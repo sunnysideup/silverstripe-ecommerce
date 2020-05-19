@@ -3,7 +3,9 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use DBTextField;
-use Requirements;
+
+use SilverStripe\View\Requirements;
+
 
 /**
  * Allows input of credit card numbers via four separate form fields,

@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Portuguese (Portugal) language pack.
  */
@@ -41,7 +44,7 @@ $lang['pt_PT']['OrderInformation.ss']['COUNTRY'] = 'País';
 $lang['pt_PT']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Detalhes do Cliente';
 $lang['pt_PT']['OrderInformation.ss']['DATE'] = 'Data';
 $lang['pt_PT']['OrderInformation.ss']['DETAILS'] = 'Detalhes';
-$lang['pt_PT']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['pt_PT']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['pt_PT']['OrderInformation.ss']['MOBILE'] = 'Telemóvel';
 $lang['pt_PT']['OrderInformation.ss']['NAME'] = 'Nome';
 $lang['pt_PT']['OrderInformation.ss']['ORDERSUMMARY'] = 'Sumário do Pedido';
@@ -77,7 +80,7 @@ $lang['pt_PT']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Morada do Co
 $lang['pt_PT']['OrderInformation_NoPricing.ss']['CITY'] = 'Localidade';
 $lang['pt_PT']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'País';
 $lang['pt_PT']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Detalhes do Cliente';
-$lang['pt_PT']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['pt_PT']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['pt_PT']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Telemóvel';
 $lang['pt_PT']['OrderInformation_NoPricing.ss']['NAME'] = 'Nome';
 $lang['pt_PT']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informação do Pedido #';

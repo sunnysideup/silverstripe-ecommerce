@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Api\Converters;
 
-use OrderConverter;
+
+use Sunnysideup\Ecommerce\Api\OrderConverter;
+
 
 
 class OrderToArray extends OrderConverter

@@ -2,11 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-use Security;
-use Member;
-use TextField;
-use DBField;
-use Config;
+
+
+
+
+
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+
 
 
 
@@ -103,7 +111,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     {
         parent::onBeforeWrite();
         if (! $this->DispatchedOn) {
-            $this->DispatchedOn = DBField::create_field('Date', date('Y-m-d'));
+            $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
         }
     }
 
@@ -118,7 +126,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     public function getCustomerNote()
     {
         Config::nest();
-        Config::inst()->update('SSViewer', 'theme_enabled', true);
+        Config::inst()->update(SSViewer::class, 'theme_enabled', true);
         $html = $this->renderWith('LogDispatchPhysicalOrderCustomerNote');
         Config::unnest();
 

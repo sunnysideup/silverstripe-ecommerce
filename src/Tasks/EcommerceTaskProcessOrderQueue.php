@@ -2,11 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Config;
-use Email;
-use EcommerceDummyMailer;
-use Injector;
+
+
+
+
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -38,11 +45,11 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $now = microtime(true);
         //IMPORTANT!
         if (! $this->sendEmails) {
-            Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
+            Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceDummyMailer());
         }
         $id = intval($request->getVar('id')) - 0;
-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
         if ($ordersinQueue->count() === 0) {
             echo 'No orders in queue';
@@ -68,7 +75,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $orders = $orders->limit($this->limit);
         //we sort randomly so it is less likely we get stuck with the same ones
         $orders = $orders->sort('RAND()');
-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         foreach ($orders as $order) {
             echo '<hr />Processing order: ' . $order->ID;
             $outcome = $queueObjectSingleton->process($order);

@@ -2,18 +2,32 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Requirements;
-use EcommerceConfig;
+
+
 use convert;
-use OrderFormAddress;
-use OrderForm;
-use Session;
-use CheckoutPageStepDescription;
-use ArrayList;
-use DataObject;
-use SS_HTTPRequest;
-use Director;
-use EcommerceCurrency;
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
+use Sunnysideup\Ecommerce\Forms\OrderForm;
+use SilverStripe\Control\Session;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
+use SilverStripe\ORM\ArrayList;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+
 
 
 
@@ -58,7 +72,7 @@ class CheckoutPageController extends CartPageController
     {
         parent::init();
 
-        Requirements::themedCSS('CheckoutPage', 'ecommerce');
+        Requirements::themedCSS(CheckoutPage::class, 'ecommerce');
         $ajaxifyArray = EcommerceConfig::get('CheckoutPage_Controller', 'ajaxify_steps');
         if (count($ajaxifyArray)) {
             foreach ($ajaxifyArray as $js) {
@@ -126,7 +140,7 @@ class CheckoutPageController extends CartPageController
      */
     public function OrderFormAddress()
     {
-        $form = OrderFormAddress::create($this, 'OrderFormAddress');
+        $form = OrderFormAddress::create($this, OrderFormAddress::class);
         $this->data()->extend('updateOrderFormAddress', $form);
         //load session data
 
@@ -153,7 +167,7 @@ class CheckoutPageController extends CartPageController
      */
     public function OrderForm()
     {
-        $form = OrderForm::create($this, 'OrderForm');
+        $form = OrderForm::create($this, OrderForm::class);
         $this->data()->extend('updateOrderForm', $form);
         //load session data
         if ($data = Session :: get("FormInfo.{$form->FormName()}.data")) {
@@ -223,7 +237,7 @@ class CheckoutPageController extends CartPageController
             }
         }
         if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
+            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
             if ($orderConfirmationPage) {
                 $do = $orderConfirmationPage->CurrentCheckoutStep(false);
                 if ($do) {
@@ -295,7 +309,7 @@ class CheckoutPageController extends CartPageController
      *
      * @return array
      */
-    public function checkoutstep(SS_HTTPRequest $request)
+    public function checkoutstep(HTTPRequest $request)
     {
         if ($this->request->isAjax()) {
             Requirements::clear();

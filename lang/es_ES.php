@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Spanish (Spain) language pack.
  */
@@ -42,7 +46,7 @@ $lang['es_ES']['Cart.ss']['RemoveAlt'] = 'Remover';
 $lang['es_ES']['Cart.ss']['SHIPPING'] = 'Envio';
 $lang['es_ES']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
 $lang['es_ES']['Cart.ss']['TOTAL'] = 'Total';
-$lang['es_ES']['CheckoutPage']['NOPAGE'] = 'No existe una página para chequearse en este sitio, porfavor crear una!';
+$lang['es_ES'][CheckoutPage::class]['NOPAGE'] = 'No existe una página para chequearse en este sitio, porfavor crear una!';
 $lang['es_ES']['CheckoutPage.ss']['CHECKOUT'] = 'chequearse';
 $lang['es_ES']['CheckoutPage.ss']['ORDERSTEP'] = 'Orden Status';
 $lang['es_ES']['CheckoutPage.ss']['PROCESS'] = 'Proceso';
@@ -72,7 +76,7 @@ $lang['es_ES']['OrderInformation.ss']['COUNTRY'] = 'País';
 $lang['es_ES']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Información del cliente';
 $lang['es_ES']['OrderInformation.ss']['DATE'] = 'Fecha';
 $lang['es_ES']['OrderInformation.ss']['DETAILS'] = 'Detalles';
-$lang['es_ES']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['es_ES']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['es_ES']['OrderInformation.ss']['MOBILE'] = 'Movil';
 $lang['es_ES']['OrderInformation.ss']['NAME'] = 'Nombre';
 $lang['es_ES']['OrderInformation.ss']['ORDERSUMMARY'] = 'Resumen de la orden';
@@ -112,7 +116,7 @@ $lang['es_ES']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Dirección d
 $lang['es_ES']['OrderInformation_NoPricing.ss']['CITY'] = 'Ciudad';
 $lang['es_ES']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'País';
 $lang['es_ES']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Información del Cliente';
-$lang['es_ES']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['es_ES']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['es_ES']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Movil';
 $lang['es_ES']['OrderInformation_NoPricing.ss']['NAME'] = 'Nombre';
 $lang['es_ES']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Información de la Orden Nro';

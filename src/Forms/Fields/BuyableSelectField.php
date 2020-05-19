@@ -2,11 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use FormField;
-use TextField;
-use ReadonlyField;
-use Requirements;
-use Convert;
+
+
+
+
+
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FormField;
+
 
 /**
  * Text input field that allows the user to select a Buyable.
@@ -90,7 +97,7 @@ class BuyableSelectField extends FormField
         //Requirements::javascript($this->jquery_UI_JS_location);
         //Requirements::css($this->jquery_UI_CSS_location);
         Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomBuyableSelectField.js');
-        Requirements::customScript($this->getJavascript(), 'BuyableSelectField' . $this->id());
+        Requirements::customScript($this->getJavascript(), BuyableSelectField::class . $this->id());
         Requirements::themedCSS('sunnysideup/ecommerce: BuyableSelectField', 'ecommerce');
 
         return '<div class="fieldgroup">' .

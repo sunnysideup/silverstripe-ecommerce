@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use ExactMatchFilter;
-use DataQuery;
+
+
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
+
 
 
 

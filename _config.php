@@ -1,5 +1,8 @@
 <?php
 
+use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
+use SilverStripe\Admin\CMSMenu;
+
 /**
  * @author: Nicolaas - modules [at] sunnysideup.co.nz
  **/
@@ -13,4 +16,4 @@
 //last param is priority
 
 // CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
-CMSMenu::remove_menu_item('CMSPageAddControllerProducts');
+CMSMenu::remove_menu_item(CMSPageAddControllerProducts::class);

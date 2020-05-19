@@ -6,66 +6,32 @@ After:
   - 'framework/*'
   - 'cms/*'
 ---
-
-
-# USAGAE:
-# 1. copy this file to another location (e.g. mysite/_config)
-# 2. reference the new file location in /ecommerce/_config/
-# 3. choose your settings in the new file
-#      - note:
-#        - no commas after values
-#        - indents are important
-#        - make sure to have a space after :
-#
-# Add to your config.yml file:
-
-#EcommerceConfig:
-  #folder_and_file_locations:
-    #- "ecommerce/_config/ecommerce.yml"
-
-
-###############################################
-# START ECOMMERCE CONFIG
-###############################################
-
-
-
-################### CONFIG #####################
-EcommerceDBConfig:
-  ecommerce_db_config_class_name: "EcommerceDBConfig"
+Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig:
+  ecommerce_db_config_class_name: Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig
   array_of_buyables:
-    - Product
-
-
-
-################### PAGES #####################
-
-CheckoutPageController:
+    - Sunnysideup\Ecommerce\Pages\Product
+Sunnysideup\Ecommerce\Pages\CheckoutPageController:
   checkout_steps:
     - orderitems
     - orderformaddress
     - orderconfirmationandpayment
-  ajaxify_steps: []
-   #- ecommerce/javascript/EcomCheckoutPage.js
-
-ShopAccountFormValidator:
+  ajaxify_steps: {  }
+Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator:
   minimum_password_length: 7
-
-OrderConfirmationPageController:
+Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController:
   include_as_checkout_step: true
-  google_analytics_variable: 'ga'
-
-ProductGroup:
-  base_buyable_class: Product
+  google_analytics_variable: ga
+Sunnysideup\Ecommerce\Pages\ProductGroup:
+  base_buyable_class: Sunnysideup\Ecommerce\Pages\Product
   actively_check_for_can_purchase: false
   maximum_number_of_products_to_list: 300
   sort_options:
     default:
       Title: 'Default Order'
-      SQL: "\"Sort\" ASC, \"Title\" ASC"
+      SQL: '"Sort" ASC, "Title" ASC'
     price:
       Title: 'Lowest Price'
-      SQL: "\"Price\" ASC, \"Sort\" ASC", \"Title\" ASC"
+      SQL: '"Price" ASC, "Sort" ASC, "Title" ASC'
   filter_options:
     default:
       Title: 'All Products (default)'
@@ -80,140 +46,102 @@ ProductGroup:
     default:
       Title: default
   session_name_for_product_array: ProductGroupProductIDs
-
-ProductGroupSearchPage:
+Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage:
   maximum_number_of_products_to_list_for_search: 100
-  best_match_key: 'bestmatch'
+  best_match_key: bestmatch
   sort_options:
     bestmatch:
       Title: 'Best Match'
-      SQL: "\"Price\" DESC"
-
-Product:
-  folder_name_for_images: "ProductImages"
+      SQL: '"Price" DESC'
+Sunnysideup\Ecommerce\Pages\Product:
+  folder_name_for_images: ProductImages
   add_data_to_meta_description_for_search: false
-
-ProductImage:
+Sunnysideup\Ecommerce\Filesystem\ProductImage:
   thumbnail_width: 75
   thumbnail_height: 75
   small_image_width: 200
   small_image_height: 200
   content_image_width: 400
   large_image_width: 600
-
-
-
-
-################### MODEL, PROCESS, ADDRESS #####################
-
-Order:
-  modifiers: []
-  minutes_an_order_can_be_viewed_without_logging_in: 4320 #three day default
+Sunnysideup\Ecommerce\Model\Order:
+  modifiers: {  }
+  minutes_an_order_can_be_viewed_without_logging_in: 4320
   maximum_ignorable_sales_payments_difference: 0.01
   order_id_start_number: 0
-  template_id_prefix: ""
+  template_id_prefix: ''
   ajax_subtotal_format:
     - SubTotalAsMoney
     - NiceDefaultFormat
   ajax_total_format:
     - TotalAsMoney
     - NiceDefaultFormat
-  date_format_for_title: "D j M Y, G:i T"
+  date_format_for_title: 'D j M Y, G:i T'
   include_customer_name_in_title: true
-
-OrderItem:
+Sunnysideup\Ecommerce\Model\OrderItem:
   ajax_total_format:
     - CalculatedTotalAsMoney
     - NiceDefaultFormat
-
-OrderModifier:
+Sunnysideup\Ecommerce\Model\OrderModifier:
   ajax_total_format:
     - TableValueAsMoney
     - NiceDefaultFormat
-
-OrderStep:
-# we only add the basics here, so that it is easy to add additional ones...
+Sunnysideup\Ecommerce\Model\Process\OrderStep:
   order_steps_to_include:
-    step1: OrderStepCreated
-    step2: OrderStepSubmitted
-    step3: OrderStepArchived
-
+    step1: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated
+    step2: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted
+    step3: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived
   number_of_days_to_send_update_email: 10
-
-OrderStepConfirmed:
+Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed:
   list_of_things_to_check:
-    check1:  "Payment has arrived in Bank Account"
-    check2:  "Products are available"
-
-OrderStatusLog:
-  available_log_classes_array: []
-    #- OrderStatusLogCancel
-    #- OrderStatusLogDispatchElectronicOrder
-    #- OrderStatusLogDispatchPhysicalOrder
-    #- OrderStatusLogPaymentCheck
-    #- OrderStatusLogArchived
-  order_status_log_class_used_for_submitting_order: "OrderStatusLogSubmitted"
-
-BillingAddress:
+    check1: 'Payment has arrived in Bank Account'
+    check2: 'Products are available'
+Sunnysideup\Ecommerce\Model\Process\OrderStatusLog:
+  available_log_classes_array: {  }
+  order_status_log_class_used_for_submitting_order: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted
+Sunnysideup\Ecommerce\Model\Address\BillingAddress:
   allow_selection_of_previous_addresses_in_checkout: false
   required_fields:
     - Phone
-    - Email
+    - SilverStripe\Control\Email\Email
     - FirstName
     - Surname
     - Address
     - City
     - PostalCode
-#   - RegionCode
-#   - RegionID
-
-ShippingAddress:
+Sunnysideup\Ecommerce\Model\Address\ShippingAddress:
   allow_selection_of_previous_addresses_in_checkout: false
   required_fields:
     - ShippingPhone
-    - ShippingAddress
+    - Sunnysideup\Ecommerce\Model\Address\ShippingAddress
     - ShippingCity
     - ShippingPostalCode
-#   - ShippingRegionCode
-#   - ShippingRegionID
     - ShippingCountry
-
-EcommerceCountry:
-  allowed_country_codes: []
-  visitor_country_provider: "EcommerceCountryVisitorCountryProvider"
-  default_country_code: "NZ"
-
-EcommerceRegion:
-  visitor_region_provider: "EcommerceRegion_VisitorRegionProvider"
+Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
+  allowed_country_codes: {  }
+  visitor_country_provider: Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider
+  default_country_code: NZ
+Sunnysideup\Ecommerce\Model\Address\EcommerceRegion:
+  visitor_region_provider: EcommerceRegion_VisitorRegionProvider
   show_freetext_region_field: true
-
-OrderAddress:
+Sunnysideup\Ecommerce\Model\Address\OrderAddress:
   use_separate_shipping_address: false
   use_shipping_address_for_main_region_and_country: false
-  field_class_and_id_prefix: ""
-
-
-
-
-################### EXTENSIONS #####################
-
-
-
-EcommerceRole:
-  permission_category: 'E-commerce'
+  field_class_and_id_prefix: ''
+Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole:
+  permission_category: E-commerce
   allow_customers_to_setup_accounts: 1
   must_have_account_to_purchase: false
   automatically_update_member_details: true
-  customer_group_code: "shopcustomers"
-  customer_group_name: "shop customers"
-  customer_permission_code: "SHOPCUSTOMER"
-  admin_group_code: "shopadministrators"
-  admin_group_name: "shop administrators"
-  admin_group_user_first_name: ""
-  admin_group_user_surname: ""
-  admin_group_user_email: ""
-  admin_permission_code: "SHOPADMIN"
-  admin_role_title: "Managing Store"
+  customer_group_code: shopcustomers
+  customer_group_name: 'shop customers'
+  customer_permission_code: SHOPCUSTOMER
+  admin_group_code: shopadministrators
+  admin_group_name: 'shop administrators'
+  admin_group_user_first_name: ''
+  admin_group_user_surname: ''
+  admin_group_user_email: ''
+  admin_permission_code: SHOPADMIN
+  admin_role_title: 'Managing Store'
   admin_role_permission_codes:
     - CMS_ACCESS_ProductsAndGroupsModelAdmin
     - CMS_ACCESS_ProductConfigModelAdmin
@@ -223,165 +151,98 @@ EcommerceRole:
     - CMS_ACCESS_AssetAdmin
     - CMS_ACCESS_CMSMain
     - CMS_ACCESS_SalesAdmin_PROCESS
-  assistant_group_code: "shopassistants"
-  assistant_group_name: "Shop Assistants"
-  assistant_group_user_first_name: ""
-  assistant_group_user_surname: ""
-  assistant_group_user_email: ""
-  assistant_permission_code: "SHOPASSISTANTS"
-  assistant_role_title: "Store Assistant"
+  assistant_group_code: shopassistants
+  assistant_group_name: 'Shop Assistants'
+  assistant_group_user_first_name: ''
+  assistant_group_user_surname: ''
+  assistant_group_user_email: ''
+  assistant_permission_code: SHOPASSISTANTS
+  assistant_role_title: 'Store Assistant'
   assistant_role_permission_codes:
     - CMS_ACCESS_SalesAdmin
     - CMS_ACCESS_SalesAdminExtras
   process_orders_permission_code: CMS_ACCESS_SalesAdmin_PROCESS
-
-
-
-################### FORMS AND FIELDS #####################
-
-OrderFormAddress:
+Sunnysideup\Ecommerce\Forms\OrderFormAddress:
   shipping_address_first: true
-
-ProductSearchForm:
-  form_data_session_variable: "ProductGroupSearchResultsFormData"
+Sunnysideup\Ecommerce\Forms\ProductSearchForm:
+  form_data_session_variable: ProductGroupSearchResultsFormData
   include_price_filters: false
-  product_session_variable: "ProductGroupSearchResultsProducts"
-  product_group_session_variable: "ProductGroupSearchResultsProductGroups"
-
-OrderModifierForm:
-  controller_class: "OrderModifierFormController"
-  validator_class: "OrderModifierFormValidator"
-
-OrderStatusLogForm:
-  controller_class: "OrderStatusLogFormController"
-  validator_class: "OrderStatusLogFormValidator"
-
+  product_session_variable: ProductGroupSearchResultsProducts
+  product_group_session_variable: ProductGroupSearchResultsProductGroups
+Sunnysideup\Ecommerce\Forms\OrderModifierForm:
+  controller_class: Sunnysideup\Ecommerce\Control\OrderModifierFormController
+  validator_class: Sunnysideup\Ecommerce\Forms\Validation\OrderModifierFormValidator
+Sunnysideup\Ecommerce\Forms\OrderStatusLogForm:
+  controller_class: Sunnysideup\Ecommerce\Control\OrderStatusLogFormController
+  validator_class: Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator
 ExpirySilverStripe\Forms\DateField:
   short_months: true
-
-
-
-################### EMAIL ################################
-
-OrderEmail:
+Sunnysideup\Ecommerce\Email\OrderEmail:
   send_all_emails_plain: false
-  css_file_location: "ecommerce/css/OrderReport.css"
+  css_file_location: ecommerce/css/OrderReport.css
   copy_to_admin_for_all_emails: true
-
-
-
-################### MONEY #############
-### also see payment.yml
-
-EcommerceCurrency:
-  exchange_provider_class: ExchangeRateProvider
+Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency:
+  exchange_provider_class: Sunnysideup\Ecommerce\Money\ExchangeRateProvider
   default_currency: NZD
-
-EcommerceMoney:
+Sunnysideup\Ecommerce\Money\EcommerceMoney:
   default_format: NiceShortSymbol
-
-
-################### CONTROL #####################
-
-CartPageController:
-  session_code: "EcommerceCartPageMessage"
-
-ShoppingCart:
-  session_code: "EcommerceShoppingCart"
+Sunnysideup\Ecommerce\Pages\CartPageController:
+  session_code: EcommerceCartPageMessage
+Sunnysideup\Ecommerce\Api\ShoppingCart:
+  session_code: EcommerceShoppingCart
   cleanup_every_time: true
-  default_param_filters: []
-  response_class: "CartResponse"
-
-ShoppingCartController:
+  default_param_filters: {  }
+  response_class: Sunnysideup\Ecommerce\Control\CartResponse
+Sunnysideup\Ecommerce\Control\ShoppingCartController:
   url_segment: shoppingcart
-
-EcommercePaymentController:
+Sunnysideup\Ecommerce\Control\EcommercePaymentController:
   url_segment: ecommercepayment
-
-EcommerceConfigAjax:
-  definitions_class_name: EcommerceConfigAjaxDefinitions
+Sunnysideup\Ecommerce\Config\EcommerceConfigAjax:
+  definitions_class_name: Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions
   cart_js_file_location: ecommerce/javascript/EcomCart.js
   dialogue_js_file_location: ecommerce/javascript/jquery.colorbox-min.js
-
-#cart responses are set as NameOfJavascriptVariable: NameOfTemplate
-CartResponse:
+Sunnysideup\Ecommerce\Control\CartResponse:
   cart_responses_required:
-#    TinyCartClassName: CartTinyInner
-#    SmallCartID: CartShortInner
     SideBarCartID: Sidebar_Cart_Inner
-
-################### MODIFIERS #####################
-
-
-
-
-
-
-################### CMS #####################
-
-StoreAdmin:
+Sunnysideup\Ecommerce\Cms\StoreAdmin:
   managed_models:
-    - EcommerceDBConfig
-    - OrderStep
-    - EcommerceCountry
-    - EcommerceCurrency
-
-ProductsAndGroupsModelAdmin:
+    - Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig
+    - Sunnysideup\Ecommerce\Model\Process\OrderStep
+    - Sunnysideup\Ecommerce\Model\Address\EcommerceCountry
+    - Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency
+Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin:
   managed_models:
-    - Product
-    - ProductGroup
-
-ProductConfigModelAdmin:
+    - Sunnysideup\Ecommerce\Pages\Product
+    - Sunnysideup\Ecommerce\Pages\ProductGroup
+Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin:
   managed_models:
-    - SearchReplacement
-    - SearchHistory
-
-SalesAdmin:
+    - Sunnysideup\Ecommerce\Model\Search\SearchReplacement
+    - Sunnysideup\Ecommerce\Model\Search\SearchHistory
+Sunnysideup\Ecommerce\Cms\SalesAdmin:
   managed_models:
-    - Order
-    - OrderProcessQueue
-    - OrderFeedback
-
-SalesAdminExtras:
+    - Sunnysideup\Ecommerce\Model\Order
+    - Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue
+    - Sunnysideup\Ecommerce\Model\Process\OrderFeedback
+Sunnysideup\Ecommerce\Cms\SalesAdminExtras:
   managed_models:
-    - Order
-    - OrderStatusLog
-    - OrderItem
-    - OrderModifier
-    - OrderEmailRecord
-
-    - BillingAddress
-    - ShippingAddress
-    - EcommercePayment
-
-
-
-################### TASKS #####################
-
-
-EcommerceTaskCartCleanup:
+    - Sunnysideup\Ecommerce\Model\Order
+    - Sunnysideup\Ecommerce\Model\Process\OrderStatusLog
+    - Sunnysideup\Ecommerce\Model\OrderItem
+    - Sunnysideup\Ecommerce\Model\OrderModifier
+    - Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord
+    - Sunnysideup\Ecommerce\Model\Address\BillingAddress
+    - Sunnysideup\Ecommerce\Model\Address\ShippingAddress
+    - Sunnysideup\Ecommerce\Model\Money\EcommercePayment
+Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup:
   clear_minutes_empty_carts: 120
   clear_minutes: 10080
   maximum_number_of_objects_deleted: 10
   never_delete_if_linked_to_member: true
   one_to_one_classes:
-    BillingAddressID: BillingAddress
-    ShippingAddressID: ShippingAddress
+    BillingAddressID: Sunnysideup\Ecommerce\Model\Address\BillingAddress
+    ShippingAddressID: Sunnysideup\Ecommerce\Model\Address\ShippingAddress
   one_to_many_classes:
-    OrderAttribute: OrderAttribute
-    OrderStatusLog: OrderStatusLog
-    OrderEmailRecord: OrderEmailRecord
-  many_to_many_classes: []
-
-
-################### SERVICES #####################
-# these can be overriden in mysite/_config/config.yml #
-
-#Injector:
-  #EcommercePaymentSupportedMethodsProvider:
-    #class: EcommercePaymentSupportedMethodsProvider
-
-
-###############################################
-# END ECOMMERCE CONFIG
-###############################################
+    Sunnysideup\Ecommerce\Model\OrderAttribute: Sunnysideup\Ecommerce\Model\OrderAttribute
+    Sunnysideup\Ecommerce\Model\Process\OrderStatusLog: Sunnysideup\Ecommerce\Model\Process\OrderStatusLog
+    Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord: Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord
+  many_to_many_classes: {  }

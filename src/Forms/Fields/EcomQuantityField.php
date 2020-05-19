@@ -2,12 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use NumericField;
-use Requirements;
-use BuyableModel;
-use ShoppingCart;
-use FormField;
-use ShoppingCartController;
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use SilverStripe\Forms\FormField;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use SilverStripe\Forms\NumericField;
+
 
 
 
@@ -53,7 +62,7 @@ class EcomQuantityField extends NumericField
     /**
      *@var string
      **/
-    protected $template = 'EcomQuantityField';
+    protected $template = EcomQuantityField::class;
 
     /**
      * the tabindex for the form field
@@ -106,7 +115,7 @@ class EcomQuantityField extends NumericField
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderItem')) && $object->BuyableID) {
+        } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class)) && $object->BuyableID) {
             $this->orderItem = $object;
         } else {
             user_error('EcomQuantityField: no/bad order item or buyable passed to constructor.', E_USER_WARNING);

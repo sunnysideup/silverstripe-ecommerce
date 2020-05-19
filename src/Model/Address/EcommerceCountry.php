@@ -2,18 +2,34 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use EcommerceConfig;
+
+
+
+
+
+
 use Geoip;
-use ShoppingCart;
-use LiteralField;
+
+
 use CMSEditLinkAPI;
-use EcommerceTaskCountryAndRegion;
-use EcommerceCodeFilter;
+
+
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
+use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 /**
@@ -57,7 +73,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @var array
      **/
     private static $has_many = [
-        'Regions' => 'EcommerceRegion',
+        'Regions' => EcommerceRegion::class,
     ];
 
     /**
@@ -244,7 +260,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -267,7 +283,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -297,7 +313,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (BillingAddress::get()->filter(['Country' => $this->Code])->count()) {
             return false;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -312,9 +328,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_country_from_ip()
     {
-        $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
+        $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_country_provider');
         if (! $visitorCountryProviderClassName) {
-            $visitorCountryProviderClassName = 'EcommerceCountryVisitorCountryProvider';
+            $visitorCountryProviderClassName = EcommerceCountryVisitorCountryProvider::class;
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
@@ -329,9 +345,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_ip()
     {
-        $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
+        $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_country_provider');
         if (! $visitorCountryProviderClassName) {
-            $visitorCountryProviderClassName = 'EcommerceCountryVisitorCountryProvider';
+            $visitorCountryProviderClassName = EcommerceCountryVisitorCountryProvider::class;
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
@@ -385,7 +401,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      **/
     public static function get_fixed_country_code()
     {
-        $a = EcommerceConfig::get('EcommerceCountry', 'allowed_country_codes');
+        $a = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
         if (is_array($a) && count($a) === 1) {
             return array_shift($a);
         }
@@ -420,7 +436,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return $options[$code];
         } elseif ($code) {
             $obj = DataObject::get_one(
-                'EcommerceCountry',
+                EcommerceCountry::class,
                 ['Code' => $code]
             );
             if ($obj) {
@@ -482,7 +498,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 //include $countryCode = self::get_country_from_ip();
                 $o = ShoppingCart::current_order();
                 if ($orderID && $orderID !== $o->ID) {
-                    $o = DataObject::get_one('Order', ['ID' => $orderID]);
+                    $o = DataObject::get_one(Order::class, ['ID' => $orderID]);
                 }
                 if ($o && $o->exists()) {
                     $countryCode = $o->getCountry();
@@ -507,7 +523,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public static function get_country_default()
     {
-        $countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
+        $countryCode = EcommerceConfig::get(EcommerceCountry::class, 'default_country_code');
         //5. take the FIRST country from the get_allowed_country_codes
         if (! $countryCode) {
             $countryArray = self::list_of_allowed_entries_for_dropdown();
@@ -528,7 +544,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         if (is_string($var)) {
             $var = strtoupper($var);
-            $var = DataObject::get_one('EcommerceCountry', ['Code' => $var]);
+            $var = DataObject::get_one(EcommerceCountry::class, ['Code' => $var]);
         } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get()->byID($var);
         }
@@ -558,7 +574,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
 
         return DataObject::get_one(
-            'EcommerceCountry',
+            EcommerceCountry::class,
             ['Code' => $countryCode]
         );
     }
@@ -581,7 +597,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
         self::$_code_to_id_map[$countryCode] = 0;
         $country = DataObject::get_one(
-            'EcommerceCountry',
+            EcommerceCountry::class,
             ['Code' => $countryCode]
         );
         if ($country) {

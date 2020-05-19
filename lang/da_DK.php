@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Danish (Denmark) language pack.
  */
@@ -13,7 +19,7 @@ if (array_key_exists('da_DK', $lang) && is_array($lang['da_DK'])) {
     $lang['da_DK'] = $lang['en_US'];
 }
 
-$lang['da_DK']['AccountPage']['NOPAGE'] = 'Ingen kontoside på dette site. Opret venligst en!';
+$lang['da_DK'][AccountPage::class]['NOPAGE'] = 'Ingen kontoside på dette site. Opret venligst en!';
 $lang['da_DK']['AccountPage.ss']['COMPLETED'] = 'Fuldførte ordrer';
 $lang['da_DK']['AccountPage.ss']['HISTORY'] = 'Din ordrehistorie';
 $lang['da_DK']['AccountPage.ss']['INCOMPLETE'] = 'Mangelfuld ordre';
@@ -38,7 +44,7 @@ $lang['da_DK']['Cart.ss']['REMOVEONE'] = 'Fjern &quot;%s&quot; fra din kurv';
 $lang['da_DK']['Cart.ss']['SHIPPING'] = 'Levering';
 $lang['da_DK']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
 $lang['da_DK']['Cart.ss']['TOTAL'] = 'Total';
-$lang['da_DK']['CheckoutPage']['NOPAGE'] = 'Ingen Checkout Side på dette site - Lav venligst en!';
+$lang['da_DK'][CheckoutPage::class]['NOPAGE'] = 'Ingen Checkout Side på dette site - Lav venligst en!';
 $lang['da_DK']['CheckoutPage.ss']['CHECKOUT'] = 'Check ud';
 $lang['da_DK']['CheckoutPage.ss']['ORDERSTEP'] = 'Ordrestatus';
 $lang['da_DK']['CheckoutPage.ss']['PROCESS'] = 'Proces';
@@ -59,8 +65,8 @@ $lang['da_DK']['ChequePayment']['MESSAGE'] = 'Betaling med check mulig. Bemærk:
 $lang['da_DK']['FindOrderReport']['DATERANGE'] = 'Dato interval';
 $lang['da_DK']['MemberForm']['DETAILSSAVED'] = 'Dine detajler er blevet gemt';
 $lang['da_DK']['MemberForm']['LOGGEDIN'] = 'Du er i øjeblikket logget ind som ';
-$lang['da_DK']['Order']['INCOMPLETE'] = 'Ordren er ikke komplet';
-$lang['da_DK']['Order']['SUCCESSFULL'] = 'Ordre modtaget succesfuldt';
+$lang['da_DK'][Order::class]['INCOMPLETE'] = 'Ordren er ikke komplet';
+$lang['da_DK'][Order::class]['SUCCESSFULL'] = 'Ordre modtaget succesfuldt';
 $lang['da_DK']['OrderInformation.ss']['ADDRESS'] = 'Adresse';
 $lang['da_DK']['OrderInformation.ss']['AMOUNT'] = 'Antal';
 $lang['da_DK']['OrderInformation.ss']['BUYERSADDRESS'] = 'Købers adresse';
@@ -69,7 +75,7 @@ $lang['da_DK']['OrderInformation.ss']['COUNTRY'] = 'Land';
 $lang['da_DK']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Kundedetaljer';
 $lang['da_DK']['OrderInformation.ss']['DATE'] = 'Dato';
 $lang['da_DK']['OrderInformation.ss']['DETAILS'] = 'Detaljer';
-$lang['da_DK']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['da_DK']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['da_DK']['OrderInformation.ss']['MOBILE'] = 'Mobil';
 $lang['da_DK']['OrderInformation.ss']['NAME'] = 'Navn';
 $lang['da_DK']['OrderInformation.ss']['ORDERSUMMARY'] = 'Ordresammendrag';
@@ -111,7 +117,7 @@ $lang['da_DK']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Købers adre
 $lang['da_DK']['OrderInformation_NoPricing.ss']['CITY'] = 'By';
 $lang['da_DK']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Land';
 $lang['da_DK']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Kundedetaljer';
-$lang['da_DK']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['da_DK']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['da_DK']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobil';
 $lang['da_DK']['OrderInformation_NoPricing.ss']['NAME'] = 'Navn';
 $lang['da_DK']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Information tilhørende ordre #';

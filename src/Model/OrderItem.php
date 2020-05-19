@@ -2,23 +2,42 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use Versioned;
-use HiddenField;
-use HeaderField;
-use ReadonlyField;
-use NumericField;
-use BuyableSelectField;
-use BuyableModel;
-use EcommerceConfig;
-use EcommerceCurrency;
-use EcomQuantityField;
-use DBField;
-use Product;
+
+
+
+
+
+
+
+
+
+
+
+
 use Translatable;
-use Director;
-use CheckoutPage;
-use ShoppingCartController;
-use EcommerceTaskDebugCart;
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\NumericField;
+use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use SilverStripe\ORM\FieldType\DBField;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+
 
 /**
  * @description: An order item is a product which has been added to an order.
@@ -70,7 +89,7 @@ class OrderItem extends OrderAttribute
             'Version',
             'UnitPrice',
             'Total',
-            'Order',
+            Order::class,
         ],
     ];
 
@@ -316,7 +335,7 @@ class OrderItem extends OrderAttribute
   * EXP: check the number of decimals required and add as ->Step(123)
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
+            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', Order::class)));
         }
         $fields->removeByName('Sort');
         $fields->removeByName('CalculatedTotal');
@@ -430,7 +449,7 @@ class OrderItem extends OrderAttribute
      **/
     public function updateForAjax(array $js)
     {
-        $function = EcommerceConfig::get('OrderItem', 'ajax_total_format');
+        $function = EcommerceConfig::get(OrderItem::class, 'ajax_total_format');
         if (is_array($function)) {
             list($function, $format) = $function;
         }
@@ -563,7 +582,7 @@ class OrderItem extends OrderAttribute
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                if ($this->ClassName === 'OrderItem' && $this->BuyableClassName !== 'OrderItem') {
+                if ($this->ClassName === OrderItem::class && $this->BuyableClassName !== OrderItem::class) {
                     $this->setClassName($buyable->classNameForOrderItem());
                 }
             }
@@ -606,7 +625,7 @@ class OrderItem extends OrderAttribute
      **/
     public function hasSameContent(OrderItem $orderItem)
     {
-        return is_a($orderItem, Object::getCustomClass('OrderItem')) &&
+        return is_a($orderItem, Object::getCustomClass(OrderItem::class)) &&
             $this->BuyableID === $orderItem->BuyableID &&
             $this->BuyableClassName === $orderItem->BuyableClassName &&
             $this->Version === $orderItem->Version;

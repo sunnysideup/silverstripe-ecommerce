@@ -3,11 +3,20 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-use Permission;
-use Config;
-use DataObject;
-use Member;
-use Order;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+
 
 /**
  * @description:
@@ -91,7 +100,7 @@ class AccountPage extends Page
      **/
     public function canCreate($member = null)
     {
-        return AccountPage::get()->filter(['ClassName' => 'AccountPage'])->Count() ? false : $this->canEdit($member);
+        return AccountPage::get()->filter(['ClassName' => AccountPage::class])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -103,7 +112,7 @@ class AccountPage extends Page
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -152,8 +161,8 @@ class AccountPage extends Page
     public static function find_link($action = null)
     {
         $page = DataObject::get_one(
-            'AccountPage',
-            ['ClassName' => 'AccountPage']
+            AccountPage::class,
+            ['ClassName' => AccountPage::class]
         );
         if ($page) {
             return $page->Link($action);
@@ -272,7 +281,7 @@ class AccountPage extends Page
                     '"Order"."MemberID" = ' . $memberID . '
                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
                 )
-                ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
+                ->innerJoin(OrderStep::class, '"Order"."StatusID" = "OrderStep"."ID"');
         }
 
         return 0;

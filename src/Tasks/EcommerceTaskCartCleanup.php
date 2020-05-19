@@ -2,12 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Permission;
-use DB;
-use EcommerceConfig;
-use OrderStep;
-use Order;
+
+
+
+
+
+
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Security\Member;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -72,8 +81,8 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = ${countAll})</h2>.");
         }
 
-        $neverDeleteIfLinkedToMember = EcommerceConfig::get('EcommerceTaskCartCleanup', 'never_delete_if_linked_to_member');
-        $maximumNumberOfObjectsDeleted = EcommerceConfig::get('EcommerceTaskCartCleanup', 'maximum_number_of_objects_deleted');
+        $neverDeleteIfLinkedToMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'never_delete_if_linked_to_member');
+        $maximumNumberOfObjectsDeleted = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'maximum_number_of_objects_deleted');
 
         //LIMITS ...
         if ($request) {
@@ -91,7 +100,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $joinShort = '"Member"."ID" = "Order"."MemberID"';
 
         //ABANDONNED CARTS
-        $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes');
+        $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
         $time = strtotime('-' . $clearMinutes . ' minutes');
         $where = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < ${time} ";
@@ -110,7 +119,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->where($where . $withoutMemberWhere)
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin('Member', $joinShort);
+        $oldCarts = $oldCarts->leftJoin(Member::class, $joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -171,14 +180,14 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
 
         //EMPTY ORDERS
-        $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes_empty_carts');
+        $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_empty_carts');
         $time = strtotime('-' . $clearMinutes . ' minutes');
         $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < ${time} ";
         $oldCarts = Order::get()
             ->where($where)
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin('Member', $joinShort);
+        $oldCarts = $oldCarts->leftJoin(Member::class, $joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -238,9 +247,9 @@ class EcommerceTaskCartCleanup extends BuildTask
             );
         }
 
-        $oneToMany = EcommerceConfig::get('EcommerceTaskCartCleanup', 'one_to_many_classes');
-        $oneToOne = EcommerceConfig::get('EcommerceTaskCartCleanup', 'one_to_one_classes');
-        $manyToMany = EcommerceConfig::get('EcommerceTaskCartCleanup', 'many_to_many_classes');
+        $oneToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_many_classes');
+        $oneToOne = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_one_classes');
+        $manyToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'many_to_many_classes');
         if (! is_array($oneToOne)) {
             $oneToOne = [];
         }

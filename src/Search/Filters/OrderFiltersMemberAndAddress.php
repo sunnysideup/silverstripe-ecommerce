@@ -2,11 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use ExactMatchFilter;
-use DataQuery;
-use BillingAddress;
-use ShippingAddress;
-use Member;
+
+
+
+
+
+use SilverStripe\ORM\DataQuery;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use SilverStripe\Security\Member;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
+
 
 
 

@@ -5,48 +5,36 @@ After:
    - 'framework/*'
    - 'cms/*'
 ---
-
-
-
-DevelopmentAdmin:
+SilverStripe\Dev\DevelopmentAdmin:
   extensions:
-    - EcommerceDevelopmentAdminDecorator
+    - Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator
   registered_controllers:
     ecommerce:
-      controller: 'EcommerceDatabaseAdmin'
+      controller: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
       links:
         ecommerce: 'The home page for everything e-commerce'
-
 SilverStripe\Security\Member:
   extensions:
-    - EcommerceRole
-
+    - Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole
 SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - EcommerceSiteTreeExtension
-  #we add this index to make caching faster ....
+    - Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension
   indexes:
     LastEdited: true
-
 PageController:
   extensions:
-    - EcommerceSiteTreeExtensionController
-
+    - Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
 Money:
   extensions:
-    - EcommerceMoney
-
-OrderEmailRecordReview:
-  url_segment: "ecommerce-email-preview"
-
-EcommerceDatabaseAdmin:
+    - Sunnysideup\Ecommerce\Money\EcommerceMoney
+Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
+  url_segment: ecommerce-email-preview
+Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN
-
 SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - ecommerce/css/ecommercecmsfixes.css
-
 ---
 Only:
   moduleexists: 'grouped-cms-menu'
@@ -54,9 +42,9 @@ Only:
 SilverStripe\Admin\LeftAndMain:
   menu_groups:
     Shop:
-      - StoreAdmin
-      - ProductsAndGroupsModelAdmin
-      - ProductConfigModelAdmin
-      - SalesAdmin
-      - SalesAdminExtras
+      - Sunnysideup\Ecommerce\Cms\StoreAdmin
+      - Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
+      - Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
+      - Sunnysideup\Ecommerce\Cms\SalesAdmin
+      - Sunnysideup\Ecommerce\Cms\SalesAdminExtras
       - refresh

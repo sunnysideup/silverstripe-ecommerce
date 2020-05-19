@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
-use Extension;
-use SS_HTTPRequest;
+
+
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Extension;
+
 
 
 
@@ -29,7 +32,7 @@ class EcommerceDevelopmentAdminDecorator extends Extension
      *
      * @return HTML
      **/
-    public function ecommerce(SS_HTTPRequest $request)
+    public function ecommerce(HTTPRequest $request)
     {
         return EcommerceDatabaseAdmin::create();
     }

@@ -2,19 +2,34 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Form;
-use Controller;
-use Order;
-use Convert;
-use FieldList;
-use OptionsetField;
-use TextareaField;
-use FormAction;
-use OrderFormFeedbackValidator;
-use SS_HTTPRequest;
-use OrderFeedback;
-use Config;
-use DataObject;
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Control\Controller;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
+use SilverStripe\Forms\Form;
+use SilverStripe\Control\HTTPRequest;
+use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use SilverStripe\ORM\DataObject;
+
 
 
 
@@ -74,7 +89,7 @@ class OrderFormFeedback extends Form
      * @param Form         $form The {@link Form} this was submitted on
      * @param HTTPRequest  $request The {@link Form} this was submitted on
      */
-    public function dofeedback(array $data, Form $form, SS_HTTPRequest $request)
+    public function dofeedback(array $data, Form $form, HTTPRequest $request)
     {
         if ($this->order) {
             $object = OrderFeedback::create();
@@ -125,7 +140,7 @@ class OrderFormFeedback extends Form
         if ($page = $this->getOrderConfirmationPage()) {
             return $page->{$value};
         }
-        $defaults = Config::inst()->get('OrderConfirmationPage', 'defaults');
+        $defaults = Config::inst()->get(OrderConfirmationPage::class, 'defaults');
         if ($defaults && is_array($defaults) && isset($defaults[$value])) {
             return $defaults[$value];
         }
@@ -135,7 +150,7 @@ class OrderFormFeedback extends Form
     protected function getOrderConfirmationPage()
     {
         if (! $this->_orderConfirmationPage) {
-            $this->_orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
+            $this->_orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
         }
         return $this->_orderConfirmationPage;
     }

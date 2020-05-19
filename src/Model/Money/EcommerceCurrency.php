@@ -2,23 +2,41 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use EcommerceConfig;
-use Order;
+
+
+
+
+
+
+
 use Currency;
-use ShoppingCart;
-use Injector;
-use DBField;
-use ReadonlyField;
-use HeaderField;
+
+
+
+
+
 use CMSEditLinkAPI;
-use EcommerceMoney;
-use ShoppingCartController;
-use EcommerceTaskDebugCart;
+
+
+
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Money\EcommerceMoney;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 /**
@@ -283,7 +301,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -306,7 +324,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -329,7 +347,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -353,7 +371,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             if ($extended !== null) {
                 return $extended;
             }
-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
                 return true;
             }
 
@@ -375,7 +393,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             ->Filter(['InUse' => 1])
             ->Sort(
                 [
-                    "IF(\"Code\" = '" . strtoupper(EcommerceConfig::get('EcommerceCurrency', 'default_currency')) . "', 0, 1)" => 'ASC',
+                    "IF(\"Code\" = '" . strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency')) . "', 0, 1)" => 'ASC',
                     'Name' => 'ASC',
                     'Code' => 'ASC',
                 ]
@@ -393,7 +411,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             ->filter(['InUse' => 1])
             ->sort(
                 [
-                    "IF(\"Code\" = '" . EcommerceConfig::get('EcommerceCurrency', 'default_currency') . "', 0, 1)" => 'ASC',
+                    "IF(\"Code\" = '" . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . "', 0, 1)" => 'ASC',
                     'Name' => 'ASC',
                     'Code' => 'ASC',
                 ]
@@ -425,7 +443,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
 
-        $updatedCurrencyCode = Injector::inst()->get('EcommerceCurrency')->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
+        $updatedCurrencyCode = Injector::inst()->get(EcommerceCurrency::class)->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
         if ($updatedCurrencyCode !== null && is_array($updatedCurrencyCode) && count($updatedCurrencyCode)) {
             $currencyCode = $updatedCurrencyCode[0];
         }
@@ -445,9 +463,9 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public static function default_currency()
     {
         return DataObject::get_one(
-            'EcommerceCurrency',
+            EcommerceCurrency::class,
             [
-                'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
+                'Code' => trim(strtolower(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'))),
                 'InUse' => 1,
             ]
         );
@@ -465,7 +483,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $code = $obj->Code;
         }
         if (! $code) {
-            $code = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
+            $code = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         }
         if (! $code) {
             $code = 'NZD';
@@ -494,7 +512,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public static function get_one_from_code($currencyCode)
     {
         return DataObject::get_one(
-            'EcommerceCurrency',
+            EcommerceCurrency::class,
             [
                 'Code' => trim(strtoupper($currencyCode)),
                 'InUse' => 1,
@@ -588,7 +606,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return strtoupper($this->Code) === strtoupper(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
+        return strtoupper($this->Code) === strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
     }
 
     /**
@@ -643,10 +661,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function getExchangeRate()
     {
-        $exchangeRateProviderClassName = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
+        $exchangeRateProviderClassName = EcommerceConfig::get(EcommerceCurrency::class, 'exchange_provider_class');
         $exchangeRateProvider = new $exchangeRateProviderClassName();
 
-        return $exchangeRateProvider->ExchangeRate(EcommerceConfig::get('EcommerceCurrency', 'default_currency'), $this->Code);
+        return $exchangeRateProvider->ExchangeRate(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'), $this->Code);
     }
 
     /**
@@ -664,7 +682,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function getExchangeRateExplanation(): string
     {
-        $string = '1 ' . EcommerceConfig::get('EcommerceCurrency', 'default_currency') . ' = ' . round($this->getExchangeRate(), 3) . ' ' . $this->Code;
+        $string = '1 ' . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . ' = ' . round($this->getExchangeRate(), 3) . ' ' . $this->Code;
         $exchangeRate = $this->getExchangeRate();
         $exchangeRateError = '';
         if (! $exchangeRate) {
@@ -673,7 +691,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         }
         return $string .
             ', 1 ' . $this->Code . ' = ' . round(1 / $exchangeRate, 3) . ' ' .
-            EcommerceConfig::get('EcommerceCurrency', 'default_currency') . '. ' .
+            EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . '. ' .
             $exchangeRateError;
     }
 
@@ -777,7 +795,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         parent::requireDefaultRecords();
         if (! self::default_currency()) {
-            self::create_new(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
+            self::create_new(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
         }
     }
 
@@ -791,7 +809,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         $code = trim(strtoupper($code));
         if (! $name) {
-            $currencies = Config::inst()->get('EcommerceCurrency', 'currencies');
+            $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
             if (isset($currencies[$code])) {
                 $name = $currencies[$code];
             } else {
@@ -800,7 +818,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         }
         $name = ucwords($name);
         $currency = DataObject::get_one(
-            'EcommerceCurrency',
+            EcommerceCurrency::class,
             ['Code' => $code],
             $cacheDataObjectGetOne = false
         );

@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Controller;
-use Config;
-use OrderEmailRecord;
+
+
+
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use SilverStripe\Control\Controller;
+
 
 
 
@@ -16,7 +21,7 @@ class OrderEmailRecordReview extends Controller
 
     public static function review_link($email)
     {
-        return Config::inst()->get('OrderEmailRecordReview', 'url_segment') . '/read/' . $email->ID;
+        return Config::inst()->get(OrderEmailRecordReview::class, 'url_segment') . '/read/' . $email->ID;
     }
 
     public function read($request)

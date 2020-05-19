@@ -2,9 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceCountry;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 

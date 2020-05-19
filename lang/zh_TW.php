@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
 /**
  * Chinese (Taiwan) language pack.
  */
@@ -32,7 +35,7 @@ $lang['zh_TW']['Cart.ss']['RemoveAlt'] = '移除';
 $lang['zh_TW']['Cart.ss']['SHIPPING'] = '運費';
 $lang['zh_TW']['Cart.ss']['SUBTOTAL'] = '小計';
 $lang['zh_TW']['Cart.ss']['TOTAL'] = '總計';
-$lang['zh_TW']['CheckoutPage']['NOPAGE'] = '找不到 CheckoutPage，請建立此頁。';
+$lang['zh_TW'][CheckoutPage::class]['NOPAGE'] = '找不到 CheckoutPage，請建立此頁。';
 $lang['zh_TW']['CheckoutPage.ss']['CHECKOUT'] = '結帳';
 $lang['zh_TW']['CheckoutPage.ss']['ORDERSTEP'] = '訂單狀態';
 $lang['zh_TW']['CheckoutPage.ss']['PROCESS'] = '步驟';

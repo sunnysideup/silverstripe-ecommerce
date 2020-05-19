@@ -1,6 +1,8 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Email;
+use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
+
 
 
 
@@ -21,6 +23,6 @@ class OrderErrorEmail extends OrderEmail
     /**
      * @param string $ss_template The name of the used template (without *.ss extension)
      */
-    protected $ss_template = 'OrderErrorEmail';
+    protected $ss_template = OrderErrorEmail::class;
 }
 

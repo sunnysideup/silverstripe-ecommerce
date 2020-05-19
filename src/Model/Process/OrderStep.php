@@ -2,26 +2,55 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use DataObject;
-use EditableEcommerceObject;
-use Order;
-use EcommerceConfig;
-use Config;
-use HeaderField;
-use TextField;
-use CheckboxField;
-use LiteralField;
-use HTMLEditorField;
-use DropdownField;
-use TextareaField;
-use FieldList;
-use DBField;
-use Member;
-use Permission;
-use Director;
-use OrderConfirmationPage;
-use DB;
-use EcommerceDBConfig;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 /**
@@ -41,7 +70,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * @var string
      */
-    protected $emailClassName = 'OrderInvoiceEmail';
+    protected $emailClassName = OrderInvoiceEmail::class;
 
     /**************************************************
     * Order Status Logs
@@ -119,9 +148,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @return array
      */
     private static $has_many = [
-        'Orders' => 'Order',
-        'OrderEmailRecords' => 'OrderEmailRecord',
-        'OrderProcessQueueEntries' => 'OrderProcessQueue',
+        'Orders' => Order::class,
+        'OrderEmailRecords' => OrderEmailRecord::class,
+        'OrderProcessQueueEntries' => OrderProcessQueue::class,
     ];
 
     /**
@@ -438,7 +467,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function bad_order_step_ids()
     {
         $badorderStatus = Order::get()
-            ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
+            ->leftJoin(OrderStep::class, '"OrderStep"."ID" = "Order"."StatusID"')
             ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
             ->column('StatusID');
         if (is_array($badorderStatus)) {
@@ -456,7 +485,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function get_status_id_from_code($code)
     {
         $otherStatus = DataObject::get_one(
-            'OrderStep',
+            OrderStep::class,
             ['Code' => $code]
         );
         if ($otherStatus) {
@@ -472,7 +501,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function get_codes_for_order_steps_to_include()
     {
         $newArray = [];
-        $array = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
+        $array = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
         if (is_array($array) && count($array)) {
             foreach ($array as $className) {
                 $code = singleton($className)->getMyCode();
@@ -490,7 +519,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public static function get_not_created_codes_for_order_steps_to_include()
     {
-        $array = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
+        $array = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
         if (is_array($array) && count($array)) {
             foreach ($array as $className) {
                 $obj = DataObject::get_one($className);
@@ -534,8 +563,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //replacing
         $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
         $config = $queueField->getConfig();
-        $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
-        $config->removeComponentsByType('GridFieldDeleteAction');
+        $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+        $config->removeComponentsByType(GridFieldDeleteAction::class);
         $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
             if ($this->DeferTimeInSeconds) {
@@ -771,7 +800,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         }
         $where = '"OrderStep"."Sort" >  ' . $sort;
         $nextOrderStepObject = DataObject::get_one(
-            'OrderStep',
+            OrderStep::class,
             $where
         );
         if ($nextOrderStepObject) {
@@ -796,7 +825,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function hasPassed($code, $orIsEqualTo = false)
     {
         $otherStatus = DataObject::get_one(
-            'OrderStep',
+            OrderStep::class,
             ['Code' => $code]
         );
         if ($otherStatus) {
@@ -887,7 +916,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             } else {
                 $lastEditedValue = $order->LastEdited;
             }
-            if ((strtotime($lastEditedValue) < strtotime('-' . EcommerceConfig::get('OrderStep', 'number_of_days_to_send_update_email') . ' days'))) {
+            if ((strtotime($lastEditedValue) < strtotime('-' . EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email') . ' days'))) {
                 return true;
             }
         }
@@ -1123,7 +1152,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -1164,7 +1193,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -1202,7 +1231,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -1335,7 +1364,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             //ADMIN ONLY ....
             } else {
                 if (! $emailClassName) {
-                    $emailClassName = 'OrderErrorEmail';
+                    $emailClassName = OrderErrorEmail::class;
                 }
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.') . '<br /><br /><br /><br />' . $message;
@@ -1368,7 +1397,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         if ($this->getEmailClassName()) {
             $order = DataObject::get_one(
-                'Order',
+                Order::class,
                 ['StatusID' => $this->ID],
                 $cacheDataObjectGetOne = true,
                 'RAND() ASC'
@@ -1377,7 +1406,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
                     ->sort('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
-                    ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
+                    ->innerJoin(OrderStep::class, '"OrderStep"."ID" = "Order"."StatusID"')
                     ->first();
             }
             if ($order) {
@@ -1451,7 +1480,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     protected function checkValidityOfOrderSteps()
     {
-        $orderStepsToInclude = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
+        $orderStepsToInclude = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
         $codesToInclude = self::get_codes_for_order_steps_to_include();
         $indexNumber = 0;
         if ($orderStepsToInclude && count($orderStepsToInclude)) {
@@ -1464,7 +1493,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     if ($itemCount > 0) {
                         //always reset code
                         $obj = DataObject::get_one(
-                            'OrderStep',
+                            OrderStep::class,
                             $filter,
                             $cacheDataObjectGetOne = false
                         );
@@ -1473,7 +1502,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $obj->write();
                         }
                         //replace default description
-                        $parentObj = singleton('OrderStep');
+                        $parentObj = singleton(OrderStep::class);
                         if ($obj->Description === $parentObj->myDescription()) {
                             $obj->Description = $obj->myDescription();
                             $obj->write();
@@ -1506,7 +1535,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         DB::alteration_message("Created \"${code}\" as ${className}.", 'created');
                     }
                     $obj = DataObject::get_one(
-                        'OrderStep',
+                        OrderStep::class,
                         $filter,
                         $cacheDataObjectGetOne = false
                     );

@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use GridField;
-use GridFieldEditOriginalPageConfig;
-use GridFieldExportButton;
+
+
+
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridField;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfig;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+
 
 
 
@@ -38,7 +43,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
-        if (is_subclass_of($this->modelClass, 'SiteTree') || $this->modelClass === 'SiteTree') {
+        if (is_subclass_of($this->modelClass, SiteTree::class) || $this->modelClass === SiteTree::class) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = GridFieldEditOriginalPageConfig::create();

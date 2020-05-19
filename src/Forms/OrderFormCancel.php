@@ -2,18 +2,31 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Form;
-use Controller;
-use Order;
-use FieldList;
-use HeaderField;
-use TextField;
-use HiddenField;
-use FormAction;
-use OrderFormCancelValidator;
-use SS_HTTPRequest;
-use Convert;
-use Member;
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Control\Controller;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
+use SilverStripe\Forms\Form;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Convert;
+use SilverStripe\Security\Member;
+
 
 
 
@@ -76,7 +89,7 @@ class OrderFormCancel extends Form
      * @param array $data The form request data submitted
      * @param Form  $form The {@link Form} this was submitted on
      */
-    public function docancel(array $data, Form $form, SS_HTTPRequest $request)
+    public function docancel(array $data, Form $form, HTTPRequest $request)
     {
         $SQLData = Convert::raw2sql($data);
         $member = Member::currentUser();

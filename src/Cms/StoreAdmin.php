@@ -2,8 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use DataObject;
-use GridField;
+
+
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
+
 
 
 
@@ -65,9 +71,9 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
     public function getManagedModels()
     {
         $models = parent::getManagedModels();
-        $ecommerceDBConfig = isset($models['EcommerceDBConfig']) ? $models['EcommerceDBConfig'] : null;
+        $ecommerceDBConfig = isset($models[EcommerceDBConfig::class]) ? $models[EcommerceDBConfig::class] : null;
         if ($ecommerceDBConfig) {
-            unset($models['EcommerceDBConfig']);
+            unset($models[EcommerceDBConfig::class]);
 
             return ['EcommerceDBConfig' => $ecommerceDBConfig] + $models;
         }
@@ -78,16 +84,16 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if ($this->modelClass === 'EcommerceDBConfig' || is_subclass_of($this->modelClass, 'EcommerceDBConfig')) {
-            $record = DataObject::get_one('EcommerceDBConfig');
+        if ($this->modelClass === EcommerceDBConfig::class || is_subclass_of($this->modelClass, EcommerceDBConfig::class)) {
+            $record = DataObject::get_one(EcommerceDBConfig::class);
             if ($record && $record->exists()) {
                 return $this->oneItemForm($record);
             }
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();
-                    $config->removeComponentsByType('GridFieldExportButton');
-                    $config->removeComponentsByType('GridFieldPrintButton');
+                    $config->removeComponentsByType(GridFieldExportButton::class);
+                    $config->removeComponentsByType(GridFieldPrintButton::class);
                 }
             }
         }

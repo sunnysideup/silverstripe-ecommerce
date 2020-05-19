@@ -2,8 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use TextField;
-use EcommerceConfig;
+
+
+use SilverStripe\Forms\ReadonlyField;
+use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\TextField;
+
 
 
 /**
@@ -142,7 +147,7 @@ class ExpiryDateField extends TextField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy('ReadonlyField')
+        return $this->castedCopy(ReadonlyField::class)
             ->setTitle($this->title)
             ->setValue(substr($this->value, 0, 2) . '/' . substr($this->value, 2, 2));
     }
@@ -250,7 +255,7 @@ class ExpiryDateField extends TextField
      **/
     protected function monthArray()
     {
-        $shortMonths = EcommerceConfig::get('ExpiryDateField', 'short_months');
+        $shortMonths = EcommerceConfig::get(ExpiryDateField::class, 'short_months');
         if ($shortMonths) {
             return [
                 '01' => '01 - Jan',

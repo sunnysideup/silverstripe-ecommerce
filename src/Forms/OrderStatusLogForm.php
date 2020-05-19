@@ -2,12 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Form;
-use Controller;
-use FieldList;
-use Validator;
-use EcommerceConfig;
-use Requirements;
+
+
+
+
+
+
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Validator;
+use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\View\Requirements;
+use SilverStripe\Forms\Form;
+
 
 
 
@@ -47,11 +55,11 @@ class OrderStatusLogForm extends Form
         Validator $optionalValidator = null
     ) {
         if (! $optionalController) {
-            $controllerClassName = EcommerceConfig::get('OrderStatusLogForm', 'controller_class');
+            $controllerClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
         if (! $optionalValidator) {
-            $validatorClassName = EcommerceConfig::get('OrderStatusLogForm', 'validator_class');
+            $validatorClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }
         parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);

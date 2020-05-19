@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
 /**
  * Finnish (Finland) language pack.
  */
@@ -36,7 +39,7 @@ $lang['fi_FI']['Cart.ss']['RemoveAlt'] = 'Poista';
 $lang['fi_FI']['Cart.ss']['SHIPPING'] = 'Kuljetus';
 $lang['fi_FI']['Cart.ss']['SUBTOTAL'] = 'Yhteensä';
 $lang['fi_FI']['Cart.ss']['TOTAL'] = 'Yhteensä';
-$lang['fi_FI']['CheckoutPage']['NOPAGE'] = 'Tällä sivustolla ei ole KassaSivua - ole hyvä ja luo sellainen!';
+$lang['fi_FI'][CheckoutPage::class]['NOPAGE'] = 'Tällä sivustolla ei ole KassaSivua - ole hyvä ja luo sellainen!';
 $lang['fi_FI']['CheckoutPage.ss']['CHECKOUT'] = 'Kassa';
 $lang['fi_FI']['CheckoutPage.ss']['ORDERSTEP'] = 'Tilauksen tila';
 $lang['fi_FI']['CheckoutPage_OrderIncomplete.ss']['BACKTOCHECKOUT'] = 'Paina tästä palataksesi Kassalle';

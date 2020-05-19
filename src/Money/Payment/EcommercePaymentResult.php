@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Money\Payment;
 
-use ViewableData;
+
+use SilverStripe\View\ViewableData;
+
 
 
 

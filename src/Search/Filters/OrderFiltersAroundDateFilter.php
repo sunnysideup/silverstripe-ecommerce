@@ -2,9 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use ExactMatchFilter;
-use DataQuery;
-use Date;
+
+
+
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
+
 
 
 /**
@@ -32,7 +36,7 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
     {
         $value = $this->getValue();
 
-        $date = new Date();
+        $date = new DBDate();
         $date->setValue($value);
         $formattedDate = $date->format('Y-m-d');
 

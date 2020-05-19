@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+
 /**
  * Turkish (Turkey) language pack.
  */
@@ -13,8 +18,8 @@ if (array_key_exists('tr_TR', $lang) && is_array($lang['tr_TR'])) {
     $lang['tr_TR'] = $lang['en_US'];
 }
 
-$lang['tr_TR']['AccountPage']['Message'] = 'Hesap sayfasına ulaşabilmek icin oturum açmalısınız. Henüz kayıt olmadıysanız, ilk siparişinizi verene kadar erişemeyeceksiniz, kayıtlı iseniz, lütfen detaylarınızı aşagıya giriniz.';
-$lang['tr_TR']['AccountPage']['NOPAGE'] = 'Bu sitede herhangi bir AccountPage bulunamadı - lütfen oluşturunuz !';
+$lang['tr_TR'][AccountPage::class]['Message'] = 'Hesap sayfasına ulaşabilmek icin oturum açmalısınız. Henüz kayıt olmadıysanız, ilk siparişinizi verene kadar erişemeyeceksiniz, kayıtlı iseniz, lütfen detaylarınızı aşagıya giriniz.';
+$lang['tr_TR'][AccountPage::class]['NOPAGE'] = 'Bu sitede herhangi bir AccountPage bulunamadı - lütfen oluşturunuz !';
 $lang['tr_TR']['AccountPage.ss']['COMPLETED'] = 'Tamamlanan Siparişler';
 $lang['tr_TR']['AccountPage.ss']['HISTORY'] = 'Sipariş Geçmişiniz';
 $lang['tr_TR']['AccountPage.ss']['INCOMPLETE'] = 'Tamamlanmamış Siparişler';
@@ -49,7 +54,7 @@ $lang['tr_TR']['Cart.ss']['REMOVEONE'] = 'Sepetinizdeki %s lerden birini silin';
 $lang['tr_TR']['Cart.ss']['SHIPPING'] = 'Nakliye';
 $lang['tr_TR']['Cart.ss']['SUBTOTAL'] = 'Ara Toplam';
 $lang['tr_TR']['Cart.ss']['TOTAL'] = 'Toplam';
-$lang['tr_TR']['CheckoutPage']['NOPAGE'] = 'Bu sitede CheckoutPage sayfası bulunamıyor - lütfen bir adet oluşturun!';
+$lang['tr_TR'][CheckoutPage::class]['NOPAGE'] = 'Bu sitede CheckoutPage sayfası bulunamıyor - lütfen bir adet oluşturun!';
 $lang['tr_TR']['CheckoutPage.ss']['CHECKOUT'] = 'Ödeme';
 $lang['tr_TR']['CheckoutPage.ss']['ORDERSTEP'] = 'Sipariş Durumu';
 $lang['tr_TR']['CheckoutPage.ss']['PROCESS'] = 'İşlem';
@@ -71,8 +76,8 @@ $lang['tr_TR']['DataReport']['EXPORTCSV'] = 'CSV olarak dışa aktar';
 $lang['tr_TR']['FindOrderReport']['DATERANGE'] = 'Tarih Aralığı';
 $lang['tr_TR']['MemberForm']['DETAILSSAVED'] = 'Bilgileriniz kaydedildi';
 $lang['tr_TR']['MemberForm']['LOGGEDIN'] = 'Oturum açtınız, kullanıcı: ';
-$lang['tr_TR']['Order']['INCOMPLETE'] = 'Sipariş tamamlanmamış';
-$lang['tr_TR']['Order']['SUCCESSFULL'] = 'Sipariş Başarılı';
+$lang['tr_TR'][Order::class]['INCOMPLETE'] = 'Sipariş tamamlanmamış';
+$lang['tr_TR'][Order::class]['SUCCESSFULL'] = 'Sipariş Başarılı';
 $lang['tr_TR']['OrderInformation.ss']['ADDRESS'] = 'Adres';
 $lang['tr_TR']['OrderInformation.ss']['AMOUNT'] = 'Tutar';
 $lang['tr_TR']['OrderInformation.ss']['BUYERSADDRESS'] = 'Alıcının Adresi';

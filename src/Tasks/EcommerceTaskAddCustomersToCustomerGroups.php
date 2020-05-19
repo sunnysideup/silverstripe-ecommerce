@@ -2,10 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceRole;
-use DB;
-use Member;
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -46,7 +52,7 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
                         'ID' => $alreadyAdded,
                     ]
                 )
-                ->innerJoin('Order', '"Order"."MemberID" = "Member"."ID"');
+                ->innerJoin(Order::class, '"Order"."MemberID" = "Member"."ID"');
             //add combos
             if ($unlistedMembers->count()) {
                 $existingMembers = $customerGroup->Members();

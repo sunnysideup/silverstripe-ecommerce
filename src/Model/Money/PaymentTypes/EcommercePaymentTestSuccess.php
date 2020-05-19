@@ -2,9 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
-use EcommercePaymentSuccess;
-use FieldList;
-use LiteralField;
+
+
+
+use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\FieldList;
+
 
 
 

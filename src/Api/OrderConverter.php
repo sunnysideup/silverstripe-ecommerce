@@ -2,9 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use ViewableData;
+
 use Shoppingcart;
-use Order;
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\View\ViewableData;
+
 
 
 

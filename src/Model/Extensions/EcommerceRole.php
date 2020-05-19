@@ -2,34 +2,68 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
-use DataExtension;
-use PermissionProvider;
-use EcommerceConfig;
-use DataObject;
-use Config;
-use Member;
-use Order;
-use FieldList;
-use GridFieldConfig_RecordEditor;
-use GridField;
-use HiddenField;
-use LiteralField;
-use Controller;
-use Director;
-use EcommerceCurrency;
-use CompositeField;
-use ReadonlyField;
-use Group;
-use HeaderField;
-use EcommerceCMSButtonField;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 use CMSEditLinkAPI;
-use TextField;
-use EmailField;
-use Requirements;
-use PasswordField;
-use Convert;
-use Permission;
-use ArrayList;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Security\Group;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\View\Requirements;
+use SilverStripe\Forms\PasswordField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\PermissionProvider;
+
 
 /**
  * @description EcommerceRole provides specific customisations to the {@link Member}
@@ -92,12 +126,12 @@ class EcommerceRole extends DataExtension implements PermissionProvider
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'PreferredCurrency' => 'EcommerceCurrency',
+        'PreferredCurrency' => EcommerceCurrency::class,
     ];
 
     private static $has_many = [
-        'Orders' => 'Order',
-        'CancelledOrders' => 'Order',
+        'Orders' => Order::class,
+        'CancelledOrders' => Order::class,
     ];
 
     /**
@@ -105,10 +139,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      **/
     public static function get_customer_group()
     {
-        $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
+        $customerCode = EcommerceConfig::get(EcommerceRole::class, 'customer_group_code');
 
         return DataObject::get_one(
-            'Group',
+            Group::class,
             ['Code' => $customerCode]
         );
     }
@@ -135,7 +169,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         if ($group) {
             $members = $group->Members();
             $membersCount = $members->count();
-            if ($membersCount > 0 && $membersCount < Config::inst()->get('EcommerceRole', 'max_count_of_members_in_array')) {
+            if ($membersCount > 0 && $membersCount < Config::inst()->get(EcommerceRole::class, 'max_count_of_members_in_array')) {
                 foreach ($members as $member) {
                     if ($member->Email) {
                         $array[$member->ID] = $member->Email . ' (' . $member->getTitle() . ')';
@@ -182,7 +216,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             }
         }
         $group = DataObject::get_one(
-            'Group',
+            Group::class,
             ['Code' => 'administrators']
         );
         //fill array
@@ -265,10 +299,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      **/
     public static function get_admin_group()
     {
-        $adminCode = EcommerceConfig::get('EcommerceRole', 'admin_group_code');
+        $adminCode = EcommerceConfig::get(EcommerceRole::class, 'admin_group_code');
 
         return DataObject::get_one(
-            'Group',
+            Group::class,
             ['Code' => $adminCode]
         );
     }
@@ -278,10 +312,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      **/
     public static function get_assistant_group()
     {
-        $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');
+        $assistantCode = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code');
 
         return DataObject::get_one(
-            'Group',
+            Group::class,
             ['Code' => $assistantCode]
         );
     }
@@ -352,8 +386,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function providePermissions()
     {
-        $category = EcommerceConfig::get('EcommerceRole', 'permission_category');
-        $perms[EcommerceConfig::get('EcommerceRole', 'customer_permission_code')] = [
+        $category = EcommerceConfig::get(EcommerceRole::class, 'permission_category');
+        $perms[EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code')] = [
             'name' => _t(
                 'EcommerceRole.CUSTOMER_PERMISSION_ANME',
                 'Customers'
@@ -365,8 +399,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             ),
             'sort' => 98,
         ];
-        $perms[EcommerceConfig::get('EcommerceRole', 'admin_permission_code')] = [
-            'name' => EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
+        $perms[EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code')] = [
+            'name' => EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'),
             'category' => $category,
             'help' => _t(
                 'EcommerceRole.ADMINISTRATORS_HELP',
@@ -374,8 +408,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             ),
             'sort' => 99,
         ];
-        $perms[EcommerceConfig::get('EcommerceRole', 'assistant_permission_code')] = [
-            'name' => EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
+        $perms[EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code')] = [
+            'name' => EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'),
             'category' => $category,
             'help' => _t(
                 'EcommerceRole.STORE_ASSISTANTS_HELP',
@@ -383,7 +417,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             ),
             'sort' => 100,
         ];
-        $perms[EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code')] = [
+        $perms[EcommerceConfig::get(EcommerceRole::class, 'process_orders_permission_code')] = [
             'name' => _t(
                 'EcommerceRole.PROCESS_ORDERS_PERMISSION_NAME',
                 'Can process orders'
@@ -411,8 +445,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $orderField = $fields->dataFieldByName('Orders');
         if ($orderField) {
             $config = GridFieldConfig_RecordEditor::create();
-            $config->removeComponentsByType('GridFieldDeleteAction');
-            $config->removeComponentsByType('GridFieldAddNewButton');
+            $config->removeComponentsByType(GridFieldDeleteAction::class);
+            $config->removeComponentsByType(GridFieldAddNewButton::class);
             if ($orderField instanceof GridField) {
                 $orderField->setConfig($config);
                 $orderField->setList($this->getOrders());
@@ -428,7 +462,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
         $link = Controller::join_links(
             Director::baseURL(),
-            Config::inst()->get('ShoppingCartController', 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
+            Config::inst()->get(ShoppingCartController::class, 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
         );
         $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"${link}\" target=\"_blank\">Place order for customer</a></p>");
         $fields->addFieldsToTab(
@@ -471,7 +505,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $memberTitle = new ReadonlyField('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . _t('Member.TITLE', 'Name') . ': ' . $this->owner->getTitle() . '</p>');
         $memberTitle->dontEscape = true;
         $fields->push($memberTitle);
-        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>' . _t('Member.EMAIL', 'Email') . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
+        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', Email::class), '<p>' . _t('Member.EMAIL', Email::class) . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
         $memberEmail->dontEscape = true;
         $fields->push($memberEmail);
         $lastLogin = new ReadonlyField('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . _t('Member.LASTLOGIN', 'Last Login') . ': ' . $this->owner->dbObject('LastVisited')->Nice() . '</p>');
@@ -508,7 +542,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function getEcommerceFields($mustCreateAccount = false)
     {
-        if (! EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
+        if (! EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
             //if no accounts are made then we simply return the basics....
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
@@ -522,7 +556,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
   * EXP: make sure that this does not end up as Email::class
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
+                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class))
             );
         } else {
             Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPasswordField.js');
@@ -546,7 +580,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 );
             } else {
                 //login invite right on the top
-                if (EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase') || $mustCreateAccount) {
+                if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') || $mustCreateAccount) {
                     $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 3);
                     //dont allow people to purchase without creating a password
                     $loginDetailsDescription = new LiteralField(
@@ -588,7 +622,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
   * EXP: make sure that this does not end up as Email::class
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email')),
+                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class)),
                 $loginDetailsHeader,
                 $loginDetailsDescription,
                 $updatePasswordLinkField,
@@ -612,9 +646,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $fields = [
             'FirstName',
             'Surname',
-            'Email',
+            Email::class,
         ];
-        if (EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
+        if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
             $passwordFieldIsRequired = true;
             if ($this->owner->exists()) {
                 if ($this->owner->Password) {
@@ -643,7 +677,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         if (Permission::checkMember($this->owner, 'ADMIN')) {
             return true;
         }
-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'admin_permission_code'));
+        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'));
     }
 
     /**
@@ -657,7 +691,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             return true;
         }
 
-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));
+        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'));
     }
 
     /**
@@ -671,7 +705,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             return true;
         }
 
-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code'));
+        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'process_orders_permission_code'));
     }
 
     /**
@@ -717,7 +751,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @return ArrayList (BillingAddresses | ShippingAddresses)
      **/
-    public function previousOrderAddresses($type = 'BillingAddress', $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
+    public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
     {
         $returnArrayList = new ArrayList();
         if ($this->owner->exists()) {
@@ -733,7 +767,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 ->sort('LastEdited', 'DESC')
                 ->exclude(['ID' => $excludeID])
                 ->limit($limit)
-                ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
+                ->innerJoin(Order::class, '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
             if ($addresses->count()) {
                 if ($keepDoubles) {
                     foreach ($addresses as $address) {
@@ -763,7 +797,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * @param string $type
      * @param int    $excludeID - the ID of the record to exlcude (if any)
      **/
-    public function previousOrderAddress($type = 'BillingAddress', $excludeID = 0)
+    public function previousOrderAddress($type = BillingAddress::class, $excludeID = 0)
     {
         $addresses = $this->previousOrderAddresses($type, $excludeID, true, false);
         if ($addresses->count()) {
@@ -775,7 +809,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         return Controller::join_links(
             Director::baseURL(),
-            Config::inst()->get('ShoppingCartController', 'url_segment') .
+            Config::inst()->get(ShoppingCartController::class, 'url_segment') .
             '/loginas/' . $this->owner->ID . '/'
         );
     }

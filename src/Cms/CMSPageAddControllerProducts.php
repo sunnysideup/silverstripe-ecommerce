@@ -2,9 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use CMSPageAddController;
-use ArrayList;
-use ClassInfo;
+
+
+
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
+use SilverStripe\ORM\ArrayList;
+use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\CMS\Controllers\CMSPageAddController;
+
 
 
 
@@ -31,11 +39,11 @@ class CMSPageAddControllerProducts extends CMSPageAddController
      *
      * @var string
      */
-    private static $root_parent_class_for_adding_page = 'ProductGroupSearchPage';
+    private static $root_parent_class_for_adding_page = ProductGroupSearchPage::class;
 
     public function doCancel($data, $form)
     {
-        return $this->redirect(singleton('ProductsAndGroupsModelAdmin')->Link());
+        return $this->redirect(singleton(ProductsAndGroupsModelAdmin::class)->Link());
     }
 
     /**
@@ -54,7 +62,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Product');
+        $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class);
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -64,7 +72,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup');
+        $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class);
 
         $acceptedClasses1 = ClassInfo::subclassesFor($productClass);
         $acceptedClasses1[$productClass] = $productClass;

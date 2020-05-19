@@ -2,24 +2,49 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Form;
-use Controller;
-use Requirements;
-use EcommerceConfig;
-use FieldList;
-use HeaderField;
-use ShoppingCart;
-use Member;
-use CheckboxField;
-use HiddenField;
-use CompositeField;
-use LiteralField;
-use Convert;
-use FormAction;
-use OrderFormAddressValidator;
-use SS_HTTPRequest;
-use CheckoutPage;
-use ShopAccountFormPasswordValidator;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Control\Controller;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\HiddenField;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use SilverStripe\Forms\CompositeField;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FormAction;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
+use SilverStripe\Forms\Form;
+use SilverStripe\Control\HTTPRequest;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
+
 
 
 /**
@@ -85,7 +110,7 @@ class OrderFormAddress extends Form
 
         //requirements
         Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
+        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
             Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         }
 
@@ -96,7 +121,7 @@ class OrderFormAddress extends Form
         $addressFieldsBilling = FieldList::create();
         $addressFieldsShipping = null;
         $useShippingAddressField = null;
-        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
+        $shippingAddressFirst = EcommerceConfig::get(OrderFormAddress::class, 'shipping_address_first');
 
         $addressFieldsMember->push(
             HeaderField::create(
@@ -127,7 +152,7 @@ class OrderFormAddress extends Form
         }
 
         //billing address field
-        $billingAddress = $this->order->CreateOrReturnExistingAddress('BillingAddress');
+        $billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
         $billingAddressFields = $billingAddress->getFields($this->orderMember);
         $addressFieldsBilling->merge($billingAddressFields);
 
@@ -138,14 +163,14 @@ class OrderFormAddress extends Form
             if ($addressFieldsBilling) {
                 if ($phoneField = $addressFieldsBilling->dataFieldByName('Phone')) {
                     $addressFieldsBilling->removeByName('Phone');
-                    $addressFieldsMember->insertAfter('Email', $phoneField);
+                    $addressFieldsMember->insertAfter(Email::class, $phoneField);
                 }
             }
         }
 
         //shipping address field
 
-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
+        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
             //add the important CHECKBOX
             $useShippingAddressField = FieldList::create(
                 HeaderField::create(
@@ -180,7 +205,7 @@ class OrderFormAddress extends Form
 
             //$addressFieldsShipping->merge($useShippingAddressField);
             //now we can add the shipping fields
-            $shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress');
+            $shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class);
             $shippingAddressFields = $shippingAddress->getFields($this->orderMember);
             $requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
             $addressFieldsShipping->merge($shippingAddressFields);
@@ -226,7 +251,7 @@ class OrderFormAddress extends Form
         $rightFields = CompositeField::create();
         $rightFields->addExtraClass('rightOrder');
         //to do: simplify
-        if (EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
+        if (EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
             if ($this->orderDoesNotHaveFullyOperationalMember()) {
                 //general header
                 if (! $this->loggedInMember) {
@@ -314,7 +339,7 @@ class OrderFormAddress extends Form
             if ($billingAddress) {
                 $this->loadDataFrom($billingAddress);
             }
-            if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
+            if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
                 if ($shippingAddress) {
                     $this->loadDataFrom($shippingAddress);
                 }
@@ -351,7 +376,7 @@ class OrderFormAddress extends Form
      * @param Form        $form    Form object for this action
      * @param HTTPRequest $request Request object for this action
      */
-    public function saveAddress(array $data, Form $form, SS_HTTPRequest $request)
+    public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
         $this->saveAddressDetails($data, $form, $request);
 
@@ -373,7 +398,7 @@ class OrderFormAddress extends Form
      * @param Form        $form    Form object for this action
      * @param HTTPRequest $request Request object for this action
      */
-    public function saveAddressDetails(array $data, Form $form, SS_HTTPRequest $request)
+    public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
 
 /**
@@ -450,7 +475,7 @@ class OrderFormAddress extends Form
         }
 
         //BILLING ADDRESS
-        if ($billingAddress = $this->order->CreateOrReturnExistingAddress('BillingAddress')) {
+        if ($billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class)) {
             $form->saveInto($billingAddress);
             // NOTE: write should return the new ID of the object
             $this->order->BillingAddressID = $billingAddress->write();
@@ -459,7 +484,7 @@ class OrderFormAddress extends Form
         // SHIPPING ADDRESS
         if (isset($data['UseShippingAddress'])) {
             if ($data['UseShippingAddress']) {
-                if ($shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress')) {
+                if ($shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class)) {
                     $form->saveInto($shippingAddress);
                     // NOTE: write should return the new ID of the object
                     $this->order->ShippingAddressID = $shippingAddress->write();
@@ -752,12 +777,12 @@ class OrderFormAddress extends Form
         // AND do not match someone else...
         $updateableMember = $this->loggedInMember &&
             ! $this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
-            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details') ? true : false;
+            EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details') ? true : false;
 
         // logged in member is shop admin and members are updateable...
         $memberIsShopAdmin = $this->loggedInMember &&
             $this->loggedInMember->IsShopAdmin() &&
-            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details') ? true : false;
+            EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details') ? true : false;
         if ($newMember || $updateableMember || $memberIsShopAdmin) {
             return true;
         }

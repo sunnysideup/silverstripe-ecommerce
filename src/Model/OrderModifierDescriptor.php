@@ -2,18 +2,34 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use ReadonlyField;
-use TreeDropdownField;
-use TextareaField;
+
+
+
+
+
+
+
+
 use CMSEditLinkAPI;
-use EcommerceConfig;
-use Injector;
-use DB;
+
+
+
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\Forms\TextareaField;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 
@@ -68,7 +84,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Link' => 'SiteTree',
+        'Link' => SiteTree::class,
     ];
 
     /**
@@ -171,7 +187,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -199,7 +215,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     {
         $fields = parent::getCMSFields();
         $fields->replaceField('ModifierClassName', new ReadonlyField('RealName', 'Name'));
-        $fields->replaceField('LinkID', new TreeDropdownField('LinkID', 'More info link (optional)', 'SiteTree'));
+        $fields->replaceField('LinkID', new TreeDropdownField('LinkID', 'More info link (optional)', SiteTree::class));
         $fields->replaceField('Description', new TextareaField('Description', 'Description'));
 
         return $fields;
@@ -256,7 +272,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $arrayOfModifiers = EcommerceConfig::get('Order', 'modifiers');
+        $arrayOfModifiers = EcommerceConfig::get(Order::class, 'modifiers');
         if (! is_array($arrayOfModifiers)) {
             $arrayOfModifiers = [];
         }
@@ -272,7 +288,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
   */
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
-                    'OrderModifierDescriptor',
+                    OrderModifierDescriptor::class,
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###

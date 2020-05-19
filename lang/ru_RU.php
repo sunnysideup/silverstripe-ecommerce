@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Russian (Russia) language pack.
  */
@@ -13,8 +19,8 @@ if (array_key_exists('ru_RU', $lang) && is_array($lang['ru_RU'])) {
     $lang['ru_RU'] = $lang['en_US'];
 }
 
-$lang['ru_RU']['AccountPage']['Message'] = 'Вы должны авторизоваться до того, как получите доступ к странице счета. Если вы не зарегистрированы, то сможете зайти на нее только после того, как сделаете ваш первый заказ. Если зарегистрированы, введите ваши данные ниже.';
-$lang['ru_RU']['AccountPage']['NOPAGE'] = 'На этом сайте нет страницы счета - пожалуйста, создайте ее!';
+$lang['ru_RU'][AccountPage::class]['Message'] = 'Вы должны авторизоваться до того, как получите доступ к странице счета. Если вы не зарегистрированы, то сможете зайти на нее только после того, как сделаете ваш первый заказ. Если зарегистрированы, введите ваши данные ниже.';
+$lang['ru_RU'][AccountPage::class]['NOPAGE'] = 'На этом сайте нет страницы счета - пожалуйста, создайте ее!';
 $lang['ru_RU']['AccountPage.ss']['COMPLETED'] = 'Выполненные заказы';
 $lang['ru_RU']['AccountPage.ss']['HISTORY'] = 'История ваших заказов';
 $lang['ru_RU']['AccountPage.ss']['INCOMPLETE'] = 'Невыполненные заказы';
@@ -49,7 +55,7 @@ $lang['ru_RU']['Cart.ss']['REMOVEONE'] = 'Удалить одно наимено
 $lang['ru_RU']['Cart.ss']['SHIPPING'] = 'Доставка';
 $lang['ru_RU']['Cart.ss']['SUBTOTAL'] = 'Промежуточная сумма';
 $lang['ru_RU']['Cart.ss']['TOTAL'] = 'Итого';
-$lang['ru_RU']['CheckoutPage']['NOPAGE'] = 'На сайте нет страницы подсчета стоимости. Пожалуйста, создайте ее!';
+$lang['ru_RU'][CheckoutPage::class]['NOPAGE'] = 'На сайте нет страницы подсчета стоимости. Пожалуйста, создайте ее!';
 $lang['ru_RU']['CheckoutPage.ss']['CHECKOUT'] = 'Расчет стоимости';
 $lang['ru_RU']['CheckoutPage.ss']['ORDERSTEP'] = 'Статус заказа';
 $lang['ru_RU']['CheckoutPage.ss']['PROCESS'] = 'Оформить';
@@ -71,8 +77,8 @@ $lang['ru_RU']['DataReport']['EXPORTCSV'] = 'Экспорт в CSV';
 $lang['ru_RU']['FindOrderReport']['DATERANGE'] = 'Диапазон дат';
 $lang['ru_RU']['MemberForm']['DETAILSSAVED'] = 'Выши данные сохранены';
 $lang['ru_RU']['MemberForm']['LOGGEDIN'] = 'Вы вошли в систему как';
-$lang['ru_RU']['Order']['INCOMPLETE'] = 'Заказ незавершен';
-$lang['ru_RU']['Order']['SUCCESSFULL'] = 'Заказ успешен';
+$lang['ru_RU'][Order::class]['INCOMPLETE'] = 'Заказ незавершен';
+$lang['ru_RU'][Order::class]['SUCCESSFULL'] = 'Заказ успешен';
 $lang['ru_RU']['OrderInformation.ss']['ADDRESS'] = 'Адрес';
 $lang['ru_RU']['OrderInformation.ss']['AMOUNT'] = 'Сумма';
 $lang['ru_RU']['OrderInformation.ss']['BUYERSADDRESS'] = 'Адрес покупателя';
@@ -154,7 +160,7 @@ $lang['ru_RU']['Order_Content.ss']['TOTALPRICE'] = 'Итог';
 $lang['ru_RU']['Order_Member.ss']['ADDRESS'] = 'Адрес';
 $lang['ru_RU']['Order_Member.ss']['CITY'] = 'Город';
 $lang['ru_RU']['Order_Member.ss']['COUNTRY'] = 'Страна';
-$lang['ru_RU']['Order_Member.ss']['EMAIL'] = 'Email';
+$lang['ru_RU']['Order_Member.ss']['EMAIL'] = Email::class;
 $lang['ru_RU']['Order_Member.ss']['MOBILE'] = 'Моб. тел.';
 $lang['ru_RU']['Order_Member.ss']['NAME'] = 'Имя';
 $lang['ru_RU']['Order_Member.ss']['PHONE'] = 'Тел.';

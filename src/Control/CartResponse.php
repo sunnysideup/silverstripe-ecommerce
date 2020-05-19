@@ -2,11 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Config;
-use ShoppingCart;
-use EcommerceConfig;
-use DBField;
-use Director;
+
+
+
+
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Control\CartResponse;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Control\Director;
+
 
 
 /**
@@ -69,7 +77,7 @@ class CartResponse extends EcommerceResponse
             $this->addHeader('Content-Type', 'application/json');
         }
 
-        Config::modify()->update('SSViewer', 'source_file_comments', false);
+        Config::modify()->update(SSViewer::class, 'source_file_comments', false);
         //merge messages
         $messagesImploded = '';
         if (is_array($messages) && count($messages)) {
@@ -165,7 +173,7 @@ class CartResponse extends EcommerceResponse
         }
 
         //TO DO: set it up in such a way that it specifically requests one of these
-        $templates = EcommerceConfig::get('CartResponse', 'cart_responses_required');
+        $templates = EcommerceConfig::get(CartResponse::class, 'cart_responses_required');
         foreach ($templates as $idMethod => $template) {
             $selector = $ajaxObject->{$idMethod}();
             $classOrID = 'id';

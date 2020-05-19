@@ -2,8 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use ViewableData;
-use DataObject;
+
+
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ViewableData;
+
 
 
 
@@ -22,7 +26,7 @@ class EcommerceRegionVisitorRegionProvider extends ViewableData
      */
     public function getRegion()
     {
-        $region = DataObject::get_one('EcommerceRegion');
+        $region = DataObject::get_one(EcommerceRegion::class);
         if ($region) {
             return $region->ID;
         }

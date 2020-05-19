@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+
 /**
  * Arabic (Saudi Arabia) language pack.
  */
@@ -13,8 +18,8 @@ if (array_key_exists('ar_SA', $lang) && is_array($lang['ar_SA'])) {
     $lang['ar_SA'] = $lang['en_US'];
 }
 
-$lang['ar_SA']['AccountPage']['Message'] = 'يجب عليك التسجيل قبل الدخول لصفحة الحساب, وإذا لم تكن مسجلاً من قبل فلا يمكنك الدخولحتى ترسل طلبك الأول ,, إذا كنت تغرب في التسجيل فملأ المطلوب بالأسفل';
-$lang['ar_SA']['AccountPage']['NOPAGE'] = 'لايوجد صفحة حساب لهذا الموقع .. فضلاً أنشئ صفحة حساب جديدة';
+$lang['ar_SA'][AccountPage::class]['Message'] = 'يجب عليك التسجيل قبل الدخول لصفحة الحساب, وإذا لم تكن مسجلاً من قبل فلا يمكنك الدخولحتى ترسل طلبك الأول ,, إذا كنت تغرب في التسجيل فملأ المطلوب بالأسفل';
+$lang['ar_SA'][AccountPage::class]['NOPAGE'] = 'لايوجد صفحة حساب لهذا الموقع .. فضلاً أنشئ صفحة حساب جديدة';
 $lang['ar_SA']['AccountPage.ss']['COMPLETED'] = 'الطلبات المكتملة';
 $lang['ar_SA']['AccountPage.ss']['HISTORY'] = 'تاريخ الطلب';
 $lang['ar_SA']['AccountPage.ss']['INCOMPLETE'] = 'الطلبات غير المكتملة';
@@ -49,7 +54,7 @@ $lang['ar_SA']['Cart.ss']['REMOVEONE'] = 'حذف أحد &quot;%s&quot; من عر
 $lang['ar_SA']['Cart.ss']['SHIPPING'] = 'التسوق';
 $lang['ar_SA']['Cart.ss']['SUBTOTAL'] = 'المجموع';
 $lang['ar_SA']['Cart.ss']['TOTAL'] = 'المجموع';
-$lang['ar_SA']['CheckoutPage']['NOPAGE'] = 'لايجد صفحة خروج لهذا الموقع - فضلاً قم بإنشاء صفحة خروج';
+$lang['ar_SA'][CheckoutPage::class]['NOPAGE'] = 'لايجد صفحة خروج لهذا الموقع - فضلاً قم بإنشاء صفحة خروج';
 $lang['ar_SA']['CheckoutPage.ss']['CHECKOUT'] = 'الخروج';
 $lang['ar_SA']['CheckoutPage.ss']['ORDERSTEP'] = 'حالة الطلب';
 $lang['ar_SA']['CheckoutPage.ss']['PROCESS'] = 'العملية';
@@ -71,8 +76,8 @@ $lang['ar_SA']['DataReport']['EXPORTCSV'] = 'تصدير إلى CSV';
 $lang['ar_SA']['FindOrderReport']['DATERANGE'] = 'الفترة';
 $lang['ar_SA']['MemberForm']['DETAILSSAVED'] = 'تم حفظ التفاصيل';
 $lang['ar_SA']['MemberForm']['LOGGEDIN'] = 'حالياً أنت مسجل كـ';
-$lang['ar_SA']['Order']['INCOMPLETE'] = 'الطلب غير مكتمل';
-$lang['ar_SA']['Order']['SUCCESSFULL'] = 'تم الطلب بنجاح';
+$lang['ar_SA'][Order::class]['INCOMPLETE'] = 'الطلب غير مكتمل';
+$lang['ar_SA'][Order::class]['SUCCESSFULL'] = 'تم الطلب بنجاح';
 $lang['ar_SA']['OrderInformation.ss']['ADDRESS'] = 'العنوان';
 $lang['ar_SA']['OrderInformation.ss']['AMOUNT'] = 'المبلغ';
 $lang['ar_SA']['OrderInformation.ss']['BUYERSADDRESS'] = 'عنوان المشتري';

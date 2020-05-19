@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-use OrderStatusLog;
-use Member;
+
+
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+
 
 
 

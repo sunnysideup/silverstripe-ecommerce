@@ -2,23 +2,38 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Page_Controller;
-use EcommerceConfig;
-use Session;
-use HTTP;
-use Order;
-use Convert;
-use ShoppingCart;
-use Security;
-use SS_HTTPRequest;
-use Member;
-use DBField;
-use ShopAccountForm;
-use ArrayList;
-use ArrayData;
 
 
-class CartPageController extends Page_Controller
+
+
+
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\HTTP;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Security\Security;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Security\Member;
+use SilverStripe\ORM\FieldType\DBField;
+use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use PageController;
+
+
+
+class CartPageController extends PageController
 {
     /**
      * This ArraList holds DataObjects with a Link and Title each....
@@ -189,7 +204,7 @@ class CartPageController extends Page_Controller
      * @param SS_HTTPRequest $request
      * @return array just so that template shows
      **/
-    public function showorder(SS_HTTPRequest $request)
+    public function showorder(HTTPRequest $request)
     {
         if (! $this->currentOrder) {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
@@ -215,7 +230,7 @@ class CartPageController extends Page_Controller
      * @param SS_HTTPRequest $request
      * @return array just so that template shows
      **/
-    public function share(SS_HTTPRequest $request)
+    public function share(HTTPRequest $request)
     {
         $codes = Convert::raw2sql($request->param('ID'));
         if (! $request->getVar('ready') && ! $request->getVar('done')) {
@@ -267,7 +282,7 @@ class CartPageController extends Page_Controller
      *
      * @return array
      */
-    public function loadorder(SS_HTTPRequest $request)
+    public function loadorder(HTTPRequest $request)
     {
         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
         ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
@@ -284,7 +299,7 @@ class CartPageController extends Page_Controller
      * @return array
      *               TO DO: untested
      */
-    public function saveorder(SS_HTTPRequest $request)
+    public function saveorder(HTTPRequest $request)
     {
         $member = Member::currentUser();
         if (! $member) {
@@ -312,7 +327,7 @@ class CartPageController extends Page_Controller
      *
      * @return array
      */
-    public function deleteorder(SS_HTTPRequest $request)
+    public function deleteorder(HTTPRequest $request)
     {
         if (! $this->CurrentOrderIsInCart()) {
             if ($this->currentOrder->canDelete()) {
@@ -333,7 +348,7 @@ class CartPageController extends Page_Controller
      * @return array
      *               TO DO: untested
      */
-    public function startneworder(SS_HTTPRequest $request)
+    public function startneworder(HTTPRequest $request)
     {
         ShoppingCart::singleton()->clear();
         self::set_message(_t('CartPage.NEWORDERSTARTED', 'New order has been started.'));

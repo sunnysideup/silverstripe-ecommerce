@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
-use TaskRunner;
-use Director;
-use Controller;
-use ArrayList;
-use ArrayData;
-use BuildTask;
-use DB;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCleanupProducts;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\TaskRunner;
+
 
 
 
@@ -84,7 +94,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         'ecommercetaskprocessorderqueue',
         'ecommercetaskarchiveallsubmittedorders',
         'ecommercetasklinkorderaddressesatbothends',
-        'EcommerceTaskCleanupProducts',
+        EcommerceTaskCleanupProducts::class,
     ];
 
     //##############################
@@ -190,7 +200,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      */
     public function OverallConfig()
     {
-        return $this->createMenuDOSFromArray($this->overallconfig, $type = 'Config');
+        return $this->createMenuDOSFromArray($this->overallconfig, $type = Config::class);
     }
 
     /**
@@ -285,7 +295,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         $renderer->writeHeader();
         $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
         $renderer->writePreOutcome();
-        if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
+        if (class_exists($taskName) && is_subclass_of($taskName, BuildTask::class)) {
             $title = singleton($taskName)->getTitle();
             if (Director::is_cli()) {
                 echo "Running task '${title}'...\n\n";

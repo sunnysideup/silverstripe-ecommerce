@@ -2,11 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use RequiredFields;
-use Member;
-use Convert;
-use EcommerceConfig;
-use Config;
+
+
+
+
+
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
+use SilverStripe\Forms\RequiredFields;
+
 
 
 
@@ -77,7 +85,7 @@ class ShopAccountFormValidator extends RequiredFields
             }
             //if you are not logged in, you have not provided a password and the settings require you to be logged in then
             //we have a problem
-            if (! $loggedInMember && ! $data['PasswordCheck1'] && EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
+            if (! $loggedInMember && ! $data['PasswordCheck1'] && EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
                 $this->validationError(
                     'PasswordCheck1',
                     _t('Account.SELECTPASSWORD', 'Please select a password.'),
@@ -86,7 +94,7 @@ class ShopAccountFormValidator extends RequiredFields
                 $valid = false;
             }
             $letterCount = strlen($data['PasswordCheck1']);
-            $minLength = Config::inst()->get('ShopAccountFormValidator', 'minimum_password_length');
+            $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
             if ($letterCount > 0 && $letterCount < $minLength) {
                 $this->validationError(
                     'PasswordCheck1',

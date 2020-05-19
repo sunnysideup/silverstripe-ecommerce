@@ -2,8 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SS_Report;
-use SiteTree;
+
+
+use SilverStripe\CMS\Model\SiteTree;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Reports\Report;
+
 
 /**
  * EcommerceSideReport classes are to allow quick reports that can be accessed
@@ -20,13 +30,13 @@ use SiteTree;
  * @sub-package: reports
 
  **/
-class EcommerceSideReportEcommercePages extends SS_Report
+class EcommerceSideReportEcommercePages extends Report
 {
     /**
      * The class of object being managed by this report.
      * Set by overriding in your subclass.
      */
-    protected $dataClass = 'SiteTree';
+    protected $dataClass = SiteTree::class;
 
     private static $additional_classnames = [];
 
@@ -64,7 +74,7 @@ class EcommerceSideReportEcommercePages extends SS_Report
      */
     public function sourceRecords($params = null)
     {
-        return SiteTree::get()->filter('ClassName', ['CartPage', 'AccountPage', 'ProductGroupSearchPage', 'CheckoutPage', 'OrderConfirmationPage'] + (array) $this->Config()->get('additional_classnames'));
+        return SiteTree::get()->filter('ClassName', [CartPage::class, AccountPage::class, ProductGroupSearchPage::class, CheckoutPage::class, OrderConfirmationPage::class] + (array) $this->Config()->get('additional_classnames'));
     }
 
     /**
@@ -74,7 +84,7 @@ class EcommerceSideReportEcommercePages extends SS_Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
                 'link' => true,
             ],
         ];
@@ -84,7 +94,7 @@ class EcommerceSideReportEcommercePages extends SS_Report
     {
         $field = parent::getReportField();
         $config = $field->getConfig();
-        $exportButton = $config->getComponentByType('GridFieldExportButton');
+        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
         $exportButton->setExportColumns($field->getColumns());
 
         return $field;

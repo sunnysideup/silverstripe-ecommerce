@@ -2,10 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Injector;
+
+
 use db;
-use EcommerceConfig;
+
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -28,10 +33,10 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         $permissionProviderFactory = Injector::inst()->get('PermissionProviderFactory');
         db::alteration_message('========================== <br />creating customer group', 'created');
         $permissionProviderFactory->CreateGroup(
-            $code = EcommerceConfig::get('EcommerceRole', 'customer_group_code'),
-            $name = EcommerceConfig::get('EcommerceRole', 'customer_group_name'),
+            $code = EcommerceConfig::get(EcommerceRole::class, 'customer_group_code'),
+            $name = EcommerceConfig::get(EcommerceRole::class, 'customer_group_name'),
             $parentGroup = null,
-            $permissionCode = EcommerceConfig::get('EcommerceRole', 'customer_permission_code'),
+            $permissionCode = EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code'),
             $roleTitle = '',
             $permissionArray = [],
             $member = null
@@ -39,15 +44,15 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
 
         db::alteration_message('========================== <br />creating sales manager', 'created');
         //work out email
-        $email = EcommerceConfig::get('EcommerceRole', 'admin_group_user_email');
+        $email = EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email');
         if (! $email) {
             $email = 'websales@' . $_SERVER['HTTP_HOST'];
         }
-        $firstName = EcommerceConfig::get('EcommerceRole', 'admin_group_user_first_name');
+        $firstName = EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name');
         if (! $firstName) {
             $firstName = 'Web';
         }
-        $surname = EcommerceConfig::get('EcommerceRole', 'admin_group_user_surname');
+        $surname = EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname');
         if (! $surname) {
             $surname = 'Sales';
         }
@@ -60,25 +65,25 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         db::alteration_message('================================<br />creating shop admin group ', 'created');
 
         $permissionProviderFactory->CreateGroup(
-            $code = EcommerceConfig::get('EcommerceRole', 'admin_group_code'),
-            $name = EcommerceConfig::get('EcommerceRole', 'admin_group_name'),
+            $code = EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'),
+            $name = EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'),
             $parentGroup = null,
-            $permissionCode = EcommerceConfig::get('EcommerceRole', 'admin_permission_code'),
-            $roleTitle = EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
-            $permissionArray = EcommerceConfig::get('EcommerceRole', 'admin_role_permission_codes'),
+            $permissionCode = EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'),
+            $roleTitle = EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'),
+            $permissionArray = EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'),
             $member
         );
 
         //work out email
-        $email = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_email');
+        $email = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_user_email');
         if (! $email) {
             $email = 'assistant@' . $_SERVER['HTTP_HOST'];
         }
-        $firstName = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_first_name');
+        $firstName = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_user_first_name');
         if (! $firstName) {
             $firstName = 'Web';
         }
-        $surname = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_surname');
+        $surname = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_user_surname');
         if (! $surname) {
             $surname = 'Asssistant';
         }
@@ -91,12 +96,12 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         db::alteration_message('================================<br />creating shop assistant group ', 'created');
 
         $permissionProviderFactory->CreateGroup(
-            $code = EcommerceConfig::get('EcommerceRole', 'assistant_group_code'),
-            $name = EcommerceConfig::get('EcommerceRole', 'assistant_group_name'),
+            $code = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code'),
+            $name = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_name'),
             $parentGroup = null,
-            $permissionCode = EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'),
-            $roleTitle = EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
-            $permissionArray = EcommerceConfig::get('EcommerceRole', 'assistant_role_permission_codes'),
+            $permissionCode = EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'),
+            $roleTitle = EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'),
+            $permissionArray = EcommerceConfig::get(EcommerceRole::class, 'assistant_role_permission_codes'),
             $member
         );
     }

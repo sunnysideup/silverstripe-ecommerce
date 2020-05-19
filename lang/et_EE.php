@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+
 /**
  * Estonian (Estonia) language pack.
  */
@@ -13,8 +18,8 @@ if (array_key_exists('et_EE', $lang) && is_array($lang['et_EE'])) {
     $lang['et_EE'] = $lang['en_US'];
 }
 
-$lang['et_EE']['AccountPage']['Message'] = 'Te peate sisse logima, enne kui saate tutvuda konto lehega. Kui olete siin esimest korda sisestage andmed allool';
-$lang['et_EE']['AccountPage']['NOPAGE'] = 'Kontolehte pole - loo kontoleht';
+$lang['et_EE'][AccountPage::class]['Message'] = 'Te peate sisse logima, enne kui saate tutvuda konto lehega. Kui olete siin esimest korda sisestage andmed allool';
+$lang['et_EE'][AccountPage::class]['NOPAGE'] = 'Kontolehte pole - loo kontoleht';
 $lang['et_EE']['AccountPage.ss']['COMPLETED'] = 'Lõpetatud tellimused';
 $lang['et_EE']['AccountPage.ss']['HISTORY'] = 'Tellimuste ajalugu';
 $lang['et_EE']['AccountPage.ss']['INCOMPLETE'] = 'Lõpetamata tellimused';
@@ -49,7 +54,7 @@ $lang['et_EE']['Cart.ss']['REMOVEONE'] = 'Eemalda üks &quot;%s&quot; ostukorvis
 $lang['et_EE']['Cart.ss']['SHIPPING'] = 'Transport';
 $lang['et_EE']['Cart.ss']['SUBTOTAL'] = 'Vahesumma';
 $lang['et_EE']['Cart.ss']['TOTAL'] = 'Kokku';
-$lang['et_EE']['CheckoutPage']['NOPAGE'] = 'Ostukorv Puudub - loo ostukorv';
+$lang['et_EE'][CheckoutPage::class]['NOPAGE'] = 'Ostukorv Puudub - loo ostukorv';
 $lang['et_EE']['CheckoutPage.ss']['CHECKOUT'] = 'Ostukorv';
 $lang['et_EE']['CheckoutPage.ss']['ORDERSTEP'] = 'Tellimuse staatus';
 $lang['et_EE']['CheckoutPage.ss']['PROCESS'] = 'Asukoht';
@@ -72,8 +77,8 @@ $lang['et_EE']['DataReport']['EXPORTCSV'] = 'Ekspordi CSV-na';
 $lang['et_EE']['FindOrderReport']['DATERANGE'] = 'Kuupäevade vahe';
 $lang['et_EE']['MemberForm']['DETAILSSAVED'] = 'Sinu andmed on salvestatud';
 $lang['et_EE']['MemberForm']['LOGGEDIN'] = 'Oled siselogitud nimega';
-$lang['et_EE']['Order']['INCOMPLETE'] = 'Tellimus poolik';
-$lang['et_EE']['Order']['SUCCESSFULL'] = 'Tellimus lõppetatud';
+$lang['et_EE'][Order::class]['INCOMPLETE'] = 'Tellimus poolik';
+$lang['et_EE'][Order::class]['SUCCESSFULL'] = 'Tellimus lõppetatud';
 $lang['et_EE']['OrderInformation.ss']['ADDRESS'] = 'Aadress';
 $lang['et_EE']['OrderInformation.ss']['AMOUNT'] = 'Kokku';
 $lang['et_EE']['OrderInformation.ss']['BUYERSADDRESS'] = 'Ostja aadress';

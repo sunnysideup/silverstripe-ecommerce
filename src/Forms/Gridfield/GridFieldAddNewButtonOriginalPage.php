@@ -2,11 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-use GridFieldAddNewButton;
-use ArrayData;
-use Config;
-use DataObject;
-use Versioned;
+
+
+
+
+
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
+use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+
 
 
 /**
@@ -41,7 +50,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         }
 
         $data = new ArrayData([
-            'NewLink' => '/admin/' . Config::inst()->get('CMSPageAddControllerProducts', 'url_segment') . '/' . $getSegment,
+            'NewLink' => '/admin/' . Config::inst()->get(CMSPageAddControllerProducts::class, 'url_segment') . '/' . $getSegment,
             'ButtonName' => $this->buttonName,
         ]);
 
@@ -66,8 +75,8 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
      */
     public function BestParentPage()
     {
-        $defaultRootParentClass = Config::inst()->get('CMSPageAddControllerProducts', 'root_parent_class_for_adding_page');
-        $rootParentClassArray = [$defaultRootParentClass, 'ProductGroup'];
+        $defaultRootParentClass = Config::inst()->get(CMSPageAddControllerProducts::class, 'root_parent_class_for_adding_page');
+        $rootParentClassArray = [$defaultRootParentClass, ProductGroup::class];
         foreach ($rootParentClassArray as $rootParentClass) {
             $result = DataObject::get_one(
                 $rootParentClass,
@@ -80,7 +89,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             if (Versioned::current_stage() === 'Live') {
                 $stage = '_Live';
             }
-            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin('SiteTree' . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
+            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin(SiteTree::class . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
                 return $result;
             }
         }

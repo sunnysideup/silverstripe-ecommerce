@@ -1,5 +1,32 @@
 <?php
 
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Control\Controller;
+use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
+use SilverStripe\ORM\DataList;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Assets\Image;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\Tab;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Versioned\Versioned;
+
 /**
  * Product Group is a 'holder' for Products within the CMS
  * It contains functions for versioning child products.
@@ -249,7 +276,7 @@ class ProductGroup extends Page
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Image' => 'ProductImage',
+        'Image' => ProductImage::class,
     ];
 
     /**
@@ -258,7 +285,7 @@ class ProductGroup extends Page
      * @static Array
      */
     private static $belongs_many_many = [
-        'AlsoShowProducts' => 'Product',
+        'AlsoShowProducts' => Product::class,
     ];
 
     /**
@@ -309,7 +336,7 @@ class ProductGroup extends Page
      *
      * @static String
      */
-    private static $default_child = 'Product';
+    private static $default_child = Product::class;
 
     /**
      * standard SS variable.
@@ -379,7 +406,7 @@ class ProductGroup extends Page
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -402,7 +429,7 @@ class ProductGroup extends Page
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -427,7 +454,7 @@ class ProductGroup extends Page
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductsAndGroupsModelAdmin'))) {
+        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
         if (! $member) {
@@ -437,7 +464,7 @@ class ProductGroup extends Page
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -453,7 +480,7 @@ class ProductGroup extends Page
      */
     public function canPublish($member = null)
     {
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -546,7 +573,7 @@ class ProductGroup extends Page
         }
         //reset to default
         if ($this->LevelOfProductsToShow === 0) {
-            $defaults = Config::inst()->get('ProductGroup', 'defaults');
+            $defaults = Config::inst()->get(ProductGroup::class, 'defaults');
 
             return isset($defaults['LevelOfProductsToShow']) ? $defaults['LevelOfProductsToShow'] : 99;
         }
@@ -567,7 +594,7 @@ class ProductGroup extends Page
     {
         $fields = parent::getCMSFields();
         //dirty hack to show images!
-        $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
+        $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create(Image::class, _t('Product.IMAGE', 'Product Group Image')));
         //number of products
         $calculatedNumberOfProductsPerPage = $this->MyNumberOfProductsPerPage();
         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
@@ -939,7 +966,7 @@ class ProductGroup extends Page
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            return is_a($parent, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup')) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
+            return is_a($parent, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class)) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
         }
         return $this->ChildGroups($filter);
     }
@@ -1082,8 +1109,8 @@ class ProductGroup extends Page
         parent::onAfterWrite();
 
         if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(['ClassName' => 'ProductImage'])->byID($this->ImageID)) {
-                $normalImage = $normalImage->newClassInstance('ProductImage');
+            if ($normalImage = Image::get()->exclude(['ClassName' => ProductImage::class])->byID($this->ImageID)) {
+                $normalImage = $normalImage->newClassInstance(ProductImage::class);
                 $normalImage->write();
             }
         }
@@ -1175,9 +1202,9 @@ class ProductGroup extends Page
     {
         $idString = '_' . $this->ID;
         if ($isForGroups) {
-            return Config::inst()->get('ProductSearchForm', 'product_session_variable') . $idString;
+            return Config::inst()->get(ProductSearchForm::class, 'product_session_variable') . $idString;
         }
-        return Config::inst()->get('ProductSearchForm', 'product_group_session_variable') . $idString;
+        return Config::inst()->get(ProductSearchForm::class, 'product_group_session_variable') . $idString;
     }
 
     /**
@@ -1504,7 +1531,7 @@ class ProductGroup extends Page
      */
     protected function getBuyableClassName()
     {
-        return EcommerceConfig::get('ProductGroup', 'base_buyable_class');
+        return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
     }
 
     /**
@@ -1618,7 +1645,7 @@ class ProductGroup extends Page
      * @param bool   $asArray
      * @param string $table
      */
-    protected function allowPurchaseWhereStatement($asArray = true, $table = 'Product')
+    protected function allowPurchaseWhereStatement($asArray = true, $table = Product::class)
     {
         if ($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
             if ($asArray) {
@@ -1711,7 +1738,7 @@ class ProductGroup extends Page
      *
      * @return string
      */
-    protected function createSortStatementFromIDArray($IDarray, $table = 'Product')
+    protected function createSortStatementFromIDArray($IDarray, $table = Product::class)
     {
         $ifStatement = 'CASE ';
         // $sortStatement = '';
@@ -1732,7 +1759,7 @@ class ProductGroup extends Page
     protected function limitCurrentFinalProducts()
     {
         $this->rawCount = $this->allProducts->count();
-        $max = EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list');
+        $max = EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list');
         if ($this->rawCount > $max) {
             $this->allProducts = $this->allProducts->limit($max - 1);
             $this->totalCount = $max;

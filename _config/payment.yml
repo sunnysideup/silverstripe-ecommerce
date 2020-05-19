@@ -5,10 +5,8 @@ After: 'framework/*','cms/*'
 only:
   environment: 'dev'
 ---
-EcommercePayment:
+Sunnysideup\Ecommerce\Model\Money\EcommercePayment:
   supported_methods:
-    EcommercePaymentTestSuccess : "Test Success Payment"
-    EcommercePaymentTestPending : "Test Pending Payment"
-    EcommercePaymentTestFailure : "Test Failure Payment"
-
-
+    Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestSuccess: 'Test Success Payment'
+    Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestPending: 'Test Pending Payment'
+    Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestFailure: 'Test Failure Payment'

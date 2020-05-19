@@ -2,15 +2,26 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use OrderStep;
-use OrderStepInterface;
-use EcommerceConfig;
-use HeaderField;
-use Order;
-use OrderStatusLog;
-use Convert;
-use SS_Datetime;
-use FieldList;
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+
 
 
 
@@ -27,7 +38,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @var string
      */
-    protected $relevantLogEntryClassName = 'OrderStatusLogSubmitted';
+    protected $relevantLogEntryClassName = OrderStatusLogSubmitted::class;
 
 
 /**
@@ -73,7 +84,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function getRelevantLogEntryClassName()
     {
-        return EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        return EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
     }
 
     public function getCMSFields()
@@ -133,7 +144,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderStatusLog'))) {
+                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
                     $obj->OrderID = $order->ID;
                     $obj->Title = $this->Name;
                     //it is important we add this here so that we can save the 'submitted' version.
@@ -156,7 +167,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             } else {
                 user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
             }
-            $order->LastEdited = "'" . SS_Datetime::now()->Rfc2822() . "'";
+            $order->LastEdited = "'" . DBDatetime::now()->Rfc2822() . "'";
 
             //add member if needed...
             if (! $order->MemberID) {
@@ -239,7 +250,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog', $title), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLog::class, $title), 'ActionNextStepManually');
 
         return $fields;
     }

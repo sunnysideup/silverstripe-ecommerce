@@ -2,18 +2,35 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Order;
-use Requirements;
-use SS_HTTPRequest;
-use Config;
-use ShoppingCart;
-use EcommerceConfig;
-use CheckoutPageStepDescription;
-use ArrayList;
-use OrderFormCancel;
-use OrderFormFeedback;
-use OrderFormPayment;
-use OrderStep;
+
+
+
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\View\Requirements;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
+use SilverStripe\ORM\ArrayList;
+use Sunnysideup\Ecommerce\Forms\OrderFormCancel;
+use Sunnysideup\Ecommerce\Forms\OrderFormFeedback;
+use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
+use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
+use Sunnysideup\Ecommerce\Email\OrderEmail;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+
 
 
 
@@ -92,7 +109,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return array
      **/
-    public function showorder(SS_HTTPRequest $request)
+    public function showorder(HTTPRequest $request)
     {
         isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
         if (isset($_REQUEST['print'])) {
@@ -102,7 +119,7 @@ class OrderConfirmationPageController extends CartPageController
             Requirements::themedCSS('Order_Invoice', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
-            Config::inst()->update('SSViewer', 'theme_enabled', true);
+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('Invoice');
             Config::unnest();
 
@@ -113,7 +130,7 @@ class OrderConfirmationPageController extends CartPageController
             Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
-            Config::inst()->update('SSViewer', 'theme_enabled', true);
+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('PackingSlip');
             Config::unnest();
 
@@ -129,7 +146,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return array
      **/
-    public function retrieveorder(SS_HTTPRequest $request)
+    public function retrieveorder(HTTPRequest $request)
     {
         return [];
     }
@@ -144,7 +161,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return array
      */
-    public function copyorder(SS_HTTPRequest $request)
+    public function copyorder(HTTPRequest $request)
     {
         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
         ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
@@ -350,14 +367,14 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return HTML
      **/
-    public function sendemail(SS_HTTPRequest $request)
+    public function sendemail(HTTPRequest $request)
     {
         if ($this->currentOrder) {
             $subject = '';
             $message = '';
-            $emailClassName = 'OrderReceiptEmail';
+            $emailClassName = OrderReceiptEmail::class;
             if (class_exists($request->param('OtherID'))) {
-                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass('OrderEmail'))) {
+                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass(OrderEmail::class))) {
                     $emailClassName = $request->param('OtherID');
                 }
             }
@@ -386,7 +403,7 @@ class OrderConfirmationPageController extends CartPageController
                     $step = OrderStep::get()->byID($statusID);
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
-                    $emailClassName = 'OrderInvoiceEmail';
+                    $emailClassName = OrderInvoiceEmail::class;
                     if ($this->currentOrder->sendEmail(
                         $emailClassName,
                         $subject,

@@ -2,17 +2,31 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
+
+
+
+
+
 use CMSEditLinkAPI;
-use ShoppingCart;
-use EcommerceConfigAjax;
-use EcommerceDBConfig;
-use EcommerceCurrency;
-use EcommerceTaskDebugCart;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 /**
  * @description: base class for OrderItem (item in cart) and OrderModifier (extra - e.g. Tax)
@@ -63,7 +77,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             'TableSubTitleNOHTML',
             'CartTitle',
             'CartSubTitle',
-            'Order',
+            Order::class,
         ],
     ];
 
@@ -116,7 +130,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Order' => 'Order',
+        'Order' => Order::class,
     ];
 
     /**
@@ -221,7 +235,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -393,7 +407,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         $class = static::class;
         $classes = [];
         $class = get_parent_class($class);
-        while ($class && $class !== 'DataObject') {
+        while ($class && $class !== DataObject::class) {
             $classes[] = strtolower($class);
             $class = get_parent_class($class);
         }
@@ -406,7 +420,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderItem'))) {
+        if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class))) {
             $classes[] = strtolower($this->BuyableClassName);
         }
 

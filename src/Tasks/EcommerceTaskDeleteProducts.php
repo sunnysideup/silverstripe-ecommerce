@@ -2,9 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceConfig;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DB;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -27,13 +33,13 @@ class EcommerceTaskDeleteProducts extends BuildTask
 
     public function run($request)
     {
-        $arrayOfBuyables = EcommerceConfig::get('EcommerceDBConfig', 'array_of_buyables');
+        $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
         foreach ($arrayOfBuyables as $buyable) {
             $allproducts = $buyable::get();
             if ($allproducts->count()) {
                 foreach ($allproducts as $product) {
                     DB::alteration_message('Deleting ' . $product->ClassName . ' ID = ' . $product->ID, 'deleted');
-                    if (is_a($product, Object::getCustomClass('SiteTree'))) {
+                    if (is_a($product, Object::getCustomClass(SiteTree::class))) {
                         $product->deleteFromStage('Live');
                         $product->deleteFromStage('Draft');
                     } else {

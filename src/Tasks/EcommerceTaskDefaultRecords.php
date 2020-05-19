@@ -2,14 +2,24 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DataObject;
-use AccountPage;
-use DB;
-use CheckoutPage;
-use OrderConfirmationPage;
-use EcommerceDBConfig;
-use Email;
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -41,10 +51,10 @@ class EcommerceTaskDefaultRecords extends BuildTask
     public function run($request)
     {
         $update = [];
-        $orderStep = singleton('OrderStep');
+        $orderStep = singleton(OrderStep::class);
         $orderStep->requireDefaultRecords();
         // ACCOUNT PAGE
-        $accountPage = DataObject::get_one('AccountPage', null, $cacheDataObjectGetOne = false);
+        $accountPage = DataObject::get_one(AccountPage::class, null, $cacheDataObjectGetOne = false);
         if (! $accountPage) {
             $accountPage = new AccountPage();
             $accountPage->Title = 'Account';
@@ -63,7 +73,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
         //CHECKOUT PAGE
 
-        $checkoutPage = DataObject::get_one('CheckoutPage', null, $cacheDataObjectGetOne = false);
+        $checkoutPage = DataObject::get_one(CheckoutPage::class, null, $cacheDataObjectGetOne = false);
         if (! $checkoutPage) {
             $checkoutPage = new CheckoutPage();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
@@ -94,7 +104,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $checkoutPage->writeToStage('Stage');
             $checkoutPage->publish('Stage', 'Live');
             DB::alteration_message('Checkout page saved');
-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage', null, $cacheDataObjectGetOne = false);
+            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class, null, $cacheDataObjectGetOne = false);
             if ($orderConfirmationPage) {
                 DB::alteration_message('No need to create an Order Confirmation Page. It already exists.');
             } else {

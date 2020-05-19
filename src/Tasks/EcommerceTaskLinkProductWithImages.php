@@ -2,12 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Product;
-use File;
-use DB;
-use Controller;
-use Director;
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use SilverStripe\ORM\DB;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -101,8 +110,8 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image')) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductImage')) {
-                                        $image = $image->newClassInstance('ProductImage');
+                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class)) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class)) {
+                                        $image = $image->newClassInstance(ProductImage::class);
                                         $image->write();
                                     }
                                     $collection->add($image);

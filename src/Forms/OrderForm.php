@@ -2,27 +2,49 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Form;
-use Controller;
-use Requirements;
-use ShoppingCart;
-use CompositeField;
-use HeaderField;
-use EcommercePayment;
-use HiddenField;
-use CheckoutPage;
-use DataObject;
-use CheckboxField;
-use Convert;
-use TextareaField;
-use FieldList;
-use LiteralField;
-use FormAction;
-use OrderFormValidator;
-use SS_HTTPRequest;
-use Member;
-use ShopAccountFormPasswordValidator;
-use EcommerceDBConfig;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Control\Controller;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use SilverStripe\Forms\HiddenField;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\FormAction;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
+use SilverStripe\Forms\Form;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+
 
 
 
@@ -78,7 +100,7 @@ class OrderForm extends Form
         $finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER', 'Complete Order'), 3));
         // If a terms and conditions page exists, we need to create a field to confirm the user has read it
         if ($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
-            $checkoutPage = DataObject::get_one('CheckoutPage');
+            $checkoutPage = DataObject::get_one(CheckoutPage::class);
             if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
                 $alreadyTicked = false;
                 $requiredFields[] = 'ReadTermsAndConditions';
@@ -142,7 +164,7 @@ class OrderForm extends Form
      * @param Form        $form    Form object for this action
      * @param HTTPRequest $request Request object for this action
      */
-    public function processOrder(array $data, Form $form, SS_HTTPRequest $request)
+    public function processOrder(array $data, Form $form, HTTPRequest $request)
     {
         $this->saveDataToSession($data); //save for later if necessary
         $order = ShoppingCart::current_order();

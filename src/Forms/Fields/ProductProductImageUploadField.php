@@ -2,9 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use UploadField;
-use SS_List;
-use Config;
+
+
+
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+
 
 
 /**

@@ -2,7 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-use GridFieldConfig_RelationEditor;
+
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+
 
 /**
  * ensures that order items can not be auto-linked or deleted
@@ -19,7 +23,7 @@ class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor
             $itemsPerPage = 100;
         }
         parent::__construct($itemsPerPage);
-        $this->removeComponentsByType('GridFieldAddExistingAutocompleter');
+        $this->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
         //$this->removeComponentsByType("GridFieldButtonRow");
         //$this->removeComponentsByType("GridFieldAddNewButton");
         //$this->removeComponentsByType("GridFieldToolbarHeader");
@@ -27,7 +31,7 @@ class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor
         //$this->removeComponentsByType("GridFieldFilterHeader");
         //$this->removeComponentsByType("GridFieldDataColumns");
         //$this->removeComponentsByType("GridFieldEditButton");
-        $this->removeComponentsByType('GridFieldDeleteAction');
+        $this->removeComponentsByType(GridFieldDeleteAction::class);
         //$this->removeComponentsByType("GridFieldPageCount");
         //$this->removeComponentsByType("GridFieldPaginator");
         //$this->removeComponentsByType("GridFieldDetailForm");

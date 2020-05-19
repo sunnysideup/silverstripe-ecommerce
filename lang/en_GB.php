@@ -1,5 +1,13 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Pages\Product;
+
 /**
  * English (United Kingdom) language pack.
  */
@@ -13,8 +21,8 @@ if (array_key_exists('en_GB', $lang) && is_array($lang['en_GB'])) {
     $lang['en_GB'] = $lang['en_US'];
 }
 
-$lang['en_GB']['AccountPage']['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you\'ll place your first order, otherwise please enter your details below.';
-$lang['en_GB']['AccountPage']['NOPAGE'] = 'No AccountPage on this site - please create one !';
+$lang['en_GB'][AccountPage::class]['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you\'ll place your first order, otherwise please enter your details below.';
+$lang['en_GB'][AccountPage::class]['NOPAGE'] = 'No AccountPage on this site - please create one !';
 $lang['en_GB']['AccountPage.ss']['COMPLETED'] = 'Completed Orders';
 $lang['en_GB']['AccountPage.ss']['HISTORY'] = 'Your Order History';
 $lang['en_GB']['AccountPage.ss']['INCOMPLETE'] = 'Incomplete Orders';
@@ -39,7 +47,7 @@ $lang['en_GB']['Cart.ss']['REMOVEONE'] = 'Remove one of &quot;%s&quot; from your
 $lang['en_GB']['Cart.ss']['SHIPPING'] = 'Shipping';
 $lang['en_GB']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
 $lang['en_GB']['Cart.ss']['TOTAL'] = 'Total';
-$lang['en_GB']['CheckoutPage']['NOPAGE'] = 'No CheckoutPage on this site - please create one !';
+$lang['en_GB'][CheckoutPage::class]['NOPAGE'] = 'No CheckoutPage on this site - please create one !';
 $lang['en_GB']['CheckoutPage.ss']['CHECKOUT'] = 'Checkout';
 $lang['en_GB']['CheckoutPage.ss']['ORDERSTEP'] = 'Order Status';
 $lang['en_GB']['CheckoutPage.ss']['PROCESS'] = 'Process';
@@ -60,17 +68,17 @@ $lang['en_GB']['ChequePayment']['MESSAGE'] = 'Payment accepted via Cheque. Pleas
 $lang['en_GB']['FindOrderReport']['DATERANGE'] = 'Date Range';
 $lang['en_GB']['MemberForm']['DETAILSSAVED'] = 'Your details have been saved';
 $lang['en_GB']['MemberForm']['LOGGEDIN'] = 'You are currently logged in as';
-$lang['en_GB']['Order']['INCOMPLETE'] = 'Order Incomplete';
-$lang['en_GB']['Order']['SUCCESSFULL'] = 'Order Successful';
+$lang['en_GB'][Order::class]['INCOMPLETE'] = 'Order Incomplete';
+$lang['en_GB'][Order::class]['SUCCESSFULL'] = 'Order Successful';
 $lang['en_GB']['OrderInformation.ss']['ADDRESS'] = 'Address';
 $lang['en_GB']['OrderInformation.ss']['AMOUNT'] = 'Amount';
 $lang['en_GB']['OrderInformation.ss']['BUYERSADDRESS'] = 'Buyer\'s Address';
 $lang['en_GB']['OrderInformation.ss']['CITY'] = 'City';
 $lang['en_GB']['OrderInformation.ss']['COUNTRY'] = 'Country';
 $lang['en_GB']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Customer Details';
-$lang['en_GB']['OrderInformation.ss']['DATE'] = 'Date';
+$lang['en_GB']['OrderInformation.ss']['DATE'] = DBDate::class;
 $lang['en_GB']['OrderInformation.ss']['DETAILS'] = 'Details';
-$lang['en_GB']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['en_GB']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['en_GB']['OrderInformation.ss']['MOBILE'] = 'Mobile';
 $lang['en_GB']['OrderInformation.ss']['NAME'] = 'Name';
 $lang['en_GB']['OrderInformation.ss']['ORDERSUMMARY'] = 'Order Summary';
@@ -80,7 +88,7 @@ $lang['en_GB']['OrderInformation.ss']['PAYMENTMETHOD'] = 'Method';
 $lang['en_GB']['OrderInformation.ss']['PAYMENTSTATUS'] = 'Payment Status';
 $lang['en_GB']['OrderInformation.ss']['PHONE'] = 'Phone';
 $lang['en_GB']['OrderInformation.ss']['PRICE'] = 'Price';
-$lang['en_GB']['OrderInformation.ss']['PRODUCT'] = 'Product';
+$lang['en_GB']['OrderInformation.ss']['PRODUCT'] = Product::class;
 $lang['en_GB']['OrderInformation.ss']['QUANTITY'] = 'Quantity';
 $lang['en_GB']['OrderInformation.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
 $lang['en_GB']['OrderInformation.ss']['SHIPPING'] = 'Shipping';
@@ -96,7 +104,7 @@ $lang['en_GB']['OrderInformation_Editable.ss']['ADDONE'] = 'Add one more of &quo
 $lang['en_GB']['OrderInformation_Editable.ss']['NOITEMS'] = 'There are <strong>no</strong> items in your cart.';
 $lang['en_GB']['OrderInformation_Editable.ss']['ORDERINFORMATION'] = 'Order Information';
 $lang['en_GB']['OrderInformation_Editable.ss']['PRICE'] = 'Price';
-$lang['en_GB']['OrderInformation_Editable.ss']['PRODUCT'] = 'Product';
+$lang['en_GB']['OrderInformation_Editable.ss']['PRODUCT'] = Product::class;
 $lang['en_GB']['OrderInformation_Editable.ss']['QUANTITY'] = 'Quantity';
 $lang['en_GB']['OrderInformation_Editable.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
 $lang['en_GB']['OrderInformation_Editable.ss']['REMOVEALL'] = 'Remove all of &quot;%s&quot; from your cart';
@@ -112,7 +120,7 @@ $lang['en_GB']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Buyer\'s Add
 $lang['en_GB']['OrderInformation_NoPricing.ss']['CITY'] = 'City';
 $lang['en_GB']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Country';
 $lang['en_GB']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Customer Details';
-$lang['en_GB']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['en_GB']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['en_GB']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobile';
 $lang['en_GB']['OrderInformation_NoPricing.ss']['NAME'] = 'Name';
 $lang['en_GB']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Information for Order #';
@@ -141,7 +149,7 @@ $lang['en_GB']['OrderStatusEmail.ss']['STATUSCHANGE'] = 'Status changed to "%s" 
 $lang['en_GB']['Order_statusEmail.ss']['TITLE'] = 'Shop Status Change';
 $lang['en_GB']['OrderStatusEmail.ss']['TITLE'] = 'Shop Status Change';
 $lang['en_GB']['PaymentInformation.ss']['AMOUNT'] = 'Amount';
-$lang['en_GB']['PaymentInformation.ss']['DATE'] = 'Date';
+$lang['en_GB']['PaymentInformation.ss']['DATE'] = DBDate::class;
 $lang['en_GB']['PaymentInformation.ss']['DETAILS'] = 'Details';
 $lang['en_GB']['PaymentInformation.ss']['PAYMENTID'] = 'Payment ID';
 $lang['en_GB']['PaymentInformation.ss']['PAYMENTINFORMATION'] = 'Payment Information';

@@ -2,7 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use Config;
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+
 
 
 class ProductOrderItem extends OrderItem
@@ -25,7 +29,7 @@ class ProductOrderItem extends OrderItem
             'Version',
             'UnitPrice',
             'Total',
-            'Order',
+            Order::class,
             'InternalItemID',
         ],
     ];
@@ -76,7 +80,7 @@ class ProductOrderItem extends OrderItem
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         if ($product = $this->Product()) {
             Config::nest();
-            Config::inst()->update('SSViewer', 'theme_enabled', true);
+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
             $tableTitle = strip_tags($product->renderWith('ProductTableTitle'));
             Config::unnest();
         }

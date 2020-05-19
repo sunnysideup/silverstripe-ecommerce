@@ -871,3 +871,17111 @@ Array
     [501] => upgrade [-r|--rule RULE] [-p|--prompt] [-d|--root-dir ROOT-DIR] [-w|--write] [--] <path>
     [502] => 
 )
+
+# running php upgrade upgrade see: https://github.com/silverstripe/silverstripe-upgrader
+cd /var/www/ss3/upgrades/ecommerce-root
+php /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code upgrade /var/www/ss3/upgrades/ecommerce-root/ecommerce  --root-dir=/var/www/ss3/upgrades/ecommerce-root --write -vvv
+Writing changes for 230 files
+Running upgrades on "/var/www/ss3/upgrades/ecommerce-root/ecommerce"
+[2020-05-19 15:16:16] Applying RenameClasses to es_MX.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to es_MX.php...
+[2020-05-19 15:16:16] Applying RenameClasses to id_ID.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to id_ID.php...
+[2020-05-19 15:16:16] Applying RenameClasses to ar_SA.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to ar_SA.php...
+[2020-05-19 15:16:16] Applying RenameClasses to nb_NO.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to nb_NO.php...
+[2020-05-19 15:16:16] Applying RenameClasses to nl_NL.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to nl_NL.php...
+[2020-05-19 15:16:16] Applying RenameClasses to fr_FR.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to fr_FR.php...
+[2020-05-19 15:16:16] Applying RenameClasses to pl_PL.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to pl_PL.php...
+[2020-05-19 15:16:16] Applying RenameClasses to tr_TR.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to tr_TR.php...
+[2020-05-19 15:16:16] Applying RenameClasses to fi_FI.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to fi_FI.php...
+[2020-05-19 15:16:16] Applying RenameClasses to hr_HR.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to hr_HR.php...
+[2020-05-19 15:16:16] Applying RenameClasses to de_DE.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to de_DE.php...
+[2020-05-19 15:16:16] Applying RenameClasses to it_IT.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to it_IT.php...
+[2020-05-19 15:16:16] Applying RenameClasses to ru_RU.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to ru_RU.php...
+[2020-05-19 15:16:16] Applying RenameClasses to en_GB.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to en_GB.php...
+[2020-05-19 15:16:16] Applying RenameClasses to et_EE.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to et_EE.php...
+[2020-05-19 15:16:16] Applying RenameClasses to ms_MY.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to ms_MY.php...
+[2020-05-19 15:16:16] Applying RenameClasses to bg_BG.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to bg_BG.php...
+[2020-05-19 15:16:16] Applying RenameClasses to da_DK.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to da_DK.php...
+[2020-05-19 15:16:16] Applying RenameClasses to zh_TW.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to zh_TW.php...
+[2020-05-19 15:16:16] Applying RenameClasses to pt_PT.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to pt_PT.php...
+[2020-05-19 15:16:16] Applying RenameClasses to en_US.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to en_US.php...
+[2020-05-19 15:16:16] Applying RenameClasses to es_ES.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to es_ES.php...
+[2020-05-19 15:16:16] Applying RenameClasses to _config.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to _config.php...
+[2020-05-19 15:16:16] Applying RenameClasses to EcommerceTest.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to EcommerceTest.php...
+[2020-05-19 15:16:16] Applying RenameClasses to OrderConverter.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to OrderConverter.php...
+[2020-05-19 15:16:16] Applying RenameClasses to EcommerceRestfulServer.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to EcommerceRestfulServer.php...
+[2020-05-19 15:16:16] Applying RenameClasses to EcommerceCountryVisitorCountryProvider.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to EcommerceCountryVisitorCountryProvider.php...
+[2020-05-19 15:16:16] Applying RenameClasses to ShoppingCart.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to ShoppingCart.php...
+[2020-05-19 15:16:16] Applying RenameClasses to ProductCollection.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to ProductCollection.php...
+[2020-05-19 15:16:16] Applying RenameClasses to OrderToArray.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to OrderToArray.php...
+[2020-05-19 15:16:16] Applying RenameClasses to EcommerceCodeFilter.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to EcommerceCodeFilter.php...
+[2020-05-19 15:16:16] Applying RenameClasses to OrderInvoiceEmail.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to OrderInvoiceEmail.php...
+[2020-05-19 15:16:16] Applying RenameClasses to OrderErrorEmail.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to OrderErrorEmail.php...
+[2020-05-19 15:16:16] Applying RenameClasses to EcommerceDummyMailer.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to EcommerceDummyMailer.php...
+[2020-05-19 15:16:16] Applying RenameClasses to OrderStatusEmail.php...
+[2020-05-19 15:16:16] Applying ClassToTraitRule to OrderStatusEmail.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderReceiptEmail.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderReceiptEmail.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderEmail.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderEmail.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductImage.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductImage.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentSupportedMethodsProviderInterface.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentSupportedMethodsProviderInterface.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepInterface.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepInterface.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceGEOipProvider.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceGEOipProvider.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EditableEcommerceObject.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EditableEcommerceObject.php...
+[2020-05-19 15:16:17] Applying RenameClasses to BuyableModel.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to BuyableModel.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceConfigDefinitions.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceConfigDefinitions.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceConfig.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceConfig.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceConfigAjaxDefinitions.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceConfigAjaxDefinitions.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceConfigAjax.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceConfigAjax.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderModifierFormController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderModifierFormController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogFormController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogFormController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceResponse.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceResponse.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to BuyableSelectFieldDataList.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to BuyableSelectFieldDataList.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceSiteTreeExtensionController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceSiteTreeExtensionController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTemplateTest.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTemplateTest.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ShoppingCartController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ShoppingCartController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to CartResponse.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to CartResponse.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderEmailRecordReview.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderEmailRecordReview.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductOrderItem.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductOrderItem.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceDBConfig.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceDBConfig.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceRegionVisitorRegionProvider.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceRegionVisitorRegionProvider.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceRegion.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceRegion.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ShippingAddress.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ShippingAddress.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceCountry.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceCountry.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderAddress.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderAddress.php...
+[2020-05-19 15:16:17] Applying RenameClasses to BillingAddress.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to BillingAddress.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderAttribute.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderAttribute.php...
+[2020-05-19 15:16:17] Applying RenameClasses to CheckoutPageStepDescription.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to CheckoutPageStepDescription.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepCreated.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepCreated.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepSentReceipt.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepSentReceipt.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepSendAdminNotification.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepSendAdminNotification.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepSent.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepSent.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepSubmitted.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepSubmitted.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepArchived.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepArchived.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepConfirmed.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepConfirmed.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepPaid.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepPaid.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepSentInvoice.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepSentInvoice.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStep.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStep.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderEmailRecord.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderEmailRecord.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderProcessQueue.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderProcessQueue.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogCancel.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogCancel.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogDispatchElectronicOrder.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogDispatchElectronicOrder.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogDispatch.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogDispatch.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogSubmitted.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogSubmitted.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogArchived.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogArchived.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogPaymentCheck.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogPaymentCheck.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogDispatchPhysicalOrder.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogDispatchPhysicalOrder.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLog.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLog.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFeedback.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFeedback.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceCurrency.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceCurrency.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentTest.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentTest.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentTestPending.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentTestPending.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentTestSuccess.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentTestSuccess.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentTestFailure.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentTestFailure.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePayment.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePayment.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderModifierDescriptor.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderModifierDescriptor.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderItem.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderItem.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderModifier.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderModifier.php...
+[2020-05-19 15:16:17] Applying RenameClasses to SearchReplacement.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to SearchReplacement.php...
+[2020-05-19 15:16:17] Applying RenameClasses to SearchHistory.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to SearchHistory.php...
+[2020-05-19 15:16:17] Applying RenameClasses to Order.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to Order.php...
+[2020-05-19 15:16:17] Applying RenameClasses to BuyableFieldType.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to BuyableFieldType.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderAttributeGroup.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderAttributeGroup.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceRole.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceRole.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceSiteTreeExtension.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceSiteTreeExtension.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldAddNewButtonOriginalPage.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldAddNewButtonOriginalPage.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldBasicPageRelationConfig.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldBasicPageRelationConfig.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldEditOriginalPageConfigWithDelete.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldEditOriginalPageConfigWithDelete.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldEditOriginalPageConfigWithAddExisting.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldEditOriginalPageConfigWithAddExisting.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldConfigForOrderItems.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldConfigForOrderItems.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldBasicPageRelationConfigNoAddExisting.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldBasicPageRelationConfigNoAddExisting.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldEditOriginalPageConfig.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldEditOriginalPageConfig.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldPrintInvoiceButton.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldPrintInvoiceButton.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldExportSalesButton.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldExportSalesButton.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldEditButtonOriginalPage.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldEditButtonOriginalPage.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldPrintAllPackingSlipsButton.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldPrintAllPackingSlipsButton.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldPrintAllInvoicesButton.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldPrintAllInvoicesButton.php...
+[2020-05-19 15:16:17] Applying RenameClasses to GridFieldPrintPackingSlipButton.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to GridFieldPrintPackingSlipButton.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormAddress.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormAddress.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormPayment.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormPayment.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormCancel.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormCancel.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductSearchFormShort.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductSearchFormShort.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OptionalTreeDropdownField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OptionalTreeDropdownField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcomQuantityField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcomQuantityField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceSearchHistoryFormField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceSearchHistoryFormField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStepField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStepField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to BuyableSelectField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to BuyableSelectField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to SelectOrderAddressField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to SelectOrderAddressField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceClassNameOrTypeDropdownField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceClassNameOrTypeDropdownField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceCreditCardField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceCreditCardField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceCMSButtonField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceCMSButtonField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ExpiryDateField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ExpiryDateField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductProductImageUploadField.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductProductImageUploadField.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderForm.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderForm.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormAddressValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormAddressValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ShopAccountFormValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ShopAccountFormValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormCancelValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormCancelValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogFormValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogFormValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentFormSetupAndValidation.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentFormSetupAndValidation.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormPaymentValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormPaymentValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductSearchFormValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductSearchFormValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ShopAccountFormPasswordValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ShopAccountFormPasswordValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderModifierFormValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderModifierFormValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormFeedbackValidator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormFeedbackValidator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFormFeedback.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFormFeedback.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ShopAccountForm.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ShopAccountForm.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderStatusLogForm.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderStatusLogForm.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderModifierForm.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderModifierForm.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductSearchForm.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductSearchForm.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceDevelopmentAdminDecorator.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceDevelopmentAdminDecorator.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceDatabaseAdmin.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceDatabaseAdmin.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceDatabaseAdminDebugView.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceDatabaseAdminDebugView.php...
+[2020-05-19 15:16:17] Applying RenameClasses to SalesAdmin.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to SalesAdmin.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductsAndGroupsModelAdmin.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductsAndGroupsModelAdmin.php...
+[2020-05-19 15:16:17] Applying RenameClasses to CMSPageAddControllerProducts.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to CMSPageAddControllerProducts.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ModelAdminEcommerceBaseClass.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ModelAdminEcommerceBaseClass.php...
+[2020-05-19 15:16:17] Applying RenameClasses to SalesAdminExtras.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to SalesAdminExtras.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductConfigModelAdmin.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductConfigModelAdmin.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductBulkLoader.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductBulkLoader.php...
+[2020-05-19 15:16:17] Applying RenameClasses to StoreAdmin.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to StoreAdmin.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceMoney.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceMoney.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentSupportedMethodsProvider.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentSupportedMethodsProvider.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentResult.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentResult.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentProcessing.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentProcessing.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentSuccess.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentSuccess.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentFailure.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentFailure.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ExchangeRateProviderDummy.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ExchangeRateProviderDummy.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ExchangeRateProvider.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ExchangeRateProvider.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCountryAndRegionDisallowAllCountries.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCountryAndRegionDisallowAllCountries.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskAPIandMore.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskAPIandMore.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskTemplateTest.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskTemplateTest.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskSetOrderIDStartingNumber.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskSetOrderIDStartingNumber.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskAddDefaultProducts.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskAddDefaultProducts.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCreateMemberGroups.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCreateMemberGroups.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskBuildingModel.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskBuildingModel.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskLinkProductsWithImages.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskLinkProductsWithImages.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskOrdersWithoutOrderStep.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskOrdersWithoutOrderStep.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCartManipulationDebug.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCartManipulationDebug.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskProductVariationsFixes.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskProductVariationsFixes.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskArchiveAllOrdersWithItems.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskArchiveAllOrdersWithItems.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskAddCustomersToCustomerGroups.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskAddCustomersToCustomerGroups.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskBuildingExtending.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskBuildingExtending.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskProductImageReset.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskProductImageReset.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskArchiveAllSubmittedOrders.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskArchiveAllSubmittedOrders.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCartCleanup.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCartCleanup.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskTryToFinaliseOrders.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskTryToFinaliseOrders.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCheckConfiguration.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCheckConfiguration.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskDeleteAllOrders.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskDeleteAllOrders.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskProcessOrderQueue.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskProcessOrderQueue.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskLinkOrderAddressesAtBothEnds.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskLinkOrderAddressesAtBothEnds.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskReviewSearches.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskReviewSearches.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskLinkProductWithImages.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskLinkProductWithImages.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCleanupProducts.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCleanupProducts.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskReviewReports.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskReviewReports.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskSetDefaultProductGroupValues.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskSetDefaultProductGroupValues.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCartManipulationCurrent.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCartManipulationCurrent.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskFixBrokenOrderSubmissionData.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskFixBrokenOrderSubmissionData.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskDefaultRecords.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskDefaultRecords.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCleanupProductFullSiteTreeSorting.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCleanupProductFullSiteTreeSorting.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCountryAndRegion.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCountryAndRegion.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskDeleteProducts.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskDeleteProducts.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCountryAndRegionAllowAllCountries.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCountryAndRegionAllowAllCountries.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskDebugCart.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskDebugCart.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskCartManipulation.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskCartManipulation.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommerceTaskOrderItemsPerCustomer.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommerceTaskOrderItemsPerCustomer.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFiltersMustHaveAtLeastOnePayment.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFiltersMustHaveAtLeastOnePayment.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFiltersAroundDateFilter.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFiltersAroundDateFilter.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFiltersMultiOptionsetStatusIDFilter.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFiltersMultiOptionsetStatusIDFilter.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFiltersMemberAndAddress.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFiltersMemberAndAddress.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderFiltersHasBeenCancelled.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderFiltersHasBeenCancelled.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderEmailRecordFiltersMultiOptionsetStatusIDFilter.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderEmailRecordFiltersMultiOptionsetStatusIDFilter.php...
+[2020-05-19 15:16:17] Applying RenameClasses to EcommercePaymentFiltersAroundDateFilter.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to EcommercePaymentFiltersAroundDateFilter.php...
+[2020-05-19 15:16:17] Applying RenameClasses to CheckoutPageController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to CheckoutPageController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductGroupController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductGroupController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to AccountPageController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to AccountPageController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductController.php...
+[2020-05-19 15:16:17] Applying RenameClasses to OrderConfirmationPage.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to OrderConfirmationPage.php...
+[2020-05-19 15:16:17] Applying RenameClasses to ProductGroupSearchPage.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to ProductGroupSearchPage.php...
+[2020-05-19 15:16:17] Applying RenameClasses to CartPageController.php...
+[2020-05-19 15:16:17] Applying ClassToTraitRule to CartPageController.php...
+[2020-05-19 15:16:18] Applying RenameClasses to CheckoutPage.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to CheckoutPage.php...
+[2020-05-19 15:16:18] Applying RenameClasses to AccountPage.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to AccountPage.php...
+[2020-05-19 15:16:18] Applying RenameClasses to ProductGroupSearchPageController.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to ProductGroupSearchPageController.php...
+[2020-05-19 15:16:18] Applying RenameClasses to Product.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to Product.php...
+[2020-05-19 15:16:18] Applying RenameClasses to ProductGroup.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to ProductGroup.php...
+[2020-05-19 15:16:18] Applying RenameClasses to CartPage.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to CartPage.php...
+[2020-05-19 15:16:18] Applying RenameClasses to OrderConfirmationPageController.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to OrderConfirmationPageController.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportEcommercePages.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportEcommercePages.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportAllProducts.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportAllProducts.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportNoPriceProducts.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportNoPriceProducts.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportFeaturedProducts.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportFeaturedProducts.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportNoImageProducts.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportNoImageProducts.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportNotForSale.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportNotForSale.php...
+[2020-05-19 15:16:18] Applying RenameClasses to EcommerceSideReportNoInternalIDProducts.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to EcommerceSideReportNoInternalIDProducts.php...
+[2020-05-19 15:16:18] Applying UpdateConfigClasses to config.yml...
+[2020-05-19 15:16:18] Applying UpdateConfigClasses to payment.yml...
+[2020-05-19 15:16:18] Applying UpdateConfigClasses to ecommerce.yml...
+[2020-05-19 15:16:18] Applying UpdateConfigClasses to routes.yaml...
+[2020-05-19 15:16:18] Applying RenameClasses to tmp.php...
+[2020-05-19 15:16:18] Applying ClassToTraitRule to tmp.php...
+modified:	lang/es_MX.php
+@@ -1,4 +1,9 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
+
+ /**
+  * Spanish (Mexico) language pack.
+@@ -13,8 +18,8 @@
+     $lang['es_MX'] = $lang['en_US'];
+ }
+
+-$lang['es_MX']['AccountPage']['Message'] = 'Es necesario ingresar antes para poder ver la página de tu cuenta. Si no te has registrado, no puedes verla hasta que hayas realizado tu primer pedido, de otro modo, por favor, introduce tus generales abajo.';
+-$lang['es_MX']['AccountPage']['NOPAGE'] = 'No existe Página de Cuenta  en este sitio - por favor, ¡crea una!';
++$lang['es_MX'][AccountPage::class]['Message'] = 'Es necesario ingresar antes para poder ver la página de tu cuenta. Si no te has registrado, no puedes verla hasta que hayas realizado tu primer pedido, de otro modo, por favor, introduce tus generales abajo.';
++$lang['es_MX'][AccountPage::class]['NOPAGE'] = 'No existe Página de Cuenta  en este sitio - por favor, ¡crea una!';
+ $lang['es_MX']['AccountPage.ss']['COMPLETED'] = 'Pedidos Completos';
+ $lang['es_MX']['AccountPage.ss']['HISTORY'] = 'Historia de Tu Pedido';
+ $lang['es_MX']['AccountPage.ss']['INCOMPLETE'] = 'Pedidos Incompletos';
+@@ -49,7 +54,7 @@
+ $lang['es_MX']['Cart.ss']['SHIPPING'] = 'Envío';
+ $lang['es_MX']['Cart.ss']['SUBTOTAL'] = 'Sub-Total';
+ $lang['es_MX']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['es_MX']['CheckoutPage']['NOPAGE'] = 'No existe la página CheckoutPage en este sitio - ¡Por favor crea una!';
++$lang['es_MX'][CheckoutPage::class]['NOPAGE'] = 'No existe la página CheckoutPage en este sitio - ¡Por favor crea una!';
+ $lang['es_MX']['CheckoutPage.ss']['CHECKOUT'] = 'Terminar Compra';
+ $lang['es_MX']['CheckoutPage.ss']['ORDERSTEP'] = 'Estado del Pedido';
+ $lang['es_MX']['CheckoutPage.ss']['PROCESS'] = 'Proceso';
+@@ -71,8 +76,8 @@
+ $lang['es_MX']['FindOrderReport']['DATERANGE'] = 'Rango de Fechas';
+ $lang['es_MX']['MemberForm']['DETAILSSAVED'] = 'Tus detalles han sido guardados';
+ $lang['es_MX']['MemberForm']['LOGGEDIN'] = 'Actualmente tienes una sesión activa.';
+-$lang['es_MX']['Order']['INCOMPLETE'] = 'Pedido Incompleto';
+-$lang['es_MX']['Order']['SUCCESSFULL'] = 'Pedido Existoso';
++$lang['es_MX'][Order::class]['INCOMPLETE'] = 'Pedido Incompleto';
++$lang['es_MX'][Order::class]['SUCCESSFULL'] = 'Pedido Existoso';
+ $lang['es_MX']['OrderInformation.ss']['ADDRESS'] = 'Dirección';
+ $lang['es_MX']['OrderInformation.ss']['AMOUNT'] = 'Cantidad';
+ $lang['es_MX']['OrderInformation.ss']['BUYERSADDRESS'] = 'Dirección del Comprador';
+
+modified:	lang/id_ID.php
+@@ -1,4 +1,10 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Indonesian (Indonesia) language pack.
+@@ -13,8 +19,8 @@
+     $lang['id_ID'] = $lang['en_US'];
+ }
+
+-$lang['id_ID']['AccountPage']['Message'] = 'Anda perlu login sebelon dapat mengakses halaman account. Jika anda tidak terdaftar, anda tidak akan dapat mengakses halaman tersebut sampai anda membuat pesanan pertama anda, atau anda bisa masukkan perincian anda di bawah ini.';
+-$lang['id_ID']['AccountPage']['NOPAGE'] = 'Tidak ada HalamanAccount di situs ini - mohon dibuat!';
++$lang['id_ID'][AccountPage::class]['Message'] = 'Anda perlu login sebelon dapat mengakses halaman account. Jika anda tidak terdaftar, anda tidak akan dapat mengakses halaman tersebut sampai anda membuat pesanan pertama anda, atau anda bisa masukkan perincian anda di bawah ini.';
++$lang['id_ID'][AccountPage::class]['NOPAGE'] = 'Tidak ada HalamanAccount di situs ini - mohon dibuat!';
+ $lang['id_ID']['AccountPage.ss']['COMPLETED'] = 'Pemesanan Yang Telah Diselesaikan';
+ $lang['id_ID']['AccountPage.ss']['HISTORY'] = 'Sejarah Pesanan Anda';
+ $lang['id_ID']['AccountPage.ss']['INCOMPLETE'] = 'Pemesanan yang Belum Selesai';
+@@ -44,7 +50,7 @@
+ $lang['id_ID']['Cart.ss']['SHIPPING'] = 'Pengiriman';
+ $lang['id_ID']['Cart.ss']['SUBTOTAL'] = 'Sub total';
+ $lang['id_ID']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['id_ID']['CheckoutPage']['NOPAGE'] = 'Tidak ada CheckoutPage di situs ini - mohon buatlah satu !';
++$lang['id_ID'][CheckoutPage::class]['NOPAGE'] = 'Tidak ada CheckoutPage di situs ini - mohon buatlah satu !';
+ $lang['id_ID']['CheckoutPage.ss']['CHECKOUT'] = 'Checkout';
+ $lang['id_ID']['CheckoutPage.ss']['ORDERSTEP'] = 'Status Pemesanan';
+ $lang['id_ID']['CheckoutPage.ss']['PROCESS'] = 'Proses';
+@@ -66,8 +72,8 @@
+ $lang['id_ID']['FindOrderReport']['DATERANGE'] = 'Rentang Tanggal';
+ $lang['id_ID']['MemberForm']['DETAILSSAVED'] = 'Perincian anda telah disimpan.';
+ $lang['id_ID']['MemberForm']['LOGGEDIN'] = 'Saat ini Anda masuk log sebagai';
+-$lang['id_ID']['Order']['INCOMPLETE'] = 'Pemesanan Tidak Selesai';
+-$lang['id_ID']['Order']['SUCCESSFULL'] = 'Pemesanan Sukses';
++$lang['id_ID'][Order::class]['INCOMPLETE'] = 'Pemesanan Tidak Selesai';
++$lang['id_ID'][Order::class]['SUCCESSFULL'] = 'Pemesanan Sukses';
+ $lang['id_ID']['OrderInformation.ss']['ADDRESS'] = 'Alamat';
+ $lang['id_ID']['OrderInformation.ss']['AMOUNT'] = 'Nominal';
+ $lang['id_ID']['OrderInformation.ss']['BUYERSADDRESS'] = 'Alamat Pembeli';
+@@ -76,7 +82,7 @@
+ $lang['id_ID']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Perincian Pelanggan';
+ $lang['id_ID']['OrderInformation.ss']['DATE'] = 'Tanggal';
+ $lang['id_ID']['OrderInformation.ss']['DETAILS'] = 'Keterangan';
+-$lang['id_ID']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['id_ID']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['id_ID']['OrderInformation.ss']['MOBILE'] = 'Telepon Genggam';
+ $lang['id_ID']['OrderInformation.ss']['NAME'] = 'Nama';
+ $lang['id_ID']['OrderInformation.ss']['ORDERSUMMARY'] = 'Perincian Pemesanan';
+@@ -117,7 +123,7 @@
+ $lang['id_ID']['OrderInformation_NoPricing.ss']['CITY'] = 'Kota';
+ $lang['id_ID']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Negara';
+ $lang['id_ID']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Perincian Pelanggan';
+-$lang['id_ID']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['id_ID']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['id_ID']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Telepon Genggam';
+ $lang['id_ID']['OrderInformation_NoPricing.ss']['NAME'] = 'Nama';
+ $lang['id_ID']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informasi untuk Pemesanan #';
+@@ -144,7 +150,7 @@
+ $lang['id_ID']['Order_Member.ss']['ADDRESS'] = 'Alamat';
+ $lang['id_ID']['Order_Member.ss']['CITY'] = 'Kota';
+ $lang['id_ID']['Order_Member.ss']['COUNTRY'] = 'Negara';
+-$lang['id_ID']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['id_ID']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['id_ID']['Order_Member.ss']['MOBILE'] = 'Telepon Genggam';
+ $lang['id_ID']['Order_Member.ss']['NAME'] = 'Nama';
+ $lang['id_ID']['Order_Member.ss']['PHONE'] = 'Telepon';
+
+modified:	lang/ar_SA.php
+@@ -1,4 +1,9 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
+
+ /**
+  * Arabic (Saudi Arabia) language pack.
+@@ -13,8 +18,8 @@
+     $lang['ar_SA'] = $lang['en_US'];
+ }
+
+-$lang['ar_SA']['AccountPage']['Message'] = 'يجب عليك التسجيل قبل الدخول لصفحة الحساب, وإذا لم تكن مسجلاً من قبل فلا يمكنك الدخولحتى ترسل طلبك الأول ,, إذا كنت تغرب في التسجيل فملأ المطلوب بالأسفل';
+-$lang['ar_SA']['AccountPage']['NOPAGE'] = 'لايوجد صفحة حساب لهذا الموقع .. فضلاً أنشئ صفحة حساب جديدة';
++$lang['ar_SA'][AccountPage::class]['Message'] = 'يجب عليك التسجيل قبل الدخول لصفحة الحساب, وإذا لم تكن مسجلاً من قبل فلا يمكنك الدخولحتى ترسل طلبك الأول ,, إذا كنت تغرب في التسجيل فملأ المطلوب بالأسفل';
++$lang['ar_SA'][AccountPage::class]['NOPAGE'] = 'لايوجد صفحة حساب لهذا الموقع .. فضلاً أنشئ صفحة حساب جديدة';
+ $lang['ar_SA']['AccountPage.ss']['COMPLETED'] = 'الطلبات المكتملة';
+ $lang['ar_SA']['AccountPage.ss']['HISTORY'] = 'تاريخ الطلب';
+ $lang['ar_SA']['AccountPage.ss']['INCOMPLETE'] = 'الطلبات غير المكتملة';
+@@ -49,7 +54,7 @@
+ $lang['ar_SA']['Cart.ss']['SHIPPING'] = 'التسوق';
+ $lang['ar_SA']['Cart.ss']['SUBTOTAL'] = 'المجموع';
+ $lang['ar_SA']['Cart.ss']['TOTAL'] = 'المجموع';
+-$lang['ar_SA']['CheckoutPage']['NOPAGE'] = 'لايجد صفحة خروج لهذا الموقع - فضلاً قم بإنشاء صفحة خروج';
++$lang['ar_SA'][CheckoutPage::class]['NOPAGE'] = 'لايجد صفحة خروج لهذا الموقع - فضلاً قم بإنشاء صفحة خروج';
+ $lang['ar_SA']['CheckoutPage.ss']['CHECKOUT'] = 'الخروج';
+ $lang['ar_SA']['CheckoutPage.ss']['ORDERSTEP'] = 'حالة الطلب';
+ $lang['ar_SA']['CheckoutPage.ss']['PROCESS'] = 'العملية';
+@@ -71,8 +76,8 @@
+ $lang['ar_SA']['FindOrderReport']['DATERANGE'] = 'الفترة';
+ $lang['ar_SA']['MemberForm']['DETAILSSAVED'] = 'تم حفظ التفاصيل';
+ $lang['ar_SA']['MemberForm']['LOGGEDIN'] = 'حالياً أنت مسجل كـ';
+-$lang['ar_SA']['Order']['INCOMPLETE'] = 'الطلب غير مكتمل';
+-$lang['ar_SA']['Order']['SUCCESSFULL'] = 'تم الطلب بنجاح';
++$lang['ar_SA'][Order::class]['INCOMPLETE'] = 'الطلب غير مكتمل';
++$lang['ar_SA'][Order::class]['SUCCESSFULL'] = 'تم الطلب بنجاح';
+ $lang['ar_SA']['OrderInformation.ss']['ADDRESS'] = 'العنوان';
+ $lang['ar_SA']['OrderInformation.ss']['AMOUNT'] = 'المبلغ';
+ $lang['ar_SA']['OrderInformation.ss']['BUYERSADDRESS'] = 'عنوان المشتري';
+
+modified:	lang/nb_NO.php
+@@ -1,4 +1,9 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
+
+ /**
+  * Norwegian Bokmal (Norway) language pack.
+@@ -13,8 +18,8 @@
+     $lang['nb_NO'] = $lang['en_US'];
+ }
+
+-$lang['nb_NO']['AccountPage']['Message'] = 'Du må logge inn for å få tilgang til denne kontosiden. Hvis du er registrert, vil du ikke kunne få tilgang til denne før du har opprettet din første ordre. Ellers tast inn detaljene nedenunder.';
+-$lang['nb_NO']['AccountPage']['NOPAGE'] = 'Ingen kontoside på denne nettsiden, vennligst opprett en!';
++$lang['nb_NO'][AccountPage::class]['Message'] = 'Du må logge inn for å få tilgang til denne kontosiden. Hvis du er registrert, vil du ikke kunne få tilgang til denne før du har opprettet din første ordre. Ellers tast inn detaljene nedenunder.';
++$lang['nb_NO'][AccountPage::class]['NOPAGE'] = 'Ingen kontoside på denne nettsiden, vennligst opprett en!';
+ $lang['nb_NO']['AccountPage.ss']['COMPLETED'] = 'Fullførte bestillinger';
+ $lang['nb_NO']['AccountPage.ss']['HISTORY'] = 'Din ordrehistorikk';
+ $lang['nb_NO']['AccountPage.ss']['INCOMPLETE'] = 'Ukomplette Ordre';
+@@ -50,7 +55,7 @@
+ $lang['nb_NO']['Cart.ss']['SHIPPING'] = 'Frakt';
+ $lang['nb_NO']['Cart.ss']['SUBTOTAL'] = 'Delsum';
+ $lang['nb_NO']['Cart.ss']['TOTAL'] = 'Sum';
+-$lang['nb_NO']['CheckoutPage']['NOPAGE'] = 'Finnes ingen ChecoutPage for dette nettstedet - vennligst opprett en!';
++$lang['nb_NO'][CheckoutPage::class]['NOPAGE'] = 'Finnes ingen ChecoutPage for dette nettstedet - vennligst opprett en!';
+ $lang['nb_NO']['CheckoutPage.ss']['CHECKOUT'] = 'Sjekk ut';
+ $lang['nb_NO']['CheckoutPage.ss']['ORDERSTEP'] = 'Bestillingsstatus';
+ $lang['nb_NO']['CheckoutPage.ss']['PROCESS'] = 'Prosess';
+@@ -72,8 +77,8 @@
+ $lang['nb_NO']['FindOrderReport']['DATERANGE'] = 'Datoområde';
+ $lang['nb_NO']['MemberForm']['DETAILSSAVED'] = 'Detaljene er lagret';
+ $lang['nb_NO']['MemberForm']['LOGGEDIN'] = 'Du er logget inn som';
+-$lang['nb_NO']['Order']['INCOMPLETE'] = 'Ordre Ufullkommen';
+-$lang['nb_NO']['Order']['SUCCESSFULL'] = 'Ordre Vellykket';
++$lang['nb_NO'][Order::class]['INCOMPLETE'] = 'Ordre Ufullkommen';
++$lang['nb_NO'][Order::class]['SUCCESSFULL'] = 'Ordre Vellykket';
+ $lang['nb_NO']['OrderInformation.ss']['ADDRESS'] = 'Adresse';
+ $lang['nb_NO']['OrderInformation.ss']['AMOUNT'] = 'Beløp';
+ $lang['nb_NO']['OrderInformation.ss']['BUYERSADDRESS'] = 'Kundeadresse';
+
+modified:	lang/nl_NL.php
+@@ -1,4 +1,11 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Pages\Product;
+
+ /**
+  * Dutch (Netherlands) language pack.
+@@ -13,8 +20,8 @@
+     $lang['nl_NL'] = $lang['en_US'];
+ }
+
+-$lang['nl_NL']['AccountPage']['Message'] = 'U dient zich in te loggen voordat u toegang krijgt tot de account pagina. Als u niet geregistreerd bent, zult u niet in staat zijn om deze te openen totdat u uw eerste bestelling maakt, vul anders hieronder je gegevens in.';
+-$lang['nl_NL']['AccountPage']['NOPAGE'] = 'Geen account pagina op deze site - maak er een A.U.B.!';
++$lang['nl_NL'][AccountPage::class]['Message'] = 'U dient zich in te loggen voordat u toegang krijgt tot de account pagina. Als u niet geregistreerd bent, zult u niet in staat zijn om deze te openen totdat u uw eerste bestelling maakt, vul anders hieronder je gegevens in.';
++$lang['nl_NL'][AccountPage::class]['NOPAGE'] = 'Geen account pagina op deze site - maak er een A.U.B.!';
+ $lang['nl_NL']['AccountPage.ss']['COMPLETED'] = 'Afgeronde bestellingen';
+ $lang['nl_NL']['AccountPage.ss']['HISTORY'] = 'Uw vorige aankopen';
+ $lang['nl_NL']['AccountPage.ss']['INCOMPLETE'] = 'Lopende bestellingen';
+@@ -49,7 +56,7 @@
+ $lang['nl_NL']['Cart.ss']['SHIPPING'] = 'Verzending';
+ $lang['nl_NL']['Cart.ss']['SUBTOTAL'] = 'Subtotaal';
+ $lang['nl_NL']['Cart.ss']['TOTAL'] = 'Totaal';
+-$lang['nl_NL']['CheckoutPage']['NOPAGE'] = 'Er is geen CheckoutPage op deze site - maak er een aan a.u.b. !';
++$lang['nl_NL'][CheckoutPage::class]['NOPAGE'] = 'Er is geen CheckoutPage op deze site - maak er een aan a.u.b. !';
+ $lang['nl_NL']['CheckoutPage.ss']['CHECKOUT'] = 'Kassa';
+ $lang['nl_NL']['CheckoutPage.ss']['ORDERSTEP'] = 'Offerte Status';
+ $lang['nl_NL']['CheckoutPage.ss']['PROCESS'] = 'Verwerk';
+@@ -71,8 +78,8 @@
+ $lang['nl_NL']['FindOrderReport']['DATERANGE'] = 'Datumbereik';
+ $lang['nl_NL']['MemberForm']['DETAILSSAVED'] = 'Uw gegevens zijn opgeslagen';
+ $lang['nl_NL']['MemberForm']['LOGGEDIN'] = 'Je bent momenteel ingelogd als';
+-$lang['nl_NL']['Order']['INCOMPLETE'] = 'Bestelling onvolledig';
+-$lang['nl_NL']['Order']['SUCCESSFULL'] = 'Bestelling succesvol';
++$lang['nl_NL'][Order::class]['INCOMPLETE'] = 'Bestelling onvolledig';
++$lang['nl_NL'][Order::class]['SUCCESSFULL'] = 'Bestelling succesvol';
+ $lang['nl_NL']['OrderInformation.ss']['ADDRESS'] = 'Adres';
+ $lang['nl_NL']['OrderInformation.ss']['AMOUNT'] = 'Hoeveelheid';
+ $lang['nl_NL']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adres van koper';
+@@ -81,7 +88,7 @@
+ $lang['nl_NL']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Klant gegevens';
+ $lang['nl_NL']['OrderInformation.ss']['DATE'] = 'Datum';
+ $lang['nl_NL']['OrderInformation.ss']['DETAILS'] = 'Details';
+-$lang['nl_NL']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['nl_NL']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['nl_NL']['OrderInformation.ss']['MOBILE'] = 'Mobiel';
+ $lang['nl_NL']['OrderInformation.ss']['NAME'] = 'Naam';
+ $lang['nl_NL']['OrderInformation.ss']['ORDERSUMMARY'] = 'Samenvatting Offerte';
+@@ -91,7 +98,7 @@
+ $lang['nl_NL']['OrderInformation.ss']['PAYMENTSTATUS'] = 'Betalings Status';
+ $lang['nl_NL']['OrderInformation.ss']['PHONE'] = 'Telefoon';
+ $lang['nl_NL']['OrderInformation.ss']['PRICE'] = 'Prijs';
+-$lang['nl_NL']['OrderInformation.ss']['PRODUCT'] = 'Product';
++$lang['nl_NL']['OrderInformation.ss']['PRODUCT'] = Product::class;
+ $lang['nl_NL']['OrderInformation.ss']['QUANTITY'] = 'Hoeveelheid';
+ $lang['nl_NL']['OrderInformation.ss']['READMORE'] = 'Klik hier om meer te lezen over &quot;%s&quot;';
+ $lang['nl_NL']['OrderInformation.ss']['SHIPPING'] = 'Verzending';
+@@ -107,7 +114,7 @@
+ $lang['nl_NL']['OrderInformation_Editable.ss']['NOITEMS'] = 'Er zijn <strong>g&eacute;&eacute;n</strong> dingen in je winkelwagen';
+ $lang['nl_NL']['OrderInformation_Editable.ss']['ORDERINFORMATION'] = 'Offerte Informatie';
+ $lang['nl_NL']['OrderInformation_Editable.ss']['PRICE'] = 'Prijs';
+-$lang['nl_NL']['OrderInformation_Editable.ss']['PRODUCT'] = 'Product';
++$lang['nl_NL']['OrderInformation_Editable.ss']['PRODUCT'] = Product::class;
+ $lang['nl_NL']['OrderInformation_Editable.ss']['QUANTITY'] = 'Hoeveelheid';
+ $lang['nl_NL']['OrderInformation_Editable.ss']['READMORE'] = 'Klik hier om meer over &quot;%s&quot; te lezen';
+ $lang['nl_NL']['OrderInformation_Editable.ss']['REMOVE'] = 'Verwijder &quot;% s&quot; van uw bestelling';
+@@ -124,7 +131,7 @@
+ $lang['nl_NL']['OrderInformation_NoPricing.ss']['CITY'] = 'Stad';
+ $lang['nl_NL']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Land';
+ $lang['nl_NL']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Klant gegevens';
+-$lang['nl_NL']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['nl_NL']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['nl_NL']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobiel';
+ $lang['nl_NL']['OrderInformation_NoPricing.ss']['NAME'] = 'Naam';
+ $lang['nl_NL']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informatie over Offerte %';
+@@ -144,7 +151,7 @@
+ $lang['nl_NL']['OrderReport']['SENDNOTETO'] = 'Verstuur deze notitie naar %s (%s)';
+ $lang['nl_NL']['Order_Content.ss']['NOITEMS'] = 'Er zijn <strong>geen</ strong> items in uw bestelling.';
+ $lang['nl_NL']['Order_Content.ss']['PRICE'] = 'Prijs';
+-$lang['nl_NL']['Order_Content.ss']['PRODUCT'] = 'Product';
++$lang['nl_NL']['Order_Content.ss']['PRODUCT'] = Product::class;
+ $lang['nl_NL']['Order_Content.ss']['QUANTITY'] = 'Hoeveelheid';
+ $lang['nl_NL']['Order_Content.ss']['READMORE'] = 'Klik hier om meer te lezen over &quot;% s&quot;';
+ $lang['nl_NL']['Order_Content.ss']['SUBTOTAL'] = 'Sub-totaal';
+@@ -154,7 +161,7 @@
+ $lang['nl_NL']['Order_Member.ss']['ADDRESS'] = 'Adres';
+ $lang['nl_NL']['Order_Member.ss']['CITY'] = 'Stad';
+ $lang['nl_NL']['Order_Member.ss']['COUNTRY'] = 'Land';
+-$lang['nl_NL']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['nl_NL']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['nl_NL']['Order_Member.ss']['MOBILE'] = 'Mobiel';
+ $lang['nl_NL']['Order_Member.ss']['NAME'] = 'Naam';
+ $lang['nl_NL']['Order_Member.ss']['PHONE'] = 'Telefoon';
+
+modified:	lang/fr_FR.php
+@@ -1,4 +1,11 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use SilverStripe\ORM\FieldType\DBDate;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * French (France) language pack.
+@@ -13,8 +20,8 @@
+     $lang['fr_FR'] = $lang['en_US'];
+ }
+
+-$lang['fr_FR']['AccountPage']['Message'] = 'Vous devez avoir un login avant d\'avoir accès à votre page de profile. Si vous n\'êtes pas enregistré, vous ne pourrez avoir accès qu\'à partir du moment ou vous ferez votre première commande, sinon veuillez écrire vos renseignements ci-dessous.';
+-$lang['fr_FR']['AccountPage']['NOPAGE'] = 'Aucun compte sur ce site - créez-en un s\'il vous plaît!';
++$lang['fr_FR'][AccountPage::class]['Message'] = 'Vous devez avoir un login avant d\'avoir accès à votre page de profile. Si vous n\'êtes pas enregistré, vous ne pourrez avoir accès qu\'à partir du moment ou vous ferez votre première commande, sinon veuillez écrire vos renseignements ci-dessous.';
++$lang['fr_FR'][AccountPage::class]['NOPAGE'] = 'Aucun compte sur ce site - créez-en un s\'il vous plaît!';
+ $lang['fr_FR']['AccountPage.ss']['COMPLETED'] = 'Commandes terminées';
+ $lang['fr_FR']['AccountPage.ss']['HISTORY'] = 'Historique de vos commandes';
+ $lang['fr_FR']['AccountPage.ss']['INCOMPLETE'] = 'Commandes incomplètes';
+@@ -28,7 +35,7 @@
+ $lang['fr_FR']['AccountPage_order.ss']['BACKTOCHECKOUT'] = 'Cliquer ici pour vous rendre à la page de la caisse';
+ $lang['fr_FR']['AccountPage_order.ss']['CITY'] = 'Ville';
+ $lang['fr_FR']['AccountPage_order.ss']['COUNTRY'] = 'Pays';
+-$lang['fr_FR']['AccountPage_order.ss']['DATE'] = 'Date';
++$lang['fr_FR']['AccountPage_order.ss']['DATE'] = DBDate::class;
+ $lang['fr_FR']['AccountPage_order.ss']['DETAILS'] = 'Détails';
+ $lang['fr_FR']['AccountPage_order.ss']['EMAILDETAILS'] = 'Une copie confirmant les détails a été envoyé  vers votre adresse email.';
+ $lang['fr_FR']['AccountPage_order.ss']['NAME'] = 'Nom';
+@@ -49,7 +56,7 @@
+ $lang['fr_FR']['Cart.ss']['SHIPPING'] = 'Expédition';
+ $lang['fr_FR']['Cart.ss']['SUBTOTAL'] = 'Sous-Total';
+ $lang['fr_FR']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['fr_FR']['CheckoutPage']['NOPAGE'] = 'Pas de paiement sur la page de ce site, veuillez en créer un!';
++$lang['fr_FR'][CheckoutPage::class]['NOPAGE'] = 'Pas de paiement sur la page de ce site, veuillez en créer un!';
+ $lang['fr_FR']['CheckoutPage.ss']['CHECKOUT'] = 'Commander';
+ $lang['fr_FR']['CheckoutPage.ss']['ORDERSTEP'] = 'Etat de la commande';
+ $lang['fr_FR']['CheckoutPage.ss']['PROCESS'] = 'Processus';
+@@ -71,15 +78,15 @@
+ $lang['fr_FR']['FindOrderReport']['DATERANGE'] = 'Période';
+ $lang['fr_FR']['MemberForm']['DETAILSSAVED'] = 'Vos coordonnées ont été enregistrées';
+ $lang['fr_FR']['MemberForm']['LOGGEDIN'] = 'Vous êtes actuellement connecté en tant que';
+-$lang['fr_FR']['Order']['INCOMPLETE'] = 'Commande incomplète';
+-$lang['fr_FR']['Order']['SUCCESSFULL'] = 'Commande réussie';
++$lang['fr_FR'][Order::class]['INCOMPLETE'] = 'Commande incomplète';
++$lang['fr_FR'][Order::class]['SUCCESSFULL'] = 'Commande réussie';
+ $lang['fr_FR']['OrderInformation.ss']['ADDRESS'] = 'Adresse';
+ $lang['fr_FR']['OrderInformation.ss']['AMOUNT'] = 'Quantité';
+ $lang['fr_FR']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adresse de l\'acheteur';
+ $lang['fr_FR']['OrderInformation.ss']['CITY'] = 'Ville';
+ $lang['fr_FR']['OrderInformation.ss']['COUNTRY'] = 'Pays';
+ $lang['fr_FR']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Détails du Client';
+-$lang['fr_FR']['OrderInformation.ss']['DATE'] = 'Date';
++$lang['fr_FR']['OrderInformation.ss']['DATE'] = DBDate::class;
+ $lang['fr_FR']['OrderInformation.ss']['DETAILS'] = 'Détails';
+ $lang['fr_FR']['OrderInformation.ss']['EMAIL'] = 'Courrier électronique';
+ $lang['fr_FR']['OrderInformation.ss']['MOBILE'] = 'GSM';
+@@ -153,7 +160,7 @@
+ $lang['fr_FR']['Order_Member.ss']['ADDRESS'] = 'Adresse';
+ $lang['fr_FR']['Order_Member.ss']['CITY'] = 'Ville';
+ $lang['fr_FR']['Order_Member.ss']['COUNTRY'] = 'Pays';
+-$lang['fr_FR']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['fr_FR']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['fr_FR']['Order_Member.ss']['MOBILE'] = 'Mobile';
+ $lang['fr_FR']['Order_Member.ss']['NAME'] = 'Nom';
+ $lang['fr_FR']['Order_Member.ss']['PHONE'] = 'Téléphone';
+@@ -168,7 +175,7 @@
+ $lang['fr_FR']['Order_statusEmail.ss']['TITLE'] = 'Changement de statut de la boutique';
+ $lang['fr_FR']['OrderStatusEmail.ss']['TITLE'] = 'Changement du statut du magasin';
+ $lang['fr_FR']['PaymentInformation.ss']['AMOUNT'] = 'Montant';
+-$lang['fr_FR']['PaymentInformation.ss']['DATE'] = 'Date';
++$lang['fr_FR']['PaymentInformation.ss']['DATE'] = DBDate::class;
+ $lang['fr_FR']['PaymentInformation.ss']['DETAILS'] = 'Détails';
+ $lang['fr_FR']['PaymentInformation.ss']['PAYMENTID'] = 'ID du Paiement';
+ $lang['fr_FR']['PaymentInformation.ss']['PAYMENTINFORMATION'] = 'Information sur le paiement';
+
+modified:	lang/pl_PL.php
+@@ -1,4 +1,10 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Polish (Poland) language pack.
+@@ -13,8 +19,8 @@
+     $lang['pl_PL'] = $lang['en_US'];
+ }
+
+-$lang['pl_PL']['AccountPage']['Message'] = 'Musisz się najpierw zalogować aby uzyskać dostęp do strony profilu. Jeśli nie jesteś zarejestrowany, nie możesz się do niej dostać przed złożeniem pierwszego zamówienia. W przeciwnym przypadku, wpisz poniżej dane potrzebne do logowania.';
+-$lang['pl_PL']['AccountPage']['NOPAGE'] = 'Brak AccountPage na tej stronie - stwórz jedną !';
++$lang['pl_PL'][AccountPage::class]['Message'] = 'Musisz się najpierw zalogować aby uzyskać dostęp do strony profilu. Jeśli nie jesteś zarejestrowany, nie możesz się do niej dostać przed złożeniem pierwszego zamówienia. W przeciwnym przypadku, wpisz poniżej dane potrzebne do logowania.';
++$lang['pl_PL'][AccountPage::class]['NOPAGE'] = 'Brak AccountPage na tej stronie - stwórz jedną !';
+ $lang['pl_PL']['AccountPage.ss']['COMPLETED'] = 'Zrealizowane Zamówienia';
+ $lang['pl_PL']['AccountPage.ss']['HISTORY'] = 'Historia Zamówień';
+ $lang['pl_PL']['AccountPage.ss']['INCOMPLETE'] = 'Nieukończone zamówienia';
+@@ -49,7 +55,7 @@
+ $lang['pl_PL']['Cart.ss']['SHIPPING'] = 'Koszt Wysyłki';
+ $lang['pl_PL']['Cart.ss']['SUBTOTAL'] = 'Suma';
+ $lang['pl_PL']['Cart.ss']['TOTAL'] = 'Całkowity Koszt';
+-$lang['pl_PL']['CheckoutPage']['NOPAGE'] = 'Brak CheckoutPage na tej stronie - stwórz ją!';
++$lang['pl_PL'][CheckoutPage::class]['NOPAGE'] = 'Brak CheckoutPage na tej stronie - stwórz ją!';
+ $lang['pl_PL']['CheckoutPage.ss']['CHECKOUT'] = 'Do kasy!';
+ $lang['pl_PL']['CheckoutPage.ss']['ORDERSTEP'] = 'Status Zamówienia';
+ $lang['pl_PL']['CheckoutPage.ss']['PROCESS'] = 'Przebieg';
+@@ -71,8 +77,8 @@
+ $lang['pl_PL']['FindOrderReport']['DATERANGE'] = 'Zakres dat';
+ $lang['pl_PL']['MemberForm']['DETAILSSAVED'] = 'Szczegóły Twojego profilu zostały zapisane';
+ $lang['pl_PL']['MemberForm']['LOGGEDIN'] = 'Jesteś aktualnie zalogowany.';
+-$lang['pl_PL']['Order']['INCOMPLETE'] = 'Zamówienie Niekompletne';
+-$lang['pl_PL']['Order']['SUCCESSFULL'] = 'Zamówienie Poprawnie Złożone';
++$lang['pl_PL'][Order::class]['INCOMPLETE'] = 'Zamówienie Niekompletne';
++$lang['pl_PL'][Order::class]['SUCCESSFULL'] = 'Zamówienie Poprawnie Złożone';
+ $lang['pl_PL']['OrderInformation.ss']['ADDRESS'] = 'Adres';
+ $lang['pl_PL']['OrderInformation.ss']['AMOUNT'] = 'Ilość';
+ $lang['pl_PL']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adres Nabywcy';
+@@ -81,7 +87,7 @@
+ $lang['pl_PL']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Szczegóły Klienta';
+ $lang['pl_PL']['OrderInformation.ss']['DATE'] = 'Data';
+ $lang['pl_PL']['OrderInformation.ss']['DETAILS'] = 'Szczegóły';
+-$lang['pl_PL']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['pl_PL']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['pl_PL']['OrderInformation.ss']['MOBILE'] = 'Telefon Komórkowy';
+ $lang['pl_PL']['OrderInformation.ss']['NAME'] = 'Imię';
+ $lang['pl_PL']['OrderInformation.ss']['ORDERSUMMARY'] = 'Podsumowanie Zamówienia';
+@@ -124,7 +130,7 @@
+ $lang['pl_PL']['OrderInformation_NoPricing.ss']['CITY'] = 'Miasto';
+ $lang['pl_PL']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Państwo';
+ $lang['pl_PL']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Szczegóły Klienta';
+-$lang['pl_PL']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['pl_PL']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['pl_PL']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Telefon Komórkowy';
+ $lang['pl_PL']['OrderInformation_NoPricing.ss']['NAME'] = 'Imię';
+ $lang['pl_PL']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informacje o Zamówieniu #';
+@@ -154,7 +160,7 @@
+ $lang['pl_PL']['Order_Member.ss']['ADDRESS'] = 'Adres';
+ $lang['pl_PL']['Order_Member.ss']['CITY'] = 'Miasto';
+ $lang['pl_PL']['Order_Member.ss']['COUNTRY'] = 'Państwo';
+-$lang['pl_PL']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['pl_PL']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['pl_PL']['Order_Member.ss']['MOBILE'] = 'Telefon Komórkowy';
+ $lang['pl_PL']['Order_Member.ss']['NAME'] = 'Imię i Nazwisko';
+ $lang['pl_PL']['Order_Member.ss']['PHONE'] = 'Telefon';
+
+modified:	lang/tr_TR.php
+@@ -1,4 +1,9 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
+
+ /**
+  * Turkish (Turkey) language pack.
+@@ -13,8 +18,8 @@
+     $lang['tr_TR'] = $lang['en_US'];
+ }
+
+-$lang['tr_TR']['AccountPage']['Message'] = 'Hesap sayfasına ulaşabilmek icin oturum açmalısınız. Henüz kayıt olmadıysanız, ilk siparişinizi verene kadar erişemeyeceksiniz, kayıtlı iseniz, lütfen detaylarınızı aşagıya giriniz.';
+-$lang['tr_TR']['AccountPage']['NOPAGE'] = 'Bu sitede herhangi bir AccountPage bulunamadı - lütfen oluşturunuz !';
++$lang['tr_TR'][AccountPage::class]['Message'] = 'Hesap sayfasına ulaşabilmek icin oturum açmalısınız. Henüz kayıt olmadıysanız, ilk siparişinizi verene kadar erişemeyeceksiniz, kayıtlı iseniz, lütfen detaylarınızı aşagıya giriniz.';
++$lang['tr_TR'][AccountPage::class]['NOPAGE'] = 'Bu sitede herhangi bir AccountPage bulunamadı - lütfen oluşturunuz !';
+ $lang['tr_TR']['AccountPage.ss']['COMPLETED'] = 'Tamamlanan Siparişler';
+ $lang['tr_TR']['AccountPage.ss']['HISTORY'] = 'Sipariş Geçmişiniz';
+ $lang['tr_TR']['AccountPage.ss']['INCOMPLETE'] = 'Tamamlanmamış Siparişler';
+@@ -49,7 +54,7 @@
+ $lang['tr_TR']['Cart.ss']['SHIPPING'] = 'Nakliye';
+ $lang['tr_TR']['Cart.ss']['SUBTOTAL'] = 'Ara Toplam';
+ $lang['tr_TR']['Cart.ss']['TOTAL'] = 'Toplam';
+-$lang['tr_TR']['CheckoutPage']['NOPAGE'] = 'Bu sitede CheckoutPage sayfası bulunamıyor - lütfen bir adet oluşturun!';
++$lang['tr_TR'][CheckoutPage::class]['NOPAGE'] = 'Bu sitede CheckoutPage sayfası bulunamıyor - lütfen bir adet oluşturun!';
+ $lang['tr_TR']['CheckoutPage.ss']['CHECKOUT'] = 'Ödeme';
+ $lang['tr_TR']['CheckoutPage.ss']['ORDERSTEP'] = 'Sipariş Durumu';
+ $lang['tr_TR']['CheckoutPage.ss']['PROCESS'] = 'İşlem';
+@@ -71,8 +76,8 @@
+ $lang['tr_TR']['FindOrderReport']['DATERANGE'] = 'Tarih Aralığı';
+ $lang['tr_TR']['MemberForm']['DETAILSSAVED'] = 'Bilgileriniz kaydedildi';
+ $lang['tr_TR']['MemberForm']['LOGGEDIN'] = 'Oturum açtınız, kullanıcı: ';
+-$lang['tr_TR']['Order']['INCOMPLETE'] = 'Sipariş tamamlanmamış';
+-$lang['tr_TR']['Order']['SUCCESSFULL'] = 'Sipariş Başarılı';
++$lang['tr_TR'][Order::class]['INCOMPLETE'] = 'Sipariş tamamlanmamış';
++$lang['tr_TR'][Order::class]['SUCCESSFULL'] = 'Sipariş Başarılı';
+ $lang['tr_TR']['OrderInformation.ss']['ADDRESS'] = 'Adres';
+ $lang['tr_TR']['OrderInformation.ss']['AMOUNT'] = 'Tutar';
+ $lang['tr_TR']['OrderInformation.ss']['BUYERSADDRESS'] = 'Alıcının Adresi';
+
+modified:	lang/fi_FI.php
+@@ -1,4 +1,7 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
+ /**
+  * Finnish (Finland) language pack.
+@@ -36,7 +39,7 @@
+ $lang['fi_FI']['Cart.ss']['SHIPPING'] = 'Kuljetus';
+ $lang['fi_FI']['Cart.ss']['SUBTOTAL'] = 'Yhteensä';
+ $lang['fi_FI']['Cart.ss']['TOTAL'] = 'Yhteensä';
+-$lang['fi_FI']['CheckoutPage']['NOPAGE'] = 'Tällä sivustolla ei ole KassaSivua - ole hyvä ja luo sellainen!';
++$lang['fi_FI'][CheckoutPage::class]['NOPAGE'] = 'Tällä sivustolla ei ole KassaSivua - ole hyvä ja luo sellainen!';
+ $lang['fi_FI']['CheckoutPage.ss']['CHECKOUT'] = 'Kassa';
+ $lang['fi_FI']['CheckoutPage.ss']['ORDERSTEP'] = 'Tilauksen tila';
+ $lang['fi_FI']['CheckoutPage_OrderIncomplete.ss']['BACKTOCHECKOUT'] = 'Paina tästä palataksesi Kassalle';
+
+modified:	lang/hr_HR.php
+@@ -1,4 +1,8 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Croatian (Croatia) language pack.
+@@ -41,8 +45,8 @@
+ $lang['hr_HR']['FindOrderReport']['DATERANGE'] = 'Raspon datuma';
+ $lang['hr_HR']['MemberForm']['DETAILSSAVED'] = 'Vaši detalji su snimljeni';
+ $lang['hr_HR']['MemberForm']['LOGGEDIN'] = 'Trenutno ste logirani kao';
+-$lang['hr_HR']['Order']['INCOMPLETE'] = 'Nepotpuna narudžba';
+-$lang['hr_HR']['Order']['SUCCESSFULL'] = 'Narudžba uspjela';
++$lang['hr_HR'][Order::class]['INCOMPLETE'] = 'Nepotpuna narudžba';
++$lang['hr_HR'][Order::class]['SUCCESSFULL'] = 'Narudžba uspjela';
+ $lang['hr_HR']['OrderInformation.ss']['ADDRESS'] = 'Adresa';
+ $lang['hr_HR']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adresa kupca';
+ $lang['hr_HR']['OrderInformation.ss']['CITY'] = 'Grad';
+@@ -50,7 +54,7 @@
+ $lang['hr_HR']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Detalji o kupcu';
+ $lang['hr_HR']['OrderInformation.ss']['DATE'] = 'Datum';
+ $lang['hr_HR']['OrderInformation.ss']['DETAILS'] = 'Datalji';
+-$lang['hr_HR']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['hr_HR']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['hr_HR']['OrderInformation.ss']['MOBILE'] = 'Mobitel';
+ $lang['hr_HR']['OrderInformation.ss']['NAME'] = 'Ime';
+ $lang['hr_HR']['OrderInformation.ss']['ORDERSUMMARY'] = 'Pregled narudžbe';
+@@ -87,7 +91,7 @@
+ $lang['hr_HR']['OrderInformation_NoPricing.ss']['CITY'] = 'Grad';
+ $lang['hr_HR']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Država';
+ $lang['hr_HR']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Detalji o kupcu';
+-$lang['hr_HR']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['hr_HR']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['hr_HR']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobitel';
+ $lang['hr_HR']['OrderInformation_NoPricing.ss']['NAME'] = 'Ime';
+ $lang['hr_HR']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informazije o narudđbi #';
+
+modified:	lang/de_DE.php
+@@ -1,4 +1,11 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
+ /**
+  * German (Germany) language pack.
+  */
+@@ -72,72 +79,72 @@
+ $lang['de_DE']['Checkout']['MUSTLOGINTOCHECKOUTMESSAGE'] = 'Sie müssen eingeloggt sein, um die Bestellung anzusehen.';
+ $lang['de_DE']['Checkout']['LOGINTOORDERLINKLABEL'] = 'Einloggen und Bestellung ansehen.';
+ $lang['de_DE']['ChequePayment']['MESSAGE'] = 'Bezahlung per Scheck (Vorkasse). Bitte beachten: Der Versand der Produkte erfolgt erst nach Zahlungseingang.';
+-$lang['de_DE']['EcommerceRole']['PERSONALINFORMATION'] = 'Ihre Daten';
+-$lang['de_DE']['EcommerceRole']['COUNTRY'] = 'Land';
+-$lang['de_DE']['EcommerceRole']['FIRSTNAME'] = 'Vorname';
+-$lang['de_DE']['EcommerceRole']['SURNAME'] = 'Nachname';
+-$lang['de_DE']['EcommerceRole']['PHONE'] = 'Tel.';
+-$lang['de_DE']['EcommerceRole']['MOBILEPHONE'] = 'Mobil';
+-$lang['de_DE']['EcommerceRole']['EMAIL'] = 'Email';
+-$lang['de_DE']['EcommerceRole']['ADDRESS'] = 'Adresse';
+-$lang['de_DE']['EcommerceRole']['ADDRESSLINE2'] = '&nbsp;';
+-$lang['de_DE']['EcommerceRole']['CITY'] = 'Stadt';
+-$lang['de_DE']['EcommerceRole']['POSTALCODE'] = 'PLZ';
+-$lang['de_DE']['Order']['ACCOUNTINFO'] = 'Bitte wählen Sie ein Passwort, damit Sie sich zukünftig einloggen können und Ihre Bestellhistorie anschauen können.';
+-$lang['de_DE']['Order']['ADDRESS'] = 'Adresse';
+-$lang['de_DE']['Order']['ADDRESS2'] = '&nbsp;';
+-$lang['de_DE']['Order']['AGREEWITHTERMS1'] = 'Ich habe die Informationen zur Bestellung und die ';
+-$lang['de_DE']['Order']['AGREEWITHTERMS2'] = ' gelesen und verstanden.';
+-$lang['de_DE']['Order']['AMOUNT'] = 'Betrag';
+-$lang['de_DE']['Order']['CANCELORDER'] = 'Bestellung stornieren';
+-$lang['de_DE']['Order']['CITY'] = 'Stadt';
+-$lang['de_DE']['Order']['COMPLETEORDER'] = 'Bestellung abschließen';
+-$lang['de_DE']['Order']['COUNTRY'] = 'Land';
+-$lang['de_DE']['Order']['CUSTOMERORDERNOTE'] = 'Kunden Bemerkung';
+-$lang['de_DE']['Order']['CUSTOMERNOTE'] = 'Bemerkungen';
+-$lang['de_DE']['Order']['DATE'] = 'Datum';
+-$lang['de_DE']['Order']['ERRORINFORM'] = 'Es ist ein Fehler aufgetreten. Wir konnten Ihre Bestellung nicht ausführen!';
+-$lang['de_DE']['Order']['LOGIN'] = 'Loggen Sie sich ein.';
+-$lang['de_DE']['Order']['MAKEPAYMENT'] = 'Zahlart auswählen';
+-$lang['de_DE']['Order']['MEMBEREXISTS'] = 'Ein Konto mit dieser E-Mail Adresse gibt es bereits. Wenn das Ihre E-mail Adresse ist, loggen Sie sich bitte ein, um Ihre Bestellung abzuschließen.';
+-$lang['de_DE']['Order']['MEMBERINFO'] = 'Haben Sie bereits ein Kunden-Konto?';
+-$lang['de_DE']['Order']['MEMBERSHIPDETAILS'] = 'Kunden-Konto Details';
+-$lang['de_DE']['Order']['NAME'] = 'Name';
+-$lang['de_DE']['Order']['NOITEMS'] = 'Ihre Bestellung weist <strong>keine</strong> Artikel auf';
+-$lang['de_DE']['Order']['NOITEMSINCART'] = 'Sie haben keine Produkte ausgewählt. Bitte legen Sie Produkte in den Warenkorb.';
+-$lang['de_DE']['Order']['NOPAYMENTS'] = 'Es gibt keine Zahlungen für diese Bestellung.';
+-$lang['de_DE']['Order']['ORDER'] = 'Bestellung';
+-$lang['de_DE']['Order']['ORDERHASBEENCANCELLED'] = 'Bestellung wurde storniert!';
+-$lang['de_DE']['Order']['ORDERINFORMATION'] = 'Bestellinformationen';
+-$lang['de_DE']['Order']['PASSWORD'] = 'Passwort';
+-$lang['de_DE']['Order']['PAYMENTMETHOD'] = 'Zahlart';
+-$lang['de_DE']['Order']['PAYMENTSTATUS'] = 'Bezahlstatus';
+-$lang['de_DE']['Order']['PAYMENTS'] = 'Zahlart';
+-$lang['de_DE']['Order']['PAYMENTNOTE'] = 'Anmerkung';
+-$lang['de_DE']['Order']['PAYORDER'] = 'Bestellung bezahlen';
+-$lang['de_DE']['Order']['PRICE'] = 'Preis';
+-$lang['de_DE']['Order']['PRICEUPDATED'] = 'Die Bestellsumme wurde aktualisiert.';
+-$lang['de_DE']['Order']['PROCESSORDER'] = 'Bestellung ausführen';
+-$lang['de_DE']['Order']['PRODUCT'] = 'Produkt';
+-$lang['de_DE']['Order']['PURCHASEDBY'] = 'Rechnungsadresse';
+-$lang['de_DE']['Order']['QUANTITY'] = 'Menge';
+-$lang['de_DE']['Order']['READMORE'] = 'Wenn zu mehr über &quot;%s&quot; erfahren willst, klick hier';
+-$lang['de_DE']['Order']['READTERMSANDCONDITIONS'] = 'Bitte lesen und bestätigen Sie die AGB!';
+-$lang['de_DE']['Order']['REMOVE'] = '&quot;%s&quot; aus Ihrem Warenkorb entfernen';
+-$lang['de_DE']['Order']['REMOVEALL'] = '&quot;%s&quot; komplett aus dem Warenkorb entfernen';
+-$lang['de_DE']['Order']['SENDGOODSTODIFFERENTADDRESS'] = 'Abweichende Lieferadresse';
+-$lang['de_DE']['Order']['SHIPTO'] = 'Lieferadresse (falls abweichend)';
+-$lang['de_DE']['Order']['SHIPPING'] = 'Versandkosten';
+-$lang['de_DE']['Order']['SHIPPINGHELP'] = 'Sie können dies für Geschenke benutzen. Es werden keine Rechnungsinformationen mit versandt.';
+-$lang['de_DE']['Order']['SHIPPINGNOTE'] = 'Die Bestellung wird an folgende Adresse versendet.';
+-$lang['de_DE']['Order']['SHIPPINGTO'] = 'an';
+-$lang['de_DE']['Order']['SHIPPINGPOSTALCODE'] = 'PLZ';
+-$lang['de_DE']['Order']['SUBTOTAL'] = 'Zwischensumme';
+-$lang['de_DE']['Order']['TABLESUMMARY'] = 'Hier werden alle Artikel im Warenkorb und eine Zusammenfassung aller für die Bestellung anfallender Gebühren angezeigt. Außerdem wird ein Überblick aller Zahlungsmöglichkeiten angezeigt.';
+-$lang['de_DE']['Order']['TOTAL'] = 'Gesamt';
+-$lang['de_DE']['Order']['TOTALPRICE'] = 'Gesamtpreis';
+-$lang['de_DE']['Order']['TOTALOUTSTANDING'] = 'Gesamt ausstehend';
+-$lang['de_DE']['Order']['USEDIFFERENTSHIPPINGADDRESS'] = 'andere Lieferadresse wählen';
++$lang['de_DE'][EcommerceRole::class]['PERSONALINFORMATION'] = 'Ihre Daten';
++$lang['de_DE'][EcommerceRole::class]['COUNTRY'] = 'Land';
++$lang['de_DE'][EcommerceRole::class]['FIRSTNAME'] = 'Vorname';
++$lang['de_DE'][EcommerceRole::class]['SURNAME'] = 'Nachname';
++$lang['de_DE'][EcommerceRole::class]['PHONE'] = 'Tel.';
++$lang['de_DE'][EcommerceRole::class]['MOBILEPHONE'] = 'Mobil';
++$lang['de_DE'][EcommerceRole::class]['EMAIL'] = Email::class;
++$lang['de_DE'][EcommerceRole::class]['ADDRESS'] = 'Adresse';
++$lang['de_DE'][EcommerceRole::class]['ADDRESSLINE2'] = '&nbsp;';
++$lang['de_DE'][EcommerceRole::class]['CITY'] = 'Stadt';
++$lang['de_DE'][EcommerceRole::class]['POSTALCODE'] = 'PLZ';
++$lang['de_DE'][Order::class]['ACCOUNTINFO'] = 'Bitte wählen Sie ein Passwort, damit Sie sich zukünftig einloggen können und Ihre Bestellhistorie anschauen können.';
++$lang['de_DE'][Order::class]['ADDRESS'] = 'Adresse';
++$lang['de_DE'][Order::class]['ADDRESS2'] = '&nbsp;';
++$lang['de_DE'][Order::class]['AGREEWITHTERMS1'] = 'Ich habe die Informationen zur Bestellung und die ';
++$lang['de_DE'][Order::class]['AGREEWITHTERMS2'] = ' gelesen und verstanden.';
++$lang['de_DE'][Order::class]['AMOUNT'] = 'Betrag';
++$lang['de_DE'][Order::class]['CANCELORDER'] = 'Bestellung stornieren';
++$lang['de_DE'][Order::class]['CITY'] = 'Stadt';
++$lang['de_DE'][Order::class]['COMPLETEORDER'] = 'Bestellung abschließen';
++$lang['de_DE'][Order::class]['COUNTRY'] = 'Land';
++$lang['de_DE'][Order::class]['CUSTOMERORDERNOTE'] = 'Kunden Bemerkung';
++$lang['de_DE'][Order::class]['CUSTOMERNOTE'] = 'Bemerkungen';
++$lang['de_DE'][Order::class]['DATE'] = 'Datum';
++$lang['de_DE'][Order::class]['ERRORINFORM'] = 'Es ist ein Fehler aufgetreten. Wir konnten Ihre Bestellung nicht ausführen!';
++$lang['de_DE'][Order::class]['LOGIN'] = 'Loggen Sie sich ein.';
++$lang['de_DE'][Order::class]['MAKEPAYMENT'] = 'Zahlart auswählen';
++$lang['de_DE'][Order::class]['MEMBEREXISTS'] = 'Ein Konto mit dieser E-Mail Adresse gibt es bereits. Wenn das Ihre E-mail Adresse ist, loggen Sie sich bitte ein, um Ihre Bestellung abzuschließen.';
++$lang['de_DE'][Order::class]['MEMBERINFO'] = 'Haben Sie bereits ein Kunden-Konto?';
++$lang['de_DE'][Order::class]['MEMBERSHIPDETAILS'] = 'Kunden-Konto Details';
++$lang['de_DE'][Order::class]['NAME'] = 'Name';
++$lang['de_DE'][Order::class]['NOITEMS'] = 'Ihre Bestellung weist <strong>keine</strong> Artikel auf';
++$lang['de_DE'][Order::class]['NOITEMSINCART'] = 'Sie haben keine Produkte ausgewählt. Bitte legen Sie Produkte in den Warenkorb.';
++$lang['de_DE'][Order::class]['NOPAYMENTS'] = 'Es gibt keine Zahlungen für diese Bestellung.';
++$lang['de_DE'][Order::class]['ORDER'] = 'Bestellung';
++$lang['de_DE'][Order::class]['ORDERHASBEENCANCELLED'] = 'Bestellung wurde storniert!';
++$lang['de_DE'][Order::class]['ORDERINFORMATION'] = 'Bestellinformationen';
++$lang['de_DE'][Order::class]['PASSWORD'] = 'Passwort';
++$lang['de_DE'][Order::class]['PAYMENTMETHOD'] = 'Zahlart';
++$lang['de_DE'][Order::class]['PAYMENTSTATUS'] = 'Bezahlstatus';
++$lang['de_DE'][Order::class]['PAYMENTS'] = 'Zahlart';
++$lang['de_DE'][Order::class]['PAYMENTNOTE'] = 'Anmerkung';
++$lang['de_DE'][Order::class]['PAYORDER'] = 'Bestellung bezahlen';
++$lang['de_DE'][Order::class]['PRICE'] = 'Preis';
++$lang['de_DE'][Order::class]['PRICEUPDATED'] = 'Die Bestellsumme wurde aktualisiert.';
++$lang['de_DE'][Order::class]['PROCESSORDER'] = 'Bestellung ausführen';
++$lang['de_DE'][Order::class]['PRODUCT'] = 'Produkt';
++$lang['de_DE'][Order::class]['PURCHASEDBY'] = 'Rechnungsadresse';
++$lang['de_DE'][Order::class]['QUANTITY'] = 'Menge';
++$lang['de_DE'][Order::class]['READMORE'] = 'Wenn zu mehr über &quot;%s&quot; erfahren willst, klick hier';
++$lang['de_DE'][Order::class]['READTERMSANDCONDITIONS'] = 'Bitte lesen und bestätigen Sie die AGB!';
++$lang['de_DE'][Order::class]['REMOVE'] = '&quot;%s&quot; aus Ihrem Warenkorb entfernen';
++$lang['de_DE'][Order::class]['REMOVEALL'] = '&quot;%s&quot; komplett aus dem Warenkorb entfernen';
++$lang['de_DE'][Order::class]['SENDGOODSTODIFFERENTADDRESS'] = 'Abweichende Lieferadresse';
++$lang['de_DE'][Order::class]['SHIPTO'] = 'Lieferadresse (falls abweichend)';
++$lang['de_DE'][Order::class]['SHIPPING'] = 'Versandkosten';
++$lang['de_DE'][Order::class]['SHIPPINGHELP'] = 'Sie können dies für Geschenke benutzen. Es werden keine Rechnungsinformationen mit versandt.';
++$lang['de_DE'][Order::class]['SHIPPINGNOTE'] = 'Die Bestellung wird an folgende Adresse versendet.';
++$lang['de_DE'][Order::class]['SHIPPINGTO'] = 'an';
++$lang['de_DE'][Order::class]['SHIPPINGPOSTALCODE'] = 'PLZ';
++$lang['de_DE'][Order::class]['SUBTOTAL'] = 'Zwischensumme';
++$lang['de_DE'][Order::class]['TABLESUMMARY'] = 'Hier werden alle Artikel im Warenkorb und eine Zusammenfassung aller für die Bestellung anfallender Gebühren angezeigt. Außerdem wird ein Überblick aller Zahlungsmöglichkeiten angezeigt.';
++$lang['de_DE'][Order::class]['TOTAL'] = 'Gesamt';
++$lang['de_DE'][Order::class]['TOTALPRICE'] = 'Gesamtpreis';
++$lang['de_DE'][Order::class]['TOTALOUTSTANDING'] = 'Gesamt ausstehend';
++$lang['de_DE'][Order::class]['USEDIFFERENTSHIPPINGADDRESS'] = 'andere Lieferadresse wählen';
+ $lang['de_DE']['OrderReceiptEmail.ss']['HEADLINE'] = 'Auftragsbestätigung';
+ $lang['de_DE']['OrderReceiptEmail.ss']['TITLE'] = 'Shop Empfangsbestätigung';
+ $lang['de_DE']['OrderStatusEmail.ss']['HEADLINE'] = 'Shop-Status Änderung';
+@@ -150,39 +157,39 @@
+ $lang['de_DE']['Payment']['Failure'] = 'Misserfolg';
+ $lang['de_DE']['Payment']['Pending'] = 'Warteschleife';
+ $lang['de_DE']['Payment']['Paid'] = 'Bezahlt';
+-$lang['de_DE']['Product']['ADD'] = '&quot;%s&quot; zum Warenkorb hinzufügen';
+-$lang['de_DE']['Product']['ADDLINK'] = 'Diesen Artikel zum Warenkorb hinzufügen';
+-$lang['de_DE']['Product']['ADDONE'] = '&quot;%s&quot; zum Warenkorb hinzufügen';
+-$lang['de_DE']['Product']['ADDVARIATIONSLINK'] = 'Varianten anzeigen';
+-$lang['de_DE']['Product']['AUTHOR'] = 'Autor';
+-$lang['de_DE']['Product']['FEATURED'] = 'Wir empfehlen diesen Artikel.';
+-$lang['de_DE']['Product']['GOTOPAGE'] = 'Zur %s Seite';
+-$lang['de_DE']['Product']['GOTOCHECKOUT'] = 'Jetzt zur Kasse gehen';
+-$lang['de_DE']['Product']['GOTOCHECKOUTLINK'] = '&#187; Zur Kasse';
+-$lang['de_DE']['Product']['IMAGE'] = '%s Bild';
+-$lang['de_DE']['Product']['ITEMID'] = 'Artikel Nr.';
+-$lang['de_DE']['Product']['MODEL'] = 'Typ';
+-$lang['de_DE']['Product']['NOIMAGE'] = 'Keine Produktabbildung vorhanden für &quot;%s&quot;';
+-$lang['de_DE']['Product']['QUANTITYCART'] = 'Menge im Warenkorb';
+-$lang['de_DE']['Product']['QUANTITY'] = 'Menge';
+-$lang['de_DE']['Product']['REMOVE'] = '&quot;%s&quot; aus dem Warenkorb entfernen';
+-$lang['de_DE']['Product']['REMOVEALL'] = '&quot;%s&quot; aus dem Warenkorb entfernen';
+-$lang['de_DE']['Product']['REMOVELINK'] = '&#187; aus dem Warenkorb entfernen';
+-$lang['de_DE']['Product']['REMOVEONE'] = '1 Einheit von &quot;%s&quot; aus dem Warenkorb entferrnen';
+-$lang['de_DE']['Product']['READMORE'] = 'Erfahren Sie hier mehr über &quot;%s&quot;';
+-$lang['de_DE']['Product']['READMORECONTENT'] = 'mehr &#187;';
+-$lang['de_DE']['Product']['SIZE'] = 'Größe';
+-$lang['de_DE']['ProductGroup']['GOTOPAGE'] = 'Gehe zu Seite %s';
+-$lang['de_DE']['ProductGroup']['OTHER'] = 'Andere Produkte';
+-$lang['de_DE']['ProductGroup']['PREVIOUS'] = 'Vorherige';
+-$lang['de_DE']['ProductGroup']['SORTBY'] = 'Sortieren nach';
+-$lang['de_DE']['ProductGroup']['SORTBYALPHABETICAL'] = 'Alphabet';
+-$lang['de_DE']['ProductGroup']['SORTBYFEATURED'] = 'Empfohlene Artikel';
+-$lang['de_DE']['ProductGroup']['SORTBYLOWESTPRICE'] = 'billigstem Preis';
+-$lang['de_DE']['ProductGroup']['SORTBYMOSTPOPULAR'] = 'Beliebtheit';
+-$lang['de_DE']['ProductGroup']['SHOWNEXTPAGE'] = 'Nächste Seite';
+-$lang['de_DE']['ProductGroup']['SHOWPREVIOUSPAGE'] = 'Vorherige Seite';
+-$lang['de_DE']['ProductGroup']['VIEWGROUP'] = 'Produktgruppe &quot;%s&quot; anzeigen';
++$lang['de_DE'][Product::class]['ADD'] = '&quot;%s&quot; zum Warenkorb hinzufügen';
++$lang['de_DE'][Product::class]['ADDLINK'] = 'Diesen Artikel zum Warenkorb hinzufügen';
++$lang['de_DE'][Product::class]['ADDONE'] = '&quot;%s&quot; zum Warenkorb hinzufügen';
++$lang['de_DE'][Product::class]['ADDVARIATIONSLINK'] = 'Varianten anzeigen';
++$lang['de_DE'][Product::class]['AUTHOR'] = 'Autor';
++$lang['de_DE'][Product::class]['FEATURED'] = 'Wir empfehlen diesen Artikel.';
++$lang['de_DE'][Product::class]['GOTOPAGE'] = 'Zur %s Seite';
++$lang['de_DE'][Product::class]['GOTOCHECKOUT'] = 'Jetzt zur Kasse gehen';
++$lang['de_DE'][Product::class]['GOTOCHECKOUTLINK'] = '&#187; Zur Kasse';
++$lang['de_DE'][Product::class]['IMAGE'] = '%s Bild';
++$lang['de_DE'][Product::class]['ITEMID'] = 'Artikel Nr.';
++$lang['de_DE'][Product::class]['MODEL'] = 'Typ';
++$lang['de_DE'][Product::class]['NOIMAGE'] = 'Keine Produktabbildung vorhanden für &quot;%s&quot;';
++$lang['de_DE'][Product::class]['QUANTITYCART'] = 'Menge im Warenkorb';
++$lang['de_DE'][Product::class]['QUANTITY'] = 'Menge';
++$lang['de_DE'][Product::class]['REMOVE'] = '&quot;%s&quot; aus dem Warenkorb entfernen';
++$lang['de_DE'][Product::class]['REMOVEALL'] = '&quot;%s&quot; aus dem Warenkorb entfernen';
++$lang['de_DE'][Product::class]['REMOVELINK'] = '&#187; aus dem Warenkorb entfernen';
++$lang['de_DE'][Product::class]['REMOVEONE'] = '1 Einheit von &quot;%s&quot; aus dem Warenkorb entferrnen';
++$lang['de_DE'][Product::class]['READMORE'] = 'Erfahren Sie hier mehr über &quot;%s&quot;';
++$lang['de_DE'][Product::class]['READMORECONTENT'] = 'mehr &#187;';
++$lang['de_DE'][Product::class]['SIZE'] = 'Größe';
++$lang['de_DE'][ProductGroup::class]['GOTOPAGE'] = 'Gehe zu Seite %s';
++$lang['de_DE'][ProductGroup::class]['OTHER'] = 'Andere Produkte';
++$lang['de_DE'][ProductGroup::class]['PREVIOUS'] = 'Vorherige';
++$lang['de_DE'][ProductGroup::class]['SORTBY'] = 'Sortieren nach';
++$lang['de_DE'][ProductGroup::class]['SORTBYALPHABETICAL'] = 'Alphabet';
++$lang['de_DE'][ProductGroup::class]['SORTBYFEATURED'] = 'Empfohlene Artikel';
++$lang['de_DE'][ProductGroup::class]['SORTBYLOWESTPRICE'] = 'billigstem Preis';
++$lang['de_DE'][ProductGroup::class]['SORTBYMOSTPOPULAR'] = 'Beliebtheit';
++$lang['de_DE'][ProductGroup::class]['SHOWNEXTPAGE'] = 'Nächste Seite';
++$lang['de_DE'][ProductGroup::class]['SHOWPREVIOUSPAGE'] = 'Vorherige Seite';
++$lang['de_DE'][ProductGroup::class]['VIEWGROUP'] = 'Produktgruppe &quot;%s&quot; anzeigen';
+ $lang['de_DE']['Report']['ALLCLICKHERE'] = 'Klicken Sie hier, um alle Produkte anzuzeigen';
+ $lang['de_DE']['Report']['INVOICE'] = 'Rechnung';
+ $lang['de_DE']['Report']['PRINT'] = 'drucken';
+
+modified:	lang/it_IT.php
+@@ -1,4 +1,10 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Italian (Italy) language pack.
+@@ -13,8 +19,8 @@
+     $lang['it_IT'] = $lang['en_US'];
+ }
+
+-$lang['it_IT']['AccountPage']['Message'] = 'Avrai bisogno di fare il login prima di poter accedere alla pagina di account. Se non sei ancora registrato, non sarai in grado di accedere fino a quando non avrai fatto il tuo primo ordine, altrimenti inserisci i tuoi dati qui di seguito.';
+-$lang['it_IT']['AccountPage']['NOPAGE'] = 'Non c\'è la pagina Account su questo sito - creane una !';
++$lang['it_IT'][AccountPage::class]['Message'] = 'Avrai bisogno di fare il login prima di poter accedere alla pagina di account. Se non sei ancora registrato, non sarai in grado di accedere fino a quando non avrai fatto il tuo primo ordine, altrimenti inserisci i tuoi dati qui di seguito.';
++$lang['it_IT'][AccountPage::class]['NOPAGE'] = 'Non c\'è la pagina Account su questo sito - creane una !';
+ $lang['it_IT']['AccountPage.ss']['COMPLETED'] = 'Ordini Completati';
+ $lang['it_IT']['AccountPage.ss']['HISTORY'] = 'Il tuo Storico degli Ordini';
+ $lang['it_IT']['AccountPage.ss']['INCOMPLETE'] = 'Ordini non completati';
+@@ -49,7 +55,7 @@
+ $lang['it_IT']['Cart.ss']['SHIPPING'] = 'Spedizione';
+ $lang['it_IT']['Cart.ss']['SUBTOTAL'] = 'Subtotale';
+ $lang['it_IT']['Cart.ss']['TOTAL'] = 'Totale';
+-$lang['it_IT']['CheckoutPage']['NOPAGE'] = 'Non è ancora stata creata una pagina di Checkout in questo sito - per favore creane una!';
++$lang['it_IT'][CheckoutPage::class]['NOPAGE'] = 'Non è ancora stata creata una pagina di Checkout in questo sito - per favore creane una!';
+ $lang['it_IT']['CheckoutPage.ss']['CHECKOUT'] = 'Checkout';
+ $lang['it_IT']['CheckoutPage.ss']['ORDERSTEP'] = 'Stato dell\'ordine';
+ $lang['it_IT']['CheckoutPage.ss']['PROCESS'] = 'Processo';
+@@ -71,8 +77,8 @@
+ $lang['it_IT']['FindOrderReport']['DATERANGE'] = 'Intervallo Date';
+ $lang['it_IT']['MemberForm']['DETAILSSAVED'] = 'I tuoi dati sono stati salvati';
+ $lang['it_IT']['MemberForm']['LOGGEDIN'] = 'Sei attualmente collegato come';
+-$lang['it_IT']['Order']['INCOMPLETE'] = 'Ordine Incompleto';
+-$lang['it_IT']['Order']['SUCCESSFULL'] = 'Ordine completato correttamente';
++$lang['it_IT'][Order::class]['INCOMPLETE'] = 'Ordine Incompleto';
++$lang['it_IT'][Order::class]['SUCCESSFULL'] = 'Ordine completato correttamente';
+ $lang['it_IT']['OrderInformation.ss']['ADDRESS'] = 'Indirizzo';
+ $lang['it_IT']['OrderInformation.ss']['AMOUNT'] = 'Importo';
+ $lang['it_IT']['OrderInformation.ss']['BUYERSADDRESS'] = 'Indirizzo del compratore';
+@@ -81,7 +87,7 @@
+ $lang['it_IT']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Dettagli Cliente';
+ $lang['it_IT']['OrderInformation.ss']['DATE'] = 'Data';
+ $lang['it_IT']['OrderInformation.ss']['DETAILS'] = 'Dettagli';
+-$lang['it_IT']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['it_IT']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['it_IT']['OrderInformation.ss']['MOBILE'] = 'Telefono cellulare';
+ $lang['it_IT']['OrderInformation.ss']['NAME'] = 'Nome';
+ $lang['it_IT']['OrderInformation.ss']['ORDERSUMMARY'] = 'Riepilogo dell\'ordine';
+@@ -124,7 +130,7 @@
+ $lang['it_IT']['OrderInformation_NoPricing.ss']['CITY'] = 'Città';
+ $lang['it_IT']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Nazione';
+ $lang['it_IT']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Dettagli del Cliente';
+-$lang['it_IT']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['it_IT']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['it_IT']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Cellulare';
+ $lang['it_IT']['OrderInformation_NoPricing.ss']['NAME'] = 'Nome';
+ $lang['it_IT']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informazioni sull\'Ordine #';
+@@ -154,7 +160,7 @@
+ $lang['it_IT']['Order_Member.ss']['ADDRESS'] = 'Indirizzo';
+ $lang['it_IT']['Order_Member.ss']['CITY'] = 'Città';
+ $lang['it_IT']['Order_Member.ss']['COUNTRY'] = 'Paese';
+-$lang['it_IT']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['it_IT']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['it_IT']['Order_Member.ss']['MOBILE'] = 'Cellulare';
+ $lang['it_IT']['Order_Member.ss']['NAME'] = 'Nome';
+ $lang['it_IT']['Order_Member.ss']['PHONE'] = 'Telefono';
+
+modified:	lang/ru_RU.php
+@@ -1,4 +1,10 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Russian (Russia) language pack.
+@@ -13,8 +19,8 @@
+     $lang['ru_RU'] = $lang['en_US'];
+ }
+
+-$lang['ru_RU']['AccountPage']['Message'] = 'Вы должны авторизоваться до того, как получите доступ к странице счета. Если вы не зарегистрированы, то сможете зайти на нее только после того, как сделаете ваш первый заказ. Если зарегистрированы, введите ваши данные ниже.';
+-$lang['ru_RU']['AccountPage']['NOPAGE'] = 'На этом сайте нет страницы счета - пожалуйста, создайте ее!';
++$lang['ru_RU'][AccountPage::class]['Message'] = 'Вы должны авторизоваться до того, как получите доступ к странице счета. Если вы не зарегистрированы, то сможете зайти на нее только после того, как сделаете ваш первый заказ. Если зарегистрированы, введите ваши данные ниже.';
++$lang['ru_RU'][AccountPage::class]['NOPAGE'] = 'На этом сайте нет страницы счета - пожалуйста, создайте ее!';
+ $lang['ru_RU']['AccountPage.ss']['COMPLETED'] = 'Выполненные заказы';
+ $lang['ru_RU']['AccountPage.ss']['HISTORY'] = 'История ваших заказов';
+ $lang['ru_RU']['AccountPage.ss']['INCOMPLETE'] = 'Невыполненные заказы';
+@@ -49,7 +55,7 @@
+ $lang['ru_RU']['Cart.ss']['SHIPPING'] = 'Доставка';
+ $lang['ru_RU']['Cart.ss']['SUBTOTAL'] = 'Промежуточная сумма';
+ $lang['ru_RU']['Cart.ss']['TOTAL'] = 'Итого';
+-$lang['ru_RU']['CheckoutPage']['NOPAGE'] = 'На сайте нет страницы подсчета стоимости. Пожалуйста, создайте ее!';
++$lang['ru_RU'][CheckoutPage::class]['NOPAGE'] = 'На сайте нет страницы подсчета стоимости. Пожалуйста, создайте ее!';
+ $lang['ru_RU']['CheckoutPage.ss']['CHECKOUT'] = 'Расчет стоимости';
+ $lang['ru_RU']['CheckoutPage.ss']['ORDERSTEP'] = 'Статус заказа';
+ $lang['ru_RU']['CheckoutPage.ss']['PROCESS'] = 'Оформить';
+@@ -71,8 +77,8 @@
+ $lang['ru_RU']['FindOrderReport']['DATERANGE'] = 'Диапазон дат';
+ $lang['ru_RU']['MemberForm']['DETAILSSAVED'] = 'Выши данные сохранены';
+ $lang['ru_RU']['MemberForm']['LOGGEDIN'] = 'Вы вошли в систему как';
+-$lang['ru_RU']['Order']['INCOMPLETE'] = 'Заказ незавершен';
+-$lang['ru_RU']['Order']['SUCCESSFULL'] = 'Заказ успешен';
++$lang['ru_RU'][Order::class]['INCOMPLETE'] = 'Заказ незавершен';
++$lang['ru_RU'][Order::class]['SUCCESSFULL'] = 'Заказ успешен';
+ $lang['ru_RU']['OrderInformation.ss']['ADDRESS'] = 'Адрес';
+ $lang['ru_RU']['OrderInformation.ss']['AMOUNT'] = 'Сумма';
+ $lang['ru_RU']['OrderInformation.ss']['BUYERSADDRESS'] = 'Адрес покупателя';
+@@ -154,7 +160,7 @@
+ $lang['ru_RU']['Order_Member.ss']['ADDRESS'] = 'Адрес';
+ $lang['ru_RU']['Order_Member.ss']['CITY'] = 'Город';
+ $lang['ru_RU']['Order_Member.ss']['COUNTRY'] = 'Страна';
+-$lang['ru_RU']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['ru_RU']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['ru_RU']['Order_Member.ss']['MOBILE'] = 'Моб. тел.';
+ $lang['ru_RU']['Order_Member.ss']['NAME'] = 'Имя';
+ $lang['ru_RU']['Order_Member.ss']['PHONE'] = 'Тел.';
+
+modified:	lang/en_GB.php
+@@ -1,4 +1,12 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\ORM\FieldType\DBDate;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Pages\Product;
+
+ /**
+  * English (United Kingdom) language pack.
+@@ -13,8 +21,8 @@
+     $lang['en_GB'] = $lang['en_US'];
+ }
+
+-$lang['en_GB']['AccountPage']['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you\'ll place your first order, otherwise please enter your details below.';
+-$lang['en_GB']['AccountPage']['NOPAGE'] = 'No AccountPage on this site - please create one !';
++$lang['en_GB'][AccountPage::class]['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you\'ll place your first order, otherwise please enter your details below.';
++$lang['en_GB'][AccountPage::class]['NOPAGE'] = 'No AccountPage on this site - please create one !';
+ $lang['en_GB']['AccountPage.ss']['COMPLETED'] = 'Completed Orders';
+ $lang['en_GB']['AccountPage.ss']['HISTORY'] = 'Your Order History';
+ $lang['en_GB']['AccountPage.ss']['INCOMPLETE'] = 'Incomplete Orders';
+@@ -39,7 +47,7 @@
+ $lang['en_GB']['Cart.ss']['SHIPPING'] = 'Shipping';
+ $lang['en_GB']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
+ $lang['en_GB']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['en_GB']['CheckoutPage']['NOPAGE'] = 'No CheckoutPage on this site - please create one !';
++$lang['en_GB'][CheckoutPage::class]['NOPAGE'] = 'No CheckoutPage on this site - please create one !';
+ $lang['en_GB']['CheckoutPage.ss']['CHECKOUT'] = 'Checkout';
+ $lang['en_GB']['CheckoutPage.ss']['ORDERSTEP'] = 'Order Status';
+ $lang['en_GB']['CheckoutPage.ss']['PROCESS'] = 'Process';
+@@ -60,17 +68,17 @@
+ $lang['en_GB']['FindOrderReport']['DATERANGE'] = 'Date Range';
+ $lang['en_GB']['MemberForm']['DETAILSSAVED'] = 'Your details have been saved';
+ $lang['en_GB']['MemberForm']['LOGGEDIN'] = 'You are currently logged in as';
+-$lang['en_GB']['Order']['INCOMPLETE'] = 'Order Incomplete';
+-$lang['en_GB']['Order']['SUCCESSFULL'] = 'Order Successful';
++$lang['en_GB'][Order::class]['INCOMPLETE'] = 'Order Incomplete';
++$lang['en_GB'][Order::class]['SUCCESSFULL'] = 'Order Successful';
+ $lang['en_GB']['OrderInformation.ss']['ADDRESS'] = 'Address';
+ $lang['en_GB']['OrderInformation.ss']['AMOUNT'] = 'Amount';
+ $lang['en_GB']['OrderInformation.ss']['BUYERSADDRESS'] = 'Buyer\'s Address';
+ $lang['en_GB']['OrderInformation.ss']['CITY'] = 'City';
+ $lang['en_GB']['OrderInformation.ss']['COUNTRY'] = 'Country';
+ $lang['en_GB']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Customer Details';
+-$lang['en_GB']['OrderInformation.ss']['DATE'] = 'Date';
++$lang['en_GB']['OrderInformation.ss']['DATE'] = DBDate::class;
+ $lang['en_GB']['OrderInformation.ss']['DETAILS'] = 'Details';
+-$lang['en_GB']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['en_GB']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['en_GB']['OrderInformation.ss']['MOBILE'] = 'Mobile';
+ $lang['en_GB']['OrderInformation.ss']['NAME'] = 'Name';
+ $lang['en_GB']['OrderInformation.ss']['ORDERSUMMARY'] = 'Order Summary';
+@@ -80,7 +88,7 @@
+ $lang['en_GB']['OrderInformation.ss']['PAYMENTSTATUS'] = 'Payment Status';
+ $lang['en_GB']['OrderInformation.ss']['PHONE'] = 'Phone';
+ $lang['en_GB']['OrderInformation.ss']['PRICE'] = 'Price';
+-$lang['en_GB']['OrderInformation.ss']['PRODUCT'] = 'Product';
++$lang['en_GB']['OrderInformation.ss']['PRODUCT'] = Product::class;
+ $lang['en_GB']['OrderInformation.ss']['QUANTITY'] = 'Quantity';
+ $lang['en_GB']['OrderInformation.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
+ $lang['en_GB']['OrderInformation.ss']['SHIPPING'] = 'Shipping';
+@@ -96,7 +104,7 @@
+ $lang['en_GB']['OrderInformation_Editable.ss']['NOITEMS'] = 'There are <strong>no</strong> items in your cart.';
+ $lang['en_GB']['OrderInformation_Editable.ss']['ORDERINFORMATION'] = 'Order Information';
+ $lang['en_GB']['OrderInformation_Editable.ss']['PRICE'] = 'Price';
+-$lang['en_GB']['OrderInformation_Editable.ss']['PRODUCT'] = 'Product';
++$lang['en_GB']['OrderInformation_Editable.ss']['PRODUCT'] = Product::class;
+ $lang['en_GB']['OrderInformation_Editable.ss']['QUANTITY'] = 'Quantity';
+ $lang['en_GB']['OrderInformation_Editable.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
+ $lang['en_GB']['OrderInformation_Editable.ss']['REMOVEALL'] = 'Remove all of &quot;%s&quot; from your cart';
+@@ -112,7 +120,7 @@
+ $lang['en_GB']['OrderInformation_NoPricing.ss']['CITY'] = 'City';
+ $lang['en_GB']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Country';
+ $lang['en_GB']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Customer Details';
+-$lang['en_GB']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['en_GB']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['en_GB']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobile';
+ $lang['en_GB']['OrderInformation_NoPricing.ss']['NAME'] = 'Name';
+ $lang['en_GB']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Information for Order #';
+@@ -141,7 +149,7 @@
+ $lang['en_GB']['Order_statusEmail.ss']['TITLE'] = 'Shop Status Change';
+ $lang['en_GB']['OrderStatusEmail.ss']['TITLE'] = 'Shop Status Change';
+ $lang['en_GB']['PaymentInformation.ss']['AMOUNT'] = 'Amount';
+-$lang['en_GB']['PaymentInformation.ss']['DATE'] = 'Date';
++$lang['en_GB']['PaymentInformation.ss']['DATE'] = DBDate::class;
+ $lang['en_GB']['PaymentInformation.ss']['DETAILS'] = 'Details';
+ $lang['en_GB']['PaymentInformation.ss']['PAYMENTID'] = 'Payment ID';
+ $lang['en_GB']['PaymentInformation.ss']['PAYMENTINFORMATION'] = 'Payment Information';
+
+modified:	lang/et_EE.php
+@@ -1,4 +1,9 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
+
+ /**
+  * Estonian (Estonia) language pack.
+@@ -13,8 +18,8 @@
+     $lang['et_EE'] = $lang['en_US'];
+ }
+
+-$lang['et_EE']['AccountPage']['Message'] = 'Te peate sisse logima, enne kui saate tutvuda konto lehega. Kui olete siin esimest korda sisestage andmed allool';
+-$lang['et_EE']['AccountPage']['NOPAGE'] = 'Kontolehte pole - loo kontoleht';
++$lang['et_EE'][AccountPage::class]['Message'] = 'Te peate sisse logima, enne kui saate tutvuda konto lehega. Kui olete siin esimest korda sisestage andmed allool';
++$lang['et_EE'][AccountPage::class]['NOPAGE'] = 'Kontolehte pole - loo kontoleht';
+ $lang['et_EE']['AccountPage.ss']['COMPLETED'] = 'Lõpetatud tellimused';
+ $lang['et_EE']['AccountPage.ss']['HISTORY'] = 'Tellimuste ajalugu';
+ $lang['et_EE']['AccountPage.ss']['INCOMPLETE'] = 'Lõpetamata tellimused';
+@@ -49,7 +54,7 @@
+ $lang['et_EE']['Cart.ss']['SHIPPING'] = 'Transport';
+ $lang['et_EE']['Cart.ss']['SUBTOTAL'] = 'Vahesumma';
+ $lang['et_EE']['Cart.ss']['TOTAL'] = 'Kokku';
+-$lang['et_EE']['CheckoutPage']['NOPAGE'] = 'Ostukorv Puudub - loo ostukorv';
++$lang['et_EE'][CheckoutPage::class]['NOPAGE'] = 'Ostukorv Puudub - loo ostukorv';
+ $lang['et_EE']['CheckoutPage.ss']['CHECKOUT'] = 'Ostukorv';
+ $lang['et_EE']['CheckoutPage.ss']['ORDERSTEP'] = 'Tellimuse staatus';
+ $lang['et_EE']['CheckoutPage.ss']['PROCESS'] = 'Asukoht';
+@@ -72,8 +77,8 @@
+ $lang['et_EE']['FindOrderReport']['DATERANGE'] = 'Kuupäevade vahe';
+ $lang['et_EE']['MemberForm']['DETAILSSAVED'] = 'Sinu andmed on salvestatud';
+ $lang['et_EE']['MemberForm']['LOGGEDIN'] = 'Oled siselogitud nimega';
+-$lang['et_EE']['Order']['INCOMPLETE'] = 'Tellimus poolik';
+-$lang['et_EE']['Order']['SUCCESSFULL'] = 'Tellimus lõppetatud';
++$lang['et_EE'][Order::class]['INCOMPLETE'] = 'Tellimus poolik';
++$lang['et_EE'][Order::class]['SUCCESSFULL'] = 'Tellimus lõppetatud';
+ $lang['et_EE']['OrderInformation.ss']['ADDRESS'] = 'Aadress';
+ $lang['et_EE']['OrderInformation.ss']['AMOUNT'] = 'Kokku';
+ $lang['et_EE']['OrderInformation.ss']['BUYERSADDRESS'] = 'Ostja aadress';
+
+modified:	lang/ms_MY.php
+@@ -1,4 +1,6 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
+
+ /**
+  * Malay (Malaysia) language pack.
+
+modified:	lang/bg_BG.php
+@@ -1,4 +1,10 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Bulgarian (Bulgaria) language pack.
+@@ -13,8 +19,8 @@
+     $lang['bg_BG'] = $lang['en_US'];
+ }
+
+-$lang['bg_BG']['AccountPage']['Message'] = 'Ще трябва да влезнете в система преди да влезнете в профила си. Ако не сте регистриран, няма да може да влезните преди да направите първата си покупка, по друг начин можете да въведете данните си по-долу.';
+-$lang['bg_BG']['AccountPage']['NOPAGE'] = 'Няма ПрофилСтраница на този сайт - моля създайте една !';
++$lang['bg_BG'][AccountPage::class]['Message'] = 'Ще трябва да влезнете в система преди да влезнете в профила си. Ако не сте регистриран, няма да може да влезните преди да направите първата си покупка, по друг начин можете да въведете данните си по-долу.';
++$lang['bg_BG'][AccountPage::class]['NOPAGE'] = 'Няма ПрофилСтраница на този сайт - моля създайте една !';
+ $lang['bg_BG']['AccountPage.ss']['COMPLETED'] = 'Завършени поръчки';
+ $lang['bg_BG']['AccountPage.ss']['HISTORY'] = 'Хронология на вашите поръчки';
+ $lang['bg_BG']['AccountPage.ss']['INCOMPLETE'] = 'Неизпълнени поръчки';
+@@ -47,7 +53,7 @@
+ $lang['bg_BG']['Cart.ss']['SHIPPING'] = 'Изпращане';
+ $lang['bg_BG']['Cart.ss']['SUBTOTAL'] = 'Общо';
+ $lang['bg_BG']['Cart.ss']['TOTAL'] = 'Общо';
+-$lang['bg_BG']['CheckoutPage']['NOPAGE'] = 'Няма страница за поръчки на този сайт - моля създайте една!';
++$lang['bg_BG'][CheckoutPage::class]['NOPAGE'] = 'Няма страница за поръчки на този сайт - моля създайте една!';
+ $lang['bg_BG']['CheckoutPage.ss']['CHECKOUT'] = 'Поръчай';
+ $lang['bg_BG']['CheckoutPage.ss']['ORDERSTEP'] = 'Състояние на поръчката';
+ $lang['bg_BG']['CheckoutPage.ss']['PROCESS'] = 'Процедирай';
+@@ -69,8 +75,8 @@
+ $lang['bg_BG']['FindOrderReport']['DATERANGE'] = 'Интервал';
+ $lang['bg_BG']['MemberForm']['DETAILSSAVED'] = 'Вашите детайли бяха запазени';
+ $lang['bg_BG']['MemberForm']['LOGGEDIN'] = 'Вие сте влязъл като';
+-$lang['bg_BG']['Order']['INCOMPLETE'] = 'Неуспашна поръчка';
+-$lang['bg_BG']['Order']['SUCCESSFULL'] = 'Успешна поръчка';
++$lang['bg_BG'][Order::class]['INCOMPLETE'] = 'Неуспашна поръчка';
++$lang['bg_BG'][Order::class]['SUCCESSFULL'] = 'Успешна поръчка';
+ $lang['bg_BG']['OrderInformation.ss']['ADDRESS'] = 'Адрес';
+ $lang['bg_BG']['OrderInformation.ss']['AMOUNT'] = 'Сума';
+ $lang['bg_BG']['OrderInformation.ss']['BUYERSADDRESS'] = 'Адрес на копувача';
+@@ -142,7 +148,7 @@
+ $lang['bg_BG']['Order_Member.ss']['ADDRESS'] = 'Адрес';
+ $lang['bg_BG']['Order_Member.ss']['CITY'] = 'Град';
+ $lang['bg_BG']['Order_Member.ss']['COUNTRY'] = 'Държава';
+-$lang['bg_BG']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['bg_BG']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['bg_BG']['Order_Member.ss']['MOBILE'] = 'GSM';
+ $lang['bg_BG']['Order_Member.ss']['NAME'] = 'Име';
+ $lang['bg_BG']['Order_Member.ss']['PHONE'] = 'Телефон';
+
+modified:	lang/da_DK.php
+@@ -1,4 +1,10 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Danish (Denmark) language pack.
+@@ -13,7 +19,7 @@
+     $lang['da_DK'] = $lang['en_US'];
+ }
+
+-$lang['da_DK']['AccountPage']['NOPAGE'] = 'Ingen kontoside på dette site. Opret venligst en!';
++$lang['da_DK'][AccountPage::class]['NOPAGE'] = 'Ingen kontoside på dette site. Opret venligst en!';
+ $lang['da_DK']['AccountPage.ss']['COMPLETED'] = 'Fuldførte ordrer';
+ $lang['da_DK']['AccountPage.ss']['HISTORY'] = 'Din ordrehistorie';
+ $lang['da_DK']['AccountPage.ss']['INCOMPLETE'] = 'Mangelfuld ordre';
+@@ -38,7 +44,7 @@
+ $lang['da_DK']['Cart.ss']['SHIPPING'] = 'Levering';
+ $lang['da_DK']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
+ $lang['da_DK']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['da_DK']['CheckoutPage']['NOPAGE'] = 'Ingen Checkout Side på dette site - Lav venligst en!';
++$lang['da_DK'][CheckoutPage::class]['NOPAGE'] = 'Ingen Checkout Side på dette site - Lav venligst en!';
+ $lang['da_DK']['CheckoutPage.ss']['CHECKOUT'] = 'Check ud';
+ $lang['da_DK']['CheckoutPage.ss']['ORDERSTEP'] = 'Ordrestatus';
+ $lang['da_DK']['CheckoutPage.ss']['PROCESS'] = 'Proces';
+@@ -59,8 +65,8 @@
+ $lang['da_DK']['FindOrderReport']['DATERANGE'] = 'Dato interval';
+ $lang['da_DK']['MemberForm']['DETAILSSAVED'] = 'Dine detajler er blevet gemt';
+ $lang['da_DK']['MemberForm']['LOGGEDIN'] = 'Du er i øjeblikket logget ind som ';
+-$lang['da_DK']['Order']['INCOMPLETE'] = 'Ordren er ikke komplet';
+-$lang['da_DK']['Order']['SUCCESSFULL'] = 'Ordre modtaget succesfuldt';
++$lang['da_DK'][Order::class]['INCOMPLETE'] = 'Ordren er ikke komplet';
++$lang['da_DK'][Order::class]['SUCCESSFULL'] = 'Ordre modtaget succesfuldt';
+ $lang['da_DK']['OrderInformation.ss']['ADDRESS'] = 'Adresse';
+ $lang['da_DK']['OrderInformation.ss']['AMOUNT'] = 'Antal';
+ $lang['da_DK']['OrderInformation.ss']['BUYERSADDRESS'] = 'Købers adresse';
+@@ -69,7 +75,7 @@
+ $lang['da_DK']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Kundedetaljer';
+ $lang['da_DK']['OrderInformation.ss']['DATE'] = 'Dato';
+ $lang['da_DK']['OrderInformation.ss']['DETAILS'] = 'Detaljer';
+-$lang['da_DK']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['da_DK']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['da_DK']['OrderInformation.ss']['MOBILE'] = 'Mobil';
+ $lang['da_DK']['OrderInformation.ss']['NAME'] = 'Navn';
+ $lang['da_DK']['OrderInformation.ss']['ORDERSUMMARY'] = 'Ordresammendrag';
+@@ -111,7 +117,7 @@
+ $lang['da_DK']['OrderInformation_NoPricing.ss']['CITY'] = 'By';
+ $lang['da_DK']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Land';
+ $lang['da_DK']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Kundedetaljer';
+-$lang['da_DK']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['da_DK']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['da_DK']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobil';
+ $lang['da_DK']['OrderInformation_NoPricing.ss']['NAME'] = 'Navn';
+ $lang['da_DK']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Information tilhørende ordre #';
+
+modified:	lang/zh_TW.php
+@@ -1,4 +1,7 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
+ /**
+  * Chinese (Taiwan) language pack.
+@@ -32,7 +35,7 @@
+ $lang['zh_TW']['Cart.ss']['SHIPPING'] = '運費';
+ $lang['zh_TW']['Cart.ss']['SUBTOTAL'] = '小計';
+ $lang['zh_TW']['Cart.ss']['TOTAL'] = '總計';
+-$lang['zh_TW']['CheckoutPage']['NOPAGE'] = '找不到 CheckoutPage，請建立此頁。';
++$lang['zh_TW'][CheckoutPage::class]['NOPAGE'] = '找不到 CheckoutPage，請建立此頁。';
+ $lang['zh_TW']['CheckoutPage.ss']['CHECKOUT'] = '結帳';
+ $lang['zh_TW']['CheckoutPage.ss']['ORDERSTEP'] = '訂單狀態';
+ $lang['zh_TW']['CheckoutPage.ss']['PROCESS'] = '步驟';
+
+modified:	lang/pt_PT.php
+@@ -1,4 +1,7 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Portuguese (Portugal) language pack.
+@@ -41,7 +44,7 @@
+ $lang['pt_PT']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Detalhes do Cliente';
+ $lang['pt_PT']['OrderInformation.ss']['DATE'] = 'Data';
+ $lang['pt_PT']['OrderInformation.ss']['DETAILS'] = 'Detalhes';
+-$lang['pt_PT']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['pt_PT']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['pt_PT']['OrderInformation.ss']['MOBILE'] = 'Telemóvel';
+ $lang['pt_PT']['OrderInformation.ss']['NAME'] = 'Nome';
+ $lang['pt_PT']['OrderInformation.ss']['ORDERSUMMARY'] = 'Sumário do Pedido';
+@@ -77,7 +80,7 @@
+ $lang['pt_PT']['OrderInformation_NoPricing.ss']['CITY'] = 'Localidade';
+ $lang['pt_PT']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'País';
+ $lang['pt_PT']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Detalhes do Cliente';
+-$lang['pt_PT']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['pt_PT']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['pt_PT']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Telemóvel';
+ $lang['pt_PT']['OrderInformation_NoPricing.ss']['NAME'] = 'Nome';
+ $lang['pt_PT']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informação do Pedido #';
+
+modified:	lang/en_US.php
+@@ -1,15 +1,27 @@
+ <?php
++
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use SilverStripe\ORM\FieldType\DBDate;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\OrderAttribute;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
+
+ global $lang;
+
+-$lang['en_US']['AccountPage']['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you place your first order, otherwise please enter your details below.';
+-$lang['en_US']['AccountPage']['NOPAGE'] = 'No AccountPage on this site - please create one !';
+-$lang['en_US']['AccountPage']['PLURALNAME'] = [
++$lang['en_US'][AccountPage::class]['Message'] = 'You\'ll need to login before you can access the account page. If you are not registered, you won\'t be able to access it until you place your first order, otherwise please enter your details below.';
++$lang['en_US'][AccountPage::class]['NOPAGE'] = 'No AccountPage on this site - please create one !';
++$lang['en_US'][AccountPage::class]['PLURALNAME'] = [
+     'Account Pags',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['AccountPage']['SINGULARNAME'] = [
++$lang['en_US'][AccountPage::class]['SINGULARNAME'] = [
+     'Account Page',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+@@ -28,7 +40,7 @@
+ $lang['en_US']['AccountPage_order.ss']['BACKTOCHECKOUT'] = 'Click here to go to the checkout page';
+ $lang['en_US']['AccountPage_order.ss']['CITY'] = 'City';
+ $lang['en_US']['AccountPage_order.ss']['COUNTRY'] = 'Country';
+-$lang['en_US']['AccountPage_order.ss']['DATE'] = 'Date';
++$lang['en_US']['AccountPage_order.ss']['DATE'] = DBDate::class;
+ $lang['en_US']['AccountPage_order.ss']['DETAILS'] = 'Details';
+ $lang['en_US']['AccountPage_order.ss']['EMAILDETAILS'] = 'A copy of this has been sent to your email address confirming the order details.';
+ $lang['en_US']['AccountPage_order.ss']['NAME'] = 'Name';
+@@ -46,13 +58,13 @@
+ $lang['en_US']['Cart.ss']['REMOVEONE'] = 'Remove one of &quot;%s&quot; from your cart';
+ $lang['en_US']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
+ $lang['en_US']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['en_US']['CheckoutPage']['NOPAGE'] = 'No CheckoutPage on this site - please create one!';
+-$lang['en_US']['CheckoutPage']['PLURALNAME'] = [
++$lang['en_US'][CheckoutPage::class]['NOPAGE'] = 'No CheckoutPage on this site - please create one!';
++$lang['en_US'][CheckoutPage::class]['PLURALNAME'] = [
+     'Checkout Pags',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['CheckoutPage']['SINGULARNAME'] = [
++$lang['en_US'][CheckoutPage::class]['SINGULARNAME'] = [
+     'Checkout Page',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+@@ -93,24 +105,24 @@
+ ];
+ $lang['en_US']['MemberForm']['DETAILSSAVED'] = 'Your details have been saved';
+ $lang['en_US']['MemberForm']['LOGGEDIN'] = 'You are currently logged in as ';
+-$lang['en_US']['Order']['INCOMPLETE'] = 'Order Incomplete';
+-$lang['en_US']['Order']['PLURALNAME'] = [
++$lang['en_US'][Order::class]['INCOMPLETE'] = 'Order Incomplete';
++$lang['en_US'][Order::class]['PLURALNAME'] = [
+     'Orders',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['Order']['SINGULARNAME'] = [
+-    'Order',
+-    50,
+-    'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+-];
+-$lang['en_US']['Order']['SUCCESSFULL'] = 'Order Successful';
+-$lang['en_US']['OrderAttribute']['PLURALNAME'] = [
++$lang['en_US'][Order::class]['SINGULARNAME'] = [
++    Order::class,
++    50,
++    'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
++];
++$lang['en_US'][Order::class]['SUCCESSFULL'] = 'Order Successful';
++$lang['en_US'][OrderAttribute::class]['PLURALNAME'] = [
+     'Order Attributs',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['OrderAttribute']['SINGULARNAME'] = [
++$lang['en_US'][OrderAttribute::class]['SINGULARNAME'] = [
+     'Order Attribute',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+@@ -121,9 +133,9 @@
+ $lang['en_US']['OrderInformation.ss']['CITY'] = 'City';
+ $lang['en_US']['OrderInformation.ss']['COUNTRY'] = 'Country';
+ $lang['en_US']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Customer Details';
+-$lang['en_US']['OrderInformation.ss']['DATE'] = 'Date';
++$lang['en_US']['OrderInformation.ss']['DATE'] = DBDate::class;
+ $lang['en_US']['OrderInformation.ss']['DETAILS'] = 'Details';
+-$lang['en_US']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['en_US']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['en_US']['OrderInformation.ss']['MOBILE'] = 'Mobile';
+ $lang['en_US']['OrderInformation.ss']['NAME'] = 'Name';
+ $lang['en_US']['OrderInformation.ss']['ORDERSUMMARY'] = 'Order Summary';
+@@ -133,7 +145,7 @@
+ $lang['en_US']['OrderInformation.ss']['PAYMENTSTATUS'] = 'Payment Status';
+ $lang['en_US']['OrderInformation.ss']['PHONE'] = 'Phone';
+ $lang['en_US']['OrderInformation.ss']['PRICE'] = 'Price';
+-$lang['en_US']['OrderInformation.ss']['PRODUCT'] = 'Product';
++$lang['en_US']['OrderInformation.ss']['PRODUCT'] = Product::class;
+ $lang['en_US']['OrderInformation.ss']['QUANTITY'] = 'Quantity';
+ $lang['en_US']['OrderInformation.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
+ $lang['en_US']['OrderInformation.ss']['SHIPPINGDETAILS'] = 'Shipping Details';
+@@ -145,7 +157,7 @@
+ $lang['en_US']['OrderInformation_Editable.ss']['NOITEMS'] = 'There are <strong>no</strong> items in your cart.';
+ $lang['en_US']['OrderInformation_Editable.ss']['ORDERINFORMATION'] = 'Order Information';
+ $lang['en_US']['OrderInformation_Editable.ss']['PRICE'] = 'Price';
+-$lang['en_US']['OrderInformation_Editable.ss']['PRODUCT'] = 'Product';
++$lang['en_US']['OrderInformation_Editable.ss']['PRODUCT'] = Product::class;
+ $lang['en_US']['OrderInformation_Editable.ss']['QUANTITY'] = 'Quantity';
+ $lang['en_US']['OrderInformation_Editable.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
+ $lang['en_US']['OrderInformation_Editable.ss']['REMOVE'] = 'Remove &quot;%s&quot; from your order';
+@@ -160,7 +172,7 @@
+ $lang['en_US']['OrderInformation_NoPricing.ss']['CITY'] = 'City';
+ $lang['en_US']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Country';
+ $lang['en_US']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Customer Details';
+-$lang['en_US']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['en_US']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['en_US']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobile';
+ $lang['en_US']['OrderInformation_NoPricing.ss']['NAME'] = 'Name';
+ $lang['en_US']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Information for Order #';
+@@ -174,22 +186,22 @@
+ $lang['en_US']['OrderInformation_PackingSlip.ss']['QUANTITY'] = 'Quantity';
+ $lang['en_US']['OrderInformation_PackingSlip.ss']['TABLESUMMARY'] = 'The contents of your cart are displayed in this form and summary of all fees associated with an order and a rundown of payments options.';
+ $lang['en_US']['OrderInformation_Print.ss']['PAGETITLE'] = 'Print Orders';
+-$lang['en_US']['OrderItem']['PLURALNAME'] = [
++$lang['en_US'][OrderItem::class]['PLURALNAME'] = [
+     'Order Items',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['OrderItem']['SINGULARNAME'] = [
++$lang['en_US'][OrderItem::class]['SINGULARNAME'] = [
+     'Order Item',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+ ];
+-$lang['en_US']['OrderModifier']['PLURALNAME'] = [
++$lang['en_US'][OrderModifier::class]['PLURALNAME'] = [
+     'Order Modifiers',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['OrderModifier']['SINGULARNAME'] = [
++$lang['en_US'][OrderModifier::class]['SINGULARNAME'] = [
+     'Order Modifier',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+@@ -197,19 +209,19 @@
+ $lang['en_US']['OrderReport']['CHANGESTATUS'] = 'Change Order Status';
+ $lang['en_US']['OrderReport']['NOTEEMAIL'] = 'Note/Email';
+ $lang['en_US']['OrderReport']['SENDNOTETO'] = 'Send this note to %s (%s)';
+-$lang['en_US']['OrderStatusLog']['PLURALNAME'] = [
++$lang['en_US'][OrderStatusLog::class]['PLURALNAME'] = [
+     'Order Status Logs',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['OrderStatusLog']['SINGULARNAME'] = [
++$lang['en_US'][OrderStatusLog::class]['SINGULARNAME'] = [
+     'Order Status Log',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+ ];
+ $lang['en_US']['Order_Content.ss']['NOITEMS'] = 'There are <strong>no</strong> items in your order.';
+ $lang['en_US']['Order_Content.ss']['PRICE'] = 'Price';
+-$lang['en_US']['Order_Content.ss']['PRODUCT'] = 'Product';
++$lang['en_US']['Order_Content.ss']['PRODUCT'] = Product::class;
+ $lang['en_US']['Order_Content.ss']['QUANTITY'] = 'Quantity';
+ $lang['en_US']['Order_Content.ss']['READMORE'] = 'Click here to read more on &quot;%s&quot;';
+ $lang['en_US']['Order_Content.ss']['SUBTOTAL'] = 'Sub-total';
+@@ -219,7 +231,7 @@
+ $lang['en_US']['Order_Member.ss']['ADDRESS'] = 'Address';
+ $lang['en_US']['Order_Member.ss']['CITY'] = 'City';
+ $lang['en_US']['Order_Member.ss']['COUNTRY'] = 'Country';
+-$lang['en_US']['Order_Member.ss']['EMAIL'] = 'Email';
++$lang['en_US']['Order_Member.ss']['EMAIL'] = Email::class;
+ $lang['en_US']['Order_Member.ss']['MOBILE'] = 'Mobile';
+ $lang['en_US']['Order_Member.ss']['NAME'] = 'Name';
+ $lang['en_US']['Order_Member.ss']['PHONE'] = 'Phone';
+@@ -252,7 +264,7 @@
+ ];
+ $lang['en_US']['Payment']['SUBTOTAL'] = 'Subtotal';
+ $lang['en_US']['PaymentInformation.ss']['AMOUNT'] = 'Amount';
+-$lang['en_US']['PaymentInformation.ss']['DATE'] = 'Date';
++$lang['en_US']['PaymentInformation.ss']['DATE'] = DBDate::class;
+ $lang['en_US']['PaymentInformation.ss']['DETAILS'] = 'Details';
+ $lang['en_US']['PaymentInformation.ss']['PAYMENTID'] = 'Payment ID';
+ $lang['en_US']['PaymentInformation.ss']['PAYMENTINFORMATION'] = 'Payment Information';
+@@ -279,13 +291,13 @@
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+ ];
+-$lang['en_US']['Product']['PLURALNAME'] = [
++$lang['en_US'][Product::class]['PLURALNAME'] = [
+     'Products',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['Product']['SINGULARNAME'] = [
+-    'Product',
++$lang['en_US'][Product::class]['SINGULARNAME'] = [
++    Product::class,
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+ ];
+@@ -305,12 +317,12 @@
+ $lang['en_US']['Product.ss']['REMOVEALL'] = 'Remove one of &quot;%s&quot; from your cart';
+ $lang['en_US']['Product.ss']['REMOVELINK'] = '&#187; Remove from cart';
+ $lang['en_US']['Product.ss']['SIZE'] = 'Size';
+-$lang['en_US']['ProductGroup']['PLURALNAME'] = [
++$lang['en_US'][ProductGroup::class]['PLURALNAME'] = [
+     'Product Groups',
+     50,
+     'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the interface',
+ ];
+-$lang['en_US']['ProductGroup']['SINGULARNAME'] = [
++$lang['en_US'][ProductGroup::class]['SINGULARNAME'] = [
+     'Product Group',
+     50,
+     'Singular name of the object, used in dropdowns and to generally identify a single object in the interface',
+
+modified:	lang/es_ES.php
+@@ -1,4 +1,8 @@
+ <?php
++
++use SilverStripe\i18n\i18n;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\Control\Email\Email;
+
+ /**
+  * Spanish (Spain) language pack.
+@@ -42,7 +46,7 @@
+ $lang['es_ES']['Cart.ss']['SHIPPING'] = 'Envio';
+ $lang['es_ES']['Cart.ss']['SUBTOTAL'] = 'Subtotal';
+ $lang['es_ES']['Cart.ss']['TOTAL'] = 'Total';
+-$lang['es_ES']['CheckoutPage']['NOPAGE'] = 'No existe una página para chequearse en este sitio, porfavor crear una!';
++$lang['es_ES'][CheckoutPage::class]['NOPAGE'] = 'No existe una página para chequearse en este sitio, porfavor crear una!';
+ $lang['es_ES']['CheckoutPage.ss']['CHECKOUT'] = 'chequearse';
+ $lang['es_ES']['CheckoutPage.ss']['ORDERSTEP'] = 'Orden Status';
+ $lang['es_ES']['CheckoutPage.ss']['PROCESS'] = 'Proceso';
+@@ -72,7 +76,7 @@
+ $lang['es_ES']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Información del cliente';
+ $lang['es_ES']['OrderInformation.ss']['DATE'] = 'Fecha';
+ $lang['es_ES']['OrderInformation.ss']['DETAILS'] = 'Detalles';
+-$lang['es_ES']['OrderInformation.ss']['EMAIL'] = 'Email';
++$lang['es_ES']['OrderInformation.ss']['EMAIL'] = Email::class;
+ $lang['es_ES']['OrderInformation.ss']['MOBILE'] = 'Movil';
+ $lang['es_ES']['OrderInformation.ss']['NAME'] = 'Nombre';
+ $lang['es_ES']['OrderInformation.ss']['ORDERSUMMARY'] = 'Resumen de la orden';
+@@ -112,7 +116,7 @@
+ $lang['es_ES']['OrderInformation_NoPricing.ss']['CITY'] = 'Ciudad';
+ $lang['es_ES']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'País';
+ $lang['es_ES']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Información del Cliente';
+-$lang['es_ES']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
++$lang['es_ES']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
+ $lang['es_ES']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Movil';
+ $lang['es_ES']['OrderInformation_NoPricing.ss']['NAME'] = 'Nombre';
+ $lang['es_ES']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Información de la Orden Nro';
+
+modified:	_config.php
+@@ -1,4 +1,7 @@
+ <?php
++
++use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
++use SilverStripe\Admin\CMSMenu;
+
+ /**
+  * @author: Nicolaas - modules [at] sunnysideup.co.nz
+@@ -13,5 +16,5 @@
+ //last param is priority
+
+ // CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
+-CMSMenu::remove_menu_item('CMSPageAddControllerProducts');
++CMSMenu::remove_menu_item(CMSPageAddControllerProducts::class);
+
+
+modified:	tests/EcommerceTest.php
+@@ -1,4 +1,6 @@
+ <?php
++
++use SilverStripe\Dev\SapphireTest;
+
+ class EcommerceTest extends SapphireTest
+ {
+
+modified:	src/Api/OrderConverter.php
+@@ -2,9 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Api;
+
+-use ViewableData;
++
+ use Shoppingcart;
+-use Order;
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\View\ViewableData;
++
+
+
+
+
+unchanged:	src/Api/EcommerceRestfulServer.php
+Warnings for src/Api/EcommerceRestfulServer.php:
+ - src/Api/EcommerceRestfulServer.php:92 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 92
+
+modified:	src/Api/EcommerceCountryVisitorCountryProvider.php
+@@ -2,11 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Api;
+
+-use ViewableData;
+-use EcommerceGEOipProvider;
++
++
+ use Geoip;
+-use Config;
+-use Controller;
++
++
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use SilverStripe\Control\Controller;
++use SilverStripe\View\ViewableData;
++use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
++
+
+
+ /**
+@@ -35,7 +41,7 @@
+         if (class_exists('Geoip')) {
+             return Geoip::visitor_country();
+         }
+-        return Config::inst()->get('EcommerceCountry', 'default_country_code');
++        return Config::inst()->get(EcommerceCountry::class, 'default_country_code');
+     }
+
+     /**
+
+modified:	src/Api/ShoppingCart.php
+@@ -2,23 +2,46 @@
+
+ namespace Sunnysideup\Ecommerce\Api;
+
+-use Injector;
+-use Order;
+-use Member;
+-use DataObject;
+-use EcommerceConfig;
+-use BuyableModel;
+-use Form;
+-use OrderItem;
+-use OrderModifier;
+-use EcommerceCountry;
+-use EcommerceRegion;
+-use EcommerceCurrency;
+-use Director;
+-use Permission;
+-use Controller;
+-use Convert;
+-use EcommerceDBConfig;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
++use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
++use SilverStripe\Forms\Form;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use SilverStripe\Control\Director;
++use SilverStripe\Security\Permission;
++use SilverStripe\Control\Controller;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++
+
+
+ /**
+@@ -55,46 +78,79 @@
+  * @sub-package: control
+
+  **/
+-class ShoppingCart extends Object
++use SilverStripe\Core\Extensible;
++use SilverStripe\Core\Injector\Injectable;
++use SilverStripe\Core\Config\Configurable;
++/**
++ * ShoppingCart - provides a global way to interface with the cart (current order).
++ *
++ * This can be used in other code by calling $cart = ShoppingCart::singleton();
++ *
++ * The shopping cart can be accessed as an order handler from the back-end
++ * (e.g. when creating an order programmatically), while the accompagnying controller
++ * is used by web-users to manipulate their order.
++ *
++ * A bunch of core functions are also stored in the order itself.
++ * Methods and variables are in the shopping cart if they are relevant
++ * only before (and while) the order is placed (e.g. latest update message),
++ * and others are in the order because they are relevant even after the
++ * order has been submitted (e.g. Total Cost).
++ *
++ * Key methods:
++ *
++ * //get Cart
++ * $myCart = ShoppingCart::singleton();
++ *
++ * //get order
++ * $myOrder = ShoppingCart::current_order();
++ *
++ * //view order (from another controller)
++ * $this->redirect(ShoppingCart::current_order()->Link());
++ *
++ * //add item to cart
++ * ShoppingCart::singleton()->addBuyable($myProduct);
++ *
++ * @authors: Nicolaas [at] Sunny Side Up .co.nz
++ * @package: ecommerce
++ * @sub-package: control
++ **/
++class ShoppingCart
+ {
++    use Extensible;
++    use Injectable;
++    use Configurable;
+     /**
+      * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
+      *
+      *@var array
+      **/
+-    protected $messages = [];
+-
++    protected $messages = array();
+     /**
+      * stores a reference to the current order object.
+      *
+      * @var object
+      **/
+     protected $order = null;
+-
+     /**
+      * This variable is set to YES when we actually need an order (i.e. write it).
+      *
+      * @var bool
+      */
+     protected $requireSavedOrder = false;
+-
+     /**
+      * List of names that can be used as session variables.
+      * Also @see ShoppingCart::sessionVariableName.
+      *
+      * @var array
+      */
+-    private static $session_variable_names = ['OrderID', 'Messages'];
+-
++    private static $session_variable_names = array('OrderID', 'Messages');
+     /**
+      * This is where we hold the (singleton) Shoppingcart.
+      *
+      * @var object (ShoppingCart)
+      */
+     private static $_singletoncart = null;
+-
+     private static $_allow_writes_cache = null;
+-
+     /**
+      * Allows access to the cart from anywhere in code.
+      *
+@@ -102,13 +158,11 @@
+      */
+     public static function singleton()
+     {
+-        if (! self::$_singletoncart) {
+-            self::$_singletoncart = Injector::inst()->get('ShoppingCart');
+-        }
+-
++        if (!self::$_singletoncart) {
++            self::$_singletoncart = Injector::inst()->get(ShoppingCart::class);
++        }
+         return self::$_singletoncart;
+     }
+-
+     /**
+      * Allows access to the current order from anywhere in the code..
+      *
+@@ -122,7 +176,6 @@
+     {
+         return self::singleton()->currentOrder(0, $order);
+     }
+-
+     /**
+      * useful when the order has been updated ...
+      */
+@@ -130,7 +183,6 @@
+     {
+         return self::singleton()->order = null;
+     }
+-
+     /**
+      * looks up current order id.
+      * you may supply an ID here, so that it looks up the current order ID
+@@ -143,7 +195,7 @@
+     public static function current_order_id($orderOrOrderID = 0)
+     {
+         $orderID = 0;
+-        if (! $orderOrOrderID) {
++        if (!$orderOrOrderID) {
+             $order = self::current_order();
+             if ($order && $order->exists()) {
+                 $orderID = $order->ID;
+@@ -154,10 +206,8 @@
+         } elseif (intval($orderOrOrderID)) {
+             $orderID = intval($orderOrOrderID);
+         }
+-
+         return $orderID;
+     }
+-
+     /**
+      * Allows access to the current order from anywhere in the code..
+      *
+@@ -166,20 +216,17 @@
+     public static function session_order()
+     {
+         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: Session:: (case sensitive)
++         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         $orderIDFromSession = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
+-
+         return Order::get()->byID($orderIDFromSession);
+     }
+-
+     /**
+      * set a specific order, other than the one from session ....
+      *
+@@ -192,7 +239,6 @@
+         $this->order = $order;
+         return $this->order;
+     }
+-
+     /**
+      * Gets or creates the current order.
+      * Based on the session ONLY unless the order has been explictely set.
+@@ -213,24 +259,24 @@
+             $this->order = $order;
+         }
+         if ($this->allowWrites()) {
+-            if (! $this->order) {
++            if (!$this->order) {
+                 $this->order = self::session_order();
+                 $loggedInMember = Member::currentUser();
+                 if ($this->order) {
+                     //first reason to set to null: it is already submitted
+                     if ($this->order->IsSubmitted()) {
+                         $this->order = null;
+-                    } elseif (! $this->order->canView()) {
++                    } elseif (!$this->order->canView()) {
+                         //second reason to set to null: make sure we have permissions
+                         $this->order = null;
+                     } elseif ($loggedInMember && $loggedInMember->exists()) {
+                         //logged in, add Member.ID to order->MemberID
+                         if ($this->order->MemberID !== $loggedInMember->ID) {
+                             $updateMember = false;
+-                            if (! $this->order->MemberID) {
++                            if (!$this->order->MemberID) {
+                                 $updateMember = true;
+                             }
+-                            if (! $loggedInMember->IsShopAdmin()) {
++                            if (!$loggedInMember->IsShopAdmin()) {
+                                 $updateMember = true;
+                             }
+                             if ($updateMember) {
+@@ -243,18 +289,14 @@
+                         if ($this->order->StatusID || $this->order->TotalItems()) {
+                             //do NOTHING!
+                         } else {
+-                            $firstStep = DataObject::get_one('OrderStep');
++                            $firstStep = DataObject::get_one(OrderStep::class);
+                             //we assume the first step always exists.
+                             //TODO: what sort order?
+                             $count = 0;
+-                            $previousOrderFromMember = DataObject::get_one(
+-                                'Order',
+-                                '
++                            $previousOrderFromMember = DataObject::get_one(Order::class, '
+                                     "MemberID" = ' . $loggedInMember->ID . '
+                                     AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
+-                                    AND "Order"."ID" <> ' . $this->order->ID
+-                            );
+-
++                                    AND "Order"."ID" <> ' . $this->order->ID);
+                             while ($firstStep && $previousOrderFromMember) {
+                                 //arbritary 12 attempts ...
+                                 if ($count > 12) {
+@@ -269,29 +311,20 @@
+                                     }
+                                     $previousOrderFromMember->delete();
+                                 }
+-                                $previousOrderFromMember = DataObject::get_one(
+-                                    'Order',
+-                                    '
++                                $previousOrderFromMember = DataObject::get_one(Order::class, '
+                                         "MemberID" = ' . $loggedInMember->ID . '
+                                         AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
+-                                        AND "Order"."ID" <> ' . $this->order->ID
+-                                );
++                                        AND "Order"."ID" <> ' . $this->order->ID);
+                             }
+                         }
+                     }
+                 }
+-                if (! $this->order) {
++                if (!$this->order) {
+                     if ($loggedInMember) {
+                         //find previour order...
+-                        $firstStep = DataObject::get_one('OrderStep');
++                        $firstStep = DataObject::get_one(OrderStep::class);
+                         if ($firstStep) {
+-                            $previousOrderFromMember = Order::get()
+-                                ->filter(
+-                                    [
+-                                        'MemberID' => $loggedInMember->ID,
+-                                        'StatusID' => [$firstStep->ID, 0],
+-                                    ]
+-                                )->first();
++                            $previousOrderFromMember = Order::get()->filter(['MemberID' => $loggedInMember->ID, 'StatusID' => [$firstStep->ID, 0]])->first();
+                             if ($previousOrderFromMember) {
+                                 if ($previousOrderFromMember->canView()) {
+                                     $this->order = $previousOrderFromMember;
+@@ -299,14 +332,14 @@
+                             }
+                         }
+                     }
+-                    if ($this->order && ! $this->order->exists()) {
++                    if ($this->order && !$this->order->exists()) {
+                         $this->order = null;
+                     }
+-                    if (! $this->order) {
++                    if (!$this->order) {
+                         //here we cleanup old orders, because they should be
+                         //cleaned at the same rate that they are created...
+-                        if (EcommerceConfig::get('ShoppingCart', 'cleanup_every_time')) {
+-                            $cartCleanupTask = Injector::inst()->get('EcommerceTaskCartCleanup');
++                        if (EcommerceConfig::get(ShoppingCart::class, 'cleanup_every_time')) {
++                            $cartCleanupTask = Injector::inst()->get(EcommerceTaskCartCleanup::class);
+                             $cartCleanupTask->runSilently();
+                         }
+                         //create new order
+@@ -317,22 +350,21 @@
+                         $this->order->write();
+                     }
+                     $sessionVariableName = $this->sessionVariableName('OrderID');
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++                    /**
++                     * ### @@@@ START REPLACEMENT @@@@ ###
++                     * WHY: automated upgrade
++                     * OLD: Session:: (case sensitive)
++                     * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++                     * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++                     * ### @@@@ STOP REPLACEMENT @@@@ ###
++                     */
+                     SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, intval($this->order->ID));
+                 }
+                 if ($this->order) {
+                     if ($this->order->exists()) {
+                         $this->order->calculateOrderAttributes($force = false);
+                     }
+-                    if (! $this->order->SessionID) {
++                    if (!$this->order->SessionID) {
+                         $this->order->write();
+                     }
+                     //add session ID...
+@@ -341,18 +373,15 @@
+             //try it again
+             //but limit to three, just in case ...
+             //just in case ...
+-            if (! $this->order && $recurseCount < 3) {
++            if (!$this->order && $recurseCount < 3) {
+                 ++$recurseCount;
+-
+                 return $this->currentOrder($recurseCount, $order);
+             }
+-
+             return $this->order;
+         }
+         //we still return an order so that we do not end up with errors...
+         return Order::create();
+     }
+-
+     /**
+      * Allows access to the current order from anywhere in the code..
+      *
+@@ -367,7 +396,6 @@
+             return $order->Link();
+         }
+     }
+-
+     /**
+      * Adds any number of items to the cart.
+      * Returns the order item on succes OR false on failure.
+@@ -380,23 +408,25 @@
+      *
+      * @return false | DataObject (OrderItem)
+      */
+-    public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = [])
++    public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = array())
+     {
+         if ($this->allowWrites()) {
+-            if (! $buyable) {
++            if (!$buyable) {
+                 $this->addMessage(_t('Order.ITEMCOULDNOTBEFOUND', 'This item could not be found.'), 'bad');
+                 return false;
+             }
+-            if (! $buyable->canPurchase()) {
++            if (!$buyable->canPurchase()) {
+                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'This item is not for sale.'), 'bad');
+                 return false;
+             }
+             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+             $quantity = $this->prepareQuantity($buyable, $quantity);
+-            if ($item && $quantity) { //find existing order item or make one
++            if ($item && $quantity) {
++                //find existing order item or make one
+                 $item->Quantity += $quantity;
+                 $item->write();
+-                $this->currentOrder()->Attributes()->add($item); //save to current order
++                $this->currentOrder()->Attributes()->add($item);
++                //save to current order
+                 //TODO: distinquish between incremented and set
+                 //TODO: use sprintf to allow product name etc to be included in message
+                 if ($quantity > 1) {
+@@ -405,16 +435,14 @@
+                     $msg = _t('Order.ITEMADDED', 'Item added.');
+                 }
+                 $this->addMessage($msg, 'good');
+-            } elseif (! $item) {
++            } elseif (!$item) {
+                 $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+             } else {
+                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'Item could not be added.'), 'bad');
+             }
+-
+             return $item;
+         }
+     }
+-
+     /**
+      * Sets quantity for an item in the cart.
+      *
+@@ -426,24 +454,22 @@
+      *
+      * @return false | DataObject (OrderItem) | null
+      */
+-    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
++    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = array())
+     {
+         if ($this->allowWrites()) {
+             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+             $quantity = $this->prepareQuantity($buyable, $quantity);
+             if ($item) {
+-                $item->Quantity = $quantity; //remove quantity
++                $item->Quantity = $quantity;
++                //remove quantity
+                 $item->write();
+                 $this->addMessage(_t('Order.ITEMUPDATED', 'Item updated.'), 'good');
+-
+                 return $item;
+             }
+             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+-
+             return false;
+         }
+     }
+-
+     /**
+      * Removes any number of items from the cart.
+      *
+@@ -455,13 +481,14 @@
+      *
+      * @return false | OrderItem | null
+      */
+-    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = [])
++    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = array())
+     {
+         if ($this->allowWrites()) {
+             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+             $quantity = $this->prepareQuantity($buyable, $quantity);
+             if ($item) {
+-                $item->Quantity -= $quantity; //remove quantity
++                $item->Quantity -= $quantity;
++                //remove quantity
+                 if ($item->Quantity < 0) {
+                     $item->Quantity = 0;
+                 }
+@@ -472,15 +499,12 @@
+                     $msg = _t('Order.ITEMREMOVED', 'Item removed.');
+                 }
+                 $this->addMessage($msg, 'good');
+-
+                 return $item;
+             }
+             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+-
+             return false;
+         }
+     }
+-
+     /**
+      * Delete item from the cart.
+      *
+@@ -491,7 +515,7 @@
+      *
+      * @return bool | item | null - successfully removed
+      */
+-    public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
++    public function deleteBuyable(BuyableModel $buyable, array $parameters = array())
+     {
+         if ($this->allowWrites()) {
+             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = true);
+@@ -500,15 +524,12 @@
+                 $item->delete();
+                 $item->destroy();
+                 $this->addMessage(_t('Order.ITEMCOMPLETELYREMOVED', 'Item removed from cart.'), 'good');
+-
+                 return $item;
+             }
+             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+-
+             return false;
+         }
+     }
+-
+     /**
+      * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
+      *
+@@ -520,7 +541,7 @@
+      *
+      * @return bool | DataObject ($orderItem)
+      */
+-    public function prepareOrderItem(BuyableModel $buyable, $parameters = [], $mustBeExistingItem = true)
++    public function prepareOrderItem(BuyableModel $buyable, $parameters = array(), $mustBeExistingItem = true)
+     {
+         $parametersArray = $parameters;
+         $form = null;
+@@ -528,29 +549,28 @@
+             $parametersArray = [];
+             $form = $parameters;
+         }
+-        if (! $buyable) {
++        if (!$buyable) {
+             user_error('No buyable was provided', E_USER_WARNING);
+         }
+-        if (! $buyable->canPurchase()) {
++        if (!$buyable->canPurchase()) {
+             return false;
+         }
+         $item = null;
+         if ($mustBeExistingItem) {
+             $item = $this->getExistingItem($buyable, $parametersArray);
+         } else {
+-            $item = $this->findOrMakeItem($buyable, $parametersArray); //find existing order item or make one
+-        }
+-        if (! $item) {
++            $item = $this->findOrMakeItem($buyable, $parametersArray);
++            //find existing order item or make one
++        }
++        if (!$item) {
+             //check for existence of item
+             return false;
+         }
+         if ($form) {
+             $form->saveInto($item);
+         }
+-
+         return $item;
+     }
+-
+     /**
+      * @todo: what does this method do???
+      *
+@@ -566,10 +586,8 @@
+             return $quantity;
+         }
+         $this->addMessage(_t('Order.INVALIDQUANTITY', 'Invalid quantity.'), 'warning');
+-
+         return 0;
+     }
+-
+     /**
+      * Helper function for making / retrieving order items.
+      * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
+@@ -580,37 +598,34 @@
+      *
+      * @return OrderItem
+      */
+-    public function findOrMakeItem(BuyableModel $buyable, array $parameters = [])
++    public function findOrMakeItem(BuyableModel $buyable, array $parameters = array())
+     {
+         if ($this->allowWrites()) {
+             if ($item = $this->getExistingItem($buyable, $parameters)) {
+                 //do nothing
+             } else {
+                 //otherwise create a new item
+-                if (! ($buyable instanceof BuyableModel)) {
++                if (!$buyable instanceof BuyableModel) {
+                     $this->addMessage(_t('ShoppingCart.ITEMNOTFOUND', 'Item is not buyable.'), 'bad');
+-
+                     return false;
+                 }
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++                /**
++                 * ### @@@@ START REPLACEMENT @@@@ ###
++                 * WHY: automated upgrade
++                 * OLD: $className (case sensitive)
++                 * NEW: $className (COMPLEX)
++                 * EXP: Check if the class name can still be used as such
++                 * ### @@@@ STOP REPLACEMENT @@@@ ###
++                 */
+                 $className = $buyable->classNameForOrderItem();
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++                /**
++                 * ### @@@@ START REPLACEMENT @@@@ ###
++                 * WHY: automated upgrade
++                 * OLD: $className (case sensitive)
++                 * NEW: $className (COMPLEX)
++                 * EXP: Check if the class name can still be used as such
++                 * ### @@@@ STOP REPLACEMENT @@@@ ###
++                 */
+                 $item = new $className();
+                 if ($order = $this->currentOrder()) {
+                     $item->OrderID = $order->ID;
+@@ -624,12 +639,10 @@
+             if ($parameters) {
+                 $item->Parameters = $parameters;
+             }
+-
+             return $item;
+         }
+         return OrderItem::create();
+     }
+-
+     /**
+      * submit the order so that it is no longer available
+      * in the cart but will continue its journey through the
+@@ -644,13 +657,10 @@
+             $this->clear();
+             //little hack to clear static memory
+             OrderItem::reset_price_has_been_fixed($this->currentOrder()->ID);
+-
+             return true;
+         }
+-
+         return false;
+     }
+-
+     /**
+      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
+      *
+@@ -661,11 +671,9 @@
+         if ($this->allowWrites()) {
+             $this->currentOrder()->write();
+             $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'), 'good');
+-
+             return true;
+         }
+     }
+-
+     /**
+      * Clears the cart contents completely by removing the orderID from session, and
+      * thus creating a new cart on next request.
+@@ -681,35 +689,32 @@
+         $this->messages = [];
+         foreach (self::$session_variable_names as $name) {
+             $sessionVariableName = $this->sessionVariableName($name);
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: Session:: (case sensitive)
++             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, null);
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: Session:: (case sensitive)
++             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: Session:: (case sensitive)
++             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
+         }
+         $memberID = Intval(Member::currentUserID());
+@@ -717,16 +722,14 @@
+             $orders = Order::get()->filter(['MemberID' => $memberID]);
+             if ($orders && $orders->count()) {
+                 foreach ($orders as $order) {
+-                    if (! $order->IsSubmitted()) {
++                    if (!$order->IsSubmitted()) {
+                         $order->delete();
+                     }
+                 }
+             }
+         }
+-
+         return true;
+     }
+-
+     /**
+      * alias for clear.
+      */
+@@ -734,7 +737,6 @@
+     {
+         return $this->clear();
+     }
+-
+     /**
+      * Removes a modifier from the cart
+      * It does not actually remove it, but it just
+@@ -751,14 +753,12 @@
+     {
+         if ($this->allowWrites()) {
+             $modifier = is_numeric($modifier) ? OrderModifier::get()->byID($modifier) : $modifier;
+-            if (! $modifier) {
++            if (!$modifier) {
+                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
+-
+                 return false;
+             }
+-            if (! $modifier->CanBeRemoved()) {
++            if (!$modifier->CanBeRemoved()) {
+                 $this->addMessage(_t('Order.MODIFIERCANNOTBEREMOVED', 'Modifier can not be removed.'), 'bad');
+-
+                 return false;
+             }
+             $modifier->HasBeenRemoved = 1;
+@@ -766,11 +766,9 @@
+             $modifier->write();
+             $modifier->onAfterRemove();
+             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Removed.'), 'good');
+-
+             return true;
+         }
+     }
+-
+     /**
+      * Removes a modifier from the cart.
+      *
+@@ -785,31 +783,27 @@
+         if ($this->allowWrites()) {
+             if (is_numeric($modifier)) {
+                 $modifier = OrderModifier::get()->byID($modifier);
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD:  Object:: (case sensitive)
+-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+-  * EXP: Check if this is the right implementation, this is highly speculative.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
+-            } elseif (! is_a($modifier, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderModifier'))) {
++                /**
++                 * ### @@@@ START REPLACEMENT @@@@ ###
++                 * WHY: automated upgrade
++                 * OLD:  Object:: (case sensitive)
++                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
++                 * EXP: Check if this is the right implementation, this is highly speculative.
++                 * ### @@@@ STOP REPLACEMENT @@@@ ###
++                 */
++            } elseif (!is_a($modifier, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderModifier::class))) {
+                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
+             }
+-            if (! $modifier) {
++            if (!$modifier) {
+                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
+-
+                 return false;
+             }
+             $modifier->HasBeenRemoved = 0;
+             $modifier->write();
+             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'), 'good');
+-
+             return true;
+         }
+     }
+-
+     /**
+      * Sets an order as the current order.
+      *
+@@ -824,16 +818,15 @@
+             //TODO: permission check - does this belong to another member? ...or should permission be assumed already?
+             if (is_numeric($order)) {
+                 $this->order = Order::get()->byID($order);
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD:  Object:: (case sensitive)
+-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+-  * EXP: Check if this is the right implementation, this is highly speculative.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
+-            } elseif (is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Order'))) {
++                /**
++                 * ### @@@@ START REPLACEMENT @@@@ ###
++                 * WHY: automated upgrade
++                 * OLD:  Object:: (case sensitive)
++                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
++                 * EXP: Check if this is the right implementation, this is highly speculative.
++                 * ### @@@@ STOP REPLACEMENT @@@@ ###
++                 */
++            } elseif (is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class))) {
+                 $this->order = $order;
+             } else {
+                 user_error('Bad order provided as parameter to ShoppingCart::loadOrder()');
+@@ -844,33 +837,27 @@
+                     $this->order->init(true);
+                     $sessionVariableName = $this->sessionVariableName('OrderID');
+                     //we set session ID after can view check ...
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++                    /**
++                     * ### @@@@ START REPLACEMENT @@@@ ###
++                     * WHY: automated upgrade
++                     * OLD: Session:: (case sensitive)
++                     * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++                     * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++                     * ### @@@@ STOP REPLACEMENT @@@@ ###
++                     */
+                     SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, $this->order->ID);
+                     $this->addMessage(_t('Order.LOADEDEXISTING', 'Order loaded.'), 'good');
+-
+                     return true;
+                 }
+                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
+-
+                 return false;
+             }
+             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
+-
+             return false;
+         }
+         $this->addMessage(_t('Order.NOSAVE', 'You can not load orders as your session functionality is turned off.'), 'bad');
+-
+         return false;
+     }
+-
+     /**
+      * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
+      *
+@@ -885,7 +872,7 @@
+         if ($this->allowWrites()) {
+             if (is_numeric($oldOrder)) {
+                 $oldOrder = Order::get()->byID(intval($oldOrder));
+-            } elseif (is_a($oldOrder, Object::getCustomClass('Order'))) {
++            } elseif (is_a($oldOrder, Object::getCustomClass(Order::class))) {
+                 //$oldOrder = $oldOrder;
+             } else {
+                 user_error('Bad order provided as parameter to ShoppingCart::loadOrder()');
+@@ -895,10 +882,8 @@
+                     $this->addMessage(_t('Order.ORDERCOPIED', 'Order has been copied.'), 'good');
+                     $newOrder = Order::create();
+                     $newOrder = $this->CopyOrderOnly($oldOrder, $newOrder);
+-
+                     $buyables = [];
+-                    $items = OrderItem::get()
+-                        ->filter(['OrderID' => $oldOrder->ID]);
++                    $items = OrderItem::get()->filter(['OrderID' => $oldOrder->ID]);
+                     if ($items->count()) {
+                         foreach ($items as $item) {
+                             $buyables[] = $item->Buyable($current = true);
+@@ -908,19 +893,15 @@
+                         $newOrder = $this->CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = []);
+                     }
+                     $this->loadOrder($newOrder);
+-
+                     return $newOrder;
+                 }
+                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
+-
+                 return false;
+             }
+             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
+-
+             return false;
+         }
+     }
+-
+     /**
+      * @param Order $oldOrder
+      * @param Order $newOrder
+@@ -929,7 +910,6 @@
+      */
+     public function CopyOrderOnly($oldOrder, $newOrder)
+     {
+-
+         //copying fields.
+         $newOrder->UseShippingAddress = $oldOrder->UseShippingAddress;
+         //important to set it this way...
+@@ -937,13 +917,11 @@
+         $newOrder->MemberID = $oldOrder->MemberID;
+         //load the order
+         $newOrder->write();
+-        $newOrder->CreateOrReturnExistingAddress('BillingAddress');
+-        $newOrder->CreateOrReturnExistingAddress('ShippingAddress');
++        $newOrder->CreateOrReturnExistingAddress(BillingAddress::class);
++        $newOrder->CreateOrReturnExistingAddress(ShippingAddress::class);
+         $newOrder->write();
+-
+         return $newOrder;
+     }
+-
+     /**
+      * add buyables into new Order
+      *
+@@ -953,7 +931,7 @@
+      *
+      * @return Order (same order as was passed)
+      */
+-    public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = [])
++    public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = array())
+     {
+         foreach ($buyables as $buyable) {
+             if ($buyable && $buyable->canPurchase()) {
+@@ -962,15 +940,14 @@
+                 if ($item && $quantity) {
+                     $item->Quantity = $quantity;
+                     $item->write();
+-                    $newOrder->Attributes()->add($item); //save to new order order
++                    $newOrder->Attributes()->add($item);
++                    //save to new order order
+                 }
+             }
+             $newOrder->write();
+         }
+-
+         return $newOrder;
+     }
+-
+     /**
+      * sets country in order so that modifiers can be recalculated, etc...
+      *
+@@ -984,15 +961,12 @@
+             if (EcommerceCountry::code_allowed($countryCode)) {
+                 $this->currentOrder()->SetCountryFields($countryCode);
+                 $this->addMessage(_t('Order.UPDATEDCOUNTRY', 'Updated country.'), 'good');
+-
+                 return true;
+             }
+             $this->addMessage(_t('Order.NOTUPDATEDCOUNTRY', 'Could not update country.'), 'bad');
+-
+             return false;
+         }
+     }
+-
+     /**
+      * sets region in order so that modifiers can be recalculated, etc...
+      *
+@@ -1005,14 +979,11 @@
+         if (EcommerceRegion::regionid_allowed($regionID)) {
+             $this->currentOrder()->SetRegionFields($regionID);
+             $this->addMessage(_t('ShoppingCart.REGIONUPDATED', 'Region updated.'), 'good');
+-
+             return true;
+         }
+         $this->addMessage(_t('ORDER.NOTUPDATEDREGION', 'Could not update region.'), 'bad');
+-
+         return false;
+     }
+-
+     /**
+      * sets the display currency for the cart.
+      *
+@@ -1033,15 +1004,12 @@
+             $this->currentOrder()->UpdateCurrency($currency);
+             $msg = _t('Order.CURRENCYUPDATED', 'Currency updated.');
+             $this->addMessage($msg, 'good');
+-
+             return true;
+         }
+         $msg = _t('Order.CURRENCYCOULDNOTBEUPDATED', 'Currency could not be updated.');
+         $this->addMessage($msg, 'bad');
+-
+         return false;
+     }
+-
+     /**
+      * Produces a debug of the shopping cart.
+      */
+@@ -1049,13 +1017,10 @@
+     {
+         if (Director::isDev() || Permission::check('ADMIN')) {
+             print_r($this->currentOrder());
+-
+             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>';
+             echo 'GEOIP Country: ' . EcommerceCountry::get_country_from_ip() . '<br />';
+             echo 'Calculated Country: ' . EcommerceCountry::get_country() . '<br />';
+-
+             echo '<blockquote><blockquote><blockquote><blockquote>';
+-
+             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Items</h1>';
+             $items = $this->currentOrder()->Items();
+             echo $items->sql();
+@@ -1067,7 +1032,6 @@
+             } else {
+                 echo '<p>there are no items for this order</p>';
+             }
+-
+             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Modifiers</h1>';
+             $modifiers = $this->currentOrder()->Modifiers();
+             if ($modifiers->count()) {
+@@ -1077,7 +1041,6 @@
+             } else {
+                 echo '<p>there are no modifiers for this order</p>';
+             }
+-
+             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Addresses</h1>';
+             $billingAddress = $this->currentOrder()->BillingAddress();
+             if ($billingAddress && $billingAddress->exists()) {
+@@ -1091,19 +1054,16 @@
+             } else {
+                 echo '<p>there is no shipping address for this order</p>';
+             }
+-
+             $currencyUsed = $this->currentOrder()->CurrencyUsed();
+             if ($currencyUsed && $currencyUsed->exists()) {
+                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Currency</h1>';
+                 print_r($currencyUsed);
+             }
+-
+             $cancelledBy = $this->currentOrder()->CancelledBy();
+             if ($cancelledBy && $cancelledBy->exists()) {
+                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Cancelled By</h1>';
+                 print_r($cancelledBy);
+             }
+-
+             $logs = $this->currentOrder()->OrderStatusLogs();
+             if ($logs && $logs->count()) {
+                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Logs</h1>';
+@@ -1111,7 +1071,6 @@
+                     print_r($log);
+                 }
+             }
+-
+             $payments = $this->currentOrder()->Payments();
+             if ($payments && $payments->count()) {
+                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Payments</h1>';
+@@ -1119,7 +1078,6 @@
+                     print_r($payment);
+                 }
+             }
+-
+             $emails = $this->currentOrder()->Emails();
+             if ($emails && $emails->count()) {
+                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Emails</h1>';
+@@ -1127,13 +1085,11 @@
+                     print_r($email);
+                 }
+             }
+-
+             echo '</blockquote></blockquote></blockquote></blockquote>';
+         } else {
+             echo 'Please log in as admin first';
+         }
+     }
+-
+     /**
+      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
+      *
+@@ -1147,19 +1103,14 @@
+         $status = strtolower($status);
+         str_replace(['success', 'failure'], ['good', 'bad'], $status);
+         $statusOptions = ['good', 'bad', 'warning'];
+-        if (! in_array($status, $statusOptions, true)) {
++        if (!in_array($status, $statusOptions, true)) {
+             user_error('Message status should be one of the following: ' . implode(',', $statusOptions), E_USER_NOTICE);
+         }
+-        $this->messages[] = [
+-            'Message' => $message,
+-            'Type' => $status,
+-        ];
+-    }
+-
++        $this->messages[] = ['Message' => $message, 'Type' => $status];
++    }
+     /*******************************************************
+-    * UI MESSAGE HANDLING
+-    *******************************************************/
+-
++     * UI MESSAGE HANDLING
++     *******************************************************/
+     /**
+      * Retrieves all good, bad, and ugly messages that have been produced during the current request.
+      *
+@@ -1169,35 +1120,31 @@
+     {
+         $sessionVariableName = $this->sessionVariableName('Messages');
+         //get old messages
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: Session:: (case sensitive)
++         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         $messages = unserialize(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName));
+         //clear old messages
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: Session:: (case sensitive)
++         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear($sessionVariableName, '');
+         //set to form????
+         if ($messages && count($messages)) {
+             $this->messages = array_merge($messages, $this->messages);
+         }
+-
+         return $this->messages;
+     }
+-
+     /**
+      * This method is used to return data after an ajax call was made.
+      * When a asynchronious request is made to the shopping cart (ajax),
+@@ -1220,11 +1167,9 @@
+             $this->addMessage($message, $status);
+         }
+         //TODO: handle passing back multiple messages
+-
+         if (Director::is_ajax()) {
+-            $responseClass = EcommerceConfig::get('ShoppingCart', 'response_class');
++            $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
+             $obj = new $responseClass();
+-
+             return $obj->ReturnCartData($this->getMessages());
+         }
+         //TODO: handle passing a message back to a form->sessionMessage
+@@ -1235,7 +1180,7 @@
+             // now we can (re)calculate the order
+             $this->order->calculateOrderAttributes($force = false);
+             $form->sessionMessage($message, $status);
+-        // let the form controller do the redirectback or whatever else is needed.
++            // let the form controller do the redirectback or whatever else is needed.
+         } else {
+             if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
+                 Controller::curr()->redirectBack();
+@@ -1243,10 +1188,8 @@
+                 Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
+             }
+         }
+-
+         return;
+     }
+-
+     /**
+      * can the current user use sessions and therefore write to cart???
+      * the method also returns if an order has explicitely been set
+@@ -1260,23 +1203,20 @@
+             } else {
+                 if (PHP_SAPI !== 'cli') {
+                     if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+-                        self::$_allow_writes_cache = (session_status() === PHP_SESSION_ACTIVE ? true : false);
++                        self::$_allow_writes_cache = session_status() === PHP_SESSION_ACTIVE ? true : false;
+                     } else {
+-                        self::$_allow_writes_cache = (session_id() === '' ? false : true);
++                        self::$_allow_writes_cache = session_id() === '' ? false : true;
+                     }
+                 } else {
+                     self::$_allow_writes_cache = false;
+                 }
+             }
+         }
+-
+         return self::$_allow_writes_cache;
+     }
+-
+     /*******************************************************
+-    * HELPER FUNCTIONS
+-    *******************************************************/
+-
++     * HELPER FUNCTIONS
++     *******************************************************/
+     /**
+      * Gets an existing order item based on buyable and passed parameters.
+      *
+@@ -1285,22 +1225,15 @@
+      *
+      * @return OrderItem | null
+      */
+-    protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
++    protected function getExistingItem(BuyableModel $buyable, array $parameters = array())
+     {
+         $filterString = $this->parametersToSQL($parameters);
+         if ($order = $this->currentOrder()) {
+             $orderID = $order->ID;
+-            return DataObject::get_one(
+-                'OrderItem',
+-                " \"BuyableClassName\" = '" . $buyable->ClassName . "' AND
+-                \"BuyableID\" = " . $buyable->ID . ' AND
+-                "OrderID" = ' . $orderID . ' ' .
+-                $filterString,
+-                $cacheDataObjectGetOne = false
+-            );
+-        }
+-    }
+-
++            return DataObject::get_one(OrderItem::class, " \"BuyableClassName\" = '" . $buyable->ClassName . "' AND\n                \"BuyableID\" = " . $buyable->ID . ' AND
++                "OrderID" = ' . $orderID . ' ' . $filterString, $cacheDataObjectGetOne = false);
++        }
++    }
+     /**
+      * Removes parameters that aren't in the default array, merges with default parameters, and converts raw2SQL.
+      *
+@@ -1308,31 +1241,32 @@
+      *
+      * @return cleaned array
+      */
+-    protected function cleanParameters(array $params = [])
+-    {
+-        $defaultParamFilters = EcommerceConfig::get('ShoppingCart', 'default_param_filters');
+-        $newarray = array_merge([], $defaultParamFilters); //clone array
+-        if (! count($newarray)) {
+-            return []; //no use for this if there are not parameters defined
++    protected function cleanParameters(array $params = array())
++    {
++        $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
++        $newarray = array_merge([], $defaultParamFilters);
++        //clone array
++        if (!count($newarray)) {
++            return [];
++            //no use for this if there are not parameters defined
+         }
+         foreach (array_keys($newarray) as $field) {
+             if (isset($params[$field])) {
+                 $newarray[$field] = Convert::raw2sql($params[$field]);
+             }
+         }
+-
+         return $newarray;
+     }
+-
+     /**
+      * Converts parameter array to SQL query filter
+      * @param array $parameters
+      */
+-    protected function parametersToSQL(array $parameters = [])
+-    {
+-        $defaultParamFilters = EcommerceConfig::get('ShoppingCart', 'default_param_filters');
+-        if (! count($defaultParamFilters)) {
+-            return ''; //no use for this if there are not parameters defined
++    protected function parametersToSQL(array $parameters = array())
++    {
++        $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
++        if (!count($defaultParamFilters)) {
++            return '';
++            //no use for this if there are not parameters defined
+         }
+         $cleanedparams = $this->cleanParameters($parameters);
+         $outputArray = [];
+@@ -1342,10 +1276,8 @@
+         if (count($outputArray)) {
+             return implode(' AND ', $outputArray);
+         }
+-
+         return '';
+     }
+-
+     /**
+      *Saves current messages in session for retrieving them later.
+      *
+@@ -1354,18 +1286,16 @@
+     protected function StoreMessagesInSession()
+     {
+         $sessionVariableName = $this->sessionVariableName('Messages');
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: Session:: (case sensitive)
++         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, serialize($this->messages));
+     }
+-
+     /**
+      * @return EcommerceDBConfig
+      */
+@@ -1373,7 +1303,6 @@
+     {
+         return EcommerceDBConfig::current_ecommerce_db_config();
+     }
+-
+     /**
+      * Return the name of the session variable that should be used.
+      *
+@@ -1383,11 +1312,10 @@
+      */
+     protected function sessionVariableName($name = '')
+     {
+-        if (! in_array($name, self::$session_variable_names, true)) {
+-            user_error("Tried to set session variable ${name}, that is not in use", E_USER_NOTICE);
+-        }
+-        $sessionCode = EcommerceConfig::get('ShoppingCart', 'session_code');
+-
++        if (!in_array($name, self::$session_variable_names, true)) {
++            user_error("Tried to set session variable {$name}, that is not in use", E_USER_NOTICE);
++        }
++        $sessionCode = EcommerceConfig::get(ShoppingCart::class, 'session_code');
+         return $sessionCode . '_' . $name;
+     }
+ }
+
+Warnings for src/Api/ShoppingCart.php:
+ - src/Api/ShoppingCart.php:614 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 614
+
+ - src/Api/ShoppingCart.php:1226 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1226
+
+modified:	src/Api/ProductCollection.php
+@@ -2,8 +2,10 @@
+
+ namespace Sunnysideup\Ecommerce\Api;
+
+-use ArrayList;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++
+
+ /**
+  * @description: Sometimes you need a large collection of products
+
+modified:	src/Api/Converters/OrderToArray.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Api\Converters;
+
+-use OrderConverter;
++
++use Sunnysideup\Ecommerce\Api\OrderConverter;
++
+
+
+ class OrderToArray extends OrderConverter
+
+modified:	src/Dev/EcommerceCodeFilter.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Dev;
+
+-use ViewableData;
+-use DataObject;
++
++
++use SilverStripe\ORM\DataObject;
++use SilverStripe\View\ViewableData;
++
+
+
+ /**
+
+Warnings for src/Dev/EcommerceCodeFilter.php:
+ - src/Dev/EcommerceCodeFilter.php:65 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 65
+
+modified:	src/Email/OrderInvoiceEmail.php
+@@ -1,6 +1,8 @@
+ <?php
+
+ namespace Sunnysideup\Ecommerce\Email;
++use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
++
+
+
+
+@@ -19,7 +21,7 @@
+     /**
+      * @param string $ss_template The name of the used template (without *.ss extension)
+      */
+-    protected $ss_template = 'OrderInvoiceEmail';
++    protected $ss_template = OrderInvoiceEmail::class;
+ }
+
+
+
+modified:	src/Email/OrderErrorEmail.php
+@@ -1,6 +1,8 @@
+ <?php
+
+ namespace Sunnysideup\Ecommerce\Email;
++use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
++
+
+
+
+@@ -21,7 +23,7 @@
+     /**
+      * @param string $ss_template The name of the used template (without *.ss extension)
+      */
+-    protected $ss_template = 'OrderErrorEmail';
++    protected $ss_template = OrderErrorEmail::class;
+ }
+
+
+
+modified:	src/Email/OrderStatusEmail.php
+@@ -1,6 +1,8 @@
+ <?php
+
+ namespace Sunnysideup\Ecommerce\Email;
++use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
++
+
+
+
+@@ -19,7 +21,7 @@
+     /**
+      * @param string $ss_template The name of the used template (without *.ss extension)
+      */
+-    protected $ss_template = 'OrderStatusEmail';
++    protected $ss_template = OrderStatusEmail::class;
+ }
+
+
+
+modified:	src/Email/OrderReceiptEmail.php
+@@ -1,6 +1,8 @@
+ <?php
+
+ namespace Sunnysideup\Ecommerce\Email;
++use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
++
+
+
+
+@@ -19,7 +21,7 @@
+     /**
+      * @param string $ss_template The name of the used template (without *.ss extension)
+      */
+-    protected $ss_template = 'OrderReceiptEmail';
++    protected $ss_template = OrderReceiptEmail::class;
+ }
+
+
+
+modified:	src/Email/OrderEmail.php
+@@ -2,15 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Email;
+
+-use Email;
+-use Director;
+-use EcommerceConfig;
+-use HTTP;
+-use EcommerceDBConfig;
+-use SiteConfig;
+-use Order;
+-use OrderEmailRecord;
+-use Config;
++
++
++
++
++
++
++
++
++
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Email\OrderEmail;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Control\HTTP;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\Control\Email\Email;
++use SilverStripe\SiteConfig\SiteConfig;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
++use SilverStripe\Core\Config\Config;
++
+
+
+
+@@ -49,7 +61,7 @@
+         if (! class_exists('\Pelago\Emogrifier')) {
+             require_once $baseFolder . '/ecommerce/thirdparty/Emogrifier.php';
+         }
+-        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get('OrderEmail', 'css_file_location');
++        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
+         $cssFileHandler = fopen($cssFileLocation, 'r');
+         $css = fread($cssFileHandler, filesize($cssFileLocation));
+         fclose($cssFileHandler);
+@@ -127,7 +139,7 @@
+         }
+         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
+         if (! $this->hasBeenSent() || ($this->resend)) {
+-            if (EcommerceConfig::get('OrderEmail', 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
++            if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
+                 if ($memberEmail = self::get_from_email()) {
+                     $array = [$memberEmail];
+                     if ($bcc = $this->Bcc()) {
+@@ -142,7 +154,7 @@
+                 return $this->Body();
+             }
+
+-            if (EcommerceConfig::get('OrderEmail', 'send_all_emails_plain')) {
++            if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
+                 $result = parent::sendPlain($messageID);
+             } else {
+                 $result = parent::send($messageID);
+@@ -179,7 +191,7 @@
+     public function hasBeenSent(): bool
+     {
+         $orderStep = $this->order->Status();
+-        if (is_a($orderStep, Object::getCustomClass('OrderStep'))) {
++        if (is_a($orderStep, Object::getCustomClass(OrderStep::class))) {
+             return $orderStep->hasBeenSent($this->order);
+         }
+
+@@ -223,7 +235,7 @@
+         $orderEmailRecord->Result = $result ? 1 : 0;
+         $orderEmailRecord->OrderID = $this->order->ID;
+         $orderEmailRecord->OrderStepID = $this->order->StatusID;
+-        if ($sendAllEmailsTo = Config::inst()->get('Email', 'send_all_emails_to')) {
++        if ($sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to')) {
+             $orderEmailRecord->To .=
+                 _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
+                 . $sendAllEmailsTo
+
+modified:	src/Filesystem/ProductImage.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Filesystem;
+
+-use Image;
+-use EcommerceConfig;
+-use DBField;
++
++
++
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\Assets\Image;
++
+
+
+
+@@ -56,7 +61,7 @@
+      */
+     public function ThumbWidth()
+     {
+-        return EcommerceConfig::get('ProductImage', 'thumbnail_width');
++        return EcommerceConfig::get(ProductImage::class, 'thumbnail_width');
+     }
+
+     /**
+@@ -64,7 +69,7 @@
+      */
+     public function ThumbHeight()
+     {
+-        return EcommerceConfig::get('ProductImage', 'thumbnail_height');
++        return EcommerceConfig::get(ProductImage::class, 'thumbnail_height');
+     }
+
+     /**
+@@ -72,7 +77,7 @@
+      */
+     public function SmallWidth()
+     {
+-        return EcommerceConfig::get('ProductImage', 'small_image_width');
++        return EcommerceConfig::get(ProductImage::class, 'small_image_width');
+     }
+
+     /**
+@@ -80,7 +85,7 @@
+      */
+     public function SmallHeight()
+     {
+-        return EcommerceConfig::get('ProductImage', 'small_image_height');
++        return EcommerceConfig::get(ProductImage::class, 'small_image_height');
+     }
+
+     /**
+@@ -88,7 +93,7 @@
+      */
+     public function ContentWidth()
+     {
+-        return EcommerceConfig::get('ProductImage', 'content_image_width');
++        return EcommerceConfig::get(ProductImage::class, 'content_image_width');
+     }
+
+     /**
+@@ -96,7 +101,7 @@
+      */
+     public function LargeWidth()
+     {
+-        return EcommerceConfig::get('ProductImage', 'large_image_width');
++        return EcommerceConfig::get(ProductImage::class, 'large_image_width');
+     }
+
+     /**
+
+modified:	src/Interfaces/OrderStepInterface.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Interfaces;
+
+-use Order;
+-use FieldList;
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++
+
+ /**
+  * @authors: Nicolaas [at] Sunny Side Up .co.nz
+
+modified:	src/Interfaces/BuyableModel.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Interfaces;
+
+-use Member;
++
++use SilverStripe\Security\Member;
++
+
+ /**
+  * describes the buyable classes
+
+modified:	src/Config/EcommerceConfigDefinitions.php
+@@ -2,8 +2,48 @@
+
+ namespace Sunnysideup\Ecommerce\Config;
+
+-use Director;
+-use ClassInfo;
++
++
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\SiteConfig\SiteConfig;
++use Sunnysideup\Ecommerce\Cms\StoreAdmin;
++use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
++use Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin;
++use Sunnysideup\Ecommerce\Cms\SalesAdmin;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use Sunnysideup\Ecommerce\Control\CartResponse;
++use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
++use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
++use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
++use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Email\OrderEmail;
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Money\EcommerceMoney;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
++use SilverStripe\Control\Director;
++use SilverStripe\Core\ClassInfo;
++
+
+
+
+@@ -16,110 +56,33 @@
+  * @sub-package: configuration
+
+  **/
+-class EcommerceConfigDefinitions extends Object
++use SilverStripe\Core\Extensible;
++use SilverStripe\Core\Injector\Injectable;
++use SilverStripe\Core\Config\Configurable;
++/**
++ * This class sets out the static config variables for e-commerce.
++ * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
++ *
++ * @authors: Nicolaas [at] Sunny Side Up .co.nz
++ * @package: ecommerce
++ * @sub-package: configuration
++ **/
++class EcommerceConfigDefinitions
+ {
++    use Extensible;
++    use Injectable;
++    use Configurable;
+     /**
+      * LIST of ajax methods.
+      */
+-    protected $ajaxMethods = [
+-        'SideBarCartID' => 'The sidebar cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.',
+-        'SmallCartID' => 'The small cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.',
+-        'TinyCartClassName' => 'The tiny cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used. ',
+-        'TotalItemsClassName' => 'The total number of items in the order. Use in the following context: AjaxDefinitions.TotalItemsClassName',
+-        'TotalItemsTimesQuantityClassName' => 'The total number of items times their quantity in the order. Use in the following context: AjaxDefinitions.TotalItemsClassNameTimesQuantity',
+-        'TableID' => 'The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID',
+-        'TableTotalID' => 'The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID',
+-        'HiddenPageTitleID' => 'The ID used to identify a (hidden) element that contains the title of the page. This can be used for ajax updates of the product list.  It will be used to update the title of the page. For example, we can change the PageTitle to MyPage - sorted by Price.',
+-        'ProductListHolderID' => 'The ID used to identify the product group list holder.  This list can be replaced using ajax. ',
+-        'ProductListAjaxifiedLinkClassName' => 'The class name use for sections that contain links for showing alternative views of the product group list. ',
+-        'ProductListItemClassName' => 'The class used to identify each LI item in the list of product items on the product group page (or elsewhere).',
+-        'ProductListItemInCartClassName' => 'The class used to identify the product actions of each LI list item of the list of products that is in the cart right now.',
+-        'ProductListItemNotInCartClassName' => 'The class used to identify each LI item of the list of products that is NOT in the cart right now.',
+-        'TableMessageID' => 'The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID',
+-        'TableSubTotalID' => 'The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID',
+-        'ExpectedCountryClassName' => 'The holder of the expected country name. Use in the following context: AjaxDefinitions.ExpectedCountryClassName',
+-        'CountryFieldID' => 'The field used for selecting the country. Use in the following context: AjaxDefinitions.CountryFieldID',
+-        'RegionFieldID' => 'The field used for selecting the region. Use in the following context: AjaxDefinitions.RegionFieldID',
+-        'TableTitleID' => 'The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID',
+-        'CartTitleID' => 'The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID',
+-        'TableSubTitleID' => 'The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ',
+-        'CartSubTitleID' => 'The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ',
+-        'QuantityFieldName' => 'The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName',
+-        'UniqueIdentifier' => 'Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier',
+-    ];
+-
++    protected $ajaxMethods = array('SideBarCartID' => 'The sidebar cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.', 'SmallCartID' => 'The small cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.', 'TinyCartClassName' => 'The tiny cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used. ', 'TotalItemsClassName' => 'The total number of items in the order. Use in the following context: AjaxDefinitions.TotalItemsClassName', 'TotalItemsTimesQuantityClassName' => 'The total number of items times their quantity in the order. Use in the following context: AjaxDefinitions.TotalItemsClassNameTimesQuantity', 'TableID' => 'The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID', 'TableTotalID' => 'The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID', 'HiddenPageTitleID' => 'The ID used to identify a (hidden) element that contains the title of the page. This can be used for ajax updates of the product list.  It will be used to update the title of the page. For example, we can change the PageTitle to MyPage - sorted by Price.', 'ProductListHolderID' => 'The ID used to identify the product group list holder.  This list can be replaced using ajax. ', 'ProductListAjaxifiedLinkClassName' => 'The class name use for sections that contain links for showing alternative views of the product group list. ', 'ProductListItemClassName' => 'The class used to identify each LI item in the list of product items on the product group page (or elsewhere).', 'ProductListItemInCartClassName' => 'The class used to identify the product actions of each LI list item of the list of products that is in the cart right now.', 'ProductListItemNotInCartClassName' => 'The class used to identify each LI item of the list of products that is NOT in the cart right now.', 'TableMessageID' => 'The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID', 'TableSubTotalID' => 'The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID', 'ExpectedCountryClassName' => 'The holder of the expected country name. Use in the following context: AjaxDefinitions.ExpectedCountryClassName', 'CountryFieldID' => 'The field used for selecting the country. Use in the following context: AjaxDefinitions.CountryFieldID', 'RegionFieldID' => 'The field used for selecting the region. Use in the following context: AjaxDefinitions.RegionFieldID', 'TableTitleID' => 'The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID', 'CartTitleID' => 'The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID', 'TableSubTitleID' => 'The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ', 'CartSubTitleID' => 'The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ', 'QuantityFieldName' => 'The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName', 'UniqueIdentifier' => 'Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier');
+     /**
+      * Tells us what version of e-commerce we are using.
+      *
+      * @var float
+      */
+     private $version = 1;
+-
+-    private $definitionGrouping = [
+-        'GENERAL AND CMS CONFIG' => [
+-            'EcommerceDBConfig',
+-            'SiteConfig',
+-            'StoreAdmin',
+-            'ProductsAndGroupsModelAdmin',
+-            'ProductConfigModelAdmin',
+-            'SalesAdmin',
+-        ],
+-        'TEMPLATES' => [
+-            'Templates',
+-            'EcommerceConfigAjax',
+-        ],
+-        'PRODUCTS' => [
+-            'ProductGroup',
+-            'ProductImage',
+-            'ProductSearchForm',
+-        ],
+-        'ORDER OBJECTS' => [
+-            'Order',
+-            'OrderItem',
+-            'OrderModifier',
+-        ],
+-        'CART' => [
+-            'ShoppingCart',
+-            'ShoppingCartController',
+-            'CartResponse',
+-        ],
+-        'CHECKOUT' => [
+-            'Pages',
+-            'CartPage_Controller',
+-            'CheckoutPage_Controller',
+-            'ShopAccountFormValidator',
+-            'OrderModifierForm',
+-            'EcommercePaymentController',
+-            'OrderFormAddress',
+-        ],
+-        'POST SALE PROCESSING' => [
+-            'OrderConfirmationPage_Controller',
+-            'OrderStep',
+-            'OrderStepConfirmed',
+-            'OrderStatusLog',
+-            'OrderStatusLogForm',
+-            'Email',
+-            'OrderEmail',
+-        ],
+-        'CUSTOMERS' => [
+-            'OrderAddress',
+-            'EcommerceRole',
+-            'BillingAddress',
+-            'ShippingAddress',
+-            'EcommerceCountry',
+-            'EcommerceRegion',
+-        ],
+-        'PAYMENT AND MONEY' => [
+-            'EcommerceCurrency',
+-            'EcommerceMoney',
+-            'EcommercePayment',
+-            'ExpiryDateField',
+-        ],
+-        'CLEANUP AND OTHER TASKS' => [
+-            'EcommerceTaskCartCleanup',
+-        ],
+-    ];
+-
++    private $definitionGrouping = array('GENERAL AND CMS CONFIG' => array(EcommerceDBConfig::class, SiteConfig::class, StoreAdmin::class, ProductsAndGroupsModelAdmin::class, ProductConfigModelAdmin::class, SalesAdmin::class), 'TEMPLATES' => array('Templates', EcommerceConfigAjax::class), 'PRODUCTS' => array(ProductGroup::class, ProductImage::class, ProductSearchForm::class), 'ORDER OBJECTS' => array(Order::class, OrderItem::class, OrderModifier::class), 'CART' => array(ShoppingCart::class, ShoppingCartController::class, CartResponse::class), 'CHECKOUT' => array('Pages', 'CartPage_Controller', 'CheckoutPage_Controller', ShopAccountFormValidator::class, OrderModifierForm::class, EcommercePaymentController::class, OrderFormAddress::class), 'POST SALE PROCESSING' => array('OrderConfirmationPage_Controller', OrderStep::class, OrderStepConfirmed::class, OrderStatusLog::class, OrderStatusLogForm::class, Email::class, OrderEmail::class), 'CUSTOMERS' => array(OrderAddress::class, EcommerceRole::class, BillingAddress::class, ShippingAddress::class, EcommerceCountry::class, EcommerceRegion::class), 'PAYMENT AND MONEY' => array(EcommerceCurrency::class, EcommerceMoney::class, EcommercePayment::class, ExpiryDateField::class), 'CLEANUP AND OTHER TASKS' => array(EcommerceTaskCartCleanup::class));
+     /**
+      * Tells us the version of e-commerce in use.
+      *
+@@ -129,7 +92,6 @@
+     {
+         return $this->version;
+     }
+-
+     /**
+      * returns defition of Ajax Method.
+      *
+@@ -141,7 +103,6 @@
+     {
+         return $this->ajaxMethods[$name];
+     }
+-
+     /**
+      * returns the definition of an ajax definition.
+      *
+@@ -151,7 +112,6 @@
+     {
+         return $this->ajaxMethods;
+     }
+-
+     /**
+      * Tells us the svn revision of e-commerce in use.
+      *
+@@ -167,10 +127,8 @@
+                 $svnrev = $svn[3];
+             }
+         }
+-
+         return $svnrev;
+     }
+-
+     /**
+      * @return array
+      */
+@@ -178,7 +136,6 @@
+     {
+         return $this->definitionGrouping + ['OTHER' => []];
+     }
+-
+     /**
+      * Get a list of all definitions required for e-commerce.
+      * We have this here so that we can check that all static variables have been defined.
+@@ -191,236 +148,67 @@
+      *
+      * @return array | String
+      */
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++    /**
++     * ### @@@@ START REPLACEMENT @@@@ ###
++     * WHY: automated upgrade
++     * OLD: $className (case sensitive)
++     * NEW: $className (COMPLEX)
++     * EXP: Check if the class name can still be used as such
++     * ### @@@@ STOP REPLACEMENT @@@@ ###
++     */
+     public function Definitions($className = '', $variable = '')
+     {
+         $array = [
+-
+             ################### GENERAL AND CMS CONFIG #####################
+-            'EcommerceDBConfig' => [
+-                'ecommerce_db_config_class_name' => 'Class Name for the DataObject that contains the settings for the e-commerce application',
+-                'array_of_buyables' => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable.  You do not need to include a class that extends a buyable.  For example, if you create a class called 'MyProduct' extending Product then you do not need to list it here.",
+-            ],
+-            'EcommerceConfigAjax' => [
+-                'definitions_class_name' => 'Class Name (string) for the class used to define and name all the ajax IDs and Classes.',
+-                'cart_js_file_location' => 'The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js',
+-                'dialogue_js_file_location' => 'The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox).',
+-            ],
+-            'StoreAdmin' => [
+-                'managed_models' => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
+-            ],
+-            'ProductsAndGroupsModelAdmin' => [
+-                'managed_models' => 'An array of data object classes that are managed as Products and Product Groups ',
+-            ],
+-            'ProductConfigModelAdmin' => [
+-                'managed_models' => "An array of data object classes that are managed as 'Product Config' configuration items.  These are all items that relate to Products and Product Groups that are not in the main group.  This includes any searches carried out in the Product Group. ",
+-            ],
+-            'SalesAdmin' => [
+-                'managed_models' => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. ",
+-            ],
+-
++            'EcommerceDBConfig' => ['ecommerce_db_config_class_name' => 'Class Name for the DataObject that contains the settings for the e-commerce application', 'array_of_buyables' => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable.  You do not need to include a class that extends a buyable.  For example, if you create a class called 'MyProduct' extending Product then you do not need to list it here."],
++            'EcommerceConfigAjax' => ['definitions_class_name' => 'Class Name (string) for the class used to define and name all the ajax IDs and Classes.', 'cart_js_file_location' => 'The location for the EcomCart.js (javascipt that runs the cart) file.  The default one is ecommerce/javascript/EcomCart.js', 'dialogue_js_file_location' => 'The location for the dialogue (pop-up) javascript.  E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue, but you can also use your own (e.g. prettyPhoto or Greybox).'],
++            'StoreAdmin' => ['managed_models' => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. "],
++            'ProductsAndGroupsModelAdmin' => ['managed_models' => 'An array of data object classes that are managed as Products and Product Groups '],
++            'ProductConfigModelAdmin' => ['managed_models' => "An array of data object classes that are managed as 'Product Config' configuration items.  These are all items that relate to Products and Product Groups that are not in the main group.  This includes any searches carried out in the Product Group. "],
++            'SalesAdmin' => ['managed_models' => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. "],
+             ################### PRODUCT DISPLAY #####################
+-            'ProductGroup' => [
+-                'base_buyable_class' => 'The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.',
+-                'actively_check_for_can_purchase' => 'Before listing a product, actively check if canPurcahse returns true.  This is useful, when for example, you are deciding whether or not products can be sold based on the country of the customer.',
+-                'maximum_number_of_products_to_list' => 'The maximum number of products to be shown in a list.  For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.',
+-                'sort_options' => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
+-                'filter_options' => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
+-                'display_styles' => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
+-                'session_name_for_product_array' => 'This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. ',
+-            ],
+-            'ProductGroupSearchPage' => [
+-                'best_match_key' => 'Sort key used to sort by relevance.',
+-                'sort_options' => "Additional associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC') for searching. Include on with the best_match_key.",
+-                'maximum_number_of_products_to_list_for_search' => 'Maximum number of products returned in search.',
+-            ],
+-            'Product' => [
+-                'folder_name_for_images' => 'Default folder for uploading product images.',
+-                'add_data_to_meta_description_for_search' => 'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details',
+-            ],
+-            'ProductImage' => [
+-                'thumbnail_width' => 'Thumbnail width in pixels. For thumbnails, we use paddedResize.',
+-                'thumbnail_height' => 'Thumbnail height in pixels. For thumbnails, we use paddedResize.',
+-                'small_image_width' => 'Width for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
+-                'small_image_height' => 'Height for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
+-                'content_image_width' => 'Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
+-                'large_image_width' => 'Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
+-            ],
+-            'ProductSearchForm' => [
+-                'include_price_filters' => 'For the product search form, make sure that there are no filter fields for minimum and maximum price',
+-                'form_data_session_variable' => 'Name of the session variable used to store the form field values',
+-                'product_session_variable' => 'Name of a session variable used to tell the website what products - based on a search - are to be shown',
+-                'product_group_session_variable' => 'Name of the session variable used to tell the website what products GROUPS - based on a search - are to be shown',
+-            ],
+-
++            'ProductGroup' => ['base_buyable_class' => 'The base class for the products being retrieved.  Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.', 'actively_check_for_can_purchase' => 'Before listing a product, actively check if canPurcahse returns true.  This is useful, when for example, you are deciding whether or not products can be sold based on the country of the customer.', 'maximum_number_of_products_to_list' => 'The maximum number of products to be shown in a list.  For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.', 'sort_options' => "associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')", 'filter_options' => "associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')", 'display_styles' => "associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'", 'session_name_for_product_array' => 'This is the name for variable stored in session.  The variable stores a list of IDs for products being shown on the product group.  We store this so that we can go previous and next for each product. '],
++            'ProductGroupSearchPage' => ['best_match_key' => 'Sort key used to sort by relevance.', 'sort_options' => "Additional associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC') for searching. Include on with the best_match_key.", 'maximum_number_of_products_to_list_for_search' => 'Maximum number of products returned in search.'],
++            'Product' => ['folder_name_for_images' => 'Default folder for uploading product images.', 'add_data_to_meta_description_for_search' => 'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details'],
++            'ProductImage' => ['thumbnail_width' => 'Thumbnail width in pixels. For thumbnails, we use paddedResize.', 'thumbnail_height' => 'Thumbnail height in pixels. For thumbnails, we use paddedResize.', 'small_image_width' => 'Width for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.', 'small_image_height' => 'Height for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.', 'content_image_width' => 'Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.', 'large_image_width' => 'Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.'],
++            'ProductSearchForm' => ['include_price_filters' => 'For the product search form, make sure that there are no filter fields for minimum and maximum price', 'form_data_session_variable' => 'Name of the session variable used to store the form field values', 'product_session_variable' => 'Name of a session variable used to tell the website what products - based on a search - are to be shown', 'product_group_session_variable' => 'Name of the session variable used to tell the website what products GROUPS - based on a search - are to be shown'],
+             ################### CART AND CHECKOUT PROCESS #####################
+-            'ShoppingCart' => [
+-                'session_code' => 'The code use for the session variable that stores the Order ID.',
+-                'cleanup_every_time' => 'Are carts are cleaned up all the time (if this is set to FALSE then we recommend you setup a cron job to clean old carts - this is recommended on large sites where any run-time activity will slow the site down (it is more efficient to clear 1000 carts once an hour than to clear 1 cart ever second))?',
+-                'default_param_filters' => 'Advanced filtering in the shopping cart.  Not currently being used. ',
+-                'response_class' => 'Class used for ajax responses.',
+-            ],
+-            'ShoppingCartController' => [
+-                'url_segment' => 'URL Segment used for the shopping cart.',
+-            ],
+-            'CartResponse' => [
+-                'cart_responses_required' => 'An array of the cart responses required for AJAX.  This array also identifies the unique IDs used in the html that will be updated by the ajax response.',
+-            ],
+-            'CartPage_Controller' => [
+-                'session_code' => 'Code name for session variable used in Cart Page.  This session variable is used to retain a message.',
+-            ],
+-            'CheckoutPage_Controller' => [
+-                'checkout_steps' => 'The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment.',
+-                'ajaxify_steps' => 'Array of Javascript files that are required to ajaxify the steps in the checkout. Defaults to none, but there is a sample JS file available: ecommerce/javascript/EcomCheckoutPage.js.',
+-            ],
+-            'ShopAccountFormValidator' => [
+-                'minimum_password_length' => 'The minimum length of the password for an account.',
+-            ],
+-            'OrderModifierForm' => [
+-                'controller_class' => 'The controller class is used for Order Modifier Forms.',
+-                'validator_class' => 'The validator class is used for Order Modifier Forms.',
+-            ],
+-            'EcommercePaymentController' => [
+-                'url_segment' => 'URL Segment used for the payment process.',
+-            ],
+-
+-            'OrderFormAddress' => [
+-                'shipping_address_first' => 'Show the shipping address before the billing address. This is a better option if it is likely that you have a billing address that is not the same as the shipping address.',
+-            ],
+-
++            'ShoppingCart' => ['session_code' => 'The code use for the session variable that stores the Order ID.', 'cleanup_every_time' => 'Are carts are cleaned up all the time (if this is set to FALSE then we recommend you setup a cron job to clean old carts - this is recommended on large sites where any run-time activity will slow the site down (it is more efficient to clear 1000 carts once an hour than to clear 1 cart ever second))?', 'default_param_filters' => 'Advanced filtering in the shopping cart.  Not currently being used. ', 'response_class' => 'Class used for ajax responses.'],
++            'ShoppingCartController' => ['url_segment' => 'URL Segment used for the shopping cart.'],
++            'CartResponse' => ['cart_responses_required' => 'An array of the cart responses required for AJAX.  This array also identifies the unique IDs used in the html that will be updated by the ajax response.'],
++            'CartPage_Controller' => ['session_code' => 'Code name for session variable used in Cart Page.  This session variable is used to retain a message.'],
++            'CheckoutPage_Controller' => ['checkout_steps' => 'The Checkout Steps.  This can be defined as you like, but the last step should always be: orderconfirmationandpayment.', 'ajaxify_steps' => 'Array of Javascript files that are required to ajaxify the steps in the checkout. Defaults to none, but there is a sample JS file available: ecommerce/javascript/EcomCheckoutPage.js.'],
++            'ShopAccountFormValidator' => ['minimum_password_length' => 'The minimum length of the password for an account.'],
++            'OrderModifierForm' => ['controller_class' => 'The controller class is used for Order Modifier Forms.', 'validator_class' => 'The validator class is used for Order Modifier Forms.'],
++            'EcommercePaymentController' => ['url_segment' => 'URL Segment used for the payment process.'],
++            'OrderFormAddress' => ['shipping_address_first' => 'Show the shipping address before the billing address. This is a better option if it is likely that you have a billing address that is not the same as the shipping address.'],
+             ################### POST SALE PROCESSING #####################
+-            'OrderConfirmationPage_Controller' => [
+-                'include_as_checkout_step' => 'Include the order confirmation as one of the checkout steps, visually, in the list of steps shown.',
+-                'google_analytics_variable' => 'The name of the Google Analytics variables (usually ga or _gaq).',
+-            ],
+-            'OrderStep' => [
+-                'order_steps_to_include' => 'Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.',
+-                'number_of_days_to_send_update_email' => 'The maximum number of days available to send an status update for the customer for the specific order step',
+-            ],
+-            'OrderStepConfirmed' => [
+-                'list_of_things_to_check' => 'One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)',
+-            ],
+-            'OrderStatusLog' => [
+-                'available_log_classes_array' => 'Tells us what order log classes are to be used. OrderStatusLogSubmitted should always be used and does not need to be listed here.',
+-                'order_status_log_class_used_for_submitting_order' => 'This is the log class used to record the submission of the order.  It is crucial to set this to the right log class, as a lot of the functionality in e-commerce depends on it: ',
+-            ],
+-            'OrderStatusLogForm' => [
+-                'controller_class' => 'The controller class is used for OrderStatusLogForm forms.',
+-                'validator_class' => 'The validator class is used for OrderStatusLogForm forms.',
+-            ],
+-            'OrderEmail' => [
+-                'send_all_emails_plain' => 'Should all the emails be send as plain text?  Not recommended.',
+-                'css_file_location' => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
+-                'copy_to_admin_for_all_emails' => 'Send a copy to the shop administrator for every email sent?',
+-            ],
+-
++            'OrderConfirmationPage_Controller' => ['include_as_checkout_step' => 'Include the order confirmation as one of the checkout steps, visually, in the list of steps shown.', 'google_analytics_variable' => 'The name of the Google Analytics variables (usually ga or _gaq).'],
++            'OrderStep' => ['order_steps_to_include' => 'Another very important definition.  These are the steps that the order goes through from creation to archiving.  A bunch of standard steps have been included in the e-commerce module, but this is also a place where you can add / remove your own customisations (steps) as required by your individual project.', 'number_of_days_to_send_update_email' => 'The maximum number of days available to send an status update for the customer for the specific order step'],
++            'OrderStepConfirmed' => ['list_of_things_to_check' => 'One of the steps in the order steps sequence is the Order Confirmation.  This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.  Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock, is there a delivery address, etc....)'],
++            'OrderStatusLog' => ['available_log_classes_array' => 'Tells us what order log classes are to be used. OrderStatusLogSubmitted should always be used and does not need to be listed here.', 'order_status_log_class_used_for_submitting_order' => 'This is the log class used to record the submission of the order.  It is crucial to set this to the right log class, as a lot of the functionality in e-commerce depends on it: '],
++            'OrderStatusLogForm' => ['controller_class' => 'The controller class is used for OrderStatusLogForm forms.', 'validator_class' => 'The validator class is used for OrderStatusLogForm forms.'],
++            'OrderEmail' => ['send_all_emails_plain' => 'Should all the emails be send as plain text?  Not recommended.', 'css_file_location' => "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ", 'copy_to_admin_for_all_emails' => 'Send a copy to the shop administrator for every email sent?'],
+             ################### ORDER DETAILS #####################
+-            'Order' => [
+-                'modifiers' => 'This is the single most important setting.  here you determine what modifiers are being added to every order.  You can just add them as a non-associative array.  However, their order is important!',
+-                'minutes_an_order_can_be_viewed_without_logging_in' => 'Orders can be viewed with the special retrieve link (without the need for the user to log in) for xxx number of minutes.',
+-                'maximum_ignorable_sales_payments_difference' => "The maximum allowable difference between the Order Total and the Payment Total. 	If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered 'paid'",
+-                'order_id_start_number' => 'The starting number for the order number. For example, if you enter 1000 here then the first order will have number 1000, the next one 1001 and so on.',
+-                'template_id_prefix' => 'If you end up with conflicts in your templates (e.g. having the same ID twice) then you can use this variable to set an prefix to all PHP generated IDs in all templates. We use these PHP generated IDs for AJAX templates - where HTML, JS and PHP need to work together.',
+-                'ajax_subtotal_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the SubTotal value. You can also specify if you want a format to be called on that function.',
+-                'ajax_total_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.',
+-                'date_format_for_title' => 'PHP Date format to show date in the title of the order e.g. Y-m-d, leave blank to exclude date format.',
+-                'include_customer_name_in_title' => 'Include the name of the customer in the title of the order.  Set to false to exclude the name of the customer in the order title.',
+-            ],
+-            'OrderItem' => [
+-                'ajax_total_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.',
+-            ],
+-            'OrderModifier' => [
+-                'ajax_total_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.',
+-            ],
+-
++            'Order' => ['modifiers' => 'This is the single most important setting.  here you determine what modifiers are being added to every order.  You can just add them as a non-associative array.  However, their order is important!', 'minutes_an_order_can_be_viewed_without_logging_in' => 'Orders can be viewed with the special retrieve link (without the need for the user to log in) for xxx number of minutes.', 'maximum_ignorable_sales_payments_difference' => "The maximum allowable difference between the Order Total and the Payment Total. \tIf this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered 'paid'", 'order_id_start_number' => 'The starting number for the order number. For example, if you enter 1000 here then the first order will have number 1000, the next one 1001 and so on.', 'template_id_prefix' => 'If you end up with conflicts in your templates (e.g. having the same ID twice) then you can use this variable to set an prefix to all PHP generated IDs in all templates. We use these PHP generated IDs for AJAX templates - where HTML, JS and PHP need to work together.', 'ajax_subtotal_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the SubTotal value. You can also specify if you want a format to be called on that function.', 'ajax_total_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.', 'date_format_for_title' => 'PHP Date format to show date in the title of the order e.g. Y-m-d, leave blank to exclude date format.', 'include_customer_name_in_title' => 'Include the name of the customer in the title of the order.  Set to false to exclude the name of the customer in the order title.'],
++            'OrderItem' => ['ajax_total_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.'],
++            'OrderModifier' => ['ajax_total_format' => 'This is used when AJAX returns some values to update on the checkout page. Specify which function returns the Total value. You can also specify if you want a format to be called on that function.'],
+             ################### CUSTOMERS #####################
+-            'OrderAddress' => [
+-                'use_separate_shipping_address' => 'Do the goods need to get shipped and if so, do we allow these goods to be shipped to a different address than the billing address?',
+-                'use_shipping_address_for_main_region_and_country' => 'In determing the country/region from which the order originated. For, for example, tax purposes - we use the Billing Address (@see Order::Country). However, we can also choose the Shipping Address by setting this variable to TRUE.',
+-                'field_class_and_id_prefix' => 'In case you have some conflicts in the class / IDs for formfields then you can use this variable to add a few characters in front of the classes / IDs',
+-            ],
+-            'EcommerceRole' => [
+-                'permission_category' => 'E-commerce permission group name.',
+-                'allow_customers_to_setup_accounts' => 'Allow customers to become members when they purchase items. If this is false then customers can never setup an account. Orders will still get a member assigned to them but the member does not log in and they are not prompted for a password.',
+-                'must_have_account_to_purchase' => 'When this is set to TRUE, any purchasers must log in or create an account. When set to false, customers still get added as a member, but they can purchase without logging in or choosing a password.',
+-                'automatically_update_member_details' => 'When set to true, the member fields (e.g. email, surname, first name) will be automatically updated from the billing address.  That is, if the customers enters a different email or surname in the billing field then the member record will be updated based on these new values.',
+-                'customer_group_code' => 'Code for the customer member group.',
+-                'customer_group_name' => 'Title (name) for the customer member group.',
+-                'customer_permission_code' => 'Permission code for the customer member group.',
+-                'admin_group_code' => 'Code for the shop administrator member group.',
+-                'admin_group_name' => 'Title (name) for the shop administrator member group.',
+-                'admin_group_user_first_name' => 'First name for the shop administrator (e.g. John).',
+-                'admin_group_user_surname' => 'Last name for the shop administrator (e.g. Smith).',
+-                'admin_group_user_email' => 'Email address for the shop administrator (e.g. johnsmith@app.co.nz).',
+-                'admin_permission_code' => 'Permission code for the shop administrator member group.',
+-                'admin_role_title' => 'Role title for the shop administrator member group.',
+-                'admin_role_permission_codes' => 'Permission codes for the shop administrator member group.',
+-                'assistant_group_code' => 'Code for the shop assistant member group.',
+-                'assistant_group_name' => 'Title (name) for the shop assistant member group.',
+-                'assistant_group_user_first_name' => 'First name for the shop assistant (e.g. John).',
+-                'assistant_group_user_surname' => 'Last name for the shop assistant (e.g. Smith).',
+-                'assistant_group_user_email' => 'Email address for the shop assistant (e.g. johnsmith@app.co.nz).',
+-                'assistant_permission_code' => 'Permission code for the shop assistant member group.',
+-                'assistant_role_title' => 'Role title for the shop assistant member group.',
+-                'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.',
+-                'process_orders_permission_code' => 'Permission code for being allowed to process orders. This code is separate from admins and assistants to make it easier to apply separate codes to groups.',
+-            ],
+-            'BillingAddress' => [
+-                'allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.',
+-                'required_fields' => 'List of fields that is required to be entered.',
+-                'fields_to_google_geocode_conversion' => 'This variable tells us how Billing Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.',
+-            ],
+-            'ShippingAddress' => [
+-                'allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.',
+-                'required_fields' => 'List of fields that is required to be entered.',
+-                'fields_to_google_geocode_conversion' => 'This variable tells us how Shipping Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.',
+-            ],
+-            'EcommerceCountry' => [
+-                'allowed_country_codes' => 'To what countries are you selling?  You can leave this as an empty array, in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set, you can adjust this list in EcommerceCountry using the CMS. ',
+-                'visitor_country_provider' => 'The class that is being used to provide the country of the customer. Usually this is GEOIP, but you can also setup your own one. This class just needs one public method: getCountry.',
+-                'default_country_code' => 'The default country code (e.g. NZ or CA or UK). ',
+-            ],
+-            'EcommerceRegion' => [
+-                'visitor_region_provider' => 'The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions.',
+-                'show_freetext_region_field' => "Provide a free text region field if no regions are specified. Region can also be 'State', or 'Province', etc...",
+-            ],
+-
++            'OrderAddress' => ['use_separate_shipping_address' => 'Do the goods need to get shipped and if so, do we allow these goods to be shipped to a different address than the billing address?', 'use_shipping_address_for_main_region_and_country' => 'In determing the country/region from which the order originated. For, for example, tax purposes - we use the Billing Address (@see Order::Country). However, we can also choose the Shipping Address by setting this variable to TRUE.', 'field_class_and_id_prefix' => 'In case you have some conflicts in the class / IDs for formfields then you can use this variable to add a few characters in front of the classes / IDs'],
++            'EcommerceRole' => ['permission_category' => 'E-commerce permission group name.', 'allow_customers_to_setup_accounts' => 'Allow customers to become members when they purchase items. If this is false then customers can never setup an account. Orders will still get a member assigned to them but the member does not log in and they are not prompted for a password.', 'must_have_account_to_purchase' => 'When this is set to TRUE, any purchasers must log in or create an account. When set to false, customers still get added as a member, but they can purchase without logging in or choosing a password.', 'automatically_update_member_details' => 'When set to true, the member fields (e.g. email, surname, first name) will be automatically updated from the billing address.  That is, if the customers enters a different email or surname in the billing field then the member record will be updated based on these new values.', 'customer_group_code' => 'Code for the customer member group.', 'customer_group_name' => 'Title (name) for the customer member group.', 'customer_permission_code' => 'Permission code for the customer member group.', 'admin_group_code' => 'Code for the shop administrator member group.', 'admin_group_name' => 'Title (name) for the shop administrator member group.', 'admin_group_user_first_name' => 'First name for the shop administrator (e.g. John).', 'admin_group_user_surname' => 'Last name for the shop administrator (e.g. Smith).', 'admin_group_user_email' => 'Email address for the shop administrator (e.g. johnsmith@app.co.nz).', 'admin_permission_code' => 'Permission code for the shop administrator member group.', 'admin_role_title' => 'Role title for the shop administrator member group.', 'admin_role_permission_codes' => 'Permission codes for the shop administrator member group.', 'assistant_group_code' => 'Code for the shop assistant member group.', 'assistant_group_name' => 'Title (name) for the shop assistant member group.', 'assistant_group_user_first_name' => 'First name for the shop assistant (e.g. John).', 'assistant_group_user_surname' => 'Last name for the shop assistant (e.g. Smith).', 'assistant_group_user_email' => 'Email address for the shop assistant (e.g. johnsmith@app.co.nz).', 'assistant_permission_code' => 'Permission code for the shop assistant member group.', 'assistant_role_title' => 'Role title for the shop assistant member group.', 'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.', 'process_orders_permission_code' => 'Permission code for being allowed to process orders. This code is separate from admins and assistants to make it easier to apply separate codes to groups.'],
++            'BillingAddress' => ['allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.', 'required_fields' => 'List of fields that is required to be entered.', 'fields_to_google_geocode_conversion' => 'This variable tells us how Billing Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.'],
++            'ShippingAddress' => ['allow_selection_of_previous_addresses_in_checkout' => 'In the checkout, allow a customer to select from previously used addresses.', 'required_fields' => 'List of fields that is required to be entered.', 'fields_to_google_geocode_conversion' => 'This variable tells us how Shipping Fields map to the Google Geo Coding objects.  If you set it to null or an empty array then there will be no geocoding. See https://developers.google.com/maps/documentation/geocoding/#Types for more information.'],
++            'EcommerceCountry' => ['allowed_country_codes' => 'To what countries are you selling?  You can leave this as an empty array, in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set, you can adjust this list in EcommerceCountry using the CMS. ', 'visitor_country_provider' => 'The class that is being used to provide the country of the customer. Usually this is GEOIP, but you can also setup your own one. This class just needs one public method: getCountry.', 'default_country_code' => 'The default country code (e.g. NZ or CA or UK). '],
++            'EcommerceRegion' => ['visitor_region_provider' => 'The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions.', 'show_freetext_region_field' => "Provide a free text region field if no regions are specified. Region can also be 'State', or 'Province', etc..."],
+             ################### PAYMENT AND MONEY #####################
+-            'EcommerceCurrency' => [
+-                'default_currency' => 'The default currency used on the site.',
+-                'exchange_provider_class' => 'The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.',
+-            ],
+-            'EcommerceMoney' => [
+-                'default_format' => 'Here you specify which function you want to be called as the default format for a Money object on the all site.',
+-            ],
+-            'EcommercePayment' => [
+-                'supported_methods' => 'Associative array of payment methods, e.g. ChequePayment: pay by cheque, CreditCardPayment: pay by credit card, etc....',
+-            ],
+-            'ExpiryDateField' => [
+-                'short_months' => 'Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?',
+-            ],
+-
++            'EcommerceCurrency' => ['default_currency' => 'The default currency used on the site.', 'exchange_provider_class' => 'The name of the class used to provide currency exchange rate.... You can easily built your own class here that can either provide fixed rates, database stored rates or dynamic rates.'],
++            'EcommerceMoney' => ['default_format' => 'Here you specify which function you want to be called as the default format for a Money object on the all site.'],
++            'EcommercePayment' => ['supported_methods' => 'Associative array of payment methods, e.g. ChequePayment: pay by cheque, CreditCardPayment: pay by credit card, etc....'],
++            'ExpiryDateField' => ['short_months' => 'Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?'],
+             ################### CLEANUP AND OTHER TASKS #####################
+-            'EcommerceTaskCartCleanup' => [
+-                'clear_minutes' => 'The number of minutes after which carts are considered abandonned. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.',
+-                'clear_minutes_empty_carts' => 'The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database). If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.',
+-                'maximum_number_of_objects_deleted' => 'This sets the total number of objects to be cleaned per clean.  We can keep this low to reduce time per clean and to reduce risks.',
+-                'never_delete_if_linked_to_member' => 'If set to TRUE, then orders with a member linked to it will never be deleted.',
+-                'one_to_one_classes' => 'An array of key / value pairs that are linked to orders as one-to-one relationships.  The key is the order field name (e.g. BillingAddressID) and the value is the class name (e.g. BillingAddress)',
+-                'one_to_many_classes' => 'An array of key / value pairs that are linked to orders as one-to-many relationships.  The key is the class with the order ID and the value is the class name with the LastEdited field.',
+-                'many_to_many_classes' => 'An array of key / value pairs that are linked to orders as many-to-many relationships.  Currently not in use.',
+-            ],
++            'EcommerceTaskCartCleanup' => ['clear_minutes' => 'The number of minutes after which carts are considered abandonned. If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.', 'clear_minutes_empty_carts' => 'The number of minutes after which empty carts should be deleted (to reduce the amount of empty (meaningless) carts in the database). If set to zero, all objects will be cleared. If set to ten, objects older than ten minutes will be cleared.', 'maximum_number_of_objects_deleted' => 'This sets the total number of objects to be cleaned per clean.  We can keep this low to reduce time per clean and to reduce risks.', 'never_delete_if_linked_to_member' => 'If set to TRUE, then orders with a member linked to it will never be deleted.', 'one_to_one_classes' => 'An array of key / value pairs that are linked to orders as one-to-one relationships.  The key is the order field name (e.g. BillingAddressID) and the value is the class name (e.g. BillingAddress)', 'one_to_many_classes' => 'An array of key / value pairs that are linked to orders as one-to-many relationships.  The key is the class with the order ID and the value is the class name with the LastEdited field.', 'many_to_many_classes' => 'An array of key / value pairs that are linked to orders as many-to-many relationships.  Currently not in use.'],
+         ];
+         //add more stuff through extensions
+-
+         $extendedArray = $this->extend('moreDefinitions', $array);
+         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+             foreach ($extendedArray as $extendedLabelsUpdate) {
+@@ -438,45 +226,41 @@
+             }
+         }
+         //return what is appropriate
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: $className (case sensitive)
++         * NEW: $className (COMPLEX)
++         * EXP: Check if the class name can still be used as such
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         if ($className && $variable) {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: $className (case sensitive)
++             * NEW: $className (COMPLEX)
++             * EXP: Check if the class name can still be used as such
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             return $array[$className][$variable];
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: $className (case sensitive)
++             * NEW: $className (COMPLEX)
++             * EXP: Check if the class name can still be used as such
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+         } elseif ($className) {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: $className (case sensitive)
++             * NEW: $className (COMPLEX)
++             * EXP: Check if the class name can still be used as such
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             return $array[$className];
+         }
+         return $array;
+
+Warnings for src/Config/EcommerceConfigDefinitions.php:
+ - src/Config/EcommerceConfigDefinitions.php:435 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 435
+
+modified:	src/Config/EcommerceConfig.php
+@@ -2,9 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Config;
+
+-use Config;
+-use Director;
++
++
+ use Spyc;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Director;
++
+
+
+
+@@ -59,50 +62,100 @@
+  * @sub-package: configuration
+
+  **/
+-class EcommerceConfig extends Object
++use SilverStripe\Core\Extensible;
++use SilverStripe\Core\Injector\Injectable;
++use SilverStripe\Core\Config\Configurable;
++/**
++ * This Class creates an array of configurations for e-commerce.
++ * This class replaces static variables in individual classes, such as Blog::$allow_wysiwyg_editing.
++ *
++ * @see http://en.wikipedia.org/wiki/YAML#Examples
++ * @see thirdparty/spyc/spyc.php
++ *
++ * # HOW TO USE IT
++ *
++ * 1. Copy ecommerce/_config/ecommerce.yml and move it your project folder, e.g. mysite/_config/ecommerce.yml
++ * In the copied file, set your configs as you see fit, using the YAML format.  E.g.
++ *
++ * Order:
++ * 	Test: 1
++ *
++ * Next, include in ecommerce.yml file:
++ * <code yml>
++ * EcommerceConfig:
++ *   folder_and_file_locations:
++ *     - "mysite/_config/ecommerce.yml"
++ *     - "myotherconfig.yaml"
++ * </code>
++ *
++ * Then, in individual classes, you can access configs like this:
++ *
++ * <code>
++ * EcommerceConfig::get("OrderAddress", "include_bla_bla_widget");
++ * </code>
++ *
++ * OR
++ *
++ * <code>
++ * EcommerceConfig::get($this->ClassName, "include_bla_bla_widget");
++ * </code>
++ *
++ * if you are using PHP 5.3.0+ then you can write this in a static method
++ *
++ * <code>
++ * EcommerceConfig::get("MyClassName", "include_bla_bla_widget");
++ * </code>
++ * Even though there is no direct connection, we keep linking statics to invidual classes.
++ * We do this to (a) group configs (b) make it more interchangeable with other config systems.
++ * One of the problems now is to know what "configs" are used by individual classes.
++ * Therefore, it is important to clearly document that at the top of each class.
++ *
++ * @authors: Nicolaas [at] Sunny Side Up .co.nz
++ * @package: ecommerce
++ * @sub-package: configuration
++ **/
++class EcommerceConfig
+ {
++    use Extensible;
++    use Injectable;
++    use Configurable;
+     /**
+      * The location(s) of the .yaml fixture file, relative to the site base dir.
+      *
+      * @var array
+      */
+-    private static $folder_and_file_locations = ['ecommerce/_config/ecommerce.yml', 'ecommerce/_config/payment.yml'];
+-
++    private static $folder_and_file_locations = array('ecommerce/_config/ecommerce.yml', 'ecommerce/_config/payment.yml');
+     /**
+      * Array of fixture items.
+      *
+      * @var array
+      */
+-    private $fixtureDictionary = [];
+-
++    private $fixtureDictionary = array();
+     /**
+      * Returns a configuration.  This is the main static method for this Object.
+      *
+      * @see Config::get()
+      */
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++    /**
++     * ### @@@@ START REPLACEMENT @@@@ ###
++     * WHY: automated upgrade
++     * OLD: $className (case sensitive)
++     * NEW: $className (COMPLEX)
++     * EXP: Check if the class name can still be used as such
++     * ### @@@@ STOP REPLACEMENT @@@@ ###
++     */
+     public static function get($className, $identifier, $sourceOptions = 0, $result = null, $suppress = null)
+     {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: $className (case sensitive)
++         * NEW: $className (COMPLEX)
++         * EXP: Check if the class name can still be used as such
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         return Config::inst()->get($className, $identifier, $sourceOptions, $result, $suppress);
+     }
+-
+     /**
+      * returns the complete Array of data.
+      *
+@@ -110,46 +163,41 @@
+      */
+     public function getCompleteDataSet($refresh = false)
+     {
+-        if ($refresh || ! count($this->fixtureDictionary)) {
++        if ($refresh || !count($this->fixtureDictionary)) {
+             $this->loadData();
+         }
+         //remove reserved class-names
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: $className (case sensitive)
++         * NEW: $className (COMPLEX)
++         * EXP: Check if the class name can still be used as such
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         foreach (array_keys($this->fixtureDictionary) as $className) {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: $className (case sensitive)
++             * NEW: $className (COMPLEX)
++             * EXP: Check if the class name can still be used as such
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             if (in_array(strtolower($className), ['only', 'except', 'name', 'before', 'after'], true)) {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++                /**
++                 * ### @@@@ START REPLACEMENT @@@@ ###
++                 * WHY: automated upgrade
++                 * OLD: $className (case sensitive)
++                 * NEW: $className (COMPLEX)
++                 * EXP: Check if the class name can still be used as such
++                 * ### @@@@ STOP REPLACEMENT @@@@ ###
++                 */
+                 unset($this->fixtureDictionary[$className]);
+             }
+         }
+-
+         return $this->fixtureDictionary;
+     }
+-
+     /**
+      * returns a list of file locations.
+      *
+@@ -161,7 +209,6 @@
+         //we reverse it so the default comes last
+         return array_reverse($array);
+     }
+-
+     /**
+      * loads data from file.
+      * We have this method to create a complete list of configs.
+@@ -172,7 +219,7 @@
+         $filesArray = $this->fileLocations();
+         foreach ($filesArray as $folderAndFileLocation) {
+             $fixtureFolderAndFile = Director::baseFolder() . '/' . $folderAndFileLocation;
+-            if (! file_exists($fixtureFolderAndFile)) {
++            if (!file_exists($fixtureFolderAndFile)) {
+                 user_error('No custom configuration has been setup for Ecommerce - I was looking for: "' . $fixtureFolderAndFile . '"', E_USER_NOTICE);
+             }
+             $parser = new Spyc();
+
+modified:	src/Config/EcommerceConfigAjaxDefinitions.php
+@@ -2,9 +2,16 @@
+
+ namespace Sunnysideup\Ecommerce\Config;
+
+-use ViewableData;
+-use OrderAddress;
+-use Injector;
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
++use SilverStripe\View\ViewableData;
++
+
+
+ /**
+@@ -48,7 +55,7 @@
+     public function setRequestor($do)
+     {
+         if (self::$prefix === null) {
+-            self::$prefix = EcommerceConfig::get('Order', 'template_id_prefix');
++            self::$prefix = EcommerceConfig::get(Order::class, 'template_id_prefix');
+         }
+         $this->requestor = $do;
+     }
+@@ -110,7 +117,7 @@
+      **/
+     public function ProductListHolderID()
+     {
+-        return self::$prefix . 'ProductGroup';
++        return self::$prefix . ProductGroup::class;
+     }
+
+     /**
+@@ -327,7 +334,7 @@
+
+     public function Define($name)
+     {
+-        $object = Injector::inst()->get('EcommerceConfigDefinitions');
++        $object = Injector::inst()->get(EcommerceConfigDefinitions::class);
+
+         return $object->getAjaxMethod($name);
+     }
+
+modified:	src/Config/EcommerceConfigAjax.php
+@@ -1,6 +1,8 @@
+ <?php
+
+ namespace Sunnysideup\Ecommerce\Config;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++
+
+
+
+@@ -17,8 +19,25 @@
+  * @sub-package: configuration
+
+  **/
+-class EcommerceConfigAjax extends Object
++use SilverStripe\Core\Extensible;
++use SilverStripe\Core\Injector\Injectable;
++use SilverStripe\Core\Config\Configurable;
++/**
++ * This class returns the Ajax Definitions class.
++ * The Ajax Definitions class is an object that contains all the values
++ * for ajax references in the templates.
++ *
++ * We need to have one per classname (e.g. Product)and requestor (Product A with ID = 1)
++ *
++ * @authors: Nicolaas [at] Sunny Side Up .co.nz
++ * @package: ecommerce
++ * @sub-package: configuration
++ **/
++class EcommerceConfigAjax
+ {
++    use Extensible;
++    use Injectable;
++    use Configurable;
+     /**
+      * implements singleton pattern so that there is only ever one instance
+      * of this class.
+@@ -26,8 +45,7 @@
+      *
+      * @static object
+      */
+-    private static $singleton = [];
+-
++    private static $singleton = array();
+     /**
+      * Returns the singleton instance of the Ajax Config definitions class.
+      * This class basically contains a bunch of methods that return
+@@ -39,30 +57,27 @@
+      */
+     public static function get_one($requestor)
+     {
+-        if (! isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
+-            $className = EcommerceConfig::get('EcommerceConfigAjax', 'definitions_class_name');
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: $className (case sensitive)
+-  * NEW: $className (COMPLEX)
+-  * EXP: Check if the class name can still be used as such
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        if (!isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: $className (case sensitive)
++             * NEW: $className (COMPLEX)
++             * EXP: Check if the class name can still be used as such
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
++            $className = EcommerceConfig::get(EcommerceConfigAjax::class, 'definitions_class_name');
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: $className (case sensitive)
++             * NEW: $className (COMPLEX)
++             * EXP: Check if the class name can still be used as such
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             self::$singleton[$requestor->ClassName][$requestor->ID] = new $className();
+             self::$singleton[$requestor->ClassName][$requestor->ID]->setRequestor($requestor);
+         }
+-
+         return self::$singleton[$requestor->ClassName][$requestor->ID];
+     }
+ }
+
+Warnings for src/Config/EcommerceConfigAjax.php:
+ - src/Config/EcommerceConfigAjax.php:62 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 62
+
+modified:	src/Control/OrderModifierFormController.php
+@@ -2,11 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use ShoppingCart;
+-use Config;
+-use Director;
+-use Form;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Director;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\Form;
++
+
+
+
+
+modified:	src/Control/OrderStatusLogFormController.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use ShoppingCart;
+-use Config;
+-use Director;
++
++
++
++
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Director;
++use SilverStripe\Control\Controller;
++
+
+
+
+
+modified:	src/Control/EcommerceResponse.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use SS_HTTPResponse;
++
++use SilverStripe\Control\HTTPResponse;
++
+
+
+ /**
+@@ -13,7 +15,7 @@
+  * @sub-package: control
+
+  **/
+-abstract class EcommerceResponse extends SS_HTTPResponse
++abstract class EcommerceResponse extends HTTPResponse
+ {
+     /**
+      * @param string       $status  the status to return
+
+modified:	src/Control/EcommercePaymentController.php
+@@ -2,13 +2,22 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use EcommerceConfig;
+-use Director;
+-use Requirements;
+-use Order;
+-use Config;
+-use OrderFormPayment;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Control\Director;
++use SilverStripe\Control\Controller;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
++
+
+
+
+@@ -50,7 +59,7 @@
+      */
+     public static function make_payment_link($orderID)
+     {
+-        $urlSegment = EcommerceConfig::get('EcommercePaymentController', 'url_segment');
++        $urlSegment = EcommerceConfig::get(EcommercePaymentController::class, 'url_segment');
+         return Controller::join_links(
+             Director::baseURL(),
+             $urlSegment . '/pay/' . $orderID . '/'
+
+modified:	src/Control/BuyableSelectFieldDataList.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use Config;
+-use Director;
+-use SS_HTTPRequest;
+-use Convert;
+-use EcommerceConfig;
+-use Versioned;
++
++
++
++
++
++
++
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Director;
++use SilverStripe\Control\Controller;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\Versioned\Versioned;
++
+
+
+
+@@ -63,11 +73,11 @@
+      *
+      * @return string (JSON)
+      */
+-    public function json(SS_HTTPRequest $request)
++    public function json(HTTPRequest $request)
+     {
+         $countOfSuggestions = $request->requestVar('countOfSuggestions');
+         $term = Convert::raw2sql($request->requestVar('term'));
+-        $arrayOfBuyables = EcommerceConfig::get('EcommerceDBConfig', 'array_of_buyables');
++        $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
+         $arrayOfAddedItemIDsByClassName = [];
+         $lengthOfFieldsToSearch = count($this->fieldsToSearch);
+         $lenghtOfBuyables = count($arrayOfBuyables);
+@@ -90,7 +100,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('SiteTree'))) {
++            if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(SiteTree::class))) {
+                 if (Versioned::current_stage() === 'Live') {
+                     $buyables[$key]['TableName'] .= '_Live';
+                 }
+
+Warnings for src/Control/BuyableSelectFieldDataList.php:
+ - src/Control/BuyableSelectFieldDataList.php:152 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 152
+
+modified:	src/Control/EcommerceSiteTreeExtensionController.php
+@@ -2,12 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Extension;
+-use Requirements;
+-use EcommerceConfig;
+-use ShoppingCart;
+-use Director;
+-use CartPage;
++
++
++
++
++
++
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use SilverStripe\Core\Extension;
++
+
+
+
+@@ -53,7 +64,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            if (is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Product')) || is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
++            if (is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class)) || is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -74,8 +85,8 @@
+      */
+     public function onAfterInit()
+     {
+-        Requirements::javascript(EcommerceConfig::get('EcommerceConfigAjax', 'cart_js_file_location'));
+-        Requirements::javascript(EcommerceConfig::get('EcommerceConfigAjax', 'dialogue_js_file_location'));
++        Requirements::javascript(EcommerceConfig::get(EcommerceConfigAjax::class, 'cart_js_file_location'));
++        Requirements::javascript(EcommerceConfig::get(EcommerceConfigAjax::class, 'dialogue_js_file_location'));
+         Requirements::themedCSS('sunnysideup/ecommerce: Cart', 'ecommerce');
+         Requirements::themedCSS('sunnysideup/ecommerce: jquery.colorbox', 'ecommerce');
+     }
+@@ -90,7 +101,7 @@
+      **/
+     public function SimpleCartLinkAjax()
+     {
+-        return EcommerceConfig::get('ShoppingCartController', 'url_segment') . '/showcart/?ajax=1';
++        return EcommerceConfig::get(ShoppingCartController::class, 'url_segment') . '/showcart/?ajax=1';
+     }
+
+     /**
+
+modified:	src/Control/EcommerceTemplateTest.php
+@@ -2,10 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Page_Controller;
+-use Product;
+-use OrderStep;
+-use DataObject;
++
++
++
++
++use Sunnysideup\Ecommerce\Control\EcommerceTemplateTest;
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\ORM\DataObject;
++use PageController;
++
+
+
+ /**
+@@ -16,11 +23,11 @@
+  * @sub-package: control
+
+  **/
+-class EcommerceTemplateTest extends Page_Controller
++class EcommerceTemplateTest extends PageController
+ {
+     public function index()
+     {
+-        return $this->renderWith(['EcommerceTemplateTest', 'Page']);
++        return $this->renderWith([EcommerceTemplateTest::class, 'Page']);
+     }
+
+     /**
+@@ -55,7 +62,7 @@
+         $lastStatusOrder = OrderStep::last_order_step();
+         if ($lastStatusOrder) {
+             return DataObject::get_one(
+-                'Order',
++                Order::class,
+                 ['StatusID' => $lastStatusOrder->ID],
+                 $cacheDataObjectGetOne = true,
+                 'RAND()'
+
+modified:	src/Control/OrderStepController.php
+@@ -2,13 +2,22 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use Config;
+-use Injector;
+-use Convert;
+-use SS_HTTPRequest;
+-use Order;
+-use DataObject;
++
++
++
++
++
++
++
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\Core\Convert;
++use SilverStripe\Control\HTTPRequest;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Control\Controller;
++
+
+
+ /**
+@@ -215,7 +224,7 @@
+             } elseif (isset($_GET['OrderID']) && isset($_GET['OrderSessionID'])) {
+                 $id = intval($_GET['OrderID']);
+                 $sessionID = Convert::raw2sql($_GET['OrderSessionID']);
+-            } elseif ($dataOrRequest instanceof SS_HTTPRequest) {
++            } elseif ($dataOrRequest instanceof HTTPRequest) {
+                 $id = intval($dataOrRequest->param('ID'));
+                 $sessionID = Convert::raw2sql($dataOrRequest->param('OtherID'));
+             } else {
+@@ -249,7 +258,7 @@
+     protected function orderStep()
+     {
+         return DataObject::get_one(
+-            'OrderStep',
++            OrderStep::class,
+             ['Code' => $this->codeOfRelevantOrderStep()]
+         );
+     }
+
+modified:	src/Control/ShoppingCartController.php
+@@ -2,24 +2,47 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use ShoppingCart;
+-use Order;
+-use SS_HTTPRequest;
+-use Convert;
+-use EcommerceRole;
+-use SiteTree;
+-use Security;
+-use Director;
+-use Member;
+-use CheckoutPage;
+-use CartPage;
+-use EcommerceDBConfig;
++
++
++
++
++
++
++
++
++
++
++
++
++
+ use ProductVariation;
+-use DataObject;
+-use Permission;
+-use Config;
+-use SecurityToken;
++
++
++
++
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\Security\Security;
++use SilverStripe\Control\Director;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\ErrorPage\ErrorPage;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\Control\Controller;
++use SilverStripe\Security\SecurityToken;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++
+
+
+
+@@ -179,7 +202,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-    public static function add_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
++    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+     {
+
+ /**
+@@ -209,7 +232,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-    public static function remove_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
++    public static function remove_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+     {
+
+ /**
+@@ -239,7 +262,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-    public static function remove_all_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
++    public static function remove_all_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+     {
+
+ /**
+@@ -269,7 +292,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-    public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
++    public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+     {
+
+ /**
+@@ -299,7 +322,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-    public static function set_quantity_item_link($buyableID, $classNameForBuyable = 'Product', array $parameters = [])
++    public static function set_quantity_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+     {
+
+ /**
+@@ -446,7 +469,7 @@
+      *
+      * @return JSON
+      */
+-    public function json(SS_HTTPRequest $request)
++    public function json(HTTPRequest $request)
+     {
+         return $this->cart->setMessageAndReturn();
+     }
+@@ -459,7 +482,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function additem(SS_HTTPRequest $request)
++    public function additem(HTTPRequest $request)
+     {
+         $buyable = $this->buyable();
+         if ($buyable) {
+@@ -478,7 +501,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function setquantityitem(SS_HTTPRequest $request)
++    public function setquantityitem(HTTPRequest $request)
+     {
+         $buyable = $this->buyable();
+         if ($buyable) {
+@@ -497,7 +520,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function removeitem(SS_HTTPRequest $request)
++    public function removeitem(HTTPRequest $request)
+     {
+         $buyable = $this->buyable();
+         if ($buyable) {
+@@ -516,7 +539,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function removeallitem(SS_HTTPRequest $request)
++    public function removeallitem(HTTPRequest $request)
+     {
+         $buyable = $this->buyable();
+         if ($buyable) {
+@@ -538,7 +561,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function removeallitemandedit(SS_HTTPRequest $request)
++    public function removeallitemandedit(HTTPRequest $request)
+     {
+         $buyable = $this->buyable();
+         if ($buyable) {
+@@ -558,7 +581,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function removemodifier(SS_HTTPRequest $request)
++    public function removemodifier(HTTPRequest $request)
+     {
+         $modifierID = intval($request->param('ID'));
+         $this->cart->removeModifier($modifierID);
+@@ -576,7 +599,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      */
+-    public function addmodifier(SS_HTTPRequest $request)
++    public function addmodifier(HTTPRequest $request)
+     {
+         $modifierID = intval($request->param('ID'));
+         $this->cart->addModifier($modifierID);
+@@ -594,7 +617,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      **/
+-    public function setcountry(SS_HTTPRequest $request)
++    public function setcountry(HTTPRequest $request)
+     {
+         $countryCode = Convert::raw2sql($request->param('ID'));
+         //set_country will check if the country code is actually allowed....
+@@ -609,7 +632,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      **/
+-    public function setregion(SS_HTTPRequest $request)
++    public function setregion(HTTPRequest $request)
+     {
+         $regionID = intval($request->param('ID'));
+         $this->cart->setRegion($regionID);
+@@ -623,7 +646,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      **/
+-    public function setcurrency(SS_HTTPRequest $request)
++    public function setcurrency(HTTPRequest $request)
+     {
+         $currencyCode = Convert::raw2sql($request->param('ID'));
+         $this->cart->setCurrency($currencyCode);
+@@ -637,7 +660,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      **/
+-    public function removefromsale(SS_HTTPRequest $request)
++    public function removefromsale(HTTPRequest $request)
+     {
+         if (EcommerceRole::current_member_is_shop_assistant()) {
+             $className = Convert::raw2sql($request->param('ID'));
+@@ -664,7 +687,7 @@
+      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+      *               If it is not AJAX it redirects back to requesting page.
+      **/
+-    public function save(SS_HTTPRequest $request)
++    public function save(HTTPRequest $request)
+     {
+         $this->cart->save();
+
+@@ -676,7 +699,7 @@
+      *
+      * @return REDIRECT
+      **/
+-    public function clear(SS_HTTPRequest $request)
++    public function clear(HTTPRequest $request)
+     {
+         $this->cart->clear();
+         $this->redirect(Director::baseURL());
+@@ -689,7 +712,7 @@
+      *
+      * @return REDIRECT
+      **/
+-    public function clearandlogout(SS_HTTPRequest $request)
++    public function clearandlogout(HTTPRequest $request)
+     {
+         $this->cart->clear();
+         if ($member = Member::currentUser()) {
+@@ -705,7 +728,7 @@
+      *
+      * @return REDIRECT
+      **/
+-    public function deleteorder(SS_HTTPRequest $request)
++    public function deleteorder(HTTPRequest $request)
+     {
+         $orderID = intval($request->param('ID'));
+         if ($order = Order::get_by_id_if_can_view($orderID)) {
+@@ -733,7 +756,7 @@
+      *
+      * @return int
+      **/
+-    public function numberofitemsincart(SS_HTTPRequest $request)
++    public function numberofitemsincart(HTTPRequest $request)
+     {
+         $order = $this->cart->CurrentOrder();
+
+@@ -747,7 +770,7 @@
+      *
+      * @return HTML
+      */
+-    public function showcart(SS_HTTPRequest $request)
++    public function showcart(HTTPRequest $request)
+     {
+
+ /**
+@@ -768,7 +791,7 @@
+      *
+      * @return REDIRECT
+      */
+-    public function loadorder(SS_HTTPRequest $request)
++    public function loadorder(HTTPRequest $request)
+     {
+         $this->cart->loadOrder(intval($request->param('ID')));
+         $cartPageLink = CartPage::find_link();
+@@ -786,7 +809,7 @@
+      * @return string | REDIRECT
+      * @TODO: add non-ajax version of this request.
+      */
+-    public function removeaddress(SS_HTTPRequest $request)
++    public function removeaddress(HTTPRequest $request)
+     {
+         $id = intval($request->param('ID'));
+
+@@ -847,7 +870,7 @@
+      *
+      * @return REDIRECT
+      */
+-    public function submittedbuyable(SS_HTTPRequest $request)
++    public function submittedbuyable(HTTPRequest $request)
+     {
+         $buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
+         $buyableID = intval($this->getRequest()->param('OtherID'));
+@@ -871,7 +894,7 @@
+             }
+         }
+         $errorPage404 = DataObject::get_one(
+-            'ErrorPage',
++            ErrorPage::class,
+             ['ErrorCode' => '404']
+         );
+         if ($errorPage404) {
+@@ -889,7 +912,7 @@
+      *
+      * @return REDIRECT
+      */
+-    public function placeorderformember(SS_HTTPRequest $request)
++    public function placeorderformember(HTTPRequest $request)
+     {
+         if (EcommerceRole::current_member_is_shop_admin()) {
+             $member = Member::get()->byID(intval($request->param('ID')));
+@@ -918,14 +941,14 @@
+      *
+      * @return REDIRECT
+      */
+-    public function loginas(SS_HTTPRequest $request)
++    public function loginas(HTTPRequest $request)
+     {
+         if (Permission::check('ADMIN')) {
+             $newMember = Member::get()->byID(intval($request->param('ID')));
+             if ($newMember) {
+                 //$memberToTest->logout();
+                 $newMember->logIn();
+-                if ($accountPage = DataObject::get_one('AccountPage')) {
++                if ($accountPage = DataObject::get_one(AccountPage::class)) {
+                     return $this->redirect($accountPage->Link());
+                 }
+                 return $this->redirect(Director::baseURL());
+@@ -955,7 +978,7 @@
+      *
+      * @return output to buffer
+      */
+-    public function ajaxtest(SS_HTTPRequest $request)
++    public function ajaxtest(HTTPRequest $request)
+     {
+         if (Director::isDev() || Permission::check('ADMIN')) {
+             header('Content-Type', 'text/plain');
+@@ -985,7 +1008,7 @@
+     {
+         return Controller::join_links(
+             Director::baseURL(),
+-            Config::inst()->get('ShoppingCartController', 'url_segment'),
++            Config::inst()->get(ShoppingCartController::class, 'url_segment'),
+             $actionAndOtherLinkVariables
+         );
+     }
+@@ -1031,7 +1054,7 @@
+                     }
+                 }
+             } else {
+-                if (strpos($buyableClassName, 'OrderItem')) {
++                if (strpos($buyableClassName, OrderItem::class)) {
+                     user_error('ClassName in URL should be buyable and not an orderitem', E_USER_NOTICE);
+                 }
+             }
+@@ -1070,7 +1093,7 @@
+     protected function goToErrorPage()
+     {
+         $errorPage404 = DataObject::get_one(
+-            'ErrorPage',
++            ErrorPage::class,
+             ['ErrorCode' => '404']
+         );
+         if ($errorPage404) {
+
+Warnings for src/Control/ShoppingCartController.php:
+ - src/Control/ShoppingCartController.php:646 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 646
+
+ - src/Control/ShoppingCartController.php:821 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 821
+
+ - src/Control/ShoppingCartController.php:857 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 857
+
+ - src/Control/ShoppingCartController.php:1027 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1027
+
+modified:	src/Control/CartResponse.php
+@@ -2,11 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Config;
+-use ShoppingCart;
+-use EcommerceConfig;
+-use DBField;
+-use Director;
++
++
++
++
++
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Control\CartResponse;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\Control\Director;
++
+
+
+ /**
+@@ -69,7 +77,7 @@
+             $this->addHeader('Content-Type', 'application/json');
+         }
+
+-        Config::modify()->update('SSViewer', 'source_file_comments', false);
++        Config::modify()->update(SSViewer::class, 'source_file_comments', false);
+         //merge messages
+         $messagesImploded = '';
+         if (is_array($messages) && count($messages)) {
+@@ -165,7 +173,7 @@
+         }
+
+         //TO DO: set it up in such a way that it specifically requests one of these
+-        $templates = EcommerceConfig::get('CartResponse', 'cart_responses_required');
++        $templates = EcommerceConfig::get(CartResponse::class, 'cart_responses_required');
+         foreach ($templates as $idMethod => $template) {
+             $selector = $ajaxObject->{$idMethod}();
+             $classOrID = 'id';
+
+modified:	src/Control/OrderEmailRecordReview.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Control;
+
+-use Controller;
+-use Config;
+-use OrderEmailRecord;
++
++
++
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
++use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
++use SilverStripe\Control\Controller;
++
+
+
+
+@@ -16,7 +21,7 @@
+
+     public static function review_link($email)
+     {
+-        return Config::inst()->get('OrderEmailRecordReview', 'url_segment') . '/read/' . $email->ID;
++        return Config::inst()->get(OrderEmailRecordReview::class, 'url_segment') . '/read/' . $email->ID;
+     }
+
+     public function read($request)
+
+modified:	src/Model/ProductOrderItem.php
+@@ -2,7 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use Config;
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++
+
+
+ class ProductOrderItem extends OrderItem
+@@ -25,7 +29,7 @@
+             'Version',
+             'UnitPrice',
+             'Total',
+-            'Order',
++            Order::class,
+             'InternalItemID',
+         ],
+     ];
+@@ -76,7 +80,7 @@
+         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
+         if ($product = $this->Product()) {
+             Config::nest();
+-            Config::inst()->update('SSViewer', 'theme_enabled', true);
++            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+             $tableTitle = strip_tags($product->renderWith('ProductTableTitle'));
+             Config::unnest();
+         }
+
+modified:	src/Model/Config/EcommerceDBConfig.php
+@@ -2,43 +2,87 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Config;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use Email;
+-use EcommerceConfig;
+-use ProductImage;
+-use TextField;
+-use LiteralField;
+-use Tab;
+-use CheckboxField;
+-use HTMLEditorField;
+-use NumericField;
+-use ReadonlyField;
+-use UploadField;
+-use Requirements;
+-use ProductProductImageUploadField;
+-use HiddenField;
+-use GridFieldConfig;
+-use GridFieldToolbarHeader;
+-use GridFieldSortableHeader;
+-use GridFieldDataColumns;
+-use GridFieldPaginator;
+-use GridFieldEditButton;
+-use GridFieldDeleteAction;
+-use GridFieldDetailForm;
+-use GridField;
+-use OrderStep;
+-use ShoppingCart;
+-use EcommerceCurrency;
+-use AccountPage;
+-use CheckoutPage;
+-use CartPage;
+-use OrderConfirmationPage;
+-use DB;
+-use SiteConfig;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Assets\Image;
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use SilverStripe\Forms\Tab;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\AssetAdmin\Forms\UploadField;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\GridField\GridFieldConfig;
++use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
++use SilverStripe\Forms\GridField\GridFieldSortableHeader;
++use SilverStripe\Forms\GridField\GridFieldDataColumns;
++use SilverStripe\Forms\GridField\GridFieldPaginator;
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Forms\GridField\GridFieldDetailForm;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\Forms\GridField\GridField;
++use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use SilverStripe\ORM\DB;
++use SilverStripe\SiteConfig\SiteConfig;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -130,8 +174,8 @@
+   * EXP: you may want to add ownership (owns)
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        'EmailLogo' => 'Image',
+-        'DefaultProductImage' => 'ProductImage',
++        'EmailLogo' => Image::class,
++        'DefaultProductImage' => ProductImage::class,
+     ];
+
+     /**
+@@ -308,7 +352,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -334,7 +378,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -385,7 +429,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            $className = EcommerceConfig::get('EcommerceDBConfig', 'ecommerce_db_config_class_name');
++            $className = EcommerceConfig::get(EcommerceDBConfig::class, 'ecommerce_db_config_class_name');
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -405,7 +449,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                $className = 'EcommerceDBConfig';
++                $className = EcommerceDBConfig::class;
+             }
+             self::$_my_current_one = DataObject::get_one(
+
+@@ -625,9 +669,9 @@
+                         )
+                     ),
+                 ]);
+-                $mappingArray = Config::inst()->get('BillingAddress', 'fields_to_google_geocode_conversion');
++                $mappingArray = Config::inst()->get(BillingAddress::class, 'fields_to_google_geocode_conversion');
+                 if (is_array($mappingArray) && count($mappingArray)) {
+-                    $mappingArray = Config::inst()->get('ShippingAddress', 'fields_to_google_geocode_conversion');
++                    $mappingArray = Config::inst()->get(ShippingAddress::class, 'fields_to_google_geocode_conversion');
+                     if (is_array($mappingArray) && count($mappingArray)) {
+                         $fields->removeByName('PostalCodeURL');
+                         $fields->removeByName('PostalCodeLabel');
+@@ -753,7 +797,7 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+         $implementorsArray = class_implements($className);
+-        if (is_array($implementorsArray) && in_array('BuyableModel', $implementorsArray, true)) {
++        if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
+             return true;
+         }
+
+@@ -785,7 +829,7 @@
+      */
+     public function Currency()
+     {
+-        return EcommerceConfig::get('EcommerceCurrency', 'default_currency');
++        return EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
+     }
+
+     /**
+
+Warnings for src/Model/Config/EcommerceDBConfig.php:
+ - src/Model/Config/EcommerceDBConfig.php:133 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+ - src/Model/Config/EcommerceDBConfig.php:434 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 434
+
+modified:	src/Model/Address/EcommerceRegionVisitorRegionProvider.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Address;
+
+-use ViewableData;
+-use DataObject;
++
++
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\View\ViewableData;
++
+
+
+
+@@ -22,7 +26,7 @@
+      */
+     public function getRegion()
+     {
+-        $region = DataObject::get_one('EcommerceRegion');
++        $region = DataObject::get_one(EcommerceRegion::class);
+         if ($region) {
+             return $region->ID;
+         }
+
+modified:	src/Model/Address/EcommerceRegion.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Address;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Config;
++
++
++
+ use CMSEditLinkAPI;
+-use ShoppingCart;
+-use EcommerceConfig;
+-use EcommerceCodeFilter;
++
++
++
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegionVisitorRegionProvider;
++use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -95,7 +105,7 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Country' => 'EcommerceCountry',
++        'Country' => EcommerceCountry::class,
+     ];
+
+     /**
+@@ -191,7 +201,7 @@
+      **/
+     public static function show()
+     {
+-        if (Config::inst()->get('EcommerceRegion', 'show_freetext_region_field')) {
++        if (Config::inst()->get(EcommerceRegion::class, 'show_freetext_region_field')) {
+             return true;
+         }
+         return EcommerceRegion::get()->count() ? true : false;
+@@ -233,7 +243,7 @@
+     public static function code_allowed($code)
+     {
+         $region = DataObject::get_one(
+-            'EcommerceRegion',
++            EcommerceRegion::class,
+             ['Code' => $code]
+         );
+         if ($region) {
+@@ -392,9 +402,9 @@
+      **/
+     public static function get_region_from_ip()
+     {
+-        $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_region_provider');
++        $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_region_provider');
+         if (! $visitorCountryProviderClassName) {
+-            $visitorCountryProviderClassName = 'EcommerceRegionVisitorRegionProvider';
++            $visitorCountryProviderClassName = EcommerceRegionVisitorRegionProvider::class;
+         }
+         $visitorCountryProvider = new $visitorCountryProviderClassName();
+
+
+Warnings for src/Model/Address/EcommerceRegion.php:
+ - src/Model/Address/EcommerceRegion.php:399 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 399
+
+modified:	src/Model/Address/ShippingAddress.php
+@@ -2,16 +2,31 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Address;
+
+-use Injector;
+-use ReadonlyField;
+-use Member;
+-use EcommerceConfig;
+-use CompositeField;
+-use HeaderField;
+-use LiteralField;
+-use SelectOrderAddressField;
+-use TextField;
++
++
++
++
++
++
++
++
++
+ use GoogleAddressField;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\CompositeField;
++use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
++use SilverStripe\Forms\TextField;
++
+
+
+ /**
+@@ -34,7 +49,7 @@
+             'ShippingPrefix',
+             'ShippingFirstName',
+             'ShippingSurname',
+-            'ShippingAddress',
++            ShippingAddress::class,
+             'ShippingAddress2',
+             'ShippingCity',
+             'ShippingPostalCode',
+@@ -91,14 +106,14 @@
+      * standard SS static definition.
+      **/
+     private static $has_one = [
+-        'ShippingRegion' => 'EcommerceRegion',
++        'ShippingRegion' => EcommerceRegion::class,
+     ];
+
+     /**
+      * standard SS static definition.
+      **/
+     private static $belongs_to = [
+-        'Order' => 'Order',
++        'Order' => Order::class,
+     ];
+
+     /**
+@@ -192,7 +207,7 @@
+
+     public function fieldLabels($includerelations = true)
+     {
+-        $billingAddress = Injector::inst()->get('BillingAddress');
++        $billingAddress = Injector::inst()->get(BillingAddress::class);
+         $shippingLabels = parent::fieldLabels($includerelations);
+         $billingLabels = $billingAddress->fieldLabels($includerelations);
+         $summaryFields = $this->stat('field_labels');
+@@ -254,7 +269,7 @@
+     public function getFields(Member $member = null)
+     {
+         $fields = parent::getEcommerceFields();
+-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
++        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
+             $shippingFieldsHeader = new CompositeField(
+                 new HeaderField('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
+                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
+@@ -263,7 +278,7 @@
+             if ($member && Member::currentUser()) {
+                 if ($member->exists() && ! $member->IsShopAdmin()) {
+                     $this->FillWithLastAddressFromMember($member, true);
+-                    if (EcommerceConfig::get('ShippingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
++                    if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
+                         $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+                         //we want MORE than one here not just one.
+                         if ($addresses->count() > 1) {
+@@ -308,7 +323,7 @@
+                 //$shippingFields->push(new HiddenField('ShippingCity'));
+             }
+
+-            $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
++            $shippingFields->push(new TextField(ShippingAddress::class, _t('ShippingAddress.ADDRESS', 'Address')));
+             $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', '')));
+             $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
+             $shippingFields->push($this->getRegionField('ShippingRegionID', 'ShippingRegionCode'));
+
+modified:	src/Model/Address/EcommerceCountry.php
+@@ -2,18 +2,34 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Address;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use EcommerceConfig;
++
++
++
++
++
++
+ use Geoip;
+-use ShoppingCart;
+-use LiteralField;
++
++
+ use CMSEditLinkAPI;
+-use EcommerceTaskCountryAndRegion;
+-use EcommerceCodeFilter;
++
++
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\LiteralField;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
++use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -57,7 +73,7 @@
+      * @var array
+      **/
+     private static $has_many = [
+-        'Regions' => 'EcommerceRegion',
++        'Regions' => EcommerceRegion::class,
+     ];
+
+     /**
+@@ -244,7 +260,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -267,7 +283,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -297,7 +313,7 @@
+         if (BillingAddress::get()->filter(['Country' => $this->Code])->count()) {
+             return false;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -312,9 +328,9 @@
+      **/
+     public static function get_country_from_ip()
+     {
+-        $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
++        $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_country_provider');
+         if (! $visitorCountryProviderClassName) {
+-            $visitorCountryProviderClassName = 'EcommerceCountryVisitorCountryProvider';
++            $visitorCountryProviderClassName = EcommerceCountryVisitorCountryProvider::class;
+         }
+         $visitorCountryProvider = new $visitorCountryProviderClassName();
+
+@@ -329,9 +345,9 @@
+      **/
+     public static function get_ip()
+     {
+-        $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_country_provider');
++        $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_country_provider');
+         if (! $visitorCountryProviderClassName) {
+-            $visitorCountryProviderClassName = 'EcommerceCountryVisitorCountryProvider';
++            $visitorCountryProviderClassName = EcommerceCountryVisitorCountryProvider::class;
+         }
+         $visitorCountryProvider = new $visitorCountryProviderClassName();
+
+@@ -385,7 +401,7 @@
+      **/
+     public static function get_fixed_country_code()
+     {
+-        $a = EcommerceConfig::get('EcommerceCountry', 'allowed_country_codes');
++        $a = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
+         if (is_array($a) && count($a) === 1) {
+             return array_shift($a);
+         }
+@@ -420,7 +436,7 @@
+             return $options[$code];
+         } elseif ($code) {
+             $obj = DataObject::get_one(
+-                'EcommerceCountry',
++                EcommerceCountry::class,
+                 ['Code' => $code]
+             );
+             if ($obj) {
+@@ -482,7 +498,7 @@
+                 //include $countryCode = self::get_country_from_ip();
+                 $o = ShoppingCart::current_order();
+                 if ($orderID && $orderID !== $o->ID) {
+-                    $o = DataObject::get_one('Order', ['ID' => $orderID]);
++                    $o = DataObject::get_one(Order::class, ['ID' => $orderID]);
+                 }
+                 if ($o && $o->exists()) {
+                     $countryCode = $o->getCountry();
+@@ -507,7 +523,7 @@
+      */
+     public static function get_country_default()
+     {
+-        $countryCode = EcommerceConfig::get('EcommerceCountry', 'default_country_code');
++        $countryCode = EcommerceConfig::get(EcommerceCountry::class, 'default_country_code');
+         //5. take the FIRST country from the get_allowed_country_codes
+         if (! $countryCode) {
+             $countryArray = self::list_of_allowed_entries_for_dropdown();
+@@ -528,7 +544,7 @@
+     {
+         if (is_string($var)) {
+             $var = strtoupper($var);
+-            $var = DataObject::get_one('EcommerceCountry', ['Code' => $var]);
++            $var = DataObject::get_one(EcommerceCountry::class, ['Code' => $var]);
+         } elseif (is_numeric($var) && is_int($var)) {
+             $var = EcommerceCountry::get()->byID($var);
+         }
+@@ -558,7 +574,7 @@
+         }
+
+         return DataObject::get_one(
+-            'EcommerceCountry',
++            EcommerceCountry::class,
+             ['Code' => $countryCode]
+         );
+     }
+@@ -581,7 +597,7 @@
+         }
+         self::$_code_to_id_map[$countryCode] = 0;
+         $country = DataObject::get_one(
+-            'EcommerceCountry',
++            EcommerceCountry::class,
+             ['Code' => $countryCode]
+         );
+         if ($country) {
+
+Warnings for src/Model/Address/EcommerceCountry.php:
+ - src/Model/Address/EcommerceCountry.php:319 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 319
+
+ - src/Model/Address/EcommerceCountry.php:336 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 336
+
+modified:	src/Model/Address/OrderAddress.php
+@@ -2,22 +2,44 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Address;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use EcommerceConfig;
++
++
++
+ use CMSEditLinkAPI;
+-use Member;
+-use Permission;
+-use Config;
+-use NumericField;
+-use ShoppingCartController;
+-use Convert;
+-use EcommerceDBConfig;
+-use EcommerceTaskDebugCart;
+-use FieldList;
+-use TextField;
+-use DropdownField;
+-use HiddenField;
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\View\SSViewer;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\DropdownField;
++use SilverStripe\Forms\HiddenField;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+
+@@ -93,7 +115,7 @@
+      */
+     public static function get_country_field_ID()
+     {
+-        if (EcommerceConfig::get('OrderAddress', 'use_shipping_address_for_main_region_and_country')) {
++        if (EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country')) {
+             return 'ShippingCountry';
+         }
+         return 'Country';
+@@ -107,7 +129,7 @@
+      */
+     public static function get_region_field_ID()
+     {
+-        if (EcommerceConfig::get('OrderAddress', 'use_shipping_address_for_main_region_and_country')) {
++        if (EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country')) {
+             return 'ShippingRegion';
+         }
+         return 'Region';
+@@ -156,7 +178,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -341,7 +363,7 @@
+     public function getFullString()
+     {
+         Config::nest();
+-        Config::modify()->update('SSViewer', 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -426,7 +448,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('BillingAddress'))) {
++            if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class))) {
+                 $this->Email = $member->Email;
+             }
+             $fieldNameArray = ['FirstName' => $fieldPrefix . 'FirstName', 'Surname' => $fieldPrefix . 'Surname'];
+@@ -441,7 +463,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                if (! $this->{$fieldName} || (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('BillingAddress')))) {
++                if (! $this->{$fieldName} || (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class)))) {
+                     $this->{$fieldName} = $member->{$memberField};
+                 }
+             }
+@@ -504,7 +526,7 @@
+         parent::onAfterWrite();
+         if ($this->exists()) {
+             $order = DataObject::get_one(
+-                'Order',
++                Order::class,
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -624,7 +646,7 @@
+         $postalCodeURL = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;
+         $postalCodeLabel = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;
+         if ($postalCodeURL && $postalCodeLabel) {
+-            $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
++            $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
+             $field->setRightTitle('<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>');
+         }
+
+@@ -663,7 +685,7 @@
+             //adding region field here as hidden field to make the code easier below...
+             $regionField = new HiddenField($name, '', 0);
+         }
+-        $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
++        $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
+         $regionField->addExtraClass($prefix . 'ajaxRegionField');
+
+         return $regionField;
+@@ -699,7 +721,7 @@
+                 $countryField = new HiddenField($name, '', 'not available');
+             }
+         }
+-        $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
++        $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
+         $countryField->addExtraClass($prefix . 'ajaxCountryField');
+         //important, otherwise loadData will override the default value....
+         if ($countryCode) {
+@@ -737,10 +759,10 @@
+      **/
+     protected function baseClassLinkingToOrder()
+     {
+-        if (is_a($this, Object::getCustomClass('BillingAddress'))) {
+-            return 'BillingAddress';
+-        } elseif (is_a($this, Object::getCustomClass('ShippingAddress'))) {
+-            return 'ShippingAddress';
++        if (is_a($this, Object::getCustomClass(BillingAddress::class))) {
++            return BillingAddress::class;
++        } elseif (is_a($this, Object::getCustomClass(ShippingAddress::class))) {
++            return ShippingAddress::class;
+         }
+     }
+
+@@ -751,7 +773,7 @@
+      **/
+     protected function fieldPrefix()
+     {
+-        if ($this->baseClassLinkingToOrder() === Object::getCustomClass('BillingAddress')) {
++        if ($this->baseClassLinkingToOrder() === Object::getCustomClass(BillingAddress::class)) {
+             return '';
+         }
+         return 'Shipping';
+
+modified:	src/Model/Address/BillingAddress.php
+@@ -2,15 +2,28 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Address;
+
+-use ReadonlyField;
+-use EmailField;
+-use Member;
+-use HeaderField;
+-use TextField;
+-use CompositeField;
+-use EcommerceConfig;
+-use SelectOrderAddressField;
++
++
++
++
++
++
++
++
+ use GoogleAddressField;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\EmailField;
++use SilverStripe\Security\Member;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\CompositeField;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
++
+
+
+ /**
+@@ -40,7 +53,7 @@
+             'RegionCode',
+             'Country',
+             'Phone',
+-            'Email',
++            Email::class,
+         ],
+     ];
+
+@@ -96,14 +109,14 @@
+      * (otherwise we ended up with a "has two" relationship in Order).
+      **/
+     private static $has_one = [
+-        'Region' => 'EcommerceRegion',
++        'Region' => EcommerceRegion::class,
+     ];
+
+     /**
+      * standard SS static definition.
+      **/
+     private static $belongs_to = [
+-        'Order' => 'Order',
++        'Order' => Order::class,
+     ];
+
+     /**
+@@ -182,9 +195,9 @@
+      * @return array
+      */
+     private static $field_labels = [
+-        'Order.Title' => 'Order',
++        'Order.Title' => Order::class,
+         'Obsolete' => 'Do not use for future transactions',
+-        'Email' => 'Email',
++        'Email' => Email::class,
+     ];
+
+     /**
+@@ -240,7 +253,7 @@
+     {
+         $fields = parent::getCMSFields();
+         $fields->replaceField('OrderID', new ReadonlyField('OrderID', _t('BillingAddress.ORDERID', 'Order #')));
+-        $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));
++        $fields->replaceField(Email::class, new EmailField(Email::class, _t('BillingAddress.EMAIL', Email::class)));
+         //We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
+         $fields->removeByName('RegionCode');
+         $fields->removeByName('RegionID');
+@@ -273,7 +286,7 @@
+         if ($member && Member::currentUser()) {
+             if ($member->exists() && ! $member->IsShopAdmin()) {
+                 $this->FillWithLastAddressFromMember($member, true);
+-                if (EcommerceConfig::get('BillingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
++                if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
+                     $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+                     //we want MORE than one here not just one.
+                     if ($addresses->count() > 1) {
+
+modified:	src/Model/OrderAttribute.php
+@@ -2,17 +2,31 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use ShoppingCart;
+-use EcommerceConfigAjax;
+-use EcommerceDBConfig;
+-use EcommerceCurrency;
+-use EcommerceTaskDebugCart;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+ /**
+  * @description: base class for OrderItem (item in cart) and OrderModifier (extra - e.g. Tax)
+@@ -63,7 +77,7 @@
+             'TableSubTitleNOHTML',
+             'CartTitle',
+             'CartSubTitle',
+-            'Order',
++            Order::class,
+         ],
+     ];
+
+@@ -116,7 +130,7 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Order' => 'Order',
++        'Order' => Order::class,
+     ];
+
+     /**
+@@ -221,7 +235,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -393,7 +407,7 @@
+         $class = static::class;
+         $classes = [];
+         $class = get_parent_class($class);
+-        while ($class && $class !== 'DataObject') {
++        while ($class && $class !== DataObject::class) {
+             $classes[] = strtolower($class);
+             $class = get_parent_class($class);
+         }
+@@ -406,7 +420,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderItem'))) {
++        if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class))) {
+             $classes[] = strtolower($this->BuyableClassName);
+         }
+
+
+modified:	src/Model/Process/CheckoutPageStepDescription.php
+@@ -2,16 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use EcommerceConfig;
+-use TextareaField;
+-use DropdownField;
++
++
++
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use DB;
++
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\TextareaField;
++use SilverStripe\Forms\DropdownField;
++use SilverStripe\ORM\DB;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+
+@@ -168,7 +179,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -191,7 +202,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -218,7 +229,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+
+modified:	src/Model/Process/OrderSteps/OrderStepCreated.php
+@@ -2,14 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use Order;
+-use Member;
+-use FieldList;
+-use HeaderField;
+-use LiteralField;
+-use CheckboxField;
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\CheckboxField;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+
+
+modified:	src/Model/Process/OrderSteps/OrderStepSentReceipt.php
+@@ -2,12 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use HeaderField;
+-use CheckboxField;
+-use Order;
+-use FieldList;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\CheckboxField;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+ /**
+@@ -21,7 +30,7 @@
+     /**
+      * @var string
+      */
+-    protected $emailClassName = 'OrderReceiptEmail';
++    protected $emailClassName = OrderReceiptEmail::class;
+
+
+ /**
+@@ -137,7 +146,7 @@
+     {
+         $fields = parent::addOrderStepFields($fields, $order);
+         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...)');
+-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog', $title), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLog::class, $title), 'ActionNextStepManually');
+
+         return $fields;
+     }
+
+modified:	src/Model/Process/OrderSteps/OrderStepSendAdminNotification.php
+@@ -2,10 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use Order;
+-use FieldList;
++
++
++
++
++use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+
+@@ -20,7 +27,7 @@
+     /**
+      * @var string
+      */
+-    protected $emailClassName = 'OrderReceiptEmail';
++    protected $emailClassName = OrderReceiptEmail::class;
+
+     private static $defaults = [
+         'CustomerCanEdit' => 0,
+@@ -96,7 +103,7 @@
+     {
+         $fields = parent::addOrderStepFields($fields, $order);
+         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...');
+-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog', $title), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLog::class, $title), 'ActionNextStepManually');
+
+         return $fields;
+     }
+
+modified:	src/Model/Process/OrderSteps/OrderStepSent.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use HeaderField;
+-use TextField;
+-use HTMLEditorField;
+-use Order;
+-use FieldList;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+ /**
+@@ -22,14 +32,14 @@
+     /**
+      * @var string
+      */
+-    protected $emailClassName = 'OrderStatusEmail';
++    protected $emailClassName = OrderStatusEmail::class;
+
+     /**
+      * The OrderStatusLog that is relevant to the particular step.
+      *
+      * @var string
+      */
+-    protected $relevantLogEntryClassName = 'OrderStatusLogDispatchPhysicalOrder';
++    protected $relevantLogEntryClassName = OrderStatusLogDispatchPhysicalOrder::class;
+
+
+ /**
+@@ -172,7 +182,7 @@
+     {
+         $fields = parent::addOrderStepFields($fields, $order);
+         $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step please enter dispatch details.');
+-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLogDispatchPhysicalOrder', $title), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLogDispatchPhysicalOrder::class, $title), 'ActionNextStepManually');
+
+         return $fields;
+     }
+
+modified:	src/Model/Process/OrderSteps/OrderStepSubmitted.php
+@@ -2,15 +2,26 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use EcommerceConfig;
+-use HeaderField;
+-use Order;
+-use OrderStatusLog;
+-use Convert;
+-use SS_Datetime;
+-use FieldList;
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Convert;
++use SilverStripe\ORM\FieldType\DBDatetime;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+
+@@ -27,7 +38,7 @@
+      *
+      * @var string
+      */
+-    protected $relevantLogEntryClassName = 'OrderStatusLogSubmitted';
++    protected $relevantLogEntryClassName = OrderStatusLogSubmitted::class;
+
+
+ /**
+@@ -73,7 +84,7 @@
+      */
+     public function getRelevantLogEntryClassName()
+     {
+-        return EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        return EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+     }
+
+     public function getCMSFields()
+@@ -133,7 +144,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderStatusLog'))) {
++                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
+                     $obj->OrderID = $order->ID;
+                     $obj->Title = $this->Name;
+                     //it is important we add this here so that we can save the 'submitted' version.
+@@ -156,7 +167,7 @@
+             } else {
+                 user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
+             }
+-            $order->LastEdited = "'" . SS_Datetime::now()->Rfc2822() . "'";
++            $order->LastEdited = "'" . DBDatetime::now()->Rfc2822() . "'";
+
+             //add member if needed...
+             if (! $order->MemberID) {
+@@ -239,7 +250,7 @@
+     {
+         $fields = parent::addOrderStepFields($fields, $order);
+         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...');
+-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog', $title), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLog::class, $title), 'ActionNextStepManually');
+
+         return $fields;
+     }
+
+Warnings for src/Model/Process/OrderSteps/OrderStepSubmitted.php:
+ - src/Model/Process/OrderSteps/OrderStepSubmitted.php:126 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 126
+
+modified:	src/Model/Process/OrderSteps/OrderStepArchived.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use Order;
+-use FieldList;
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+ /**
+
+modified:	src/Model/Process/OrderSteps/OrderStepConfirmed.php
+@@ -2,12 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use Order;
+-use FieldList;
+-use LiteralField;
+-use EcommerceConfig;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\LiteralField;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+ /**
+@@ -21,7 +30,7 @@
+     /**
+      * @var string
+      */
+-    protected $relevantLogEntryClassName = 'OrderStatusLogPaymentCheck';
++    protected $relevantLogEntryClassName = OrderStatusLogPaymentCheck::class;
+
+     private static $defaults = [
+         'CustomerCanEdit' => 0,
+@@ -97,8 +106,8 @@
+     {
+         $fields = parent::addOrderStepFields($fields, $order);
+         $title = _t('OrderStep.MUSTDOPAYMENTCHECK', ' ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)');
+-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLogPaymentCheck', $title), 'ActionNextStepManually');
+-        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get('OrderStepConfirmed', 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLogPaymentCheck::class, $title), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get(OrderStepConfirmed::class, 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
+
+         return $fields;
+     }
+
+Warnings for src/Model/Process/OrderSteps/OrderStepConfirmed.php:
+ - src/Model/Process/OrderSteps/OrderStepConfirmed.php:79 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 79
+
+modified:	src/Model/Process/OrderSteps/OrderStepPaid.php
+@@ -2,11 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use Order;
+-use FieldList;
+-use LiteralField;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\LiteralField;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+ /**
+
+modified:	src/Model/Process/OrderSteps/OrderStepSentInvoice.php
+@@ -2,11 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+-use OrderStep;
+-use OrderStepInterface;
+-use HeaderField;
+-use Order;
+-use FieldList;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
++
+
+
+
+@@ -21,7 +29,7 @@
+     /**
+      * @var string
+      */
+-    protected $emailClassName = 'OrderInvoiceEmail';
++    protected $emailClassName = OrderInvoiceEmail::class;
+
+
+ /**
+@@ -140,7 +148,7 @@
+     {
+         $fields = parent::addOrderStepFields($fields, $order);
+         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...');
+-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog', $title), 'ActionNextStepManually');
++        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLog::class, $title), 'ActionNextStepManually');
+
+         return $fields;
+     }
+
+modified:	src/Model/Process/OrderStep.php
+@@ -2,26 +2,55 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Order;
+-use EcommerceConfig;
+-use Config;
+-use HeaderField;
+-use TextField;
+-use CheckboxField;
+-use LiteralField;
+-use HTMLEditorField;
+-use DropdownField;
+-use TextareaField;
+-use FieldList;
+-use DBField;
+-use Member;
+-use Permission;
+-use Director;
+-use OrderConfirmationPage;
+-use DB;
+-use EcommerceDBConfig;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
++use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use SilverStripe\Forms\DropdownField;
++use SilverStripe\Forms\TextareaField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -41,7 +70,7 @@
+     /**
+      * @var string
+      */
+-    protected $emailClassName = 'OrderInvoiceEmail';
++    protected $emailClassName = OrderInvoiceEmail::class;
+
+     /**************************************************
+     * Order Status Logs
+@@ -119,9 +148,9 @@
+      * @return array
+      */
+     private static $has_many = [
+-        'Orders' => 'Order',
+-        'OrderEmailRecords' => 'OrderEmailRecord',
+-        'OrderProcessQueueEntries' => 'OrderProcessQueue',
++        'Orders' => Order::class,
++        'OrderEmailRecords' => OrderEmailRecord::class,
++        'OrderProcessQueueEntries' => OrderProcessQueue::class,
+     ];
+
+     /**
+@@ -438,7 +467,7 @@
+     public static function bad_order_step_ids()
+     {
+         $badorderStatus = Order::get()
+-            ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
++            ->leftJoin(OrderStep::class, '"OrderStep"."ID" = "Order"."StatusID"')
+             ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
+             ->column('StatusID');
+         if (is_array($badorderStatus)) {
+@@ -456,7 +485,7 @@
+     public static function get_status_id_from_code($code)
+     {
+         $otherStatus = DataObject::get_one(
+-            'OrderStep',
++            OrderStep::class,
+             ['Code' => $code]
+         );
+         if ($otherStatus) {
+@@ -472,7 +501,7 @@
+     public static function get_codes_for_order_steps_to_include()
+     {
+         $newArray = [];
+-        $array = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
++        $array = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
+         if (is_array($array) && count($array)) {
+             foreach ($array as $className) {
+                 $code = singleton($className)->getMyCode();
+@@ -490,7 +519,7 @@
+      **/
+     public static function get_not_created_codes_for_order_steps_to_include()
+     {
+-        $array = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
++        $array = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
+         if (is_array($array) && count($array)) {
+             foreach ($array as $className) {
+                 $obj = DataObject::get_one($className);
+@@ -534,8 +563,8 @@
+         //replacing
+         $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
+         $config = $queueField->getConfig();
+-        $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
+-        $config->removeComponentsByType('GridFieldDeleteAction');
++        $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
++        $config->removeComponentsByType(GridFieldDeleteAction::class);
+         $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
+         if ($this->canBeDefered()) {
+             if ($this->DeferTimeInSeconds) {
+@@ -771,7 +800,7 @@
+         }
+         $where = '"OrderStep"."Sort" >  ' . $sort;
+         $nextOrderStepObject = DataObject::get_one(
+-            'OrderStep',
++            OrderStep::class,
+             $where
+         );
+         if ($nextOrderStepObject) {
+@@ -796,7 +825,7 @@
+     public function hasPassed($code, $orIsEqualTo = false)
+     {
+         $otherStatus = DataObject::get_one(
+-            'OrderStep',
++            OrderStep::class,
+             ['Code' => $code]
+         );
+         if ($otherStatus) {
+@@ -887,7 +916,7 @@
+             } else {
+                 $lastEditedValue = $order->LastEdited;
+             }
+-            if ((strtotime($lastEditedValue) < strtotime('-' . EcommerceConfig::get('OrderStep', 'number_of_days_to_send_update_email') . ' days'))) {
++            if ((strtotime($lastEditedValue) < strtotime('-' . EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email') . ' days'))) {
+                 return true;
+             }
+         }
+@@ -1123,7 +1152,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -1164,7 +1193,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -1202,7 +1231,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -1335,7 +1364,7 @@
+             //ADMIN ONLY ....
+             } else {
+                 if (! $emailClassName) {
+-                    $emailClassName = 'OrderErrorEmail';
++                    $emailClassName = OrderErrorEmail::class;
+                 }
+                 //looks like we are sending an error, but we are just using this for notification
+                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.') . '<br /><br /><br /><br />' . $message;
+@@ -1368,7 +1397,7 @@
+     {
+         if ($this->getEmailClassName()) {
+             $order = DataObject::get_one(
+-                'Order',
++                Order::class,
+                 ['StatusID' => $this->ID],
+                 $cacheDataObjectGetOne = true,
+                 'RAND() ASC'
+@@ -1377,7 +1406,7 @@
+                 $order = Order::get()
+                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
+                     ->sort('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
+-                    ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
++                    ->innerJoin(OrderStep::class, '"OrderStep"."ID" = "Order"."StatusID"')
+                     ->first();
+             }
+             if ($order) {
+@@ -1451,7 +1480,7 @@
+
+     protected function checkValidityOfOrderSteps()
+     {
+-        $orderStepsToInclude = EcommerceConfig::get('OrderStep', 'order_steps_to_include');
++        $orderStepsToInclude = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
+         $codesToInclude = self::get_codes_for_order_steps_to_include();
+         $indexNumber = 0;
+         if ($orderStepsToInclude && count($orderStepsToInclude)) {
+@@ -1464,7 +1493,7 @@
+                     if ($itemCount > 0) {
+                         //always reset code
+                         $obj = DataObject::get_one(
+-                            'OrderStep',
++                            OrderStep::class,
+                             $filter,
+                             $cacheDataObjectGetOne = false
+                         );
+@@ -1473,7 +1502,7 @@
+                             $obj->write();
+                         }
+                         //replace default description
+-                        $parentObj = singleton('OrderStep');
++                        $parentObj = singleton(OrderStep::class);
+                         if ($obj->Description === $parentObj->myDescription()) {
+                             $obj->Description = $obj->myDescription();
+                             $obj->write();
+@@ -1506,7 +1535,7 @@
+                         DB::alteration_message("Created \"${code}\" as ${className}.", 'created');
+                     }
+                     $obj = DataObject::get_one(
+-                        'OrderStep',
++                        OrderStep::class,
+                         $filter,
+                         $cacheDataObjectGetOne = false
+                     );
+
+Warnings for src/Model/Process/OrderStep.php:
+ - src/Model/Process/OrderStep.php:1085 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1085
+
+ - src/Model/Process/OrderStep.php:1501 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1501
+
+modified:	src/Model/Process/OrderEmailRecord.php
+@@ -2,19 +2,35 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use OrderEmailRecordReview;
+-use LiteralField;
+-use ReadonlyField;
++
++
++
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use NumericField;
+-use CheckboxSetField;
+-use Injector;
+-use EcommerceTaskDebugCart;
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\Forms\CheckboxSetField;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -80,8 +96,8 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Order' => 'Order',
+-        'OrderStep' => 'OrderStep',
++        'Order' => Order::class,
++        'OrderStep' => OrderStep::class,
+     ];
+
+     /**
+@@ -251,7 +267,7 @@
+         if ($order && $order->exists()) {
+             return $order->canView();
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -373,7 +389,7 @@
+             }
+             $statusField = new CheckboxSetField(
+                 'OrderStepID',
+-                Injector::inst()->get('OrderStep')->i18n_singular_name(),
++                Injector::inst()->get(OrderStep::class)->i18n_singular_name(),
+                 $arrayOfStatusOptionsFinal,
+                 $preSelected
+             );
+
+modified:	src/Model/Process/OrderProcessQueue.php
+@@ -2,17 +2,31 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process;
+
+-use DataObject;
+-use Member;
+-use Permission;
+-use Config;
+-use EcommerceRole;
+-use DB;
+-use Order;
+-use DBField;
+-use ReadonlyField;
+-use LiteralField;
++
++
++
++
++
++
++
++
++
++
+ use CMSEditLinkField;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\ORM\DB;
++use SilverStripe\ORM\FieldType\DBDatetime;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\LiteralField;
++
+
+ /**
+  * This class provides a bunch of Meta Objects
+@@ -60,8 +74,8 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Order' => 'Order',
+-        'OrderStep' => 'OrderStep',
++        'Order' => Order::class,
++        'OrderStep' => OrderStep::class,
+     ];
+
+     private static $indexes = [
+@@ -156,7 +170,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+         //is the member is a shop assistant they can always view it
+@@ -218,7 +232,7 @@
+             'OrderStepID' => $order->StatusID,
+         ];
+         $existingEntry = DataObject::get_one(
+-            'OrderProcessQueue',
++            OrderProcessQueue::class,
+             $filter,
+             $cacheDataObjectGetOne = false
+         );
+@@ -308,7 +322,7 @@
+     {
+         $filter = ['OrderID' => $order->ID];
+
+-        return DataObject::get_one('OrderProcessQueue', $filter);
++        return DataObject::get_one(OrderProcessQueue::class, $filter);
+     }
+
+     /**
+@@ -429,7 +443,7 @@
+      */
+     public function getToBeProcessedAt()
+     {
+-        return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
++        return DBField::create_field(DBDatetime::class, (strtotime($this->Created) + $this->DeferTimeInSeconds));
+     }
+
+     /**
+@@ -447,7 +461,7 @@
+      */
+     public function getHasBeenInQueueForSince()
+     {
+-        return DBField::create_field('SS_Datetime', strtotime($this->Created));
++        return DBField::create_field(DBDatetime::class, strtotime($this->Created));
+     }
+
+     /**
+@@ -491,7 +505,7 @@
+                 'OrderID',
+                 CMSEditLinkField::create(
+                     'OrderID',
+-                    'Order',
++                    Order::class,
+                     $this->Order()
+                 )
+             );
+
+modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogCancel.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+-use OrderStatusLog;
+-use Member;
++
++
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++
+
+
+
+
+modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogDispatch.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+-use OrderStatusLog;
++
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++
+
+
+
+
+modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogSubmitted.php
+@@ -2,10 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+-use OrderStatusLog;
+-use Member;
+-use EcommerceConfig;
+-use DataObject;
++
++
++
++
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++
+
+
+
+@@ -136,14 +143,14 @@
+         }
+         if (! intval($this->SequentialOrderNumber)) {
+             $this->SequentialOrderNumber = 1;
+-            $min = intval(EcommerceConfig::get('Order', 'order_id_start_number')) - 0;
++            $min = intval(EcommerceConfig::get(Order::class, 'order_id_start_number')) - 0;
+             if (isset($this->ID)) {
+                 $id = intval($this->ID);
+             } else {
+                 $id = 0;
+             }
+             $lastOne = DataObject::get_one(
+-                'OrderStatusLogSubmitted',
++                OrderStatusLogSubmitted::class,
+                 '\'ID\' != \'' . $id . '\'',
+                 $cacheDataObjectGetOne = true,
+                 ['SequentialOrderNumber' => 'DESC']
+
+modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogArchived.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+-use OrderStatusLog;
+-use Member;
+-use HiddenField;
+-use ReadonlyField;
++
++
++
++
++use SilverStripe\Security\Member;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\ReadonlyField;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++
+
+
+ /**
+
+modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogPaymentCheck.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+-use OrderStatusLog;
+-use CheckboxField;
+-use Config;
++
++
++
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++
+
+
+
+@@ -114,7 +119,7 @@
+     {
+         if ($this->Author()) {
+             Config::nest();
+-            Config::inst()->update('SSViewer', 'theme_enabled', true);
++            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+             $html = $this->renderWith('Order_CustomerNote_PaymentCheck');
+             Config::unnest();
+
+
+modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogDispatchPhysicalOrder.php
+@@ -2,11 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+-use Security;
+-use Member;
+-use TextField;
+-use DBField;
+-use Config;
++
++
++
++
++
++use SilverStripe\Security\Security;
++use SilverStripe\Security\Member;
++use SilverStripe\Forms\TextField;
++use SilverStripe\ORM\FieldType\DBDate;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++
+
+
+
+@@ -103,7 +111,7 @@
+     {
+         parent::onBeforeWrite();
+         if (! $this->DispatchedOn) {
+-            $this->DispatchedOn = DBField::create_field('Date', date('Y-m-d'));
++            $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
+         }
+     }
+
+@@ -118,7 +126,7 @@
+     public function getCustomerNote()
+     {
+         Config::nest();
+-        Config::inst()->update('SSViewer', 'theme_enabled', true);
++        Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+         $html = $this->renderWith('LogDispatchPhysicalOrderCustomerNote');
+         Config::unnest();
+
+
+modified:	src/Model/Process/OrderStatusLog.php
+@@ -2,24 +2,43 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use EcommerceRole;
+-use Security;
+-use DropdownField;
++
++
++
++
++
++
++
++
+ use CMSEditLinkField;
+-use EcommerceConfig;
+-use Injector;
+-use HiddenField;
+-use ReadonlyField;
+-use EcommerceClassNameOrTypeDropdownField;
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use NumericField;
+-use EcommerceTaskDebugCart;
+-use EcommerceDBConfig;
++
++
++
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use SilverStripe\Security\Security;
++use SilverStripe\Forms\DropdownField;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\ReadonlyField;
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
++use SilverStripe\Forms\NumericField;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+ /**
+  * @description: see OrderStep.md
+@@ -80,8 +99,8 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Author' => 'Member',
+-        'Order' => 'Order',
++        'Author' => Member::class,
++        'Order' => Order::class,
+     ];
+
+     /**
+@@ -214,7 +233,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+         //is the member is a shop assistant they can always view it
+@@ -241,7 +260,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+         //is the member is a shop assistant they can always view it
+@@ -289,11 +308,11 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            if ($this->ClassName === 'OrderStatusLog') {
++            if ($this->ClassName === OrderStatusLog::class) {
+                 return $order->canView($member);
+             }
+
+-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++            if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+                 return $order->canEdit($member);
+             }
+         }
+@@ -381,8 +400,8 @@
+         }
+
+         //ClassName Field
+-        $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
+-        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')]);
++        $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
++        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
+         $availableLogsAssociative = [];
+
+ /**
+@@ -454,7 +473,7 @@
+             $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create(
+                 'ClassName',
+                 _t('OrderStatusLog.TYPE', 'Type'),
+-                'OrderStatusLog',
++                OrderStatusLog::class,
+                 $availableLogsAssociative
+             );
+             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
+@@ -517,9 +536,9 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+         $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
+-        $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
+-        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')]);
+-        $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderStatusLog', $availableLogs);
++        $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
++        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
++        $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', OrderStatusLog::class, $availableLogs);
+         $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
+         $fields->replaceField('ClassName', $ecommerceClassNameOrTypeDropdownField);
+
+@@ -591,7 +610,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if ($this->ClassName === 'OrderStatusLog') {
++        if ($this->ClassName === OrderStatusLog::class) {
+             return false;
+         }
+         return true;
+
+modified:	src/Model/Process/OrderFeedback.php
+@@ -2,14 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Process;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
++
++
++
++
++
+ use CMSEditLinkField;
+-use Injector;
++
+ use CMSEditLinkAPI;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+
+@@ -69,7 +78,7 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Order' => 'Order',
++        'Order' => Order::class,
+     ];
+
+     /**
+@@ -192,7 +201,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -235,7 +244,7 @@
+             'OrderID',
+             CMSEditLinkField::create(
+                 'OrderIDLink',
+-                Injector::inst()->get('Order')->singular_name(),
++                Injector::inst()->get(Order::class)->singular_name(),
+                 $this->Order()
+             )
+         );
+
+modified:	src/Model/Money/EcommerceCurrency.php
+@@ -2,23 +2,41 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Money;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use EcommerceConfig;
+-use Order;
++
++
++
++
++
++
++
+ use Currency;
+-use ShoppingCart;
+-use Injector;
+-use DBField;
+-use ReadonlyField;
+-use HeaderField;
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use EcommerceMoney;
+-use ShoppingCartController;
+-use EcommerceTaskDebugCart;
++
++
++
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\ORM\FieldType\DBField;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Money\EcommerceMoney;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -283,7 +301,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -306,7 +324,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -329,7 +347,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -353,7 +371,7 @@
+             if ($extended !== null) {
+                 return $extended;
+             }
+-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++            if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+                 return true;
+             }
+
+@@ -375,7 +393,7 @@
+             ->Filter(['InUse' => 1])
+             ->Sort(
+                 [
+-                    "IF(\"Code\" = '" . strtoupper(EcommerceConfig::get('EcommerceCurrency', 'default_currency')) . "', 0, 1)" => 'ASC',
++                    "IF(\"Code\" = '" . strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency')) . "', 0, 1)" => 'ASC',
+                     'Name' => 'ASC',
+                     'Code' => 'ASC',
+                 ]
+@@ -393,7 +411,7 @@
+             ->filter(['InUse' => 1])
+             ->sort(
+                 [
+-                    "IF(\"Code\" = '" . EcommerceConfig::get('EcommerceCurrency', 'default_currency') . "', 0, 1)" => 'ASC',
++                    "IF(\"Code\" = '" . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . "', 0, 1)" => 'ASC',
+                     'Name' => 'ASC',
+                     'Code' => 'ASC',
+                 ]
+@@ -425,7 +443,7 @@
+             }
+         }
+
+-        $updatedCurrencyCode = Injector::inst()->get('EcommerceCurrency')->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
++        $updatedCurrencyCode = Injector::inst()->get(EcommerceCurrency::class)->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
+         if ($updatedCurrencyCode !== null && is_array($updatedCurrencyCode) && count($updatedCurrencyCode)) {
+             $currencyCode = $updatedCurrencyCode[0];
+         }
+@@ -445,9 +463,9 @@
+     public static function default_currency()
+     {
+         return DataObject::get_one(
+-            'EcommerceCurrency',
++            EcommerceCurrency::class,
+             [
+-                'Code' => trim(strtolower(EcommerceConfig::get('EcommerceCurrency', 'default_currency'))),
++                'Code' => trim(strtolower(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'))),
+                 'InUse' => 1,
+             ]
+         );
+@@ -465,7 +483,7 @@
+             $code = $obj->Code;
+         }
+         if (! $code) {
+-            $code = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
++            $code = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
+         }
+         if (! $code) {
+             $code = 'NZD';
+@@ -494,7 +512,7 @@
+     public static function get_one_from_code($currencyCode)
+     {
+         return DataObject::get_one(
+-            'EcommerceCurrency',
++            EcommerceCurrency::class,
+             [
+                 'Code' => trim(strtoupper($currencyCode)),
+                 'InUse' => 1,
+@@ -588,7 +606,7 @@
+             }
+         }
+
+-        return strtoupper($this->Code) === strtoupper(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
++        return strtoupper($this->Code) === strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
+     }
+
+     /**
+@@ -643,10 +661,10 @@
+      */
+     public function getExchangeRate()
+     {
+-        $exchangeRateProviderClassName = EcommerceConfig::get('EcommerceCurrency', 'exchange_provider_class');
++        $exchangeRateProviderClassName = EcommerceConfig::get(EcommerceCurrency::class, 'exchange_provider_class');
+         $exchangeRateProvider = new $exchangeRateProviderClassName();
+
+-        return $exchangeRateProvider->ExchangeRate(EcommerceConfig::get('EcommerceCurrency', 'default_currency'), $this->Code);
++        return $exchangeRateProvider->ExchangeRate(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'), $this->Code);
+     }
+
+     /**
+@@ -664,7 +682,7 @@
+      */
+     public function getExchangeRateExplanation(): string
+     {
+-        $string = '1 ' . EcommerceConfig::get('EcommerceCurrency', 'default_currency') . ' = ' . round($this->getExchangeRate(), 3) . ' ' . $this->Code;
++        $string = '1 ' . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . ' = ' . round($this->getExchangeRate(), 3) . ' ' . $this->Code;
+         $exchangeRate = $this->getExchangeRate();
+         $exchangeRateError = '';
+         if (! $exchangeRate) {
+@@ -673,7 +691,7 @@
+         }
+         return $string .
+             ', 1 ' . $this->Code . ' = ' . round(1 / $exchangeRate, 3) . ' ' .
+-            EcommerceConfig::get('EcommerceCurrency', 'default_currency') . '. ' .
++            EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . '. ' .
+             $exchangeRateError;
+     }
+
+@@ -777,7 +795,7 @@
+     {
+         parent::requireDefaultRecords();
+         if (! self::default_currency()) {
+-            self::create_new(EcommerceConfig::get('EcommerceCurrency', 'default_currency'));
++            self::create_new(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
+         }
+     }
+
+@@ -791,7 +809,7 @@
+     {
+         $code = trim(strtoupper($code));
+         if (! $name) {
+-            $currencies = Config::inst()->get('EcommerceCurrency', 'currencies');
++            $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
+             if (isset($currencies[$code])) {
+                 $name = $currencies[$code];
+             } else {
+@@ -800,7 +818,7 @@
+         }
+         $name = ucwords($name);
+         $currency = DataObject::get_one(
+-            'EcommerceCurrency',
++            EcommerceCurrency::class,
+             ['Code' => $code],
+             $cacheDataObjectGetOne = false
+         );
+
+Warnings for src/Model/Money/EcommerceCurrency.php:
+ - src/Model/Money/EcommerceCurrency.php:647 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 647
+
+modified:	src/Model/Money/PaymentTypes/EcommercePaymentTest.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
+
+-use EcommercePayment;
++
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++
+
+
+
+
+modified:	src/Model/Money/PaymentTypes/EcommercePaymentTestPending.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
+
+-use EcommercePaymentProcessing;
+-use FieldList;
+-use LiteralField;
++
++
++
++use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentProcessing;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\FieldList;
++
+
+
+ /**
+
+modified:	src/Model/Money/PaymentTypes/EcommercePaymentTestSuccess.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
+
+-use EcommercePaymentSuccess;
+-use FieldList;
+-use LiteralField;
++
++
++
++use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\FieldList;
++
+
+
+
+
+modified:	src/Model/Money/PaymentTypes/EcommercePaymentTestFailure.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
+
+-use EcommercePaymentFailure;
+-use FieldList;
+-use LiteralField;
++
++
++
++use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentFailure;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\FieldList;
++
+
+
+
+
+modified:	src/Model/Money/EcommercePayment.php
+@@ -2,22 +2,43 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Money;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use ReadonlyField;
++
++
++
+ use CMSEditLinkAPI;
+-use Member;
+-use Permission;
+-use Config;
+-use Controller;
+-use Director;
+-use EcommerceConfig;
+-use FieldList;
+-use OptionsetField;
+-use CompositeField;
+-use HeaderField;
+-use EcommerceTaskDebugCart;
+-use Injector;
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Control\Controller;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use SilverStripe\Forms\OptionsetField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\CompositeField;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+ /**
+  * "Abstract" class for a number of different payment
+@@ -93,8 +114,8 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'PaidBy' => 'Member',
+-        'Order' => 'Order',
++        'PaidBy' => Member::class,
++        'Order' => Order::class,
+     ];
+
+     private static $summary_fields = [
+@@ -230,7 +251,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -250,7 +271,7 @@
+         if ($order && $order->exists()) {
+             return $order->canView();
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -274,7 +295,7 @@
+             if ($extended !== null) {
+                 return $extended;
+             }
+-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++            if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+                 return true;
+             }
+
+@@ -402,7 +423,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Order')) && $order->IsSubmitted()) {
++        if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class)) && $order->IsSubmitted()) {
+             $order->tryToFinaliseOrder();
+         }
+     }
+@@ -422,7 +443,7 @@
+      */
+     public static function site_currency()
+     {
+-        $currency = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
++        $currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
+         if (! $currency) {
+             user_error('It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)', E_USER_NOTICE);
+         }
+@@ -437,7 +458,7 @@
+     public function populateDefaults()
+     {
+         parent::populateDefaults();
+-        $this->Amount->Currency = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
++        $this->Amount->Currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
+         $this->setClientIP();
+     }
+
+@@ -481,8 +502,8 @@
+      */
+     public static function set_supported_methods($array)
+     {
+-        Config::modify()->update('EcommercePayment', 'supported_methods', null);
+-        Config::modify()->update('EcommercePayment', 'supported_methods', $array);
++        Config::modify()->update(EcommercePayment::class, 'supported_methods', null);
++        Config::modify()->update(EcommercePayment::class, 'supported_methods', $array);
+     }
+
+     /**
+@@ -665,7 +686,7 @@
+      */
+     public static function ecommerce_payment_form_setup_and_validation_object()
+     {
+-        return Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
++        return Injector::inst()->create(EcommercePaymentFormSetupAndValidation::class);
+     }
+
+     public static function php_class_to_html_class(string $phpClass): string
+@@ -716,7 +737,7 @@
+     protected function ecommercePaymentFormSetupAndValidationObject()
+     {
+         if (! $this->ecommercePaymentFormSetupAndValidationObject) {
+-            $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
++            $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create(EcommercePaymentFormSetupAndValidation::class);
+         }
+
+         return $this->ecommercePaymentFormSetupAndValidationObject;
+
+Warnings for src/Model/Money/EcommercePayment.php:
+ - src/Model/Money/EcommercePayment.php:546 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 546
+
+modified:	src/Model/OrderModifierDescriptor.php
+@@ -2,18 +2,34 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
+-use ReadonlyField;
+-use TreeDropdownField;
+-use TextareaField;
++
++
++
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use EcommerceConfig;
+-use Injector;
+-use DB;
++
++
++
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\TreeDropdownField;
++use SilverStripe\Forms\TextareaField;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+
+@@ -68,7 +84,7 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Link' => 'SiteTree',
++        'Link' => SiteTree::class,
+     ];
+
+     /**
+@@ -171,7 +187,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -199,7 +215,7 @@
+     {
+         $fields = parent::getCMSFields();
+         $fields->replaceField('ModifierClassName', new ReadonlyField('RealName', 'Name'));
+-        $fields->replaceField('LinkID', new TreeDropdownField('LinkID', 'More info link (optional)', 'SiteTree'));
++        $fields->replaceField('LinkID', new TreeDropdownField('LinkID', 'More info link (optional)', SiteTree::class));
+         $fields->replaceField('Description', new TextareaField('Description', 'Description'));
+
+         return $fields;
+@@ -256,7 +272,7 @@
+     public function requireDefaultRecords()
+     {
+         parent::requireDefaultRecords();
+-        $arrayOfModifiers = EcommerceConfig::get('Order', 'modifiers');
++        $arrayOfModifiers = EcommerceConfig::get(Order::class, 'modifiers');
+         if (! is_array($arrayOfModifiers)) {
+             $arrayOfModifiers = [];
+         }
+@@ -272,7 +288,7 @@
+   */
+             foreach ($arrayOfModifiers as $className) {
+                 $orderModifier_Descriptor = DataObject::get_one(
+-                    'OrderModifierDescriptor',
++                    OrderModifierDescriptor::class,
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+
+modified:	src/Model/OrderItem.php
+@@ -2,23 +2,42 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use Versioned;
+-use HiddenField;
+-use HeaderField;
+-use ReadonlyField;
+-use NumericField;
+-use BuyableSelectField;
+-use BuyableModel;
+-use EcommerceConfig;
+-use EcommerceCurrency;
+-use EcomQuantityField;
+-use DBField;
+-use Product;
++
++
++
++
++
++
++
++
++
++
++
++
+ use Translatable;
+-use Director;
+-use CheckoutPage;
+-use ShoppingCartController;
+-use EcommerceTaskDebugCart;
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Versioned\Versioned;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\NumericField;
++use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
++use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
++use SilverStripe\ORM\FieldType\DBField;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++
+
+ /**
+  * @description: An order item is a product which has been added to an order.
+@@ -70,7 +89,7 @@
+             'Version',
+             'UnitPrice',
+             'Total',
+-            'Order',
++            Order::class,
+         ],
+     ];
+
+@@ -316,7 +335,7 @@
+   * EXP: check the number of decimals required and add as ->Step(123)
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
++            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', Order::class)));
+         }
+         $fields->removeByName('Sort');
+         $fields->removeByName('CalculatedTotal');
+@@ -430,7 +449,7 @@
+      **/
+     public function updateForAjax(array $js)
+     {
+-        $function = EcommerceConfig::get('OrderItem', 'ajax_total_format');
++        $function = EcommerceConfig::get(OrderItem::class, 'ajax_total_format');
+         if (is_array($function)) {
+             list($function, $format) = $function;
+         }
+@@ -563,7 +582,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                if ($this->ClassName === 'OrderItem' && $this->BuyableClassName !== 'OrderItem') {
++                if ($this->ClassName === OrderItem::class && $this->BuyableClassName !== OrderItem::class) {
+                     $this->setClassName($buyable->classNameForOrderItem());
+                 }
+             }
+@@ -606,7 +625,7 @@
+      **/
+     public function hasSameContent(OrderItem $orderItem)
+     {
+-        return is_a($orderItem, Object::getCustomClass('OrderItem')) &&
++        return is_a($orderItem, Object::getCustomClass(OrderItem::class)) &&
+             $this->BuyableID === $orderItem->BuyableID &&
+             $this->BuyableClassName === $orderItem->BuyableClassName &&
+             $this->Version === $orderItem->Version;
+
+Warnings for src/Model/OrderItem.php:
+ - src/Model/OrderItem.php:816 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 816
+
+ - src/Model/OrderItem.php:832 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 832
+
+ - src/Model/OrderItem.php:869 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 869
+
+ - src/Model/OrderItem.php:970 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 970
+
+modified:	src/Model/OrderModifier.php
+@@ -2,23 +2,45 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use ReadonlyField;
+-use Tab;
+-use CheckboxField;
+-use NumericField;
+-use EcommerceConfig;
+-use LiteralField;
+-use EcommerceClassNameOrTypeDropdownField;
+-use Controller;
+-use Validator;
+-use FieldList;
+-use OrderModifierForm;
+-use EcommerceCurrency;
+-use ShoppingCartController;
+-use EcommerceTaskDebugCart;
+-use HeaderField;
+-use Convert;
+-use DataObject;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Dev\Debug;
++use SilverStripe\Forms\Tab;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\NumericField;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\LiteralField;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\Validator;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
++use SilverStripe\ORM\DataObject;
++
+
+
+ /**
+@@ -93,7 +115,7 @@
+             'Name',
+             'TableValue',
+             'HasBeenRemoved',
+-            'Order',
++            Order::class,
+         ],
+     ];
+
+@@ -268,8 +290,8 @@
+         $fields->addFieldToTab(
+             'Root',
+             Tab::create(
+-                'Debug',
+-                _t('OrderModifier.DEBUG', 'Debug'),
++                Debug::class,
++                _t('OrderModifier.DEBUG', Debug::class),
+                 new ReadonlyField('CreatedShown', 'Created', $this->Created),
+                 new ReadonlyField('LastEditedShown', 'Last Edited', $this->LastEdited),
+                 new ReadonlyField('TableValueShown', 'Table Value', $this->TableValue),
+@@ -297,12 +319,12 @@
+         }
+
+         //ClassName Field
+-        $availableModifiers = EcommerceConfig::get('Order', 'modifiers');
++        $availableModifiers = EcommerceConfig::get(Order::class, 'modifiers');
+
+         if ($this->exists()) {
+             $fields->addFieldToTab('Root.Main', new LiteralField('MyClassName', '<h2>' . $this->singular_name() . '</h2>'), 'Name');
+         } else {
+-            $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderModifier', $availableModifiers);
++            $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', OrderModifier::class, $availableModifiers);
+             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Name');
+         }
+
+@@ -790,7 +812,7 @@
+      **/
+     public function updateForAjax(array $js)
+     {
+-        $function = EcommerceConfig::get('OrderModifier', 'ajax_total_format');
++        $function = EcommerceConfig::get(OrderModifier::class, 'ajax_total_format');
+         if (is_array($function)) {
+             list($function, $format) = $function;
+         }
+@@ -942,7 +964,7 @@
+     {
+         if ($this->orderModifier_Descriptor === null) {
+             $this->orderModifier_Descriptor = DataObject::get_one(
+-                'OrderModifierDescriptor',
++                OrderModifierDescriptor::class,
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+
+modified:	src/Model/Search/SearchReplacement.php
+@@ -2,12 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Search;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
++
++
++
++
++
+ use CMSEditLinkAPI;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+ /**
+  * This dataobject
+@@ -124,7 +131,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -147,7 +154,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -170,7 +177,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -193,7 +200,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+
+modified:	src/Model/Search/SearchHistory.php
+@@ -2,10 +2,16 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Search;
+
+-use DataObject;
+-use Member;
+-use Permission;
+-use Config;
++
++
++
++
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\ORM\DataObject;
++
+
+
+ class SearchHistory extends DataObject
+@@ -144,7 +150,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+
+modified:	src/Model/Order.php
+@@ -2,66 +2,148 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Controller;
+-use Validator;
+-use ArrayList;
+-use ArrayData;
+-use OrderStep;
+-use EcommerceConfig;
+-use CheckboxSetField;
+-use Injector;
+-use DropdownField;
++
++
++
++
++
++
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use Tab;
+-use Member;
+-use GridFieldConfig_Base;
+-use LiteralField;
+-use HeaderField;
+-use GridField;
+-use OrderStatusLog;
+-use GridFieldConfig_RecordViewer;
+-use EcommerceCMSButtonField;
+-use EcommerceRole;
+-use GridFieldConfig_RecordEditor;
+-use ReadonlyField;
+-use EcommercePaymentController;
+-use OrderFeedback;
+-use CheckboxField;
+-use EcommerceCurrency;
+-use GridFieldConfigForOrderItems;
+-use GridFieldAddNewButton;
+-use GridFieldDetailForm;
+-use GridFieldEditButton;
+-use OrderStepField;
+-use DB;
+-use OrderStatusLogCancel;
+-use OrderStepCreated;
+-use Config;
+-use OrderEmail;
+-use ShoppingCart;
+-use Permission;
+-use Director;
+-use OrderConfirmationPage;
+-use CartPage;
+-use ShoppingCartController;
+-use DBField;
+-use BillingAddress;
+-use ShippingAddress;
+-use EcommerceCountry;
+-use EcommerceRegion;
+-use EcommerceConfigAjax;
+-use EcommerceDBConfig;
+-use EcommerceTaskDebugCart;
+-use GridFieldConfig;
+-use GridFieldToolbarHeader;
+-use GridFieldSortableHeader;
+-use GridFieldDataColumns;
+-use GridFieldPaginator;
+-use FieldList;
+-use ClassInfo;
+-use GridFieldConfig_RelationEditor;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Email\OrderEmail;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Model\OrderAttribute;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
++use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\Validator;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\View\ArrayData;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Cms\SalesAdmin;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\Forms\CheckboxSetField;
++use SilverStripe\Forms\DropdownField;
++use SilverStripe\Forms\Tab;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Forms\GridField\GridFieldConfig_Base;
++use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
++use SilverStripe\Forms\GridField\GridFieldFilterHeader;
++use SilverStripe\Forms\GridField\GridFieldPageCount;
++use SilverStripe\Forms\GridField\GridFieldPaginator;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
++use SilverStripe\Forms\ReadonlyField;
++use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
++use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use SilverStripe\Forms\CheckboxField;
++use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForOrderItems;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use SilverStripe\Forms\GridField\GridFieldDetailForm;
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use Sunnysideup\Ecommerce\Forms\Fields\OrderStepField;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel;
++use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
++use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
++use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\ORM\FieldType\DBField;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
++use SilverStripe\ORM\FieldType\DBDatetime;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\ErrorPage\ErrorPage;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\Security\RandomGenerator;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use SilverStripe\Forms\GridField\GridFieldConfig;
++use SilverStripe\Forms\GridField\GridFieldSortableHeader;
++use SilverStripe\Forms\GridField\GridFieldDataColumns;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Core\ClassInfo;
++use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
++use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+ /**
+@@ -165,7 +247,7 @@
+      */
+     private static $api_access = [
+         'view' => [
+-            'OrderEmail',
++            OrderEmail::class,
+             'EmailLink',
+             'PrintLink',
+             'RetrieveLink',
+@@ -188,9 +270,9 @@
+             'CanHaveShippingAddress',
+             'CancelledBy',
+             'CurrencyUsed',
+-            'BillingAddress',
++            BillingAddress::class,
+             'UseShippingAddress',
+-            'ShippingAddress',
++            ShippingAddress::class,
+             'Status',
+             'Attributes',
+             'OrderStatusLogs',
+@@ -245,12 +327,12 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Member' => 'Member',
+-        'BillingAddress' => 'BillingAddress',
+-        'ShippingAddress' => 'ShippingAddress',
+-        'Status' => 'OrderStep',
+-        'CancelledBy' => 'Member',
+-        'CurrencyUsed' => 'EcommerceCurrency',
++        'Member' => Member::class,
++        'BillingAddress' => BillingAddress::class,
++        'ShippingAddress' => ShippingAddress::class,
++        'Status' => OrderStep::class,
++        'CancelledBy' => Member::class,
++        'CurrencyUsed' => EcommerceCurrency::class,
+     ];
+
+     /**
+@@ -259,11 +341,11 @@
+      * @var array
+      */
+     private static $has_many = [
+-        'Attributes' => 'OrderAttribute',
+-        'OrderStatusLogs' => 'OrderStatusLog',
+-        'Payments' => 'EcommercePayment',
+-        'Emails' => 'OrderEmailRecord',
+-        'OrderProcessQueue' => 'OrderProcessQueue', //there is usually only one.
++        'Attributes' => OrderAttribute::class,
++        'OrderStatusLogs' => OrderStatusLog::class,
++        'Payments' => EcommercePayment::class,
++        'Emails' => OrderEmailRecord::class,
++        'OrderProcessQueue' => OrderProcessQueue::class, //there is usually only one.
+     ];
+
+     /**
+@@ -399,7 +481,7 @@
+
+     public function i18n_singular_name()
+     {
+-        return _t('Order.ORDER', 'Order');
++        return _t('Order.ORDER', Order::class);
+     }
+
+     public function i18n_plural_name()
+@@ -500,9 +582,9 @@
+     public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
+     {
+         if ($onlySubmittedOrders) {
+-            $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+             $list = Order::get()
+-                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
++                ->LeftJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                 ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
+                 ->Sort('OrderStatusLog.Created', 'ASC');
+             $where = ' ("OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\') ';
+@@ -539,7 +621,7 @@
+         $fieldList = parent::scaffoldSearchFields($_params);
+
+         //for sales to action only show relevant ones ...
+-        if (Controller::curr() && Controller::curr()->class === 'SalesAdmin') {
++        if (Controller::curr() && Controller::curr()->class === SalesAdmin::class) {
+             $statusOptions = OrderStep::admin_manageable_steps();
+         } else {
+             $statusOptions = OrderStep::get();
+@@ -566,7 +648,7 @@
+             }
+             $statusField = new CheckboxSetField(
+                 'StatusID',
+-                Injector::inst()->get('OrderStep')->i18n_singular_name(),
++                Injector::inst()->get(OrderStep::class)->i18n_singular_name(),
+                 $arrayOfStatusOptionsFinal,
+                 $preSelected
+             );
+@@ -657,7 +739,7 @@
+         $this->extend('updateCMSFields', $fields);
+         $currentMember = Member::currentUser();
+         if (! $this->exists() || ! $this->StatusID) {
+-            $firstStep = DataObject::get_one('OrderStep');
++            $firstStep = DataObject::get_one(OrderStep::class);
+             $this->StatusID = $firstStep->ID;
+             $this->write();
+         }
+@@ -697,11 +779,11 @@
+             $fields->removeByName($field);
+         }
+         $orderSummaryConfig = GridFieldConfig_Base::create();
+-        $orderSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
++        $orderSummaryConfig->removeComponentsByType(GridFieldToolbarHeader::class);
+         // $orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
+-        $orderSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
+-        $orderSummaryConfig->removeComponentsByType('GridFieldPageCount');
+-        $orderSummaryConfig->removeComponentsByType('GridFieldPaginator');
++        $orderSummaryConfig->removeComponentsByType(GridFieldFilterHeader::class);
++        $orderSummaryConfig->removeComponentsByType(GridFieldPageCount::class);
++        $orderSummaryConfig->removeComponentsByType(GridFieldPaginator::class);
+         $nextFieldArray = [
+             LiteralField::create(
+                 'CssFix',
+@@ -722,16 +804,16 @@
+         $keyNotes = OrderStatusLog::get()->filter(
+             [
+                 'OrderID' => $this->ID,
+-                'ClassName' => 'OrderStatusLog',
++                'ClassName' => OrderStatusLog::class,
+             ]
+         );
+         if ($keyNotes->count()) {
+             $notesSummaryConfig = GridFieldConfig_RecordViewer::create();
+-            $notesSummaryConfig->removeComponentsByType('GridFieldToolbarHeader');
+-            $notesSummaryConfig->removeComponentsByType('GridFieldFilterHeader');
++            $notesSummaryConfig->removeComponentsByType(GridFieldToolbarHeader::class);
++            $notesSummaryConfig->removeComponentsByType(GridFieldFilterHeader::class);
+             // $orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
+-            $notesSummaryConfig->removeComponentsByType('GridFieldPageCount');
+-            $notesSummaryConfig->removeComponentsByType('GridFieldPaginator');
++            $notesSummaryConfig->removeComponentsByType(GridFieldPageCount::class);
++            $notesSummaryConfig->removeComponentsByType(GridFieldPaginator::class);
+             $nextFieldArray = array_merge(
+                 $nextFieldArray,
+                 [
+@@ -767,7 +849,7 @@
+         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+             $lastStep = OrderStep::last_order_step();
+             if ($this->StatusID !== $lastStep->ID) {
+-                $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++                $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+                 if ($queueObjectSingleton->getQueueObject($this)) {
+                     $myQueueObjectField = GridField::create(
+                         'MyQueueObjectField',
+@@ -893,8 +975,8 @@
+                 $fields->addFieldToTab(
+                     'Root.Account',
+                     GridField::create(
+-                        'OrderFeedback',
+-                        Injector::inst()->get('OrderFeedback')->singular_name(),
++                        OrderFeedback::class,
++                        Injector::inst()->get(OrderFeedback::class)->singular_name(),
+                         OrderFeedback::get()->filter(['OrderID' => $this->ID]),
+                         GridFieldConfig_RecordViewer::create()
+                     )
+@@ -977,7 +1059,7 @@
+
+         $fields->addFieldToTab('Root.Addresses', $this->getBillingAddressField());
+
+-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
++        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
+             $fields->addFieldToTab('Root.Addresses', new HeaderField('ShippingAddressHeader', _t('Order.SHIPPINGADDRESS', 'Shipping Address')));
+             $fields->addFieldToTab('Root.Addresses', new CheckboxField('UseShippingAddress', _t('Order.USESEPERATEADDRESS', 'Use separate shipping address?')));
+             if ($this->UseShippingAddress) {
+@@ -1025,7 +1107,7 @@
+      * @return GridField
+      **/
+     public function getOrderStatusLogsTableField(
+-        $sourceClass = 'OrderStatusLog',
++        $sourceClass = OrderStatusLog::class,
+         $title = ''
+     ) {
+         $gridFieldConfig = GridFieldConfig_RecordViewer::create()->addComponents(
+@@ -1049,7 +1131,7 @@
+      * @return GridField
+      **/
+     public function getOrderStatusLogsTableFieldEditable(
+-        $sourceClass = 'OrderStatusLog',
++        $sourceClass = OrderStatusLog::class,
+         $title = ''
+     ) {
+         $gf = $this->getOrderStatusLogsTableField($sourceClass, $title);
+@@ -1099,7 +1181,7 @@
+             //to do: check if shop is open....
+             if ($this->StatusID || $recalculate) {
+                 if (! $this->StatusID) {
+-                    $createdOrderStatus = DataObject::get_one('OrderStep');
++                    $createdOrderStatus = DataObject::get_one(OrderStep::class);
+                     if (! $createdOrderStatus) {
+                         user_error('No ordersteps have been created', E_USER_WARNING);
+                     }
+@@ -1119,7 +1201,7 @@
+                     }
+                 }
+
+-                $modifiersToAdd = EcommerceConfig::get('Order', 'modifiers');
++                $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
+                 if (is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
+
+ /**
+@@ -1163,7 +1245,7 @@
+                                 $modifier = new $className();
+                                 //only add the ones that should be added automatically
+                                 if (! $modifier->DoNotAddAutomatically()) {
+-                                    if (is_a($modifier, 'OrderModifier')) {
++                                    if (is_a($modifier, OrderModifier::class)) {
+                                         $modifier->OrderID = $this->ID;
+                                         $modifier->Sort = $numericKey;
+                                         //init method includes a WRITE
+@@ -1217,7 +1299,7 @@
+             }
+             // if it is in the queue it has to run from the queue tasks
+             // if it ruins from the queue tasks then it has to be one currently processing.
+-            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++            $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+             if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+                 if ($fromOrderQueue) {
+                     if (! $myQueueObject->InProcess) {
+@@ -1315,7 +1397,7 @@
+             }
+             $log->write();
+             //remove from queue ...
+-            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++            $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+             $queueObjectSingleton->removeOrderFromQueue($this);
+             $this->extend('doCancel', $member, $log);
+
+@@ -1370,7 +1452,7 @@
+         }
+         if (! $step) {
+             $step = DataObject::get_one(
+-                'OrderStep',
++                OrderStep::class,
+                 null,
+                 $cacheDataObjectGetOne = false
+             );
+@@ -1404,7 +1486,7 @@
+         if ($obj->HideStepFromCustomer) {
+             $obj = OrderStep::get()->where('"OrderStep"."Sort" < ' . $obj->Sort . ' AND "HideStepFromCustomer" = 0')->Last();
+             if (! $obj) {
+-                $obj = DataObject::get_one('OrderStep');
++                $obj = DataObject::get_one(OrderStep::class);
+             }
+         }
+
+@@ -1418,7 +1500,7 @@
+      */
+     public function IsFirstStep()
+     {
+-        $firstStep = DataObject::get_one('OrderStep');
++        $firstStep = DataObject::get_one(OrderStep::class);
+         $currentStep = $this->MyStep();
+         if ($firstStep && $currentStep) {
+             if ($firstStep->ID === $currentStep->ID) {
+@@ -1659,7 +1741,7 @@
+      * @param string $className             - ClassName of the Address (e.g. BillingAddress or ShippingAddress)
+      * @param string $alternativeMethodName - method to retrieve Address
+      **/
+-    public function CreateOrReturnExistingAddress($className = 'BillingAddress', $alternativeMethodName = '')
++    public function CreateOrReturnExistingAddress($className = BillingAddress::class, $alternativeMethodName = '')
+     {
+         if ($this->exists()) {
+             $methodName = $className;
+@@ -1717,13 +1799,13 @@
+             user_error('Can not change country in submitted order', E_USER_NOTICE);
+         } else {
+             if ($includeBillingAddress) {
+-                if ($billingAddress = $this->CreateOrReturnExistingAddress('BillingAddress')) {
++                if ($billingAddress = $this->CreateOrReturnExistingAddress(BillingAddress::class)) {
+                     $billingAddress->SetCountryFields($countryCode);
+                 }
+             }
+-            if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
++            if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
+                 if ($includeShippingAddress) {
+-                    if ($shippingAddress = $this->CreateOrReturnExistingAddress('ShippingAddress')) {
++                    if ($shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class)) {
+                         $shippingAddress->SetCountryFields($countryCode);
+                     }
+                 }
+@@ -1741,11 +1823,11 @@
+         if ($this->IsSubmitted()) {
+             user_error('Can not change country in submitted order', E_USER_NOTICE);
+         } else {
+-            if ($billingAddress = $this->CreateOrReturnExistingAddress('BillingAddress')) {
++            if ($billingAddress = $this->CreateOrReturnExistingAddress(BillingAddress::class)) {
+                 $billingAddress->SetRegionFields($regionID);
+             }
+             if ($this->CanHaveShippingAddress()) {
+-                if ($shippingAddress = $this->CreateOrReturnExistingAddress('ShippingAddress')) {
++                if ($shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class)) {
+                     $shippingAddress->SetRegionFields($regionID);
+                 }
+             }
+@@ -1772,7 +1854,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            if (! is_a($newCurrency, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('EcommerceCurrency'))) {
++            if (! is_a($newCurrency, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(EcommerceCurrency::class))) {
+                 $newCurrency = EcommerceCurrency::default_currency();
+             }
+             $this->CurrencyUsedID = $newCurrency->ID;
+@@ -1807,7 +1889,7 @@
+      * @return bool TRUE on success, FALSE on failure
+      */
+     public function sendEmail(
+-        $emailClassName = 'OrderInvoiceEmail',
++        $emailClassName = OrderInvoiceEmail::class,
+         $subject = '',
+         $message = '',
+         $resend = false,
+@@ -1835,7 +1917,7 @@
+      * @return bool TRUE for success, FALSE for failure (not tested)
+      */
+     public function sendAdminNotification(
+-        $emailClassName = 'OrderErrorEmail',
++        $emailClassName = OrderErrorEmail::class,
+         $subject = '',
+         $message = '',
+         $resend = false,
+@@ -1866,7 +1948,7 @@
+     ) {
+         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
+         Config::nest();
+-        Config::modify()->update('SSViewer', 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -2157,7 +2239,7 @@
+         }
+         $tsOrder = strtotime($this->LastEdited);
+         $tsNow = time();
+-        $minutes = EcommerceConfig::get('Order', 'minutes_an_order_can_be_viewed_without_logging_in');
++        $minutes = EcommerceConfig::get(Order::class, 'minutes_an_order_can_be_viewed_without_logging_in');
+         if ($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
+             //has the order been edited recently?
+             return true;
+@@ -2207,7 +2289,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+     }
+@@ -2233,7 +2315,7 @@
+         if ($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
+             return true;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+         //is the member is a shop assistant they can always view it
+@@ -2360,7 +2442,7 @@
+         if ($this->IsSubmitted()) {
+             return false;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -2454,12 +2536,12 @@
+      *
+      * @return string
+      */
+-    public function EmailLink($type = 'OrderStatusEmail')
++    public function EmailLink($type = OrderStatusEmail::class)
+     {
+         return $this->getEmailLink();
+     }
+
+-    public function getEmailLink($type = 'OrderStatusEmail')
++    public function getEmailLink($type = OrderStatusEmail::class)
+     {
+         if (! isset($_REQUEST['print'])) {
+             if ($this->IsSubmitted()) {
+@@ -2566,7 +2648,7 @@
+      */
+     public function getFeedbackLink()
+     {
+-        $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
++        $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+         if ($orderConfirmationPage->IsFeedbackEnabled) {
+             return Director::AbsoluteURL($this->getRetrieveLink()) . '#OrderFormFeedback_FeedbackForm';
+         }
+@@ -2625,10 +2707,10 @@
+     {
+         if ($this->exists()) {
+             if ($dateFormat === null) {
+-                $dateFormat = EcommerceConfig::get('Order', 'date_format_for_title');
++                $dateFormat = EcommerceConfig::get(Order::class, 'date_format_for_title');
+             }
+             if ($includeName === null) {
+-                $includeName = EcommerceConfig::get('Order', 'include_customer_name_in_title');
++                $includeName = EcommerceConfig::get(Order::class, 'include_customer_name_in_title');
+             }
+             $title = $this->i18n_singular_name() . ' #' . number_format($this->ID);
+             if ($dateFormat) {
+@@ -2743,7 +2825,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                if (is_a($item, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderAttribute'))) {
++                if (is_a($item, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderAttribute::class))) {
+                     $result += $item->Total();
+                 }
+             }
+@@ -2848,7 +2930,7 @@
+             $total = $this->Total();
+             $paid = $this->TotalPaid();
+             $outstanding = $total - $paid;
+-            $maxDifference = EcommerceConfig::get('Order', 'maximum_ignorable_sales_payments_difference');
++            $maxDifference = EcommerceConfig::get(Order::class, 'maximum_ignorable_sales_payments_difference');
+             if (abs($outstanding) < $maxDifference) {
+                 $outstanding = 0;
+             }
+@@ -3030,7 +3112,7 @@
+                 }
+             }
+         }
+-        if ((EcommerceConfig::get('OrderAddress', 'use_shipping_address_for_main_region_and_country') && $countryCodes['Shipping'])
++        if ((EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $countryCodes['Shipping'])
+             ||
+             (! $countryCodes['Billing'] && $countryCodes['Shipping'])
+         ) {
+@@ -3151,7 +3233,7 @@
+         }
+         if (count($regionIDs)) {
+             //note the double-check with $this->CanHaveShippingAddress() and get_use_....
+-            if ($this->CanHaveShippingAddress() && EcommerceConfig::get('OrderAddress', 'use_shipping_address_for_main_region_and_country') && $regionIDs['Shipping']) {
++            if ($this->CanHaveShippingAddress() && EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $regionIDs['Shipping']) {
+                 return EcommerceRegion::get()->byID($regionIDs['Shipping']);
+             }
+             return EcommerceRegion::get()->byID($regionIDs['Billing']);
+@@ -3257,7 +3339,7 @@
+      **/
+     public function SubmissionLog()
+     {
+-        $className = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+
+         return $className::get()
+             ->Filter(['OrderID' => $this->ID])
+@@ -3278,7 +3360,7 @@
+             $created = $this->LastEdited;
+         }
+
+-        return DBField::create_field('SS_Datetime', $created);
++        return DBField::create_field(DBDatetime::class, $created);
+     }
+
+     /**
+@@ -3361,7 +3443,7 @@
+
+     public function getCanHaveShippingAddress()
+     {
+-        return EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address');
++        return EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address');
+     }
+
+     /**
+@@ -3375,14 +3457,14 @@
+         if ($this->MyStep() && $this->MyStep()->AlternativeDisplayPage()) {
+             $page = $this->MyStep()->AlternativeDisplayPage();
+         } elseif ($this->IsSubmitted()) {
+-            $page = DataObject::get_one('OrderConfirmationPage');
++            $page = DataObject::get_one(OrderConfirmationPage::class);
+         } else {
+             $page = DataObject::get_one(
+-                'CartPage',
+-                ['ClassName' => 'CartPage']
++                CartPage::class,
++                ['ClassName' => CartPage::class]
+             );
+             if (! $page) {
+-                $page = DataObject::get_one('CheckoutPage');
++                $page = DataObject::get_one(CheckoutPage::class);
+             }
+         }
+
+@@ -3407,7 +3489,7 @@
+         }
+         user_error('A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.', E_USER_NOTICE);
+         $page = DataObject::get_one(
+-            'ErrorPage',
++            ErrorPage::class,
+             ['ErrorCode' => '404']
+         );
+         if ($page) {
+@@ -3435,12 +3517,12 @@
+      */
+     public function CheckoutLink()
+     {
+-        $page = DataObject::get_one('CheckoutPage');
++        $page = DataObject::get_one(CheckoutPage::class);
+         if ($page) {
+             return $page->Link();
+         }
+         $page = DataObject::get_one(
+-            'ErrorPage',
++            ErrorPage::class,
+             ['ErrorCode' => '404']
+         );
+         if ($page) {
+@@ -3456,8 +3538,8 @@
+     public function ConvertToHTML()
+     {
+         Config::nest();
+-        Config::inst()->update('SSViewer', 'theme_enabled', true);
+-        $html = $this->renderWith('Order');
++        Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++        $html = $this->renderWith(Order::class);
+         Config::unnest();
+         $html = preg_replace('/(\s)+/', ' ', $html);
+
+@@ -3521,7 +3603,7 @@
+      **/
+     public function updateForAjax(array $js)
+     {
+-        $function = EcommerceConfig::get('Order', 'ajax_subtotal_format');
++        $function = EcommerceConfig::get(Order::class, 'ajax_subtotal_format');
+         if (is_array($function)) {
+             list($function, $format) = $function;
+         }
+@@ -3530,7 +3612,7 @@
+             $subTotal = $subTotal->{$format}();
+             unset($format);
+         }
+-        $function = EcommerceConfig::get('Order', 'ajax_total_format');
++        $function = EcommerceConfig::get(Order::class, 'ajax_total_format');
+         if (is_array($function)) {
+             list($function, $format) = $function;
+         }
+@@ -3605,7 +3687,7 @@
+             $this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
+         }
+         if (! $this->SessionID) {
+-            $generator = Injector::inst()->create('RandomGenerator');
++            $generator = Injector::inst()->create(RandomGenerator::class);
+             $token = $generator->randomToken('sha1');
+             $this->SessionID = substr($token, 0, 32);
+         }
+@@ -3727,7 +3809,7 @@
+      **/
+     protected function getBillingAddressField()
+     {
+-        $this->CreateOrReturnExistingAddress('BillingAddress');
++        $this->CreateOrReturnExistingAddress(BillingAddress::class);
+         $gridFieldConfig = GridFieldConfig::create()->addComponents(
+             new GridFieldToolbarHeader(),
+             new GridFieldSortableHeader(),
+@@ -3739,7 +3821,7 @@
+         //$source = $this->BillingAddress();
+         $source = BillingAddress::get()->filter(['OrderID' => $this->ID]);
+
+-        return new GridField('BillingAddress', _t('BillingAddress.SINGULARNAME', 'Billing Address'), $source, $gridFieldConfig);
++        return new GridField(BillingAddress::class, _t('BillingAddress.SINGULARNAME', 'Billing Address'), $source, $gridFieldConfig);
+     }
+
+     /**
+@@ -3747,7 +3829,7 @@
+      **/
+     protected function getShippingAddressField()
+     {
+-        $this->CreateOrReturnExistingAddress('ShippingAddress');
++        $this->CreateOrReturnExistingAddress(ShippingAddress::class);
+         $gridFieldConfig = GridFieldConfig::create()->addComponents(
+             new GridFieldToolbarHeader(),
+             new GridFieldSortableHeader(),
+@@ -3759,7 +3841,7 @@
+         //$source = $this->ShippingAddress();
+         $source = ShippingAddress::get()->filter(['OrderID' => $this->ID]);
+
+-        return new GridField('ShippingAddress', _t('BillingAddress.SINGULARNAME', 'Shipping Address'), $source, $gridFieldConfig);
++        return new GridField(ShippingAddress::class, _t('BillingAddress.SINGULARNAME', 'Shipping Address'), $source, $gridFieldConfig);
+     }
+
+     /**
+@@ -3771,19 +3853,19 @@
+      * @return GridField
+      **/
+     protected function getOrderStatusLogsTableField_Archived(
+-        $sourceClass = 'OrderStatusLog',
++        $sourceClass = OrderStatusLog::class,
+         $title = '',
+         FieldList $fieldList = null,
+         FieldList $detailedFormFields = null
+     ) {
+         $title ?: $title = _t('OrderLog.PLURALNAME', 'Order Log');
+         $source = $this->OrderStatusLogs();
+-        if ($sourceClass !== 'OrderStatusLog' && class_exists($sourceClass)) {
++        if ($sourceClass !== OrderStatusLog::class && class_exists($sourceClass)) {
+             $source = $source->filter(['ClassName' => ClassInfo::subclassesFor($sourceClass)]);
+         }
+         $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
+-        $config->removeComponentsByType('GridFieldAddExistingAutocompleter');
+-        $config->removeComponentsByType('GridFieldDeleteAction');
++        $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
++        $config->removeComponentsByType(GridFieldDeleteAction::class);
+
+         return $gridField;
+     }
+@@ -3813,7 +3895,7 @@
+      * @return bool TRUE for success, FALSE for failure (not tested)
+      */
+     protected function prepareAndSendEmail(
+-        $emailClassName = 'OrderInvoiceEmail',
++        $emailClassName = OrderInvoiceEmail::class,
+         $subject = '',
+         $message = '',
+         $resend = false,
+@@ -3847,7 +3929,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            if (! is_a($email, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Email'))) {
++            if (! is_a($email, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Email::class))) {
+                 user_error('No correct email class provided.', E_USER_ERROR);
+             }
+             $email->setFrom($from);
+@@ -3867,7 +3949,7 @@
+             // so we need to restore the theme, just in case
+             // templates within the theme exist
+             Config::nest();
+-            Config::modify()->update('SSViewer', 'theme_enabled', true);
++            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+             $email->setOrder($this);
+             $email->setResend($resend);
+             $result = $email->send(null);
+@@ -3922,10 +4004,10 @@
+         $replacementArray['CC'] = '';
+         $replacementArray['BCC'] = '';
+         $replacementArray['OrderStepMessage'] = $message;
+-        $replacementArray['Order'] = $this;
++        $replacementArray[Order::class] = $this;
+         $replacementArray['EmailLogo'] = $config->EmailLogo();
+         $replacementArray['ShopPhysicalAddress'] = $config->ShopPhysicalAddress;
+-        $replacementArray['CurrentDateAndTime'] = DBField::create_field('SS_Datetime', 'Now');
++        $replacementArray['CurrentDateAndTime'] = DBField::create_field(DBDatetime::class, 'Now');
+         $replacementArray['BaseURL'] = Director::baseURL();
+         $arrayData = ArrayData::create($replacementArray);
+         $this->extend('updateReplacementArrayForEmail', $arrayData);
+@@ -3953,7 +4035,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $className = 'OrderItem';
++        $className = OrderItem::class;
+         $extrafilter = '';
+         if ($filterOrClassName) {
+             if (class_exists($filterOrClassName)) {
+@@ -4004,7 +4086,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $className = 'OrderModifier';
++        $className = OrderModifier::class;
+         $extrafilter = '';
+         if ($filterOrClassName) {
+             if (class_exists($filterOrClassName)) {
+
+Warnings for src/Model/Order.php:
+ - src/Model/Order.php:1163 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1163
+
+ - src/Model/Order.php:1678 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1678
+
+ - src/Model/Order.php:3262 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 3262
+
+ - src/Model/Order.php:3840 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 3840
+
+ - src/Model/Order.php:3984 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 3984
+
+ - src/Model/Order.php:4035 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 4035
+
+modified:	src/Model/Fieldtypes/BuyableFieldType.php
+@@ -4,9 +4,14 @@
+
+ use PolymorphicForeignKey;
+ use CompositeDBField;
+-use BuyableSelectField;
+-use ClassInfo;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
++use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
++use SilverStripe\Core\ClassInfo;
++use SilverStripe\ORM\DB;
++
+
+
+
+@@ -48,7 +53,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            $classNames = ClassInfo::implementorsOf('BuyableModel');
++            $classNames = ClassInfo::implementorsOf(BuyableModel::class);
+
+             $schema = DB::get_schema();
+             if ($schema->hasField($this->tableName, "{$this->name}Class")) {
+
+modified:	src/Model/OrderAttributeGroup.php
+@@ -2,12 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Model;
+
+-use DataObject;
+-use EditableEcommerceObject;
+-use Member;
+-use Permission;
+-use Config;
++
++
++
++
++
+ use CMSEditLinkAPI;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
++
+
+
+
+@@ -93,7 +100,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -116,7 +123,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -139,7 +146,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -162,7 +169,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+
+modified:	src/Model/Extensions/EcommerceRole.php
+@@ -2,34 +2,68 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Extensions;
+
+-use DataExtension;
+-use PermissionProvider;
+-use EcommerceConfig;
+-use DataObject;
+-use Config;
+-use Member;
+-use Order;
+-use FieldList;
+-use GridFieldConfig_RecordEditor;
+-use GridField;
+-use HiddenField;
+-use LiteralField;
+-use Controller;
+-use Director;
+-use EcommerceCurrency;
+-use CompositeField;
+-use ReadonlyField;
+-use Group;
+-use HeaderField;
+-use EcommerceCMSButtonField;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
+ use CMSEditLinkAPI;
+-use TextField;
+-use EmailField;
+-use Requirements;
+-use PasswordField;
+-use Convert;
+-use Permission;
+-use ArrayList;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Security\Group;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Security\Member;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\CompositeField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Control\Email\Email;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\EmailField;
++use SilverStripe\View\Requirements;
++use SilverStripe\Forms\PasswordField;
++use SilverStripe\Core\Convert;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\ORM\DataExtension;
++use SilverStripe\Security\PermissionProvider;
++
+
+ /**
+  * @description EcommerceRole provides specific customisations to the {@link Member}
+@@ -92,12 +126,12 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'PreferredCurrency' => 'EcommerceCurrency',
++        'PreferredCurrency' => EcommerceCurrency::class,
+     ];
+
+     private static $has_many = [
+-        'Orders' => 'Order',
+-        'CancelledOrders' => 'Order',
++        'Orders' => Order::class,
++        'CancelledOrders' => Order::class,
+     ];
+
+     /**
+@@ -105,10 +139,10 @@
+      **/
+     public static function get_customer_group()
+     {
+-        $customerCode = EcommerceConfig::get('EcommerceRole', 'customer_group_code');
++        $customerCode = EcommerceConfig::get(EcommerceRole::class, 'customer_group_code');
+
+         return DataObject::get_one(
+-            'Group',
++            Group::class,
+             ['Code' => $customerCode]
+         );
+     }
+@@ -135,7 +169,7 @@
+         if ($group) {
+             $members = $group->Members();
+             $membersCount = $members->count();
+-            if ($membersCount > 0 && $membersCount < Config::inst()->get('EcommerceRole', 'max_count_of_members_in_array')) {
++            if ($membersCount > 0 && $membersCount < Config::inst()->get(EcommerceRole::class, 'max_count_of_members_in_array')) {
+                 foreach ($members as $member) {
+                     if ($member->Email) {
+                         $array[$member->ID] = $member->Email . ' (' . $member->getTitle() . ')';
+@@ -182,7 +216,7 @@
+             }
+         }
+         $group = DataObject::get_one(
+-            'Group',
++            Group::class,
+             ['Code' => 'administrators']
+         );
+         //fill array
+@@ -265,10 +299,10 @@
+      **/
+     public static function get_admin_group()
+     {
+-        $adminCode = EcommerceConfig::get('EcommerceRole', 'admin_group_code');
++        $adminCode = EcommerceConfig::get(EcommerceRole::class, 'admin_group_code');
+
+         return DataObject::get_one(
+-            'Group',
++            Group::class,
+             ['Code' => $adminCode]
+         );
+     }
+@@ -278,10 +312,10 @@
+      **/
+     public static function get_assistant_group()
+     {
+-        $assistantCode = EcommerceConfig::get('EcommerceRole', 'assistant_group_code');
++        $assistantCode = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code');
+
+         return DataObject::get_one(
+-            'Group',
++            Group::class,
+             ['Code' => $assistantCode]
+         );
+     }
+@@ -352,8 +386,8 @@
+      */
+     public function providePermissions()
+     {
+-        $category = EcommerceConfig::get('EcommerceRole', 'permission_category');
+-        $perms[EcommerceConfig::get('EcommerceRole', 'customer_permission_code')] = [
++        $category = EcommerceConfig::get(EcommerceRole::class, 'permission_category');
++        $perms[EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code')] = [
+             'name' => _t(
+                 'EcommerceRole.CUSTOMER_PERMISSION_ANME',
+                 'Customers'
+@@ -365,8 +399,8 @@
+             ),
+             'sort' => 98,
+         ];
+-        $perms[EcommerceConfig::get('EcommerceRole', 'admin_permission_code')] = [
+-            'name' => EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
++        $perms[EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code')] = [
++            'name' => EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'),
+             'category' => $category,
+             'help' => _t(
+                 'EcommerceRole.ADMINISTRATORS_HELP',
+@@ -374,8 +408,8 @@
+             ),
+             'sort' => 99,
+         ];
+-        $perms[EcommerceConfig::get('EcommerceRole', 'assistant_permission_code')] = [
+-            'name' => EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
++        $perms[EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code')] = [
++            'name' => EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'),
+             'category' => $category,
+             'help' => _t(
+                 'EcommerceRole.STORE_ASSISTANTS_HELP',
+@@ -383,7 +417,7 @@
+             ),
+             'sort' => 100,
+         ];
+-        $perms[EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code')] = [
++        $perms[EcommerceConfig::get(EcommerceRole::class, 'process_orders_permission_code')] = [
+             'name' => _t(
+                 'EcommerceRole.PROCESS_ORDERS_PERMISSION_NAME',
+                 'Can process orders'
+@@ -411,8 +445,8 @@
+         $orderField = $fields->dataFieldByName('Orders');
+         if ($orderField) {
+             $config = GridFieldConfig_RecordEditor::create();
+-            $config->removeComponentsByType('GridFieldDeleteAction');
+-            $config->removeComponentsByType('GridFieldAddNewButton');
++            $config->removeComponentsByType(GridFieldDeleteAction::class);
++            $config->removeComponentsByType(GridFieldAddNewButton::class);
+             if ($orderField instanceof GridField) {
+                 $orderField->setConfig($config);
+                 $orderField->setList($this->getOrders());
+@@ -428,7 +462,7 @@
+         );
+         $link = Controller::join_links(
+             Director::baseURL(),
+-            Config::inst()->get('ShoppingCartController', 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
++            Config::inst()->get(ShoppingCartController::class, 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
+         );
+         $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"${link}\" target=\"_blank\">Place order for customer</a></p>");
+         $fields->addFieldsToTab(
+@@ -471,7 +505,7 @@
+         $memberTitle = new ReadonlyField('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . _t('Member.TITLE', 'Name') . ': ' . $this->owner->getTitle() . '</p>');
+         $memberTitle->dontEscape = true;
+         $fields->push($memberTitle);
+-        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>' . _t('Member.EMAIL', 'Email') . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
++        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', Email::class), '<p>' . _t('Member.EMAIL', Email::class) . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
+         $memberEmail->dontEscape = true;
+         $fields->push($memberEmail);
+         $lastLogin = new ReadonlyField('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . _t('Member.LASTLOGIN', 'Last Login') . ': ' . $this->owner->dbObject('LastVisited')->Nice() . '</p>');
+@@ -508,7 +542,7 @@
+      */
+     public function getEcommerceFields($mustCreateAccount = false)
+     {
+-        if (! EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
++        if (! EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
+             //if no accounts are made then we simply return the basics....
+             $fields = new FieldList(
+                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
+@@ -522,7 +556,7 @@
+   * EXP: make sure that this does not end up as Email::class
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
++                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class))
+             );
+         } else {
+             Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomPasswordField.js');
+@@ -546,7 +580,7 @@
+                 );
+             } else {
+                 //login invite right on the top
+-                if (EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase') || $mustCreateAccount) {
++                if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') || $mustCreateAccount) {
+                     $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 3);
+                     //dont allow people to purchase without creating a password
+                     $loginDetailsDescription = new LiteralField(
+@@ -588,7 +622,7 @@
+   * EXP: make sure that this does not end up as Email::class
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email')),
++                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class)),
+                 $loginDetailsHeader,
+                 $loginDetailsDescription,
+                 $updatePasswordLinkField,
+@@ -612,9 +646,9 @@
+         $fields = [
+             'FirstName',
+             'Surname',
+-            'Email',
++            Email::class,
+         ];
+-        if (EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
++        if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
+             $passwordFieldIsRequired = true;
+             if ($this->owner->exists()) {
+                 if ($this->owner->Password) {
+@@ -643,7 +677,7 @@
+         if (Permission::checkMember($this->owner, 'ADMIN')) {
+             return true;
+         }
+-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'admin_permission_code'));
++        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'));
+     }
+
+     /**
+@@ -657,7 +691,7 @@
+             return true;
+         }
+
+-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'));
++        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'));
+     }
+
+     /**
+@@ -671,7 +705,7 @@
+             return true;
+         }
+
+-        return Permission::checkMember($this->owner, EcommerceConfig::get('EcommerceRole', 'process_orders_permission_code'));
++        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'process_orders_permission_code'));
+     }
+
+     /**
+@@ -717,7 +751,7 @@
+      *
+      * @return ArrayList (BillingAddresses | ShippingAddresses)
+      **/
+-    public function previousOrderAddresses($type = 'BillingAddress', $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
++    public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
+     {
+         $returnArrayList = new ArrayList();
+         if ($this->owner->exists()) {
+@@ -733,7 +767,7 @@
+                 ->sort('LastEdited', 'DESC')
+                 ->exclude(['ID' => $excludeID])
+                 ->limit($limit)
+-                ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
++                ->innerJoin(Order::class, '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
+             if ($addresses->count()) {
+                 if ($keepDoubles) {
+                     foreach ($addresses as $address) {
+@@ -763,7 +797,7 @@
+      * @param string $type
+      * @param int    $excludeID - the ID of the record to exlcude (if any)
+      **/
+-    public function previousOrderAddress($type = 'BillingAddress', $excludeID = 0)
++    public function previousOrderAddress($type = BillingAddress::class, $excludeID = 0)
+     {
+         $addresses = $this->previousOrderAddresses($type, $excludeID, true, false);
+         if ($addresses->count()) {
+@@ -775,7 +809,7 @@
+     {
+         return Controller::join_links(
+             Director::baseURL(),
+-            Config::inst()->get('ShoppingCartController', 'url_segment') .
++            Config::inst()->get(ShoppingCartController::class, 'url_segment') .
+             '/loginas/' . $this->owner->ID . '/'
+         );
+     }
+
+Warnings for src/Model/Extensions/EcommerceRole.php:
+ - src/Model/Extensions/EcommerceRole.php:729 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 729
+
+modified:	src/Model/Extensions/EcommerceSiteTreeExtension.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Model\Extensions;
+
+-use SiteTreeExtension;
+-use EcommerceConfigAjax;
+-use EcommerceDBConfig;
+-use ProductGroup;
++
++
++
++
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\CMS\Model\SiteTreeExtension;
++
+
+
+ /**
+
+modified:	src/Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php
+@@ -2,11 +2,20 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridFieldAddNewButton;
+-use ArrayData;
+-use Config;
+-use DataObject;
+-use Versioned;
++
++
++
++
++
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
++use SilverStripe\View\ArrayData;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Versioned\Versioned;
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++
+
+
+ /**
+@@ -41,7 +50,7 @@
+         }
+
+         $data = new ArrayData([
+-            'NewLink' => '/admin/' . Config::inst()->get('CMSPageAddControllerProducts', 'url_segment') . '/' . $getSegment,
++            'NewLink' => '/admin/' . Config::inst()->get(CMSPageAddControllerProducts::class, 'url_segment') . '/' . $getSegment,
+             'ButtonName' => $this->buttonName,
+         ]);
+
+@@ -66,8 +75,8 @@
+      */
+     public function BestParentPage()
+     {
+-        $defaultRootParentClass = Config::inst()->get('CMSPageAddControllerProducts', 'root_parent_class_for_adding_page');
+-        $rootParentClassArray = [$defaultRootParentClass, 'ProductGroup'];
++        $defaultRootParentClass = Config::inst()->get(CMSPageAddControllerProducts::class, 'root_parent_class_for_adding_page');
++        $rootParentClassArray = [$defaultRootParentClass, ProductGroup::class];
+         foreach ($rootParentClassArray as $rootParentClass) {
+             $result = DataObject::get_one(
+                 $rootParentClass,
+@@ -80,7 +89,7 @@
+             if (Versioned::current_stage() === 'Live') {
+                 $stage = '_Live';
+             }
+-            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin('SiteTree' . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
++            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin(SiteTree::class . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
+                 return $result;
+             }
+         }
+
+Warnings for src/Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php:
+ - src/Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php:83 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 83
+
+modified:	src/Forms/Gridfield/Configs/GridFieldBasicPageRelationConfig.php
+@@ -2,7 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+-use GridFieldConfig_RelationEditor;
++
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
++
+
+
+
+@@ -18,8 +22,8 @@
+     {
+         parent::__construct($itemsPerPage);
+         $this
+-            ->removeComponentsByType('GridFieldEditButton')
+-            ->removeComponentsByType('GridFieldAddNewButton');
++            ->removeComponentsByType(GridFieldEditButton::class)
++            ->removeComponentsByType(GridFieldAddNewButton::class);
+     }
+ }
+
+
+modified:	src/Forms/Gridfield/Configs/GridFieldEditOriginalPageConfigWithDelete.php
+@@ -2,9 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+-use GridFieldConfig_RecordEditor;
+-use GridFieldAddNewButtonOriginalPage;
+-use GridFieldEditButtonOriginalPage;
++
++
++
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldAddNewButtonOriginalPage;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldEditButtonOriginalPage;
++use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
++
+
+
+
+@@ -17,8 +23,8 @@
+     {
+         parent::__construct($itemsPerPage);
+         $this
+-            ->removeComponentsByType('GridFieldEditButton')
+-            ->removeComponentsByType('GridFieldAddNewButton')
++            ->removeComponentsByType(GridFieldEditButton::class)
++            ->removeComponentsByType(GridFieldAddNewButton::class)
+             ->addComponent(new GridFieldAddNewButtonOriginalPage())
+             ->addComponent(new GridFieldEditButtonOriginalPage());
+     }
+
+modified:	src/Forms/Gridfield/Configs/GridFieldEditOriginalPageConfigWithAddExisting.php
+@@ -2,8 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+-use GridFieldConfig_RelationEditor;
+-use GridFieldEditButtonOriginalPage;
++
++
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldEditButtonOriginalPage;
++use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
++
+
+
+
+@@ -19,8 +24,8 @@
+     {
+         parent::__construct($itemsPerPage);
+         $this
+-            ->removeComponentsByType('GridFieldEditButton')
+-            ->removeComponentsByType('GridFieldAddNewButton')
++            ->removeComponentsByType(GridFieldEditButton::class)
++            ->removeComponentsByType(GridFieldAddNewButton::class)
+             ->addComponent(new GridFieldEditButtonOriginalPage());
+     }
+ }
+
+modified:	src/Forms/Gridfield/Configs/GridFieldConfigForOrderItems.php
+@@ -2,7 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+-use GridFieldConfig_RelationEditor;
++
++use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
++
+
+ /**
+  * ensures that order items can not be auto-linked or deleted
+@@ -19,7 +23,7 @@
+             $itemsPerPage = 100;
+         }
+         parent::__construct($itemsPerPage);
+-        $this->removeComponentsByType('GridFieldAddExistingAutocompleter');
++        $this->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+         //$this->removeComponentsByType("GridFieldButtonRow");
+         //$this->removeComponentsByType("GridFieldAddNewButton");
+         //$this->removeComponentsByType("GridFieldToolbarHeader");
+@@ -27,7 +31,7 @@
+         //$this->removeComponentsByType("GridFieldFilterHeader");
+         //$this->removeComponentsByType("GridFieldDataColumns");
+         //$this->removeComponentsByType("GridFieldEditButton");
+-        $this->removeComponentsByType('GridFieldDeleteAction');
++        $this->removeComponentsByType(GridFieldDeleteAction::class);
+         //$this->removeComponentsByType("GridFieldPageCount");
+         //$this->removeComponentsByType("GridFieldPaginator");
+         //$this->removeComponentsByType("GridFieldDetailForm");
+
+modified:	src/Forms/Gridfield/Configs/GridFieldBasicPageRelationConfigNoAddExisting.php
+@@ -2,7 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+-use GridFieldConfig_RelationEditor;
++
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
++
+
+
+
+@@ -18,10 +24,10 @@
+     {
+         parent::__construct($itemsPerPage);
+         $this
+-            ->removeComponentsByType('GridFieldEditButton')
+-            ->removeComponentsByType('GridFieldAddNewButton')
+-            ->removeComponentsByType('GridFieldAddExistingAutocompleter')
+-            ->removeComponentsByType('GridFieldDeleteAction');
++            ->removeComponentsByType(GridFieldEditButton::class)
++            ->removeComponentsByType(GridFieldAddNewButton::class)
++            ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
++            ->removeComponentsByType(GridFieldDeleteAction::class);
+     }
+ }
+
+
+modified:	src/Forms/Gridfield/Configs/GridFieldEditOriginalPageConfig.php
+@@ -2,9 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+-use GridFieldConfig_RecordEditor;
+-use GridFieldAddNewButtonOriginalPage;
+-use GridFieldEditButtonOriginalPage;
++
++
++
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldDeleteAction;
++use SilverStripe\Forms\GridField\GridFieldAddNewButton;
++use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldAddNewButtonOriginalPage;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldEditButtonOriginalPage;
++use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
++
+
+
+
+@@ -20,10 +28,10 @@
+     {
+         parent::__construct($itemsPerPage);
+         $this
+-            ->removeComponentsByType('GridFieldEditButton')
+-            ->removeComponentsByType('GridFieldDeleteAction')
+-            ->removeComponentsByType('GridFieldAddNewButton')
+-            ->removeComponentsByType('GridFieldAddExistingAutocompleter')
++            ->removeComponentsByType(GridFieldEditButton::class)
++            ->removeComponentsByType(GridFieldDeleteAction::class)
++            ->removeComponentsByType(GridFieldAddNewButton::class)
++            ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
+             ->addComponent(new GridFieldAddNewButtonOriginalPage())
+             ->addComponent(new GridFieldEditButtonOriginalPage());
+     }
+
+modified:	src/Forms/Gridfield/GridFieldPrintInvoiceButton.php
+@@ -2,11 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridField_ColumnProvider;
+-use GridField_ActionProvider;
+-use Convert;
+-use GridField_FormAction;
+-use GridField;
++
++
++
++
++
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\GridField\GridField_FormAction;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Forms\GridField\GridField_ColumnProvider;
++use SilverStripe\Forms\GridField\GridField_ActionProvider;
++
+
+
+
+
+modified:	src/Forms/Gridfield/GridFieldExportSalesButton.php
+@@ -2,16 +2,29 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridFieldExportButton;
+-use GridField_HTMLProvider;
+-use GridField_ActionProvider;
+-use GridField_URLHandler;
+-use GridField;
+-use SS_HTTPRequest;
+-use GridField_FormAction;
+-use OrderItem;
+-use Config;
+-use Order;
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Forms\GridField\GridField_FormAction;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Forms\GridField\GridField_HTMLProvider;
++use SilverStripe\Forms\GridField\GridField_ActionProvider;
++use SilverStripe\Forms\GridField\GridField_URLHandler;
++
+
+
+ /**
+@@ -72,7 +85,7 @@
+         if ($fileData = $this->generateExportFileData($gridField)) {
+             $now = Date('d-m-Y-H-i');
+             $fileName = "sales-${now}.csv";
+-            return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
++            return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+         }
+     }
+
+@@ -161,7 +174,7 @@
+         $separator = $this->csvSeparator;
+         $fileData = '';
+         $columnData = [];
+-        $exportFields = Config::inst()->get('GridFieldExportSalesButton', 'fields_and_methods_to_be_exported');
++        $exportFields = Config::inst()->get(GridFieldExportSalesButton::class, 'fields_and_methods_to_be_exported');
+         if ($this->isFirstRow) {
+             $fileData = '"Email"' . $separator . '"SubmittedDate"' . $separator . '"' . implode('"' . $separator . '"', $exportFields) . '"' . "\n";
+             $this->isFirstRow = false;
+@@ -207,7 +220,7 @@
+         return Order::get()
+             ->sort('"Order"."ID" ASC')
+             ->filter(['ID' => $idArray])
+-            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
++            ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
+             ->limit($count, $offset);
+     }
+ }
+
+modified:	src/Forms/Gridfield/GridFieldEditButtonOriginalPage.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridFieldEditButton;
+-use GridField_ColumnProvider;
+-use ArrayData;
+-use Controller;
++
++
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\View\ArrayData;
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridField_ColumnProvider;
++
+
+
+ /**
+
+modified:	src/Forms/Gridfield/GridFieldPrintAllPackingSlipsButton.php
+@@ -2,15 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridField_HTMLProvider;
+-use GridField_ActionProvider;
+-use GridField_URLHandler;
+-use GridField_FormAction;
+-use GridField;
+-use Config;
+-use ArrayList;
+-use Requirements;
+-use Controller;
++
++
++
++
++
++
++
++
++
++use SilverStripe\Forms\GridField\GridField_FormAction;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\View\Requirements;
++use SilverStripe\View\SSViewer;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\GridField\GridField_HTMLProvider;
++use SilverStripe\Forms\GridField\GridField_ActionProvider;
++use SilverStripe\Forms\GridField\GridField_URLHandler;
++
+
+
+ /**
+@@ -94,7 +106,7 @@
+      */
+     public function handlePrintAllPackingSlips($gridField, $request = null)
+     {
+-        $limit = Config::inst()->get('GridFieldPrintAllPackingSlipsButton', 'packing_slip_bulk_printing_limit');
++        $limit = Config::inst()->get(GridFieldPrintAllPackingSlipsButton::class, 'packing_slip_bulk_printing_limit');
+         $list = $gridField->getList()->limit($limit);
+         $gridField->setList($list);
+         $al = ArrayList::create();
+@@ -102,7 +114,7 @@
+             $al->push($order);
+         }
+         Requirements::clear();
+-        Config::modify()->update('SSViewer', 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+         Requirements::themedCSS('sunnysideup/ecommerce: OrderReport', 'ecommerce');
+         Requirements::themedCSS('sunnysideup/ecommerce: Order_PackingSlip', 'ecommerce');
+         $curr = Controller::curr();
+
+modified:	src/Forms/Gridfield/GridFieldPrintAllInvoicesButton.php
+@@ -2,15 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridField_HTMLProvider;
+-use GridField_ActionProvider;
+-use GridField_URLHandler;
+-use GridField_FormAction;
+-use GridField;
+-use Config;
+-use ArrayList;
+-use Requirements;
+-use Controller;
++
++
++
++
++
++
++
++
++
++use SilverStripe\Forms\GridField\GridField_FormAction;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\View\Requirements;
++use SilverStripe\View\SSViewer;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\GridField\GridField_HTMLProvider;
++use SilverStripe\Forms\GridField\GridField_ActionProvider;
++use SilverStripe\Forms\GridField\GridField_URLHandler;
++
+
+
+ /**
+@@ -94,7 +106,7 @@
+      */
+     public function handlePrint($gridField, $request = null)
+     {
+-        $limit = Config::inst()->get('GridFieldPrintAllInvoicesButton', 'invoice_bulk_printing_limit');
++        $limit = Config::inst()->get(GridFieldPrintAllInvoicesButton::class, 'invoice_bulk_printing_limit');
+         $list = $gridField->getList()->limit($limit);
+         $gridField->setList($list);
+         $al = ArrayList::create();
+@@ -102,7 +114,7 @@
+             $al->push($order);
+         }
+         Requirements::clear();
+-        Config::modify()->update('SSViewer', 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+         Requirements::themedCSS('sunnysideup/ecommerce: OrderReport', 'ecommerce');
+         Requirements::themedCSS('sunnysideup/ecommerce: Order_Invoice', 'ecommerce');
+         Requirements::themedCSS('sunnysideup/ecommerce: Order_Invoice_Print_Only', 'ecommerce', 'print');
+
+modified:	src/Forms/Gridfield/GridFieldPrintPackingSlipButton.php
+@@ -2,11 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+-use GridField_ColumnProvider;
+-use GridField_ActionProvider;
+-use Convert;
+-use GridField_FormAction;
+-use GridField;
++
++
++
++
++
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\GridField\GridField_FormAction;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Forms\GridField\GridField_ColumnProvider;
++use SilverStripe\Forms\GridField\GridField_ActionProvider;
++
+
+
+
+
+modified:	src/Forms/OrderFormAddress.php
+@@ -2,24 +2,49 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use Requirements;
+-use EcommerceConfig;
+-use FieldList;
+-use HeaderField;
+-use ShoppingCart;
+-use Member;
+-use CheckboxField;
+-use HiddenField;
+-use CompositeField;
+-use LiteralField;
+-use Convert;
+-use FormAction;
+-use OrderFormAddressValidator;
+-use SS_HTTPRequest;
+-use CheckoutPage;
+-use ShopAccountFormPasswordValidator;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use SilverStripe\Control\Email\Email;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\HiddenField;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use SilverStripe\Forms\CompositeField;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\FormAction;
++use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
++use SilverStripe\Forms\Form;
++use SilverStripe\Control\HTTPRequest;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
++
+
+
+ /**
+@@ -85,7 +110,7 @@
+
+         //requirements
+         Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
++        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
+             Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomOrderFormShipping.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+         }
+
+@@ -96,7 +121,7 @@
+         $addressFieldsBilling = FieldList::create();
+         $addressFieldsShipping = null;
+         $useShippingAddressField = null;
+-        $shippingAddressFirst = EcommerceConfig::get('OrderFormAddress', 'shipping_address_first');
++        $shippingAddressFirst = EcommerceConfig::get(OrderFormAddress::class, 'shipping_address_first');
+
+         $addressFieldsMember->push(
+             HeaderField::create(
+@@ -127,7 +152,7 @@
+         }
+
+         //billing address field
+-        $billingAddress = $this->order->CreateOrReturnExistingAddress('BillingAddress');
++        $billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
+         $billingAddressFields = $billingAddress->getFields($this->orderMember);
+         $addressFieldsBilling->merge($billingAddressFields);
+
+@@ -138,14 +163,14 @@
+             if ($addressFieldsBilling) {
+                 if ($phoneField = $addressFieldsBilling->dataFieldByName('Phone')) {
+                     $addressFieldsBilling->removeByName('Phone');
+-                    $addressFieldsMember->insertAfter('Email', $phoneField);
++                    $addressFieldsMember->insertAfter(Email::class, $phoneField);
+                 }
+             }
+         }
+
+         //shipping address field
+
+-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
++        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
+             //add the important CHECKBOX
+             $useShippingAddressField = FieldList::create(
+                 HeaderField::create(
+@@ -180,7 +205,7 @@
+
+             //$addressFieldsShipping->merge($useShippingAddressField);
+             //now we can add the shipping fields
+-            $shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress');
++            $shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class);
+             $shippingAddressFields = $shippingAddress->getFields($this->orderMember);
+             $requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
+             $addressFieldsShipping->merge($shippingAddressFields);
+@@ -226,7 +251,7 @@
+         $rightFields = CompositeField::create();
+         $rightFields->addExtraClass('rightOrder');
+         //to do: simplify
+-        if (EcommerceConfig::get('EcommerceRole', 'allow_customers_to_setup_accounts')) {
++        if (EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
+             if ($this->orderDoesNotHaveFullyOperationalMember()) {
+                 //general header
+                 if (! $this->loggedInMember) {
+@@ -314,7 +339,7 @@
+             if ($billingAddress) {
+                 $this->loadDataFrom($billingAddress);
+             }
+-            if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
++            if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
+                 if ($shippingAddress) {
+                     $this->loadDataFrom($shippingAddress);
+                 }
+@@ -351,7 +376,7 @@
+      * @param Form        $form    Form object for this action
+      * @param HTTPRequest $request Request object for this action
+      */
+-    public function saveAddress(array $data, Form $form, SS_HTTPRequest $request)
++    public function saveAddress(array $data, Form $form, HTTPRequest $request)
+     {
+         $this->saveAddressDetails($data, $form, $request);
+
+@@ -373,7 +398,7 @@
+      * @param Form        $form    Form object for this action
+      * @param HTTPRequest $request Request object for this action
+      */
+-    public function saveAddressDetails(array $data, Form $form, SS_HTTPRequest $request)
++    public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
+     {
+
+ /**
+@@ -450,7 +475,7 @@
+         }
+
+         //BILLING ADDRESS
+-        if ($billingAddress = $this->order->CreateOrReturnExistingAddress('BillingAddress')) {
++        if ($billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class)) {
+             $form->saveInto($billingAddress);
+             // NOTE: write should return the new ID of the object
+             $this->order->BillingAddressID = $billingAddress->write();
+@@ -459,7 +484,7 @@
+         // SHIPPING ADDRESS
+         if (isset($data['UseShippingAddress'])) {
+             if ($data['UseShippingAddress']) {
+-                if ($shippingAddress = $this->order->CreateOrReturnExistingAddress('ShippingAddress')) {
++                if ($shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class)) {
+                     $form->saveInto($shippingAddress);
+                     // NOTE: write should return the new ID of the object
+                     $this->order->ShippingAddressID = $shippingAddress->write();
+@@ -752,12 +777,12 @@
+         // AND do not match someone else...
+         $updateableMember = $this->loggedInMember &&
+             ! $this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
+-            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details') ? true : false;
++            EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details') ? true : false;
+
+         // logged in member is shop admin and members are updateable...
+         $memberIsShopAdmin = $this->loggedInMember &&
+             $this->loggedInMember->IsShopAdmin() &&
+-            EcommerceConfig::get('EcommerceRole', 'automatically_update_member_details') ? true : false;
++            EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details') ? true : false;
+         if ($newMember || $updateableMember || $memberIsShopAdmin) {
+             return true;
+         }
+
+modified:	src/Forms/OrderFormPayment.php
+@@ -2,16 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use Order;
+-use FieldList;
+-use HiddenField;
+-use CompositeField;
+-use EcommercePayment;
+-use FormAction;
+-use OrderFormPaymentValidator;
+-use Convert;
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\CompositeField;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use SilverStripe\Forms\FormAction;
++use Sunnysideup\Ecommerce\Forms\Validation\OrderFormPaymentValidator;
++use SilverStripe\Forms\Form;
++
+
+
+ class OrderFormPayment extends Form
+
+modified:	src/Forms/OrderFormCancel.php
+@@ -2,18 +2,31 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use Order;
+-use FieldList;
+-use HeaderField;
+-use TextField;
+-use HiddenField;
+-use FormAction;
+-use OrderFormCancelValidator;
+-use SS_HTTPRequest;
+-use Convert;
+-use Member;
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\FormAction;
++use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
++use SilverStripe\Forms\Form;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Core\Convert;
++use SilverStripe\Security\Member;
++
+
+
+
+@@ -76,7 +89,7 @@
+      * @param array $data The form request data submitted
+      * @param Form  $form The {@link Form} this was submitted on
+      */
+-    public function docancel(array $data, Form $form, SS_HTTPRequest $request)
++    public function docancel(array $data, Form $form, HTTPRequest $request)
+     {
+         $SQLData = Convert::raw2sql($data);
+         $member = Member::currentUser();
+
+modified:	src/Forms/ProductSearchFormShort.php
+@@ -2,7 +2,10 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Config;
++
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
++
+
+
+ class ProductSearchFormShort extends ProductSearchForm
+@@ -20,7 +23,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
++        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+         if ($oldData && (is_array($oldData) || is_object($oldData))) {
+             //$this->loadDataFrom($oldData);
+         }
+
+modified:	src/Forms/Fields/OptionalTreeDropdownField.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use TreeDropdownField;
+-use SS_HTTPRequest;
++
++
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Forms\TreeDropdownField;
++
+
+
+ /**
+@@ -50,7 +53,7 @@
+      * @return string
+      *                for version 2.4 and later
+      */
+-    public function tree(SS_HTTPRequest $request)
++    public function tree(HTTPRequest $request)
+     {
+         if ($request->latestparam('ID')) {
+             return parent::tree($request);
+
+modified:	src/Forms/Fields/EcomQuantityField.php
+@@ -2,12 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use NumericField;
+-use Requirements;
+-use BuyableModel;
+-use ShoppingCart;
+-use FormField;
+-use ShoppingCartController;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use SilverStripe\Forms\FormField;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\Forms\NumericField;
++
+
+
+
+@@ -53,7 +62,7 @@
+     /**
+      *@var string
+      **/
+-    protected $template = 'EcomQuantityField';
++    protected $template = EcomQuantityField::class;
+
+     /**
+      * the tabindex for the form field
+@@ -106,7 +115,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderItem')) && $object->BuyableID) {
++        } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class)) && $object->BuyableID) {
+             $this->orderItem = $object;
+         } else {
+             user_error('EcomQuantityField: no/bad order item or buyable passed to constructor.', E_USER_WARNING);
+
+Warnings for src/Forms/Fields/EcomQuantityField.php:
+ - src/Forms/Fields/EcomQuantityField.php:98 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 98
+
+modified:	src/Forms/Fields/EcommerceSearchHistoryFormField.php
+@@ -2,9 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use LiteralField;
+-use DataObject;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
++use SilverStripe\Forms\LiteralField;
++
+
+
+ class EcommerceSearchHistoryFormField extends LiteralField
+@@ -150,7 +156,7 @@
+
+     public function Field($properties = [])
+     {
+-        $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
++        $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
+         $title = $this->getContent();
+         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
+         $data = DB::query('
+@@ -192,7 +198,7 @@
+                 }
+                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
+                 $list[$row['myCount'] . '-' . $key] = $row['Title'];
+-                $link = $redirectToPage->Link('ProductSearchForm') . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
++                $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                 $debugLink = $link . '&DebugSearch=1';
+                 $tableContent .= '
+                     <tr>
+@@ -215,7 +221,7 @@
+                     <h3>A - Z</h3>
+                     <table class="aToz" style="widht: 100%">';
+                 foreach ($list as $key => $title) {
+-                    $link = $redirectToPage->Link('ProductSearchForm') . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
++                    $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                     $debugLink = $link . '&DebugSearch=1';
+                     $array = explode('-', $key);
+                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
+
+modified:	src/Forms/Fields/OrderStepField.php
+@@ -2,12 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use DatalessField;
+-use Order;
+-use Member;
+-use OrderStep;
+-use Convert;
+-use Requirements;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\Core\Convert;
++use SilverStripe\View\Requirements;
++use SilverStripe\Forms\DatalessField;
++
+
+
+
+
+modified:	src/Forms/Fields/BuyableSelectField.php
+@@ -2,11 +2,18 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use FormField;
+-use TextField;
+-use ReadonlyField;
+-use Requirements;
+-use Convert;
++
++
++
++
++
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\FormField;
++
+
+ /**
+  * Text input field that allows the user to select a Buyable.
+@@ -90,7 +97,7 @@
+         //Requirements::javascript($this->jquery_UI_JS_location);
+         //Requirements::css($this->jquery_UI_CSS_location);
+         Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomBuyableSelectField.js');
+-        Requirements::customScript($this->getJavascript(), 'BuyableSelectField' . $this->id());
++        Requirements::customScript($this->getJavascript(), BuyableSelectField::class . $this->id());
+         Requirements::themedCSS('sunnysideup/ecommerce: BuyableSelectField', 'ecommerce');
+
+         return '<div class="fieldgroup">' .
+
+modified:	src/Forms/Fields/SelectOrderAddressField.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use OptionsetField;
+-use Form;
+-use SS_List;
+-use Requirements;
++
++
++
++
++use SilverStripe\Forms\Form;
++use SilverStripe\ORM\SS_List;
++use SilverStripe\View\Requirements;
++use SilverStripe\Forms\OptionsetField;
++
+
+ /**
+  * A field that allows the user to select an old address for the current order.
+
+modified:	src/Forms/Fields/EcommerceClassNameOrTypeDropdownField.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use DropdownField;
+-use ClassInfo;
++
++
++use SilverStripe\Core\ClassInfo;
++use SilverStripe\Forms\DropdownField;
++
+
+
+ /**
+
+modified:	src/Forms/Fields/EcommerceCreditCardField.php
+@@ -3,7 +3,9 @@
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+ use DBTextField;
+-use Requirements;
++
++use SilverStripe\View\Requirements;
++
+
+ /**
+  * Allows input of credit card numbers via four separate form fields,
+
+modified:	src/Forms/Fields/EcommerceCMSButtonField.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use LiteralField;
++
++use SilverStripe\Forms\LiteralField;
++
+
+
+
+
+modified:	src/Forms/Fields/ExpiryDateField.php
+@@ -2,8 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use TextField;
+-use EcommerceConfig;
++
++
++use SilverStripe\Forms\ReadonlyField;
++use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Forms\TextField;
++
+
+
+ /**
+@@ -142,7 +147,7 @@
+      */
+     public function performReadonlyTransformation()
+     {
+-        return $this->castedCopy('ReadonlyField')
++        return $this->castedCopy(ReadonlyField::class)
+             ->setTitle($this->title)
+             ->setValue(substr($this->value, 0, 2) . '/' . substr($this->value, 2, 2));
+     }
+@@ -250,7 +255,7 @@
+      **/
+     protected function monthArray()
+     {
+-        $shortMonths = EcommerceConfig::get('ExpiryDateField', 'short_months');
++        $shortMonths = EcommerceConfig::get(ExpiryDateField::class, 'short_months');
+         if ($shortMonths) {
+             return [
+                 '01' => '01 - Jan',
+
+modified:	src/Forms/Fields/ProductProductImageUploadField.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+-use UploadField;
+-use SS_List;
+-use Config;
++
++
++
++use SilverStripe\ORM\SS_List;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\AssetAdmin\Forms\UploadField;
++
+
+
+ /**
+
+modified:	src/Forms/OrderForm.php
+@@ -2,27 +2,49 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use Requirements;
+-use ShoppingCart;
+-use CompositeField;
+-use HeaderField;
+-use EcommercePayment;
+-use HiddenField;
+-use CheckoutPage;
+-use DataObject;
+-use CheckboxField;
+-use Convert;
+-use TextareaField;
+-use FieldList;
+-use LiteralField;
+-use FormAction;
+-use OrderFormValidator;
+-use SS_HTTPRequest;
+-use Member;
+-use ShopAccountFormPasswordValidator;
+-use EcommerceDBConfig;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Forms\CompositeField;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use SilverStripe\Forms\HiddenField;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\TextareaField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\FormAction;
++use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
++use SilverStripe\Forms\Form;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++
+
+
+
+@@ -78,7 +100,7 @@
+         $finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER', 'Complete Order'), 3));
+         // If a terms and conditions page exists, we need to create a field to confirm the user has read it
+         if ($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
+-            $checkoutPage = DataObject::get_one('CheckoutPage');
++            $checkoutPage = DataObject::get_one(CheckoutPage::class);
+             if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
+                 $alreadyTicked = false;
+                 $requiredFields[] = 'ReadTermsAndConditions';
+@@ -142,7 +164,7 @@
+      * @param Form        $form    Form object for this action
+      * @param HTTPRequest $request Request object for this action
+      */
+-    public function processOrder(array $data, Form $form, SS_HTTPRequest $request)
++    public function processOrder(array $data, Form $form, HTTPRequest $request)
+     {
+         $this->saveDataToSession($data); //save for later if necessary
+         $order = ShoppingCart::current_order();
+
+modified:	src/Forms/Validation/OrderFormAddressValidator.php
+@@ -2,7 +2,10 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use Member;
++
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Forms\OrderForm;
++
+
+
+
+@@ -53,7 +56,7 @@
+         }
+         if (! $valid) {
+             $this->form->sessionMessage(_t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
+-            $this->form->messageForForm('OrderForm', _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
++            $this->form->messageForForm(OrderForm::class, _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
+         }
+
+         return $valid;
+
+modified:	src/Forms/Validation/ShopAccountFormValidator.php
+@@ -2,11 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
+-use Member;
+-use Convert;
+-use EcommerceConfig;
+-use Config;
++
++
++
++
++
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+@@ -77,7 +85,7 @@
+             }
+             //if you are not logged in, you have not provided a password and the settings require you to be logged in then
+             //we have a problem
+-            if (! $loggedInMember && ! $data['PasswordCheck1'] && EcommerceConfig::get('EcommerceRole', 'must_have_account_to_purchase')) {
++            if (! $loggedInMember && ! $data['PasswordCheck1'] && EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
+                 $this->validationError(
+                     'PasswordCheck1',
+                     _t('Account.SELECTPASSWORD', 'Please select a password.'),
+@@ -86,7 +94,7 @@
+                 $valid = false;
+             }
+             $letterCount = strlen($data['PasswordCheck1']);
+-            $minLength = Config::inst()->get('ShopAccountFormValidator', 'minimum_password_length');
++            $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
+             if ($letterCount > 0 && $letterCount < $minLength) {
+                 $this->validationError(
+                     'PasswordCheck1',
+
+modified:	src/Forms/Validation/OrderFormCancelValidator.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
++
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+
+modified:	src/Forms/Validation/OrderFormValidator.php
+@@ -2,10 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
+-use DataObject;
+-use ShoppingCart;
+-use BillingAddress;
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+@@ -30,7 +37,7 @@
+     public function php($data)
+     {
+         $valid = parent::php($data);
+-        $checkoutPage = DataObject::get_one('CheckoutPage');
++        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+         if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
+             if (isset($data['ReadTermsAndConditions'])) {
+                 if (! $data['ReadTermsAndConditions']) {
+@@ -46,7 +53,7 @@
+         $order = ShoppingCart::current_order();
+         if (! $order) {
+             $this->validationError(
+-                'Order',
++                Order::class,
+                 _t('OrderForm.ORDERNOTFOUND', 'There was an error in processing your order, please try again or contact the administrator.'),
+                 'required'
+             );
+@@ -55,7 +62,7 @@
+         $billingAddress = BillingAddress::get()->byID($order->BillingAddressID);
+         if (! $billingAddress) {
+             $this->validationError(
+-                'BillingAddress',
++                BillingAddress::class,
+                 _t('OrderForm.MUSTHAVEBILLINGADDRESS', 'All orders must have a billing address, please go back and add your details.'),
+                 'required'
+             );
+
+modified:	src/Forms/Validation/OrderStatusLogFormValidator.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
++
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+
+modified:	src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use ViewableData;
+-use FieldList;
+-use EcommerceCreditCardField;
+-use TextField;
+-use ExpiryDateField;
+-use EcommercePayment;
+-use Config;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCreditCardField;
++use SilverStripe\Forms\TextField;
++use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
++use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
++use SilverStripe\View\ViewableData;
++
+
+
+ //get_credit_card_payment_form_fields: $formHelper->getCreditCardPaymentFormFields
+@@ -185,7 +195,7 @@
+             $this->paymentObject = $paymentObject;
+         }
+         $paymentClassName = $this->paymentObject->ClassName;
+-        $dbFieldMap = Config::inst()->get('EcommercePaymentFormSetupAndValidation', 'db_field_map');
++        $dbFieldMap = Config::inst()->get(EcommercePaymentFormSetupAndValidation::class, 'db_field_map');
+         $cardNumberFormFields = [
+             'CardNumber',
+             'ExpiryDate',
+@@ -346,7 +356,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (! is_a($result, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('EcommercePaymentResult'))) {
++        if (! is_a($result, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(EcommercePaymentResult::class))) {
+             $form->controller->redirectBack();
+
+             return false;
+
+Warnings for src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php:
+ - src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php:156 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 156
+
+ - src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php:325 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 325
+
+modified:	src/Forms/Validation/OrderFormPaymentValidator.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
++
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+
+modified:	src/Forms/Validation/ProductSearchFormValidator.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
++
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+
+modified:	src/Forms/Validation/ShopAccountFormPasswordValidator.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use ViewableData;
+-use Convert;
++
++
++use SilverStripe\Core\Convert;
++use SilverStripe\View\ViewableData;
++
+
+
+ /***
+
+modified:	src/Forms/Validation/OrderModifierFormValidator.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
++
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+
+modified:	src/Forms/Validation/OrderFormFeedbackValidator.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+-use RequiredFields;
++
++use SilverStripe\Forms\RequiredFields;
++
+
+
+
+
+modified:	src/Forms/OrderFormFeedback.php
+@@ -2,19 +2,34 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use Order;
+-use Convert;
+-use FieldList;
+-use OptionsetField;
+-use TextareaField;
+-use FormAction;
+-use OrderFormFeedbackValidator;
+-use SS_HTTPRequest;
+-use OrderFeedback;
+-use Config;
+-use DataObject;
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\OptionsetField;
++use SilverStripe\Forms\TextareaField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\FormAction;
++use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
++use SilverStripe\Forms\Form;
++use SilverStripe\Control\HTTPRequest;
++use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use SilverStripe\ORM\DataObject;
++
+
+
+
+@@ -74,7 +89,7 @@
+      * @param Form         $form The {@link Form} this was submitted on
+      * @param HTTPRequest  $request The {@link Form} this was submitted on
+      */
+-    public function dofeedback(array $data, Form $form, SS_HTTPRequest $request)
++    public function dofeedback(array $data, Form $form, HTTPRequest $request)
+     {
+         if ($this->order) {
+             $object = OrderFeedback::create();
+@@ -125,7 +140,7 @@
+         if ($page = $this->getOrderConfirmationPage()) {
+             return $page->{$value};
+         }
+-        $defaults = Config::inst()->get('OrderConfirmationPage', 'defaults');
++        $defaults = Config::inst()->get(OrderConfirmationPage::class, 'defaults');
+         if ($defaults && is_array($defaults) && isset($defaults[$value])) {
+             return $defaults[$value];
+         }
+@@ -135,7 +150,7 @@
+     protected function getOrderConfirmationPage()
+     {
+         if (! $this->_orderConfirmationPage) {
+-            $this->_orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
++            $this->_orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+         }
+         return $this->_orderConfirmationPage;
+     }
+
+modified:	src/Forms/ShopAccountForm.php
+@@ -2,21 +2,37 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Member;
+-use ShoppingCartController;
+-use Convert;
+-use ReadonlyField;
+-use FieldList;
+-use ShoppingCart;
+-use FormAction;
+-use Director;
+-use Controller;
+-use LiteralField;
+-use PasswordField;
+-use ShopAccountFormValidator;
+-use CheckoutPage;
+-use ShopAccountFormPasswordValidator;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\Core\Convert;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\FieldList;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Forms\FormAction;
++use SilverStripe\Control\Director;
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\PasswordField;
++use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
++use SilverStripe\Forms\Form;
++
+
+ /**
+  * @description: ShopAccountForm allows shop members to update their details.
+
+modified:	src/Forms/OrderStatusLogForm.php
+@@ -2,12 +2,20 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use FieldList;
+-use Validator;
+-use EcommerceConfig;
+-use Requirements;
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\Validator;
++use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\View\Requirements;
++use SilverStripe\Forms\Form;
++
+
+
+
+@@ -47,11 +55,11 @@
+         Validator $optionalValidator = null
+     ) {
+         if (! $optionalController) {
+-            $controllerClassName = EcommerceConfig::get('OrderStatusLogForm', 'controller_class');
++            $controllerClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'controller_class');
+             $optionalController = new $controllerClassName();
+         }
+         if (! $optionalValidator) {
+-            $validatorClassName = EcommerceConfig::get('OrderStatusLogForm', 'validator_class');
++            $validatorClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'validator_class');
+             $optionalValidator = new $validatorClassName();
+         }
+         parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
+
+Warnings for src/Forms/OrderStatusLogForm.php:
+ - src/Forms/OrderStatusLogForm.php:51 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 51
+
+ - src/Forms/OrderStatusLogForm.php:55 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 55
+
+modified:	src/Forms/OrderModifierForm.php
+@@ -2,13 +2,22 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use Controller;
+-use FieldList;
+-use Validator;
+-use EcommerceConfig;
+-use Requirements;
+-use ShoppingCart;
++
++
++
++
++
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\Validator;
++use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\View\Requirements;
++use SilverStripe\Forms\Form;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++
+
+
+ /**
+@@ -45,11 +54,11 @@
+         Validator $optionalValidator = null
+     ) {
+         if (! $optionalController) {
+-            $controllerClassName = EcommerceConfig::get('OrderModifierForm', 'controller_class');
++            $controllerClassName = EcommerceConfig::get(OrderModifierForm::class, 'controller_class');
+             $optionalController = new $controllerClassName();
+         }
+         if (! $optionalValidator) {
+-            $validatorClassName = EcommerceConfig::get('OrderModifierForm', 'validator_class');
++            $validatorClassName = EcommerceConfig::get(OrderModifierForm::class, 'validator_class');
+             $optionalValidator = new $validatorClassName();
+         }
+         parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
+
+Warnings for src/Forms/OrderModifierForm.php:
+ - src/Forms/OrderModifierForm.php:49 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 49
+
+ - src/Forms/OrderModifierForm.php:53 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 53
+
+modified:	src/Forms/ProductSearchForm.php
+@@ -2,26 +2,49 @@
+
+ namespace Sunnysideup\Ecommerce\Forms;
+
+-use Form;
+-use DataList;
+-use FieldList;
+-use TextField;
+-use FormAction;
+-use Config;
+-use NumericField;
+-use CheckboxField;
+-use Director;
+-use Permission;
+-use ProductSearchFormValidator;
+-use EcommerceConfig;
+-use Injector;
+-use EcommerceDBConfig;
+-use Controller;
+-use Convert;
+-use SearchHistory;
+-use ProductGroup;
+-use DataObject;
+-use SearchReplacement;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\ORM\DataList;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\FormAction;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Control\Director;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\Control\Controller;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
++use SilverStripe\Forms\Form;
++
+
+
+ /**
+@@ -204,7 +227,7 @@
+             );
+             $shortKeywordField->setAttribute('placeholder', _t('ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER', 'search products ...'));
+         } else {
+-            if (Config::inst()->get('ProductSearchForm', 'include_price_filters')) {
++            if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
+                 $fields = FieldList::create(
+                     $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords')),
+
+@@ -294,7 +317,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
++        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+         if ($oldData && (is_array($oldData) || is_object($oldData))) {
+             if (isset($oldData['ShortKeyword'])) {
+                 $string = $oldData['ShortKeyword'];
+@@ -319,7 +342,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
++        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+         if ($oldData && (is_array($oldData) || is_object($oldData))) {
+             $oldData['ShortKeyword'] = $phrase;
+             $oldData['Keyword'] = $phrase;
+@@ -333,7 +356,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'), $phrase);
++        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'), $phrase);
+     }
+
+     public function setControllerSearchResultDisplayMethod($s)
+@@ -381,7 +404,7 @@
+         $searchHistoryObject = null;
+         $immediateRedirectLink = '';
+         if (! $this->maximumNumberOfResults) {
+-            $this->maximumNumberOfResults = EcommerceConfig::get('ProductGroupSearchPage', 'maximum_number_of_products_to_list_for_search');
++            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
+         }
+         if (isset($data['DebugSearch'])) {
+             $this->debug = $data['DebugSearch'] ? true : false;
+@@ -393,7 +416,7 @@
+         //what is the baseclass?
+         $baseClassName = $this->baseClassForBuyables;
+         if (! $baseClassName) {
+-            $baseClassName = EcommerceConfig::get('ProductGroup', 'base_buyable_class');
++            $baseClassName = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+         }
+         if (! $baseClassName) {
+             user_error("Can not find ${baseClassName} (baseClassName)");
+@@ -575,7 +598,7 @@
+         $redirectToPage = null;
+         //if no specific section is being searched then we redirect to search page:
+         if (! $limitToCurrentSection) {
+-            $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
++            $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
+         }
+         if (! $redirectToPage) {
+             // for section specific search,
+
+Warnings for src/Forms/ProductSearchForm.php:
+ - src/Forms/ProductSearchForm.php:404 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 404
+
+ - src/Forms/ProductSearchForm.php:502 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 502
+
+modified:	src/Cms/Dev/EcommerceDevelopmentAdminDecorator.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Cms\Dev;
+
+-use Extension;
+-use SS_HTTPRequest;
++
++
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Core\Extension;
++
+
+
+
+@@ -29,7 +32,7 @@
+      *
+      * @return HTML
+      **/
+-    public function ecommerce(SS_HTTPRequest $request)
++    public function ecommerce(HTTPRequest $request)
+     {
+         return EcommerceDatabaseAdmin::create();
+     }
+
+modified:	src/Cms/Dev/EcommerceDatabaseAdmin.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Cms\Dev;
+
+-use TaskRunner;
+-use Director;
+-use Controller;
+-use ArrayList;
+-use ArrayData;
+-use BuildTask;
+-use DB;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCleanupProducts;
++use SilverStripe\Control\Director;
++use SilverStripe\Control\Controller;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\View\ArrayData;
++use SilverStripe\Dev\BuildTask;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\TaskRunner;
++
+
+
+
+@@ -84,7 +94,7 @@
+         'ecommercetaskprocessorderqueue',
+         'ecommercetaskarchiveallsubmittedorders',
+         'ecommercetasklinkorderaddressesatbothends',
+-        'EcommerceTaskCleanupProducts',
++        EcommerceTaskCleanupProducts::class,
+     ];
+
+     //##############################
+@@ -190,7 +200,7 @@
+      */
+     public function OverallConfig()
+     {
+-        return $this->createMenuDOSFromArray($this->overallconfig, $type = 'Config');
++        return $this->createMenuDOSFromArray($this->overallconfig, $type = Config::class);
+     }
+
+     /**
+@@ -285,7 +295,7 @@
+         $renderer->writeHeader();
+         $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
+         $renderer->writePreOutcome();
+-        if (class_exists($taskName) && is_subclass_of($taskName, 'BuildTask')) {
++        if (class_exists($taskName) && is_subclass_of($taskName, BuildTask::class)) {
+             $title = singleton($taskName)->getTitle();
+             if (Director::is_cli()) {
+                 echo "Running task '${title}'...\n\n";
+
+Warnings for src/Cms/Dev/EcommerceDatabaseAdmin.php:
+ - src/Cms/Dev/EcommerceDatabaseAdmin.php:296 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 296
+
+ - src/Cms/Dev/EcommerceDatabaseAdmin.php:337 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 337
+
+modified:	src/Cms/Dev/EcommerceDatabaseAdminDebugView.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Cms\Dev;
+
+-use DebugView;
+-use Controller;
++
++
++use SilverStripe\Control\Controller;
++use SilverStripe\Dev\DebugView;
++
+
+
+ class EcommerceDatabaseAdminDebugView extends DebugView
+
+modified:	src/Cms/SalesAdmin.php
+@@ -2,15 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use Requirements;
+-use Injector;
+-use OrderStep;
+-use DataList;
+-use GridField;
+-use GridFieldExportSalesButton;
+-use GridFieldPrintAllInvoicesButton;
+-use GridFieldPrintAllPackingSlipsButton;
+-use GridFieldPrintInvoiceButton;
++
++
++
++
++
++
++
++
++
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\ORM\DataList;
++use SilverStripe\Forms\GridField\GridField;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
++
+
+
+
+@@ -82,9 +94,9 @@
+     public function getManagedModels()
+     {
+         $models = parent::getManagedModels();
+-        $orderModelManagement = isset($models['Order']) ? $models['Order'] : null;
++        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
+         if ($orderModelManagement) {
+-            unset($models['Order']);
++            unset($models[Order::class]);
+
+             return ['Order' => $orderModelManagement] + $models;
+         }
+@@ -98,8 +110,8 @@
+     public function getList()
+     {
+         $list = parent::getList();
+-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
+-            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
++            $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+             $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
+             $list = $list
+                 ->filter(
+@@ -136,7 +148,7 @@
+     public function getEditForm($id = null, $fields = null)
+     {
+         $form = parent::getEditForm($id, $fields);
+-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
++        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                 if ($gridField instanceof GridField) {
+                     $config = $gridField->getConfig();
+
+modified:	src/Cms/ProductsAndGroupsModelAdmin.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use GridField;
+-use GridFieldEditOriginalPageConfig;
+-use GridFieldExportButton;
++
++
++
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\Forms\GridField\GridField;
++use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfig;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++
+
+
+
+@@ -38,7 +43,7 @@
+     public function getEditForm($id = null, $fields = null)
+     {
+         $form = parent::getEditForm();
+-        if (is_subclass_of($this->modelClass, 'SiteTree') || $this->modelClass === 'SiteTree') {
++        if (is_subclass_of($this->modelClass, SiteTree::class) || $this->modelClass === SiteTree::class) {
+             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                 if ($gridField instanceof GridField) {
+                     $config = GridFieldEditOriginalPageConfig::create();
+
+modified:	src/Cms/CMSPageAddControllerProducts.php
+@@ -2,9 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use CMSPageAddController;
+-use ArrayList;
+-use ClassInfo;
++
++
++
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
++use SilverStripe\ORM\ArrayList;
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\Core\ClassInfo;
++use SilverStripe\CMS\Controllers\CMSPageAddController;
++
+
+
+
+@@ -31,11 +39,11 @@
+      *
+      * @var string
+      */
+-    private static $root_parent_class_for_adding_page = 'ProductGroupSearchPage';
++    private static $root_parent_class_for_adding_page = ProductGroupSearchPage::class;
+
+     public function doCancel($data, $form)
+     {
+-        return $this->redirect(singleton('ProductsAndGroupsModelAdmin')->Link());
++        return $this->redirect(singleton(ProductsAndGroupsModelAdmin::class)->Link());
+     }
+
+     /**
+@@ -54,7 +62,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Product');
++        $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class);
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -64,7 +72,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup');
++        $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class);
+
+         $acceptedClasses1 = ClassInfo::subclassesFor($productClass);
+         $acceptedClasses1[$productClass] = $productClass;
+
+modified:	src/Cms/ModelAdminEcommerceBaseClass.php
+@@ -2,12 +2,20 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use ModelAdmin;
+-use Config;
+-use LeftAndMain;
+-use HiddenField;
+-use LiteralField;
+-use Injector;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Admin\LeftAndMain;
++use SilverStripe\Forms\HiddenField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Core\Injector\Injector;
++use SilverStripe\Admin\ModelAdmin;
++
+
+
+ /**
+@@ -47,7 +55,7 @@
+   * EXP: Check if the class name can still be used as such
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if ($this->ClassName === 'ModelAdminEcommerceBaseClass') {
++        if ($this->ClassName === ModelAdminEcommerceBaseClass::class) {
+             //never used
+             return ['NothingGoesHere' => ['title' => 'All Orders']];
+         }
+@@ -61,7 +69,7 @@
+      */
+     public function oneItemForm($record)
+     {
+-        Config::modify()->update('LeftAndMain', 'tree_class', $record->ClassName);
++        Config::modify()->update(LeftAndMain::class, 'tree_class', $record->ClassName);
+         $form = LeftAndMain::getEditForm($record);
+         $idField = HiddenField::create('ID')->setValue($record->ID);
+         $cssField = LiteralField::create(
+
+modified:	src/Cms/SalesAdminExtras.php
+@@ -2,14 +2,25 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use Requirements;
+-use EcommerceConfig;
+-use DataList;
+-use GridField;
+-use GridFieldExportSalesButton;
+-use GridFieldPrintAllInvoicesButton;
+-use GridFieldPrintAllPackingSlipsButton;
+-use GridFieldPrintInvoiceButton;
++
++
++
++
++
++
++
++
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DataList;
++use SilverStripe\Forms\GridField\GridField;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
++use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
++
+
+
+
+@@ -71,9 +82,9 @@
+     public function getManagedModels()
+     {
+         $models = parent::getManagedModels();
+-        $orderModelManagement = isset($models['Order']) ? $models['Order'] : null;
++        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
+         if ($orderModelManagement) {
+-            unset($models['Order']);
++            unset($models[Order::class]);
+
+             return ['Order' => $orderModelManagement] + $models;
+         }
+@@ -87,10 +98,10 @@
+     public function getList()
+     {
+         $list = parent::getList();
+-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
+-            $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
++            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+             $list = $list
+-                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
++                ->LeftJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                 ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
+                 ->where('"OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\'');
+         }
+@@ -109,7 +120,7 @@
+     public function getEditForm($id = null, $fields = null)
+     {
+         $form = parent::getEditForm($id, $fields);
+-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
++        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                 if ($gridField instanceof GridField) {
+                     $config = $gridField->getConfig();
+
+modified:	src/Cms/ProductConfigModelAdmin.php
+@@ -2,7 +2,10 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use EcommerceSearchHistoryFormField;
++
++use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
++
+
+
+
+@@ -34,7 +37,7 @@
+     public function getEditForm($id = null, $fields = null)
+     {
+         $form = parent::getEditForm();
+-        if ($this->modelClass === 'SearchHistory') {
++        if ($this->modelClass === SearchHistory::class) {
+             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                 $form->Fields()->replaceField(
+                     $gridField->getName(),
+
+modified:	src/Cms/ProductBulkLoader.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use CsvBulkLoader;
++
++use SilverStripe\Dev\CsvBulkLoader;
++
+
+
+ class ProductBulkLoader extends CsvBulkLoader{
+
+modified:	src/Cms/StoreAdmin.php
+@@ -2,8 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Cms;
+
+-use DataObject;
+-use GridField;
++
++
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Forms\GridField\GridFieldPrintButton;
++
+
+
+
+@@ -65,9 +71,9 @@
+     public function getManagedModels()
+     {
+         $models = parent::getManagedModels();
+-        $ecommerceDBConfig = isset($models['EcommerceDBConfig']) ? $models['EcommerceDBConfig'] : null;
++        $ecommerceDBConfig = isset($models[EcommerceDBConfig::class]) ? $models[EcommerceDBConfig::class] : null;
+         if ($ecommerceDBConfig) {
+-            unset($models['EcommerceDBConfig']);
++            unset($models[EcommerceDBConfig::class]);
+
+             return ['EcommerceDBConfig' => $ecommerceDBConfig] + $models;
+         }
+@@ -78,16 +84,16 @@
+     public function getEditForm($id = null, $fields = null)
+     {
+         $form = parent::getEditForm($id, $fields);
+-        if ($this->modelClass === 'EcommerceDBConfig' || is_subclass_of($this->modelClass, 'EcommerceDBConfig')) {
+-            $record = DataObject::get_one('EcommerceDBConfig');
++        if ($this->modelClass === EcommerceDBConfig::class || is_subclass_of($this->modelClass, EcommerceDBConfig::class)) {
++            $record = DataObject::get_one(EcommerceDBConfig::class);
+             if ($record && $record->exists()) {
+                 return $this->oneItemForm($record);
+             }
+             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+                 if ($gridField instanceof GridField) {
+                     $config = $gridField->getConfig();
+-                    $config->removeComponentsByType('GridFieldExportButton');
+-                    $config->removeComponentsByType('GridFieldPrintButton');
++                    $config->removeComponentsByType(GridFieldExportButton::class);
++                    $config->removeComponentsByType(GridFieldPrintButton::class);
+                 }
+             }
+         }
+
+modified:	src/Money/EcommerceMoney.php
+@@ -2,10 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Money;
+
+-use Extension;
++
+ use Money;
+ use Zend_Currency;
+-use EcommerceConfig;
++
++use Sunnysideup\Ecommerce\Money\EcommerceMoney;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Core\Extension;
++
+
+
+
+@@ -157,7 +161,7 @@
+      */
+     public function NiceDefaultFormat($html = true)
+     {
+-        $function = EcommerceConfig::get('EcommerceMoney', 'default_format');
++        $function = EcommerceConfig::get(EcommerceMoney::class, 'default_format');
+
+         return $this->owner->{$function}($html);
+     }
+
+modified:	src/Money/EcommercePaymentSupportedMethodsProvider.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Money;
+
+-use ViewableData;
+-use EcommercePaymentSupportedMethodsProviderInterface;
+-use Director;
+-use EcommerceConfig;
+-use ArrayLib;
+-use Order;
+-use ShoppingCart;
++
++
++
++
++
++
++
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\ArrayLib;
++use Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\View\ViewableData;
++use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
++
+
+
+ /**
+@@ -52,12 +62,12 @@
+         if (Director::isLive()) {
+             $hideTestPaymentMethods = true;
+         }
+-        $supportedMethods = EcommerceConfig::get('EcommercePayment', 'supported_methods');
++        $supportedMethods = EcommerceConfig::get(EcommercePayment::class, 'supported_methods');
+         if (count($supportedMethods)) {
+             if (ArrayLib::is_associative($supportedMethods)) {
+                 if ($hideTestPaymentMethods) {
+                     foreach (array_keys($supportedMethods) as $methodClass) {
+-                        if (is_subclass_of($methodClass, 'EcommercePaymentTest')) {
++                        if (is_subclass_of($methodClass, EcommercePaymentTest::class)) {
+                             unset($supportedMethods[$methodClass]);
+                         }
+                     }
+
+modified:	src/Money/Payment/EcommercePaymentResult.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Money\Payment;
+
+-use ViewableData;
++
++use SilverStripe\View\ViewableData;
++
+
+
+
+
+modified:	src/Money/Payment/PaymentResults/EcommercePaymentProcessing.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Money\Payment\PaymentResults;
+
+-use EcommercePaymentResult;
++
++use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
++
+
+
+ class EcommercePaymentProcessing extends EcommercePaymentResult
+
+modified:	src/Money/Payment/PaymentResults/EcommercePaymentSuccess.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Money\Payment\PaymentResults;
+
+-use EcommercePaymentResult;
++
++use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
++
+
+
+ class EcommercePaymentSuccess extends EcommercePaymentResult
+
+modified:	src/Money/Payment/PaymentResults/EcommercePaymentFailure.php
+@@ -2,7 +2,9 @@
+
+ namespace Sunnysideup\Ecommerce\Money\Payment\PaymentResults;
+
+-use EcommercePaymentResult;
++
++use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
++
+
+
+ class EcommercePaymentFailure extends EcommercePaymentResult
+
+modified:	src/Money/ExchangeRateProvider.php
+@@ -23,22 +23,42 @@
+  * @sub-package: money
+  **/
+
+-class ExchangeRateProvider extends Object
++use SilverStripe\Core\Extensible;
++use SilverStripe\Core\Injector\Injectable;
++use SilverStripe\Core\Config\Configurable;
++/***
++ * the sole purpose of this class is to provide an exchange rate
++ * from currency 1 to currency 2.
++ * It can provide number that reads as follows:
++ *
++ * If I exchange 1 USD I will get EUR 0.8
++ * This is the exchange rate.
++ *
++ * So, how many do I get of the "to" currency
++ * when I have one "from" currency.
++ *
++ *
++ * @authors: Nicolaas [at] Sunny Side Up .co.nz
++ * @package: ecommerce
++ * @sub-package: money
++ **/
++class ExchangeRateProvider
+ {
++    use Extensible;
++    use Injectable;
++    use Configurable;
+     /**
+      * adds a bit of additional cost to account for the exchange cost.
+      *
+      * @var floatval
+      */
+     protected $exchangeCostMultiplier = 1.05;
+-
+     /**
+      * cache of exchange rates.
+      *
+      * @var array
+      */
+-    private static $_memory_cache = [];
+-
++    private static $_memory_cache = array();
+     /**
+      * Get the exchange rate.
+      *
+@@ -56,35 +76,31 @@
+         if (isset(self::$_memory_cache[$cacheCode])) {
+             return self::$_memory_cache[$cacheCode];
+         }
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        /**
++         * ### @@@@ START REPLACEMENT @@@@ ###
++         * WHY: automated upgrade
++         * OLD: Session:: (case sensitive)
++         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++         * ### @@@@ STOP REPLACEMENT @@@@ ###
++         */
+         if ($value = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($cacheCode)) {
+             self::$_memory_cache[$cacheCode] = $value;
+         } else {
+             $value = $this->getRate($fromCode, $toCode);
+             self::$_memory_cache[$cacheCode] = $value;
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: Session:: (case sensitive)
+-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: Session:: (case sensitive)
++             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
++             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($cacheCode, $value);
+         }
+-
+         return self::$_memory_cache[$cacheCode];
+     }
+-
+     /**
+      * gets a rate from a FROM and a TO currency.
+      * see https://free.currencyconverterapi.com/ for limitations
+@@ -99,38 +115,36 @@
+         $rate = 0;
+         $reference = $fromCode . '_' . $toCode;
+         $url = 'http://free.currencyconverterapi.com/api/v5/convert?q=' . $reference . '&compact=y';
+-        if (($ch = @curl_init())) {
+-            $timeout = 5; // set to zero for no timeout
+-            curl_setopt($ch, CURLOPT_URL, "${url}");
++        if ($ch = @curl_init()) {
++            $timeout = 5;
++            // set to zero for no timeout
++            curl_setopt($ch, CURLOPT_URL, "{$url}");
+             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+             $record = curl_exec($ch);
+             curl_close($ch);
+         }
+-        if (! $record) {
+-
+-/**
+-  * ### @@@@ START REPLACEMENT @@@@ ###
+-  * WHY: automated upgrade
+-  * OLD: file_get_contents (case sensitive)
+-  * NEW: file_get_contents (COMPLEX)
+-  * EXP: Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage
+-  * ### @@@@ STOP REPLACEMENT @@@@ ###
+-  */
++        if (!$record) {
++            /**
++             * ### @@@@ START REPLACEMENT @@@@ ###
++             * WHY: automated upgrade
++             * OLD: file_get_contents (case sensitive)
++             * NEW: file_get_contents (COMPLEX)
++             * EXP: Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage
++             * ### @@@@ STOP REPLACEMENT @@@@ ###
++             */
+             $record = file_get_contents($url);
+         }
+-
+         if ($record) {
+             $currencyData = json_decode($record);
+             $rate = $currencyData->{$reference}->val;
+-            if (! $rate) {
++            if (!$rate) {
+                 user_error('There was a problem retrieving the exchange rate.');
+             }
+         }
+         if ($rate !== 1) {
+             $rate *= $this->exchangeCostMultiplier;
+         }
+-
+         return $rate;
+     }
+ }
+
+modified:	src/Tasks/EcommerceTaskCountryAndRegionDisallowAllCountries.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceCountry;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+
+modified:	src/Tasks/EcommerceTaskAPIandMore.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Director;
++
++
++use SilverStripe\Control\Director;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskTemplateTest.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskSetOrderIDStartingNumber.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceConfig;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -25,7 +30,7 @@
+     {
+
+         //set starting order number ID
+-        $number = EcommerceConfig::get('Order', 'order_id_start_number');
++        $number = EcommerceConfig::get(Order::class, 'order_id_start_number');
+         $currentMax = 0;
+         //set order ID
+         if ($number) {
+
+modified:	src/Tasks/EcommerceTaskAddDefaultProducts.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Product;
+-use ProductGroup;
+-use DB;
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+
+modified:	src/Tasks/EcommerceTaskCreateMemberGroups.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Injector;
++
++
+ use db;
+-use EcommerceConfig;
++
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -28,10 +33,10 @@
+         $permissionProviderFactory = Injector::inst()->get('PermissionProviderFactory');
+         db::alteration_message('========================== <br />creating customer group', 'created');
+         $permissionProviderFactory->CreateGroup(
+-            $code = EcommerceConfig::get('EcommerceRole', 'customer_group_code'),
+-            $name = EcommerceConfig::get('EcommerceRole', 'customer_group_name'),
++            $code = EcommerceConfig::get(EcommerceRole::class, 'customer_group_code'),
++            $name = EcommerceConfig::get(EcommerceRole::class, 'customer_group_name'),
+             $parentGroup = null,
+-            $permissionCode = EcommerceConfig::get('EcommerceRole', 'customer_permission_code'),
++            $permissionCode = EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code'),
+             $roleTitle = '',
+             $permissionArray = [],
+             $member = null
+@@ -39,15 +44,15 @@
+
+         db::alteration_message('========================== <br />creating sales manager', 'created');
+         //work out email
+-        $email = EcommerceConfig::get('EcommerceRole', 'admin_group_user_email');
++        $email = EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email');
+         if (! $email) {
+             $email = 'websales@' . $_SERVER['HTTP_HOST'];
+         }
+-        $firstName = EcommerceConfig::get('EcommerceRole', 'admin_group_user_first_name');
++        $firstName = EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name');
+         if (! $firstName) {
+             $firstName = 'Web';
+         }
+-        $surname = EcommerceConfig::get('EcommerceRole', 'admin_group_user_surname');
++        $surname = EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname');
+         if (! $surname) {
+             $surname = 'Sales';
+         }
+@@ -60,25 +65,25 @@
+         db::alteration_message('================================<br />creating shop admin group ', 'created');
+
+         $permissionProviderFactory->CreateGroup(
+-            $code = EcommerceConfig::get('EcommerceRole', 'admin_group_code'),
+-            $name = EcommerceConfig::get('EcommerceRole', 'admin_group_name'),
++            $code = EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'),
++            $name = EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'),
+             $parentGroup = null,
+-            $permissionCode = EcommerceConfig::get('EcommerceRole', 'admin_permission_code'),
+-            $roleTitle = EcommerceConfig::get('EcommerceRole', 'admin_role_title'),
+-            $permissionArray = EcommerceConfig::get('EcommerceRole', 'admin_role_permission_codes'),
++            $permissionCode = EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'),
++            $roleTitle = EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'),
++            $permissionArray = EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'),
+             $member
+         );
+
+         //work out email
+-        $email = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_email');
++        $email = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_user_email');
+         if (! $email) {
+             $email = 'assistant@' . $_SERVER['HTTP_HOST'];
+         }
+-        $firstName = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_first_name');
++        $firstName = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_user_first_name');
+         if (! $firstName) {
+             $firstName = 'Web';
+         }
+-        $surname = EcommerceConfig::get('EcommerceRole', 'assistant_group_user_surname');
++        $surname = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_user_surname');
+         if (! $surname) {
+             $surname = 'Asssistant';
+         }
+@@ -91,12 +96,12 @@
+         db::alteration_message('================================<br />creating shop assistant group ', 'created');
+
+         $permissionProviderFactory->CreateGroup(
+-            $code = EcommerceConfig::get('EcommerceRole', 'assistant_group_code'),
+-            $name = EcommerceConfig::get('EcommerceRole', 'assistant_group_name'),
++            $code = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code'),
++            $name = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_name'),
+             $parentGroup = null,
+-            $permissionCode = EcommerceConfig::get('EcommerceRole', 'assistant_permission_code'),
+-            $roleTitle = EcommerceConfig::get('EcommerceRole', 'assistant_role_title'),
+-            $permissionArray = EcommerceConfig::get('EcommerceRole', 'assistant_role_permission_codes'),
++            $permissionCode = EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'),
++            $roleTitle = EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'),
++            $permissionArray = EcommerceConfig::get(EcommerceRole::class, 'assistant_role_permission_codes'),
+             $member
+         );
+     }
+
+modified:	src/Tasks/EcommerceTaskBuildingModel.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskLinkProductsWithImages.php
+@@ -2,12 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Product;
+-use File;
+-use DB;
+-use Controller;
+-use Director;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Assets\File;
++use SilverStripe\Assets\Image;
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use SilverStripe\ORM\DB;
++use SilverStripe\Control\Controller;
++use SilverStripe\Control\Director;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -101,8 +110,8 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image')) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductImage')) {
+-                                        $image = $image->newClassInstance('ProductImage');
++                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class)) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class)) {
++                                        $image = $image->newClassInstance(ProductImage::class);
+                                         $image->write();
+                                     }
+                                     $collection->add($image);
+
+Warnings for src/Tasks/EcommerceTaskLinkProductsWithImages.php:
+ - src/Tasks/EcommerceTaskLinkProductsWithImages.php:104 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+modified:	src/Tasks/EcommerceTaskOrdersWithoutOrderStep.php
+@@ -2,12 +2,20 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
+-use EcommerceConfig;
+-use DataObject;
+-use OrderStep;
+-use Order;
++
++
++
++
++
++
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -39,7 +47,7 @@
+         if (! $doCancel) {
+             DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
+         }
+-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+         if ($submittedOrderStatusLogClassName) {
+             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
+             if ($submittedStatusLog) {
+@@ -47,7 +55,7 @@
+                 $orders = Order::get()
+                     ->where('StatusID NOT IN (' . implode(',', $orderStepsIDArray) . ')')
+                     ->innerJoin(
+-                        'OrderStatusLog',
++                        OrderStatusLog::class,
+                         '"OrderStatusLog"."OrderID" = "Order"."ID"'
+                     )
+                     ->innerJoin(
+
+modified:	src/Tasks/EcommerceTaskCartManipulationDebug.php
+@@ -2,9 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DataObject;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -25,8 +31,8 @@
+
+     public function run($request)
+     {
+-        $myProductGroup = DataObject::get_one('ProductGroup');
+-        $myProduct = DataObject::get_one('Product');
++        $myProductGroup = DataObject::get_one(ProductGroup::class);
++        $myProduct = DataObject::get_one(Product::class);
+         $html = '
+         Please use the links below:
+         <ul>
+
+modified:	src/Tasks/EcommerceTaskProductVariationsFixes.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Versioned;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Versioned\Versioned;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -25,7 +30,7 @@
+     {
+         $stagingArray = ['Live', 'Stage'];
+         foreach ($stagingArray as $stage) {
+-            $products = Versioned::get_by_stage('Product', $stage);
++            $products = Versioned::get_by_stage(Product::class, $stage);
+             $count = 0;
+             if ($products) {
+                 foreach ($products as $product) {
+
+modified:	src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php
+@@ -2,11 +2,20 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DataObject;
+-use DB;
+-use Order;
+-use EcommerceConfig;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -29,14 +38,14 @@
+         This task is basically for orders that never got archived.
+     ";
+
+-    private static $payment_table = 'EcommercePayment';
++    private static $payment_table = EcommercePayment::class;
+
+     public function run($request)
+     {
+         set_time_limit(1200);
+         //IMPORTANT!
+         $lastOrderStep = DataObject::get_one(
+-            'OrderStep',
++            OrderStep::class,
+             '',
+             $cache = true,
+             ['Sort' => 'DESC']
+@@ -83,12 +92,12 @@
+     protected function createSubmissionLogForArchivedOrders()
+     {
+         $lastOrderStep = DataObject::get_one(
+-            'OrderStep',
++            OrderStep::class,
+             '',
+             $cache = true,
+             ['Sort' => 'DESC']
+         );
+-        $submissionLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        $submissionLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+         $obj = $submissionLogClassName::create();
+
+ /**
+@@ -99,10 +108,10 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (! is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderStatusLog'))) {
++        if (! is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
+             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
+         }
+-        $orderStatusLogClassName = 'OrderStatusLog';
++        $orderStatusLogClassName = OrderStatusLog::class;
+         $offset = 0;
+         $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
+         while ($orders->count()) {
+
+Warnings for src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:
+ - src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:92 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 92
+
+ - src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:110 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 110
+
+ - src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:114 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 114
+
+modified:	src/Tasks/EcommerceTaskAddCustomersToCustomerGroups.php
+@@ -2,10 +2,16 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceRole;
+-use DB;
+-use Member;
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\ORM\DB;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -46,7 +52,7 @@
+                         'ID' => $alreadyAdded,
+                     ]
+                 )
+-                ->innerJoin('Order', '"Order"."MemberID" = "Member"."ID"');
++                ->innerJoin(Order::class, '"Order"."MemberID" = "Member"."ID"');
+             //add combos
+             if ($unlistedMembers->count()) {
+                 $existingMembers = $customerGroup->Members();
+
+modified:	src/Tasks/EcommerceTaskBuildingExtending.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskProductImageReset.php
+@@ -2,9 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
+-use ProductImage;
++
++
++
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -23,7 +29,7 @@
+
+     public function run($request)
+     {
+-        $tables = ['ProductGroup', 'ProductGroup_Live', 'Product', 'Product_Live'];
++        $tables = [ProductGroup::class, 'ProductGroup_Live', Product::class, 'Product_Live'];
+         if (class_exists('ProductVariation')) {
+             $tables[] = 'ProductVariation';
+         }
+@@ -78,9 +84,9 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                    } elseif (! is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductImage'))) {
++                    } elseif (! is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class))) {
+                         ++$updateClassCount;
+-                        $image = $image->newClassInstance('ProductImage');
++                        $image = $image->newClassInstance(ProductImage::class);
+                         $image - write();
+                     }
+                 }
+
+modified:	src/Tasks/EcommerceTaskArchiveAllSubmittedOrders.php
+@@ -2,13 +2,23 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Config;
+-use Email;
+-use EcommerceDummyMailer;
+-use EcommerceConfig;
+-use DataObject;
+-use DB;
++
++
++
++
++
++
++
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -31,17 +41,17 @@
+     public function run($request)
+     {
+         //IMPORTANT!
+-        Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
++        Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
+         Email::set_mailer(new EcommerceDummyMailer());
+-        $orderStatusLogClassName = 'OrderStatusLog';
+-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        $orderStatusLogClassName = OrderStatusLog::class;
++        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+         if ($submittedOrderStatusLogClassName) {
+             $sampleSubmittedStatusLog = DataObject::get_one(
+                 $submittedOrderStatusLogClassName
+             );
+             if ($sampleSubmittedStatusLog) {
+                 $lastOrderStep = DataObject::get_one(
+-                    'OrderStep',
++                    OrderStep::class,
+                     '',
+                     $cache = true,
+                     ['Sort' => 'DESC']
+
+modified:	src/Tasks/EcommerceTaskCartCleanup.php
+@@ -2,12 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Permission;
+-use DB;
+-use EcommerceConfig;
+-use OrderStep;
+-use Order;
++
++
++
++
++
++
++use SilverStripe\Security\Permission;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -72,8 +81,8 @@
+             DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = ${countAll})</h2>.");
+         }
+
+-        $neverDeleteIfLinkedToMember = EcommerceConfig::get('EcommerceTaskCartCleanup', 'never_delete_if_linked_to_member');
+-        $maximumNumberOfObjectsDeleted = EcommerceConfig::get('EcommerceTaskCartCleanup', 'maximum_number_of_objects_deleted');
++        $neverDeleteIfLinkedToMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'never_delete_if_linked_to_member');
++        $maximumNumberOfObjectsDeleted = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'maximum_number_of_objects_deleted');
+
+         //LIMITS ...
+         if ($request) {
+@@ -91,7 +100,7 @@
+         $joinShort = '"Member"."ID" = "Order"."MemberID"';
+
+         //ABANDONNED CARTS
+-        $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes');
++        $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
+         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
+         $time = strtotime('-' . $clearMinutes . ' minutes');
+         $where = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < ${time} ";
+@@ -110,7 +119,7 @@
+             ->where($where . $withoutMemberWhere)
+             ->sort($sort)
+             ->limit($maximumNumberOfObjectsDeleted);
+-        $oldCarts = $oldCarts->leftJoin('Member', $joinShort);
++        $oldCarts = $oldCarts->leftJoin(Member::class, $joinShort);
+         if ($oldCarts->count()) {
+             $count = 0;
+             if ($this->verbose) {
+@@ -171,14 +180,14 @@
+         }
+
+         //EMPTY ORDERS
+-        $clearMinutes = EcommerceConfig::get('EcommerceTaskCartCleanup', 'clear_minutes_empty_carts');
++        $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_empty_carts');
+         $time = strtotime('-' . $clearMinutes . ' minutes');
+         $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < ${time} ";
+         $oldCarts = Order::get()
+             ->where($where)
+             ->sort($sort)
+             ->limit($maximumNumberOfObjectsDeleted);
+-        $oldCarts = $oldCarts->leftJoin('Member', $joinShort);
++        $oldCarts = $oldCarts->leftJoin(Member::class, $joinShort);
+         if ($oldCarts->count()) {
+             $count = 0;
+             if ($this->verbose) {
+@@ -238,9 +247,9 @@
+             );
+         }
+
+-        $oneToMany = EcommerceConfig::get('EcommerceTaskCartCleanup', 'one_to_many_classes');
+-        $oneToOne = EcommerceConfig::get('EcommerceTaskCartCleanup', 'one_to_one_classes');
+-        $manyToMany = EcommerceConfig::get('EcommerceTaskCartCleanup', 'many_to_many_classes');
++        $oneToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_many_classes');
++        $oneToOne = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_one_classes');
++        $manyToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'many_to_many_classes');
+         if (! is_array($oneToOne)) {
+             $oneToOne = [];
+         }
+
+Warnings for src/Tasks/EcommerceTaskCartCleanup.php:
+ - src/Tasks/EcommerceTaskCartCleanup.php:311 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 311
+
+ - src/Tasks/EcommerceTaskCartCleanup.php:375 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 375
+
+modified:	src/Tasks/EcommerceTaskTryToFinaliseOrders.php
+@@ -2,18 +2,33 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Config;
+-use Email;
+-use EcommerceDummyMailer;
+-use Injector;
+-use EcommerceConfig;
+-use DataObject;
+-use OrderStep;
+-use Order;
+-use DB;
++
++
++
++
++
++
++
++
++
++
+ use Exception;
+-use Director;
++
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskTryToFinaliseOrders;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\ORM\DB;
++use SilverStripe\Control\Director;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -45,7 +60,7 @@
+     {
+         //IMPORTANT!
+         if (! $this->sendEmails) {
+-            Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
++            Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
+             Email::set_mailer(new EcommerceDummyMailer());
+         }
+
+@@ -71,18 +86,18 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrders'));
++            $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class));
+             if (! $startAt) {
+                 $startAt = 0;
+             }
+         }
+
+         //we exclude all orders that are in the queue
+-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++        $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+         $ordersinQueue = $queueObjectSingleton->AllOrdersInQueue();
+         //find any other order that may need help ...
+
+-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+         if ($submittedOrderStatusLogClassName) {
+             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
+             if ($submittedStatusLog) {
+@@ -104,7 +119,7 @@
+                         ->where('StatusID <> ' . $lastOrderStep->ID)
+                         ->exclude(['ID' => $ordersInQueueArray])
+                         ->innerJoin(
+-                            'OrderStatusLog',
++                            OrderStatusLog::class,
+                             '"OrderStatusLog"."OrderID" = "Order"."ID"'
+                         )
+                         ->innerJoin(
+@@ -130,7 +145,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrders')) {
++        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class)) {
+             if (! $this->isCli()) {
+                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
+                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
+@@ -154,7 +169,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrders', $startAt);
++                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
+                 $stepBefore = OrderStep::get()->byID($order->StatusID);
+                 try {
+                     $order->tryToFinaliseOrder();
+@@ -188,7 +203,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrders');
++            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear(EcommerceTaskTryToFinaliseOrders::class);
+             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
+         }
+
+
+modified:	src/Tasks/EcommerceTaskCheckConfiguration.php
+@@ -2,24 +2,51 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceConfigDefinitions;
+-use EcommerceConfig;
+-use DB;
+-use OrderStep;
+-use Config;
+-use DataObject;
+-use CheckoutPageStepDescription;
+-use OrderModifierDescriptor;
+-use Director;
++
++
++
++
++
++
++
++
++
++
+ use Spyc;
+-use EcommerceDBConfig;
+-use SiteConfig;
+-use EcommerceCountry;
+-use SiteTree;
+-use ArrayData;
+-use EcommerceConfigAjax;
+-use ClassInfo;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
++use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\Assets\Image;
++use SilverStripe\Control\Email\Email;
++use SilverStripe\SiteConfig\SiteConfig;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\View\ArrayData;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use SilverStripe\Core\ClassInfo;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -193,21 +220,21 @@
+                         }
+                     }
+                 }
+-                $this->definitions['OrderStep'][$step->Code] = $step->Description . '<br />see: <a href="' . $step->CMSEditLink() . '">Step Configuration</a>.';
+-                $this->configs['OrderStep'][$step->Code] = $configArray;
+-                $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
+-                $this->databaseValues['OrderStep'][$step->Code] = true;
++                $this->definitions[OrderStep::class][$step->Code] = $step->Description . '<br />see: <a href="' . $step->CMSEditLink() . '">Step Configuration</a>.';
++                $this->configs[OrderStep::class][$step->Code] = $configArray;
++                $this->defaults[OrderStep::class][$step->Code] = $defaultsArray;
++                $this->databaseValues[OrderStep::class][$step->Code] = true;
+             }
+         }
+     }
+
+     public function checkoutAndModifierDetails()
+     {
+-        $checkoutPage = DataObject::get_one('CheckoutPage');
++        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+         if (! $checkoutPage) {
+             $task = new EcommerceTaskDefaultRecords();
+             $task->run(null);
+-            $checkoutPage = DataObject::get_one('CheckoutPage');
++            $checkoutPage = DataObject::get_one(CheckoutPage::class);
+             if (! $checkoutPage) {
+                 user_error('There is no checkout page available and it seems impossible to create one.');
+             }
+@@ -893,10 +920,10 @@
+             foreach ($fields as $field => $description) {
+                 if ($field !== 'Title' && $field !== 'UseThisOne') {
+                     $defaultsDefaults = $ecommerceDBConfig->stat('defaults');
+-                    $this->definitions['EcommerceDBConfig'][$field] = "${description}. <br />see: <a href=\"" . $ecommerceDBConfig->CMSEditLink() . '">Ecommerce Configuration</a>';
+-                    $this->configs['EcommerceDBConfig'][$field] = $ecommerceDBConfig->{$field};
+-                    $this->databaseValues['EcommerceDBConfig'][$field] = true;
+-                    $this->defaults['EcommerceDBConfig'][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
++                    $this->definitions[EcommerceDBConfig::class][$field] = "${description}. <br />see: <a href=\"" . $ecommerceDBConfig->CMSEditLink() . '">Ecommerce Configuration</a>';
++                    $this->configs[EcommerceDBConfig::class][$field] = $ecommerceDBConfig->{$field};
++                    $this->databaseValues[EcommerceDBConfig::class][$field] = true;
++                    $this->defaults[EcommerceDBConfig::class][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
+                     $imageField = $field . 'ID';
+                     if (isset($ecommerceDBConfig->{$imageField})) {
+                         if ($image = $ecommerceDBConfig->{$field}()) {
+@@ -909,9 +936,9 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                            if ($image->exists() && is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image'))) {
+-                                $this->configs['EcommerceDBConfig'][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
+-                                $this->databaseValues['EcommerceDBConfig'][$field] = true;
++                            if ($image->exists() && is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class))) {
++                                $this->configs[EcommerceDBConfig::class][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
++                                $this->databaseValues[EcommerceDBConfig::class][$field] = true;
+                             }
+                         }
+                     }
+@@ -922,63 +949,63 @@
+
+     protected function addOtherValuesToConfigs()
+     {
+-        $this->definitions['Email']['admin_email_address'] = 'Default administrator email. <br />SET USING Email::$admin_email = "bla@ta.com" in the _config.php FILES';
+-        $this->configs['Email']['admin_email_address'] = Config::inst()->get('Email', 'admin_email');
+-        $this->defaults['Email']['admin_email_address'] = '[no default set]';
+-        $this->otherConfigs['Email']['admin_email_address'] = true;
++        $this->definitions[Email::class]['admin_email_address'] = 'Default administrator email. <br />SET USING Email::$admin_email = "bla@ta.com" in the _config.php FILES';
++        $this->configs[Email::class]['admin_email_address'] = Config::inst()->get(Email::class, 'admin_email');
++        $this->defaults[Email::class]['admin_email_address'] = '[no default set]';
++        $this->otherConfigs[Email::class]['admin_email_address'] = true;
+
+         $siteConfig = SiteConfig::current_site_config();
+-        $this->definitions['SiteConfig']['website_title'] = 'The name of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
+-        $this->configs['SiteConfig']['website_title'] = $siteConfig->Title;
+-        $this->defaults['SiteConfig']['website_title'] = '[no default set]';
+-        $this->otherConfigs['SiteConfig']['website_title'] = true;
+-
+-        $this->definitions['SiteConfig']['website_tagline'] = 'The subtitle or tagline of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
+-        $this->configs['SiteConfig']['website_tagline'] = $siteConfig->Tagline;
+-        $this->defaults['SiteConfig']['website_tagline'] = '[no default set]';
+-        $this->otherConfigs['SiteConfig']['website_tagline'] = true;
++        $this->definitions[SiteConfig::class]['website_title'] = 'The name of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
++        $this->configs[SiteConfig::class]['website_title'] = $siteConfig->Title;
++        $this->defaults[SiteConfig::class]['website_title'] = '[no default set]';
++        $this->otherConfigs[SiteConfig::class]['website_title'] = true;
++
++        $this->definitions[SiteConfig::class]['website_tagline'] = 'The subtitle or tagline of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
++        $this->configs[SiteConfig::class]['website_tagline'] = $siteConfig->Tagline;
++        $this->defaults[SiteConfig::class]['website_tagline'] = '[no default set]';
++        $this->otherConfigs[SiteConfig::class]['website_tagline'] = true;
+     }
+
+     protected function addPages()
+     {
+-        if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
++        if ($checkoutPage = DataObject::get_one(CheckoutPage::class)) {
+             $this->getPageDefinitions($checkoutPage);
+-            $this->definitions['Pages']['CheckoutPage'] = 'Page where customers finalise (checkout) their order. This page is required.<br />' . ($checkoutPage ? '<a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+-            $this->configs['Pages']['CheckoutPage'] = $checkoutPage ? 'view: <a href="' . $checkoutPage->Link() . '">' . $checkoutPage->Title . '</a><br />' . $checkoutPage->configArray : ' NOT CREATED!';
+-            $this->defaults['Pages']['CheckoutPage'] = $checkoutPage ? $checkoutPage->defaultsArray : '[add page first to see defaults]';
+-            $this->databaseValues['Pages']['CheckoutPage'] = true;
+-        }
+-
+-        if ($orderConfirmationPage = DataObject::get_one('OrderConfirmationPage')) {
++            $this->definitions['Pages'][CheckoutPage::class] = 'Page where customers finalise (checkout) their order. This page is required.<br />' . ($checkoutPage ? '<a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
++            $this->configs['Pages'][CheckoutPage::class] = $checkoutPage ? 'view: <a href="' . $checkoutPage->Link() . '">' . $checkoutPage->Title . '</a><br />' . $checkoutPage->configArray : ' NOT CREATED!';
++            $this->defaults['Pages'][CheckoutPage::class] = $checkoutPage ? $checkoutPage->defaultsArray : '[add page first to see defaults]';
++            $this->databaseValues['Pages'][CheckoutPage::class] = true;
++        }
++
++        if ($orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class)) {
+             $this->getPageDefinitions($orderConfirmationPage);
+-            $this->definitions['Pages']['OrderConfirmationPage'] = 'Page where customers review their order after it has been placed. This page is required.<br />' . ($orderConfirmationPage ? '<a href="/admin/pages/edit/show/' . $orderConfirmationPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+-            $this->configs['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? 'view: <a href="' . $orderConfirmationPage->Link() . '">' . $orderConfirmationPage->Title . '</a><br />' . $orderConfirmationPage->configArray : ' NOT CREATED!';
+-            $this->defaults['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : '[add page first to see defaults]';
+-            $this->databaseValues['Pages']['OrderConfirmationPage'] = true;
+-        }
+-
+-        if ($accountPage = DataObject::get_one('AccountPage')) {
++            $this->definitions['Pages'][OrderConfirmationPage::class] = 'Page where customers review their order after it has been placed. This page is required.<br />' . ($orderConfirmationPage ? '<a href="/admin/pages/edit/show/' . $orderConfirmationPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
++            $this->configs['Pages'][OrderConfirmationPage::class] = $orderConfirmationPage ? 'view: <a href="' . $orderConfirmationPage->Link() . '">' . $orderConfirmationPage->Title . '</a><br />' . $orderConfirmationPage->configArray : ' NOT CREATED!';
++            $this->defaults['Pages'][OrderConfirmationPage::class] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : '[add page first to see defaults]';
++            $this->databaseValues['Pages'][OrderConfirmationPage::class] = true;
++        }
++
++        if ($accountPage = DataObject::get_one(AccountPage::class)) {
+             $this->getPageDefinitions($accountPage);
+-            $this->definitions['Pages']['AccountPage'] = 'Page where customers can review their account. This page is required.<br />' . ($accountPage ? '<a href="/admin/pages/edit/show/' . $accountPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+-            $this->configs['Pages']['AccountPage'] = $accountPage ? 'view: <a href="' . $accountPage->Link() . '">' . $accountPage->Title . '</a><br />' . $accountPage->configArray : ' NOT CREATED!';
+-            $this->defaults['Pages']['AccountPage'] = $accountPage ? $accountPage->defaultsArray : '[add page first to see defaults]';
+-            $this->databaseValues['Pages']['AccountPage'] = true;
+-        }
+-
+-        if ($cartPage = DataObject::get_one('CartPage', ['ClassName' => 'CartPage'])
++            $this->definitions['Pages'][AccountPage::class] = 'Page where customers can review their account. This page is required.<br />' . ($accountPage ? '<a href="/admin/pages/edit/show/' . $accountPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
++            $this->configs['Pages'][AccountPage::class] = $accountPage ? 'view: <a href="' . $accountPage->Link() . '">' . $accountPage->Title . '</a><br />' . $accountPage->configArray : ' NOT CREATED!';
++            $this->defaults['Pages'][AccountPage::class] = $accountPage ? $accountPage->defaultsArray : '[add page first to see defaults]';
++            $this->databaseValues['Pages'][AccountPage::class] = true;
++        }
++
++        if ($cartPage = DataObject::get_one(CartPage::class, ['ClassName' => CartPage::class])
+         ) {
+             $this->getPageDefinitions($cartPage);
+-            $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />' . ($cartPage ? '<a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+-            $this->configs['Pages']['CartPage'] = $cartPage ? 'view: <a href="' . $cartPage->Link() . '">' . $cartPage->Title . '</a>, <a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a><br />' . $cartPage->configArray : ' NOT CREATED!';
+-            $this->defaults['Pages']['CartPage'] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
+-            $this->defaults['Pages']['CartPage'] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
+-            $this->databaseValues['Pages']['CartPage'] = true;
++            $this->definitions['Pages'][CartPage::class] = 'Page where customers review their cart while shopping. This page is optional.<br />' . ($cartPage ? '<a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
++            $this->configs['Pages'][CartPage::class] = $cartPage ? 'view: <a href="' . $cartPage->Link() . '">' . $cartPage->Title . '</a>, <a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a><br />' . $cartPage->configArray : ' NOT CREATED!';
++            $this->defaults['Pages'][CartPage::class] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
++            $this->defaults['Pages'][CartPage::class] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
++            $this->databaseValues['Pages'][CartPage::class] = true;
+         }
+     }
+
+     protected function checkGEOIP()
+     {
+-        if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') === 'EcommerceCountryVisitorCountryProvider' && ! class_exists('Geoip')) {
++        if (Config::inst()->get(EcommerceCountry::class, 'visitor_country_provider') === EcommerceCountryVisitorCountryProvider::class && ! class_exists('Geoip')) {
+             user_error(
+                 "
+                 You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
+@@ -1075,22 +1102,22 @@
+
+                 break;
+             case 'Order.modifiers':
+-                $classes = ClassInfo::subclassesFor('OrderModifier');
+-                unset($classes['OrderModifier']);
++                $classes = ClassInfo::subclassesFor(OrderModifier::class);
++                unset($classes[OrderModifier::class]);
+                 $classesAsString = implode(', <br />', $classes);
+
+                 return "<br /><h4>Available Modifiers</h4>${classesAsString}";
+                 break;
+             case 'OrderStatusLog.available_log_classes_array':
+-                $classes = ClassInfo::subclassesFor('OrderStatusLog');
+-                unset($classes['OrderStatusLog']);
++                $classes = ClassInfo::subclassesFor(OrderStatusLog::class);
++                unset($classes[OrderStatusLog::class]);
+                 $classesAsString = implode(', <br />', $classes);
+
+                 return "<br /><h4>Available Modifiers</h4>${classesAsString}";
+                 break;
+             case 'OrderStep.order_steps_to_include':
+-                $classes = ClassInfo::subclassesFor('OrderStep');
+-                unset($classes['OrderStep']);
++                $classes = ClassInfo::subclassesFor(OrderStep::class);
++                unset($classes[OrderStep::class]);
+                 $classesAsString = implode('<br /> - ', $classes);
+
+                 return "<br /><h4>Available Order Steps</h4> - ${classesAsString}";
+
+Warnings for src/Tasks/EcommerceTaskCheckConfiguration.php:
+ - src/Tasks/EcommerceTaskCheckConfiguration.php:912 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+modified:	src/Tasks/EcommerceTaskDeleteAllOrders.php
+@@ -2,11 +2,24 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Director;
+-use DB;
+-use Order;
+-use DataObject;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\OrderAttribute;
++use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
++use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Model\OrderModifier;
++use SilverStripe\Control\Director;
++use SilverStripe\ORM\DB;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -35,12 +48,12 @@
+      *value = table where LastEdited is saved.
+      **/
+     private static $linked_objects_array = [
+-        'OrderAttribute' => 'OrderAttribute',
+-        'BillingAddress' => 'OrderAddress',
+-        'ShippingAddress' => 'OrderAddress',
+-        'OrderStatusLog' => 'OrderStatusLog',
+-        'OrderEmailRecord' => 'OrderEmailRecord',
+-        'EcommercePayment' => 'EcommercePayment',
++        'OrderAttribute' => OrderAttribute::class,
++        'BillingAddress' => OrderAddress::class,
++        'ShippingAddress' => OrderAddress::class,
++        'OrderStatusLog' => OrderStatusLog::class,
++        'OrderEmailRecord' => OrderEmailRecord::class,
++        'EcommercePayment' => EcommercePayment::class,
+     ];
+
+     /**
+@@ -48,10 +61,10 @@
+      *value = table where LastEdited is saved.
+      **/
+     private static $double_check_objects = [
+-        'Order',
+-        'OrderItem',
+-        'OrderModifier',
+-        'EcommercePayment',
++        Order::class,
++        OrderItem::class,
++        OrderModifier::class,
++        EcommercePayment::class,
+     ];
+
+     /*******************************************************
+@@ -126,7 +139,7 @@
+                 }
+                 $unlinkedObjects = $unlinkedObjects
+                     ->where($where)
+-                    ->leftJoin('Order', "\"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"");
++                    ->leftJoin(Order::class, "\"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"");
+
+                 if ($unlinkedObjects->count()) {
+                     foreach ($unlinkedObjects as $unlinkedObject) {
+
+Warnings for src/Tasks/EcommerceTaskDeleteAllOrders.php:
+ - src/Tasks/EcommerceTaskDeleteAllOrders.php:122 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 122
+
+ - src/Tasks/EcommerceTaskDeleteAllOrders.php:169 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 169
+
+modified:	src/Tasks/EcommerceTaskProcessOrderQueue.php
+@@ -2,11 +2,18 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Config;
+-use Email;
+-use EcommerceDummyMailer;
+-use Injector;
++
++
++
++
++
++use SilverStripe\Core\Config\Config;
++use SilverStripe\Control\Email\Email;
++use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
++use SilverStripe\Core\Injector\Injector;
++use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -38,11 +45,11 @@
+         $now = microtime(true);
+         //IMPORTANT!
+         if (! $this->sendEmails) {
+-            Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
++            Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
+             Email::set_mailer(new EcommerceDummyMailer());
+         }
+         $id = intval($request->getVar('id')) - 0;
+-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++        $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
+         if ($ordersinQueue->count() === 0) {
+             echo 'No orders in queue';
+@@ -68,7 +75,7 @@
+         $orders = $orders->limit($this->limit);
+         //we sort randomly so it is less likely we get stuck with the same ones
+         $orders = $orders->sort('RAND()');
+-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
++        $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+         foreach ($orders as $order) {
+             echo '<hr />Processing order: ' . $order->ID;
+             $outcome = $queueObjectSingleton->process($order);
+
+modified:	src/Tasks/EcommerceTaskLinkOrderAddressesAtBothEnds.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskReviewSearches.php
+@@ -2,13 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceSearchHistoryFormField;
+-use FieldList;
+-use HeaderField;
+-use NumericField;
+-use FormAction;
+-use Form;
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\FormAction;
++use SilverStripe\Forms\Form;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskLinkProductWithImages.php
+@@ -2,12 +2,21 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use Product;
+-use File;
+-use DB;
+-use Controller;
+-use Director;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Assets\File;
++use SilverStripe\Assets\Image;
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use SilverStripe\ORM\DB;
++use SilverStripe\Control\Controller;
++use SilverStripe\Control\Director;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -101,8 +110,8 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image')) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductImage')) {
+-                                        $image = $image->newClassInstance('ProductImage');
++                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class)) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class)) {
++                                        $image = $image->newClassInstance(ProductImage::class);
+                                         $image->write();
+                                     }
+                                     $collection->add($image);
+
+Warnings for src/Tasks/EcommerceTaskLinkProductWithImages.php:
+ - src/Tasks/EcommerceTaskLinkProductWithImages.php:104 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+modified:	src/Tasks/EcommerceTaskCleanupProducts.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
+-use Product;
++
++
++
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskReviewReports.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskSetDefaultProductGroupValues.php
+@@ -2,10 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DataObject;
+-use DB;
+-use ProductGroup;
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -31,7 +36,7 @@
+
+     public function run($request)
+     {
+-        $productGroup = DataObject::get_one('ProductGroup');
++        $productGroup = DataObject::get_one(ProductGroup::class);
+         if ($productGroup) {
+             foreach ($this->fieldsToCheck as $method => $fieldName) {
+                 $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));
+
+modified:	src/Tasks/EcommerceTaskCartManipulationCurrent.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskFixBrokenOrderSubmissionData.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskDefaultRecords.php
+@@ -2,14 +2,24 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DataObject;
+-use AccountPage;
+-use DB;
+-use CheckoutPage;
+-use OrderConfirmationPage;
+-use EcommerceDBConfig;
+-use Email;
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use SilverStripe\Control\Email\Email;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -41,10 +51,10 @@
+     public function run($request)
+     {
+         $update = [];
+-        $orderStep = singleton('OrderStep');
++        $orderStep = singleton(OrderStep::class);
+         $orderStep->requireDefaultRecords();
+         // ACCOUNT PAGE
+-        $accountPage = DataObject::get_one('AccountPage', null, $cacheDataObjectGetOne = false);
++        $accountPage = DataObject::get_one(AccountPage::class, null, $cacheDataObjectGetOne = false);
+         if (! $accountPage) {
+             $accountPage = new AccountPage();
+             $accountPage->Title = 'Account';
+@@ -63,7 +73,7 @@
+
+         //CHECKOUT PAGE
+
+-        $checkoutPage = DataObject::get_one('CheckoutPage', null, $cacheDataObjectGetOne = false);
++        $checkoutPage = DataObject::get_one(CheckoutPage::class, null, $cacheDataObjectGetOne = false);
+         if (! $checkoutPage) {
+             $checkoutPage = new CheckoutPage();
+             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
+@@ -94,7 +104,7 @@
+             $checkoutPage->writeToStage('Stage');
+             $checkoutPage->publish('Stage', 'Live');
+             DB::alteration_message('Checkout page saved');
+-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage', null, $cacheDataObjectGetOne = false);
++            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class, null, $cacheDataObjectGetOne = false);
+             if ($orderConfirmationPage) {
+                 DB::alteration_message('No need to create an Order Confirmation Page. It already exists.');
+             } else {
+
+modified:	src/Tasks/EcommerceTaskCleanupProductFullSiteTreeSorting.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
+-use Product;
++
++
++
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskCountryAndRegion.php
+@@ -2,12 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceCountry;
+-use EcommerceConfig;
+-use DataObject;
+-use Convert;
+-use DB;
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Core\Convert;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -28,10 +35,10 @@
+     {
+         $count = 0;
+         $array = EcommerceCountry::get_country_dropdown();
+-        $allowedArray = EcommerceConfig::get('EcommerceCountry', 'allowed_country_codes');
++        $allowedArray = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
+         foreach ($array as $code => $name) {
+             $ecommerceCountry = DataObject::get_one(
+-                'EcommerceCountry',
++                EcommerceCountry::class,
+                 ['Code' => Convert::raw2sql($code)],
+                 $cacheDataObjectGetOne = false
+             );
+
+modified:	src/Tasks/EcommerceTaskDeleteProducts.php
+@@ -2,9 +2,15 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceConfig;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\ORM\DB;
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -27,13 +33,13 @@
+
+     public function run($request)
+     {
+-        $arrayOfBuyables = EcommerceConfig::get('EcommerceDBConfig', 'array_of_buyables');
++        $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
+         foreach ($arrayOfBuyables as $buyable) {
+             $allproducts = $buyable::get();
+             if ($allproducts->count()) {
+                 foreach ($allproducts as $product) {
+                     DB::alteration_message('Deleting ' . $product->ClassName . ' ID = ' . $product->ID, 'deleted');
+-                    if (is_a($product, Object::getCustomClass('SiteTree'))) {
++                    if (is_a($product, Object::getCustomClass(SiteTree::class))) {
+                         $product->deleteFromStage('Live');
+                         $product->deleteFromStage('Draft');
+                     } else {
+
+Warnings for src/Tasks/EcommerceTaskDeleteProducts.php:
+ - src/Tasks/EcommerceTaskDeleteProducts.php:32 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 32
+
+modified:	src/Tasks/EcommerceTaskCountryAndRegionAllowAllCountries.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceCountry;
+-use DB;
++
++
++
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskDebugCart.php
+@@ -2,9 +2,14 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use ShoppingCart;
+-use Config;
++
++
++
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\ORM\FieldType\DBBoolean;
++use SilverStripe\Dev\BuildTask;
++
+
+
+
+@@ -79,7 +84,7 @@
+             case 'HTMLText':
+                 $value = substr(strip_tags($value), 0, 100);
+                 break;
+-            case 'Boolean':
++            case DBBoolean::class:
+                 $value = $value ? 'YES' : 'NO';
+                 break;
+             default:
+
+modified:	src/Tasks/EcommerceTaskCartManipulation.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use DB;
++
++
++use SilverStripe\ORM\DB;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+
+modified:	src/Tasks/EcommerceTaskOrderItemsPerCustomer.php
+@@ -2,11 +2,19 @@
+
+ namespace Sunnysideup\Ecommerce\Tasks;
+
+-use BuildTask;
+-use EcommerceConfig;
+-use Order;
+-use OrderItem;
+-use SS_HTTPRequest;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Dev\BuildTask;
++
+
+
+ /**
+@@ -33,15 +41,15 @@
+         $fileName = "export-${now}.csv";
+
+         //data object variables
+-        $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
++        $orderStatusSubmissionLog = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+         $fileData = '';
+         $offset = 0;
+         $count = 50;
+         $orders = Order::get()
+             ->sort('"Order"."ID" ASC')
+-            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
++            ->innerJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+             ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+-            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
++            ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
+             ->limit($count, $offset);
+         $ordersCount = $orders->count();
+         while ($orders && $ordersCount) {
+@@ -69,15 +77,15 @@
+             }
+             $orders = Order::get()
+                 ->sort('"Order"."ID" ASC')
+-                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
++                ->innerJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                 ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+-                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
++                ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
+                 ->limit($count, $offset);
+             $ordersCount = $orders->count();
+         }
+         unset($orders);
+         if ($fileData) {
+-            SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
++            HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+         } else {
+             user_error('No records found', E_USER_ERROR);
+         }
+
+modified:	src/Search/Filters/OrderFiltersMustHaveAtLeastOnePayment.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
++
++
++use SilverStripe\ORM\DataQuery;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+ /**
+
+modified:	src/Search/Filters/OrderFiltersAroundDateFilter.php
+@@ -2,9 +2,13 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
+-use Date;
++
++
++
++use SilverStripe\ORM\DataQuery;
++use SilverStripe\ORM\FieldType\DBDate;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+ /**
+@@ -32,7 +36,7 @@
+     {
+         $value = $this->getValue();
+
+-        $date = new Date();
++        $date = new DBDate();
+         $date->setValue($value);
+         $formattedDate = $date->format('Y-m-d');
+
+
+modified:	src/Search/Filters/OrderFiltersMultiOptionsetStatusIDFilter.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
++
++
++use SilverStripe\ORM\DataQuery;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+ /**
+
+modified:	src/Search/Filters/OrderFiltersMemberAndAddress.php
+@@ -2,11 +2,17 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
+-use BillingAddress;
+-use ShippingAddress;
+-use Member;
++
++
++
++
++
++use SilverStripe\ORM\DataQuery;
++use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
++use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
++use SilverStripe\Security\Member;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+
+
+modified:	src/Search/Filters/OrderFiltersHasBeenCancelled.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
++
++
++use SilverStripe\ORM\DataQuery;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+ /**
+
+modified:	src/Search/Filters/OrderEmailRecordFiltersMultiOptionsetStatusIDFilter.php
+@@ -2,8 +2,11 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
++
++
++use SilverStripe\ORM\DataQuery;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+
+
+modified:	src/Search/Filters/EcommercePaymentFiltersAroundDateFilter.php
+@@ -2,11 +2,16 @@
+
+ namespace Sunnysideup\Ecommerce\Search\Filters;
+
+-use ExactMatchFilter;
+-use DataQuery;
+-use Date;
+-use DB;
++
++
++
++
+ use PostgreSQLDatabase;
++use SilverStripe\ORM\DataQuery;
++use SilverStripe\ORM\FieldType\DBDate;
++use SilverStripe\ORM\DB;
++use SilverStripe\ORM\Filters\ExactMatchFilter;
++
+
+
+
+@@ -46,7 +51,7 @@
+     {
+         //$this->model = $query->applyRelation($this->relation);
+         $value = $this->getValue();
+-        $date = new Date();
++        $date = new DBDate();
+         $date->setValue($value);
+         $distanceFromToday = time() - strtotime($value);
+         $maxDays = round($distanceFromToday / (($this->divider * 2) * 86400)) + 1;
+
+modified:	src/Pages/CheckoutPageController.php
+@@ -2,18 +2,32 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Requirements;
+-use EcommerceConfig;
++
++
+ use convert;
+-use OrderFormAddress;
+-use OrderForm;
+-use Session;
+-use CheckoutPageStepDescription;
+-use ArrayList;
+-use DataObject;
+-use SS_HTTPRequest;
+-use Director;
+-use EcommerceCurrency;
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
++use Sunnysideup\Ecommerce\Forms\OrderForm;
++use SilverStripe\Control\Session;
++use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
++use SilverStripe\ORM\ArrayList;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++
+
+
+
+@@ -58,7 +72,7 @@
+     {
+         parent::init();
+
+-        Requirements::themedCSS('CheckoutPage', 'ecommerce');
++        Requirements::themedCSS(CheckoutPage::class, 'ecommerce');
+         $ajaxifyArray = EcommerceConfig::get('CheckoutPage_Controller', 'ajaxify_steps');
+         if (count($ajaxifyArray)) {
+             foreach ($ajaxifyArray as $js) {
+@@ -126,7 +140,7 @@
+      */
+     public function OrderFormAddress()
+     {
+-        $form = OrderFormAddress::create($this, 'OrderFormAddress');
++        $form = OrderFormAddress::create($this, OrderFormAddress::class);
+         $this->data()->extend('updateOrderFormAddress', $form);
+         //load session data
+
+@@ -153,7 +167,7 @@
+      */
+     public function OrderForm()
+     {
+-        $form = OrderForm::create($this, 'OrderForm');
++        $form = OrderForm::create($this, OrderForm::class);
+         $this->data()->extend('updateOrderForm', $form);
+         //load session data
+         if ($data = Session :: get("FormInfo.{$form->FormName()}.data")) {
+@@ -223,7 +237,7 @@
+             }
+         }
+         if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
+-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
++            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+             if ($orderConfirmationPage) {
+                 $do = $orderConfirmationPage->CurrentCheckoutStep(false);
+                 if ($do) {
+@@ -295,7 +309,7 @@
+      *
+      * @return array
+      */
+-    public function checkoutstep(SS_HTTPRequest $request)
++    public function checkoutstep(HTTPRequest $request)
+     {
+         if ($this->request->isAjax()) {
+             Requirements::clear();
+
+modified:	src/Pages/ProductGroupController.php
+@@ -2,27 +2,48 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Page_Controller;
+-use Requirements;
+-use Config;
+-use Convert;
+-use DataObject;
+-use ProductSearchForm;
+-use EcommerceConfig;
+-use ShoppingCart;
+-use ArrayList;
+-use ArrayData;
+-use Member;
+-use Security;
+-use EcommerceTaskDebugCart;
+-use Session;
+-use Director;
+-use SS_List;
+-use PaginatedList;
+-
+-
+-
+-class ProductGroupController extends Page_Controller
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\View\Requirements;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\View\ArrayData;
++use SilverStripe\Security\Member;
++use SilverStripe\Security\Security;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use SilverStripe\Control\Session;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Control\Director;
++use SilverStripe\ORM\SS_List;
++use SilverStripe\ORM\PaginatedList;
++use PageController;
++
++
++
++
++class ProductGroupController extends PageController
+ {
+     /**
+      * The original Title of this page before filters, etc...
+@@ -107,7 +128,7 @@
+         //makes sure best match only applies to search -i.e. reset otherwise.
+         if ($this->request->param('Action') !== 'searchresults') {
+             $sortKey = $this->getCurrentUserPreferences('SORT');
+-            if ($sortKey === Config::inst()->get('ProductGroupSearchPage', 'best_match_key')) {
++            if ($sortKey === Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key')) {
+                 $this->resetsort();
+             }
+         }
+@@ -154,7 +175,7 @@
+         $arrayOfIDs = [0 => 0];
+         if ($otherGroupURLSegment) {
+             $otherProductGroup = DataObject::get_one(
+-                'ProductGroup',
++                ProductGroup::class,
+                 ['URLSegment' => $otherGroupURLSegment]
+             );
+             if ($otherProductGroup) {
+@@ -278,7 +299,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'), $stringOfIDs);
++        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'), $stringOfIDs);
+
+         return $this->products;
+     }
+@@ -380,7 +401,7 @@
+         }
+         $currentOrder = ShoppingCart::current_order();
+         if ($currentOrder->TotalItems(true)) {
+-            $responseClass = EcommerceConfig::get('ShoppingCart', 'response_class');
++            $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
+             $obj = new $responseClass();
+             $obj->setIncludeHeaders(false);
+             $json = $obj->ReturnCartData();
+@@ -474,7 +495,7 @@
+   */
+         $groupArray = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable($isForGroup = true)));
+         if (is_array($groupArray) && count($groupArray)) {
+-            $sortStatement = $this->createSortStatementFromIDArray($groupArray, 'ProductGroup');
++            $sortStatement = $this->createSortStatementFromIDArray($groupArray, ProductGroup::class);
+
+             return ProductGroup::get()->filter(['ID' => $groupArray, 'ShowInSearch' => 1])->sort($sortStatement);
+         }
+@@ -501,7 +522,7 @@
+         }
+         $form = ProductSearchForm::create(
+             $this,
+-            'ProductSearchForm',
++            ProductSearchForm::class,
+             $onlySearchTitle,
+             $this->currentInitialProducts(null, $this->getMyUserPreferencesDefault('FILTER'))
+         );
+@@ -509,7 +530,7 @@
+         $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+         $additionalGetParameters =
+             $filterGetVariable . '=' . $this->getMyUserPreferencesDefault('FILTER') . '&' .
+-            $sortGetVariable . '=' . Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
++            $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
+         $form->setAdditionalGetParameters($additionalGetParameters);
+
+         return $form;
+@@ -592,7 +613,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
++        $data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+         if (! empty($data['Keyword'])) {
+             return $this->IsSearchResults();
+         }
+@@ -1105,7 +1126,7 @@
+
+         $html .= '<li><hr /><h3>Product Example and Links</h3><hr /></li>';
+         $product = DataObject::get_one(
+-            'Product',
++            Product::class,
+             ['ParentID' => $this->ID]
+         );
+         if ($product) {
+@@ -1126,7 +1147,7 @@
+         if (! $alternativeSort) {
+             $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+             if (! $this->request->getVar($sortGetVariable)) {
+-                $suggestion = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
++                $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
+                 if ($suggestion) {
+                     $this->saveUserPreferences(
+                         [
+@@ -1157,7 +1178,7 @@
+      */
+     protected function productListsHTMLCanBeCached()
+     {
+-        return Config::inst()->get('ProductGroup', 'actively_check_for_can_purchase') ? false : true;
++        return Config::inst()->get(ProductGroup::class, 'actively_check_for_can_purchase') ? false : true;
+     }
+
+     /**
+@@ -1238,7 +1259,7 @@
+         if ($list && $list->count()) {
+             if ($this->IsShowFullList()) {
+                 $obj = PaginatedList::create($list, $this->request);
+-                $obj->setPageLength(EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') + 1);
++                $obj->setPageLength(EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list') + 1);
+
+                 return $obj;
+             }
+@@ -1452,7 +1473,7 @@
+                 $array = $this->searchResultsArrayFromSession();
+                 $count = count($array);
+                 if ($count > 4) {
+-                    if ($count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list_for_search')) {
++                    if ($count < EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list_for_search')) {
+                         $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                         $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                     }
+
+Warnings for src/Pages/ProductGroupController.php:
+ - src/Pages/ProductGroupController.php:384 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 384
+
+ - src/Pages/ProductGroupController.php:916 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 916
+
+modified:	src/Pages/AccountPageController.php
+@@ -2,15 +2,22 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Page_Controller;
+-use Security;
+-use Requirements;
+-use ShopAccountForm;
+-use Member;
+
+
+
+-class AccountPageController extends Page_Controller
++
++
++use SilverStripe\Security\Security;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use SilverStripe\View\Requirements;
++use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
++use SilverStripe\Security\Member;
++use PageController;
++
++
++
++
++class AccountPageController extends PageController
+ {
+     //TODO: why do we need this?
+     private static $allowed_actions = [
+@@ -32,7 +39,7 @@
+
+             return false;
+         }
+-        Requirements::themedCSS('AccountPage', 'ecommerce');
++        Requirements::themedCSS(AccountPage::class, 'ecommerce');
+     }
+
+     /**
+
+modified:	src/Pages/ProductController.php
+@@ -2,25 +2,43 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Page_Controller;
+-use Requirements;
+-use SS_HTTPRequest;
+-use Config;
+-use FieldList;
+-use NumericField;
+-use FormAction;
+-use RequiredFields;
+-use Form;
+-use ShoppingCart;
+-use Director;
+-use EcomQuantityField;
+-use Member;
+-use Security;
+-use EcommerceConfig;
+-
+-
+-
+-class ProductController extends Page_Controller
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use SilverStripe\View\Requirements;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++use SilverStripe\Forms\FieldList;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\FormAction;
++use SilverStripe\Forms\RequiredFields;
++use SilverStripe\Forms\Form;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
++use SilverStripe\Security\Member;
++use SilverStripe\Security\Security;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use PageController;
++
++
++
++
++class ProductController extends PageController
+ {
+     /**
+      * is this the current version?
+@@ -61,7 +79,7 @@
+      *
+      * @param SS_HTTPRequest $request
+      */
+-    public function viewversion(SS_HTTPRequest $request)
++    public function viewversion(HTTPRequest $request)
+     {
+         $version = intval($request->param('ID')) - 0;
+         $currentVersion = $this->Version;
+@@ -88,10 +106,10 @@
+      * Standard SS method
+      * Returns a snippet when requested by ajax.
+      */
+-    public function ajaxview(SS_HTTPRequest $request)
++    public function ajaxview(HTTPRequest $request)
+     {
+         Config::nest();
+-        Config::modify()->update('SSViewer', 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -269,7 +287,7 @@
+   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'));
++        $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'));
+         if ($listOfIDs) {
+             $arrayOfIDs = explode(',', $listOfIDs);
+             if (is_array($arrayOfIDs)) {
+
+modified:	src/Pages/OrderConfirmationPage.php
+@@ -2,14 +2,27 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Permission;
+-use Config;
+-use TextField;
+-use HeaderField;
+-use HTMLEditorField;
+-use CheckboxField;
+-use DataObject;
+-use CheckoutPageStepDescription;
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
++use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++
+
+
+ /**
+@@ -153,7 +166,7 @@
+      */
+     public function canCreate($member = null, $context = [])
+     {
+-        return OrderConfirmationPage::get()->filter(['ClassName' => 'OrderConfirmationPage'])->Count() ? false : $this->canEdit($member);
++        return OrderConfirmationPage::get()->filter(['ClassName' => OrderConfirmationPage::class])->Count() ? false : $this->canEdit($member);
+     }
+
+     /**
+@@ -165,7 +178,7 @@
+      */
+     public function canEdit($member = null, $context = [])
+     {
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -308,9 +321,9 @@
+      */
+     public static function find_link($action = null)
+     {
+-        if ($page = DataObject::get_one('OrderConfirmationPage', ['ClassName' => 'OrderConfirmationPage'])) {
++        if ($page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class])) {
+             return $page->Link($action);
+-        } elseif ($page = DataObject::get_one('OrderConfirmationPage')) {
++        } elseif ($page = DataObject::get_one(OrderConfirmationPage::class)) {
+             return $page->Link($action);
+         }
+
+@@ -339,7 +352,7 @@
+      *
+      * @return string (URLSegment)
+      */
+-    public static function get_email_link($orderID, $emailClassName = 'OrderStatusEmail', $actuallySendEmail = false, $alternativeOrderStepID = 0)
++    public static function get_email_link($orderID, $emailClassName = OrderStatusEmail::class, $actuallySendEmail = false, $alternativeOrderStepID = 0)
+     {
+         $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . $emailClassName;
+         $getParams = [];
+@@ -424,9 +437,9 @@
+     public function requireDefaultRecords()
+     {
+         parent::requireDefaultRecords();
+-        $checkoutPage = DataObject::get_one('CheckoutPage');
++        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+         if ($checkoutPage) {
+-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
++            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+             if (! $orderConfirmationPage) {
+                 $orderConfirmationPage = OrderConfirmationPage::create();
+                 $orderConfirmationPage->Title = 'Order Confirmation';
+
+modified:	src/Pages/ProductGroupSearchPage.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use DataList;
+-use ArrayList;
++
++
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use SilverStripe\ORM\DataList;
++use SilverStripe\ORM\ArrayList;
++
+
+ /**
+  * This page manages searching for products.
+@@ -65,7 +69,7 @@
+      */
+     public function canCreate($member = null, $context = [])
+     {
+-        return ProductGroupSearchPage::get()->filter(['ClassName' => 'ProductGroupSearchPage'])->Count() ? false : $this->canEdit($member);
++        return ProductGroupSearchPage::get()->filter(['ClassName' => ProductGroupSearchPage::class])->Count() ? false : $this->canEdit($member);
+     }
+
+     /**
+
+modified:	src/Pages/CartPageController.php
+@@ -2,23 +2,38 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Page_Controller;
+-use EcommerceConfig;
+-use Session;
+-use HTTP;
+-use Order;
+-use Convert;
+-use ShoppingCart;
+-use Security;
+-use SS_HTTPRequest;
+-use Member;
+-use DBField;
+-use ShopAccountForm;
+-use ArrayList;
+-use ArrayData;
+-
+-
+-class CartPageController extends Page_Controller
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Control\Session;
++use SilverStripe\Control\HTTP;
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\Core\Convert;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\Security\Security;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Security\Member;
++use SilverStripe\ORM\FieldType\DBField;
++use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\View\ArrayData;
++use PageController;
++
++
++
++class CartPageController extends PageController
+ {
+     /**
+      * This ArraList holds DataObjects with a Link and Title each....
+@@ -189,7 +204,7 @@
+      * @param SS_HTTPRequest $request
+      * @return array just so that template shows
+      **/
+-    public function showorder(SS_HTTPRequest $request)
++    public function showorder(HTTPRequest $request)
+     {
+         if (! $this->currentOrder) {
+             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
+@@ -215,7 +230,7 @@
+      * @param SS_HTTPRequest $request
+      * @return array just so that template shows
+      **/
+-    public function share(SS_HTTPRequest $request)
++    public function share(HTTPRequest $request)
+     {
+         $codes = Convert::raw2sql($request->param('ID'));
+         if (! $request->getVar('ready') && ! $request->getVar('done')) {
+@@ -267,7 +282,7 @@
+      *
+      * @return array
+      */
+-    public function loadorder(SS_HTTPRequest $request)
++    public function loadorder(HTTPRequest $request)
+     {
+         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
+         ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
+@@ -284,7 +299,7 @@
+      * @return array
+      *               TO DO: untested
+      */
+-    public function saveorder(SS_HTTPRequest $request)
++    public function saveorder(HTTPRequest $request)
+     {
+         $member = Member::currentUser();
+         if (! $member) {
+@@ -312,7 +327,7 @@
+      *
+      * @return array
+      */
+-    public function deleteorder(SS_HTTPRequest $request)
++    public function deleteorder(HTTPRequest $request)
+     {
+         if (! $this->CurrentOrderIsInCart()) {
+             if ($this->currentOrder->canDelete()) {
+@@ -333,7 +348,7 @@
+      * @return array
+      *               TO DO: untested
+      */
+-    public function startneworder(SS_HTTPRequest $request)
++    public function startneworder(HTTPRequest $request)
+     {
+         ShoppingCart::singleton()->clear();
+         self::set_message(_t('CartPage.NEWORDERSTARTED', 'New order has been started.'));
+
+Warnings for src/Pages/CartPageController.php:
+ - src/Pages/CartPageController.php:237 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 237
+
+modified:	src/Pages/CheckoutPage.php
+@@ -2,25 +2,47 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use DataObject;
++
+ use Page;
+-use EcommerceConfig;
+-use Permission;
+-use Config;
+-use OptionalTreeDropdownField;
+-use TextField;
+-use HTMLEditorField;
+-use OrderModifierDescriptor;
+-use CheckoutPageStepDescription;
+-use CheckboxField;
+-use SiteTree;
+-use GridFieldConfig;
+-use GridFieldToolbarHeader;
+-use GridFieldSortableHeader;
+-use GridFieldDataColumns;
+-use GridFieldEditButton;
+-use GridFieldDetailForm;
+-use GridField;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\CMS\Model\SiteTree;
++use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
++use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\GridField\GridFieldConfig;
++use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
++use SilverStripe\Forms\GridField\GridFieldSortableHeader;
++use SilverStripe\Forms\GridField\GridFieldDataColumns;
++use SilverStripe\Forms\GridField\GridFieldEditButton;
++use SilverStripe\Forms\GridField\GridFieldDetailForm;
++use SilverStripe\Forms\GridField\GridField;
++
+
+
+ /**
+@@ -61,7 +83,7 @@
+      *
+      * @Var Boolean
+      */
+-    private static $hide_ancestor = 'CartPage';
++    private static $hide_ancestor = CartPage::class;
+
+     /**
+      * standard SS variable.
+@@ -168,7 +190,7 @@
+      */
+     public static function find_terms_and_conditions_page()
+     {
+-        $checkoutPage = DataObject::get_one('CheckoutPage');
++        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+         if ($checkoutPage && $checkoutPage->TermsPageID) {
+             return Page::get()->byID($checkoutPage->TermsPageID);
+         }
+@@ -183,7 +205,7 @@
+      */
+     public static function find_link($action = null)
+     {
+-        $page = DataObject::get_one('CheckoutPage');
++        $page = DataObject::get_one(CheckoutPage::class);
+         if ($page) {
+             return $page->Link($action);
+         }
+@@ -284,7 +306,7 @@
+      **/
+     public function canCreate($member = null)
+     {
+-        return CheckoutPage::get()->Filter(['ClassName' => 'CheckoutPage'])->Count() ? false : $this->canEdit($member);
++        return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->Count() ? false : $this->canEdit($member);
+     }
+
+     /**
+@@ -296,7 +318,7 @@
+      */
+     public function canEdit($member = null, $context = [])
+     {
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -345,7 +367,7 @@
+         $termsPageIDField = OptionalTreeDropdownField::create(
+             'TermsPageID',
+             _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
+-            'SiteTree'
++            SiteTree::class
+         );
+         $termsPageIDField->setRightTitle(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+         $fields->addFieldToTab('Root.Terms', $termsPageIDField);
+@@ -378,7 +400,7 @@
+     {
+         parent::requireDefaultRecords();
+         if (SiteTree::config()->create_default_pages) {
+-            $checkoutPage = DataObject::get_one('CheckoutPage');
++            $checkoutPage = DataObject::get_one(CheckoutPage::class);
+             if (! $checkoutPage) {
+                 $checkoutPage = self::create();
+                 $checkoutPage->Title = 'Checkout';
+@@ -405,7 +427,7 @@
+         $title = _t('CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES', 'Messages relating to order form extras (e.g. tax or shipping)');
+         $source = OrderModifierDescriptor::get();
+
+-        return new GridField('OrderModifierDescriptor', $title, $source, $gridFieldConfig);
++        return new GridField(OrderModifierDescriptor::class, $title, $source, $gridFieldConfig);
+     }
+
+     /**
+@@ -423,7 +445,7 @@
+         $title = _t('CheckoutPage.CHECKOUTSTEPESCRIPTIONS', 'Checkout Step Descriptions');
+         $source = CheckoutPageStepDescription::get();
+
+-        return new GridField('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
++        return new GridField(CheckoutPageStepDescription::class, $title, $source, $gridFieldConfig);
+     }
+ }
+
+
+modified:	src/Pages/AccountPage.php
+@@ -3,11 +3,20 @@
+ namespace Sunnysideup\Ecommerce\Pages;
+
+ use Page;
+-use Permission;
+-use Config;
+-use DataObject;
+-use Member;
+-use Order;
++
++
++
++
++
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++
+
+ /**
+  * @description:
+@@ -91,7 +100,7 @@
+      **/
+     public function canCreate($member = null)
+     {
+-        return AccountPage::get()->filter(['ClassName' => 'AccountPage'])->Count() ? false : $this->canEdit($member);
++        return AccountPage::get()->filter(['ClassName' => AccountPage::class])->Count() ? false : $this->canEdit($member);
+     }
+
+     /**
+@@ -103,7 +112,7 @@
+      */
+     public function canEdit($member = null, $context = [])
+     {
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -152,8 +161,8 @@
+     public static function find_link($action = null)
+     {
+         $page = DataObject::get_one(
+-            'AccountPage',
+-            ['ClassName' => 'AccountPage']
++            AccountPage::class,
++            ['ClassName' => AccountPage::class]
+         );
+         if ($page) {
+             return $page->Link($action);
+@@ -272,7 +281,7 @@
+                     '"Order"."MemberID" = ' . $memberID . '
+                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
+                 )
+-                ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
++                ->innerJoin(OrderStep::class, '"Order"."StatusID" = "OrderStep"."ID"');
+         }
+
+         return 0;
+
+modified:	src/Pages/Product.php
+@@ -3,41 +3,83 @@
+ namespace Sunnysideup\Ecommerce\Pages;
+
+ use Page;
+-use BuyableModel;
+-use HTMLEditorField;
+-use TextField;
+-use ProductProductImageUploadField;
+-use ReadonlyField;
+-use CheckboxField;
+-use NumericField;
+-use LiteralField;
+-use HeaderField;
+-use EcommerceCodeFilter;
+-use Config;
+-use Image;
+-use SiteTree;
+-use DataObject;
+-use ProductImage;
+-use ClassInfo;
+-use OrderItem;
+-use ShoppingCart;
+-use Order;
+-use ShoppingCartController;
+-use Controller;
+-use Director;
+-use EcommerceConfig;
+-use EcomQuantityField;
+-use EcommerceConfigAjax;
+-use EcommerceDBConfig;
+-use EcommerceCurrency;
+-use Member;
+-use EcommerceCountry;
+-use Permission;
+-use EcommerceTaskDebugCart;
+-use GridField;
+-use GridFieldBasicPageRelationConfig;
+-use EcommerceTaskLinkProductWithImages;
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
++
+ use UploadFIeld;
++use Sunnysideup\Ecommerce\Model\ProductOrderItem;
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\Assets\Image;
++use SilverStripe\Assets\File;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use SilverStripe\Forms\TextField;
++use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
++use SilverStripe\Forms\ReadonlyField;
++use SilverStripe\Forms\CheckboxField;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\LiteralField;
++use SilverStripe\Forms\HeaderField;
++use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\CMS\Model\SiteTree;
++use SilverStripe\ORM\DataObject;
++use SilverStripe\Core\ClassInfo;
++use Sunnysideup\Ecommerce\Model\OrderItem;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Model\Order;
++use Sunnysideup\Ecommerce\Model\OrderAttribute;
++use Sunnysideup\Ecommerce\Control\ShoppingCartController;
++use SilverStripe\Control\Director;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use SilverStripe\Control\Controller;
++use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
++use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
++use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
++use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
++use SilverStripe\Security\Member;
++use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
++use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
++use SilverStripe\Forms\GridField\GridField;
++use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
++use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
++
+
+ /**
+  * This is a standard Product page-type with fields like
+@@ -61,7 +103,7 @@
+     /**
+      * @var string
+      */
+-    protected $defaultClassNameForOrderItem = 'ProductOrderItem';
++    protected $defaultClassNameForOrderItem = ProductOrderItem::class;
+
+     /**
+      * Standard SS variable.
+@@ -134,14 +176,14 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Image' => 'ProductImage',
++        'Image' => ProductImage::class,
+     ];
+
+     /**
+      * Standard SS variable.
+      */
+     private static $many_many = [
+-        'ProductGroups' => 'ProductGroup',
++        'ProductGroups' => ProductGroup::class,
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -151,8 +193,8 @@
+   * EXP: you may want to add ownership (owns)
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        'AdditionalImages' => 'Image',
+-        'AdditionalFiles' => 'File',
++        'AdditionalImages' => Image::class,
++        'AdditionalFiles' => File::class,
+     ];
+
+     /**
+@@ -256,7 +298,7 @@
+     /**
+      * Standard SS variable.
+      */
+-    private static $default_parent = 'ProductGroup';
++    private static $default_parent = ProductGroup::class;
+
+     /**
+      * Standard SS variable.
+@@ -281,7 +323,7 @@
+
+     public function i18n_singular_name()
+     {
+-        return _t('Order.PRODUCT', 'Product');
++        return _t('Order.PRODUCT', Product::class);
+     }
+
+     public function i18n_plural_name()
+@@ -317,8 +359,8 @@
+   * EXP: make sure that Image does not end up as Image::class where this is not required
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
+-        $uploadField->setCallingClass('Product');
++        $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField(Image::class, _t('Product.IMAGE', 'Product Image')));
++        $uploadField->setCallingClass(Product::class);
+         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
+         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
+         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
+@@ -436,7 +478,7 @@
+         //because the MetaKeywords Field is being searched.
+         if ($this->Config()->get('add_data_to_meta_description_for_search')) {
+             $this->MetaDescription = '';
+-            $fieldsToExclude = Config::inst()->get('SiteTree', 'db');
++            $fieldsToExclude = Config::inst()->get(SiteTree::class, 'db');
+
+ /**
+   * ### @@@@ START REPLACEMENT @@@@ ###
+@@ -475,8 +517,8 @@
+     {
+         parent::onAfterWrite();
+         if ($this->ImageID) {
+-            if ($normalImage = Image::get()->exclude(['ClassName' => 'ProductImage'])->byID($this->ImageID)) {
+-                $normalImage = $normalImage->newClassInstance('ProductImage');
++            if ($normalImage = Image::get()->exclude(['ClassName' => ProductImage::class])->byID($this->ImageID)) {
++                $normalImage = $normalImage->newClassInstance(ProductImage::class);
+                 $normalImage->write();
+             }
+         }
+@@ -514,7 +556,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
++                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
+                     $parentTitleArray[] = $obj->Title;
+                 }
+             }
+@@ -577,7 +619,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-                    if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
++                    if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
+                         $allParentsArray[$obj->ID] = $obj->ID;
+                     }
+                 }
+@@ -619,7 +661,7 @@
+         while ($parent && $x < 100) {
+             $returnValue = $parent;
+             $parent = DataObject::get_one(
+-                'ProductGroup',
++                ProductGroup::class,
+                 ['ID' => $parent->ParentID]
+             );
+             ++$x;
+@@ -903,8 +945,8 @@
+     public function getHasBeenSold()
+     {
+         $dataList = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false);
+-        $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
+-        $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
++        $dataList = $dataList->innerJoin(OrderAttribute::class, '"OrderAttribute"."OrderID" = "Order"."ID"');
++        $dataList = $dataList->innerJoin(OrderItem::class, '"OrderAttribute"."ID" = "OrderItem"."ID"');
+         $dataList = $dataList->filter(
+             [
+                 'BuyableID' => $this->ID,
+@@ -1106,7 +1148,7 @@
+     {
+         return Controller::join_links(
+             Director::baseURL(),
+-            EcommerceConfig::get('ShoppingCartController', 'url_segment'),
++            EcommerceConfig::get(ShoppingCartController::class, 'url_segment'),
+             'submittedbuyable',
+
+ /**
+@@ -1312,7 +1354,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -1335,7 +1377,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -1360,7 +1402,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductsAndGroupsModelAdmin'))) {
++        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
+             return false;
+         }
+         if (! $member) {
+
+Warnings for src/Pages/Product.php:
+ - src/Pages/Product.php:154 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+ - src/Pages/Product.php:155 Renaming ambiguous string File to SilverStripe\Assets\File
+
+ - src/Pages/Product.php:320 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+ - src/Pages/Product.php:825 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 825
+
+modified:	src/Pages/ProductGroup.php
+@@ -1,4 +1,31 @@
+ <?php
++
++use Sunnysideup\Ecommerce\Filesystem\ProductImage;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Security\Member;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Control\Controller;
++use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
++use SilverStripe\ORM\DataList;
++use Sunnysideup\Ecommerce\Pages\ProductGroup;
++use SilverStripe\Assets\Image;
++use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
++use SilverStripe\Forms\DropdownField;
++use SilverStripe\Forms\HeaderField;
++use SilverStripe\Forms\NumericField;
++use SilverStripe\Forms\Tab;
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use SilverStripe\ORM\ArrayList;
++use SilverStripe\ORM\SS_List;
++use SilverStripe\Dev\Deprecation;
++use SilverStripe\ORM\DB;
++use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
++use SilverStripe\Forms\GridField\GridField;
++use SilverStripe\Versioned\Versioned;
+
+ /**
+  * Product Group is a 'holder' for Products within the CMS
+@@ -249,7 +276,7 @@
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+     private static $has_one = [
+-        'Image' => 'ProductImage',
++        'Image' => ProductImage::class,
+     ];
+
+     /**
+@@ -258,7 +285,7 @@
+      * @static Array
+      */
+     private static $belongs_many_many = [
+-        'AlsoShowProducts' => 'Product',
++        'AlsoShowProducts' => Product::class,
+     ];
+
+     /**
+@@ -309,7 +336,7 @@
+      *
+      * @static String
+      */
+-    private static $default_child = 'Product';
++    private static $default_child = Product::class;
+
+     /**
+      * standard SS variable.
+@@ -379,7 +406,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -402,7 +429,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -427,7 +454,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductsAndGroupsModelAdmin'))) {
++        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
+             return false;
+         }
+         if (! $member) {
+@@ -437,7 +464,7 @@
+         if ($extended !== null) {
+             return $extended;
+         }
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -453,7 +480,7 @@
+      */
+     public function canPublish($member = null)
+     {
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -546,7 +573,7 @@
+         }
+         //reset to default
+         if ($this->LevelOfProductsToShow === 0) {
+-            $defaults = Config::inst()->get('ProductGroup', 'defaults');
++            $defaults = Config::inst()->get(ProductGroup::class, 'defaults');
+
+             return isset($defaults['LevelOfProductsToShow']) ? $defaults['LevelOfProductsToShow'] : 99;
+         }
+@@ -567,7 +594,7 @@
+     {
+         $fields = parent::getCMSFields();
+         //dirty hack to show images!
+-        $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
++        $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create(Image::class, _t('Product.IMAGE', 'Product Group Image')));
+         //number of products
+         $calculatedNumberOfProductsPerPage = $this->MyNumberOfProductsPerPage();
+         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
+@@ -939,7 +966,7 @@
+   * EXP: Check if this is the right implementation, this is highly speculative.
+   * ### @@@@ STOP REPLACEMENT @@@@ ###
+   */
+-            return is_a($parent, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup')) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
++            return is_a($parent, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class)) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
+         }
+         return $this->ChildGroups($filter);
+     }
+@@ -1082,8 +1109,8 @@
+         parent::onAfterWrite();
+
+         if ($this->ImageID) {
+-            if ($normalImage = Image::get()->exclude(['ClassName' => 'ProductImage'])->byID($this->ImageID)) {
+-                $normalImage = $normalImage->newClassInstance('ProductImage');
++            if ($normalImage = Image::get()->exclude(['ClassName' => ProductImage::class])->byID($this->ImageID)) {
++                $normalImage = $normalImage->newClassInstance(ProductImage::class);
+                 $normalImage->write();
+             }
+         }
+@@ -1175,9 +1202,9 @@
+     {
+         $idString = '_' . $this->ID;
+         if ($isForGroups) {
+-            return Config::inst()->get('ProductSearchForm', 'product_session_variable') . $idString;
+-        }
+-        return Config::inst()->get('ProductSearchForm', 'product_group_session_variable') . $idString;
++            return Config::inst()->get(ProductSearchForm::class, 'product_session_variable') . $idString;
++        }
++        return Config::inst()->get(ProductSearchForm::class, 'product_group_session_variable') . $idString;
+     }
+
+     /**
+@@ -1504,7 +1531,7 @@
+      */
+     protected function getBuyableClassName()
+     {
+-        return EcommerceConfig::get('ProductGroup', 'base_buyable_class');
++        return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+     }
+
+     /**
+@@ -1618,7 +1645,7 @@
+      * @param bool   $asArray
+      * @param string $table
+      */
+-    protected function allowPurchaseWhereStatement($asArray = true, $table = 'Product')
++    protected function allowPurchaseWhereStatement($asArray = true, $table = Product::class)
+     {
+         if ($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+             if ($asArray) {
+@@ -1711,7 +1738,7 @@
+      *
+      * @return string
+      */
+-    protected function createSortStatementFromIDArray($IDarray, $table = 'Product')
++    protected function createSortStatementFromIDArray($IDarray, $table = Product::class)
+     {
+         $ifStatement = 'CASE ';
+         // $sortStatement = '';
+@@ -1732,7 +1759,7 @@
+     protected function limitCurrentFinalProducts()
+     {
+         $this->rawCount = $this->allProducts->count();
+-        $max = EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list');
++        $max = EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list');
+         if ($this->rawCount > $max) {
+             $this->allProducts = $this->allProducts->limit($max - 1);
+             $this->totalCount = $max;
+
+Warnings for src/Pages/ProductGroup.php:
+ - src/Pages/ProductGroup.php:570 Renaming ambiguous string Image to SilverStripe\Assets\Image
+
+ - src/Pages/ProductGroup.php:1481 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1481
+
+modified:	src/Pages/CartPage.php
+@@ -3,15 +3,28 @@
+ namespace Sunnysideup\Ecommerce\Pages;
+
+ use Page;
+-use DBField;
+-use Permission;
+-use Config;
+-use TabSet;
+-use Tab;
+-use TextField;
+-use HTMLEditorField;
+-use DataObject;
+-use ShoppingCart;
++
++
++
++
++
++
++
++
++
++use SilverStripe\ORM\FieldType\DBField;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use SilverStripe\Core\Config\Config;
++use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
++use SilverStripe\Security\Permission;
++use SilverStripe\Forms\TextField;
++use SilverStripe\Forms\Tab;
++use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
++use SilverStripe\Forms\TabSet;
++use SilverStripe\ORM\DataObject;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use SilverStripe\View\SSViewer;
++
+
+
+ /**
+@@ -152,7 +165,7 @@
+      */
+     public function canCreate($member = null, $context = [])
+     {
+-        return CartPage::get()->Filter(['ClassName' => 'CartPage'])->Count() ? false : $this->canEdit($member);
++        return CartPage::get()->Filter(['ClassName' => CartPage::class])->Count() ? false : $this->canEdit($member);
+     }
+
+     /**
+@@ -164,7 +177,7 @@
+      */
+     public function canEdit($member = null, $context = [])
+     {
+-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
++        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
+             return true;
+         }
+
+@@ -240,7 +253,7 @@
+      */
+     public static function find_link($action = null)
+     {
+-        $page = DataObject::get_one('CartPage', ['ClassName' => 'CartPage']);
++        $page = DataObject::get_one(CartPage::class, ['ClassName' => CartPage::class]);
+         if ($page) {
+             return $page->Link($action);
+         }
+@@ -314,11 +327,11 @@
+         $order = ShoppingCart::current_order();
+         if ($order) {
+             $count = $order->TotalItems();
+-            $oldSSViewer = Config::inst()->get('SSViewer', 'source_file_comments');
+-            Config::inst()->update('SSViewer', 'source_file_comments', false);
++            $oldSSViewer = Config::inst()->get(SSViewer::class, 'source_file_comments');
++            Config::inst()->update(SSViewer::class, 'source_file_comments', false);
+             $this->customise(['Count' => $count, 'OriginalMenuTitle' => $this->MenuTitle]);
+             $s = $this->renderWith('AjaxNumItemsInCart');
+-            Config::inst()->update('SSViewer', 'source_file_comments', $oldSSViewer);
++            Config::inst()->update(SSViewer::class, 'source_file_comments', $oldSSViewer);
+
+             return $s;
+         }
+
+modified:	src/Pages/OrderConfirmationPageController.php
+@@ -2,18 +2,35 @@
+
+ namespace Sunnysideup\Ecommerce\Pages;
+
+-use Order;
+-use Requirements;
+-use SS_HTTPRequest;
+-use Config;
+-use ShoppingCart;
+-use EcommerceConfig;
+-use CheckoutPageStepDescription;
+-use ArrayList;
+-use OrderFormCancel;
+-use OrderFormFeedback;
+-use OrderFormPayment;
+-use OrderStep;
++
++
++
++
++
++
++
++
++
++
++
++
++use Sunnysideup\Ecommerce\Model\Order;
++use SilverStripe\View\Requirements;
++use SilverStripe\Control\HTTPRequest;
++use SilverStripe\Core\Config\Config;
++use SilverStripe\View\SSViewer;
++use Sunnysideup\Ecommerce\Api\ShoppingCart;
++use Sunnysideup\Ecommerce\Config\EcommerceConfig;
++use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
++use SilverStripe\ORM\ArrayList;
++use Sunnysideup\Ecommerce\Forms\OrderFormCancel;
++use Sunnysideup\Ecommerce\Forms\OrderFormFeedback;
++use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
++use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
++use Sunnysideup\Ecommerce\Email\OrderEmail;
++use Sunnysideup\Ecommerce\Model\Process\OrderStep;
++use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
++
+
+
+
+@@ -92,7 +109,7 @@
+      *
+      * @return array
+      **/
+-    public function showorder(SS_HTTPRequest $request)
++    public function showorder(HTTPRequest $request)
+     {
+         isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
+         if (isset($_REQUEST['print'])) {
+@@ -102,7 +119,7 @@
+             Requirements::themedCSS('Order_Invoice', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+             Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+             Config::nest();
+-            Config::inst()->update('SSViewer', 'theme_enabled', true);
++            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+             $html = $this->renderWith('Invoice');
+             Config::unnest();
+
+@@ -113,7 +130,7 @@
+             Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+             Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+             Config::nest();
+-            Config::inst()->update('SSViewer', 'theme_enabled', true);
++            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+             $html = $this->renderWith('PackingSlip');
+             Config::unnest();
+
+@@ -129,7 +146,7 @@
+      *
+      * @return array
+      **/
+-    public function retrieveorder(SS_HTTPRequest $request)
++    public function retrieveorder(HTTPRequest $request)
+     {
+         return [];
+     }
+@@ -144,7 +161,7 @@
+      *
+      * @return array
+      */
+-    public function copyorder(SS_HTTPRequest $request)
++    public function copyorder(HTTPRequest $request)
+     {
+         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
+         ShoppingCart::singleton()->copyOrder($this->currentOrder->ID);
+@@ -350,14 +367,14 @@
+      *
+      * @return HTML
+      **/
+-    public function sendemail(SS_HTTPRequest $request)
++    public function sendemail(HTTPRequest $request)
+     {
+         if ($this->currentOrder) {
+             $subject = '';
+             $message = '';
+-            $emailClassName = 'OrderReceiptEmail';
++            $emailClassName = OrderReceiptEmail::class;
+             if (class_exists($request->param('OtherID'))) {
+-                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass('OrderEmail'))) {
++                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass(OrderEmail::class))) {
+                     $emailClassName = $request->param('OtherID');
+                 }
+             }
+@@ -386,7 +403,7 @@
+                     $step = OrderStep::get()->byID($statusID);
+                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
+                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
+-                    $emailClassName = 'OrderInvoiceEmail';
++                    $emailClassName = OrderInvoiceEmail::class;
+                     if ($this->currentOrder->sendEmail(
+                         $emailClassName,
+                         $subject,
+
+modified:	src/Reports/EcommerceSideReportEcommercePages.php
+@@ -2,8 +2,18 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use SiteTree;
++
++
++use SilverStripe\CMS\Model\SiteTree;
++use Sunnysideup\Ecommerce\Pages\CartPage;
++use Sunnysideup\Ecommerce\Pages\AccountPage;
++use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
++use Sunnysideup\Ecommerce\Pages\CheckoutPage;
++use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+ /**
+  * EcommerceSideReport classes are to allow quick reports that can be accessed
+@@ -20,13 +30,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportEcommercePages extends SS_Report
++class EcommerceSideReportEcommercePages extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'SiteTree';
++    protected $dataClass = SiteTree::class;
+
+     private static $additional_classnames = [];
+
+@@ -64,7 +74,7 @@
+      */
+     public function sourceRecords($params = null)
+     {
+-        return SiteTree::get()->filter('ClassName', ['CartPage', 'AccountPage', 'ProductGroupSearchPage', 'CheckoutPage', 'OrderConfirmationPage'] + (array) $this->Config()->get('additional_classnames'));
++        return SiteTree::get()->filter('ClassName', [CartPage::class, AccountPage::class, ProductGroupSearchPage::class, CheckoutPage::class, OrderConfirmationPage::class] + (array) $this->Config()->get('additional_classnames'));
+     }
+
+     /**
+@@ -74,7 +84,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -84,7 +94,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	src/Reports/EcommerceSideReportAllProducts.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use Product;
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+
+
+@@ -15,13 +19,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportAllProducts extends SS_Report
++class EcommerceSideReportAllProducts extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'Product';
++    protected $dataClass = Product::class;
+
+     /**
+      * @return string
+@@ -67,7 +71,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -77,7 +81,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	src/Reports/EcommerceSideReportNoPriceProducts.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use Product;
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+
+ /**
+@@ -14,13 +18,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportNoPriceProducts extends SS_Report
++class EcommerceSideReportNoPriceProducts extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'Product';
++    protected $dataClass = Product::class;
+
+     /**
+      * @return string
+@@ -68,7 +72,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -78,7 +82,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	src/Reports/EcommerceSideReportFeaturedProducts.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use Product;
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+
+
+@@ -13,13 +17,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportFeaturedProducts extends SS_Report
++class EcommerceSideReportFeaturedProducts extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'Product';
++    protected $dataClass = Product::class;
+
+     /**
+      * @return string
+@@ -67,7 +71,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -77,7 +81,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	src/Reports/EcommerceSideReportNoImageProducts.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use Product;
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+
+
+@@ -16,13 +20,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportNoImageProducts extends SS_Report
++class EcommerceSideReportNoImageProducts extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'Product';
++    protected $dataClass = Product::class;
+
+     /**
+      * @return string
+@@ -70,7 +74,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -80,7 +84,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	src/Reports/EcommerceSideReportNotForSale.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use Product;
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+
+
+@@ -16,13 +20,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportNotForSale extends SS_Report
++class EcommerceSideReportNotForSale extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'Product';
++    protected $dataClass = Product::class;
+
+     /**
+      * @return string
+@@ -58,7 +62,7 @@
+      */
+     public function sourceRecords($params = null)
+     {
+-        return Product::get('Product')
++        return Product::get(Product::class)
+             ->filter(['AllowPurchase' => 0])
+             ->sort('FullSiteTreeSort', 'ASC');
+     }
+@@ -70,7 +74,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -80,7 +84,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	src/Reports/EcommerceSideReportNoInternalIDProducts.php
+@@ -2,8 +2,12 @@
+
+ namespace Sunnysideup\Ecommerce\Reports;
+
+-use SS_Report;
+-use Product;
++
++
++use Sunnysideup\Ecommerce\Pages\Product;
++use SilverStripe\Forms\GridField\GridFieldExportButton;
++use SilverStripe\Reports\Report;
++
+
+
+
+@@ -15,13 +19,13 @@
+  * @sub-package: reports
+
+  **/
+-class EcommerceSideReportNoInternalIDProducts extends SS_Report
++class EcommerceSideReportNoInternalIDProducts extends Report
+ {
+     /**
+      * The class of object being managed by this report.
+      * Set by overriding in your subclass.
+      */
+-    protected $dataClass = 'Product';
++    protected $dataClass = Product::class;
+
+     /**
+      * @return string
+@@ -69,7 +73,7 @@
+     {
+         return [
+             'FullName' => [
+-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
++                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                 'link' => true,
+             ],
+         ];
+@@ -79,7 +83,7 @@
+     {
+         $field = parent::getReportField();
+         $config = $field->getConfig();
+-        $exportButton = $config->getComponentByType('GridFieldExportButton');
++        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+         $exportButton->setExportColumns($field->getColumns());
+
+         return $field;
+
+modified:	_config/config.yml
+@@ -5,48 +5,36 @@
+    - 'framework/*'
+    - 'cms/*'
+ ---
+-
+-
+-
+-DevelopmentAdmin:
++SilverStripe\Dev\DevelopmentAdmin:
+   extensions:
+-    - EcommerceDevelopmentAdminDecorator
++    - Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator
+   registered_controllers:
+     ecommerce:
+-      controller: 'EcommerceDatabaseAdmin'
++      controller: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
+       links:
+         ecommerce: 'The home page for everything e-commerce'
+-
+ SilverStripe\Security\Member:
+   extensions:
+-    - EcommerceRole
+-
++    - Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole
+ SilverStripe\CMS\Model\SiteTree:
+   extensions:
+-    - EcommerceSiteTreeExtension
+-  #we add this index to make caching faster ....
++    - Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension
+   indexes:
+     LastEdited: true
+-
+ PageController:
+   extensions:
+-    - EcommerceSiteTreeExtensionController
+-
++    - Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
+ Money:
+   extensions:
+-    - EcommerceMoney
+-
+-OrderEmailRecordReview:
+-  url_segment: "ecommerce-email-preview"
+-
+-EcommerceDatabaseAdmin:
++    - Sunnysideup\Ecommerce\Money\EcommerceMoney
++Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
++  url_segment: ecommerce-email-preview
++Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
+   allowed_actions:
+     runTask: ADMIN
+-
+ SilverStripe\Admin\LeftAndMain:
+   extra_requirements_css:
+     - ecommerce/css/ecommercecmsfixes.css
+-
+ ---
+ Only:
+   moduleexists: 'grouped-cms-menu'
+@@ -54,10 +42,10 @@
+ SilverStripe\Admin\LeftAndMain:
+   menu_groups:
+     Shop:
+-      - StoreAdmin
+-      - ProductsAndGroupsModelAdmin
+-      - ProductConfigModelAdmin
+-      - SalesAdmin
+-      - SalesAdminExtras
++      - Sunnysideup\Ecommerce\Cms\StoreAdmin
++      - Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
++      - Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
++      - Sunnysideup\Ecommerce\Cms\SalesAdmin
++      - Sunnysideup\Ecommerce\Cms\SalesAdminExtras
+       - refresh
+
+
+modified:	_config/payment.yml
+@@ -5,11 +5,9 @@
+ only:
+   environment: 'dev'
+ ---
+-EcommercePayment:
++Sunnysideup\Ecommerce\Model\Money\EcommercePayment:
+   supported_methods:
+-    EcommercePaymentTestSuccess : "Test Success Payment"
+-    EcommercePaymentTestPending : "Test Pending Payment"
+-    EcommercePaymentTestFailure : "Test Failure Payment"
++    Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestSuccess: 'Test Success Payment'
++    Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestPending: 'Test Pending Payment'
++    Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestFailure: 'Test Failure Payment'
+
+-
+-
+
+modified:	_config/ecommerce.yml
+@@ -6,66 +6,32 @@
+   - 'framework/*'
+   - 'cms/*'
+ ---
+-
+-
+-# USAGAE:
+-# 1. copy this file to another location (e.g. mysite/_config)
+-# 2. reference the new file location in /ecommerce/_config/
+-# 3. choose your settings in the new file
+-#      - note:
+-#        - no commas after values
+-#        - indents are important
+-#        - make sure to have a space after :
+-#
+-# Add to your config.yml file:
+-
+-#EcommerceConfig:
+-  #folder_and_file_locations:
+-    #- "ecommerce/_config/ecommerce.yml"
+-
+-
+-###############################################
+-# START ECOMMERCE CONFIG
+-###############################################
+-
+-
+-
+-################### CONFIG #####################
+-EcommerceDBConfig:
+-  ecommerce_db_config_class_name: "EcommerceDBConfig"
++Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig:
++  ecommerce_db_config_class_name: Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig
+   array_of_buyables:
+-    - Product
+-
+-
+-
+-################### PAGES #####################
+-
+-CheckoutPageController:
++    - Sunnysideup\Ecommerce\Pages\Product
++Sunnysideup\Ecommerce\Pages\CheckoutPageController:
+   checkout_steps:
+     - orderitems
+     - orderformaddress
+     - orderconfirmationandpayment
+-  ajaxify_steps: []
+-   #- ecommerce/javascript/EcomCheckoutPage.js
+-
+-ShopAccountFormValidator:
++  ajaxify_steps: {  }
++Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator:
+   minimum_password_length: 7
+-
+-OrderConfirmationPageController:
++Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController:
+   include_as_checkout_step: true
+-  google_analytics_variable: 'ga'
+-
+-ProductGroup:
+-  base_buyable_class: Product
++  google_analytics_variable: ga
++Sunnysideup\Ecommerce\Pages\ProductGroup:
++  base_buyable_class: Sunnysideup\Ecommerce\Pages\Product
+   actively_check_for_can_purchase: false
+   maximum_number_of_products_to_list: 300
+   sort_options:
+     default:
+       Title: 'Default Order'
+-      SQL: "\"Sort\" ASC, \"Title\" ASC"
++      SQL: '"Sort" ASC, "Title" ASC'
+     price:
+       Title: 'Lowest Price'
+-      SQL: "\"Price\" ASC, \"Sort\" ASC, \"Title\" ASC"
++      SQL: '"Price" ASC, "Sort" ASC, "Title" ASC'
+   filter_options:
+     default:
+       Title: 'All Products (default)'
+@@ -80,140 +46,102 @@
+     default:
+       Title: default
+   session_name_for_product_array: ProductGroupProductIDs
+-
+-ProductGroupSearchPage:
++Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage:
+   maximum_number_of_products_to_list_for_search: 100
+-  best_match_key: 'bestmatch'
++  best_match_key: bestmatch
+   sort_options:
+     bestmatch:
+       Title: 'Best Match'
+-      SQL: "\"Price\" DESC"
+-
+-Product:
+-  folder_name_for_images: "ProductImages"
++      SQL: '"Price" DESC'
++Sunnysideup\Ecommerce\Pages\Product:
++  folder_name_for_images: ProductImages
+   add_data_to_meta_description_for_search: false
+-
+-ProductImage:
++Sunnysideup\Ecommerce\Filesystem\ProductImage:
+   thumbnail_width: 75
+   thumbnail_height: 75
+   small_image_width: 200
+   small_image_height: 200
+   content_image_width: 400
+   large_image_width: 600
+-
+-
+-
+-
+-################### MODEL, PROCESS, ADDRESS #####################
+-
+-Order:
+-  modifiers: []
+-  minutes_an_order_can_be_viewed_without_logging_in: 4320 #three day default
++Sunnysideup\Ecommerce\Model\Order:
++  modifiers: {  }
++  minutes_an_order_can_be_viewed_without_logging_in: 4320
+   maximum_ignorable_sales_payments_difference: 0.01
+   order_id_start_number: 0
+-  template_id_prefix: ""
++  template_id_prefix: ''
+   ajax_subtotal_format:
+     - SubTotalAsMoney
+     - NiceDefaultFormat
+   ajax_total_format:
+     - TotalAsMoney
+     - NiceDefaultFormat
+-  date_format_for_title: "D j M Y, G:i T"
++  date_format_for_title: 'D j M Y, G:i T'
+   include_customer_name_in_title: true
+-
+-OrderItem:
++Sunnysideup\Ecommerce\Model\OrderItem:
+   ajax_total_format:
+     - CalculatedTotalAsMoney
+     - NiceDefaultFormat
+-
+-OrderModifier:
++Sunnysideup\Ecommerce\Model\OrderModifier:
+   ajax_total_format:
+     - TableValueAsMoney
+     - NiceDefaultFormat
+-
+-OrderStep:
+-# we only add the basics here, so that it is easy to add additional ones...
++Sunnysideup\Ecommerce\Model\Process\OrderStep:
+   order_steps_to_include:
+-    step1: OrderStepCreated
+-    step2: OrderStepSubmitted
+-    step3: OrderStepArchived
+-
++    step1: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated
++    step2: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted
++    step3: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived
+   number_of_days_to_send_update_email: 10
+-
+-OrderStepConfirmed:
++Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed:
+   list_of_things_to_check:
+-    check1:  "Payment has arrived in Bank Account"
+-    check2:  "Products are available"
+-
+-OrderStatusLog:
+-  available_log_classes_array: []
+-    #- OrderStatusLogCancel
+-    #- OrderStatusLogDispatchElectronicOrder
+-    #- OrderStatusLogDispatchPhysicalOrder
+-    #- OrderStatusLogPaymentCheck
+-    #- OrderStatusLogArchived
+-  order_status_log_class_used_for_submitting_order: "OrderStatusLogSubmitted"
+-
+-BillingAddress:
++    check1: 'Payment has arrived in Bank Account'
++    check2: 'Products are available'
++Sunnysideup\Ecommerce\Model\Process\OrderStatusLog:
++  available_log_classes_array: {  }
++  order_status_log_class_used_for_submitting_order: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted
++Sunnysideup\Ecommerce\Model\Address\BillingAddress:
+   allow_selection_of_previous_addresses_in_checkout: false
+   required_fields:
+     - Phone
+-    - Email
++    - SilverStripe\Control\Email\Email
+     - FirstName
+     - Surname
+     - Address
+     - City
+     - PostalCode
+-#   - RegionCode
+-#   - RegionID
+-
+-ShippingAddress:
++Sunnysideup\Ecommerce\Model\Address\ShippingAddress:
+   allow_selection_of_previous_addresses_in_checkout: false
+   required_fields:
+     - ShippingPhone
+-    - ShippingAddress
++    - Sunnysideup\Ecommerce\Model\Address\ShippingAddress
+     - ShippingCity
+     - ShippingPostalCode
+-#   - ShippingRegionCode
+-#   - ShippingRegionID
+     - ShippingCountry
+-
+-EcommerceCountry:
+-  allowed_country_codes: []
+-  visitor_country_provider: "EcommerceCountryVisitorCountryProvider"
+-  default_country_code: "NZ"
+-
+-EcommerceRegion:
+-  visitor_region_provider: "EcommerceRegion_VisitorRegionProvider"
++Sunnysideup\Ecommerce\Model\Address\EcommerceCountry:
++  allowed_country_codes: {  }
++  visitor_country_provider: Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider
++  default_country_code: NZ
++Sunnysideup\Ecommerce\Model\Address\EcommerceRegion:
++  visitor_region_provider: EcommerceRegion_VisitorRegionProvider
+   show_freetext_region_field: true
+-
+-OrderAddress:
++Sunnysideup\Ecommerce\Model\Address\OrderAddress:
+   use_separate_shipping_address: false
+   use_shipping_address_for_main_region_and_country: false
+-  field_class_and_id_prefix: ""
+-
+-
+-
+-
+-################### EXTENSIONS #####################
+-
+-
+-
+-EcommerceRole:
+-  permission_category: 'E-commerce'
++  field_class_and_id_prefix: ''
++Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole:
++  permission_category: E-commerce
+   allow_customers_to_setup_accounts: 1
+   must_have_account_to_purchase: false
+   automatically_update_member_details: true
+-  customer_group_code: "shopcustomers"
+-  customer_group_name: "shop customers"
+-  customer_permission_code: "SHOPCUSTOMER"
+-  admin_group_code: "shopadministrators"
+-  admin_group_name: "shop administrators"
+-  admin_group_user_first_name: ""
+-  admin_group_user_surname: ""
+-  admin_group_user_email: ""
+-  admin_permission_code: "SHOPADMIN"
+-  admin_role_title: "Managing Store"
++  customer_group_code: shopcustomers
++  customer_group_name: 'shop customers'
++  customer_permission_code: SHOPCUSTOMER
++  admin_group_code: shopadministrators
++  admin_group_name: 'shop administrators'
++  admin_group_user_first_name: ''
++  admin_group_user_surname: ''
++  admin_group_user_email: ''
++  admin_permission_code: SHOPADMIN
++  admin_role_title: 'Managing Store'
+   admin_role_permission_codes:
+     - CMS_ACCESS_ProductsAndGroupsModelAdmin
+     - CMS_ACCESS_ProductConfigModelAdmin
+@@ -223,166 +151,99 @@
+     - CMS_ACCESS_AssetAdmin
+     - CMS_ACCESS_CMSMain
+     - CMS_ACCESS_SalesAdmin_PROCESS
+-  assistant_group_code: "shopassistants"
+-  assistant_group_name: "Shop Assistants"
+-  assistant_group_user_first_name: ""
+-  assistant_group_user_surname: ""
+-  assistant_group_user_email: ""
+-  assistant_permission_code: "SHOPASSISTANTS"
+-  assistant_role_title: "Store Assistant"
++  assistant_group_code: shopassistants
++  assistant_group_name: 'Shop Assistants'
++  assistant_group_user_first_name: ''
++  assistant_group_user_surname: ''
++  assistant_group_user_email: ''
++  assistant_permission_code: SHOPASSISTANTS
++  assistant_role_title: 'Store Assistant'
+   assistant_role_permission_codes:
+     - CMS_ACCESS_SalesAdmin
+     - CMS_ACCESS_SalesAdminExtras
+   process_orders_permission_code: CMS_ACCESS_SalesAdmin_PROCESS
+-
+-
+-
+-################### FORMS AND FIELDS #####################
+-
+-OrderFormAddress:
++Sunnysideup\Ecommerce\Forms\OrderFormAddress:
+   shipping_address_first: true
+-
+-ProductSearchForm:
+-  form_data_session_variable: "ProductGroupSearchResultsFormData"
++Sunnysideup\Ecommerce\Forms\ProductSearchForm:
++  form_data_session_variable: ProductGroupSearchResultsFormData
+   include_price_filters: false
+-  product_session_variable: "ProductGroupSearchResultsProducts"
+-  product_group_session_variable: "ProductGroupSearchResultsProductGroups"
+-
+-OrderModifierForm:
+-  controller_class: "OrderModifierFormController"
+-  validator_class: "OrderModifierFormValidator"
+-
+-OrderStatusLogForm:
+-  controller_class: "OrderStatusLogFormController"
+-  validator_class: "OrderStatusLogFormValidator"
+-
++  product_session_variable: ProductGroupSearchResultsProducts
++  product_group_session_variable: ProductGroupSearchResultsProductGroups
++Sunnysideup\Ecommerce\Forms\OrderModifierForm:
++  controller_class: Sunnysideup\Ecommerce\Control\OrderModifierFormController
++  validator_class: Sunnysideup\Ecommerce\Forms\Validation\OrderModifierFormValidator
++Sunnysideup\Ecommerce\Forms\OrderStatusLogForm:
++  controller_class: Sunnysideup\Ecommerce\Control\OrderStatusLogFormController
++  validator_class: Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator
+ ExpirySilverStripe\Forms\DateField:
+   short_months: true
+-
+-
+-
+-################### EMAIL ################################
+-
+-OrderEmail:
++Sunnysideup\Ecommerce\Email\OrderEmail:
+   send_all_emails_plain: false
+-  css_file_location: "ecommerce/css/OrderReport.css"
++  css_file_location: ecommerce/css/OrderReport.css
+   copy_to_admin_for_all_emails: true
+-
+-
+-
+-################### MONEY #############
+-### also see payment.yml
+-
+-EcommerceCurrency:
+-  exchange_provider_class: ExchangeRateProvider
++Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency:
++  exchange_provider_class: Sunnysideup\Ecommerce\Money\ExchangeRateProvider
+   default_currency: NZD
+-
+-EcommerceMoney:
++Sunnysideup\Ecommerce\Money\EcommerceMoney:
+   default_format: NiceShortSymbol
+-
+-
+-################### CONTROL #####################
+-
+-CartPageController:
+-  session_code: "EcommerceCartPageMessage"
+-
+-ShoppingCart:
+-  session_code: "EcommerceShoppingCart"
++Sunnysideup\Ecommerce\Pages\CartPageController:
++  session_code: EcommerceCartPageMessage
++Sunnysideup\Ecommerce\Api\ShoppingCart:
++  session_code: EcommerceShoppingCart
+   cleanup_every_time: true
+-  default_param_filters: []
+-  response_class: "CartResponse"
+-
+-ShoppingCartController:
++  default_param_filters: {  }
++  response_class: Sunnysideup\Ecommerce\Control\CartResponse
++Sunnysideup\Ecommerce\Control\ShoppingCartController:
+   url_segment: shoppingcart
+-
+-EcommercePaymentController:
++Sunnysideup\Ecommerce\Control\EcommercePaymentController:
+   url_segment: ecommercepayment
+-
+-EcommerceConfigAjax:
+-  definitions_class_name: EcommerceConfigAjaxDefinitions
++Sunnysideup\Ecommerce\Config\EcommerceConfigAjax:
++  definitions_class_name: Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions
+   cart_js_file_location: ecommerce/javascript/EcomCart.js
+   dialogue_js_file_location: ecommerce/javascript/jquery.colorbox-min.js
+-
+-#cart responses are set as NameOfJavascriptVariable: NameOfTemplate
+-CartResponse:
++Sunnysideup\Ecommerce\Control\CartResponse:
+   cart_responses_required:
+-#    TinyCartClassName: CartTinyInner
+-#    SmallCartID: CartShortInner
+     SideBarCartID: Sidebar_Cart_Inner
+-
+-################### MODIFIERS #####################
+-
+-
+-
+-
+-
+-
+-################### CMS #####################
+-
+-StoreAdmin:
+-  managed_models:
+-    - EcommerceDBConfig
+-    - OrderStep
+-    - EcommerceCountry
+-    - EcommerceCurrency
+-
+-ProductsAndGroupsModelAdmin:
+-  managed_models:
+-    - Product
+-    - ProductGroup
+-
+-ProductConfigModelAdmin:
+-  managed_models:
+-    - SearchReplacement
+-    - SearchHistory
+-
+-SalesAdmin:
+-  managed_models:
+-    - Order
+-    - OrderProcessQueue
+-    - OrderFeedback
+-
+-SalesAdminExtras:
+-  managed_models:
+-    - Order
+-    - OrderStatusLog
+-    - OrderItem
+-    - OrderModifier
+-    - OrderEmailRecord
+-
+-    - BillingAddress
+-    - ShippingAddress
+-    - EcommercePayment
+-
+-
+-
+-################### TASKS #####################
+-
+-
+-EcommerceTaskCartCleanup:
++Sunnysideup\Ecommerce\Cms\StoreAdmin:
++  managed_models:
++    - Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig
++    - Sunnysideup\Ecommerce\Model\Process\OrderStep
++    - Sunnysideup\Ecommerce\Model\Address\EcommerceCountry
++    - Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency
++Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin:
++  managed_models:
++    - Sunnysideup\Ecommerce\Pages\Product
++    - Sunnysideup\Ecommerce\Pages\ProductGroup
++Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin:
++  managed_models:
++    - Sunnysideup\Ecommerce\Model\Search\SearchReplacement
++    - Sunnysideup\Ecommerce\Model\Search\SearchHistory
++Sunnysideup\Ecommerce\Cms\SalesAdmin:
++  managed_models:
++    - Sunnysideup\Ecommerce\Model\Order
++    - Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue
++    - Sunnysideup\Ecommerce\Model\Process\OrderFeedback
++Sunnysideup\Ecommerce\Cms\SalesAdminExtras:
++  managed_models:
++    - Sunnysideup\Ecommerce\Model\Order
++    - Sunnysideup\Ecommerce\Model\Process\OrderStatusLog
++    - Sunnysideup\Ecommerce\Model\OrderItem
++    - Sunnysideup\Ecommerce\Model\OrderModifier
++    - Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord
++    - Sunnysideup\Ecommerce\Model\Address\BillingAddress
++    - Sunnysideup\Ecommerce\Model\Address\ShippingAddress
++    - Sunnysideup\Ecommerce\Model\Money\EcommercePayment
++Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup:
+   clear_minutes_empty_carts: 120
+   clear_minutes: 10080
+   maximum_number_of_objects_deleted: 10
+   never_delete_if_linked_to_member: true
+   one_to_one_classes:
+-    BillingAddressID: BillingAddress
+-    ShippingAddressID: ShippingAddress
++    BillingAddressID: Sunnysideup\Ecommerce\Model\Address\BillingAddress
++    ShippingAddressID: Sunnysideup\Ecommerce\Model\Address\ShippingAddress
+   one_to_many_classes:
+-    OrderAttribute: OrderAttribute
+-    OrderStatusLog: OrderStatusLog
+-    OrderEmailRecord: OrderEmailRecord
+-  many_to_many_classes: []
++    Sunnysideup\Ecommerce\Model\OrderAttribute: Sunnysideup\Ecommerce\Model\OrderAttribute
++    Sunnysideup\Ecommerce\Model\Process\OrderStatusLog: Sunnysideup\Ecommerce\Model\Process\OrderStatusLog
++    Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord: Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord
++  many_to_many_classes: {  }
+
+-
+-################### SERVICES #####################
+-# these can be overriden in mysite/_config/config.yml #
+-
+-#Injector:
+-  #EcommercePaymentSupportedMethodsProvider:
+-    #class: EcommercePaymentSupportedMethodsProvider
+-
+-
+-###############################################
+-# END ECOMMERCE CONFIG
+-###############################################
+-
+
+modified:	_config/routes.yaml
+@@ -2,12 +2,12 @@
+ Name: ecommerce_routes
+ After: framework/routes#coreroutes
+ ---
+-Director:
++SilverStripe\Control\Director:
+   rules:
+-    'shoppingcart//$Action/$ID/$OtherID/$Version' : 'ShoppingCartController'
+-    'ecommercepayment//$Action/$ID/$OtherID' : 'EcommercePaymentController'
+-    'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
+-    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectFieldDataList'
+-    'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecordReview'
+-    'ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version' : 'OrderModifierFormController'
++    shoppingcart//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\ShoppingCartController
++    ecommercepayment//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommercePaymentController
++    ecommercetemplatetest//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
++    ecommercebuyabledatalist//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
++    ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
++    ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\OrderModifierFormController
+
+
+Writing changes for 230 files
+✔✔✔

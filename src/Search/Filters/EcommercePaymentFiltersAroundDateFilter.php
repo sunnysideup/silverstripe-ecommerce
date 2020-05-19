@@ -2,11 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use ExactMatchFilter;
-use DataQuery;
-use Date;
-use DB;
+
+
+
+
 use PostgreSQLDatabase;
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
+
 
 
 
@@ -46,7 +51,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
     {
         //$this->model = $query->applyRelation($this->relation);
         $value = $this->getValue();
-        $date = new Date();
+        $date = new DBDate();
         $date->setValue($value);
         $distanceFromToday = time() - strtotime($value);
         $maxDays = round($distanceFromToday / (($this->divider * 2) * 86400)) + 1;

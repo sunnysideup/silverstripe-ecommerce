@@ -3,41 +3,83 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-use BuyableModel;
-use HTMLEditorField;
-use TextField;
-use ProductProductImageUploadField;
-use ReadonlyField;
-use CheckboxField;
-use NumericField;
-use LiteralField;
-use HeaderField;
-use EcommerceCodeFilter;
-use Config;
-use Image;
-use SiteTree;
-use DataObject;
-use ProductImage;
-use ClassInfo;
-use OrderItem;
-use ShoppingCart;
-use Order;
-use ShoppingCartController;
-use Controller;
-use Director;
-use EcommerceConfig;
-use EcomQuantityField;
-use EcommerceConfigAjax;
-use EcommerceDBConfig;
-use EcommerceCurrency;
-use Member;
-use EcommerceCountry;
-use Permission;
-use EcommerceTaskDebugCart;
-use GridField;
-use GridFieldBasicPageRelationConfig;
-use EcommerceTaskLinkProductWithImages;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 use UploadFIeld;
+use Sunnysideup\Ecommerce\Model\ProductOrderItem;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\File;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\ClassInfo;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderAttribute;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Control\Controller;
+use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use SilverStripe\Forms\GridField\GridField;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+
 
 /**
  * This is a standard Product page-type with fields like
@@ -61,7 +103,7 @@ class Product extends Page implements BuyableModel
     /**
      * @var string
      */
-    protected $defaultClassNameForOrderItem = 'ProductOrderItem';
+    protected $defaultClassNameForOrderItem = ProductOrderItem::class;
 
     /**
      * Standard SS variable.
@@ -134,14 +176,14 @@ class Product extends Page implements BuyableModel
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Image' => 'ProductImage',
+        'Image' => ProductImage::class,
     ];
 
     /**
      * Standard SS variable.
      */
     private static $many_many = [
-        'ProductGroups' => 'ProductGroup',
+        'ProductGroups' => ProductGroup::class,
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -151,8 +193,8 @@ class Product extends Page implements BuyableModel
   * EXP: you may want to add ownership (owns)
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        'AdditionalImages' => 'Image',
-        'AdditionalFiles' => 'File',
+        'AdditionalImages' => Image::class,
+        'AdditionalFiles' => File::class,
     ];
 
     /**
@@ -256,7 +298,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-    private static $default_parent = 'ProductGroup';
+    private static $default_parent = ProductGroup::class;
 
     /**
      * Standard SS variable.
@@ -281,7 +323,7 @@ class Product extends Page implements BuyableModel
 
     public function i18n_singular_name()
     {
-        return _t('Order.PRODUCT', 'Product');
+        return _t('Order.PRODUCT', Product::class);
     }
 
     public function i18n_plural_name()
@@ -317,8 +359,8 @@ class Product extends Page implements BuyableModel
   * EXP: make sure that Image does not end up as Image::class where this is not required
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
-        $uploadField->setCallingClass('Product');
+        $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField(Image::class, _t('Product.IMAGE', 'Product Image')));
+        $uploadField->setCallingClass(Product::class);
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
@@ -436,7 +478,7 @@ class Product extends Page implements BuyableModel
         //because the MetaKeywords Field is being searched.
         if ($this->Config()->get('add_data_to_meta_description_for_search')) {
             $this->MetaDescription = '';
-            $fieldsToExclude = Config::inst()->get('SiteTree', 'db');
+            $fieldsToExclude = Config::inst()->get(SiteTree::class, 'db');
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -475,8 +517,8 @@ class Product extends Page implements BuyableModel
     {
         parent::onAfterWrite();
         if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(['ClassName' => 'ProductImage'])->byID($this->ImageID)) {
-                $normalImage = $normalImage->newClassInstance('ProductImage');
+            if ($normalImage = Image::get()->exclude(['ClassName' => ProductImage::class])->byID($this->ImageID)) {
+                $normalImage = $normalImage->newClassInstance(ProductImage::class);
                 $normalImage->write();
             }
         }
@@ -514,7 +556,7 @@ class Product extends Page implements BuyableModel
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
+                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
                     $parentTitleArray[] = $obj->Title;
                 }
             }
@@ -577,7 +619,7 @@ class Product extends Page implements BuyableModel
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                    if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
+                    if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
                         $allParentsArray[$obj->ID] = $obj->ID;
                     }
                 }
@@ -619,7 +661,7 @@ class Product extends Page implements BuyableModel
         while ($parent && $x < 100) {
             $returnValue = $parent;
             $parent = DataObject::get_one(
-                'ProductGroup',
+                ProductGroup::class,
                 ['ID' => $parent->ParentID]
             );
             ++$x;
@@ -903,8 +945,8 @@ class Product extends Page implements BuyableModel
     public function getHasBeenSold()
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false);
-        $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
-        $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
+        $dataList = $dataList->innerJoin(OrderAttribute::class, '"OrderAttribute"."OrderID" = "Order"."ID"');
+        $dataList = $dataList->innerJoin(OrderItem::class, '"OrderAttribute"."ID" = "OrderItem"."ID"');
         $dataList = $dataList->filter(
             [
                 'BuyableID' => $this->ID,
@@ -1106,7 +1148,7 @@ class Product extends Page implements BuyableModel
     {
         return Controller::join_links(
             Director::baseURL(),
-            EcommerceConfig::get('ShoppingCartController', 'url_segment'),
+            EcommerceConfig::get(ShoppingCartController::class, 'url_segment'),
             'submittedbuyable',
 
 /**
@@ -1312,7 +1354,7 @@ class Product extends Page implements BuyableModel
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -1335,7 +1377,7 @@ class Product extends Page implements BuyableModel
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -1360,7 +1402,7 @@ class Product extends Page implements BuyableModel
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductsAndGroupsModelAdmin'))) {
+        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
         if (! $member) {

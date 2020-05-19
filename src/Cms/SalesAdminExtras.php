@@ -2,14 +2,25 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use Requirements;
-use EcommerceConfig;
-use DataList;
-use GridField;
-use GridFieldExportSalesButton;
-use GridFieldPrintAllInvoicesButton;
-use GridFieldPrintAllPackingSlipsButton;
-use GridFieldPrintInvoiceButton;
+
+
+
+
+
+
+
+
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Forms\GridField\GridField;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
+
 
 
 
@@ -71,9 +82,9 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     public function getManagedModels()
     {
         $models = parent::getManagedModels();
-        $orderModelManagement = isset($models['Order']) ? $models['Order'] : null;
+        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
         if ($orderModelManagement) {
-            unset($models['Order']);
+            unset($models[Order::class]);
 
             return ['Order' => $orderModelManagement] + $models;
         }
@@ -87,10 +98,10 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     public function getList()
     {
         $list = parent::getList();
-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
-            $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
             $list = $list
-                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->LeftJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
                 ->where('"OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\'');
         }
@@ -109,7 +120,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
+        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();

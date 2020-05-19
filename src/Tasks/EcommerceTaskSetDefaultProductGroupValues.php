@@ -2,10 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DataObject;
-use DB;
-use ProductGroup;
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -31,7 +36,7 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 
     public function run($request)
     {
-        $productGroup = DataObject::get_one('ProductGroup');
+        $productGroup = DataObject::get_one(ProductGroup::class);
         if ($productGroup) {
             foreach ($this->fieldsToCheck as $method => $fieldName) {
                 $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));

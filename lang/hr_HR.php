@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Croatian (Croatia) language pack.
  */
@@ -41,8 +45,8 @@ $lang['hr_HR']['ChequePayment']['MESSAGE'] = 'Prihvaćena uplata čekom. Primite
 $lang['hr_HR']['FindOrderReport']['DATERANGE'] = 'Raspon datuma';
 $lang['hr_HR']['MemberForm']['DETAILSSAVED'] = 'Vaši detalji su snimljeni';
 $lang['hr_HR']['MemberForm']['LOGGEDIN'] = 'Trenutno ste logirani kao';
-$lang['hr_HR']['Order']['INCOMPLETE'] = 'Nepotpuna narudžba';
-$lang['hr_HR']['Order']['SUCCESSFULL'] = 'Narudžba uspjela';
+$lang['hr_HR'][Order::class]['INCOMPLETE'] = 'Nepotpuna narudžba';
+$lang['hr_HR'][Order::class]['SUCCESSFULL'] = 'Narudžba uspjela';
 $lang['hr_HR']['OrderInformation.ss']['ADDRESS'] = 'Adresa';
 $lang['hr_HR']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adresa kupca';
 $lang['hr_HR']['OrderInformation.ss']['CITY'] = 'Grad';
@@ -50,7 +54,7 @@ $lang['hr_HR']['OrderInformation.ss']['COUNTRY'] = 'Država';
 $lang['hr_HR']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Detalji o kupcu';
 $lang['hr_HR']['OrderInformation.ss']['DATE'] = 'Datum';
 $lang['hr_HR']['OrderInformation.ss']['DETAILS'] = 'Datalji';
-$lang['hr_HR']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['hr_HR']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['hr_HR']['OrderInformation.ss']['MOBILE'] = 'Mobitel';
 $lang['hr_HR']['OrderInformation.ss']['NAME'] = 'Ime';
 $lang['hr_HR']['OrderInformation.ss']['ORDERSUMMARY'] = 'Pregled narudžbe';
@@ -87,7 +91,7 @@ $lang['hr_HR']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Adresa kupca
 $lang['hr_HR']['OrderInformation_NoPricing.ss']['CITY'] = 'Grad';
 $lang['hr_HR']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Država';
 $lang['hr_HR']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Detalji o kupcu';
-$lang['hr_HR']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['hr_HR']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['hr_HR']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobitel';
 $lang['hr_HR']['OrderInformation_NoPricing.ss']['NAME'] = 'Ime';
 $lang['hr_HR']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informazije o narudđbi #';

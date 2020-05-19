@@ -2,23 +2,45 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use ReadonlyField;
-use Tab;
-use CheckboxField;
-use NumericField;
-use EcommerceConfig;
-use LiteralField;
-use EcommerceClassNameOrTypeDropdownField;
-use Controller;
-use Validator;
-use FieldList;
-use OrderModifierForm;
-use EcommerceCurrency;
-use ShoppingCartController;
-use EcommerceTaskDebugCart;
-use HeaderField;
-use Convert;
-use DataObject;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Dev\Debug;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\NumericField;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Validator;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
+use SilverStripe\ORM\DataObject;
+
 
 
 /**
@@ -93,7 +115,7 @@ class OrderModifier extends OrderAttribute
             'Name',
             'TableValue',
             'HasBeenRemoved',
-            'Order',
+            Order::class,
         ],
     ];
 
@@ -268,8 +290,8 @@ class OrderModifier extends OrderAttribute
         $fields->addFieldToTab(
             'Root',
             Tab::create(
-                'Debug',
-                _t('OrderModifier.DEBUG', 'Debug'),
+                Debug::class,
+                _t('OrderModifier.DEBUG', Debug::class),
                 new ReadonlyField('CreatedShown', 'Created', $this->Created),
                 new ReadonlyField('LastEditedShown', 'Last Edited', $this->LastEdited),
                 new ReadonlyField('TableValueShown', 'Table Value', $this->TableValue),
@@ -297,12 +319,12 @@ class OrderModifier extends OrderAttribute
         }
 
         //ClassName Field
-        $availableModifiers = EcommerceConfig::get('Order', 'modifiers');
+        $availableModifiers = EcommerceConfig::get(Order::class, 'modifiers');
 
         if ($this->exists()) {
             $fields->addFieldToTab('Root.Main', new LiteralField('MyClassName', '<h2>' . $this->singular_name() . '</h2>'), 'Name');
         } else {
-            $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderModifier', $availableModifiers);
+            $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', OrderModifier::class, $availableModifiers);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Name');
         }
 
@@ -790,7 +812,7 @@ class OrderModifier extends OrderAttribute
      **/
     public function updateForAjax(array $js)
     {
-        $function = EcommerceConfig::get('OrderModifier', 'ajax_total_format');
+        $function = EcommerceConfig::get(OrderModifier::class, 'ajax_total_format');
         if (is_array($function)) {
             list($function, $format) = $function;
         }
@@ -942,7 +964,7 @@ class OrderModifier extends OrderAttribute
     {
         if ($this->orderModifier_Descriptor === null) {
             $this->orderModifier_Descriptor = DataObject::get_one(
-                'OrderModifierDescriptor',
+                OrderModifierDescriptor::class,
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###

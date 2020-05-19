@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use ShoppingCart;
-use Config;
+
+
+
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -79,7 +84,7 @@ class EcommerceTaskDebugCart extends BuildTask
             case 'HTMLText':
                 $value = substr(strip_tags($value), 0, 100);
                 break;
-            case 'Boolean':
+            case DBBoolean::class:
                 $value = $value ? 'YES' : 'NO';
                 break;
             default:

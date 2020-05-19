@@ -2,11 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use OrderStep;
-use OrderStepInterface;
-use HeaderField;
-use Order;
-use FieldList;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+
 
 
 
@@ -21,7 +29,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
     /**
      * @var string
      */
-    protected $emailClassName = 'OrderInvoiceEmail';
+    protected $emailClassName = OrderInvoiceEmail::class;
 
 
 /**
@@ -140,7 +148,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLog', $title), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLog::class, $title), 'ActionNextStepManually');
 
         return $fields;
     }

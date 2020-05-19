@@ -2,43 +2,87 @@
 
 namespace Sunnysideup\Ecommerce\Model\Config;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use Email;
-use EcommerceConfig;
-use ProductImage;
-use TextField;
-use LiteralField;
-use Tab;
-use CheckboxField;
-use HTMLEditorField;
-use NumericField;
-use ReadonlyField;
-use UploadField;
-use Requirements;
-use ProductProductImageUploadField;
-use HiddenField;
-use GridFieldConfig;
-use GridFieldToolbarHeader;
-use GridFieldSortableHeader;
-use GridFieldDataColumns;
-use GridFieldPaginator;
-use GridFieldEditButton;
-use GridFieldDeleteAction;
-use GridFieldDetailForm;
-use GridField;
-use OrderStep;
-use ShoppingCart;
-use EcommerceCurrency;
-use AccountPage;
-use CheckoutPage;
-use CartPage;
-use OrderConfirmationPage;
-use DB;
-use SiteConfig;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Assets\Image;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Forms\GridField\GridField;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use SilverStripe\ORM\DB;
+use SilverStripe\SiteConfig\SiteConfig;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 /**
@@ -130,8 +174,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
   * EXP: you may want to add ownership (owns)
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        'EmailLogo' => 'Image',
-        'DefaultProductImage' => 'ProductImage',
+        'EmailLogo' => Image::class,
+        'DefaultProductImage' => ProductImage::class,
     ];
 
     /**
@@ -308,7 +352,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -334,7 +378,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -385,7 +429,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            $className = EcommerceConfig::get('EcommerceDBConfig', 'ecommerce_db_config_class_name');
+            $className = EcommerceConfig::get(EcommerceDBConfig::class, 'ecommerce_db_config_class_name');
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -405,7 +449,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                $className = 'EcommerceDBConfig';
+                $className = EcommerceDBConfig::class;
             }
             self::$_my_current_one = DataObject::get_one(
 
@@ -625,9 +669,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         )
                     ),
                 ]);
-                $mappingArray = Config::inst()->get('BillingAddress', 'fields_to_google_geocode_conversion');
+                $mappingArray = Config::inst()->get(BillingAddress::class, 'fields_to_google_geocode_conversion');
                 if (is_array($mappingArray) && count($mappingArray)) {
-                    $mappingArray = Config::inst()->get('ShippingAddress', 'fields_to_google_geocode_conversion');
+                    $mappingArray = Config::inst()->get(ShippingAddress::class, 'fields_to_google_geocode_conversion');
                     if (is_array($mappingArray) && count($mappingArray)) {
                         $fields->removeByName('PostalCodeURL');
                         $fields->removeByName('PostalCodeLabel');
@@ -753,7 +797,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
         $implementorsArray = class_implements($className);
-        if (is_array($implementorsArray) && in_array('BuyableModel', $implementorsArray, true)) {
+        if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
             return true;
         }
 
@@ -785,7 +829,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function Currency()
     {
-        return EcommerceConfig::get('EcommerceCurrency', 'default_currency');
+        return EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
     }
 
     /**

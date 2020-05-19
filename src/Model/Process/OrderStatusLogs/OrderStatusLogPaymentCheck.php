@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-use OrderStatusLog;
-use CheckboxField;
-use Config;
+
+
+
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+
 
 
 
@@ -114,7 +119,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     {
         if ($this->Author()) {
             Config::nest();
-            Config::inst()->update('SSViewer', 'theme_enabled', true);
+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('Order_CustomerNote_PaymentCheck');
             Config::unnest();
 

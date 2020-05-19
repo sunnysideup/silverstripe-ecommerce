@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-use ViewableData;
-use EcommercePaymentSupportedMethodsProviderInterface;
-use Director;
-use EcommerceConfig;
-use ArrayLib;
-use Order;
-use ShoppingCart;
+
+
+
+
+
+
+
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\ArrayLib;
+use Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
+
 
 
 /**
@@ -52,12 +62,12 @@ class EcommercePaymentSupportedMethodsProvider extends ViewableData implements E
         if (Director::isLive()) {
             $hideTestPaymentMethods = true;
         }
-        $supportedMethods = EcommerceConfig::get('EcommercePayment', 'supported_methods');
+        $supportedMethods = EcommerceConfig::get(EcommercePayment::class, 'supported_methods');
         if (count($supportedMethods)) {
             if (ArrayLib::is_associative($supportedMethods)) {
                 if ($hideTestPaymentMethods) {
                     foreach (array_keys($supportedMethods) as $methodClass) {
-                        if (is_subclass_of($methodClass, 'EcommercePaymentTest')) {
+                        if (is_subclass_of($methodClass, EcommercePaymentTest::class)) {
                             unset($supportedMethods[$methodClass]);
                         }
                     }

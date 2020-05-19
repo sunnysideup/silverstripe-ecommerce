@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use ViewableData;
-use FieldList;
-use EcommerceCreditCardField;
-use TextField;
-use ExpiryDateField;
-use EcommercePayment;
-use Config;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCreditCardField;
+use SilverStripe\Forms\TextField;
+use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
+use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
+use SilverStripe\View\ViewableData;
+
 
 
 //get_credit_card_payment_form_fields: $formHelper->getCreditCardPaymentFormFields
@@ -185,7 +195,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
             $this->paymentObject = $paymentObject;
         }
         $paymentClassName = $this->paymentObject->ClassName;
-        $dbFieldMap = Config::inst()->get('EcommercePaymentFormSetupAndValidation', 'db_field_map');
+        $dbFieldMap = Config::inst()->get(EcommercePaymentFormSetupAndValidation::class, 'db_field_map');
         $cardNumberFormFields = [
             'CardNumber',
             'ExpiryDate',
@@ -346,7 +356,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (! is_a($result, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('EcommercePaymentResult'))) {
+        if (! is_a($result, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(EcommercePaymentResult::class))) {
             $form->controller->redirectBack();
 
             return false;

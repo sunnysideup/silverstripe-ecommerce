@@ -2,10 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Model\Search;
 
-use DataObject;
-use Member;
-use Permission;
-use Config;
+
+
+
+
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\ORM\DataObject;
+
 
 
 class SearchHistory extends DataObject
@@ -144,7 +150,7 @@ class SearchHistory extends DataObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 

@@ -2,12 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use OrderStep;
-use OrderStepInterface;
-use Order;
-use FieldList;
-use LiteralField;
-use EcommerceConfig;
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+
 
 
 /**
@@ -21,7 +30,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     /**
      * @var string
      */
-    protected $relevantLogEntryClassName = 'OrderStatusLogPaymentCheck';
+    protected $relevantLogEntryClassName = OrderStatusLogPaymentCheck::class;
 
     private static $defaults = [
         'CustomerCanEdit' => 0,
@@ -97,8 +106,8 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.MUSTDOPAYMENTCHECK', ' ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLogPaymentCheck', $title), 'ActionNextStepManually');
-        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get('OrderStepConfirmed', 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLogPaymentCheck::class, $title), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get(OrderStepConfirmed::class, 'list_of_things_to_check')) . '</li></ul>'), 'ActionNextStepManually');
 
         return $fields;
     }

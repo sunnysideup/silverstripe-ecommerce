@@ -2,9 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use LiteralField;
-use DataObject;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use SilverStripe\Forms\LiteralField;
+
 
 
 class EcommerceSearchHistoryFormField extends LiteralField
@@ -150,7 +156,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function Field($properties = [])
     {
-        $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
+        $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
         $title = $this->getContent();
         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
         $data = DB::query('
@@ -192,7 +198,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 }
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'] . '-' . $key] = $row['Title'];
-                $link = $redirectToPage->Link('ProductSearchForm') . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
                 $debugLink = $link . '&DebugSearch=1';
                 $tableContent .= '
                     <tr>
@@ -215,7 +221,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     <h3>A - Z</h3>
                     <table class="aToz" style="widht: 100%">';
                 foreach ($list as $key => $title) {
-                    $link = $redirectToPage->Link('ProductSearchForm') . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                    $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
                     $debugLink = $link . '&DebugSearch=1';
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);

@@ -2,25 +2,47 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use DataObject;
+
 use Page;
-use EcommerceConfig;
-use Permission;
-use Config;
-use OptionalTreeDropdownField;
-use TextField;
-use HTMLEditorField;
-use OrderModifierDescriptor;
-use CheckoutPageStepDescription;
-use CheckboxField;
-use SiteTree;
-use GridFieldConfig;
-use GridFieldToolbarHeader;
-use GridFieldSortableHeader;
-use GridFieldDataColumns;
-use GridFieldEditButton;
-use GridFieldDetailForm;
-use GridField;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\CMS\Model\SiteTree;
+use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridField;
+
 
 
 /**
@@ -61,7 +83,7 @@ class CheckoutPage extends CartPage
      *
      * @Var Boolean
      */
-    private static $hide_ancestor = 'CartPage';
+    private static $hide_ancestor = CartPage::class;
 
     /**
      * standard SS variable.
@@ -168,7 +190,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_terms_and_conditions_page()
     {
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if ($checkoutPage && $checkoutPage->TermsPageID) {
             return Page::get()->byID($checkoutPage->TermsPageID);
         }
@@ -183,7 +205,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_link($action = null)
     {
-        $page = DataObject::get_one('CheckoutPage');
+        $page = DataObject::get_one(CheckoutPage::class);
         if ($page) {
             return $page->Link($action);
         }
@@ -284,7 +306,7 @@ class CheckoutPage extends CartPage
      **/
     public function canCreate($member = null)
     {
-        return CheckoutPage::get()->Filter(['ClassName' => 'CheckoutPage'])->Count() ? false : $this->canEdit($member);
+        return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -296,7 +318,7 @@ class CheckoutPage extends CartPage
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -345,7 +367,7 @@ class CheckoutPage extends CartPage
         $termsPageIDField = OptionalTreeDropdownField::create(
             'TermsPageID',
             _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
-            'SiteTree'
+            SiteTree::class
         );
         $termsPageIDField->setRightTitle(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
         $fields->addFieldToTab('Root.Terms', $termsPageIDField);
@@ -378,7 +400,7 @@ class CheckoutPage extends CartPage
     {
         parent::requireDefaultRecords();
         if (SiteTree::config()->create_default_pages) {
-            $checkoutPage = DataObject::get_one('CheckoutPage');
+            $checkoutPage = DataObject::get_one(CheckoutPage::class);
             if (! $checkoutPage) {
                 $checkoutPage = self::create();
                 $checkoutPage->Title = 'Checkout';
@@ -405,7 +427,7 @@ class CheckoutPage extends CartPage
         $title = _t('CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES', 'Messages relating to order form extras (e.g. tax or shipping)');
         $source = OrderModifierDescriptor::get();
 
-        return new GridField('OrderModifierDescriptor', $title, $source, $gridFieldConfig);
+        return new GridField(OrderModifierDescriptor::class, $title, $source, $gridFieldConfig);
     }
 
     /**
@@ -423,7 +445,7 @@ class CheckoutPage extends CartPage
         $title = _t('CheckoutPage.CHECKOUTSTEPESCRIPTIONS', 'Checkout Step Descriptions');
         $source = CheckoutPageStepDescription::get();
 
-        return new GridField('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
+        return new GridField(CheckoutPageStepDescription::class, $title, $source, $gridFieldConfig);
     }
 }
 

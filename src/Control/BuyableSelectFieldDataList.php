@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Controller;
-use Config;
-use Director;
-use SS_HTTPRequest;
-use Convert;
-use EcommerceConfig;
-use Versioned;
+
+
+
+
+
+
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Versioned\Versioned;
+
 
 
 
@@ -63,11 +73,11 @@ class BuyableSelectFieldDataList extends Controller
      *
      * @return string (JSON)
      */
-    public function json(SS_HTTPRequest $request)
+    public function json(HTTPRequest $request)
     {
         $countOfSuggestions = $request->requestVar('countOfSuggestions');
         $term = Convert::raw2sql($request->requestVar('term'));
-        $arrayOfBuyables = EcommerceConfig::get('EcommerceDBConfig', 'array_of_buyables');
+        $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
         $arrayOfAddedItemIDsByClassName = [];
         $lengthOfFieldsToSearch = count($this->fieldsToSearch);
         $lenghtOfBuyables = count($arrayOfBuyables);
@@ -90,7 +100,7 @@ class BuyableSelectFieldDataList extends Controller
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('SiteTree'))) {
+            if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(SiteTree::class))) {
                 if (Versioned::current_stage() === 'Live') {
                     $buyables[$key]['TableName'] .= '_Live';
                 }

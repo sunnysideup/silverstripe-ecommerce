@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Money\Payment\PaymentResults;
 
-use EcommercePaymentResult;
+
+use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
+
 
 
 class EcommercePaymentFailure extends EcommercePaymentResult

@@ -2,22 +2,44 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use DataObject;
-use EditableEcommerceObject;
-use EcommerceConfig;
+
+
+
 use CMSEditLinkAPI;
-use Member;
-use Permission;
-use Config;
-use NumericField;
-use ShoppingCartController;
-use Convert;
-use EcommerceDBConfig;
-use EcommerceTaskDebugCart;
-use FieldList;
-use TextField;
-use DropdownField;
-use HiddenField;
+
+
+
+
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\HiddenField;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 
@@ -93,7 +115,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public static function get_country_field_ID()
     {
-        if (EcommerceConfig::get('OrderAddress', 'use_shipping_address_for_main_region_and_country')) {
+        if (EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country')) {
             return 'ShippingCountry';
         }
         return 'Country';
@@ -107,7 +129,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public static function get_region_field_ID()
     {
-        if (EcommerceConfig::get('OrderAddress', 'use_shipping_address_for_main_region_and_country')) {
+        if (EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country')) {
             return 'ShippingRegion';
         }
         return 'Region';
@@ -156,7 +178,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -341,7 +363,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function getFullString()
     {
         Config::nest();
-        Config::modify()->update('SSViewer', 'theme_enabled', true);
+        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -426,7 +448,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('BillingAddress'))) {
+            if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class))) {
                 $this->Email = $member->Email;
             }
             $fieldNameArray = ['FirstName' => $fieldPrefix . 'FirstName', 'Surname' => $fieldPrefix . 'Surname'];
@@ -441,7 +463,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                if (! $this->{$fieldName} || (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('BillingAddress')))) {
+                if (! $this->{$fieldName} || (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class)))) {
                     $this->{$fieldName} = $member->{$memberField};
                 }
             }
@@ -504,7 +526,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         parent::onAfterWrite();
         if ($this->exists()) {
             $order = DataObject::get_one(
-                'Order',
+                Order::class,
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -624,7 +646,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $postalCodeURL = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;
         $postalCodeLabel = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;
         if ($postalCodeURL && $postalCodeLabel) {
-            $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
+            $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
             $field->setRightTitle('<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>');
         }
 
@@ -663,7 +685,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             //adding region field here as hidden field to make the code easier below...
             $regionField = new HiddenField($name, '', 0);
         }
-        $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
+        $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
         $regionField->addExtraClass($prefix . 'ajaxRegionField');
 
         return $regionField;
@@ -699,7 +721,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 $countryField = new HiddenField($name, '', 'not available');
             }
         }
-        $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
+        $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
         $countryField->addExtraClass($prefix . 'ajaxCountryField');
         //important, otherwise loadData will override the default value....
         if ($countryCode) {
@@ -737,10 +759,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      **/
     protected function baseClassLinkingToOrder()
     {
-        if (is_a($this, Object::getCustomClass('BillingAddress'))) {
-            return 'BillingAddress';
-        } elseif (is_a($this, Object::getCustomClass('ShippingAddress'))) {
-            return 'ShippingAddress';
+        if (is_a($this, Object::getCustomClass(BillingAddress::class))) {
+            return BillingAddress::class;
+        } elseif (is_a($this, Object::getCustomClass(ShippingAddress::class))) {
+            return ShippingAddress::class;
         }
     }
 
@@ -751,7 +773,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      **/
     protected function fieldPrefix()
     {
-        if ($this->baseClassLinkingToOrder() === Object::getCustomClass('BillingAddress')) {
+        if ($this->baseClassLinkingToOrder() === Object::getCustomClass(BillingAddress::class)) {
             return '';
         }
         return 'Shipping';

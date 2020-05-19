@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use LiteralField;
+
+use SilverStripe\Forms\LiteralField;
+
 
 
 

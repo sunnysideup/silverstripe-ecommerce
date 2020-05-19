@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Dev;
 
-use ViewableData;
-use DataObject;
+
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ViewableData;
+
 
 
 /**

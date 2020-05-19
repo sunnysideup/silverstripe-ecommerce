@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceConfig;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -25,7 +30,7 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
     {
 
         //set starting order number ID
-        $number = EcommerceConfig::get('Order', 'order_id_start_number');
+        $number = EcommerceConfig::get(Order::class, 'order_id_start_number');
         $currentMax = 0;
         //set order ID
         if ($number) {

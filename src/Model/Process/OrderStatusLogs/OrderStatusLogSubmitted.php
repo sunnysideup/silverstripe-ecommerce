@@ -2,10 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-use OrderStatusLog;
-use Member;
-use EcommerceConfig;
-use DataObject;
+
+
+
+
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+
 
 
 
@@ -136,14 +143,14 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         }
         if (! intval($this->SequentialOrderNumber)) {
             $this->SequentialOrderNumber = 1;
-            $min = intval(EcommerceConfig::get('Order', 'order_id_start_number')) - 0;
+            $min = intval(EcommerceConfig::get(Order::class, 'order_id_start_number')) - 0;
             if (isset($this->ID)) {
                 $id = intval($this->ID);
             } else {
                 $id = 0;
             }
             $lastOne = DataObject::get_one(
-                'OrderStatusLogSubmitted',
+                OrderStatusLogSubmitted::class,
                 '\'ID\' != \'' . $id . '\'',
                 $cacheDataObjectGetOne = true,
                 ['SequentialOrderNumber' => 'DESC']

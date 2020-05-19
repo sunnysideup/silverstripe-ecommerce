@@ -2,22 +2,43 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
-use DataObject;
-use EditableEcommerceObject;
-use ReadonlyField;
+
+
+
 use CMSEditLinkAPI;
-use Member;
-use Permission;
-use Config;
-use Controller;
-use Director;
-use EcommerceConfig;
-use FieldList;
-use OptionsetField;
-use CompositeField;
-use HeaderField;
-use EcommerceTaskDebugCart;
-use Injector;
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 /**
  * "Abstract" class for a number of different payment
@@ -93,8 +114,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'PaidBy' => 'Member',
-        'Order' => 'Order',
+        'PaidBy' => Member::class,
+        'Order' => Order::class,
     ];
 
     private static $summary_fields = [
@@ -230,7 +251,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -250,7 +271,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if ($order && $order->exists()) {
             return $order->canView();
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -274,7 +295,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             if ($extended !== null) {
                 return $extended;
             }
-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
                 return true;
             }
 
@@ -402,7 +423,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Order')) && $order->IsSubmitted()) {
+        if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class)) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }
     }
@@ -422,7 +443,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public static function site_currency()
     {
-        $currency = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
+        $currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         if (! $currency) {
             user_error('It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)', E_USER_NOTICE);
         }
@@ -437,7 +458,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function populateDefaults()
     {
         parent::populateDefaults();
-        $this->Amount->Currency = EcommerceConfig::get('EcommerceCurrency', 'default_currency');
+        $this->Amount->Currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         $this->setClientIP();
     }
 
@@ -481,8 +502,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public static function set_supported_methods($array)
     {
-        Config::modify()->update('EcommercePayment', 'supported_methods', null);
-        Config::modify()->update('EcommercePayment', 'supported_methods', $array);
+        Config::modify()->update(EcommercePayment::class, 'supported_methods', null);
+        Config::modify()->update(EcommercePayment::class, 'supported_methods', $array);
     }
 
     /**
@@ -665,7 +686,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public static function ecommerce_payment_form_setup_and_validation_object()
     {
-        return Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
+        return Injector::inst()->create(EcommercePaymentFormSetupAndValidation::class);
     }
 
     public static function php_class_to_html_class(string $phpClass): string
@@ -716,7 +737,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function ecommercePaymentFormSetupAndValidationObject()
     {
         if (! $this->ecommercePaymentFormSetupAndValidationObject) {
-            $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create('EcommercePaymentFormSetupAndValidation');
+            $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create(EcommercePaymentFormSetupAndValidation::class);
         }
 
         return $this->ecommercePaymentFormSetupAndValidationObject;

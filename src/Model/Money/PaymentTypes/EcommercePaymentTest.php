@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
-use EcommercePayment;
+
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+
 
 
 

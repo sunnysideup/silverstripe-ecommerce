@@ -2,18 +2,33 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Config;
-use Email;
-use EcommerceDummyMailer;
-use Injector;
-use EcommerceConfig;
-use DataObject;
-use OrderStep;
-use Order;
-use DB;
+
+
+
+
+
+
+
+
+
+
 use Exception;
-use Director;
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskTryToFinaliseOrders;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\ORM\DB;
+use SilverStripe\Control\Director;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -45,7 +60,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     {
         //IMPORTANT!
         if (! $this->sendEmails) {
-            Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
+            Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceDummyMailer());
         }
 
@@ -71,18 +86,18 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrders'));
+            $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class));
             if (! $startAt) {
                 $startAt = 0;
             }
         }
 
         //we exclude all orders that are in the queue
-        $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->AllOrdersInQueue();
         //find any other order that may need help ...
 
-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
@@ -104,7 +119,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->where('StatusID <> ' . $lastOrderStep->ID)
                         ->exclude(['ID' => $ordersInQueueArray])
                         ->innerJoin(
-                            'OrderStatusLog',
+                            OrderStatusLog::class,
                             '"OrderStatusLog"."OrderID" = "Order"."ID"'
                         )
                         ->innerJoin(
@@ -130,7 +145,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrders')) {
+        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class)) {
             if (! $this->isCli()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
@@ -154,7 +169,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrders', $startAt);
+                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
                 $stepBefore = OrderStep::get()->byID($order->StatusID);
                 try {
                     $order->tryToFinaliseOrder();
@@ -188,7 +203,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrders');
+            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear(EcommerceTaskTryToFinaliseOrders::class);
             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
         }
 

@@ -2,12 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use ModelAdmin;
-use Config;
-use LeftAndMain;
-use HiddenField;
-use LiteralField;
-use Injector;
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Admin\ModelAdmin;
+
 
 
 /**
@@ -47,7 +55,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if ($this->ClassName === 'ModelAdminEcommerceBaseClass') {
+        if ($this->ClassName === ModelAdminEcommerceBaseClass::class) {
             //never used
             return ['NothingGoesHere' => ['title' => 'All Orders']];
         }
@@ -61,7 +69,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
      */
     public function oneItemForm($record)
     {
-        Config::modify()->update('LeftAndMain', 'tree_class', $record->ClassName);
+        Config::modify()->update(LeftAndMain::class, 'tree_class', $record->ClassName);
         $form = LeftAndMain::getEditForm($record);
         $idField = HiddenField::create('ID')->setValue($record->ID);
         $cssField = LiteralField::create(

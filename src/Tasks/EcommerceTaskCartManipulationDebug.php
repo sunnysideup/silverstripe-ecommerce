@@ -2,9 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DataObject;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -25,8 +31,8 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
 
     public function run($request)
     {
-        $myProductGroup = DataObject::get_one('ProductGroup');
-        $myProduct = DataObject::get_one('Product');
+        $myProductGroup = DataObject::get_one(ProductGroup::class);
+        $myProduct = DataObject::get_one(Product::class);
         $html = '
         Please use the links below:
         <ul>

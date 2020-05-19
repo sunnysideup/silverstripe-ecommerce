@@ -2,27 +2,48 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Page_Controller;
-use Requirements;
-use Config;
-use Convert;
-use DataObject;
-use ProductSearchForm;
-use EcommerceConfig;
-use ShoppingCart;
-use ArrayList;
-use ArrayData;
-use Member;
-use Security;
-use EcommerceTaskDebugCart;
-use Session;
-use Director;
-use SS_List;
-use PaginatedList;
 
 
 
-class ProductGroupController extends Page_Controller
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\View\Requirements;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use SilverStripe\Control\Session;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Control\Director;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\PaginatedList;
+use PageController;
+
+
+
+
+class ProductGroupController extends PageController
 {
     /**
      * The original Title of this page before filters, etc...
@@ -107,7 +128,7 @@ class ProductGroupController extends Page_Controller
         //makes sure best match only applies to search -i.e. reset otherwise.
         if ($this->request->param('Action') !== 'searchresults') {
             $sortKey = $this->getCurrentUserPreferences('SORT');
-            if ($sortKey === Config::inst()->get('ProductGroupSearchPage', 'best_match_key')) {
+            if ($sortKey === Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key')) {
                 $this->resetsort();
             }
         }
@@ -154,7 +175,7 @@ class ProductGroupController extends Page_Controller
         $arrayOfIDs = [0 => 0];
         if ($otherGroupURLSegment) {
             $otherProductGroup = DataObject::get_one(
-                'ProductGroup',
+                ProductGroup::class,
                 ['URLSegment' => $otherGroupURLSegment]
             );
             if ($otherProductGroup) {
@@ -278,7 +299,7 @@ class ProductGroupController extends Page_Controller
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'), $stringOfIDs);
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'), $stringOfIDs);
 
         return $this->products;
     }
@@ -380,7 +401,7 @@ class ProductGroupController extends Page_Controller
         }
         $currentOrder = ShoppingCart::current_order();
         if ($currentOrder->TotalItems(true)) {
-            $responseClass = EcommerceConfig::get('ShoppingCart', 'response_class');
+            $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
             $obj = new $responseClass();
             $obj->setIncludeHeaders(false);
             $json = $obj->ReturnCartData();
@@ -474,7 +495,7 @@ class ProductGroupController extends Page_Controller
   */
         $groupArray = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable($isForGroup = true)));
         if (is_array($groupArray) && count($groupArray)) {
-            $sortStatement = $this->createSortStatementFromIDArray($groupArray, 'ProductGroup');
+            $sortStatement = $this->createSortStatementFromIDArray($groupArray, ProductGroup::class);
 
             return ProductGroup::get()->filter(['ID' => $groupArray, 'ShowInSearch' => 1])->sort($sortStatement);
         }
@@ -501,7 +522,7 @@ class ProductGroupController extends Page_Controller
         }
         $form = ProductSearchForm::create(
             $this,
-            'ProductSearchForm',
+            ProductSearchForm::class,
             $onlySearchTitle,
             $this->currentInitialProducts(null, $this->getMyUserPreferencesDefault('FILTER'))
         );
@@ -509,7 +530,7 @@ class ProductGroupController extends Page_Controller
         $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
         $additionalGetParameters =
             $filterGetVariable . '=' . $this->getMyUserPreferencesDefault('FILTER') . '&' .
-            $sortGetVariable . '=' . Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
+            $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
         $form->setAdditionalGetParameters($additionalGetParameters);
 
         return $form;
@@ -592,7 +613,7 @@ class ProductGroupController extends Page_Controller
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        $data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if (! empty($data['Keyword'])) {
             return $this->IsSearchResults();
         }
@@ -1105,7 +1126,7 @@ class ProductGroupController extends Page_Controller
 
         $html .= '<li><hr /><h3>Product Example and Links</h3><hr /></li>';
         $product = DataObject::get_one(
-            'Product',
+            Product::class,
             ['ParentID' => $this->ID]
         );
         if ($product) {
@@ -1126,7 +1147,7 @@ class ProductGroupController extends Page_Controller
         if (! $alternativeSort) {
             $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
             if (! $this->request->getVar($sortGetVariable)) {
-                $suggestion = Config::inst()->get('ProductGroupSearchPage', 'best_match_key');
+                $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
                 if ($suggestion) {
                     $this->saveUserPreferences(
                         [
@@ -1157,7 +1178,7 @@ class ProductGroupController extends Page_Controller
      */
     protected function productListsHTMLCanBeCached()
     {
-        return Config::inst()->get('ProductGroup', 'actively_check_for_can_purchase') ? false : true;
+        return Config::inst()->get(ProductGroup::class, 'actively_check_for_can_purchase') ? false : true;
     }
 
     /**
@@ -1238,7 +1259,7 @@ class ProductGroupController extends Page_Controller
         if ($list && $list->count()) {
             if ($this->IsShowFullList()) {
                 $obj = PaginatedList::create($list, $this->request);
-                $obj->setPageLength(EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') + 1);
+                $obj->setPageLength(EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list') + 1);
 
                 return $obj;
             }
@@ -1452,7 +1473,7 @@ class ProductGroupController extends Page_Controller
                 $array = $this->searchResultsArrayFromSession();
                 $count = count($array);
                 if ($count > 4) {
-                    if ($count < EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list_for_search')) {
+                    if ($count < EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list_for_search')) {
                         $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
                         $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
                     }

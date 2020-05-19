@@ -1,6 +1,8 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Email;
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+
 
 
 
@@ -19,6 +21,6 @@ class OrderInvoiceEmail extends OrderEmail
     /**
      * @param string $ss_template The name of the used template (without *.ss extension)
      */
-    protected $ss_template = 'OrderInvoiceEmail';
+    protected $ss_template = OrderInvoiceEmail::class;
 }
 

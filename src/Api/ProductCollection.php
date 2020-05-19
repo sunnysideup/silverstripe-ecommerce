@@ -2,8 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use ArrayList;
-use DB;
+
+
+use SilverStripe\ORM\DB;
+
 
 /**
  * @description: Sometimes you need a large collection of products

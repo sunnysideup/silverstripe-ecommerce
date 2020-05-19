@@ -2,8 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SS_Report;
-use Product;
+
+
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Reports\Report;
+
 
 
 /**
@@ -14,13 +18,13 @@ use Product;
  * @sub-package: reports
 
  **/
-class EcommerceSideReportNoPriceProducts extends SS_Report
+class EcommerceSideReportNoPriceProducts extends Report
 {
     /**
      * The class of object being managed by this report.
      * Set by overriding in your subclass.
      */
-    protected $dataClass = 'Product';
+    protected $dataClass = Product::class;
 
     /**
      * @return string
@@ -68,7 +72,7 @@ class EcommerceSideReportNoPriceProducts extends SS_Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Product'),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
                 'link' => true,
             ],
         ];
@@ -78,7 +82,7 @@ class EcommerceSideReportNoPriceProducts extends SS_Report
     {
         $field = parent::getReportField();
         $config = $field->getConfig();
-        $exportButton = $config->getComponentByType('GridFieldExportButton');
+        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
         $exportButton->setExportColumns($field->getColumns());
 
         return $field;

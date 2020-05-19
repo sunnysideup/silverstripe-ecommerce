@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use SilverStripe\ORM\FieldType\DBDate;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * French (France) language pack.
  */
@@ -13,8 +20,8 @@ if (array_key_exists('fr_FR', $lang) && is_array($lang['fr_FR'])) {
     $lang['fr_FR'] = $lang['en_US'];
 }
 
-$lang['fr_FR']['AccountPage']['Message'] = 'Vous devez avoir un login avant d\'avoir accès à votre page de profile. Si vous n\'êtes pas enregistré, vous ne pourrez avoir accès qu\'à partir du moment ou vous ferez votre première commande, sinon veuillez écrire vos renseignements ci-dessous.';
-$lang['fr_FR']['AccountPage']['NOPAGE'] = 'Aucun compte sur ce site - créez-en un s\'il vous plaît!';
+$lang['fr_FR'][AccountPage::class]['Message'] = 'Vous devez avoir un login avant d\'avoir accès à votre page de profile. Si vous n\'êtes pas enregistré, vous ne pourrez avoir accès qu\'à partir du moment ou vous ferez votre première commande, sinon veuillez écrire vos renseignements ci-dessous.';
+$lang['fr_FR'][AccountPage::class]['NOPAGE'] = 'Aucun compte sur ce site - créez-en un s\'il vous plaît!';
 $lang['fr_FR']['AccountPage.ss']['COMPLETED'] = 'Commandes terminées';
 $lang['fr_FR']['AccountPage.ss']['HISTORY'] = 'Historique de vos commandes';
 $lang['fr_FR']['AccountPage.ss']['INCOMPLETE'] = 'Commandes incomplètes';
@@ -28,7 +35,7 @@ $lang['fr_FR']['AccountPage_order.ss']['AMOUNT'] = 'Somme';
 $lang['fr_FR']['AccountPage_order.ss']['BACKTOCHECKOUT'] = 'Cliquer ici pour vous rendre à la page de la caisse';
 $lang['fr_FR']['AccountPage_order.ss']['CITY'] = 'Ville';
 $lang['fr_FR']['AccountPage_order.ss']['COUNTRY'] = 'Pays';
-$lang['fr_FR']['AccountPage_order.ss']['DATE'] = 'Date';
+$lang['fr_FR']['AccountPage_order.ss']['DATE'] = DBDate::class;
 $lang['fr_FR']['AccountPage_order.ss']['DETAILS'] = 'Détails';
 $lang['fr_FR']['AccountPage_order.ss']['EMAILDETAILS'] = 'Une copie confirmant les détails a été envoyé  vers votre adresse email.';
 $lang['fr_FR']['AccountPage_order.ss']['NAME'] = 'Nom';
@@ -49,7 +56,7 @@ $lang['fr_FR']['Cart.ss']['REMOVEONE'] = 'Supprimer un des  &quot;%s&quot; de vo
 $lang['fr_FR']['Cart.ss']['SHIPPING'] = 'Expédition';
 $lang['fr_FR']['Cart.ss']['SUBTOTAL'] = 'Sous-Total';
 $lang['fr_FR']['Cart.ss']['TOTAL'] = 'Total';
-$lang['fr_FR']['CheckoutPage']['NOPAGE'] = 'Pas de paiement sur la page de ce site, veuillez en créer un!';
+$lang['fr_FR'][CheckoutPage::class]['NOPAGE'] = 'Pas de paiement sur la page de ce site, veuillez en créer un!';
 $lang['fr_FR']['CheckoutPage.ss']['CHECKOUT'] = 'Commander';
 $lang['fr_FR']['CheckoutPage.ss']['ORDERSTEP'] = 'Etat de la commande';
 $lang['fr_FR']['CheckoutPage.ss']['PROCESS'] = 'Processus';
@@ -71,15 +78,15 @@ $lang['fr_FR']['DataReport']['EXPORTCSV'] = 'Exporte en CSV';
 $lang['fr_FR']['FindOrderReport']['DATERANGE'] = 'Période';
 $lang['fr_FR']['MemberForm']['DETAILSSAVED'] = 'Vos coordonnées ont été enregistrées';
 $lang['fr_FR']['MemberForm']['LOGGEDIN'] = 'Vous êtes actuellement connecté en tant que';
-$lang['fr_FR']['Order']['INCOMPLETE'] = 'Commande incomplète';
-$lang['fr_FR']['Order']['SUCCESSFULL'] = 'Commande réussie';
+$lang['fr_FR'][Order::class]['INCOMPLETE'] = 'Commande incomplète';
+$lang['fr_FR'][Order::class]['SUCCESSFULL'] = 'Commande réussie';
 $lang['fr_FR']['OrderInformation.ss']['ADDRESS'] = 'Adresse';
 $lang['fr_FR']['OrderInformation.ss']['AMOUNT'] = 'Quantité';
 $lang['fr_FR']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adresse de l\'acheteur';
 $lang['fr_FR']['OrderInformation.ss']['CITY'] = 'Ville';
 $lang['fr_FR']['OrderInformation.ss']['COUNTRY'] = 'Pays';
 $lang['fr_FR']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Détails du Client';
-$lang['fr_FR']['OrderInformation.ss']['DATE'] = 'Date';
+$lang['fr_FR']['OrderInformation.ss']['DATE'] = DBDate::class;
 $lang['fr_FR']['OrderInformation.ss']['DETAILS'] = 'Détails';
 $lang['fr_FR']['OrderInformation.ss']['EMAIL'] = 'Courrier électronique';
 $lang['fr_FR']['OrderInformation.ss']['MOBILE'] = 'GSM';
@@ -153,7 +160,7 @@ $lang['fr_FR']['Order_Content.ss']['TOTALPRICE'] = 'Prix Total';
 $lang['fr_FR']['Order_Member.ss']['ADDRESS'] = 'Adresse';
 $lang['fr_FR']['Order_Member.ss']['CITY'] = 'Ville';
 $lang['fr_FR']['Order_Member.ss']['COUNTRY'] = 'Pays';
-$lang['fr_FR']['Order_Member.ss']['EMAIL'] = 'Email';
+$lang['fr_FR']['Order_Member.ss']['EMAIL'] = Email::class;
 $lang['fr_FR']['Order_Member.ss']['MOBILE'] = 'Mobile';
 $lang['fr_FR']['Order_Member.ss']['NAME'] = 'Nom';
 $lang['fr_FR']['Order_Member.ss']['PHONE'] = 'Téléphone';
@@ -168,7 +175,7 @@ $lang['fr_FR']['OrderStatusEmail.ss']['STATUSCHANGE'] = 'Status modifié à "%s"
 $lang['fr_FR']['Order_statusEmail.ss']['TITLE'] = 'Changement de statut de la boutique';
 $lang['fr_FR']['OrderStatusEmail.ss']['TITLE'] = 'Changement du statut du magasin';
 $lang['fr_FR']['PaymentInformation.ss']['AMOUNT'] = 'Montant';
-$lang['fr_FR']['PaymentInformation.ss']['DATE'] = 'Date';
+$lang['fr_FR']['PaymentInformation.ss']['DATE'] = DBDate::class;
 $lang['fr_FR']['PaymentInformation.ss']['DETAILS'] = 'Détails';
 $lang['fr_FR']['PaymentInformation.ss']['PAYMENTID'] = 'ID du Paiement';
 $lang['fr_FR']['PaymentInformation.ss']['PAYMENTINFORMATION'] = 'Information sur le paiement';

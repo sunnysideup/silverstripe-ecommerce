@@ -2,13 +2,22 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Controller;
-use Config;
-use Injector;
-use Convert;
-use SS_HTTPRequest;
-use Order;
-use DataObject;
+
+
+
+
+
+
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\HTTPRequest;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\Controller;
+
 
 
 /**
@@ -215,7 +224,7 @@ abstract class OrderStepController extends Controller
             } elseif (isset($_GET['OrderID']) && isset($_GET['OrderSessionID'])) {
                 $id = intval($_GET['OrderID']);
                 $sessionID = Convert::raw2sql($_GET['OrderSessionID']);
-            } elseif ($dataOrRequest instanceof SS_HTTPRequest) {
+            } elseif ($dataOrRequest instanceof HTTPRequest) {
                 $id = intval($dataOrRequest->param('ID'));
                 $sessionID = Convert::raw2sql($dataOrRequest->param('OtherID'));
             } else {
@@ -249,7 +258,7 @@ abstract class OrderStepController extends Controller
     protected function orderStep()
     {
         return DataObject::get_one(
-            'OrderStep',
+            OrderStep::class,
             ['Code' => $this->codeOfRelevantOrderStep()]
         );
     }

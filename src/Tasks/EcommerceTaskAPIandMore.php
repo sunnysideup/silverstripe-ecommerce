@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Director;
+
+
+use SilverStripe\Control\Director;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**

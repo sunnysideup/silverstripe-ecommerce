@@ -2,7 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-use GridFieldConfig_RelationEditor;
+
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+
 
 
 
@@ -18,10 +24,10 @@ class GridFieldBasicPageRelationConfigNoAddExisting extends GridFieldConfig_Rela
     {
         parent::__construct($itemsPerPage);
         $this
-            ->removeComponentsByType('GridFieldEditButton')
-            ->removeComponentsByType('GridFieldAddNewButton')
-            ->removeComponentsByType('GridFieldAddExistingAutocompleter')
-            ->removeComponentsByType('GridFieldDeleteAction');
+            ->removeComponentsByType(GridFieldEditButton::class)
+            ->removeComponentsByType(GridFieldAddNewButton::class)
+            ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
+            ->removeComponentsByType(GridFieldDeleteAction::class);
     }
 }
 

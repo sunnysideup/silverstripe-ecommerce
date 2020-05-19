@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use OrderStep;
-use OrderStepInterface;
-use HeaderField;
-use TextField;
-use HTMLEditorField;
-use Order;
-use FieldList;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+
 
 
 /**
@@ -22,14 +32,14 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     /**
      * @var string
      */
-    protected $emailClassName = 'OrderStatusEmail';
+    protected $emailClassName = OrderStatusEmail::class;
 
     /**
      * The OrderStatusLog that is relevant to the particular step.
      *
      * @var string
      */
-    protected $relevantLogEntryClassName = 'OrderStatusLogDispatchPhysicalOrder';
+    protected $relevantLogEntryClassName = OrderStatusLogDispatchPhysicalOrder::class;
 
 
 /**
@@ -172,7 +182,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step please enter dispatch details.');
-        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField('OrderStatusLogDispatchPhysicalOrder', $title), 'ActionNextStepManually');
+        $fields->addFieldToTab('Root.Next', $order->getOrderStatusLogsTableField(OrderStatusLogDispatchPhysicalOrder::class, $title), 'ActionNextStepManually');
 
         return $fields;
     }

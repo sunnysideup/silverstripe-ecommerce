@@ -2,19 +2,35 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use OrderEmailRecordReview;
-use LiteralField;
-use ReadonlyField;
+
+
+
+
+
+
+
+
 use CMSEditLinkAPI;
-use NumericField;
-use CheckboxSetField;
-use Injector;
-use EcommerceTaskDebugCart;
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\CheckboxSetField;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 /**
@@ -80,8 +96,8 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Order' => 'Order',
-        'OrderStep' => 'OrderStep',
+        'Order' => Order::class,
+        'OrderStep' => OrderStep::class,
     ];
 
     /**
@@ -251,7 +267,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         if ($order && $order->exists()) {
             return $order->canView();
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -373,7 +389,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             }
             $statusField = new CheckboxSetField(
                 'OrderStepID',
-                Injector::inst()->get('OrderStep')->i18n_singular_name(),
+                Injector::inst()->get(OrderStep::class)->i18n_singular_name(),
                 $arrayOfStatusOptionsFinal,
                 $preSelected
             );

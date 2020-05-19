@@ -2,11 +2,24 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Director;
-use DB;
-use Order;
-use DataObject;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\OrderAttribute;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+use SilverStripe\Control\Director;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -35,12 +48,12 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
      *value = table where LastEdited is saved.
      **/
     private static $linked_objects_array = [
-        'OrderAttribute' => 'OrderAttribute',
-        'BillingAddress' => 'OrderAddress',
-        'ShippingAddress' => 'OrderAddress',
-        'OrderStatusLog' => 'OrderStatusLog',
-        'OrderEmailRecord' => 'OrderEmailRecord',
-        'EcommercePayment' => 'EcommercePayment',
+        'OrderAttribute' => OrderAttribute::class,
+        'BillingAddress' => OrderAddress::class,
+        'ShippingAddress' => OrderAddress::class,
+        'OrderStatusLog' => OrderStatusLog::class,
+        'OrderEmailRecord' => OrderEmailRecord::class,
+        'EcommercePayment' => EcommercePayment::class,
     ];
 
     /**
@@ -48,10 +61,10 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
      *value = table where LastEdited is saved.
      **/
     private static $double_check_objects = [
-        'Order',
-        'OrderItem',
-        'OrderModifier',
-        'EcommercePayment',
+        Order::class,
+        OrderItem::class,
+        OrderModifier::class,
+        EcommercePayment::class,
     ];
 
     /*******************************************************
@@ -126,7 +139,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                 }
                 $unlinkedObjects = $unlinkedObjects
                     ->where($where)
-                    ->leftJoin('Order', "\"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"");
+                    ->leftJoin(Order::class, "\"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"");
 
                 if ($unlinkedObjects->count()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {

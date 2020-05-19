@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Polish (Poland) language pack.
  */
@@ -13,8 +19,8 @@ if (array_key_exists('pl_PL', $lang) && is_array($lang['pl_PL'])) {
     $lang['pl_PL'] = $lang['en_US'];
 }
 
-$lang['pl_PL']['AccountPage']['Message'] = 'Musisz się najpierw zalogować aby uzyskać dostęp do strony profilu. Jeśli nie jesteś zarejestrowany, nie możesz się do niej dostać przed złożeniem pierwszego zamówienia. W przeciwnym przypadku, wpisz poniżej dane potrzebne do logowania.';
-$lang['pl_PL']['AccountPage']['NOPAGE'] = 'Brak AccountPage na tej stronie - stwórz jedną !';
+$lang['pl_PL'][AccountPage::class]['Message'] = 'Musisz się najpierw zalogować aby uzyskać dostęp do strony profilu. Jeśli nie jesteś zarejestrowany, nie możesz się do niej dostać przed złożeniem pierwszego zamówienia. W przeciwnym przypadku, wpisz poniżej dane potrzebne do logowania.';
+$lang['pl_PL'][AccountPage::class]['NOPAGE'] = 'Brak AccountPage na tej stronie - stwórz jedną !';
 $lang['pl_PL']['AccountPage.ss']['COMPLETED'] = 'Zrealizowane Zamówienia';
 $lang['pl_PL']['AccountPage.ss']['HISTORY'] = 'Historia Zamówień';
 $lang['pl_PL']['AccountPage.ss']['INCOMPLETE'] = 'Nieukończone zamówienia';
@@ -49,7 +55,7 @@ $lang['pl_PL']['Cart.ss']['REMOVEONE'] = 'Usuń jedno  &quot;%s&quot; z koszyka'
 $lang['pl_PL']['Cart.ss']['SHIPPING'] = 'Koszt Wysyłki';
 $lang['pl_PL']['Cart.ss']['SUBTOTAL'] = 'Suma';
 $lang['pl_PL']['Cart.ss']['TOTAL'] = 'Całkowity Koszt';
-$lang['pl_PL']['CheckoutPage']['NOPAGE'] = 'Brak CheckoutPage na tej stronie - stwórz ją!';
+$lang['pl_PL'][CheckoutPage::class]['NOPAGE'] = 'Brak CheckoutPage na tej stronie - stwórz ją!';
 $lang['pl_PL']['CheckoutPage.ss']['CHECKOUT'] = 'Do kasy!';
 $lang['pl_PL']['CheckoutPage.ss']['ORDERSTEP'] = 'Status Zamówienia';
 $lang['pl_PL']['CheckoutPage.ss']['PROCESS'] = 'Przebieg';
@@ -71,8 +77,8 @@ $lang['pl_PL']['DataReport']['EXPORTCSV'] = 'Eksportuj do CSV';
 $lang['pl_PL']['FindOrderReport']['DATERANGE'] = 'Zakres dat';
 $lang['pl_PL']['MemberForm']['DETAILSSAVED'] = 'Szczegóły Twojego profilu zostały zapisane';
 $lang['pl_PL']['MemberForm']['LOGGEDIN'] = 'Jesteś aktualnie zalogowany.';
-$lang['pl_PL']['Order']['INCOMPLETE'] = 'Zamówienie Niekompletne';
-$lang['pl_PL']['Order']['SUCCESSFULL'] = 'Zamówienie Poprawnie Złożone';
+$lang['pl_PL'][Order::class]['INCOMPLETE'] = 'Zamówienie Niekompletne';
+$lang['pl_PL'][Order::class]['SUCCESSFULL'] = 'Zamówienie Poprawnie Złożone';
 $lang['pl_PL']['OrderInformation.ss']['ADDRESS'] = 'Adres';
 $lang['pl_PL']['OrderInformation.ss']['AMOUNT'] = 'Ilość';
 $lang['pl_PL']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adres Nabywcy';
@@ -81,7 +87,7 @@ $lang['pl_PL']['OrderInformation.ss']['COUNTRY'] = 'Państwo';
 $lang['pl_PL']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Szczegóły Klienta';
 $lang['pl_PL']['OrderInformation.ss']['DATE'] = 'Data';
 $lang['pl_PL']['OrderInformation.ss']['DETAILS'] = 'Szczegóły';
-$lang['pl_PL']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['pl_PL']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['pl_PL']['OrderInformation.ss']['MOBILE'] = 'Telefon Komórkowy';
 $lang['pl_PL']['OrderInformation.ss']['NAME'] = 'Imię';
 $lang['pl_PL']['OrderInformation.ss']['ORDERSUMMARY'] = 'Podsumowanie Zamówienia';
@@ -124,7 +130,7 @@ $lang['pl_PL']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Adres Kupuj�
 $lang['pl_PL']['OrderInformation_NoPricing.ss']['CITY'] = 'Miasto';
 $lang['pl_PL']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Państwo';
 $lang['pl_PL']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Szczegóły Klienta';
-$lang['pl_PL']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['pl_PL']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['pl_PL']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Telefon Komórkowy';
 $lang['pl_PL']['OrderInformation_NoPricing.ss']['NAME'] = 'Imię';
 $lang['pl_PL']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informacje o Zamówieniu #';
@@ -154,7 +160,7 @@ $lang['pl_PL']['Order_Content.ss']['TOTALPRICE'] = 'Całkowita Cena';
 $lang['pl_PL']['Order_Member.ss']['ADDRESS'] = 'Adres';
 $lang['pl_PL']['Order_Member.ss']['CITY'] = 'Miasto';
 $lang['pl_PL']['Order_Member.ss']['COUNTRY'] = 'Państwo';
-$lang['pl_PL']['Order_Member.ss']['EMAIL'] = 'Email';
+$lang['pl_PL']['Order_Member.ss']['EMAIL'] = Email::class;
 $lang['pl_PL']['Order_Member.ss']['MOBILE'] = 'Telefon Komórkowy';
 $lang['pl_PL']['Order_Member.ss']['NAME'] = 'Imię i Nazwisko';
 $lang['pl_PL']['Order_Member.ss']['PHONE'] = 'Telefon';

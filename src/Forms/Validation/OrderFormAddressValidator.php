@@ -2,7 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use Member;
+
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Forms\OrderForm;
+
 
 
 
@@ -53,7 +56,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
         }
         if (! $valid) {
             $this->form->sessionMessage(_t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
-            $this->form->messageForForm('OrderForm', _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
+            $this->form->messageForForm(OrderForm::class, _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
         }
 
         return $valid;

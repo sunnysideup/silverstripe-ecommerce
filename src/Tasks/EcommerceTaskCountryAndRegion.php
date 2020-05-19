@@ -2,12 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceCountry;
-use EcommerceConfig;
-use DataObject;
-use Convert;
-use DB;
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -28,10 +35,10 @@ class EcommerceTaskCountryAndRegion extends BuildTask
     {
         $count = 0;
         $array = EcommerceCountry::get_country_dropdown();
-        $allowedArray = EcommerceConfig::get('EcommerceCountry', 'allowed_country_codes');
+        $allowedArray = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
         foreach ($array as $code => $name) {
             $ecommerceCountry = DataObject::get_one(
-                'EcommerceCountry',
+                EcommerceCountry::class,
                 ['Code' => Convert::raw2sql($code)],
                 $cacheDataObjectGetOne = false
             );

@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-use OrderStatusLog;
+
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+
 
 
 

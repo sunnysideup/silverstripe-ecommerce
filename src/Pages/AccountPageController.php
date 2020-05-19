@@ -2,15 +2,22 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Page_Controller;
-use Security;
-use Requirements;
-use ShopAccountForm;
-use Member;
 
 
 
-class AccountPageController extends Page_Controller
+
+
+use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
+use SilverStripe\Security\Member;
+use PageController;
+
+
+
+
+class AccountPageController extends PageController
 {
     //TODO: why do we need this?
     private static $allowed_actions = [
@@ -32,7 +39,7 @@ class AccountPageController extends Page_Controller
 
             return false;
         }
-        Requirements::themedCSS('AccountPage', 'ecommerce');
+        Requirements::themedCSS(AccountPage::class, 'ecommerce');
     }
 
     /**

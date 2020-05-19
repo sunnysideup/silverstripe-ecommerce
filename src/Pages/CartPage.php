@@ -3,15 +3,28 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-use DBField;
-use Permission;
-use Config;
-use TabSet;
-use Tab;
-use TextField;
-use HTMLEditorField;
-use DataObject;
-use ShoppingCart;
+
+
+
+
+
+
+
+
+
+use SilverStripe\ORM\FieldType\DBField;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\View\SSViewer;
+
 
 
 /**
@@ -152,7 +165,7 @@ class CartPage extends Page
      */
     public function canCreate($member = null, $context = [])
     {
-        return CartPage::get()->Filter(['ClassName' => 'CartPage'])->Count() ? false : $this->canEdit($member);
+        return CartPage::get()->Filter(['ClassName' => CartPage::class])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -164,7 +177,7 @@ class CartPage extends Page
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -240,7 +253,7 @@ class CartPage extends Page
      */
     public static function find_link($action = null)
     {
-        $page = DataObject::get_one('CartPage', ['ClassName' => 'CartPage']);
+        $page = DataObject::get_one(CartPage::class, ['ClassName' => CartPage::class]);
         if ($page) {
             return $page->Link($action);
         }
@@ -314,11 +327,11 @@ class CartPage extends Page
         $order = ShoppingCart::current_order();
         if ($order) {
             $count = $order->TotalItems();
-            $oldSSViewer = Config::inst()->get('SSViewer', 'source_file_comments');
-            Config::inst()->update('SSViewer', 'source_file_comments', false);
+            $oldSSViewer = Config::inst()->get(SSViewer::class, 'source_file_comments');
+            Config::inst()->update(SSViewer::class, 'source_file_comments', false);
             $this->customise(['Count' => $count, 'OriginalMenuTitle' => $this->MenuTitle]);
             $s = $this->renderWith('AjaxNumItemsInCart');
-            Config::inst()->update('SSViewer', 'source_file_comments', $oldSSViewer);
+            Config::inst()->update(SSViewer::class, 'source_file_comments', $oldSSViewer);
 
             return $s;
         }

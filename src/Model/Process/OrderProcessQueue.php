@@ -2,17 +2,31 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use DataObject;
-use Member;
-use Permission;
-use Config;
-use EcommerceRole;
-use DB;
-use Order;
-use DBField;
-use ReadonlyField;
-use LiteralField;
+
+
+
+
+
+
+
+
+
+
 use CMSEditLinkField;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\LiteralField;
+
 
 /**
  * This class provides a bunch of Meta Objects
@@ -60,8 +74,8 @@ class OrderProcessQueue extends DataObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Order' => 'Order',
-        'OrderStep' => 'OrderStep',
+        'Order' => Order::class,
+        'OrderStep' => OrderStep::class,
     ];
 
     private static $indexes = [
@@ -156,7 +170,7 @@ class OrderProcessQueue extends DataObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
         //is the member is a shop assistant they can always view it
@@ -218,7 +232,7 @@ class OrderProcessQueue extends DataObject
             'OrderStepID' => $order->StatusID,
         ];
         $existingEntry = DataObject::get_one(
-            'OrderProcessQueue',
+            OrderProcessQueue::class,
             $filter,
             $cacheDataObjectGetOne = false
         );
@@ -308,7 +322,7 @@ class OrderProcessQueue extends DataObject
     {
         $filter = ['OrderID' => $order->ID];
 
-        return DataObject::get_one('OrderProcessQueue', $filter);
+        return DataObject::get_one(OrderProcessQueue::class, $filter);
     }
 
     /**
@@ -429,7 +443,7 @@ class OrderProcessQueue extends DataObject
      */
     public function getToBeProcessedAt()
     {
-        return DBField::create_field('SS_Datetime', (strtotime($this->Created) + $this->DeferTimeInSeconds));
+        return DBField::create_field(DBDatetime::class, (strtotime($this->Created) + $this->DeferTimeInSeconds));
     }
 
     /**
@@ -447,7 +461,7 @@ class OrderProcessQueue extends DataObject
      */
     public function getHasBeenInQueueForSince()
     {
-        return DBField::create_field('SS_Datetime', strtotime($this->Created));
+        return DBField::create_field(DBDatetime::class, strtotime($this->Created));
     }
 
     /**
@@ -491,7 +505,7 @@ class OrderProcessQueue extends DataObject
                 'OrderID',
                 CMSEditLinkField::create(
                     'OrderID',
-                    'Order',
+                    Order::class,
                     $this->Order()
                 )
             );

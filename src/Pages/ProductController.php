@@ -2,25 +2,43 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Page_Controller;
-use Requirements;
-use SS_HTTPRequest;
-use Config;
-use FieldList;
-use NumericField;
-use FormAction;
-use RequiredFields;
-use Form;
-use ShoppingCart;
-use Director;
-use EcomQuantityField;
-use Member;
-use Security;
-use EcommerceConfig;
 
 
 
-class ProductController extends Page_Controller
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\View\Requirements;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Form;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use PageController;
+
+
+
+
+class ProductController extends PageController
 {
     /**
      * is this the current version?
@@ -61,7 +79,7 @@ class ProductController extends Page_Controller
      *
      * @param SS_HTTPRequest $request
      */
-    public function viewversion(SS_HTTPRequest $request)
+    public function viewversion(HTTPRequest $request)
     {
         $version = intval($request->param('ID')) - 0;
         $currentVersion = $this->Version;
@@ -88,10 +106,10 @@ class ProductController extends Page_Controller
      * Standard SS method
      * Returns a snippet when requested by ajax.
      */
-    public function ajaxview(SS_HTTPRequest $request)
+    public function ajaxview(HTTPRequest $request)
     {
         Config::nest();
-        Config::modify()->update('SSViewer', 'theme_enabled', true);
+        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
@@ -269,7 +287,7 @@ class ProductController extends Page_Controller
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'));
+        $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'));
         if ($listOfIDs) {
             $arrayOfIDs = explode(',', $listOfIDs);
             if (is_array($arrayOfIDs)) {

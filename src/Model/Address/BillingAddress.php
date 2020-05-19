@@ -2,15 +2,28 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use ReadonlyField;
-use EmailField;
-use Member;
-use HeaderField;
-use TextField;
-use CompositeField;
-use EcommerceConfig;
-use SelectOrderAddressField;
+
+
+
+
+
+
+
+
 use GoogleAddressField;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\CompositeField;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
+
 
 
 /**
@@ -40,7 +53,7 @@ class BillingAddress extends OrderAddress
             'RegionCode',
             'Country',
             'Phone',
-            'Email',
+            Email::class,
         ],
     ];
 
@@ -96,14 +109,14 @@ class BillingAddress extends OrderAddress
      * (otherwise we ended up with a "has two" relationship in Order).
      **/
     private static $has_one = [
-        'Region' => 'EcommerceRegion',
+        'Region' => EcommerceRegion::class,
     ];
 
     /**
      * standard SS static definition.
      **/
     private static $belongs_to = [
-        'Order' => 'Order',
+        'Order' => Order::class,
     ];
 
     /**
@@ -182,9 +195,9 @@ class BillingAddress extends OrderAddress
      * @return array
      */
     private static $field_labels = [
-        'Order.Title' => 'Order',
+        'Order.Title' => Order::class,
         'Obsolete' => 'Do not use for future transactions',
-        'Email' => 'Email',
+        'Email' => Email::class,
     ];
 
     /**
@@ -240,7 +253,7 @@ class BillingAddress extends OrderAddress
     {
         $fields = parent::getCMSFields();
         $fields->replaceField('OrderID', new ReadonlyField('OrderID', _t('BillingAddress.ORDERID', 'Order #')));
-        $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));
+        $fields->replaceField(Email::class, new EmailField(Email::class, _t('BillingAddress.EMAIL', Email::class)));
         //We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
         $fields->removeByName('RegionCode');
         $fields->removeByName('RegionID');
@@ -273,7 +286,7 @@ class BillingAddress extends OrderAddress
         if ($member && Member::currentUser()) {
             if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
-                if (EcommerceConfig::get('BillingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
+                if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
                     $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
                     //we want MORE than one here not just one.
                     if ($addresses->count() > 1) {

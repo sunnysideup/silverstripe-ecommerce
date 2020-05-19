@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Filesystem;
 
-use Image;
-use EcommerceConfig;
-use DBField;
+
+
+
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Assets\Image;
+
 
 
 
@@ -56,7 +61,7 @@ class ProductImage extends Image
      */
     public function ThumbWidth()
     {
-        return EcommerceConfig::get('ProductImage', 'thumbnail_width');
+        return EcommerceConfig::get(ProductImage::class, 'thumbnail_width');
     }
 
     /**
@@ -64,7 +69,7 @@ class ProductImage extends Image
      */
     public function ThumbHeight()
     {
-        return EcommerceConfig::get('ProductImage', 'thumbnail_height');
+        return EcommerceConfig::get(ProductImage::class, 'thumbnail_height');
     }
 
     /**
@@ -72,7 +77,7 @@ class ProductImage extends Image
      */
     public function SmallWidth()
     {
-        return EcommerceConfig::get('ProductImage', 'small_image_width');
+        return EcommerceConfig::get(ProductImage::class, 'small_image_width');
     }
 
     /**
@@ -80,7 +85,7 @@ class ProductImage extends Image
      */
     public function SmallHeight()
     {
-        return EcommerceConfig::get('ProductImage', 'small_image_height');
+        return EcommerceConfig::get(ProductImage::class, 'small_image_height');
     }
 
     /**
@@ -88,7 +93,7 @@ class ProductImage extends Image
      */
     public function ContentWidth()
     {
-        return EcommerceConfig::get('ProductImage', 'content_image_width');
+        return EcommerceConfig::get(ProductImage::class, 'content_image_width');
     }
 
     /**
@@ -96,7 +101,7 @@ class ProductImage extends Image
      */
     public function LargeWidth()
     {
-        return EcommerceConfig::get('ProductImage', 'large_image_width');
+        return EcommerceConfig::get(ProductImage::class, 'large_image_width');
     }
 
     /**

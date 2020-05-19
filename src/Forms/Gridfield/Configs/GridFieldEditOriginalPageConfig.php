@@ -2,9 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-use GridFieldConfig_RecordEditor;
-use GridFieldAddNewButtonOriginalPage;
-use GridFieldEditButtonOriginalPage;
+
+
+
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldAddNewButtonOriginalPage;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldEditButtonOriginalPage;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+
 
 
 
@@ -20,10 +28,10 @@ class GridFieldEditOriginalPageConfig extends GridFieldConfig_RecordEditor
     {
         parent::__construct($itemsPerPage);
         $this
-            ->removeComponentsByType('GridFieldEditButton')
-            ->removeComponentsByType('GridFieldDeleteAction')
-            ->removeComponentsByType('GridFieldAddNewButton')
-            ->removeComponentsByType('GridFieldAddExistingAutocompleter')
+            ->removeComponentsByType(GridFieldEditButton::class)
+            ->removeComponentsByType(GridFieldDeleteAction::class)
+            ->removeComponentsByType(GridFieldAddNewButton::class)
+            ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
             ->addComponent(new GridFieldAddNewButtonOriginalPage())
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }

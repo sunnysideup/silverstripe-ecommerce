@@ -2,15 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Email;
 
-use Email;
-use Director;
-use EcommerceConfig;
-use HTTP;
-use EcommerceDBConfig;
-use SiteConfig;
-use Order;
-use OrderEmailRecord;
-use Config;
+
+
+
+
+
+
+
+
+
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Email\OrderEmail;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Control\HTTP;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\SiteConfig\SiteConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use SilverStripe\Core\Config\Config;
+
 
 
 
@@ -49,7 +61,7 @@ abstract class OrderEmail extends Email
         if (! class_exists('\Pelago\Emogrifier')) {
             require_once $baseFolder . '/ecommerce/thirdparty/Emogrifier.php';
         }
-        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get('OrderEmail', 'css_file_location');
+        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
@@ -127,7 +139,7 @@ abstract class OrderEmail extends Email
         }
         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
         if (! $this->hasBeenSent() || ($this->resend)) {
-            if (EcommerceConfig::get('OrderEmail', 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
+            if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
                 if ($memberEmail = self::get_from_email()) {
                     $array = [$memberEmail];
                     if ($bcc = $this->Bcc()) {
@@ -142,7 +154,7 @@ abstract class OrderEmail extends Email
                 return $this->Body();
             }
 
-            if (EcommerceConfig::get('OrderEmail', 'send_all_emails_plain')) {
+            if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
                 $result = parent::sendPlain($messageID);
             } else {
                 $result = parent::send($messageID);
@@ -179,7 +191,7 @@ abstract class OrderEmail extends Email
     public function hasBeenSent(): bool
     {
         $orderStep = $this->order->Status();
-        if (is_a($orderStep, Object::getCustomClass('OrderStep'))) {
+        if (is_a($orderStep, Object::getCustomClass(OrderStep::class))) {
             return $orderStep->hasBeenSent($this->order);
         }
 
@@ -223,7 +235,7 @@ abstract class OrderEmail extends Email
         $orderEmailRecord->Result = $result ? 1 : 0;
         $orderEmailRecord->OrderID = $this->order->ID;
         $orderEmailRecord->OrderStepID = $this->order->StatusID;
-        if ($sendAllEmailsTo = Config::inst()->get('Email', 'send_all_emails_to')) {
+        if ($sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to')) {
             $orderEmailRecord->To .=
                 _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
                 . $sendAllEmailsTo

@@ -2,15 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use Requirements;
-use Injector;
-use OrderStep;
-use DataList;
-use GridField;
-use GridFieldExportSalesButton;
-use GridFieldPrintAllInvoicesButton;
-use GridFieldPrintAllPackingSlipsButton;
-use GridFieldPrintInvoiceButton;
+
+
+
+
+
+
+
+
+
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Forms\GridField\GridField;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
+
 
 
 
@@ -82,9 +94,9 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     public function getManagedModels()
     {
         $models = parent::getManagedModels();
-        $orderModelManagement = isset($models['Order']) ? $models['Order'] : null;
+        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
         if ($orderModelManagement) {
-            unset($models['Order']);
+            unset($models[Order::class]);
 
             return ['Order' => $orderModelManagement] + $models;
         }
@@ -98,8 +110,8 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     public function getList()
     {
         $list = parent::getList();
-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
-            $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
+        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+            $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
             $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
             $list = $list
                 ->filter(
@@ -136,7 +148,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (is_subclass_of($this->modelClass, 'Order') || $this->modelClass === 'Order') {
+        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();

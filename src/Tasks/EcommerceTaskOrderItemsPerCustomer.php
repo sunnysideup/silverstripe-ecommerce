@@ -2,11 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceConfig;
-use Order;
-use OrderItem;
-use SS_HTTPRequest;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -33,15 +41,15 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         $fileName = "export-${now}.csv";
 
         //data object variables
-        $orderStatusSubmissionLog = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        $orderStatusSubmissionLog = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $fileData = '';
         $offset = 0;
         $count = 50;
         $orders = Order::get()
             ->sort('"Order"."ID" ASC')
-            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+            ->innerJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
             ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+            ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset);
         $ordersCount = $orders->count();
         while ($orders && $ordersCount) {
@@ -69,15 +77,15 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             }
             $orders = Order::get()
                 ->sort('"Order"."ID" ASC')
-                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->innerJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+                ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
                 ->limit($count, $offset);
             $ordersCount = $orders->count();
         }
         unset($orders);
         if ($fileData) {
-            SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+            HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         } else {
             user_error('No records found', E_USER_ERROR);
         }

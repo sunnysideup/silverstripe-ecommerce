@@ -2,10 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use RequiredFields;
-use DataObject;
-use ShoppingCart;
-use BillingAddress;
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use SilverStripe\Forms\RequiredFields;
+
 
 
 
@@ -30,7 +37,7 @@ class OrderFormValidator extends RequiredFields
     public function php($data)
     {
         $valid = parent::php($data);
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
             if (isset($data['ReadTermsAndConditions'])) {
                 if (! $data['ReadTermsAndConditions']) {
@@ -46,7 +53,7 @@ class OrderFormValidator extends RequiredFields
         $order = ShoppingCart::current_order();
         if (! $order) {
             $this->validationError(
-                'Order',
+                Order::class,
                 _t('OrderForm.ORDERNOTFOUND', 'There was an error in processing your order, please try again or contact the administrator.'),
                 'required'
             );
@@ -55,7 +62,7 @@ class OrderFormValidator extends RequiredFields
         $billingAddress = BillingAddress::get()->byID($order->BillingAddressID);
         if (! $billingAddress) {
             $this->validationError(
-                'BillingAddress',
+                BillingAddress::class,
                 _t('OrderForm.MUSTHAVEBILLINGADDRESS', 'All orders must have a billing address, please go back and add your details.'),
                 'required'
             );

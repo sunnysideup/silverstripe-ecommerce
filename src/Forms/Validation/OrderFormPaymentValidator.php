@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use RequiredFields;
+
+use SilverStripe\Forms\RequiredFields;
+
 
 
 

@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
-use Order;
-use FieldList;
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Forms\FieldList;
+
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz

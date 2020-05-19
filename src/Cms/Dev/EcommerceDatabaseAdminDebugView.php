@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
-use DebugView;
-use Controller;
+
+
+use SilverStripe\Control\Controller;
+use SilverStripe\Dev\DebugView;
+
 
 
 class EcommerceDatabaseAdminDebugView extends DebugView

@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use DataObject;
-use EditableEcommerceObject;
-use Config;
+
+
+
 use CMSEditLinkAPI;
-use ShoppingCart;
-use EcommerceConfig;
-use EcommerceCodeFilter;
+
+
+
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegionVisitorRegionProvider;
+use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 /**
@@ -95,7 +105,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Country' => 'EcommerceCountry',
+        'Country' => EcommerceCountry::class,
     ];
 
     /**
@@ -191,7 +201,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      **/
     public static function show()
     {
-        if (Config::inst()->get('EcommerceRegion', 'show_freetext_region_field')) {
+        if (Config::inst()->get(EcommerceRegion::class, 'show_freetext_region_field')) {
             return true;
         }
         return EcommerceRegion::get()->count() ? true : false;
@@ -233,7 +243,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     public static function code_allowed($code)
     {
         $region = DataObject::get_one(
-            'EcommerceRegion',
+            EcommerceRegion::class,
             ['Code' => $code]
         );
         if ($region) {
@@ -392,9 +402,9 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      **/
     public static function get_region_from_ip()
     {
-        $visitorCountryProviderClassName = EcommerceConfig::get('EcommerceCountry', 'visitor_region_provider');
+        $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_region_provider');
         if (! $visitorCountryProviderClassName) {
-            $visitorCountryProviderClassName = 'EcommerceRegionVisitorRegionProvider';
+            $visitorCountryProviderClassName = EcommerceRegionVisitorRegionProvider::class;
         }
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 

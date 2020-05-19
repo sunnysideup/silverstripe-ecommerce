@@ -2,16 +2,31 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use Injector;
-use ReadonlyField;
-use Member;
-use EcommerceConfig;
-use CompositeField;
-use HeaderField;
-use LiteralField;
-use SelectOrderAddressField;
-use TextField;
+
+
+
+
+
+
+
+
+
 use GoogleAddressField;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\CompositeField;
+use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
+use SilverStripe\Forms\TextField;
+
 
 
 /**
@@ -34,7 +49,7 @@ class ShippingAddress extends OrderAddress
             'ShippingPrefix',
             'ShippingFirstName',
             'ShippingSurname',
-            'ShippingAddress',
+            ShippingAddress::class,
             'ShippingAddress2',
             'ShippingCity',
             'ShippingPostalCode',
@@ -91,14 +106,14 @@ class ShippingAddress extends OrderAddress
      * standard SS static definition.
      **/
     private static $has_one = [
-        'ShippingRegion' => 'EcommerceRegion',
+        'ShippingRegion' => EcommerceRegion::class,
     ];
 
     /**
      * standard SS static definition.
      **/
     private static $belongs_to = [
-        'Order' => 'Order',
+        'Order' => Order::class,
     ];
 
     /**
@@ -192,7 +207,7 @@ class ShippingAddress extends OrderAddress
 
     public function fieldLabels($includerelations = true)
     {
-        $billingAddress = Injector::inst()->get('BillingAddress');
+        $billingAddress = Injector::inst()->get(BillingAddress::class);
         $shippingLabels = parent::fieldLabels($includerelations);
         $billingLabels = $billingAddress->fieldLabels($includerelations);
         $summaryFields = $this->stat('field_labels');
@@ -254,7 +269,7 @@ class ShippingAddress extends OrderAddress
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
-        if (EcommerceConfig::get('OrderAddress', 'use_separate_shipping_address')) {
+        if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
             $shippingFieldsHeader = new CompositeField(
                 new HeaderField('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
@@ -263,7 +278,7 @@ class ShippingAddress extends OrderAddress
             if ($member && Member::currentUser()) {
                 if ($member->exists() && ! $member->IsShopAdmin()) {
                     $this->FillWithLastAddressFromMember($member, true);
-                    if (EcommerceConfig::get('ShippingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
+                    if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
                         $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
                         //we want MORE than one here not just one.
                         if ($addresses->count() > 1) {
@@ -308,7 +323,7 @@ class ShippingAddress extends OrderAddress
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             }
 
-            $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
+            $shippingFields->push(new TextField(ShippingAddress::class, _t('ShippingAddress.ADDRESS', 'Address')));
             $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', '')));
             $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
             $shippingFields->push($this->getRegionField('ShippingRegionID', 'ShippingRegionCode'));

@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use SS_HTTPResponse;
+
+use SilverStripe\Control\HTTPResponse;
+
 
 
 /**
@@ -13,7 +15,7 @@ use SS_HTTPResponse;
  * @sub-package: control
 
  **/
-abstract class EcommerceResponse extends SS_HTTPResponse
+abstract class EcommerceResponse extends HTTPResponse
 {
     /**
      * @param string       $status  the status to return

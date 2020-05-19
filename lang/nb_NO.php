@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+
 /**
  * Norwegian Bokmal (Norway) language pack.
  */
@@ -13,8 +18,8 @@ if (array_key_exists('nb_NO', $lang) && is_array($lang['nb_NO'])) {
     $lang['nb_NO'] = $lang['en_US'];
 }
 
-$lang['nb_NO']['AccountPage']['Message'] = 'Du må logge inn for å få tilgang til denne kontosiden. Hvis du er registrert, vil du ikke kunne få tilgang til denne før du har opprettet din første ordre. Ellers tast inn detaljene nedenunder.';
-$lang['nb_NO']['AccountPage']['NOPAGE'] = 'Ingen kontoside på denne nettsiden, vennligst opprett en!';
+$lang['nb_NO'][AccountPage::class]['Message'] = 'Du må logge inn for å få tilgang til denne kontosiden. Hvis du er registrert, vil du ikke kunne få tilgang til denne før du har opprettet din første ordre. Ellers tast inn detaljene nedenunder.';
+$lang['nb_NO'][AccountPage::class]['NOPAGE'] = 'Ingen kontoside på denne nettsiden, vennligst opprett en!';
 $lang['nb_NO']['AccountPage.ss']['COMPLETED'] = 'Fullførte bestillinger';
 $lang['nb_NO']['AccountPage.ss']['HISTORY'] = 'Din ordrehistorikk';
 $lang['nb_NO']['AccountPage.ss']['INCOMPLETE'] = 'Ukomplette Ordre';
@@ -50,7 +55,7 @@ $lang['nb_NO']['Cart.ss']['REMOVEONE'] = 'Fjern en av &quot;%s&quot; fra handlek
 $lang['nb_NO']['Cart.ss']['SHIPPING'] = 'Frakt';
 $lang['nb_NO']['Cart.ss']['SUBTOTAL'] = 'Delsum';
 $lang['nb_NO']['Cart.ss']['TOTAL'] = 'Sum';
-$lang['nb_NO']['CheckoutPage']['NOPAGE'] = 'Finnes ingen ChecoutPage for dette nettstedet - vennligst opprett en!';
+$lang['nb_NO'][CheckoutPage::class]['NOPAGE'] = 'Finnes ingen ChecoutPage for dette nettstedet - vennligst opprett en!';
 $lang['nb_NO']['CheckoutPage.ss']['CHECKOUT'] = 'Sjekk ut';
 $lang['nb_NO']['CheckoutPage.ss']['ORDERSTEP'] = 'Bestillingsstatus';
 $lang['nb_NO']['CheckoutPage.ss']['PROCESS'] = 'Prosess';
@@ -72,8 +77,8 @@ $lang['nb_NO']['DataReport']['EXPORTCSV'] = 'Eksporter til CSV';
 $lang['nb_NO']['FindOrderReport']['DATERANGE'] = 'Datoområde';
 $lang['nb_NO']['MemberForm']['DETAILSSAVED'] = 'Detaljene er lagret';
 $lang['nb_NO']['MemberForm']['LOGGEDIN'] = 'Du er logget inn som';
-$lang['nb_NO']['Order']['INCOMPLETE'] = 'Ordre Ufullkommen';
-$lang['nb_NO']['Order']['SUCCESSFULL'] = 'Ordre Vellykket';
+$lang['nb_NO'][Order::class]['INCOMPLETE'] = 'Ordre Ufullkommen';
+$lang['nb_NO'][Order::class]['SUCCESSFULL'] = 'Ordre Vellykket';
 $lang['nb_NO']['OrderInformation.ss']['ADDRESS'] = 'Adresse';
 $lang['nb_NO']['OrderInformation.ss']['AMOUNT'] = 'Beløp';
 $lang['nb_NO']['OrderInformation.ss']['BUYERSADDRESS'] = 'Kundeadresse';

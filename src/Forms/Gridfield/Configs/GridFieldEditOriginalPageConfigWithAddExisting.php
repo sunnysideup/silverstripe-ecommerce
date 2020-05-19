@@ -2,8 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-use GridFieldConfig_RelationEditor;
-use GridFieldEditButtonOriginalPage;
+
+
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldEditButtonOriginalPage;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+
 
 
 
@@ -19,8 +24,8 @@ class GridFieldEditOriginalPageConfigWithAddExisting extends GridFieldConfig_Rel
     {
         parent::__construct($itemsPerPage);
         $this
-            ->removeComponentsByType('GridFieldEditButton')
-            ->removeComponentsByType('GridFieldAddNewButton')
+            ->removeComponentsByType(GridFieldEditButton::class)
+            ->removeComponentsByType(GridFieldAddNewButton::class)
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }
 }

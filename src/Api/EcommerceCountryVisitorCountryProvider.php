@@ -2,11 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use ViewableData;
-use EcommerceGEOipProvider;
+
+
 use Geoip;
-use Config;
-use Controller;
+
+
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use SilverStripe\Control\Controller;
+use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
+
 
 
 /**
@@ -35,7 +41,7 @@ class EcommerceCountryVisitorCountryProvider extends ViewableData implements Eco
         if (class_exists('Geoip')) {
             return Geoip::visitor_country();
         }
-        return Config::inst()->get('EcommerceCountry', 'default_country_code');
+        return Config::inst()->get(EcommerceCountry::class, 'default_country_code');
     }
 
     /**

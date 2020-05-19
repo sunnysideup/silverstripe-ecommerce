@@ -2,11 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DataObject;
-use DB;
-use Order;
-use EcommerceConfig;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -29,14 +38,14 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         This task is basically for orders that never got archived.
     ";
 
-    private static $payment_table = 'EcommercePayment';
+    private static $payment_table = EcommercePayment::class;
 
     public function run($request)
     {
         set_time_limit(1200);
         //IMPORTANT!
         $lastOrderStep = DataObject::get_one(
-            'OrderStep',
+            OrderStep::class,
             '',
             $cache = true,
             ['Sort' => 'DESC']
@@ -83,12 +92,12 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
     protected function createSubmissionLogForArchivedOrders()
     {
         $lastOrderStep = DataObject::get_one(
-            'OrderStep',
+            OrderStep::class,
             '',
             $cache = true,
             ['Sort' => 'DESC']
         );
-        $submissionLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        $submissionLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $obj = $submissionLogClassName::create();
 
 /**
@@ -99,10 +108,10 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if (! is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderStatusLog'))) {
+        if (! is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }
-        $orderStatusLogClassName = 'OrderStatusLog';
+        $orderStatusLogClassName = OrderStatusLog::class;
         $offset = 0;
         $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
         while ($orders->count()) {

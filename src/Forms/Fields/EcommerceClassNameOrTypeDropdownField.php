@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use DropdownField;
-use ClassInfo;
+
+
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Forms\DropdownField;
+
 
 
 /**

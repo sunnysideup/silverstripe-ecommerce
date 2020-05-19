@@ -2,24 +2,43 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use EcommerceRole;
-use Security;
-use DropdownField;
+
+
+
+
+
+
+
+
 use CMSEditLinkField;
-use EcommerceConfig;
-use Injector;
-use HiddenField;
-use ReadonlyField;
-use EcommerceClassNameOrTypeDropdownField;
+
+
+
+
+
 use CMSEditLinkAPI;
-use NumericField;
-use EcommerceTaskDebugCart;
-use EcommerceDBConfig;
+
+
+
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use SilverStripe\Security\Security;
+use SilverStripe\Forms\DropdownField;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\ReadonlyField;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
+use SilverStripe\Forms\NumericField;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 /**
  * @description: see OrderStep.md
@@ -80,8 +99,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Author' => 'Member',
-        'Order' => 'Order',
+        'Author' => Member::class,
+        'Order' => Order::class,
     ];
 
     /**
@@ -214,7 +233,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
         //is the member is a shop assistant they can always view it
@@ -241,7 +260,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
         //is the member is a shop assistant they can always view it
@@ -289,11 +308,11 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            if ($this->ClassName === 'OrderStatusLog') {
+            if ($this->ClassName === OrderStatusLog::class) {
                 return $order->canView($member);
             }
 
-            if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+            if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
                 return $order->canEdit($member);
             }
         }
@@ -381,8 +400,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
 
         //ClassName Field
-        $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
-        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')]);
+        $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
+        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
         $availableLogsAssociative = [];
 
 /**
@@ -454,7 +473,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create(
                 'ClassName',
                 _t('OrderStatusLog.TYPE', 'Type'),
-                'OrderStatusLog',
+                OrderStatusLog::class,
                 $availableLogsAssociative
             );
             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
@@ -517,9 +536,9 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
         $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
-        $availableLogs = EcommerceConfig::get('OrderStatusLog', 'available_log_classes_array');
-        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order')]);
-        $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', 'OrderStatusLog', $availableLogs);
+        $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
+        $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
+        $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', OrderStatusLog::class, $availableLogs);
         $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
         $fields->replaceField('ClassName', $ecommerceClassNameOrTypeDropdownField);
 
@@ -591,7 +610,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        if ($this->ClassName === 'OrderStatusLog') {
+        if ($this->ClassName === OrderStatusLog::class) {
             return false;
         }
         return true;

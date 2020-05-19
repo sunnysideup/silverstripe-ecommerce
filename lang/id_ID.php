@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Indonesian (Indonesia) language pack.
  */
@@ -13,8 +19,8 @@ if (array_key_exists('id_ID', $lang) && is_array($lang['id_ID'])) {
     $lang['id_ID'] = $lang['en_US'];
 }
 
-$lang['id_ID']['AccountPage']['Message'] = 'Anda perlu login sebelon dapat mengakses halaman account. Jika anda tidak terdaftar, anda tidak akan dapat mengakses halaman tersebut sampai anda membuat pesanan pertama anda, atau anda bisa masukkan perincian anda di bawah ini.';
-$lang['id_ID']['AccountPage']['NOPAGE'] = 'Tidak ada HalamanAccount di situs ini - mohon dibuat!';
+$lang['id_ID'][AccountPage::class]['Message'] = 'Anda perlu login sebelon dapat mengakses halaman account. Jika anda tidak terdaftar, anda tidak akan dapat mengakses halaman tersebut sampai anda membuat pesanan pertama anda, atau anda bisa masukkan perincian anda di bawah ini.';
+$lang['id_ID'][AccountPage::class]['NOPAGE'] = 'Tidak ada HalamanAccount di situs ini - mohon dibuat!';
 $lang['id_ID']['AccountPage.ss']['COMPLETED'] = 'Pemesanan Yang Telah Diselesaikan';
 $lang['id_ID']['AccountPage.ss']['HISTORY'] = 'Sejarah Pesanan Anda';
 $lang['id_ID']['AccountPage.ss']['INCOMPLETE'] = 'Pemesanan yang Belum Selesai';
@@ -44,7 +50,7 @@ $lang['id_ID']['Cart.ss']['RemoveAlt'] = 'Buang';
 $lang['id_ID']['Cart.ss']['SHIPPING'] = 'Pengiriman';
 $lang['id_ID']['Cart.ss']['SUBTOTAL'] = 'Sub total';
 $lang['id_ID']['Cart.ss']['TOTAL'] = 'Total';
-$lang['id_ID']['CheckoutPage']['NOPAGE'] = 'Tidak ada CheckoutPage di situs ini - mohon buatlah satu !';
+$lang['id_ID'][CheckoutPage::class]['NOPAGE'] = 'Tidak ada CheckoutPage di situs ini - mohon buatlah satu !';
 $lang['id_ID']['CheckoutPage.ss']['CHECKOUT'] = 'Checkout';
 $lang['id_ID']['CheckoutPage.ss']['ORDERSTEP'] = 'Status Pemesanan';
 $lang['id_ID']['CheckoutPage.ss']['PROCESS'] = 'Proses';
@@ -66,8 +72,8 @@ $lang['id_ID']['DataReport']['EXPORTCSV'] = 'Ekspor ke CSV';
 $lang['id_ID']['FindOrderReport']['DATERANGE'] = 'Rentang Tanggal';
 $lang['id_ID']['MemberForm']['DETAILSSAVED'] = 'Perincian anda telah disimpan.';
 $lang['id_ID']['MemberForm']['LOGGEDIN'] = 'Saat ini Anda masuk log sebagai';
-$lang['id_ID']['Order']['INCOMPLETE'] = 'Pemesanan Tidak Selesai';
-$lang['id_ID']['Order']['SUCCESSFULL'] = 'Pemesanan Sukses';
+$lang['id_ID'][Order::class]['INCOMPLETE'] = 'Pemesanan Tidak Selesai';
+$lang['id_ID'][Order::class]['SUCCESSFULL'] = 'Pemesanan Sukses';
 $lang['id_ID']['OrderInformation.ss']['ADDRESS'] = 'Alamat';
 $lang['id_ID']['OrderInformation.ss']['AMOUNT'] = 'Nominal';
 $lang['id_ID']['OrderInformation.ss']['BUYERSADDRESS'] = 'Alamat Pembeli';
@@ -76,7 +82,7 @@ $lang['id_ID']['OrderInformation.ss']['COUNTRY'] = 'Negara';
 $lang['id_ID']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Perincian Pelanggan';
 $lang['id_ID']['OrderInformation.ss']['DATE'] = 'Tanggal';
 $lang['id_ID']['OrderInformation.ss']['DETAILS'] = 'Keterangan';
-$lang['id_ID']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['id_ID']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['id_ID']['OrderInformation.ss']['MOBILE'] = 'Telepon Genggam';
 $lang['id_ID']['OrderInformation.ss']['NAME'] = 'Nama';
 $lang['id_ID']['OrderInformation.ss']['ORDERSUMMARY'] = 'Perincian Pemesanan';
@@ -117,7 +123,7 @@ $lang['id_ID']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Alamat Pembe
 $lang['id_ID']['OrderInformation_NoPricing.ss']['CITY'] = 'Kota';
 $lang['id_ID']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Negara';
 $lang['id_ID']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Perincian Pelanggan';
-$lang['id_ID']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['id_ID']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['id_ID']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Telepon Genggam';
 $lang['id_ID']['OrderInformation_NoPricing.ss']['NAME'] = 'Nama';
 $lang['id_ID']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informasi untuk Pemesanan #';
@@ -144,7 +150,7 @@ $lang['id_ID']['Order_Content.ss']['TOTALPRICE'] = 'Jumlah Harga';
 $lang['id_ID']['Order_Member.ss']['ADDRESS'] = 'Alamat';
 $lang['id_ID']['Order_Member.ss']['CITY'] = 'Kota';
 $lang['id_ID']['Order_Member.ss']['COUNTRY'] = 'Negara';
-$lang['id_ID']['Order_Member.ss']['EMAIL'] = 'Email';
+$lang['id_ID']['Order_Member.ss']['EMAIL'] = Email::class;
 $lang['id_ID']['Order_Member.ss']['MOBILE'] = 'Telepon Genggam';
 $lang['id_ID']['Order_Member.ss']['NAME'] = 'Nama';
 $lang['id_ID']['Order_Member.ss']['PHONE'] = 'Telepon';

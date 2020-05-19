@@ -2,8 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use DataList;
-use ArrayList;
+
+
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\ArrayList;
+
 
 /**
  * This page manages searching for products.
@@ -65,7 +69,7 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function canCreate($member = null, $context = [])
     {
-        return ProductGroupSearchPage::get()->filter(['ClassName' => 'ProductGroupSearchPage'])->Count() ? false : $this->canEdit($member);
+        return ProductGroupSearchPage::get()->filter(['ClassName' => ProductGroupSearchPage::class])->Count() ? false : $this->canEdit($member);
     }
 
     /**

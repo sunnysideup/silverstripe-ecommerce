@@ -2,26 +2,49 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Form;
-use DataList;
-use FieldList;
-use TextField;
-use FormAction;
-use Config;
-use NumericField;
-use CheckboxField;
-use Director;
-use Permission;
-use ProductSearchFormValidator;
-use EcommerceConfig;
-use Injector;
-use EcommerceDBConfig;
-use Controller;
-use Convert;
-use SearchHistory;
-use ProductGroup;
-use DataObject;
-use SearchReplacement;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\ORM\DataList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Control\Director;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
+use SilverStripe\Forms\Form;
+
 
 
 /**
@@ -204,7 +227,7 @@ class ProductSearchForm extends Form
             );
             $shortKeywordField->setAttribute('placeholder', _t('ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER', 'search products ...'));
         } else {
-            if (Config::inst()->get('ProductSearchForm', 'include_price_filters')) {
+            if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
                 $fields = FieldList::create(
                     $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords')),
 
@@ -294,7 +317,7 @@ class ProductSearchForm extends Form
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             if (isset($oldData['ShortKeyword'])) {
                 $string = $oldData['ShortKeyword'];
@@ -319,7 +342,7 @@ class ProductSearchForm extends Form
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $oldData['ShortKeyword'] = $phrase;
             $oldData['Keyword'] = $phrase;
@@ -333,7 +356,7 @@ class ProductSearchForm extends Form
   * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'), $phrase);
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'), $phrase);
     }
 
     public function setControllerSearchResultDisplayMethod($s)
@@ -381,7 +404,7 @@ class ProductSearchForm extends Form
         $searchHistoryObject = null;
         $immediateRedirectLink = '';
         if (! $this->maximumNumberOfResults) {
-            $this->maximumNumberOfResults = EcommerceConfig::get('ProductGroupSearchPage', 'maximum_number_of_products_to_list_for_search');
+            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
         }
         if (isset($data['DebugSearch'])) {
             $this->debug = $data['DebugSearch'] ? true : false;
@@ -393,7 +416,7 @@ class ProductSearchForm extends Form
         //what is the baseclass?
         $baseClassName = $this->baseClassForBuyables;
         if (! $baseClassName) {
-            $baseClassName = EcommerceConfig::get('ProductGroup', 'base_buyable_class');
+            $baseClassName = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
         if (! $baseClassName) {
             user_error("Can not find ${baseClassName} (baseClassName)");
@@ -575,7 +598,7 @@ class ProductSearchForm extends Form
         $redirectToPage = null;
         //if no specific section is being searched then we redirect to search page:
         if (! $limitToCurrentSection) {
-            $redirectToPage = DataObject::get_one('ProductGroupSearchPage');
+            $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
         }
         if (! $redirectToPage) {
             // for section specific search,

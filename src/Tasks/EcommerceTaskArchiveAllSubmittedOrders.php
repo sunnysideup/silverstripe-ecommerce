@@ -2,13 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Config;
-use Email;
-use EcommerceDummyMailer;
-use EcommerceConfig;
-use DataObject;
-use DB;
+
+
+
+
+
+
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -31,17 +41,17 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
     public function run($request)
     {
         //IMPORTANT!
-        Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
+        Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
         Email::set_mailer(new EcommerceDummyMailer());
-        $orderStatusLogClassName = 'OrderStatusLog';
-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        $orderStatusLogClassName = OrderStatusLog::class;
+        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
             $sampleSubmittedStatusLog = DataObject::get_one(
                 $submittedOrderStatusLogClassName
             );
             if ($sampleSubmittedStatusLog) {
                 $lastOrderStep = DataObject::get_one(
-                    'OrderStep',
+                    OrderStep::class,
                     '',
                     $cache = true,
                     ['Sort' => 'DESC']

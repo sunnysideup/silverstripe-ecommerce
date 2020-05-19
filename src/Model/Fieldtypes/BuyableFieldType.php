@@ -4,9 +4,14 @@ namespace Sunnysideup\Ecommerce\Model\Fieldtypes;
 
 use PolymorphicForeignKey;
 use CompositeDBField;
-use BuyableSelectField;
-use ClassInfo;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\ORM\DB;
+
 
 
 
@@ -48,7 +53,7 @@ class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
   * EXP: Check if the class name can still be used as such
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-            $classNames = ClassInfo::implementorsOf('BuyableModel');
+            $classNames = ClassInfo::implementorsOf(BuyableModel::class);
 
             $schema = DB::get_schema();
             if ($schema->hasField($this->tableName, "{$this->name}Class")) {

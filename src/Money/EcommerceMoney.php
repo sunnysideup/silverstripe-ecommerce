@@ -2,10 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-use Extension;
+
 use Money;
 use Zend_Currency;
-use EcommerceConfig;
+
+use Sunnysideup\Ecommerce\Money\EcommerceMoney;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Core\Extension;
+
 
 
 
@@ -157,7 +161,7 @@ class EcommerceMoney extends Extension
      */
     public function NiceDefaultFormat($html = true)
     {
-        $function = EcommerceConfig::get('EcommerceMoney', 'default_format');
+        $function = EcommerceConfig::get(EcommerceMoney::class, 'default_format');
 
         return $this->owner->{$function}($html);
     }

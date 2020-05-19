@@ -2,13 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceSearchHistoryFormField;
-use FieldList;
-use HeaderField;
-use NumericField;
-use FormAction;
-use Form;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\Form;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**

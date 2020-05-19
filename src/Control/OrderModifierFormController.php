@@ -2,11 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Controller;
-use ShoppingCart;
-use Config;
-use Director;
-use Form;
+
+
+
+
+
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Form;
+
 
 
 

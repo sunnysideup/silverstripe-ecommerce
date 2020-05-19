@@ -2,15 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-use GridField_HTMLProvider;
-use GridField_ActionProvider;
-use GridField_URLHandler;
-use GridField_FormAction;
-use GridField;
-use Config;
-use ArrayList;
-use Requirements;
-use Controller;
+
+
+
+
+
+
+
+
+
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\Requirements;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_URLHandler;
+
 
 
 /**
@@ -94,7 +106,7 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
      */
     public function handlePrint($gridField, $request = null)
     {
-        $limit = Config::inst()->get('GridFieldPrintAllInvoicesButton', 'invoice_bulk_printing_limit');
+        $limit = Config::inst()->get(GridFieldPrintAllInvoicesButton::class, 'invoice_bulk_printing_limit');
         $list = $gridField->getList()->limit($limit);
         $gridField->setList($list);
         $al = ArrayList::create();
@@ -102,7 +114,7 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
             $al->push($order);
         }
         Requirements::clear();
-        Config::modify()->update('SSViewer', 'theme_enabled', true);
+        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
         Requirements::themedCSS('sunnysideup/ecommerce: OrderReport', 'ecommerce');
         Requirements::themedCSS('sunnysideup/ecommerce: Order_Invoice', 'ecommerce');
         Requirements::themedCSS('sunnysideup/ecommerce: Order_Invoice_Print_Only', 'ecommerce', 'print');

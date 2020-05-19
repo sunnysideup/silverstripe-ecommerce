@@ -2,16 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
-use EcommerceConfig;
-use TextareaField;
-use DropdownField;
+
+
+
+
+
+
+
+
 use CMSEditLinkAPI;
-use DB;
+
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 
@@ -168,7 +179,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -191,7 +202,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -218,7 +229,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 

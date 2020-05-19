@@ -2,8 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use TreeDropdownField;
-use SS_HTTPRequest;
+
+
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\TreeDropdownField;
+
 
 
 /**
@@ -50,7 +53,7 @@ class OptionalTreeDropdownField extends TreeDropdownField
      * @return string
      *                for version 2.4 and later
      */
-    public function tree(SS_HTTPRequest $request)
+    public function tree(HTTPRequest $request)
     {
         if ($request->latestparam('ID')) {
             return parent::tree($request);

@@ -2,7 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use EcommerceSearchHistoryFormField;
+
+use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
+
 
 
 
@@ -34,7 +37,7 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
-        if ($this->modelClass === 'SearchHistory') {
+        if ($this->modelClass === SearchHistory::class) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 $form->Fields()->replaceField(
                     $gridField->getName(),

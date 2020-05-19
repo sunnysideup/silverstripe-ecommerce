@@ -2,13 +2,22 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Controller;
-use EcommerceConfig;
-use Director;
-use Requirements;
-use Order;
-use Config;
-use OrderFormPayment;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
+
 
 
 
@@ -50,7 +59,7 @@ class EcommercePaymentController extends Controller
      */
     public static function make_payment_link($orderID)
     {
-        $urlSegment = EcommerceConfig::get('EcommercePaymentController', 'url_segment');
+        $urlSegment = EcommerceConfig::get(EcommercePaymentController::class, 'url_segment');
         return Controller::join_links(
             Director::baseURL(),
             $urlSegment . '/pay/' . $orderID . '/'

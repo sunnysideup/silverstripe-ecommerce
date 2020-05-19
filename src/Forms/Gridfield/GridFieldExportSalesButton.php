@@ -2,16 +2,29 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-use GridFieldExportButton;
-use GridField_HTMLProvider;
-use GridField_ActionProvider;
-use GridField_URLHandler;
-use GridField;
-use SS_HTTPRequest;
-use GridField_FormAction;
-use OrderItem;
-use Config;
-use Order;
+
+
+
+
+
+
+
+
+
+
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_URLHandler;
+
 
 
 /**
@@ -72,7 +85,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         if ($fileData = $this->generateExportFileData($gridField)) {
             $now = Date('d-m-Y-H-i');
             $fileName = "sales-${now}.csv";
-            return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+            return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
     }
 
@@ -161,7 +174,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $separator = $this->csvSeparator;
         $fileData = '';
         $columnData = [];
-        $exportFields = Config::inst()->get('GridFieldExportSalesButton', 'fields_and_methods_to_be_exported');
+        $exportFields = Config::inst()->get(GridFieldExportSalesButton::class, 'fields_and_methods_to_be_exported');
         if ($this->isFirstRow) {
             $fileData = '"Email"' . $separator . '"SubmittedDate"' . $separator . '"' . implode('"' . $separator . '"', $exportFields) . '"' . "\n";
             $this->isFirstRow = false;
@@ -207,7 +220,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         return Order::get()
             ->sort('"Order"."ID" ASC')
             ->filter(['ID' => $idArray])
-            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
+            ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset);
     }
 }

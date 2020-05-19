@@ -2,9 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-use ViewableData;
-use OrderAddress;
-use Injector;
+
+
+
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
+use SilverStripe\View\ViewableData;
+
 
 
 /**
@@ -48,7 +55,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
     public function setRequestor($do)
     {
         if (self::$prefix === null) {
-            self::$prefix = EcommerceConfig::get('Order', 'template_id_prefix');
+            self::$prefix = EcommerceConfig::get(Order::class, 'template_id_prefix');
         }
         $this->requestor = $do;
     }
@@ -110,7 +117,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListHolderID()
     {
-        return self::$prefix . 'ProductGroup';
+        return self::$prefix . ProductGroup::class;
     }
 
     /**
@@ -327,7 +334,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     public function Define($name)
     {
-        $object = Injector::inst()->get('EcommerceConfigDefinitions');
+        $object = Injector::inst()->get(EcommerceConfigDefinitions::class);
 
         return $object->getAjaxMethod($name);
     }

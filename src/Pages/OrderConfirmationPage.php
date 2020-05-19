@@ -2,14 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Permission;
-use Config;
-use TextField;
-use HeaderField;
-use HTMLEditorField;
-use CheckboxField;
-use DataObject;
-use CheckoutPageStepDescription;
+
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
 
 
 /**
@@ -153,7 +166,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function canCreate($member = null, $context = [])
     {
-        return OrderConfirmationPage::get()->filter(['ClassName' => 'OrderConfirmationPage'])->Count() ? false : $this->canEdit($member);
+        return OrderConfirmationPage::get()->filter(['ClassName' => OrderConfirmationPage::class])->Count() ? false : $this->canEdit($member);
     }
 
     /**
@@ -165,7 +178,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -308,9 +321,9 @@ class OrderConfirmationPage extends CartPage
      */
     public static function find_link($action = null)
     {
-        if ($page = DataObject::get_one('OrderConfirmationPage', ['ClassName' => 'OrderConfirmationPage'])) {
+        if ($page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class])) {
             return $page->Link($action);
-        } elseif ($page = DataObject::get_one('OrderConfirmationPage')) {
+        } elseif ($page = DataObject::get_one(OrderConfirmationPage::class)) {
             return $page->Link($action);
         }
 
@@ -339,7 +352,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function get_email_link($orderID, $emailClassName = 'OrderStatusEmail', $actuallySendEmail = false, $alternativeOrderStepID = 0)
+    public static function get_email_link($orderID, $emailClassName = OrderStatusEmail::class, $actuallySendEmail = false, $alternativeOrderStepID = 0)
     {
         $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . $emailClassName;
         $getParams = [];
@@ -424,9 +437,9 @@ class OrderConfirmationPage extends CartPage
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if ($checkoutPage) {
-            $orderConfirmationPage = DataObject::get_one('OrderConfirmationPage');
+            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
             if (! $orderConfirmationPage) {
                 $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->Title = 'Order Confirmation';

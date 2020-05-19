@@ -2,12 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DB;
-use EcommerceConfig;
-use DataObject;
-use OrderStep;
-use Order;
+
+
+
+
+
+
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Dev\BuildTask;
+
 
 
 
@@ -39,7 +47,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         if (! $doCancel) {
             DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
         }
-        $submittedOrderStatusLogClassName = EcommerceConfig::get('OrderStatusLog', 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
@@ -47,7 +55,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                 $orders = Order::get()
                     ->where('StatusID NOT IN (' . implode(',', $orderStepsIDArray) . ')')
                     ->innerJoin(
-                        'OrderStatusLog',
+                        OrderStatusLog::class,
                         '"OrderStatusLog"."OrderID" = "Order"."ID"'
                     )
                     ->innerJoin(

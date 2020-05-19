@@ -2,10 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Page_Controller;
-use Product;
-use OrderStep;
-use DataObject;
+
+
+
+
+use Sunnysideup\Ecommerce\Control\EcommerceTemplateTest;
+use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\ORM\DataObject;
+use PageController;
+
 
 
 /**
@@ -16,11 +23,11 @@ use DataObject;
  * @sub-package: control
 
  **/
-class EcommerceTemplateTest extends Page_Controller
+class EcommerceTemplateTest extends PageController
 {
     public function index()
     {
-        return $this->renderWith(['EcommerceTemplateTest', 'Page']);
+        return $this->renderWith([EcommerceTemplateTest::class, 'Page']);
     }
 
     /**
@@ -55,7 +62,7 @@ class EcommerceTemplateTest extends Page_Controller
         $lastStatusOrder = OrderStep::last_order_step();
         if ($lastStatusOrder) {
             return DataObject::get_one(
-                'Order',
+                Order::class,
                 ['StatusID' => $lastStatusOrder->ID],
                 $cacheDataObjectGetOne = true,
                 'RAND()'

@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+
 /**
  * Bulgarian (Bulgaria) language pack.
  */
@@ -13,8 +19,8 @@ if (array_key_exists('bg_BG', $lang) && is_array($lang['bg_BG'])) {
     $lang['bg_BG'] = $lang['en_US'];
 }
 
-$lang['bg_BG']['AccountPage']['Message'] = 'Ще трябва да влезнете в система преди да влезнете в профила си. Ако не сте регистриран, няма да може да влезните преди да направите първата си покупка, по друг начин можете да въведете данните си по-долу.';
-$lang['bg_BG']['AccountPage']['NOPAGE'] = 'Няма ПрофилСтраница на този сайт - моля създайте една !';
+$lang['bg_BG'][AccountPage::class]['Message'] = 'Ще трябва да влезнете в система преди да влезнете в профила си. Ако не сте регистриран, няма да може да влезните преди да направите първата си покупка, по друг начин можете да въведете данните си по-долу.';
+$lang['bg_BG'][AccountPage::class]['NOPAGE'] = 'Няма ПрофилСтраница на този сайт - моля създайте една !';
 $lang['bg_BG']['AccountPage.ss']['COMPLETED'] = 'Завършени поръчки';
 $lang['bg_BG']['AccountPage.ss']['HISTORY'] = 'Хронология на вашите поръчки';
 $lang['bg_BG']['AccountPage.ss']['INCOMPLETE'] = 'Неизпълнени поръчки';
@@ -47,7 +53,7 @@ $lang['bg_BG']['Cart.ss']['REMOVEONE'] = 'Премахни едно &quot;%s&quo
 $lang['bg_BG']['Cart.ss']['SHIPPING'] = 'Изпращане';
 $lang['bg_BG']['Cart.ss']['SUBTOTAL'] = 'Общо';
 $lang['bg_BG']['Cart.ss']['TOTAL'] = 'Общо';
-$lang['bg_BG']['CheckoutPage']['NOPAGE'] = 'Няма страница за поръчки на този сайт - моля създайте една!';
+$lang['bg_BG'][CheckoutPage::class]['NOPAGE'] = 'Няма страница за поръчки на този сайт - моля създайте една!';
 $lang['bg_BG']['CheckoutPage.ss']['CHECKOUT'] = 'Поръчай';
 $lang['bg_BG']['CheckoutPage.ss']['ORDERSTEP'] = 'Състояние на поръчката';
 $lang['bg_BG']['CheckoutPage.ss']['PROCESS'] = 'Процедирай';
@@ -69,8 +75,8 @@ $lang['bg_BG']['DataReport']['EXPORTCSV'] = 'Изнеси на CSV';
 $lang['bg_BG']['FindOrderReport']['DATERANGE'] = 'Интервал';
 $lang['bg_BG']['MemberForm']['DETAILSSAVED'] = 'Вашите детайли бяха запазени';
 $lang['bg_BG']['MemberForm']['LOGGEDIN'] = 'Вие сте влязъл като';
-$lang['bg_BG']['Order']['INCOMPLETE'] = 'Неуспашна поръчка';
-$lang['bg_BG']['Order']['SUCCESSFULL'] = 'Успешна поръчка';
+$lang['bg_BG'][Order::class]['INCOMPLETE'] = 'Неуспашна поръчка';
+$lang['bg_BG'][Order::class]['SUCCESSFULL'] = 'Успешна поръчка';
 $lang['bg_BG']['OrderInformation.ss']['ADDRESS'] = 'Адрес';
 $lang['bg_BG']['OrderInformation.ss']['AMOUNT'] = 'Сума';
 $lang['bg_BG']['OrderInformation.ss']['BUYERSADDRESS'] = 'Адрес на копувача';
@@ -142,7 +148,7 @@ $lang['bg_BG']['OrderReport']['SENDNOTETO'] = 'Изпрати тази беле�
 $lang['bg_BG']['Order_Member.ss']['ADDRESS'] = 'Адрес';
 $lang['bg_BG']['Order_Member.ss']['CITY'] = 'Град';
 $lang['bg_BG']['Order_Member.ss']['COUNTRY'] = 'Държава';
-$lang['bg_BG']['Order_Member.ss']['EMAIL'] = 'Email';
+$lang['bg_BG']['Order_Member.ss']['EMAIL'] = Email::class;
 $lang['bg_BG']['Order_Member.ss']['MOBILE'] = 'GSM';
 $lang['bg_BG']['Order_Member.ss']['NAME'] = 'Име';
 $lang['bg_BG']['Order_Member.ss']['PHONE'] = 'Телефон';

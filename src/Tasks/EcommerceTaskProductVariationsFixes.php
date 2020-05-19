@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use Versioned;
-use DB;
+
+
+
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\DB;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -25,7 +30,7 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
     {
         $stagingArray = ['Live', 'Stage'];
         foreach ($stagingArray as $stage) {
-            $products = Versioned::get_by_stage('Product', $stage);
+            $products = Versioned::get_by_stage(Product::class, $stage);
             $count = 0;
             if ($products) {
                 foreach ($products as $product) {

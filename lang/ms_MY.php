@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+
 /**
  * Malay (Malaysia) language pack.
  */

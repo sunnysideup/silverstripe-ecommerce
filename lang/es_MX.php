@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+
 /**
  * Spanish (Mexico) language pack.
  */
@@ -13,8 +18,8 @@ if (array_key_exists('es_MX', $lang) && is_array($lang['es_MX'])) {
     $lang['es_MX'] = $lang['en_US'];
 }
 
-$lang['es_MX']['AccountPage']['Message'] = 'Es necesario ingresar antes para poder ver la página de tu cuenta. Si no te has registrado, no puedes verla hasta que hayas realizado tu primer pedido, de otro modo, por favor, introduce tus generales abajo.';
-$lang['es_MX']['AccountPage']['NOPAGE'] = 'No existe Página de Cuenta  en este sitio - por favor, ¡crea una!';
+$lang['es_MX'][AccountPage::class]['Message'] = 'Es necesario ingresar antes para poder ver la página de tu cuenta. Si no te has registrado, no puedes verla hasta que hayas realizado tu primer pedido, de otro modo, por favor, introduce tus generales abajo.';
+$lang['es_MX'][AccountPage::class]['NOPAGE'] = 'No existe Página de Cuenta  en este sitio - por favor, ¡crea una!';
 $lang['es_MX']['AccountPage.ss']['COMPLETED'] = 'Pedidos Completos';
 $lang['es_MX']['AccountPage.ss']['HISTORY'] = 'Historia de Tu Pedido';
 $lang['es_MX']['AccountPage.ss']['INCOMPLETE'] = 'Pedidos Incompletos';
@@ -49,7 +54,7 @@ $lang['es_MX']['Cart.ss']['REMOVEONE'] = 'Remueve de tu carrito uno de &quot;%s&
 $lang['es_MX']['Cart.ss']['SHIPPING'] = 'Envío';
 $lang['es_MX']['Cart.ss']['SUBTOTAL'] = 'Sub-Total';
 $lang['es_MX']['Cart.ss']['TOTAL'] = 'Total';
-$lang['es_MX']['CheckoutPage']['NOPAGE'] = 'No existe la página CheckoutPage en este sitio - ¡Por favor crea una!';
+$lang['es_MX'][CheckoutPage::class]['NOPAGE'] = 'No existe la página CheckoutPage en este sitio - ¡Por favor crea una!';
 $lang['es_MX']['CheckoutPage.ss']['CHECKOUT'] = 'Terminar Compra';
 $lang['es_MX']['CheckoutPage.ss']['ORDERSTEP'] = 'Estado del Pedido';
 $lang['es_MX']['CheckoutPage.ss']['PROCESS'] = 'Proceso';
@@ -71,8 +76,8 @@ $lang['es_MX']['DataReport']['EXPORTCSV'] = 'Exportar a CSV';
 $lang['es_MX']['FindOrderReport']['DATERANGE'] = 'Rango de Fechas';
 $lang['es_MX']['MemberForm']['DETAILSSAVED'] = 'Tus detalles han sido guardados';
 $lang['es_MX']['MemberForm']['LOGGEDIN'] = 'Actualmente tienes una sesión activa.';
-$lang['es_MX']['Order']['INCOMPLETE'] = 'Pedido Incompleto';
-$lang['es_MX']['Order']['SUCCESSFULL'] = 'Pedido Existoso';
+$lang['es_MX'][Order::class]['INCOMPLETE'] = 'Pedido Incompleto';
+$lang['es_MX'][Order::class]['SUCCESSFULL'] = 'Pedido Existoso';
 $lang['es_MX']['OrderInformation.ss']['ADDRESS'] = 'Dirección';
 $lang['es_MX']['OrderInformation.ss']['AMOUNT'] = 'Cantidad';
 $lang['es_MX']['OrderInformation.ss']['BUYERSADDRESS'] = 'Dirección del Comprador';

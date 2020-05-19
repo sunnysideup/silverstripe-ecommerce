@@ -2,9 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DB;
-use ProductImage;
+
+
+
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -23,7 +29,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 
     public function run($request)
     {
-        $tables = ['ProductGroup', 'ProductGroup_Live', 'Product', 'Product_Live'];
+        $tables = [ProductGroup::class, 'ProductGroup_Live', Product::class, 'Product_Live'];
         if (class_exists('ProductVariation')) {
             $tables[] = 'ProductVariation';
         }
@@ -78,9 +84,9 @@ class EcommerceTaskProductImageReset extends BuildTask
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                    } elseif (! is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductImage'))) {
+                    } elseif (! is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class))) {
                         ++$updateClassCount;
-                        $image = $image->newClassInstance('ProductImage');
+                        $image = $image->newClassInstance(ProductImage::class);
                         $image - write();
                     }
                 }

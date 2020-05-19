@@ -2,24 +2,51 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use EcommerceConfigDefinitions;
-use EcommerceConfig;
-use DB;
-use OrderStep;
-use Config;
-use DataObject;
-use CheckoutPageStepDescription;
-use OrderModifierDescriptor;
-use Director;
+
+
+
+
+
+
+
+
+
+
 use Spyc;
-use EcommerceDBConfig;
-use SiteConfig;
-use EcommerceCountry;
-use SiteTree;
-use ArrayData;
-use EcommerceConfigAjax;
-use ClassInfo;
+
+
+
+
+
+
+
+use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
+use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Assets\Image;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\SiteConfig\SiteConfig;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+use SilverStripe\Core\ClassInfo;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**
@@ -193,21 +220,21 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                         }
                     }
                 }
-                $this->definitions['OrderStep'][$step->Code] = $step->Description . '<br />see: <a href="' . $step->CMSEditLink() . '">Step Configuration</a>.';
-                $this->configs['OrderStep'][$step->Code] = $configArray;
-                $this->defaults['OrderStep'][$step->Code] = $defaultsArray;
-                $this->databaseValues['OrderStep'][$step->Code] = true;
+                $this->definitions[OrderStep::class][$step->Code] = $step->Description . '<br />see: <a href="' . $step->CMSEditLink() . '">Step Configuration</a>.';
+                $this->configs[OrderStep::class][$step->Code] = $configArray;
+                $this->defaults[OrderStep::class][$step->Code] = $defaultsArray;
+                $this->databaseValues[OrderStep::class][$step->Code] = true;
             }
         }
     }
 
     public function checkoutAndModifierDetails()
     {
-        $checkoutPage = DataObject::get_one('CheckoutPage');
+        $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if (! $checkoutPage) {
             $task = new EcommerceTaskDefaultRecords();
             $task->run(null);
-            $checkoutPage = DataObject::get_one('CheckoutPage');
+            $checkoutPage = DataObject::get_one(CheckoutPage::class);
             if (! $checkoutPage) {
                 user_error('There is no checkout page available and it seems impossible to create one.');
             }
@@ -893,10 +920,10 @@ EcommerceConfig:
             foreach ($fields as $field => $description) {
                 if ($field !== 'Title' && $field !== 'UseThisOne') {
                     $defaultsDefaults = $ecommerceDBConfig->stat('defaults');
-                    $this->definitions['EcommerceDBConfig'][$field] = "${description}. <br />see: <a href=\"" . $ecommerceDBConfig->CMSEditLink() . '">Ecommerce Configuration</a>';
-                    $this->configs['EcommerceDBConfig'][$field] = $ecommerceDBConfig->{$field};
-                    $this->databaseValues['EcommerceDBConfig'][$field] = true;
-                    $this->defaults['EcommerceDBConfig'][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
+                    $this->definitions[EcommerceDBConfig::class][$field] = "${description}. <br />see: <a href=\"" . $ecommerceDBConfig->CMSEditLink() . '">Ecommerce Configuration</a>';
+                    $this->configs[EcommerceDBConfig::class][$field] = $ecommerceDBConfig->{$field};
+                    $this->databaseValues[EcommerceDBConfig::class][$field] = true;
+                    $this->defaults[EcommerceDBConfig::class][$field] = isset($defaultsDefaults[$field]) ? $defaultsDefaults[$field] : 'no default set';
                     $imageField = $field . 'ID';
                     if (isset($ecommerceDBConfig->{$imageField})) {
                         if ($image = $ecommerceDBConfig->{$field}()) {
@@ -909,9 +936,9 @@ EcommerceConfig:
   * EXP: Check if this is the right implementation, this is highly speculative.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-                            if ($image->exists() && is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image'))) {
-                                $this->configs['EcommerceDBConfig'][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
-                                $this->databaseValues['EcommerceDBConfig'][$field] = true;
+                            if ($image->exists() && is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class))) {
+                                $this->configs[EcommerceDBConfig::class][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
+                                $this->databaseValues[EcommerceDBConfig::class][$field] = true;
                             }
                         }
                     }
@@ -922,63 +949,63 @@ EcommerceConfig:
 
     protected function addOtherValuesToConfigs()
     {
-        $this->definitions['Email']['admin_email_address'] = 'Default administrator email. <br />SET USING Email::$admin_email = "bla@ta.com" in the _config.php FILES';
-        $this->configs['Email']['admin_email_address'] = Config::inst()->get('Email', 'admin_email');
-        $this->defaults['Email']['admin_email_address'] = '[no default set]';
-        $this->otherConfigs['Email']['admin_email_address'] = true;
+        $this->definitions[Email::class]['admin_email_address'] = 'Default administrator email. <br />SET USING Email::$admin_email = "bla@ta.com" in the _config.php FILES';
+        $this->configs[Email::class]['admin_email_address'] = Config::inst()->get(Email::class, 'admin_email');
+        $this->defaults[Email::class]['admin_email_address'] = '[no default set]';
+        $this->otherConfigs[Email::class]['admin_email_address'] = true;
 
         $siteConfig = SiteConfig::current_site_config();
-        $this->definitions['SiteConfig']['website_title'] = 'The name of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
-        $this->configs['SiteConfig']['website_title'] = $siteConfig->Title;
-        $this->defaults['SiteConfig']['website_title'] = '[no default set]';
-        $this->otherConfigs['SiteConfig']['website_title'] = true;
+        $this->definitions[SiteConfig::class]['website_title'] = 'The name of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
+        $this->configs[SiteConfig::class]['website_title'] = $siteConfig->Title;
+        $this->defaults[SiteConfig::class]['website_title'] = '[no default set]';
+        $this->otherConfigs[SiteConfig::class]['website_title'] = true;
 
-        $this->definitions['SiteConfig']['website_tagline'] = 'The subtitle or tagline of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
-        $this->configs['SiteConfig']['website_tagline'] = $siteConfig->Tagline;
-        $this->defaults['SiteConfig']['website_tagline'] = '[no default set]';
-        $this->otherConfigs['SiteConfig']['website_tagline'] = true;
+        $this->definitions[SiteConfig::class]['website_tagline'] = 'The subtitle or tagline of the website. <br />see: <a href="/admin/settings/">site configuration</a>.';
+        $this->configs[SiteConfig::class]['website_tagline'] = $siteConfig->Tagline;
+        $this->defaults[SiteConfig::class]['website_tagline'] = '[no default set]';
+        $this->otherConfigs[SiteConfig::class]['website_tagline'] = true;
     }
 
     protected function addPages()
     {
-        if ($checkoutPage = DataObject::get_one('CheckoutPage')) {
+        if ($checkoutPage = DataObject::get_one(CheckoutPage::class)) {
             $this->getPageDefinitions($checkoutPage);
-            $this->definitions['Pages']['CheckoutPage'] = 'Page where customers finalise (checkout) their order. This page is required.<br />' . ($checkoutPage ? '<a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['CheckoutPage'] = $checkoutPage ? 'view: <a href="' . $checkoutPage->Link() . '">' . $checkoutPage->Title . '</a><br />' . $checkoutPage->configArray : ' NOT CREATED!';
-            $this->defaults['Pages']['CheckoutPage'] = $checkoutPage ? $checkoutPage->defaultsArray : '[add page first to see defaults]';
-            $this->databaseValues['Pages']['CheckoutPage'] = true;
+            $this->definitions['Pages'][CheckoutPage::class] = 'Page where customers finalise (checkout) their order. This page is required.<br />' . ($checkoutPage ? '<a href="/admin/pages/edit/show/' . $checkoutPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages'][CheckoutPage::class] = $checkoutPage ? 'view: <a href="' . $checkoutPage->Link() . '">' . $checkoutPage->Title . '</a><br />' . $checkoutPage->configArray : ' NOT CREATED!';
+            $this->defaults['Pages'][CheckoutPage::class] = $checkoutPage ? $checkoutPage->defaultsArray : '[add page first to see defaults]';
+            $this->databaseValues['Pages'][CheckoutPage::class] = true;
         }
 
-        if ($orderConfirmationPage = DataObject::get_one('OrderConfirmationPage')) {
+        if ($orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class)) {
             $this->getPageDefinitions($orderConfirmationPage);
-            $this->definitions['Pages']['OrderConfirmationPage'] = 'Page where customers review their order after it has been placed. This page is required.<br />' . ($orderConfirmationPage ? '<a href="/admin/pages/edit/show/' . $orderConfirmationPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? 'view: <a href="' . $orderConfirmationPage->Link() . '">' . $orderConfirmationPage->Title . '</a><br />' . $orderConfirmationPage->configArray : ' NOT CREATED!';
-            $this->defaults['Pages']['OrderConfirmationPage'] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : '[add page first to see defaults]';
-            $this->databaseValues['Pages']['OrderConfirmationPage'] = true;
+            $this->definitions['Pages'][OrderConfirmationPage::class] = 'Page where customers review their order after it has been placed. This page is required.<br />' . ($orderConfirmationPage ? '<a href="/admin/pages/edit/show/' . $orderConfirmationPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages'][OrderConfirmationPage::class] = $orderConfirmationPage ? 'view: <a href="' . $orderConfirmationPage->Link() . '">' . $orderConfirmationPage->Title . '</a><br />' . $orderConfirmationPage->configArray : ' NOT CREATED!';
+            $this->defaults['Pages'][OrderConfirmationPage::class] = $orderConfirmationPage ? $orderConfirmationPage->defaultsArray : '[add page first to see defaults]';
+            $this->databaseValues['Pages'][OrderConfirmationPage::class] = true;
         }
 
-        if ($accountPage = DataObject::get_one('AccountPage')) {
+        if ($accountPage = DataObject::get_one(AccountPage::class)) {
             $this->getPageDefinitions($accountPage);
-            $this->definitions['Pages']['AccountPage'] = 'Page where customers can review their account. This page is required.<br />' . ($accountPage ? '<a href="/admin/pages/edit/show/' . $accountPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['AccountPage'] = $accountPage ? 'view: <a href="' . $accountPage->Link() . '">' . $accountPage->Title . '</a><br />' . $accountPage->configArray : ' NOT CREATED!';
-            $this->defaults['Pages']['AccountPage'] = $accountPage ? $accountPage->defaultsArray : '[add page first to see defaults]';
-            $this->databaseValues['Pages']['AccountPage'] = true;
+            $this->definitions['Pages'][AccountPage::class] = 'Page where customers can review their account. This page is required.<br />' . ($accountPage ? '<a href="/admin/pages/edit/show/' . $accountPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages'][AccountPage::class] = $accountPage ? 'view: <a href="' . $accountPage->Link() . '">' . $accountPage->Title . '</a><br />' . $accountPage->configArray : ' NOT CREATED!';
+            $this->defaults['Pages'][AccountPage::class] = $accountPage ? $accountPage->defaultsArray : '[add page first to see defaults]';
+            $this->databaseValues['Pages'][AccountPage::class] = true;
         }
 
-        if ($cartPage = DataObject::get_one('CartPage', ['ClassName' => 'CartPage'])
+        if ($cartPage = DataObject::get_one(CartPage::class, ['ClassName' => CartPage::class])
         ) {
             $this->getPageDefinitions($cartPage);
-            $this->definitions['Pages']['CartPage'] = 'Page where customers review their cart while shopping. This page is optional.<br />' . ($cartPage ? '<a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
-            $this->configs['Pages']['CartPage'] = $cartPage ? 'view: <a href="' . $cartPage->Link() . '">' . $cartPage->Title . '</a>, <a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a><br />' . $cartPage->configArray : ' NOT CREATED!';
-            $this->defaults['Pages']['CartPage'] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
-            $this->defaults['Pages']['CartPage'] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
-            $this->databaseValues['Pages']['CartPage'] = true;
+            $this->definitions['Pages'][CartPage::class] = 'Page where customers review their cart while shopping. This page is optional.<br />' . ($cartPage ? '<a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a>' : 'Create one in the <a href="/admin/pages/add/">CMS</a>');
+            $this->configs['Pages'][CartPage::class] = $cartPage ? 'view: <a href="' . $cartPage->Link() . '">' . $cartPage->Title . '</a>, <a href="/admin/pages/edit/show/' . $cartPage->ID . '/">edit</a><br />' . $cartPage->configArray : ' NOT CREATED!';
+            $this->defaults['Pages'][CartPage::class] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
+            $this->defaults['Pages'][CartPage::class] = $cartPage ? $cartPage->defaultsArray : '[add page first to see defaults]';
+            $this->databaseValues['Pages'][CartPage::class] = true;
         }
     }
 
     protected function checkGEOIP()
     {
-        if (Config::inst()->get('EcommerceCountry', 'visitor_country_provider') === 'EcommerceCountryVisitorCountryProvider' && ! class_exists('Geoip')) {
+        if (Config::inst()->get(EcommerceCountry::class, 'visitor_country_provider') === EcommerceCountryVisitorCountryProvider::class && ! class_exists('Geoip')) {
             user_error(
                 "
                 You need to install Geoip module that has a method Geoip::visitor_country, returning the country code associated with the user's IP address.
@@ -1075,22 +1102,22 @@ EcommerceConfig:
 
                 break;
             case 'Order.modifiers':
-                $classes = ClassInfo::subclassesFor('OrderModifier');
-                unset($classes['OrderModifier']);
+                $classes = ClassInfo::subclassesFor(OrderModifier::class);
+                unset($classes[OrderModifier::class]);
                 $classesAsString = implode(', <br />', $classes);
 
                 return "<br /><h4>Available Modifiers</h4>${classesAsString}";
                 break;
             case 'OrderStatusLog.available_log_classes_array':
-                $classes = ClassInfo::subclassesFor('OrderStatusLog');
-                unset($classes['OrderStatusLog']);
+                $classes = ClassInfo::subclassesFor(OrderStatusLog::class);
+                unset($classes[OrderStatusLog::class]);
                 $classesAsString = implode(', <br />', $classes);
 
                 return "<br /><h4>Available Modifiers</h4>${classesAsString}";
                 break;
             case 'OrderStep.order_steps_to_include':
-                $classes = ClassInfo::subclassesFor('OrderStep');
-                unset($classes['OrderStep']);
+                $classes = ClassInfo::subclassesFor(OrderStep::class);
+                unset($classes[OrderStep::class]);
                 $classesAsString = implode('<br /> - ', $classes);
 
                 return "<br /><h4>Available Order Steps</h4> - ${classesAsString}";

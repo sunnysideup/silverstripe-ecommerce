@@ -2,9 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use BuildTask;
-use DB;
-use Product;
+
+
+
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Dev\BuildTask;
+
 
 
 /**

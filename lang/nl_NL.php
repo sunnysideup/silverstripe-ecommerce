@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\i18n\i18n;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\Email\Email;
+use Sunnysideup\Ecommerce\Pages\Product;
+
 /**
  * Dutch (Netherlands) language pack.
  */
@@ -13,8 +20,8 @@ if (array_key_exists('nl_NL', $lang) && is_array($lang['nl_NL'])) {
     $lang['nl_NL'] = $lang['en_US'];
 }
 
-$lang['nl_NL']['AccountPage']['Message'] = 'U dient zich in te loggen voordat u toegang krijgt tot de account pagina. Als u niet geregistreerd bent, zult u niet in staat zijn om deze te openen totdat u uw eerste bestelling maakt, vul anders hieronder je gegevens in.';
-$lang['nl_NL']['AccountPage']['NOPAGE'] = 'Geen account pagina op deze site - maak er een A.U.B.!';
+$lang['nl_NL'][AccountPage::class]['Message'] = 'U dient zich in te loggen voordat u toegang krijgt tot de account pagina. Als u niet geregistreerd bent, zult u niet in staat zijn om deze te openen totdat u uw eerste bestelling maakt, vul anders hieronder je gegevens in.';
+$lang['nl_NL'][AccountPage::class]['NOPAGE'] = 'Geen account pagina op deze site - maak er een A.U.B.!';
 $lang['nl_NL']['AccountPage.ss']['COMPLETED'] = 'Afgeronde bestellingen';
 $lang['nl_NL']['AccountPage.ss']['HISTORY'] = 'Uw vorige aankopen';
 $lang['nl_NL']['AccountPage.ss']['INCOMPLETE'] = 'Lopende bestellingen';
@@ -49,7 +56,7 @@ $lang['nl_NL']['Cart.ss']['REMOVEONE'] = 'Verwijder één &quot;%s&quot; van uw 
 $lang['nl_NL']['Cart.ss']['SHIPPING'] = 'Verzending';
 $lang['nl_NL']['Cart.ss']['SUBTOTAL'] = 'Subtotaal';
 $lang['nl_NL']['Cart.ss']['TOTAL'] = 'Totaal';
-$lang['nl_NL']['CheckoutPage']['NOPAGE'] = 'Er is geen CheckoutPage op deze site - maak er een aan a.u.b. !';
+$lang['nl_NL'][CheckoutPage::class]['NOPAGE'] = 'Er is geen CheckoutPage op deze site - maak er een aan a.u.b. !';
 $lang['nl_NL']['CheckoutPage.ss']['CHECKOUT'] = 'Kassa';
 $lang['nl_NL']['CheckoutPage.ss']['ORDERSTEP'] = 'Offerte Status';
 $lang['nl_NL']['CheckoutPage.ss']['PROCESS'] = 'Verwerk';
@@ -71,8 +78,8 @@ $lang['nl_NL']['DataReport']['EXPORTCSV'] = 'Exporteren naar CSV';
 $lang['nl_NL']['FindOrderReport']['DATERANGE'] = 'Datumbereik';
 $lang['nl_NL']['MemberForm']['DETAILSSAVED'] = 'Uw gegevens zijn opgeslagen';
 $lang['nl_NL']['MemberForm']['LOGGEDIN'] = 'Je bent momenteel ingelogd als';
-$lang['nl_NL']['Order']['INCOMPLETE'] = 'Bestelling onvolledig';
-$lang['nl_NL']['Order']['SUCCESSFULL'] = 'Bestelling succesvol';
+$lang['nl_NL'][Order::class]['INCOMPLETE'] = 'Bestelling onvolledig';
+$lang['nl_NL'][Order::class]['SUCCESSFULL'] = 'Bestelling succesvol';
 $lang['nl_NL']['OrderInformation.ss']['ADDRESS'] = 'Adres';
 $lang['nl_NL']['OrderInformation.ss']['AMOUNT'] = 'Hoeveelheid';
 $lang['nl_NL']['OrderInformation.ss']['BUYERSADDRESS'] = 'Adres van koper';
@@ -81,7 +88,7 @@ $lang['nl_NL']['OrderInformation.ss']['COUNTRY'] = 'Land';
 $lang['nl_NL']['OrderInformation.ss']['CUSTOMERDETAILS'] = 'Klant gegevens';
 $lang['nl_NL']['OrderInformation.ss']['DATE'] = 'Datum';
 $lang['nl_NL']['OrderInformation.ss']['DETAILS'] = 'Details';
-$lang['nl_NL']['OrderInformation.ss']['EMAIL'] = 'Email';
+$lang['nl_NL']['OrderInformation.ss']['EMAIL'] = Email::class;
 $lang['nl_NL']['OrderInformation.ss']['MOBILE'] = 'Mobiel';
 $lang['nl_NL']['OrderInformation.ss']['NAME'] = 'Naam';
 $lang['nl_NL']['OrderInformation.ss']['ORDERSUMMARY'] = 'Samenvatting Offerte';
@@ -91,7 +98,7 @@ $lang['nl_NL']['OrderInformation.ss']['PAYMENTMETHOD'] = 'Methode';
 $lang['nl_NL']['OrderInformation.ss']['PAYMENTSTATUS'] = 'Betalings Status';
 $lang['nl_NL']['OrderInformation.ss']['PHONE'] = 'Telefoon';
 $lang['nl_NL']['OrderInformation.ss']['PRICE'] = 'Prijs';
-$lang['nl_NL']['OrderInformation.ss']['PRODUCT'] = 'Product';
+$lang['nl_NL']['OrderInformation.ss']['PRODUCT'] = Product::class;
 $lang['nl_NL']['OrderInformation.ss']['QUANTITY'] = 'Hoeveelheid';
 $lang['nl_NL']['OrderInformation.ss']['READMORE'] = 'Klik hier om meer te lezen over &quot;%s&quot;';
 $lang['nl_NL']['OrderInformation.ss']['SHIPPING'] = 'Verzending';
@@ -107,7 +114,7 @@ $lang['nl_NL']['OrderInformation_Editable.ss']['ADDONE'] = 'Plaats &eacute;&eacu
 $lang['nl_NL']['OrderInformation_Editable.ss']['NOITEMS'] = 'Er zijn <strong>g&eacute;&eacute;n</strong> dingen in je winkelwagen';
 $lang['nl_NL']['OrderInformation_Editable.ss']['ORDERINFORMATION'] = 'Offerte Informatie';
 $lang['nl_NL']['OrderInformation_Editable.ss']['PRICE'] = 'Prijs';
-$lang['nl_NL']['OrderInformation_Editable.ss']['PRODUCT'] = 'Product';
+$lang['nl_NL']['OrderInformation_Editable.ss']['PRODUCT'] = Product::class;
 $lang['nl_NL']['OrderInformation_Editable.ss']['QUANTITY'] = 'Hoeveelheid';
 $lang['nl_NL']['OrderInformation_Editable.ss']['READMORE'] = 'Klik hier om meer over &quot;%s&quot; te lezen';
 $lang['nl_NL']['OrderInformation_Editable.ss']['REMOVE'] = 'Verwijder &quot;% s&quot; van uw bestelling';
@@ -124,7 +131,7 @@ $lang['nl_NL']['OrderInformation_NoPricing.ss']['BUYERSADDRESS'] = 'Kopers adres
 $lang['nl_NL']['OrderInformation_NoPricing.ss']['CITY'] = 'Stad';
 $lang['nl_NL']['OrderInformation_NoPricing.ss']['COUNTRY'] = 'Land';
 $lang['nl_NL']['OrderInformation_NoPricing.ss']['CUSTOMERDETAILS'] = 'Klant gegevens';
-$lang['nl_NL']['OrderInformation_NoPricing.ss']['EMAIL'] = 'Email';
+$lang['nl_NL']['OrderInformation_NoPricing.ss']['EMAIL'] = Email::class;
 $lang['nl_NL']['OrderInformation_NoPricing.ss']['MOBILE'] = 'Mobiel';
 $lang['nl_NL']['OrderInformation_NoPricing.ss']['NAME'] = 'Naam';
 $lang['nl_NL']['OrderInformation_NoPricing.ss']['ORDERINFO'] = 'Informatie over Offerte %';
@@ -144,7 +151,7 @@ $lang['nl_NL']['OrderReport']['PRINTEACHORDER'] = 'Print alle getoonde offertes'
 $lang['nl_NL']['OrderReport']['SENDNOTETO'] = 'Verstuur deze notitie naar %s (%s)';
 $lang['nl_NL']['Order_Content.ss']['NOITEMS'] = 'Er zijn <strong>geen</ strong> items in uw bestelling.';
 $lang['nl_NL']['Order_Content.ss']['PRICE'] = 'Prijs';
-$lang['nl_NL']['Order_Content.ss']['PRODUCT'] = 'Product';
+$lang['nl_NL']['Order_Content.ss']['PRODUCT'] = Product::class;
 $lang['nl_NL']['Order_Content.ss']['QUANTITY'] = 'Hoeveelheid';
 $lang['nl_NL']['Order_Content.ss']['READMORE'] = 'Klik hier om meer te lezen over &quot;% s&quot;';
 $lang['nl_NL']['Order_Content.ss']['SUBTOTAL'] = 'Sub-totaal';
@@ -154,7 +161,7 @@ $lang['nl_NL']['Order_Content.ss']['TOTALPRICE'] = 'Totaal prijs';
 $lang['nl_NL']['Order_Member.ss']['ADDRESS'] = 'Adres';
 $lang['nl_NL']['Order_Member.ss']['CITY'] = 'Stad';
 $lang['nl_NL']['Order_Member.ss']['COUNTRY'] = 'Land';
-$lang['nl_NL']['Order_Member.ss']['EMAIL'] = 'Email';
+$lang['nl_NL']['Order_Member.ss']['EMAIL'] = Email::class;
 $lang['nl_NL']['Order_Member.ss']['MOBILE'] = 'Mobiel';
 $lang['nl_NL']['Order_Member.ss']['NAME'] = 'Naam';
 $lang['nl_NL']['Order_Member.ss']['PHONE'] = 'Telefoon';

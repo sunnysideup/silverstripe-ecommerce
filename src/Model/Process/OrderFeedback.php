@@ -2,14 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use DataObject;
-use EditableEcommerceObject;
-use Member;
-use Permission;
-use Config;
+
+
+
+
+
 use CMSEditLinkField;
-use Injector;
+
 use CMSEditLinkAPI;
+use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Security\Permission;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+
 
 
 
@@ -69,7 +78,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
     private static $has_one = [
-        'Order' => 'Order',
+        'Order' => Order::class,
     ];
 
     /**
@@ -192,7 +201,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
+        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
 
@@ -235,7 +244,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
             'OrderID',
             CMSEditLinkField::create(
                 'OrderIDLink',
-                Injector::inst()->get('Order')->singular_name(),
+                Injector::inst()->get(Order::class)->singular_name(),
                 $this->Order()
             )
         );
