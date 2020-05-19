@@ -421,7 +421,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array)
+    public function canCreate($member = NULL, $context = Array())
     {
         return false;
     }

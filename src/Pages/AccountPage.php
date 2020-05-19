@@ -98,7 +98,7 @@ class AccountPage extends Page
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array)
+    public function canCreate($member = NULL, $context = Array())
     {
         return AccountPage::get()->filter(['ClassName' => AccountPage::class])->Count() ? false : $this->canEdit($member);
     }

@@ -695,3 +695,13 @@ Array
     [67] => inspect [-d|--root-dir ROOT-DIR] [-w|--write] [--skip-visibility] [--] <path>
     [68] => 
 )
+
+# running php upgrade inspect see: https://github.com/silverstripe/silverstripe-upgrader
+cd /var/www/ss3/upgrades/ecommerce-root
+php /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code inspect /var/www/ss3/upgrades/ecommerce-root/ecommerce/src  --root-dir=/var/www/ss3/upgrades/ecommerce-root --write -vvv
+Array
+(
+    [0] => Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
+    [1] => [2020-05-19 15:59:03] Applying ApiChangeWarningsRule to OrderConverter.php...
+    [2] => PHP Fatal error:  Cannot declare class Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartManipulationCurrent, because the name is already in use in /var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Tasks/EcommerceTaskCartManipulation.php on line 32
+)

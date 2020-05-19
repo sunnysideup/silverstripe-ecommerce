@@ -304,7 +304,7 @@ class CheckoutPage extends CartPage
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array)
+    public function canCreate($member = NULL, $context = Array())
     {
         return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->Count() ? false : $this->canEdit($member);
     }

@@ -289,14 +289,14 @@ class Order extends DataObject implements EditableEcommerceObject
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
   * OLD: private static $db (case sensitive)
-  * NEW: 
+  * NEW:
     private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
 
     private static $db (COMPLEX)
   * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-    
+
     private static $table_name = 'Order';
 
 
@@ -765,7 +765,7 @@ class Order extends DataObject implements EditableEcommerceObject
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
@@ -2162,7 +2162,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array)
+    public function canCreate($member = NULL, $context = Array())
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -4199,4 +4199,3 @@ class Order extends DataObject implements EditableEcommerceObject
         return $object;
     }
 }
-
