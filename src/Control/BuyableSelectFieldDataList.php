@@ -101,7 +101,7 @@ class BuyableSelectFieldDataList extends Controller
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(SiteTree::class))) {
-                if (Versioned::current_stage() === 'Live') {
+                if (Versioned::get_stage() === 'Live') {
                     $buyables[$key]['TableName'] .= '_Live';
                 }
             }

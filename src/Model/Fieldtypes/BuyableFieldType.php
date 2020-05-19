@@ -23,7 +23,7 @@ use SilverStripe\ORM\DB;
  * @subpackage: model
 
  **/
-class BuyableFieldType extends DBPolymorphicForeignKey implements DBComposite
+class BuyableFieldType extends DBPolymorphicForeignKey
 {
     public function scaffoldFormField($title = null, $params = null)
     {

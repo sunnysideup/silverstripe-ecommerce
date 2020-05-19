@@ -1821,7 +1821,7 @@ class ProductGroup extends Page
     protected function getStage()
     {
         $stage = '';
-        if (Versioned::current_stage() === 'Live') {
+        if (Versioned::get_stage() === 'Live') {
             $stage = '_Live';
         }
 

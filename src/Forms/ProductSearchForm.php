@@ -490,7 +490,7 @@ class ProductSearchForm extends Form
                     $list1 = $baseList->filter(['InternalItemID' => $keywordPhrase]);
                     $count = $list1->count();
                     if ($count === 1) {
-                        $immediateRedirectLink = $list1->First()->Link();
+                        $immediateRedirectLink = $list1->First()->getRequestHandler()->Link();
                         $this->controller->redirect($immediateRedirectLink);
                         $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: ' . $immediateRedirectLink . '</p>');
                     }
@@ -698,7 +698,7 @@ class ProductSearchForm extends Form
         if ($immediateRedirectLink) {
             $link = $immediateRedirectLink;
         } else {
-            $link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
+            $link = $redirectToPage->getRequestHandler()->Link($this->controllerSearchResultDisplayMethod);
         }
         if ($this->additionalGetParameters) {
             $link .= '?' . $this->additionalGetParameters;

@@ -142,7 +142,7 @@ abstract class OrderEmail extends Email
             if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
                 if ($memberEmail = self::get_from_email()) {
                     $array = [$memberEmail];
-                    if ($bcc = $this->Bcc()) {
+                    if ($bcc = $this->getBcc()) {
                         $array[] = $bcc;
                     }
                     $this->setBcc(implode(', ', $array));
@@ -151,7 +151,7 @@ abstract class OrderEmail extends Email
             //last chance to adjust
             $this->extend('adjustOrderEmailSending', $this, $order);
             if ($returnBodyOnly) {
-                return $this->Body();
+                return $this->getBody();
             }
 
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
@@ -218,11 +218,11 @@ abstract class OrderEmail extends Email
         $orderEmailRecord = OrderEmailRecord::create();
         $orderEmailRecord->From = $this->emailToVarchar($this->from);
         $orderEmailRecord->To = $this->emailToVarchar($this->to);
-        if ($this->Cc()) {
-            $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->Cc());
+        if ($this->getCc()) {
+            $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
-        if ($this->Bcc()) {
-            $orderEmailRecord->To .= ', BCC: ' . $this->emailToVarchar($this->Bcc());
+        if ($this->getBcc()) {
+            $orderEmailRecord->To .= ', BCC: ' . $this->emailToVarchar($this->getBcc());
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->subject;
