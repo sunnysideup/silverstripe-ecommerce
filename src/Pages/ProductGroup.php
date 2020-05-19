@@ -1,5 +1,30 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page;
+use Member;
+use Permission;
+use Config;
+use Controller;
+use DataList;
+use ProductProductImageUploadField;
+use Tab;
+use DropdownField;
+use HeaderField;
+use NumericField;
+use ArrayList;
+use SS_List;
+use Deprecation;
+use DB;
+use Image;
+use ProductVariation;
+use EcommerceConfig;
+use GridField;
+use GridFieldBasicPageRelationConfig;
+use Versioned;
+
+
 /**
  * Product Group is a 'holder' for Products within the CMS
  * It contains functions for versioning child products.
@@ -207,14 +232,14 @@ class ProductGroup extends Page
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
   * OLD: private static $db (case sensitive)
-  * NEW: 
+  * NEW:
     private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
 
     private static $db (COMPLEX)
   * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
-    
+
     private static $table_name = 'ProductGroup';
 
 
@@ -1192,7 +1217,7 @@ class ProductGroup extends Page
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             self::$_result_array[$this->ID] = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable(false)));
@@ -1406,7 +1431,7 @@ class ProductGroup extends Page
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, '');
@@ -1805,16 +1830,7 @@ class ProductGroup extends Page
      */
     protected function getSilverstripeCoreCache()
     {
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Cache::factory( (case sensitive)
-  * NEW: SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class '.  (COMPLEX)
-  * EXP: Check cache implementation - see: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class '. 'EcomPG');
+        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class . '.EcomPG');
     }
 
     /**
@@ -1884,4 +1900,3 @@ class ProductGroup extends Page
         return false;
     }
 }
-

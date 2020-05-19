@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms;
+
+use DataObject;
+use GridField;
+
+
 
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)

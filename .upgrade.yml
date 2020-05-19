@@ -182,3 +182,28 @@ mappings:
   EcommerceSideReportNoImageProducts: Sunnysideup\Ecommerce\Reports\EcommerceSideReportNoImageProducts
   EcommerceSideReportNotForSale: Sunnysideup\Ecommerce\Reports\EcommerceSideReportNotForSale
   EcommerceSideReportNoInternalIDProducts: Sunnysideup\Ecommerce\Reports\EcommerceSideReportNoInternalIDProducts
+  EcommerceDevelopmentAdminDecorator: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator
+  EcommerceDatabaseAdmin: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
+  EcommerceDatabaseAdminDebugView: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdminDebugView
+  SalesAdmin: Sunnysideup\Ecommerce\Cms\SalesAdmin
+  ProductsAndGroupsModelAdmin: Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
+  CMSPageAddControllerProducts: Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts
+  ModelAdminEcommerceBaseClass: Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass
+  SalesAdminExtras: Sunnysideup\Ecommerce\Cms\SalesAdminExtras
+  ProductConfigModelAdmin: Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
+  ProductBulkLoader: Sunnysideup\Ecommerce\Cms\ProductBulkLoader
+  StoreAdmin: Sunnysideup\Ecommerce\Cms\StoreAdmin
+  CheckoutPageController: Sunnysideup\Ecommerce\Pages\CheckoutPageController
+  ProductGroupController: Sunnysideup\Ecommerce\Pages\ProductGroupController
+  AccountPageController: Sunnysideup\Ecommerce\Pages\AccountPageController
+  ProductController: Sunnysideup\Ecommerce\Pages\ProductController
+  OrderConfirmationPage: Sunnysideup\Ecommerce\Pages\OrderConfirmationPage
+  ProductGroupSearchPage: Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage
+  CartPageController: Sunnysideup\Ecommerce\Pages\CartPageController
+  CheckoutPage: Sunnysideup\Ecommerce\Pages\CheckoutPage
+  AccountPage: Sunnysideup\Ecommerce\Pages\AccountPage
+  ProductGroupSearchPageController: Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController
+  Product: Sunnysideup\Ecommerce\Pages\Product
+  ProductGroup: Sunnysideup\Ecommerce\Pages\ProductGroup
+  CartPage: Sunnysideup\Ecommerce\Pages\CartPage
+  OrderConfirmationPageController: Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController

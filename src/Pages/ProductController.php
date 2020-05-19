@@ -1,5 +1,24 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page_Controller;
+use Requirements;
+use SS_HTTPRequest;
+use Config;
+use FieldList;
+use NumericField;
+use FormAction;
+use RequiredFields;
+use Form;
+use ShoppingCart;
+use Director;
+use EcomQuantityField;
+use Member;
+use Security;
+use EcommerceConfig;
+
+
 
 class ProductController extends Page_Controller
 {

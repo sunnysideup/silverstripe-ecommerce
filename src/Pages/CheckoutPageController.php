@@ -1,5 +1,21 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Requirements;
+use EcommerceConfig;
+use convert;
+use OrderFormAddress;
+use OrderForm;
+use Session;
+use CheckoutPageStepDescription;
+use ArrayList;
+use DataObject;
+use SS_HTTPRequest;
+use Director;
+use EcommerceCurrency;
+
+
 
 class CheckoutPageController extends CartPageController
 {

@@ -1,4 +1,44 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page;
+use BuyableModel;
+use HTMLEditorField;
+use TextField;
+use ProductProductImageUploadField;
+use ReadonlyField;
+use CheckboxField;
+use NumericField;
+use LiteralField;
+use HeaderField;
+use EcommerceCodeFilter;
+use Config;
+use Image;
+use SiteTree;
+use DataObject;
+use ProductImage;
+use ClassInfo;
+use OrderItem;
+use ShoppingCart;
+use Order;
+use ShoppingCartController;
+use Controller;
+use Director;
+use EcommerceConfig;
+use EcomQuantityField;
+use EcommerceConfigAjax;
+use EcommerceDBConfig;
+use EcommerceCurrency;
+use Member;
+use EcommerceCountry;
+use Permission;
+use EcommerceTaskDebugCart;
+use GridField;
+use GridFieldBasicPageRelationConfig;
+use EcommerceTaskLinkProductWithImages;
+use UploadFIeld;
+
 /**
  * This is a standard Product page-type with fields like
  * Price, Weight, Model and basic management of

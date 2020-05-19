@@ -1,5 +1,26 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page_Controller;
+use Requirements;
+use Config;
+use Convert;
+use DataObject;
+use ProductSearchForm;
+use EcommerceConfig;
+use ShoppingCart;
+use ArrayList;
+use ArrayData;
+use Member;
+use Security;
+use EcommerceTaskDebugCart;
+use Session;
+use Director;
+use SS_List;
+use PaginatedList;
+
+
 
 class ProductGroupController extends Page_Controller
 {

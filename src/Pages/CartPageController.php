@@ -1,5 +1,23 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page_Controller;
+use EcommerceConfig;
+use Session;
+use HTTP;
+use Order;
+use Convert;
+use ShoppingCart;
+use Security;
+use SS_HTTPRequest;
+use Member;
+use DBField;
+use ShopAccountForm;
+use ArrayList;
+use ArrayData;
+
+
 class CartPageController extends Page_Controller
 {
     /**

@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms\Dev;
+
+use DebugView;
+use Controller;
+
+
 class EcommerceDatabaseAdminDebugView extends DebugView
 {
     public function writePreOutcome()

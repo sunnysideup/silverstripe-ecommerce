@@ -1,97 +1,18 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms\Dev;
 
-/**
- * One stop shop for massaging e-commerce related data
- * AND running tests.
- *
- * You can customise this menu by "decorating" this class
- * and adding the method: "updateEcommerceDevMenu".
- *
- * Here is an example:
-
- <code php>
- <?php
-
- ####################### in mysite/code/tasks/MyMigration.php
-
- class MyMigration extends BuildTask {
-
- protected $title = "App Database Fixes";
-
- protected $description = "General DB fixes";
-
- function run(SS_HTTPRequest $request) {
- DB::query("TRUNCATE TABLE MyUselessTable;");
- }
-
- }
+use TaskRunner;
+use Director;
+use Controller;
+use ArrayList;
+use ArrayData;
+use BuildTask;
+use DB;
 
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  extends Extension (ignore case)
-  * NEW:  extends Extension (COMPLEX)
-  * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
- class MyMigration_EXT extends Extension {
-
- private static $allowed_actions = array(
- "mymigration" => true
- );
-
- //NOTE THAT updateEcommerceDevMenuConfig adds to Config options
- //but you can als have: updateEcommerceDevMenuDebugActions, or updateEcommerceDevMenuMaintenanceActions
- function updateEcommerceDevMenuConfig($buildTasks){
- $buildTasks[] = "mymigration";
- return $buildTasks;
- }
-
- function mymigration(SS_HTTPRequest $request){
- $this->owner->runTask("MyMigration", $request);
- }
-
- }
 
 
- ####################### in mysite/_config.php:
-
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
- SilverStripe\Core\Injector\Injector::inst()->add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
-
-
- </code>
-
- *
- * SECTIONS
- *
- * 0. check settings
- * 1. ecommerce setup (default records)
- * 2. data review
- * 3. regular maintance
- * 4. debug
- * 5. migration
- * 6. reset
- * 7. tests
- *
- * @todo: work out a standard "silent" option and a display option the "display" options shows all output when running it from ecommerce/dev/
- * We also have to work out an easy way to extend this.
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
-
- **/
 class EcommerceDatabaseAdmin extends TaskRunner
 {
     //##############################
@@ -446,4 +367,3 @@ class EcommerceDatabaseAdmin extends TaskRunner
         ");
     }
 }
-

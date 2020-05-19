@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use ProductGroup_Controller;
+
+
 
 class ProductGroupSearchPageController extends ProductGroup_Controller
 {

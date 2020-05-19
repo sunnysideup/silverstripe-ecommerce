@@ -1,5 +1,28 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use DataObject;
+use Page;
+use EcommerceConfig;
+use Permission;
+use Config;
+use OptionalTreeDropdownField;
+use TextField;
+use HTMLEditorField;
+use OrderModifierDescriptor;
+use CheckoutPageStepDescription;
+use CheckboxField;
+use SiteTree;
+use GridFieldConfig;
+use GridFieldToolbarHeader;
+use GridFieldSortableHeader;
+use GridFieldDataColumns;
+use GridFieldEditButton;
+use GridFieldDetailForm;
+use GridField;
+
+
 /**
  * CheckoutPage is a CMS page-type that shows the order
  * details to the customer for their current shopping

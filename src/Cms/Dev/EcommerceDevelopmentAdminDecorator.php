@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms\Dev;
+
+use Extension;
+use SS_HTTPRequest;
+
+
 
 /**
  * EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin

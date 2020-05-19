@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms;
+
+use ModelAdmin;
+use Config;
+use LeftAndMain;
+use HiddenField;
+use LiteralField;
+use Injector;
+
+
 /**
  * @see: http://doc.silverstripe.org/framework/en/reference/ModelAdmin
  *

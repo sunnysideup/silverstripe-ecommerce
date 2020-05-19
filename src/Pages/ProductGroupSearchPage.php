@@ -1,4 +1,10 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Pages;
+
+use DataList;
+use ArrayList;
+
 /**
  * This page manages searching for products.
  *

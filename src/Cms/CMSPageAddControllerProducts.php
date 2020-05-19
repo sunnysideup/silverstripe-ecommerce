@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms;
+
+use CMSPageAddController;
+use ArrayList;
+use ClassInfo;
+
+
 
 class CMSPageAddControllerProducts extends CMSPageAddController
 {

@@ -1,4 +1,14 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page;
+use Permission;
+use Config;
+use DataObject;
+use Member;
+use Order;
+
 /**
  * @description:
  * The Account Page allows the user to update their details.

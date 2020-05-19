@@ -1,5 +1,21 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Order;
+use Requirements;
+use SS_HTTPRequest;
+use Config;
+use ShoppingCart;
+use EcommerceConfig;
+use CheckoutPageStepDescription;
+use ArrayList;
+use OrderFormCancel;
+use OrderFormFeedback;
+use OrderFormPayment;
+use OrderStep;
+
+
 
 class OrderConfirmationPageController extends CartPageController
 {

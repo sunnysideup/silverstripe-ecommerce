@@ -1,5 +1,19 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page;
+use DBField;
+use Permission;
+use Config;
+use TabSet;
+use Tab;
+use TextField;
+use HTMLEditorField;
+use DataObject;
+use ShoppingCart;
+
+
 /**
  * @description: This is a page that shows the cart content,
  * without "leading to" checking out. That is, there is no "next step" functionality

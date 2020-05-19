@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms;
+
+use GridField;
+use GridFieldEditOriginalPageConfig;
+use GridFieldExportButton;
+
+
 
 /**
  * @description: for the management of Product and Product Groups only

@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms;
+
+use EcommerceSearchHistoryFormField;
+
+
 
 /**
  * @description: Manages stuff related to products,

@@ -1,5 +1,17 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Cms;
+
+use Requirements;
+use EcommerceConfig;
+use DataList;
+use GridField;
+use GridFieldExportSalesButton;
+use GridFieldPrintAllInvoicesButton;
+use GridFieldPrintAllPackingSlipsButton;
+use GridFieldPrintInvoiceButton;
+
+
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)

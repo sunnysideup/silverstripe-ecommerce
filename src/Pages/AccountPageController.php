@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Page_Controller;
+use Security;
+use Requirements;
+use ShopAccountForm;
+use Member;
+
+
 
 class AccountPageController extends Page_Controller
 {

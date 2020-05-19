@@ -1,5 +1,17 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
+use Permission;
+use Config;
+use TextField;
+use HeaderField;
+use HTMLEditorField;
+use CheckboxField;
+use DataObject;
+use CheckoutPageStepDescription;
+
+
 /**
  * @description:
  * The Order Confirmation page shows order history.
