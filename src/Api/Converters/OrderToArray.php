@@ -4,6 +4,11 @@ namespace Sunnysideup\Ecommerce\Api\Converters;
 
 use Sunnysideup\Ecommerce\Api\OrderConverter;
 
+/**
+ * todo: turn into registered object and let the objects return it.
+ * e.g. give me all classes that implement interface OrderToArrayReady
+ * and then just run it.
+ */
 class OrderToArray extends OrderConverter
 {
     public function convert(): array
