@@ -26,6 +26,20 @@ class OrderConfirmationPage extends CartPage
      *
      * @var array
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * OLD: private static $db (case sensitive)
+  * NEW: 
+    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
+
+    private static $db (COMPLEX)
+  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+    
+    private static $table_name = 'OrderConfirmationPage';
+
     private static $db = [
         'StartNewOrderLinkLabel' => 'Varchar(100)',
         'CopyOrderLinkLabel' => 'Varchar(100)',
