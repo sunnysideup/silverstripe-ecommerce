@@ -235,3 +235,6 @@ Warnings for src/Pages/ProductGroup.php:
  - src/Pages/ProductGroup.php:1508 PhpParser\Node\Expr\Variable
  - WARNING: New class instantiated by a dynamic value on line 1508
 
+Writing changes for 0 files
+✔✔✔
+
