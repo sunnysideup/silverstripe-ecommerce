@@ -1,7 +1,7 @@
 <?php
 
 
-class ProductGroupSearchPageController extends ProductGroup_Controller
+class ProductGroupSearchPageController extends ProductGroupController
 {
     /**
      * standard SS variable.
