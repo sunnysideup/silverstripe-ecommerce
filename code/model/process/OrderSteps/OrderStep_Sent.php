@@ -96,8 +96,7 @@ class OrderStep_Sent extends OrderStep implements OrderStepInterface
     public function doStep(Order $order)
     {
         if ($log = $this->RelevantLogEntry($order)) {
-            $resend = $this->hasBeenSent($order, false);
-            if ($log->InternalUseOnly && $this->hasBeenSent($order, false)) {
+            if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
             } else {
                 return $order->sendEmail(
