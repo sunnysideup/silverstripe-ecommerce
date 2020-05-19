@@ -138,7 +138,7 @@ class OrderStepField extends DatalessField
      *
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setValue($value, $data = NULL)
     {
         return $this->setContent($value);
     }
@@ -156,4 +156,3 @@ class OrderStepField extends DatalessField
         return $clone;
     }
 }
-

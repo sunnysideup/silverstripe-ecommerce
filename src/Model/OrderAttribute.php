@@ -226,7 +226,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function canCreate($member = null)
+    public function canCreate($member = NULL, $context = Array)
     {
         if (! $member) {
             $member = Member::currentUser();

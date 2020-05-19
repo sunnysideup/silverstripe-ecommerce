@@ -166,7 +166,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      *
      * @return bool
      **/
-    public function canCreate($member = null)
+    public function canCreate($member = NULL, $context = Array)
     {
         return false;
     }

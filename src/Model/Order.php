@@ -2162,7 +2162,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function canCreate($member = null)
+    public function canCreate($member = NULL, $context = Array)
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
