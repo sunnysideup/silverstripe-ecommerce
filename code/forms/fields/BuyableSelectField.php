@@ -93,7 +93,7 @@ class BuyableSelectField extends FormField
     /**
      * Do we do anything with data???
      */
-    public function setValue($data)
+    public function setValue($value, $data = NULL)
     {
         if ($this->buyable) {
             // $value = $this->buyable->FullName ?: $this->buyable->getTitle();

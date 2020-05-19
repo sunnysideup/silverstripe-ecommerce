@@ -106,7 +106,7 @@ class ProductImage extends Image
         return $gd->paddedResize($this->ThumbWidth() * 2, $this->ThumbHeight() * 2);
     }
 
-    public function Thumbnail()
+    public function Thumbnail($width, $height)
     {
         return $this->getFormattedImage('Thumbnail');
     }
