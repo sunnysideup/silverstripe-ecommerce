@@ -27,6 +27,15 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     
     private static $table_name = 'CheckoutPageStepDescription';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Heading' => 'Varchar',
         'Above' => 'Text',
@@ -124,7 +133,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return false;
     }
@@ -136,7 +145,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @return bool
      */
-    public function canView($member = null)
+    public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -159,7 +168,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -182,7 +191,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         $array = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
         if (in_array($this->getCode, $array, true)) {

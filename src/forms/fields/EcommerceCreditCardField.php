@@ -5,7 +5,7 @@
  *
  * @todo Validate
  */
-class EcommerceCreditCardField extends TextField
+class EcommerceCreditCardField extends DBTextField
 {
     /**
      * Add default attributes for use on all inputs.

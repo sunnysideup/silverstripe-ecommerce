@@ -60,7 +60,7 @@ class CartResponse extends EcommerceResponse
             $this->addHeader('Content-Type', 'application/json');
         }
 
-        SSViewer::set_source_file_comments(false);
+        Config::modify()->update('SSViewer', 'source_file_comments', false);
         //merge messages
         $messagesImploded = '';
         if (is_array($messages) && count($messages)) {
@@ -168,7 +168,16 @@ class CartResponse extends EcommerceResponse
                 's' => $selector,
                 'p' => 'innerHTML',
                 //note the space is a hack to return something!
-                'v' => ' ' . $currentOrder->renderWith($template),
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                'v' => ' ' . $currentOrder->RenderWith($template),
             ];
         }
         //now can check if it needs to be reloaded

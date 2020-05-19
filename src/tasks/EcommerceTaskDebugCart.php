@@ -28,7 +28,7 @@ class EcommerceTaskDebugCart extends BuildTask
         }
 
         //casted variables
-        $fields = Config::inst()->get($obj->ClassName, 'casting', Config::FIRST_SET);
+        $fields = Config::inst()->get($obj->ClassName, 'casting', Config::UNINHERITED);
         if (count($fields)) {
             foreach ($fields as $key => $type) {
                 $method = $key;
@@ -48,7 +48,7 @@ class EcommerceTaskDebugCart extends BuildTask
         }
 
         //has_one
-        $fields = Config::inst()->get($obj->ClassName, 'has_one', Config::FIRST_SET);
+        $fields = Config::inst()->get($obj->ClassName, 'has_one', Config::UNINHERITED);
         if (count($fields)) {
             foreach ($fields as $key => $type) {
                 $value = '';

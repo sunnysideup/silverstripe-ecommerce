@@ -185,6 +185,15 @@ class EcommerceConfigDefinitions extends Object
      *
      * @return array | String
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     public function Definitions($className = '', $variable = '')
     {
         $array = [
@@ -344,7 +353,7 @@ class EcommerceConfigDefinitions extends Object
                 'admin_group_name' => 'Title (name) for the shop administrator member group.',
                 'admin_group_user_first_name' => 'First name for the shop administrator (e.g. John).',
                 'admin_group_user_surname' => 'Last name for the shop administrator (e.g. Smith).',
-                'admin_group_user_email' => 'Email address for the shop administrator (e.g. johnsmith@mysite.co.nz).',
+                'admin_group_user_email' => 'Email address for the shop administrator (e.g. johnsmith@app.co.nz).',
                 'admin_permission_code' => 'Permission code for the shop administrator member group.',
                 'admin_role_title' => 'Role title for the shop administrator member group.',
                 'admin_role_permission_codes' => 'Permission codes for the shop administrator member group.',
@@ -352,7 +361,7 @@ class EcommerceConfigDefinitions extends Object
                 'assistant_group_name' => 'Title (name) for the shop assistant member group.',
                 'assistant_group_user_first_name' => 'First name for the shop assistant (e.g. John).',
                 'assistant_group_user_surname' => 'Last name for the shop assistant (e.g. Smith).',
-                'assistant_group_user_email' => 'Email address for the shop assistant (e.g. johnsmith@mysite.co.nz).',
+                'assistant_group_user_email' => 'Email address for the shop assistant (e.g. johnsmith@app.co.nz).',
                 'assistant_permission_code' => 'Permission code for the shop assistant member group.',
                 'assistant_role_title' => 'Role title for the shop assistant member group.',
                 'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.',
@@ -413,19 +422,55 @@ class EcommerceConfigDefinitions extends Object
             }
         }
         //add more stuff through child classes
-        $childClasses = ClassInfo::subclassesFor($this->class);
+        $childClasses = ClassInfo::subclassesFor(static::class);
         if (is_array($childClasses) && count($childClasses)) {
             foreach ($childClasses as $class) {
-                if ($class !== $this->class) {
+                if ($class !== static::class) {
                     $childObject = new $class();
                     $array = array_merge($array, $childObject->Definitions());
                 }
             }
         }
         //return what is appropriate
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         if ($className && $variable) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $array[$className][$variable];
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         } elseif ($className) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $array[$className];
         }
         return $array;

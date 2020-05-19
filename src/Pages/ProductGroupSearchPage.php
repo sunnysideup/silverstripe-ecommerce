@@ -57,7 +57,7 @@ class ProductGroupSearchPage extends ProductGroup
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return ProductGroupSearchPage::get()->filter(['ClassName' => 'ProductGroupSearchPage'])->Count() ? false : $this->canEdit($member);
     }

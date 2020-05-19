@@ -58,6 +58,15 @@ class Product extends Page implements BuyableModel
     
     private static $table_name = 'Product';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Price' => 'Currency',
         'Weight' => 'Float',
@@ -75,6 +84,15 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
         'Image' => 'ProductImage',
     ];
@@ -84,6 +102,15 @@ class Product extends Page implements BuyableModel
      */
     private static $many_many = [
         'ProductGroups' => 'ProductGroup',
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  => 'Image' (case sensitive)
+  * NEW:  => 'Image' (COMPLEX)
+  * EXP: you may want to add ownership (owns)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         'AdditionalImages' => 'Image',
         'AdditionalFiles' => 'File',
     ];
@@ -123,6 +150,15 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $summary_fields = [
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  => 'Image' (case sensitive)
+  * NEW:  => 'Image' (COMPLEX)
+  * EXP: you may want to add ownership (owns)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         'Image.CMSThumbnail' => 'Image',
         'FullName' => 'Description',
         'Price' => 'Price',
@@ -139,6 +175,15 @@ class Product extends Page implements BuyableModel
         ],
         'Price' => [
             'title' => 'Price',
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'field' => 'NumericField',
         ],
         'InternalItemID' => [
@@ -223,13 +268,22 @@ class Product extends Page implements BuyableModel
         $htmlEditorField->setRows(3);
         $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
         //dirty hack to show images!
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: UploadField('Image (case sensitive)
+  * NEW: UploadField('Image (COMPLEX)
+  * EXP: make sure that Image does not end up as Image::class where this is not required
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
         $uploadField->setCallingClass('Product');
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
-        $fields->addFieldToTab('Root.Details', new ReadOnlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
+        $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
         $config = $this->EcomConfig();
         if ($config && ! $config->AllowFreeProductPurchase) {
@@ -246,9 +300,27 @@ class Product extends Page implements BuyableModel
         }
 
         $fields->addFieldToTab('Root.Details', new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $fields->addFieldToTab('Root.Details', new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
         if ($this->EcomConfig()->ProductsHaveWeight) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $fields->addFieldToTab('Root.Details', new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
         }
         if ($this->EcomConfig()->ProductsHaveModelNames) {
@@ -325,7 +397,16 @@ class Product extends Page implements BuyableModel
         if ($this->Config()->get('add_data_to_meta_description_for_search')) {
             $this->MetaDescription = '';
             $fieldsToExclude = Config::inst()->get('SiteTree', 'db');
-            foreach (array_keys($this->db()) as $fieldName) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->db() (case sensitive)
+  * NEW: ->Config()->get('db') (COMPLEX)
+  * EXP: Check implementation
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            foreach (array_keys($this->Config()->get('db')) as $fieldName) {
                 if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
                     if (! in_array($fieldName, $fieldsToExclude, true)) {
                         $this->MetaDescription .= strip_tags($this->{$fieldName});
@@ -384,7 +465,16 @@ class Product extends Page implements BuyableModel
             $obj = SiteTree::get()->byID(intval($obj->ParentID) - 0);
             if ($obj) {
                 $parentSortArray[] = sprintf('%03d', $obj->Sort);
-                if (is_a($obj, Object::getCustomClass('ProductGroup'))) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
                     $parentTitleArray[] = $obj->Title;
                 }
             }
@@ -438,7 +528,16 @@ class Product extends Page implements BuyableModel
             while ($obj && $obj->ParentID) {
                 $obj = SiteTree::get()->byID(intval($obj->ParentID) - 0);
                 if ($obj) {
-                    if (is_a($obj, Object::getCustomClass('ProductGroup'))) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                    if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup'))) {
                         $allParentsArray[$obj->ID] = $obj->ID;
                     }
                 }
@@ -527,7 +626,16 @@ class Product extends Page implements BuyableModel
         if ($product && $product->ImageID) {
             $image = Image::get()->byID($product->ImageID);
             if ($image) {
-                if (file_exists($image->getFullPath())) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->getFullPath() (case sensitive)
+  * NEW: ->getFilename() (COMPLEX)
+  * EXP: You may need to add ASSETS_PATH."/" in front of this ...
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                if (file_exists($image->getFilename())) {
                     return $image;
                 }
             }
@@ -635,9 +743,45 @@ class Product extends Page implements BuyableModel
             $version = $this->Version;
         }
         //not sure why this is running via OrderItem...
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $obj = OrderItem::get_version($this->ClassName, $id, $version);
         if (! $obj) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = $this->ClassName;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $obj = $className::get()->byID($id);
         }
 
@@ -724,6 +868,15 @@ class Product extends Page implements BuyableModel
         $dataList = $dataList->filter(
             [
                 'BuyableID' => $this->ID,
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 'buyableClassName' => $this->ClassName,
             ]
         );
@@ -756,6 +909,15 @@ class Product extends Page implements BuyableModel
      */
     public function AddLink()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('add'));
     }
 
@@ -767,6 +929,15 @@ class Product extends Page implements BuyableModel
     public function IncrementLink()
     {
         //we can do this, because by default add link adds one
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('increment'));
     }
 
@@ -778,6 +949,15 @@ class Product extends Page implements BuyableModel
      */
     public function DecrementLink()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::remove_item_link($this->ID, $this->ClassName, $this->linkParameters('decrement'));
     }
 
@@ -788,6 +968,15 @@ class Product extends Page implements BuyableModel
      */
     public function RemoveLink()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::remove_item_link($this->ID, $this->ClassName, $this->linkParameters('remove'));
     }
 
@@ -798,6 +987,15 @@ class Product extends Page implements BuyableModel
      */
     public function RemoveAllLink()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::remove_all_item_link($this->ID, $this->ClassName, $this->linkParameters('removeall'));
     }
 
@@ -808,6 +1006,15 @@ class Product extends Page implements BuyableModel
      */
     public function RemoveAllAndEditLink()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::remove_all_item_and_edit_link($this->ID, $this->ClassName, $this->linkParameters('removeallandedit'));
     }
 
@@ -820,6 +1027,15 @@ class Product extends Page implements BuyableModel
      */
     public function SetSpecificQuantityItemLink($quantity)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters('setspecificquantityitem'), ['quantity' => $quantity]));
     }
 
@@ -831,6 +1047,15 @@ class Product extends Page implements BuyableModel
         $array = $this->linkParameters();
         $array['BackURL'] = urlencode(CheckoutPage::find_link());
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $array);
     }
 
@@ -843,6 +1068,15 @@ class Product extends Page implements BuyableModel
             Director::baseURL(),
             EcommerceConfig::get('ShoppingCartController', 'url_segment'),
             'submittedbuyable',
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $this->ClassName,
             $this->ID,
             $this->Version
@@ -851,6 +1085,15 @@ class Product extends Page implements BuyableModel
 
     public function RemoveFromSaleLink()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return ShoppingCartController::remove_from_sale_link($this->ID, $this->ClassName);
     }
 
@@ -1020,7 +1263,7 @@ class Product extends Page implements BuyableModel
         return $this->AllowPurchase;
     }
 
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -1043,7 +1286,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -1066,9 +1309,18 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
-        if (is_a(Controller::curr(), Object::getCustomClass('ProductsAndGroupsModelAdmin'))) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductsAndGroupsModelAdmin'))) {
             return false;
         }
         if (! $member) {
@@ -1116,6 +1368,15 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Shop Open:</b> ' . ($this->EcomConfig() ? ($this->EcomConfig()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
         $html .= '<li><b>Quantity Decimals:</b> ' . $this->QuantityDecimals() . ' </li>';
         $html .= '<li><b>Is In Cart:</b> ' . ($this->IsInCart() ? 'YES' : 'NO') . ' </li>';

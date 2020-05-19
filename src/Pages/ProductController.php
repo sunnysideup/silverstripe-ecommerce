@@ -72,8 +72,17 @@ class ProductController extends Page_Controller
     public function ajaxview(SS_HTTPRequest $request)
     {
         Config::nest();
-        Config::inst()->update('SSViewer', 'theme_enabled', true);
-        $html = $this->renderWith('ProductGroupItemMoreDetail');
+        Config::modify()->update('SSViewer', 'theme_enabled', true);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        $html = $this->RenderWith('ProductGroupItemMoreDetail');
         Config::unnest();
 
         return $html;
@@ -89,6 +98,15 @@ class ProductController extends Page_Controller
         if ($this->canPurchase()) {
             $farray = [];
             $fields = new FieldList($farray);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $fields->push(new NumericField('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
             $actions = new FieldList(
                 new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))
@@ -223,7 +241,16 @@ class ProductController extends Page_Controller
      */
     protected function getListOfIDs()
     {
-        $listOfIDs = Session::get(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'));
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'));
         if ($listOfIDs) {
             $arrayOfIDs = explode(',', $listOfIDs);
             if (is_array($arrayOfIDs)) {

@@ -27,6 +27,15 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     
     private static $table_name = 'OrderStepSentReceipt';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'SendReceiptToCustomer' => 'Boolean',
     ];

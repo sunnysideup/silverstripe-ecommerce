@@ -102,7 +102,7 @@
     <tr><th scope="row" style="width: 40%;">Cart Page Link <br />&#36;EcomConfig.CartPageLink</th><td width="60%">$EcomConfig.CartPageLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Order Confirmation Page Link <br />&#36;EcomConfig.OrderConfirmationPageLink</th><td width="60%">$EcomConfig.OrderConfirmationPageLink</td></tr>
     <tr><th scope="row" style="width: 40%;">Default Image Link <br />&#36;EcomConfig.DefaultImageLink</th><td width="60%">$EcomConfig.DefaultImageLink</td></tr>
-    <tr><th scope="row" style="width: 40%;">Default Image @ Width = 100px <br />&#36;EcomConfig.DefaultImage.SetWidth(100)</th><td width="60%">$EcomConfig.DefaultImage.SetWidth(100)</td></tr>
+    <tr><th scope="row" style="width: 40%;">Default Image @ Width = 100px <br />&#36;EcomConfig.DefaultImage.ScaleWidth(100)</th><td width="60%">$EcomConfig.DefaultImage.ScaleWidth(100)</td></tr>
     <tr><th scope="row" style="width: 40%;">Current Customer Name <br />&#36;EcomConfig.Customer.Title, instead of Title, you can also use Email, FirstName, etc...</th><td width="60%">$EcomConfig.Customer.Title</td></tr>
     <tr><th scope="row" style="width: 40%;">Is E-commerce Page? (This will be TRUE (YES) for the Product and Checkout type pages only.)</th><td width="60%"><% if IsEcommercePage %>YES<% else %>NO<% end_if %></td></tr>
 </table>
@@ -309,10 +309,10 @@ CartResponse:
 
 <h4>Image Controllers</h4>
 <table style="width: 95%;" border="1" cellspacing="5">
-    <tr><th scope="row" style="width: 40%;">&#36;Image.Link</th><td width="60%">$Image.SetWidth(100) $Image.Link</td></tr>
-    <tr><th scope="row" style="width: 40%;">&#36;BestAvailableImage.Link</th><td width="60%">$BestAvailableImage.SetWidth(100) $BestAvailableImage.Link</td></tr>
-    <tr><th scope="row" style="width: 40%;">&#36;DefaultImage.Link</th><td width="60%">$DefaultImage.SetWidth(100) $DefaultImage.Link</td></tr>
-    <tr><th scope="row" style="width: 40%;">&#36;DummyImage.Link</th><td width="60%">$DummyImage.SetWidth(100) $DummyImage.Link</td></tr>
+    <tr><th scope="row" style="width: 40%;">&#36;Image.Link</th><td width="60%">$Image.ScaleWidth(100) $Image.Link</td></tr>
+    <tr><th scope="row" style="width: 40%;">&#36;BestAvailableImage.Link</th><td width="60%">$BestAvailableImage.ScaleWidth(100) $BestAvailableImage.Link</td></tr>
+    <tr><th scope="row" style="width: 40%;">&#36;DefaultImage.Link</th><td width="60%">$DefaultImage.ScaleWidth(100) $DefaultImage.Link</td></tr>
+    <tr><th scope="row" style="width: 40%;">&#36;DummyImage.Link</th><td width="60%">$DummyImage.ScaleWidth(100) $DummyImage.Link</td></tr>
     <tr><th scope="row" style="width: 40%;">&#36;DefaultImageLink.Link</th><td width="60%">$DefaultImageLink</td></tr>
 </table>
 

@@ -56,7 +56,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }
@@ -68,7 +68,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         return false;
     }
@@ -80,7 +80,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();

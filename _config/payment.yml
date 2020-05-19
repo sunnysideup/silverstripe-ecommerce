@@ -1,6 +1,6 @@
 ---
 Name: ecommerce_payment_settings
-Before: 'mysite/*'
+Before: 'app/*'
 After: 'framework/*','cms/*'
 only:
   environment: 'dev'

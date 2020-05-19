@@ -417,15 +417,42 @@ class CartPageController extends Page_Controller
      */
     public function ShowCreateAccountForm()
     {
-        if (Session::get('CartPageCreateAccountForm')) {
-            Session::set('CartPageCreateAccountForm', false);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CartPageCreateAccountForm')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
 
             return true;
         }
         if (Member::currentUser() || $this->currentOrder->MemberID) {
             return false;
         }
-        Session::set('CartPageCreateAccountForm', true);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CartPageCreateAccountForm', true);
 
         return true;
     }
@@ -450,9 +477,36 @@ class CartPageController extends Page_Controller
         if (! $validUntilTS) {
             $validUntilTS = time() + 3600;
         }
-        Session::set('CheckoutPageCurrentOrderID', $orderID);
-        Session::set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
-        Session::save();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', $orderID);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
     }
 
     /**
@@ -460,11 +514,56 @@ class CartPageController extends Page_Controller
      */
     protected function clearRetrievalOrderID()
     {
-        Session::clear('CheckoutPageCurrentOrderID');
-        Session::set('CheckoutPageCurrentOrderID', 0);
-        Session::clear('CheckoutPageCurrentRetrievalTime');
-        Session::set('CheckoutPageCurrentRetrievalTime', 0);
-        Session::save();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('CheckoutPageCurrentOrderID');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', 0);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('CheckoutPageCurrentRetrievalTime');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', 0);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
     }
 
     /**

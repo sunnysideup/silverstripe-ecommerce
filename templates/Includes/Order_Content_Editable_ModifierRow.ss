@@ -15,7 +15,16 @@
 		<% if CanBeRemoved %>
 			<strong>
 				<a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveLink">
-					<img src="ecommerce/images/remove.gif" alt="x" />
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: /images/ (case sensitive)
+  * NEW: /client/images/ (COMPLEX)
+  * EXP: Check new location, also see: https://docs.silverstripe.org/en/4/developer_guides/templates/requirements/#direct-resource-urls
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+					<img src="ecommerce/client/images/remove.gif" alt="x" />
 				</a>
 			</strong>
 		<% end_if %>

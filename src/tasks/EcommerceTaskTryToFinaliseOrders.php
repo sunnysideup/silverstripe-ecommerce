@@ -29,7 +29,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     {
         //IMPORTANT!
         if (! $this->sendEmails) {
-            Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
+            Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceDummyMailer());
         }
 
@@ -46,7 +46,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             $startAt = intval($_GET['startat']);
         }
         if (! intval($startAt)) {
-            $startAt = intval(Session::get('EcommerceTaskTryToFinaliseOrders'));
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrders'));
             if (! $startAt) {
                 $startAt = 0;
             }
@@ -96,7 +105,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         } else {
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
-        if (Session::get('EcommerceTaskTryToFinaliseOrders')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrders')) {
             if (! $this->isCli()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
@@ -111,7 +129,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message("<h1>Moving ${limit} Orders (starting from ${startAt})</h1>");
             foreach ($orders as $order) {
                 ++$startAt;
-                Session::set('EcommerceTaskTryToFinaliseOrders', $startAt);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrders', $startAt);
                 $stepBefore = OrderStep::get()->byID($order->StatusID);
                 try {
                     $order->tryToFinaliseOrder();
@@ -136,7 +163,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 }
             }
         } else {
-            Session::clear('EcommerceTaskTryToFinaliseOrders');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrders');
             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
         }
 

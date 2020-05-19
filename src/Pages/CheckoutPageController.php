@@ -67,7 +67,16 @@ class CheckoutPageController extends CartPageController
         //redirect to current order -
         // this is only applicable when people submit order (start to pay)
         // and then return back
-        if ($checkoutPageCurrentOrderID = Session::get('CheckoutPageCurrentOrderID')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($checkoutPageCurrentOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
             if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
                 $this->clearRetrievalOrderID();
             }
@@ -104,7 +113,16 @@ class CheckoutPageController extends CartPageController
         $form = OrderFormAddress::create($this, 'OrderFormAddress');
         $this->data()->extend('updateOrderFormAddress', $form);
         //load session data
-        if ($data = Session::get("FormInfo.{$form->FormName()}.data")) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
             $form->loadDataFrom($data);
         }
 
@@ -266,7 +284,16 @@ class CheckoutPageController extends CartPageController
         if ($this->request->isAjax()) {
             Requirements::clear();
 
-            return $this->renderWith('LayoutCheckoutPageInner');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            return $this->RenderWith('LayoutCheckoutPageInner');
         }
 
         return [];

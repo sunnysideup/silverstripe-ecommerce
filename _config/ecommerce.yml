@@ -1,7 +1,7 @@
 ---
 Name: ecommerce_default_settings
 Before:
-  - 'mysite/*'
+  - 'app/*'
 After:
   - 'framework/*'
   - 'cms/*'
@@ -40,7 +40,7 @@ EcommerceDBConfig:
 
 ################### PAGES #####################
 
-CheckoutPage_Controller:
+CheckoutPageController:
   checkout_steps:
     - orderitems
     - orderformaddress
@@ -51,7 +51,7 @@ CheckoutPage_Controller:
 ShopAccountFormValidator:
   minimum_password_length: 7
 
-OrderConfirmationPage_Controller:
+OrderConfirmationPageController:
   include_as_checkout_step: true
   google_analytics_variable: 'ga'
 
@@ -256,7 +256,7 @@ OrderStatusLogForm:
   controller_class: "OrderStatusLogFormController"
   validator_class: "OrderStatusLogFormValidator"
 
-ExpiryDateField:
+ExpirySilverStripe\Forms\DateField:
   short_months: true
 
 
@@ -283,7 +283,7 @@ EcommerceMoney:
 
 ################### CONTROL #####################
 
-CartPage_Controller:
+CartPageController:
   session_code: "EcommerceCartPageMessage"
 
 ShoppingCart:

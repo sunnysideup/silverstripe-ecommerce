@@ -20,6 +20,15 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     
     private static $table_name = 'SearchReplacement';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Search' => 'Varchar(255)',
         'Replace' => 'Varchar(255)',
@@ -96,7 +105,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -119,7 +128,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canView($member = null)
+    public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -142,7 +151,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -165,7 +174,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();

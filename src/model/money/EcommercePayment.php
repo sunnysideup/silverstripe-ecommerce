@@ -44,6 +44,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     
     private static $table_name = 'EcommercePayment';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
@@ -54,6 +63,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'AlternativeEndPoint' => 'Varchar(255)',
     ];
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
         'PaidBy' => 'Member',
         'Order' => 'Order',
@@ -76,6 +94,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     private static $searchable_fields = [
         'OrderID' => [
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -174,7 +201,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -190,7 +217,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return parent::canCreate($member);
     }
 
-    public function canView($member = null)
+    public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -217,7 +244,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -245,7 +272,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }
@@ -346,7 +373,16 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         parent::onAfterWrite();
         $order = $this->Order();
-        if ($order && is_a($order, Object::getCustomClass('Order')) && $order->IsSubmitted()) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Order')) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }
     }
@@ -393,7 +429,25 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function PaymentMethod()
     {
         $supportedMethods = self::get_supported_methods($this->Order());
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         if (isset($supportedMethods[$this->ClassName])) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $supportedMethods[$this->ClassName];
         }
     }
@@ -407,8 +461,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public static function set_supported_methods($array)
     {
-        Config::inst()->update('EcommercePayment', 'supported_methods', null);
-        Config::inst()->update('EcommercePayment', 'supported_methods', $array);
+        Config::modify()->update('EcommercePayment', 'supported_methods', null);
+        Config::modify()->update('EcommercePayment', 'supported_methods', $array);
     }
 
     /**
@@ -495,6 +549,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormFields($amount = 0, $order = null)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         user_error("Please implement getPaymentFormFields() on {$this->class}", E_USER_ERROR);
     }
 
@@ -509,6 +572,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormRequirements()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         user_error("Please implement getPaymentFormRequirements() on {$this->class}", E_USER_ERROR);
     }
 
@@ -542,6 +614,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function processPayment($data, $form)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         user_error("Please implement processPayment() on {$this->class}", E_USER_ERROR);
     }
 

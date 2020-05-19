@@ -28,7 +28,16 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
                 'Link' => Controller::join_links($record->CMSEditLink()),
             ]);
 
-            return $data->renderWith('GridFieldEditButtonInSiteTree');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            return $data->RenderWith('GridFieldEditButtonInSiteTree');
         }
         return parent::getColumnContent($gridField, $record, $columnName);
     }

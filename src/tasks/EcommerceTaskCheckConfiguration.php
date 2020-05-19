@@ -125,6 +125,15 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 if ($this->defaults) {
                     $this->checkFiles();
                     $this->configsNotSet();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     $this->classesThatDoNotExist();
                     $this->definitionsNotSet();
                     $this->addEcommerceDBConfigToConfigs();
@@ -272,14 +281,59 @@ EcommerceConfig:
     {
         echo '<h2>Set in configs but not defined</h2>';
         $allOK = true;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         foreach (array_keys($this->configs) as $className) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             if (! isset($this->definitions[$className])) {
                 $allOK = false;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $this->missingClasses[$className] = $className;
                 DB::alteration_message("${className}", 'deleted');
             } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $classConfigs = $this->configs[$className];
                 foreach (array_keys($classConfigs) as $key) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     if (! isset($this->definitions[$className][$key])) {
                         $allOK = false;
                         DB::alteration_message("${className}.${key}", 'deleted');
@@ -301,7 +355,25 @@ EcommerceConfig:
     {
         echo '<h2>Classes that do not exist</h2>';
         $allOK = true;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         foreach (array_keys($this->configs) as $className) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             if (! class_exists($className)) {
                 $allOK = false;
                 DB::alteration_message("${className}", 'deleted');
@@ -322,18 +394,81 @@ EcommerceConfig:
         echo '<h2>Defined variables not set in configs ...</h2>';
         $allOK = true;
         //print_r($this->configs["EcommercePayment"]);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         foreach (array_keys($this->definitions) as $className) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             if (! isset($this->configs[$className])) {
                 DB::alteration_message("No settings found for ${className} in /ecommerce/_config/config.yml", 'deleted');
             } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $classConfigs = $this->definitions[$className];
                 foreach (array_keys($classConfigs) as $key) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     if (! isset($this->configs[$className][$key])) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $this->customisedValues[$className][$key] = false;
                     //fallback to Configs...
                     } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $this->customisedValues[$className][$key] = false;
                     }
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     if (! isset($this->configs[$className][$key])) {
                         DB::alteration_message(" - ${className}.${key} NOT SET in /ecommerce/_config/config.yml", 'deleted');
                         $allOK = false;
@@ -348,7 +483,7 @@ EcommerceConfig:
         if ($allOK) {
             DB::alteration_message('Perfect match, nothing to report', 'created');
         } else {
-            DB::alteration_message('Recommended course of action: add the above configs to your mysite/_config/ecommerce.yml file if you required them.', 'edited');
+            DB::alteration_message('Recommended course of action: add the above configs to your app/_config/ecommerce.yml file if you required them.', 'edited');
         }
     }
 
@@ -437,13 +572,67 @@ EcommerceConfig:
             if ($headerOfGroup === 'OTHER') {
                 $classesArray = array_keys(array_diff_key($this->configs, $completedListOfClasses));
             }
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             foreach ($classesArray as $className) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $completedListOfClasses[$className] = $className;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 if (! isset($this->configs[$className])) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     $this->configs[$className] = [];
                 }
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $settings = $this->configs[$className];
                 ++$count;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 if (in_array($className, $classesArray, true)) {
                     $newHeader = $headerOfGroup;
                 }
@@ -453,11 +642,29 @@ EcommerceConfig:
                 }
 
                 $htmlTOC .= "<li><a href=\"#${className}\">${count}. ${className}</a></li>";
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 if ($className !== $oldClassName) {
                     $htmlTable .= "<tr  class='ecommerceConfigHeadings' id=\"${className}\"><th colspan=\"2\" scope=\"col\">
                     ${count}. ${className} (${newHeader})
                     <a class=\"backToTop\" href=\"#TaskHolder\">top</a>
                     </th></tr>";
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                     $oldClassName = $className;
                 }
                 if (is_array($settings)) {
@@ -466,21 +673,93 @@ EcommerceConfig:
                         $class = '';
                         $hasDefaultvalue = false;
                         $showActualValue = true;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $isDatabaseValues = isset($this->databaseValues[$className][$key]) ? $this->databaseValues[$className][$key] : false;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $isOtherConfigs = isset($this->otherConfigs[$className][$key]) ? $this->otherConfigs[$className][$key] : false;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $isCustomisedValues = isset($this->customisedValues[$className][$key]) ? $this->customisedValues[$className][$key] : false;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         if (! isset($this->defaults[$className][$key])) {
                             $defaultValueRaw = false;
                         //DB::alteration_message("Could not retrieve default value for: $className $key", "deleted");
                         } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                             $defaultValueRaw = $this->defaults[$className][$key];
                             $hasDefaultvalue = true;
                         }
                         $defaultValue = print_r($defaultValueRaw, 1);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $manuallyAddedValue = print_r($this->configs[$className][$key], 1);
                         if ($isDatabaseValues || $isOtherConfigs) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                             $actualValueRaw = $this->configs[$className][$key];
                         } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                             $actualValueRaw = EcommerceConfig::get($className, $key);
                         }
                         //if(!$actualValueRaw && $manuallyAddedValue) {
@@ -504,10 +783,37 @@ EcommerceConfig:
                             $defaultValue = $this->turnValueIntoHumanReadableValue($defaultValue);
                         }
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         if (! isset($this->definitions[$className][$key])) {
                             $description = '<span style="color: red; font-weight: bold">ERROR: no longer required in configs!</span>';
                         } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                             $description = $this->definitions[$className][$key];
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                             $description .= $this->specialCases($className, $key, $actualValue);
                         }
                         $defaultValueHTML = '';
@@ -572,7 +878,16 @@ EcommerceConfig:
                     $imageField = $field . 'ID';
                     if (isset($ecommerceDBConfig->{$imageField})) {
                         if ($image = $ecommerceDBConfig->{$field}()) {
-                            if ($image->exists() && is_a($image, Object::getCustomClass('Image'))) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                            if ($image->exists() && is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image'))) {
                                 $this->configs['EcommerceDBConfig'][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
                                 $this->databaseValues['EcommerceDBConfig'][$field] = true;
                             }
@@ -709,8 +1024,26 @@ EcommerceConfig:
     /**
      * check for any additional settings.
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private function specialCases($className, $key, $actualValue)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         switch ($className . '.' . $key) {
             case 'OrderEmail.css_file_location':
                 if (! file_exists(Director::baseFolder() . "/${actualValue}")) {

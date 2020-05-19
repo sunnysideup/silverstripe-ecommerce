@@ -51,12 +51,30 @@ class ExchangeRateProvider extends Object
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
         }
-        if ($value = Session::get($cacheCode)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($value = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($cacheCode)) {
             self::$_memory_cache[$cacheCode] = $value;
         } else {
             $value = $this->getRate($fromCode, $toCode);
             self::$_memory_cache[$cacheCode] = $value;
-            Session::set($cacheCode, $value);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($cacheCode, $value);
         }
 
         return self::$_memory_cache[$cacheCode];
@@ -85,6 +103,15 @@ class ExchangeRateProvider extends Object
             curl_close($ch);
         }
         if (! $record) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: file_get_contents (case sensitive)
+  * NEW: file_get_contents (COMPLEX)
+  * EXP: Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $record = file_get_contents($url);
         }
 

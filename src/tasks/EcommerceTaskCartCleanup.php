@@ -249,7 +249,25 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message('<h2>Checking one-to-one relationships</h2>.');
         }
         if (count($oneToOne)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             foreach ($oneToOne as $orderFieldName => $className) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 if (! in_array($className, $oneToMany, true) && ! in_array($className, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
@@ -271,6 +289,15 @@ class EcommerceTaskCartCleanup extends BuildTask
                         }
                     }
                     if (count($oneToOneIDArray)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $unlinkedObjects = $className::get()
                             ->filter(['ID' => $oneToOneIDArray]);
                         if ($unlinkedObjects->count()) {

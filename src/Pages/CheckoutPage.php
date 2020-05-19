@@ -66,6 +66,15 @@ class CheckoutPage extends CartPage
     
     private static $table_name = 'CheckoutPage';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'TermsAndConditionsMessage' => 'Varchar(200)',
         'EnableGoogleAnalytics' => 'Boolean(1)',
@@ -76,6 +85,15 @@ class CheckoutPage extends CartPage
      *
      * @Var Array
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
         'TermsPage' => 'Page',
     ];
@@ -253,7 +271,7 @@ class CheckoutPage extends CartPage
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
@@ -269,7 +287,7 @@ class CheckoutPage extends CartPage
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }

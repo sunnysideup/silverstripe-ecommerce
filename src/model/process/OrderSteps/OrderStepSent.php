@@ -34,6 +34,15 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     
     private static $table_name = 'OrderStepSent';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'SendDetailsToCustomer' => 'Boolean',
         'EmailSubjectGift' => 'Varchar(200)',

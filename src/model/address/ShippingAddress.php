@@ -49,6 +49,15 @@ class ShippingAddress extends OrderAddress
     
     private static $table_name = 'ShippingAddress';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'ShippingPrefix' => 'Varchar(10)',
         'ShippingFirstName' => 'Varchar(100)',
@@ -112,6 +121,15 @@ class ShippingAddress extends OrderAddress
      */
     private static $searchable_fields = [
         'OrderID' => [
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -259,7 +277,16 @@ class ShippingAddress extends OrderAddress
                     $shippingEcommerceGeocodingField = new GoogleAddressField(
                         'ShippingEcommerceGeocodingField',
                         _t('ShippingAddress.Find_Address', 'Find address'),
-                        Session::get('ShippingEcommerceGeocodingFieldValue')
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ShippingEcommerceGeocodingFieldValue')
                     )
                 );
                 $shippingEcommerceGeocodingField->setFieldMap($mappingArray);

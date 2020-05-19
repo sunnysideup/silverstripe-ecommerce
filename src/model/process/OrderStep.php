@@ -49,6 +49,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     
     private static $table_name = 'OrderStep';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Name' => 'Varchar(50)',
         'Code' => 'Varchar(50)',
@@ -1030,7 +1039,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function RelevantLogEntries(Order $order)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         if ($className = $this->getRelevantLogEntryClassName()) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $className::get()->filter(
                 [
                     'OrderID' => $order->ID,
@@ -1051,7 +1078,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return false;
     }
@@ -1063,7 +1090,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canView($member = null)
+    public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -1104,7 +1131,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -1127,7 +1154,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         //cant delete last status if there are orders with this status
         $nextOrderStepObject = $this->NextOrderStep();
@@ -1438,6 +1465,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             DB::alteration_message('DELETING ' . $oldObject->Title . ' as this now appears obsolete', 'deleted');
                             $oldObject->delete();
                         }
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         $obj = $className::create($filter);
                         $obj->Code = $code;
                         $obj->Description = $obj->myDescription();

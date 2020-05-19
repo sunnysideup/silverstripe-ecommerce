@@ -29,12 +29,30 @@ class OrderConfirmationPageController extends CartPageController
     {
         //we retrieve the order in the parent page
         //the parent page also takes care of the security
-        if ($sessionOrderID = Session::get('CheckoutPageCurrentOrderID')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($sessionOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
             $this->currentOrder = Order::get()->byID($sessionOrderID);
             if ($this->currentOrder) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
-                $validUntil = intval(Session::get('CheckoutPageCurrentRetrievalTime')) - 0;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                $validUntil = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime')) - 0;
                 if ($validUntil < time()) {
                     $this->clearRetrievalOrderID();
                     $this->overrideCanView = false;

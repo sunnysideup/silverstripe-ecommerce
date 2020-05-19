@@ -37,7 +37,16 @@
 /**
  * previous and andex buttons
  */
-.next, .prev, #Checkout .Actions {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: .Actions (case sensitive)
+  * NEW: .btn-toolbar (COMPLEX)
+  * EXP: Check if this replacement is right.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+.next, .prev, #Checkout .btn-toolbar {
 	display: block;
 	margin-top: 2em;
 	margin-bottom: 2em;

@@ -40,6 +40,15 @@ class OrderConfirmationPage extends CartPage
     
     private static $table_name = 'OrderConfirmationPage';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'StartNewOrderLinkLabel' => 'Varchar(100)',
         'CopyOrderLinkLabel' => 'Varchar(100)',
@@ -130,7 +139,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return OrderConfirmationPage::get()->filter(['ClassName' => 'OrderConfirmationPage'])->Count() ? false : $this->canEdit($member);
     }
@@ -142,7 +151,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
@@ -158,7 +167,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }

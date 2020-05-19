@@ -40,6 +40,15 @@ class CartPage extends Page
     
     private static $table_name = 'CartPage';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'ContinueShoppingLabel' => 'Varchar(100)',
         'ProceedToCheckoutLabel' => 'Varchar(100)',
@@ -127,7 +136,7 @@ class CartPage extends Page
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return CartPage::get()->Filter(['ClassName' => 'CartPage'])->Count() ? false : $this->canEdit($member);
     }
@@ -139,7 +148,7 @@ class CartPage extends Page
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
@@ -155,7 +164,7 @@ class CartPage extends Page
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return $this->canEdit($member);
     }

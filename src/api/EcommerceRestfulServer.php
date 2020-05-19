@@ -53,6 +53,15 @@ class EcommerceRestfulServer extends RestfulServer
         $relation = isset($this->urlParams['Relation']) ? $this->urlParams['Relation'] : null;
 
         // Check input formats
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         if (! class_exists($className)) {
             return $this->notFound();
         }
@@ -65,8 +74,26 @@ class EcommerceRestfulServer extends RestfulServer
 
         // fix
         if ($id) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $obj = $className::get()->byID($id);
             if ($obj) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $className = $this->urlParams['ClassName'] = $obj->ClassName;
             } else {
                 return $this->notFound();
@@ -74,6 +101,15 @@ class EcommerceRestfulServer extends RestfulServer
         }
 
         // if api access is disabled, don't proceed
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $apiAccess = singleton($className)->stat('api_access');
         if (! $apiAccess) {
             return $this->permissionFailure();
@@ -84,15 +120,51 @@ class EcommerceRestfulServer extends RestfulServer
 
         // handle different HTTP verbs
         if ($this->request->isGET() || $this->request->isHEAD()) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $this->getHandler($className, $id, $relation);
         }
         if ($this->request->isPOST()) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $this->postHandler($className, $id, $relation);
         }
         if ($this->request->isPUT()) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $this->putHandler($className, $id, $relation);
         }
         if ($this->request->isDELETE()) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $this->deleteHandler($className, $id, $relation);
         }
 

@@ -30,6 +30,15 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     
     private static $table_name = 'OrderStepSubmitted';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'SaveOrderAsHTML' => 'Boolean',
         'SaveOrderAsSerializedObject' => 'Boolean',
@@ -92,8 +101,26 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             if (class_exists($className)) {
                 //add currency if needed.
                 $order->getHasAlternativeCurrency();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $obj = $className::create();
-                if (is_a($obj, Object::getCustomClass('OrderStatusLog'))) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderStatusLog'))) {
                     $obj->OrderID = $order->ID;
                     $obj->Title = $this->Name;
                     //it is important we add this here so that we can save the 'submitted' version.
@@ -121,10 +148,46 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             //add member if needed...
             if (! $order->MemberID) {
                 //lets see if we can find a member
-                $memberOrderID = Session::get('Ecommerce_Member_For_Order');
-                Session::clear('Ecommerce_Member_For_Order');
-                Session::set('Ecommerce_Member_For_Order', 0);
-                Session::save();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                $memberOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('Ecommerce_Member_For_Order');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('Ecommerce_Member_For_Order');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('Ecommerce_Member_For_Order', 0);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
                 if ($memberOrderID) {
                     $order->MemberID = $memberOrderID;
                 }

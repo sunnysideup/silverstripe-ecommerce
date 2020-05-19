@@ -1,6 +1,6 @@
 ---
 Name: ecommerce
-Before: 'mysite/*'
+Before: 'app/*'
 After:
    - 'framework/*'
    - 'cms/*'
@@ -17,20 +17,20 @@ DevelopmentAdmin:
       links:
         ecommerce: 'The home page for everything e-commerce'
 
-Member:
+SilverStripe\Security\Member:
   extensions:
     - EcommerceRole
 
-SiteTree:
+SilverStripe\CMS\Model\SiteTree:
   extensions:
     - EcommerceSiteTreeExtension
   #we add this index to make caching faster ....
   indexes:
     LastEdited: true
 
-Page_Controller:
+PageController:
   extensions:
-    - EcommerceSiteTreeExtension_Controller
+    - EcommerceSiteTreeExtensionController
 
 Money:
   extensions:
@@ -43,7 +43,7 @@ EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN
 
-LeftAndMain:
+SilverStripe\Admin\LeftAndMain:
   extra_requirements_css:
     - ecommerce/css/ecommercecmsfixes.css
 
@@ -51,7 +51,7 @@ LeftAndMain:
 Only:
   moduleexists: 'grouped-cms-menu'
 ---
-LeftAndMain:
+SilverStripe\Admin\LeftAndMain:
   menu_groups:
     Shop:
       - StoreAdmin

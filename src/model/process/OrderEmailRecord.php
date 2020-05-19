@@ -31,6 +31,15 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     
     private static $table_name = 'OrderEmailRecord';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'From' => 'Varchar(255)',
         'To' => 'Varchar(255)',
@@ -44,6 +53,15 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
         'Order' => 'Order',
         'OrderStep' => 'OrderStep',
@@ -95,6 +113,15 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      */
     private static $searchable_fields = [
         'OrderID' => [
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -182,7 +209,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return false;
     }
@@ -194,7 +221,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canView($member = null)
+    public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -221,7 +248,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         return false;
     }
@@ -233,7 +260,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }
@@ -296,6 +323,15 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     public function scaffoldSearchFields($_params = null)
     {
         $fieldList = parent::scaffoldSearchFields($_params);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $fieldList->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
         $statusOptions = OrderStep::get();
         if ($statusOptions && $statusOptions->count()) {

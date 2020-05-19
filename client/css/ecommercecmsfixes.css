@@ -1,1 +1,10 @@
-.cms .Actions {float: right;}
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: .Actions (case sensitive)
+  * NEW: .btn-toolbar (COMPLEX)
+  * EXP: Check if this replacement is right.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+.cms .btn-toolbar {float: right;}

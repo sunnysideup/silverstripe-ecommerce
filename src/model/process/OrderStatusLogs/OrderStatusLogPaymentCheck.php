@@ -53,7 +53,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }

@@ -17,7 +17,7 @@
 
  class MyMigration extends BuildTask {
 
- protected $title = "Mysite Database Fixes";
+ protected $title = "App Database Fixes";
 
  protected $description = "General DB fixes";
 
@@ -27,6 +27,15 @@
 
  }
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  extends Extension (ignore case)
+  * NEW:  extends Extension (COMPLEX)
+  * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
  class MyMigration_EXT extends Extension {
 
  private static $allowed_actions = array(
@@ -49,7 +58,16 @@
 
  ####################### in mysite/_config.php:
 
- Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+ SilverStripe\Core\Injector\Injector::inst()->add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
 
 
  </code>

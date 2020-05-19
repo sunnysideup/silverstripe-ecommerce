@@ -72,6 +72,15 @@ class OrderItem extends OrderAttribute
     
     private static $table_name = 'OrderItem';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Quantity' => 'Double',
         'BuyableID' => 'Int',
@@ -117,6 +126,15 @@ class OrderItem extends OrderAttribute
      */
     private static $searchable_fields = [
         'OrderID' => [
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -247,9 +265,36 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice()),
                 ]
             );
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->dontEscape (case sensitive)
+  * NEW: ->dontEscape (COMPLEX)
+  * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $linkField1->dontEscape = true;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->dontEscape (case sensitive)
+  * NEW: ->dontEscape (COMPLEX)
+  * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $linkField2->dontEscape = true;
         } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
         $fields->removeByName('Sort');
@@ -325,6 +370,15 @@ class OrderItem extends OrderAttribute
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
 
         return $fields;
@@ -456,11 +510,38 @@ class OrderItem extends OrderAttribute
      */
     public function onBeforeWrite()
     {
-        if (Session::get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
-            $this->OrderID = intval(Session::get('EcommerceOrderGETCMSHack'));
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            $this->OrderID = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack'));
         }
         if (! $this->exists()) {
             if ($buyable = $this->Buyable(true)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 if ($this->ClassName === 'OrderItem' && $this->BuyableClassName !== 'OrderItem') {
                     $this->setClassName($buyable->classNameForOrderItem());
                 }
@@ -671,10 +752,46 @@ class OrderItem extends OrderAttribute
             }
             //start hack
             if (! $this->BuyableClassName) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $this->BuyableClassName = str_replace('_OrderItem', '', $this->ClassName);
             }
             $turnTranslatableBackOn = false;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = $this->BuyableClassName;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             if ($className::has_extension($this->class, 'Translatable')) {
                 Translatable::disable_locale_filter();
                 $turnTranslatableBackOn = true;
@@ -682,6 +799,15 @@ class OrderItem extends OrderAttribute
             //end hack!
             $obj = null;
             if ($currentOrVersion === 'current') {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $obj = $className::get()->byID($this->BuyableID);
             }
 
@@ -690,7 +816,7 @@ class OrderItem extends OrderAttribute
                 if (! $obj || (! $obj->exists()) && $this->Version) {
                     /* @TODO: check if the version exists?? - see sample below
                     $versionTable = $this->BuyableClassName."_versions";
-                    $dbConnection = DB::getConn();
+                    $dbConnection = DB::get_conn();
                     if($dbConnection && $dbConnection instanceOf MySQLDatabase && $dbConnection->hasTable($versionTable)) {
                         $result = DB::query("
                             SELECT COUNT(\"ID\")
@@ -710,6 +836,15 @@ class OrderItem extends OrderAttribute
             }
             //our final backup
             if (! $obj || (! $obj->exists())) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $obj = $className::get()->byID($this->BuyableID);
             }
             if ($turnTranslatableBackOn) {
@@ -791,8 +926,26 @@ class OrderItem extends OrderAttribute
     public function getBuyableExists()
     {
         if ($buyable = $this->Buyable(true)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = $buyable->ClassName;
             $id = $buyable->ID;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             return $className::get()->byID($id) ? true : false;
         }
 

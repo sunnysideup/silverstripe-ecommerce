@@ -31,6 +31,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     
     private static $table_name = 'EcommerceDBConfig';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Title' => 'Varchar(30)',
         'UseThisOne' => 'Boolean',
@@ -61,7 +70,25 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  => 'Image' (case sensitive)
+  * NEW:  => 'Image' (COMPLEX)
+  * EXP: you may want to add ownership (owns)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         'EmailLogo' => 'Image',
         'DefaultProductImage' => 'ProductImage',
     ];
@@ -189,7 +216,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -211,7 +238,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    public function canView($member = null)
+    public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -231,7 +258,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -254,7 +281,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         if ($this->UseThisOne) {
             return false;
@@ -308,16 +335,61 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public static function current_ecommerce_db_config()
     {
         if (! self::$_my_current_one) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = EcommerceConfig::get('EcommerceDBConfig', 'ecommerce_db_config_class_name');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             if (! class_exists($className)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $className = 'EcommerceDBConfig';
             }
             self::$_my_current_one = DataObject::get_one(
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $className,
                 ['UseThisOne' => 1],
                 $cacheDataObjectGetOne = false
             );
             if (! self::$_my_current_one) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 self::$_my_current_one = $className::create();
             }
         }
@@ -399,7 +471,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'Title' => _t('EcommerceDBConfig.TITLE_DESCRIPTION', 'For internal use only.'),
             'UseThisOne' => _t('EcommerceDBConfig.USETHISONE_DESCRIPTION', 'You can create several setting records so that you can switch between configurations.'),
             'ShopPricesAreTaxExclusive' => _t('EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE_DESCRIPTION', 'If this option is NOT ticked, it is assumed that prices are tax inclusive.'),
-            'ReceiptEmail' => _t('EcommerceDBConfig.RECEIPTEMAIL_DESCRIPTION_DESCRIPTION', 'e.g. sales@mysite.com, you can also use something like: "Our Shop Name Goes Here" &lt;sales@mysite.com&gt;'),
+            'ReceiptEmail' => _t('EcommerceDBConfig.RECEIPTEMAIL_DESCRIPTION_DESCRIPTION', 'e.g. sales@app.com, you can also use something like: "Our Shop Name Goes Here" &lt;sales@app.com&gt;'),
             'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE_DESCRIPTION', 'This is basically a protection to disallow sales of products that do not have a price entered yet. '),
             'CurrenciesExplanation' => _t('EcommerceDBConfig.CURRENCIESEXPLANATION_DESCRIPTION', 'Explain how the user can switch between currencies and how the exchange rates are worked out.'),
             'PackingSlipTitle' => _t('EcommerceDBConfig.PACKINGSLIPTITLE_DESCRIPTION', 'e.g. Package Contents'),
@@ -448,6 +520,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     Tab::create(
                         'Products',
                         _t('EcommerceDBConfig.PRODUCTS', 'Products'),
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: NumericField (case sensitive)
+  * NEW: NumericField (COMPLEX)
+  * EXP: check the number of decimals required and add as ->Step(123)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                         new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
                         new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
                         new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
@@ -528,6 +609,15 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         ),
                     ]
                 );
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->dontEscape (case sensitive)
+  * NEW: ->dontEscape (COMPLEX)
+  * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $clearField->dontEscape = true;
                 //set cols
                 if ($f = $fields->dataFieldByName('CurrenciesExplanation')) {
@@ -601,8 +691,26 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     public static function is_buyable($className)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $implementorsArray = class_implements($className);
         if (is_array($implementorsArray) && in_array('BuyableModel', $implementorsArray, true)) {
             return true;

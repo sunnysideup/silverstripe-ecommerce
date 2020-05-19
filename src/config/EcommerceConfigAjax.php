@@ -35,7 +35,25 @@ class EcommerceConfigAjax extends Object
     public static function get_one($requestor)
     {
         if (! isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = EcommerceConfig::get('EcommerceConfigAjax', 'definitions_class_name');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             self::$singleton[$requestor->ClassName][$requestor->ID] = new $className();
             self::$singleton[$requestor->ClassName][$requestor->ID]->setRequestor($requestor);
         }

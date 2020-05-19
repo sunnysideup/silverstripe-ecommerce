@@ -50,9 +50,18 @@ class OrderModifierFormController extends Controller
      */
     public function Link($action = null)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $URLSegment = Config::inst()->get($this->class, 'url_segment');
         if (! $URLSegment) {
-            $URLSegment = $this->class;
+            $URLSegment = get_class($this);
         }
 
         return Controller::join_links(

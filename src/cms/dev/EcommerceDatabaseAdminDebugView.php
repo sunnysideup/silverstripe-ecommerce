@@ -14,6 +14,15 @@ class EcommerceDatabaseAdminDebugView extends DebugView
 
     public function writeContent(Controller $controller)
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         echo $controller->RenderWith($controller->class);
     }
 }

@@ -82,7 +82,16 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                                 $method = $this->productManyManyField;
                                 $collection = $product->{$method}();
                                 foreach ($images as $image) {
-                                    if (is_a($image, Object::getCustomClass('Image')) && $image->ClassName !== Object::getCustomClass('ProductImage')) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Image')) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductImage')) {
                                         $image = $image->newClassInstance('ProductImage');
                                         $image->write();
                                     }

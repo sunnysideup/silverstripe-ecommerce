@@ -33,7 +33,7 @@ class OrderStatusLogArchived extends OrderStatusLog
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return false;
     }
@@ -45,7 +45,7 @@ class OrderStatusLogArchived extends OrderStatusLog
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -65,7 +65,7 @@ class OrderStatusLogArchived extends OrderStatusLog
      *
      * @return bool
      */
-    public function canCreate($member = null)
+    public function canCreate($member = null, $context = [])
     {
         return true;
     }
@@ -73,6 +73,15 @@ class OrderStatusLogArchived extends OrderStatusLog
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         $fields->replaceField('ClassName', new HiddenField('ClassName', 'ClassName', $this->ClassName));
         $fields->addFieldToTab('Root.Main', new ReadonlyField('Created', 'Created'));
 

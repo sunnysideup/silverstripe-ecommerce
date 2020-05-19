@@ -29,7 +29,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $now = microtime(true);
         //IMPORTANT!
         if (! $this->sendEmails) {
-            Config::inst()->update('Email', 'send_all_emails_to', 'no-one@localhost');
+            Config::modify()->update('Email', 'send_all_emails_to', 'no-one@localhost');
             Email::set_mailer(new EcommerceDummyMailer());
         }
         $id = intval($request->getVar('id')) - 0;

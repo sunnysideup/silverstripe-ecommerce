@@ -38,8 +38,26 @@ class CMSPageAddControllerProducts extends CMSPageAddController
     {
         $pageTypes = parent::PageTypes();
         $result = new ArrayList();
-        $productClass = Object::getCustomClass('Product');
-        $productGroupClass = Object::getCustomClass('ProductGroup');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass('Product');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass('ProductGroup');
 
         $acceptedClasses1 = ClassInfo::subclassesFor($productClass);
         $acceptedClasses1[$productClass] = $productClass;

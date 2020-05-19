@@ -91,7 +91,7 @@ class AccountPage extends Page
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get('EcommerceRole', 'admin_permission_code'))) {
             return true;
@@ -107,7 +107,7 @@ class AccountPage extends Page
      *
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         return $this->canEdit($member);
     }

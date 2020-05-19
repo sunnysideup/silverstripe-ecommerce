@@ -105,7 +105,16 @@ class ProductGroupController extends Page_Controller
         $this->addSecondaryTitle();
         $this->products = $this->paginateList($this->ProductsShowable(null));
         if ($this->returnAjaxifiedProductList()) {
-            return $this->renderWith('AjaxProductList');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            return $this->RenderWith('AjaxProductList');
         }
         return [];
     }
@@ -135,7 +144,16 @@ class ProductGroupController extends Page_Controller
         $this->addSecondaryTitle();
         $this->products = $this->paginateList($this->ProductsShowable(['ID' => $arrayOfIDs]));
         if ($this->returnAjaxifiedProductList()) {
-            return $this->renderWith('AjaxProductList');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: ->RenderWith( (ignore case)
+  * NEW: ->RenderWith( (COMPLEX)
+  * EXP: Check that the template location is still valid!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            return $this->RenderWith('AjaxProductList');
         }
 
         return [];
@@ -230,7 +248,16 @@ class ProductGroupController extends Page_Controller
             $stringOfIDs = implode(',', $array);
         }
         //save list for future use
-        Session::set(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'), $stringOfIDs);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceConfig::get('ProductGroup', 'session_name_for_product_array'), $stringOfIDs);
 
         return $this->products;
     }
@@ -415,7 +442,16 @@ class ProductGroupController extends Page_Controller
      */
     public function SearchResultsChildGroups()
     {
-        $groupArray = explode(',', Session::get($this->SearchResultsSessionVariable($isForGroup = true)));
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        $groupArray = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable($isForGroup = true)));
         if (is_array($groupArray) && count($groupArray)) {
             $sortStatement = $this->createSortStatementFromIDArray($groupArray, 'ProductGroup');
 
@@ -526,7 +562,16 @@ class ProductGroupController extends Page_Controller
      */
     public function ActiveSearchTerm()
     {
-        $data = Session::get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        $data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get('ProductSearchForm', 'form_data_session_variable'));
         if (! empty($data['Keyword'])) {
             return $this->IsSearchResults();
         }
@@ -817,9 +862,36 @@ class ProductGroupController extends Page_Controller
         $links = $this->ProductGroupFilterLinks();
         // /print_r($links);
         foreach ($links as $linkItem) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = $linkItem->ClassName;
             $id = $linkItem->ID;
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             if ($className && $id) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $object = $className::get()->byID($id);
                 $linkItem->Object = $object;
             }
@@ -1181,13 +1253,40 @@ class ProductGroupController extends Page_Controller
             }
             if ($newPreference) {
                 $optionsVariableName = $oneTypeArray['configName'];
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
                 if (isset($options[$newPreference])) {
-                    Session::set('ProductGroup_' . $sessionName, $newPreference);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                    SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
                     //save in model as well...
                 }
             } else {
-                $newPreference = Session::get('ProductGroup_' . $sessionName);
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+                $newPreference = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ProductGroup_' . $sessionName);
             }
             //save data in model...
             if ($newPreference) {
@@ -1207,8 +1306,26 @@ class ProductGroupController extends Page_Controller
         //clearing data..
         if ($this->request->getVar('reload')) {
             //reset other session variables...
-            Session::set($this->SearchResultsSessionVariable(false), '');
-            Session::set($this->SearchResultsSessionVariable(true), '');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
 
             return $this->redirect($this->Link());
         }
@@ -1233,7 +1350,16 @@ class ProductGroupController extends Page_Controller
     protected function getCurrentUserPreferences($type)
     {
         $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-        if ($sessionValue = Session::get('ProductGroup_' . $sessionName)) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: Session:: (case sensitive)
+  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if ($sessionValue = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ProductGroup_' . $sessionName)) {
             $key = Convert::raw2sql($sessionValue);
         } else {
             $key = $this->getMyUserPreferencesDefault($type);

@@ -4,7 +4,16 @@
 <div id="Outer">
     <div id="Inner">
         <div id="PaymentLogoImage">$Logo</div>
-        <div id="PaymentLoadingImage"><img src="ecommerce/images/loading.gif" alt="Loading image"></div>
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: /images/ (case sensitive)
+  * NEW: /client/images/ (COMPLEX)
+  * EXP: Check new location, also see: https://docs.silverstripe.org/en/4/developer_guides/templates/requirements/#direct-resource-urls
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        <div id="PaymentLoadingImage"><img src="ecommerce/client/images/loading.gif" alt="Loading image"></div>
         <div id="PaymentFormHolder">$Form</div>
     </div>
 </div>

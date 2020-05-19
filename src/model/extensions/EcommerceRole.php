@@ -37,10 +37,28 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     
     private static $table_name = 'EcommerceRole';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'Notes' => 'Text',
     ];
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
         'PreferredCurrency' => 'EcommerceCurrency',
     ];
@@ -261,7 +279,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * you can't delete a Member with one or more orders.
      */
-    public function canDelete($member = null)
+    public function canDelete($member = null, $context = [])
     {
         if ($this->getOrders()->count()) {
             return false;
@@ -463,6 +481,15 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: EmailField('Email' (case sensitive)
+  * NEW: EmailField('Email' (COMPLEX)
+  * EXP: make sure that this does not end up as Email::class
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
             );
         } else {
@@ -520,6 +547,15 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: EmailField('Email' (case sensitive)
+  * NEW: EmailField('Email' (COMPLEX)
+  * EXP: make sure that this does not end up as Email::class
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email')),
                 $loginDetailsHeader,
                 $loginDetailsDescription,

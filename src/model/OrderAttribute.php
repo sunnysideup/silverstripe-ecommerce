@@ -71,6 +71,15 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     
     private static $table_name = 'OrderAttribute';
 
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $db = (case sensitive)
+  * NEW: private static $db = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $db = [
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
@@ -82,6 +91,15 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: private static $has_one = (case sensitive)
+  * NEW: private static $has_one = (COMPLEX)
+  * EXP: Make sure to add a private static $table_name!
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
     private static $has_one = [
         'Order' => 'Order',
     ];
@@ -321,6 +339,15 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function OrderAttributeType()
     {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->ClassName (case sensitive)
+  * NEW: $this->ClassName (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
         return $this->ClassName;
     }
 
@@ -355,7 +382,16 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             $classes[] = strtolower($class);
             $class = get_parent_class($class);
         }
-        if (is_a($this, Object::getCustomClass('OrderItem'))) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderItem'))) {
             $classes[] = strtolower($this->BuyableClassName);
         }
 

@@ -61,10 +61,28 @@ class ProductBulkLoader extends CsvBulkLoader{
 
     public $relationCallbacks = array(
         'Image' => array(
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  => 'Image' (case sensitive)
+  * NEW:  => 'Image' (COMPLEX)
+  * EXP: you may want to add ownership (owns)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'relationname' => 'Image', // relation accessor name
             'callback' => 'imageByFilename'
         ),
         'Photo' => array(
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  => 'Image' (case sensitive)
+  * NEW:  => 'Image' (COMPLEX)
+  * EXP: you may want to add ownership (owns)
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             'relationname' => 'Image', // relation accessor name
             'callback' => 'imageByFilename'
         )
@@ -156,7 +174,25 @@ class ProductBulkLoader extends CsvBulkLoader{
     function setParent(&$obj, $val, $record){
         $title = strtolower(Convert::raw2sql($val));
         if($title){
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $className = $this->Config()->get("product_group_class_name");
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $parentpage = $className::get()->where("LOWER(\"Title\") = '$title'")->sort("Created", "DESC")->First();
             if($parentpage){
                 $obj->ParentID = $parentpage->ID;
@@ -165,8 +201,26 @@ class ProductBulkLoader extends CsvBulkLoader{
                 $obj->publish('Stage', 'Live');
             }
             elseif(self::$create_new_product_groups){
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $className = $this->Config()->get("product_group_class_name");
                 //create parent product group
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $pg = new $className();
                 $pg->setTitle($title);
                 $pg->ParentID = (self::$parent_page_id) ? self::$parent_page_id : 0;

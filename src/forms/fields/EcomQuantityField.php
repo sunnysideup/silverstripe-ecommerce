@@ -66,10 +66,37 @@ class EcomQuantityField extends NumericField
             $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
             if (! $this->orderItem) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $className = $object->classNameForOrderItem();
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $className (case sensitive)
+  * NEW: $className (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
                 $this->orderItem = new $className($object->dataRecord, 0);
             }
-        } elseif (is_a($object, Object::getCustomClass('OrderItem')) && $object->BuyableID) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD:  Object:: (case sensitive)
+  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+  * EXP: Check if this is the right implementation, this is highly speculative.
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+        } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass('OrderItem')) && $object->BuyableID) {
             $this->orderItem = $object;
         } else {
             user_error('EcomQuantityField: no/bad order item or buyable passed to constructor.', E_USER_WARNING);
@@ -88,8 +115,26 @@ class EcomQuantityField extends NumericField
     public function setClasses(array $newClasses, $overwrite = false)
     {
         if ($overwrite) {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $this->classes = array_merge($this->classes, $newClasses);
         } else {
+
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: $this->class (case sensitive)
+  * NEW: $this->class (COMPLEX)
+  * EXP: Check if the class name can still be used as such
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
             $this->classes = $newclasses;
         }
     }

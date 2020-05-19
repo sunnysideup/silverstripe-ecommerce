@@ -48,7 +48,7 @@ file that shows options for the configuration of this module.
 We recommend that you:
 
   1. copy these `ecommerce.yml.example` files into your
-`mysite/_config` folder (where available - otherwise search for `private static $` in the module to see what can be configured)
+`app/_config` folder (where available - otherwise search for `private static $` in the module to see what can be configured)
   2. remove the .example extension,
   3. delete the lines you do not care about, and
   4. adjust the configurations that you would like to use.
