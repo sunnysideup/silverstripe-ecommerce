@@ -66,7 +66,7 @@ class ShoppingCart extends Object
     private static $session_variable_names = ['OrderID', 'Messages'];
 
     /**
-     * This is where we hold the (singleton) Shoppingcart.
+     * This is where we hold the (singleton) ShoppingCart.
      *
      * @var object (ShoppingCart)
      */

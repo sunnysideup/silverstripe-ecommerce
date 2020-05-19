@@ -21,7 +21,7 @@ abstract class OrderConverter extends Object
     {
         parent::__construct();
         if ($order === null) {
-            $order = Shoppingcart::current_order();
+            $order = ShoppingCart::current_order();
         }
         if ($order instanceof Order) {
             $this->order = $order;
