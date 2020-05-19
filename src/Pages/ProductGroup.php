@@ -1,30 +1,5 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\Pages;
-
-use Page;
-use Member;
-use Permission;
-use Config;
-use Controller;
-use DataList;
-use ProductProductImageUploadField;
-use Tab;
-use DropdownField;
-use HeaderField;
-use NumericField;
-use ArrayList;
-use SS_List;
-use Deprecation;
-use DB;
-use Image;
-use ProductVariation;
-use EcommerceConfig;
-use GridField;
-use GridFieldBasicPageRelationConfig;
-use Versioned;
-
-
 /**
  * Product Group is a 'holder' for Products within the CMS
  * It contains functions for versioning child products.
@@ -1830,7 +1805,8 @@ class ProductGroup extends Page
      */
     protected function getSilverstripeCoreCache()
     {
-        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class . '.EcomPG');
+
+        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class . '.'. 'EcomPG');
     }
 
     /**

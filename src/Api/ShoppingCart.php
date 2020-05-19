@@ -16,8 +16,6 @@ use EcommerceRegion;
 use EcommerceCurrency;
 use Director;
 use Permission;
-use debug;
-use Debug;
 use Controller;
 use Convert;
 use EcommerceDBConfig;
@@ -174,7 +172,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
         $orderIDFromSession = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
@@ -325,7 +323,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
                     SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, intval($this->order->ID));
@@ -689,7 +687,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, null);
@@ -699,7 +697,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
@@ -709,7 +707,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
@@ -852,7 +850,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
                     SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, $this->order->ID);
@@ -1050,7 +1048,7 @@ class ShoppingCart extends Object
     public function debug()
     {
         if (Director::isDev() || Permission::check('ADMIN')) {
-            debug::show($this->currentOrder());
+            print_r($this->currentOrder());
 
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Country</h1>';
             echo 'GEOIP Country: ' . EcommerceCountry::get_country_from_ip() . '<br />';
@@ -1064,7 +1062,7 @@ class ShoppingCart extends Object
             echo '<hr />';
             if ($items->count()) {
                 foreach ($items as $item) {
-                    Debug::show($item);
+                    print_r($item);
                 }
             } else {
                 echo '<p>there are no items for this order</p>';
@@ -1074,7 +1072,7 @@ class ShoppingCart extends Object
             $modifiers = $this->currentOrder()->Modifiers();
             if ($modifiers->count()) {
                 foreach ($modifiers as $modifier) {
-                    Debug::show($modifier);
+                    print_r($modifier);
                 }
             } else {
                 echo '<p>there are no modifiers for this order</p>';
@@ -1083,13 +1081,13 @@ class ShoppingCart extends Object
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Addresses</h1>';
             $billingAddress = $this->currentOrder()->BillingAddress();
             if ($billingAddress && $billingAddress->exists()) {
-                Debug::show($billingAddress);
+                print_r($billingAddress);
             } else {
                 echo '<p>there is no billing address for this order</p>';
             }
             $shippingAddress = $this->currentOrder()->ShippingAddress();
             if ($shippingAddress && $shippingAddress->exists()) {
-                Debug::show($shippingAddress);
+                print_r($shippingAddress);
             } else {
                 echo '<p>there is no shipping address for this order</p>';
             }
@@ -1097,20 +1095,20 @@ class ShoppingCart extends Object
             $currencyUsed = $this->currentOrder()->CurrencyUsed();
             if ($currencyUsed && $currencyUsed->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Currency</h1>';
-                Debug::show($currencyUsed);
+                print_r($currencyUsed);
             }
 
             $cancelledBy = $this->currentOrder()->CancelledBy();
             if ($cancelledBy && $cancelledBy->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Cancelled By</h1>';
-                Debug::show($cancelledBy);
+                print_r($cancelledBy);
             }
 
             $logs = $this->currentOrder()->OrderStatusLogs();
             if ($logs && $logs->count()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Logs</h1>';
                 foreach ($logs as $log) {
-                    Debug::show($log);
+                    print_r($log);
                 }
             }
 
@@ -1118,7 +1116,7 @@ class ShoppingCart extends Object
             if ($payments && $payments->count()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Payments</h1>';
                 foreach ($payments as $payment) {
-                    Debug::show($payment);
+                    print_r($payment);
                 }
             }
 
@@ -1126,7 +1124,7 @@ class ShoppingCart extends Object
             if ($emails && $emails->count()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Emails</h1>';
                 foreach ($emails as $email) {
-                    Debug::show($email);
+                    print_r($email);
                 }
             }
 
@@ -1177,7 +1175,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
         $messages = unserialize(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName));
@@ -1188,7 +1186,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear($sessionVariableName, '');
@@ -1362,7 +1360,7 @@ class ShoppingCart extends Object
   * WHY: automated upgrade
   * OLD: Session:: (case sensitive)
   * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
   * ### @@@@ STOP REPLACEMENT @@@@ ###
   */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, serialize($this->messages));
@@ -1393,4 +1391,3 @@ class ShoppingCart extends Object
         return $sessionCode . '_' . $name;
     }
 }
-
