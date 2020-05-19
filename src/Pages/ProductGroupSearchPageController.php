@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use ProductGroup_Controller;
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 
 
 
-class ProductGroupSearchPageController extends ProductGroup_Controller
+class ProductGroupSearchPageController extends ProductGroupController
 {
     /**
      * standard SS variable.
@@ -71,4 +71,3 @@ class ProductGroupSearchPageController extends ProductGroup_Controller
         return $link;
     }
 }
-
