@@ -9,7 +9,7 @@
  * @subpackage: model
 
  **/
-class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
+class BuyableFieldType extends PolymorphicForeignKey
 {
     public function scaffoldFormField($title = null, $params = null)
     {
