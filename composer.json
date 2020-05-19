@@ -1,6 +1,6 @@
 {
     "name": "sunnysideup/ecommerce",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "Silverstripe E-commerce Application",
     "keywords": [
         "Silverstripe-CMS",
