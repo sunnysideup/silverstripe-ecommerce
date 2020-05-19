@@ -102,3 +102,4 @@ class ExchangeRateProvider extends Object
         return $rate;
     }
 }
+

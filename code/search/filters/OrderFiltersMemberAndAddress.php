@@ -64,3 +64,4 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
         return $query->where('(' . implode(') OR (', $where) . ')');
     }
 }
+

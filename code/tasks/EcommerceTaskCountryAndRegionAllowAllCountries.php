@@ -29,3 +29,4 @@ class EcommerceTaskCountryAndRegionAllowAllCountries extends BuildTask
         }
     }
 }
+

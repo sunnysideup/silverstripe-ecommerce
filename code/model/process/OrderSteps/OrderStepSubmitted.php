@@ -164,3 +164,4 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
         return _t('OrderStep.SUBMITTED_DESCRIPTION', 'The official moment the order gets submitted by the customer. The hand-shake for a commercial transaction.');
     }
 }
+

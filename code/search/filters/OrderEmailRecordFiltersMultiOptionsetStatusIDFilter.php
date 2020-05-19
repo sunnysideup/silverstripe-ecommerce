@@ -25,3 +25,4 @@ class OrderEmailRecordFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilt
         return $query;
     }
 }
+

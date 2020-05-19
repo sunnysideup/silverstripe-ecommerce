@@ -57,3 +57,4 @@ class OrderFormValidator extends RequiredFields
         return $valid;
     }
 }
+

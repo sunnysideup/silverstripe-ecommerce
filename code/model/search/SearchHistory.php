@@ -144,3 +144,4 @@ class SearchHistory extends DataObject
         return false;
     }
 }
+

@@ -400,3 +400,4 @@ class OrderConfirmationPageController extends CartPageController
         return false;
     }
 }
+

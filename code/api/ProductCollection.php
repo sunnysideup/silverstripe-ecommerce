@@ -50,3 +50,4 @@ abstract class ProductCollection
         ';
     }
 }
+

@@ -207,3 +207,4 @@ class CartResponse extends EcommerceResponse
         return $json;
     }
 }
+

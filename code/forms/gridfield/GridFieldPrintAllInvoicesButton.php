@@ -98,3 +98,4 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
         return $curr->renderWith('PrintAllInvoices');
     }
 }
+

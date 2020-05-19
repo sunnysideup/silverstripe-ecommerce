@@ -247,3 +247,4 @@ class EcommerceSearchHistoryFormField extends LiteralField
         return $content;
     }
 }
+

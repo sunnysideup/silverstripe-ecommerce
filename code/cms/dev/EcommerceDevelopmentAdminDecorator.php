@@ -28,3 +28,4 @@ class EcommerceDevelopmentAdminDecorator extends Extension
         return EcommerceDatabaseAdmin::create();
     }
 }
+

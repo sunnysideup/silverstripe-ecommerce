@@ -11,3 +11,4 @@ class ExchangeRateProviderDummy extends ExchangeRateProvider
         return 1;
     }
 }
+

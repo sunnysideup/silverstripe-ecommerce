@@ -896,3 +896,4 @@ class ShoppingCartController extends Controller
         return $this->redirect('page-not-found');
     }
 }
+

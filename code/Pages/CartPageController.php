@@ -701,3 +701,4 @@ class CartPageController extends Page_Controller
         return true;
     }
 }
+

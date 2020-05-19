@@ -281,3 +281,4 @@ class ShippingAddress extends OrderAddress
         return $this->Config()->get('required_fields');
     }
 }
+

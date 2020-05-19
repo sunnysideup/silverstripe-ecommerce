@@ -403,3 +403,4 @@ class OrderConfirmationPage extends CartPage
         }
     }
 }
+

@@ -87,3 +87,4 @@ class EcommerceTaskProductImageReset extends BuildTask
         }
     }
 }
+

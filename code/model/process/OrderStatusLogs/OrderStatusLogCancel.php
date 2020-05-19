@@ -95,3 +95,4 @@ class OrderStatusLogCancel extends OrderStatusLog
         return false;
     }
 }
+

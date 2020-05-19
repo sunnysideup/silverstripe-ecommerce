@@ -236,3 +236,4 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
     }
 }
+

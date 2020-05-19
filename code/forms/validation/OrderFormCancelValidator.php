@@ -10,3 +10,4 @@ class OrderFormCancelValidator extends RequiredFields
         return parent::php($data);
     }
 }
+

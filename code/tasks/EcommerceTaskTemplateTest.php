@@ -19,3 +19,4 @@ class EcommerceTaskTemplateTest extends BuildTask
         DB::alteration_message('<br /><br /><br /><br /><br /><br /><a href="/ecommercetemplatetest/?flush=all" target="_debug">click here to view template test page</a>.<br /><br /><br /><br /><br /><br />');
     }
 }
+

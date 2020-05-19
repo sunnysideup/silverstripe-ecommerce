@@ -371,3 +371,4 @@ class CheckoutPage extends CartPage
         return new GridField('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
     }
 }
+

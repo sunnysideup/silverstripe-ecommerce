@@ -57,3 +57,4 @@ class AccountPageController extends Page_Controller
         return $link;
     }
 }
+

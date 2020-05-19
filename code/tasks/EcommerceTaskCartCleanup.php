@@ -387,3 +387,4 @@ class EcommerceTaskCartCleanup extends BuildTask
         $objectToDelete->destroy();
     }
 }
+

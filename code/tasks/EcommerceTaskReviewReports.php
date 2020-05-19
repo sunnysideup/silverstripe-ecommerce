@@ -27,3 +27,4 @@ class EcommerceTaskReviewReports extends BuildTask
         DB::alteration_message('<h1><a href="/admin/reports/" target="_blank">Open Reports Interface</a></h1>');
     }
 }
+

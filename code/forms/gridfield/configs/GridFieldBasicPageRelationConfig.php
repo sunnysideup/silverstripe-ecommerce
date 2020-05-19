@@ -17,3 +17,4 @@ class GridFieldBasicPageRelationConfig extends GridFieldConfig_RelationEditor
             ->removeComponentsByType('GridFieldAddNewButton');
     }
 }
+

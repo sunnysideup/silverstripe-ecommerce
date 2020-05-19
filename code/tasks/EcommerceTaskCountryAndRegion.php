@@ -47,3 +47,4 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         DB::alteration_message("Created / Checked ${count} Ecommerce Countries", 'edited');
     }
 }
+

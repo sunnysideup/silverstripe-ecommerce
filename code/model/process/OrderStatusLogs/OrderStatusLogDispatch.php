@@ -27,3 +27,4 @@ class OrderStatusLogDispatch extends OrderStatusLog
         return _t('OrderStatusLog.ORDERLOGDISPATCHENTRIES', 'Order Log Dispatch Entries');
     }
 }
+

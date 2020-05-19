@@ -12,3 +12,4 @@ class EcommercePaymentSuccess extends EcommercePaymentResult
         return false;
     }
 }
+

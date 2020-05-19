@@ -148,3 +148,4 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         return Director::is_cli();
     }
 }
+

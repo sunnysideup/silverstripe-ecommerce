@@ -235,3 +235,4 @@ abstract class OrderEmail extends Email
         }
     }
 }
+

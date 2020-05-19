@@ -18,3 +18,4 @@ class OrderErrorEmail extends OrderEmail
      */
     protected $ss_template = 'OrderErrorEmail';
 }
+

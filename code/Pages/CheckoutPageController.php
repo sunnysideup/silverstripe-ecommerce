@@ -406,3 +406,4 @@ class CheckoutPageController extends CartPageController
         //reset current step if different
     }
 }
+

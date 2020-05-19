@@ -17,3 +17,4 @@ class EcommerceDatabaseAdminDebugView extends DebugView
         echo $controller->RenderWith($controller->class);
     }
 }
+

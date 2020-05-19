@@ -16,3 +16,4 @@ class OrderReceiptEmail extends OrderEmail
      */
     protected $ss_template = 'OrderReceiptEmail';
 }
+

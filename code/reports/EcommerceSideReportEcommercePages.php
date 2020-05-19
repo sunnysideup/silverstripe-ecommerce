@@ -84,3 +84,4 @@ class EcommerceSideReportEcommercePages extends SS_Report
         return $field;
     }
 }
+

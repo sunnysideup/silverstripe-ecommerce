@@ -149,3 +149,4 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         }
     }
 }
+

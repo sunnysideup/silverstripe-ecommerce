@@ -19,3 +19,4 @@ abstract class EcommercePaymentResult extends Object
 
     abstract public function isProcessing();
 }
+

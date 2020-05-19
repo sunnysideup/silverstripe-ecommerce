@@ -24,3 +24,4 @@ class EcommerceDummyMailer extends mailer
         return true;
     }
 }
+

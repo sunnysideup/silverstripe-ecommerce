@@ -241,3 +241,4 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         }
     }
 }
+

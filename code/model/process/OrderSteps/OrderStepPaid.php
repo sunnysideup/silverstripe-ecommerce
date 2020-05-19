@@ -106,3 +106,4 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
         return _t('OrderStep.PAID_DESCRIPTION', 'The order is paid in full.');
     }
 }
+

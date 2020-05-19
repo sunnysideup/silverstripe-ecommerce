@@ -79,3 +79,4 @@ class EcommerceSideReportNoInternalIDProducts extends SS_Report
         return $field;
     }
 }
+

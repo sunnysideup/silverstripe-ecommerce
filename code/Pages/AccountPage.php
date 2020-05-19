@@ -268,3 +268,4 @@ class AccountPage extends Page
         return 0;
     }
 }
+

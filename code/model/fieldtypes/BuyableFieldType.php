@@ -48,3 +48,4 @@ class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
         ];
     }
 }
+

@@ -102,3 +102,4 @@ class ProductGroupSearchPage extends ProductGroup
         return $this->getUserSettingsOptionSQL('SORT', $sortKey);
     }
 }
+

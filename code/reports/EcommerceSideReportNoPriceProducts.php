@@ -78,3 +78,4 @@ class EcommerceSideReportNoPriceProducts extends SS_Report
         return $field;
     }
 }
+

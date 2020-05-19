@@ -1753,3 +1753,4 @@ class ProductGroup extends Page
         return false;
     }
 }
+

@@ -28,3 +28,4 @@ class ShopAccountFormPasswordValidator extends Object
         return '';
     }
 }
+

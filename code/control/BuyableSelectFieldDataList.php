@@ -144,3 +144,4 @@ class BuyableSelectFieldDataList extends Controller
         return Convert::array2json($array);
     }
 }
+

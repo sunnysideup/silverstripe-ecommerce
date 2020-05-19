@@ -80,3 +80,4 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
         }
     }
 }
+

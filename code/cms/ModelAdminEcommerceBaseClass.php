@@ -71,3 +71,4 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
         return $obj->summaryFields();
     }
 }
+

@@ -325,3 +325,4 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
         return $object->getAjaxMethod($name);
     }
 }
+

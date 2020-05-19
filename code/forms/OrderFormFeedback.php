@@ -105,3 +105,4 @@ class OrderFormFeedback extends Form
         return $this->_orderConfirmationPage;
     }
 }
+

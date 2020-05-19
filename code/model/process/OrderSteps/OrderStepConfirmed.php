@@ -103,3 +103,4 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
         return _t('OrderStep.CONFIRMED_DESCRIPTION', 'The shop administrator confirms all the details for the current order.');
     }
 }
+

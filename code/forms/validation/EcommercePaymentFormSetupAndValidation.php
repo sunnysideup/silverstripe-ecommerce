@@ -380,3 +380,4 @@ class EcommercePaymentFormSetupAndValidation extends Object
         return false;
     }
 }
+

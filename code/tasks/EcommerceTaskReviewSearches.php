@@ -119,3 +119,4 @@ class EcommerceTaskReviewSearches extends BuildTask
         return '/dev/tasks/EcommerceTaskReviewSearches/';
     }
 }
+

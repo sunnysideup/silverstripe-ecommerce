@@ -16,3 +16,4 @@ class OrderInvoiceEmail extends OrderEmail
      */
     protected $ss_template = 'OrderInvoiceEmail';
 }
+

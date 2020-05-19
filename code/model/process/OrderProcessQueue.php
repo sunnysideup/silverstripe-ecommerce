@@ -471,3 +471,4 @@ class OrderProcessQueue extends DataObject
         return 'FIELD("Order"."ID", ' . implode(',', $orderIDs) . ')';
     }
 }
+

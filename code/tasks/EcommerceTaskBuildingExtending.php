@@ -17,3 +17,4 @@ class EcommerceTaskBuildingExtending extends BuildTask
         DB::alteration_message('<br /><br /><br /><br /><br /><br /><a href="/ecommerce/docs/en/CustomisationChart.yaml" target="_debug">view</a>.<br /><br /><br /><br /><br /><br />');
     }
 }
+

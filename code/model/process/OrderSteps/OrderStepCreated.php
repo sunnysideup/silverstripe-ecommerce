@@ -134,3 +134,4 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
         return _t('OrderStep.CREATED_DESCRIPTION', 'During this step the customer creates her or his order. The shop admininistrator does not do anything during this step.');
     }
 }
+

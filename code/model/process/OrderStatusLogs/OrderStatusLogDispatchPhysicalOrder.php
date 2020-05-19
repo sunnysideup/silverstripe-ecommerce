@@ -116,3 +116,4 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         return $html;
     }
 }
+

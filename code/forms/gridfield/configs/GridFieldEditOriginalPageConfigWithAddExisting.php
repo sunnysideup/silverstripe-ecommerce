@@ -18,3 +18,4 @@ class GridFieldEditOriginalPageConfigWithAddExisting extends GridFieldConfig_Rel
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }
 }
+

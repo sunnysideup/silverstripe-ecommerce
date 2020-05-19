@@ -607,3 +607,4 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return $this->ecommercePaymentFormSetupAndValidationObject;
     }
 }
+

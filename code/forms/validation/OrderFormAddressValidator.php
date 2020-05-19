@@ -54,3 +54,4 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
         return $valid;
     }
 }
+

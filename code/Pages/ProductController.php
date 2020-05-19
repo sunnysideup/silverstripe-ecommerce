@@ -226,3 +226,4 @@ class ProductController extends Page_Controller
         return [];
     }
 }
+

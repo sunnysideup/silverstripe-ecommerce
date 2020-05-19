@@ -80,3 +80,4 @@ class EcommerceSideReportNoImageProducts extends SS_Report
         return $field;
     }
 }
+

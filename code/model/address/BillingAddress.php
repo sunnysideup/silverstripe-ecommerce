@@ -294,3 +294,4 @@ class BillingAddress extends OrderAddress
         //$this->Country = EcommerceCountry::get_country(false, $this->OrderID);
     //}
 }
+

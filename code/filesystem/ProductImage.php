@@ -191,3 +191,4 @@ class ProductImage extends Image
         return DBField::create_field('HTMLText', $icon);
     }
 }
+

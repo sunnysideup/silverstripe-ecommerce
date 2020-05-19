@@ -1370,3 +1370,4 @@ class ProductGroupController extends Page_Controller
         return $toAdd;
     }
 }
+

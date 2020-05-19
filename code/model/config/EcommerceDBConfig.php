@@ -777,3 +777,4 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         return $this->UseThisOne ? 'YES' : 'NO';
     }
 }
+

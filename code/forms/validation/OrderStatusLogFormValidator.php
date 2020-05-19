@@ -10,3 +10,4 @@ class OrderStatusLogFormValidator extends RequiredFields
         return parent::php($data);
     }
 }
+

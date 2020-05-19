@@ -28,3 +28,4 @@ class OrderFiltersMustHaveAtLeastOnePayment extends ExactMatchFilter
         return $query;
     }
 }
+

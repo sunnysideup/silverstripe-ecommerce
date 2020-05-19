@@ -145,3 +145,4 @@ class EcommerceMoney extends Extension
         return $this->owner->{$function}($html);
     }
 }
+

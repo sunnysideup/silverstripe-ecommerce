@@ -12,3 +12,4 @@ class EcommercePaymentProcessing extends EcommercePaymentResult
         return true;
     }
 }
+

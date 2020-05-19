@@ -787,3 +787,4 @@ class OrderFormAddress extends Form
         return ShopAccountFormPasswordValidator::clean_password($data);
     }
 }
+

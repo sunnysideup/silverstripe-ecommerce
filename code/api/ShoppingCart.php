@@ -1253,3 +1253,4 @@ class ShoppingCart extends Object
         return $sessionCode . '_' . $name;
     }
 }
+

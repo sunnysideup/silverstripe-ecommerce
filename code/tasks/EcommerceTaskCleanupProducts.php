@@ -86,3 +86,4 @@ class EcommerceTaskCleanupProducts extends BuildTask
         DB::query('INSERT INTO Product_ProductGroups(ProductID, ProductGroupID) SELECT ProductID, ProductGroupID FROM Product_ProductGroups_temp; ');
     }
 }
+

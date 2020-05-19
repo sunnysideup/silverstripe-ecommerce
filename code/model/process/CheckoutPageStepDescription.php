@@ -308,3 +308,4 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         return $code;
     }
 }
+

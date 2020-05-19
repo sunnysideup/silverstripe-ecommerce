@@ -189,3 +189,4 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return _t('OrderStep.SENT_DESCRIPTION', 'During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.');
     }
 }
+

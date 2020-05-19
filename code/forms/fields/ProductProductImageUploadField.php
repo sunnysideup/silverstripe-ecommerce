@@ -156,3 +156,4 @@ class ProductProductImageUploadField extends UploadField
         }
     }
 }
+

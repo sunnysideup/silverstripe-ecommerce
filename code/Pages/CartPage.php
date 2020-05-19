@@ -333,3 +333,4 @@ class CartPage extends Page
         return parent::LinkOrCurrent() . ' cartlink';
     }
 }
+

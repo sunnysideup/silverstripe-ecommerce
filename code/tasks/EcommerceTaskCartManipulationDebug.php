@@ -38,3 +38,4 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
         DB::alteration_message("${html}");
     }
 }
+

@@ -93,3 +93,4 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         );
     }
 }
+

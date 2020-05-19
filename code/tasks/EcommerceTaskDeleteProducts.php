@@ -39,3 +39,4 @@ class EcommerceTaskDeleteProducts extends BuildTask
         }
     }
 }
+

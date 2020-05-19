@@ -550,3 +550,4 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return self::$_price_has_been_fixed[$this->OrderID];
     }
 }
+

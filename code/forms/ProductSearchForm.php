@@ -730,3 +730,4 @@ class ProductSearchForm extends Form
         echo "<br />${string}";
     }
 }
+

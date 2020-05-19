@@ -20,3 +20,4 @@ abstract class EcommerceResponse extends SS_HTTPResponse
         user_error('Make sure to extend the EcommerceResponse::ReturnCartData class for your own purposes.', E_USER_NOTICE);
     }
 }
+

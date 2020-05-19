@@ -431,3 +431,4 @@ class EcommerceConfigDefinitions extends Object
         return $array;
     }
 }
+

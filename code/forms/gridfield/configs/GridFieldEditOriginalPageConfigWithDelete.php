@@ -16,3 +16,4 @@ class GridFieldEditOriginalPageConfigWithDelete extends GridFieldConfig_RecordEd
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }
 }
+

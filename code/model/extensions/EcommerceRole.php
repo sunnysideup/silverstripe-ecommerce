@@ -710,3 +710,4 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         return CMSEditLinkAPI::find_edit_link_for_object($this->owner);
     }
 }
+

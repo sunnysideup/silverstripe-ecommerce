@@ -18,3 +18,4 @@ class EcommerceTaskBuildingModel extends BuildTask
         DB::alteration_message('<br /><br /><br /><br /><br /><br /><a href="/ecommerce/docs/en/DataModel.png" target="_debug">view</a>.<br /><br /><br /><br /><br /><br />');
     }
 }
+

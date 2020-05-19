@@ -143,3 +143,4 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         return $form;
     }
 }
+

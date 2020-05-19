@@ -57,3 +57,4 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
         return;
     }
 }
+

@@ -101,3 +101,4 @@ class OrderFormCancel extends Form
         Session::set("FormInfo.{$this->FormName()}.data", $data);
     }
 }
+

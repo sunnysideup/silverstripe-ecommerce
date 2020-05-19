@@ -10,3 +10,4 @@ class OrderModifierFormValidator extends RequiredFields
         return parent::php($data);
     }
 }
+

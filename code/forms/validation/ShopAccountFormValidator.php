@@ -114,3 +114,4 @@ class ShopAccountFormValidator extends RequiredFields
         return $valid;
     }
 }
+

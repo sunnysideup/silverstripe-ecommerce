@@ -874,3 +874,4 @@ class OrderModifier extends OrderAttribute
         return $this->Type ?? 'Other';
     }
 }
+

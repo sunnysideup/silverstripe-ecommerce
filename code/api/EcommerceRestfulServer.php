@@ -100,3 +100,4 @@ class EcommerceRestfulServer extends RestfulServer
         return $this->methodNotAllowed();
     }
 }
+

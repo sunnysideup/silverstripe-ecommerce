@@ -19,3 +19,4 @@ class GridFieldBasicPageRelationConfigNoAddExisting extends GridFieldConfig_Rela
             ->removeComponentsByType('GridFieldDeleteAction');
     }
 }
+

@@ -121,3 +121,4 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
         }
     }
 }
+

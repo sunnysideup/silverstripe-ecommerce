@@ -212,3 +212,4 @@ class EcomQuantityField extends NumericField
         return 0;
     }
 }
+

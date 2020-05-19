@@ -77,3 +77,4 @@ class EcommerceSideReportAllProducts extends SS_Report
         return $field;
     }
 }
+

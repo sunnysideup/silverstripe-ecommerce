@@ -58,3 +58,4 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
         }
     }
 }
+

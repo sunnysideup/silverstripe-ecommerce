@@ -16,3 +16,4 @@ class OrderStatusEmail extends OrderEmail
      */
     protected $ss_template = 'OrderStatusEmail';
 }
+

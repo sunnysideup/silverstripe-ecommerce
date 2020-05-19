@@ -21,3 +21,4 @@ class GridFieldEditOriginalPageConfig extends GridFieldConfig_RecordEditor
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }
 }
+

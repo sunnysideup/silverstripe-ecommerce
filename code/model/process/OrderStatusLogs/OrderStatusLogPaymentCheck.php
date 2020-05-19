@@ -115,3 +115,4 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
         }
     }
 }
+

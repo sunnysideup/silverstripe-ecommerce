@@ -368,3 +368,4 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         return EcommerceTaskDebugCart::debug_object($this);
     }
 }
+

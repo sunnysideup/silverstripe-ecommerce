@@ -80,3 +80,4 @@ class EcommercePaymentSupportedMethodsProvider extends Object implements Ecommer
         user_error("Can't find an order to use");
     }
 }
+

@@ -66,3 +66,4 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
         }
     }
 }
+

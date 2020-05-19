@@ -129,3 +129,4 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
         return _t('OrderStep.SENTRECEIPT_DESCRIPTION', 'The customer is sent a receipt.');
     }
 }
+

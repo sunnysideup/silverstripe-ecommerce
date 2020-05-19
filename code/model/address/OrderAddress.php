@@ -674,3 +674,4 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return 'Shipping';
     }
 }
+

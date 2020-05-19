@@ -129,3 +129,4 @@ class EcommerceConfig extends Object
         }
     }
 }
+

@@ -79,3 +79,4 @@ class OrderStatusLogArchived extends OrderStatusLog
         return $fields;
     }
 }
+

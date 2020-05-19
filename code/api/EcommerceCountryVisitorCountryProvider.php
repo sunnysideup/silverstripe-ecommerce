@@ -28,3 +28,4 @@ class EcommerceCountryVisitorCountryProvider extends Object implements Ecommerce
         return Controller::curr()->getRequest()->getIP();
     }
 }
+

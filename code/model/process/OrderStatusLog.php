@@ -472,3 +472,4 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }
+

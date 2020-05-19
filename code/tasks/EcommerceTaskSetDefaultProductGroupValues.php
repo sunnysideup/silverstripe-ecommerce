@@ -50,3 +50,4 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
         }
     }
 }
+

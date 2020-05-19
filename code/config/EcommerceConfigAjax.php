@@ -43,3 +43,4 @@ class EcommerceConfigAjax extends Object
         return self::$singleton[$requestor->ClassName][$requestor->ID];
     }
 }
+

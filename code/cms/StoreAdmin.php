@@ -89,3 +89,4 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
         return $form;
     }
 }
+

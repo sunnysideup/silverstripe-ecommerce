@@ -27,3 +27,4 @@ class OrderStatusLogDispatchElectronicOrder extends OrderStatusLogDispatch
         return _t('OrderStatusLog.ORDERLOGELECTRONICDISPATCHENTRIES', 'Order Log Electronic Dispatch Entries');
     }
 }
+

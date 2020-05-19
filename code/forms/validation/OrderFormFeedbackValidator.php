@@ -10,3 +10,4 @@ class OrderFormFeedbackValidator extends RequiredFields
         return parent::php($data);
     }
 }
+

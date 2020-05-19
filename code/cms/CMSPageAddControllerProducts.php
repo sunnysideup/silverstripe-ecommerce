@@ -57,3 +57,4 @@ class CMSPageAddControllerProducts extends CMSPageAddController
         return $result;
     }
 }
+

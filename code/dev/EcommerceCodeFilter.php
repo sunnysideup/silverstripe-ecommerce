@@ -57,3 +57,4 @@ class EcommerceCodeFilter extends Object
         return $obj->{$fieldName};
     }
 }
+

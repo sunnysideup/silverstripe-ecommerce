@@ -12,3 +12,4 @@ class ProductSearchFormShort extends ProductSearchForm
         }
     }
 }
+

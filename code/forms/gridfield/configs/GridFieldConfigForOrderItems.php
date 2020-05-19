@@ -28,3 +28,4 @@ class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor
         //$this->removeComponentsByType("GridFieldDetailForm");
     }
 }
+

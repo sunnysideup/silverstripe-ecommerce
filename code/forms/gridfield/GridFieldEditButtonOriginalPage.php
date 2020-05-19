@@ -33,3 +33,4 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
         return parent::getColumnContent($gridField, $record, $columnName);
     }
 }
+

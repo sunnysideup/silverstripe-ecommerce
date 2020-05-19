@@ -10,3 +10,4 @@ class ProductSearchFormValidator extends RequiredFields
         return parent::php($data);
     }
 }
+

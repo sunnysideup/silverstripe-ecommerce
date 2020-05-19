@@ -260,3 +260,4 @@ class OrderForm extends Form
         return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }
+

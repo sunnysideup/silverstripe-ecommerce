@@ -52,3 +52,4 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
         }
     }
 }
+
