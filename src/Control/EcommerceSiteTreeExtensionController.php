@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Extension;
+use Requirements;
+use EcommerceConfig;
+use ShoppingCart;
+use Director;
+use CartPage;
+
+
 
 
 /**

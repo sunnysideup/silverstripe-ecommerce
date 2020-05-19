@@ -1,4 +1,26 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model\Process;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use EcommerceRole;
+use Security;
+use DropdownField;
+use CMSEditLinkField;
+use EcommerceConfig;
+use Injector;
+use HiddenField;
+use ReadonlyField;
+use EcommerceClassNameOrTypeDropdownField;
+use CMSEditLinkAPI;
+use NumericField;
+use EcommerceTaskDebugCart;
+use EcommerceDBConfig;
+
 /**
  * @description: see OrderStep.md
  *

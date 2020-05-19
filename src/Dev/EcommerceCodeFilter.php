@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Dev;
+
+use ViewableData;
+use DataObject;
+
+
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###
   * WHY: automated upgrade

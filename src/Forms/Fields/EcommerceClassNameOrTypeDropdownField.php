@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use DropdownField;
+use ClassInfo;
+
+
 /**
  * this is a dropdown field just for selecting the right
  * classname.

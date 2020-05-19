@@ -1,5 +1,22 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use OrderEmailRecordReview;
+use LiteralField;
+use ReadonlyField;
+use CMSEditLinkAPI;
+use NumericField;
+use CheckboxSetField;
+use Injector;
+use EcommerceTaskDebugCart;
+
+
 /**
  * @Description: DataObject recording all order emails sent.
  *

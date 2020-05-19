@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Fieldtypes;
+
+use PolymorphicForeignKey;
+use CompositeDBField;
+use BuyableSelectField;
+use ClassInfo;
+use DB;
+
+
 
 /**
  * NOTE: this is not yet being used!!!

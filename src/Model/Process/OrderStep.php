@@ -1,5 +1,29 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process;
+
+use DataObject;
+use EditableEcommerceObject;
+use Order;
+use EcommerceConfig;
+use Config;
+use HeaderField;
+use TextField;
+use CheckboxField;
+use LiteralField;
+use HTMLEditorField;
+use DropdownField;
+use TextareaField;
+use FieldList;
+use DBField;
+use Member;
+use Permission;
+use Director;
+use OrderConfirmationPage;
+use DB;
+use EcommerceDBConfig;
+
+
 /**
  * @description: see OrderStep.md
  *

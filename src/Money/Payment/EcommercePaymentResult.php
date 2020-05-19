@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Money\Payment;
+
+use ViewableData;
+
+
 
 
 /**

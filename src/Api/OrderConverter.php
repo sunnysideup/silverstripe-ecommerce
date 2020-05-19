@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Api;
+
+use ViewableData;
+use Shoppingcart;
+use Order;
+
+
 
 
 /**

@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+use RequiredFields;
+use DataObject;
+use ShoppingCart;
+use BillingAddress;
+
+
 
 
 /**

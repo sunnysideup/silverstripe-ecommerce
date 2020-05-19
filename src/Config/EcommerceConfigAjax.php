@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Config;
+
+
+
+
 /**
  * This class returns the Ajax Definitions class.
  * The Ajax Definitions class is an object that contains all the values

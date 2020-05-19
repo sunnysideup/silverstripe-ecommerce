@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use Controller;
+use FieldList;
+use Validator;
+use EcommerceConfig;
+use Requirements;
+
+
 
 /**
  * @description: this class is the base class for Order Log Forms in the checkout form...

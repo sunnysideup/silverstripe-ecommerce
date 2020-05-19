@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Search\Filters;
+
+use ExactMatchFilter;
+use DataQuery;
+
+
 
 /**
  * Allows you to filter orders for multiple statusIDs.

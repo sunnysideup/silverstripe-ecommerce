@@ -1,5 +1,17 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+use OrderStep;
+use OrderStepInterface;
+use Order;
+use Member;
+use FieldList;
+use HeaderField;
+use LiteralField;
+use CheckboxField;
+
+
 
 /**
  * This is the first Order Step.

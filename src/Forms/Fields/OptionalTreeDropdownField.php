@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use TreeDropdownField;
+use SS_HTTPRequest;
+
+
 /**
  * TreeDropdown-like field that gives you a tree of items including an empty field, using ajax.
  * Author: Marijn Kampf www.exadium.com

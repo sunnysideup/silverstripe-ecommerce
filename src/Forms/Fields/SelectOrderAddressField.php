@@ -1,4 +1,12 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use OptionsetField;
+use Form;
+use SS_List;
+use Requirements;
+
 /**
  * A field that allows the user to select an old address for the current order.
  *

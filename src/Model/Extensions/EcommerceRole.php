@@ -1,4 +1,36 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model\Extensions;
+
+use DataExtension;
+use PermissionProvider;
+use EcommerceConfig;
+use DataObject;
+use Config;
+use Member;
+use Order;
+use FieldList;
+use GridFieldConfig_RecordEditor;
+use GridField;
+use HiddenField;
+use LiteralField;
+use Controller;
+use Director;
+use EcommerceCurrency;
+use CompositeField;
+use ReadonlyField;
+use Group;
+use HeaderField;
+use EcommerceCMSButtonField;
+use CMSEditLinkAPI;
+use TextField;
+use EmailField;
+use Requirements;
+use PasswordField;
+use Convert;
+use Permission;
+use ArrayList;
+
 /**
  * @description EcommerceRole provides specific customisations to the {@link Member}
  * class for the ecommerce module.

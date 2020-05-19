@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Email;
+
+
+
+
 /**
  * @Description: This class handles the receipt email which gets sent once an order is made.
  * You can call it by issuing sendReceipt() in the Order class.

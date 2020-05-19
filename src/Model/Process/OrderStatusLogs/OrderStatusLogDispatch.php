@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+use OrderStatusLog;
+
+
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz

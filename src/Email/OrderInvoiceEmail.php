@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Email;
+
+
+
+
 /**
  * @Description: This class handles the invoice email which gets sent once an order is made.
  * You can call it like this: $Order->sendInvoice();

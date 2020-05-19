@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
+
+use EcommercePaymentFailure;
+use FieldList;
+use LiteralField;
+
+
 
 /**
  * Payment object representing a TEST = FAILURE.

@@ -1,5 +1,18 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Address;
+
+use ReadonlyField;
+use EmailField;
+use Member;
+use HeaderField;
+use TextField;
+use CompositeField;
+use EcommerceConfig;
+use SelectOrderAddressField;
+use GoogleAddressField;
+
+
 /**
  * @description: each order has a billing address.
  *

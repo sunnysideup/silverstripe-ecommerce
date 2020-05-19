@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Page_Controller;
+use Product;
+use OrderStep;
+use DataObject;
+
+
 /**
  * @description: used to display a random product in the Template Test.
  *

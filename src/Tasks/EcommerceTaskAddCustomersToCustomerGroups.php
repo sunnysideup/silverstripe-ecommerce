@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use EcommerceRole;
+use DB;
+use Member;
+
+
 /**
  * Adds all members, who have bought something, to the customer group.
  *

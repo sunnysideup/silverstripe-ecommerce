@@ -1,4 +1,24 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model\Money;
+
+use DataObject;
+use EditableEcommerceObject;
+use ReadonlyField;
+use CMSEditLinkAPI;
+use Member;
+use Permission;
+use Config;
+use Controller;
+use Director;
+use EcommerceConfig;
+use FieldList;
+use OptionsetField;
+use CompositeField;
+use HeaderField;
+use EcommerceTaskDebugCart;
+use Injector;
+
 /**
  * "Abstract" class for a number of different payment
  * types allowing a user to pay for something on a site.

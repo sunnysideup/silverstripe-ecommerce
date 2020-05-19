@@ -1,5 +1,46 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Config;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use Email;
+use EcommerceConfig;
+use ProductImage;
+use TextField;
+use LiteralField;
+use Tab;
+use CheckboxField;
+use HTMLEditorField;
+use NumericField;
+use ReadonlyField;
+use UploadField;
+use Requirements;
+use ProductProductImageUploadField;
+use HiddenField;
+use GridFieldConfig;
+use GridFieldToolbarHeader;
+use GridFieldSortableHeader;
+use GridFieldDataColumns;
+use GridFieldPaginator;
+use GridFieldEditButton;
+use GridFieldDeleteAction;
+use GridFieldDetailForm;
+use GridField;
+use OrderStep;
+use ShoppingCart;
+use EcommerceCurrency;
+use AccountPage;
+use CheckoutPage;
+use CartPage;
+use OrderConfirmationPage;
+use DB;
+use SiteConfig;
+
+
 /**
  * Database Settings for E-commerce
  * Similar to SiteConfig but then for E-commerce

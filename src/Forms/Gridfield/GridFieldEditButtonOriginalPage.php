@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Gridfield;
+
+use GridFieldEditButton;
+use GridField_ColumnProvider;
+use ArrayData;
+use Controller;
+
+
 /**
  * Provides the entry point to editing a single record presented by the
  * {@link GridField}.

@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Email;
+
+use mailer;
+
+
 
 
 class EcommerceDummyMailer extends mailer

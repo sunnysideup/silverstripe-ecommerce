@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Config;
+
+use Config;
+use Director;
+use Spyc;
+
+
 
 /**
  * This Class creates an array of configurations for e-commerce.

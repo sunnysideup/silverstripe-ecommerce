@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DataObject;
+use DB;
+use ProductGroup;
+
+
 
 /**
  * @description: resets fields in the product group class to "inherit" in case their value does not exist.

@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DB;
+
+
 /**
  * works out how many products have been sold, per product.
  *

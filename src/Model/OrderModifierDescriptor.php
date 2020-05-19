@@ -1,5 +1,21 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use ReadonlyField;
+use TreeDropdownField;
+use TextareaField;
+use CMSEditLinkAPI;
+use EcommerceConfig;
+use Injector;
+use DB;
+
+
 
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {

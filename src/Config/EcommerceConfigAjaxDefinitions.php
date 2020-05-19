@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Config;
+
+use ViewableData;
+use OrderAddress;
+use Injector;
+
+
 /**
  * This class defines all the names for IDs and Classes that are used
  * within the e-commerce ajax framework.

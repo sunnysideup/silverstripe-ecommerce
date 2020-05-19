@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use EcommerceSearchHistoryFormField;
+use FieldList;
+use HeaderField;
+use NumericField;
+use FormAction;
+use Form;
+
+
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

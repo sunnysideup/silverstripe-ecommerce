@@ -1,5 +1,28 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Api;
+
+use Injector;
+use Order;
+use Member;
+use DataObject;
+use EcommerceConfig;
+use BuyableModel;
+use Form;
+use OrderItem;
+use OrderModifier;
+use EcommerceCountry;
+use EcommerceRegion;
+use EcommerceCurrency;
+use Director;
+use Permission;
+use debug;
+use Debug;
+use Controller;
+use Convert;
+use EcommerceDBConfig;
+
+
 /**
  * ShoppingCart - provides a global way to interface with the cart (current order).
  *

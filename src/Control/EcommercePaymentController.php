@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Controller;
+use EcommerceConfig;
+use Director;
+use Requirements;
+use Order;
+use Config;
+use OrderFormPayment;
+
+
 
 /**
  * @description: Used to diplay the payment form.

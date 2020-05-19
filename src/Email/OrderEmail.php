@@ -1,5 +1,18 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Email;
+
+use Email;
+use Director;
+use EcommerceConfig;
+use HTTP;
+use EcommerceDBConfig;
+use SiteConfig;
+use Order;
+use OrderEmailRecord;
+use Config;
+
+
 
 /**
  * @Description: Email specifically for communicating with customer about order.

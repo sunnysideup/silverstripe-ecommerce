@@ -1,4 +1,13 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use FormField;
+use TextField;
+use ReadonlyField;
+use Requirements;
+use Convert;
+
 /**
  * Text input field that allows the user to select a Buyable.
  * A product, a product variation or any other buyable.

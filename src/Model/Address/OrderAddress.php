@@ -1,5 +1,25 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Address;
+
+use DataObject;
+use EditableEcommerceObject;
+use EcommerceConfig;
+use CMSEditLinkAPI;
+use Member;
+use Permission;
+use Config;
+use NumericField;
+use ShoppingCartController;
+use Convert;
+use EcommerceDBConfig;
+use EcommerceTaskDebugCart;
+use FieldList;
+use TextField;
+use DropdownField;
+use HiddenField;
+
+
 
 /**
  * @description: each order has an address: a Shipping and a Billing address

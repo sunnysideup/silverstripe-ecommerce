@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use CMSEditLinkAPI;
+
+
 
 /**
  * Allows you to group OrderAttributes.

@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Search\Filters;
+
+use ExactMatchFilter;
+use DataQuery;
+use Date;
+
+
 /**
  * Allows you to filter orders that are within three days of a specific date.
  *

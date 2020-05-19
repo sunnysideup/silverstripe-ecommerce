@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use Product;
+use ProductGroup;
+use DB;
+
+
 
 /**
  * @description: see EcommerceTaskAddDefaultProducts::$description

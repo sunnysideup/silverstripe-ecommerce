@@ -1,4 +1,10 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Interfaces;
+
+use Order;
+use FieldList;
+
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

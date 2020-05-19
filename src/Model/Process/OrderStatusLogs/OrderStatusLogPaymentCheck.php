@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+use OrderStatusLog;
+use CheckboxField;
+use Config;
+
+
 
 /**
  * @Description: We use this payment check class to double check that payment has arrived against

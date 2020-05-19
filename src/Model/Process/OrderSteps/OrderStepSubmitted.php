@@ -1,5 +1,18 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+use OrderStep;
+use OrderStepInterface;
+use EcommerceConfig;
+use HeaderField;
+use Order;
+use OrderStatusLog;
+use Convert;
+use SS_Datetime;
+use FieldList;
+
+
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz

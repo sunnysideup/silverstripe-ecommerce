@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model;
+
+use Config;
+
+
 class ProductOrderItem extends OrderItem
 {
     /**

@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use Product;
+use File;
+use DB;
+use Controller;
+use Director;
+
+
 /**
  * Add any Image (or other file) to a product using the InternalItemID.
  *

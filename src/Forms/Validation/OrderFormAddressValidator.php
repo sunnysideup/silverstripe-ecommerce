@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+use Member;
+
+
 
 /**
  * @Description: allows customer to make additional payments for their order

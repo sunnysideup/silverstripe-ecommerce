@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use EcommerceCountry;
+use DB;
+
+
 
 /**
  * update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country.

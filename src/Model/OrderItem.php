@@ -1,4 +1,25 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model;
+
+use Versioned;
+use HiddenField;
+use HeaderField;
+use ReadonlyField;
+use NumericField;
+use BuyableSelectField;
+use BuyableModel;
+use EcommerceConfig;
+use EcommerceCurrency;
+use EcomQuantityField;
+use DBField;
+use Product;
+use Translatable;
+use Director;
+use CheckoutPage;
+use ShoppingCartController;
+use EcommerceTaskDebugCart;
+
 /**
  * @description: An order item is a product which has been added to an order.
  * An order item links to a Buyable (product) by class name

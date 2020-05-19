@@ -1,5 +1,30 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use Controller;
+use Requirements;
+use ShoppingCart;
+use CompositeField;
+use HeaderField;
+use EcommercePayment;
+use HiddenField;
+use CheckoutPage;
+use DataObject;
+use CheckboxField;
+use Convert;
+use TextareaField;
+use FieldList;
+use LiteralField;
+use FormAction;
+use OrderFormValidator;
+use SS_HTTPRequest;
+use Member;
+use ShopAccountFormPasswordValidator;
+use EcommerceDBConfig;
+
+
 
 /**
  * @Description: form to submit order.

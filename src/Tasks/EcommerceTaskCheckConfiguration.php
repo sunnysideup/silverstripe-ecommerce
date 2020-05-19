@@ -1,5 +1,27 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use EcommerceConfigDefinitions;
+use EcommerceConfig;
+use DB;
+use OrderStep;
+use Config;
+use DataObject;
+use CheckoutPageStepDescription;
+use OrderModifierDescriptor;
+use Director;
+use Spyc;
+use EcommerceDBConfig;
+use SiteConfig;
+use EcommerceCountry;
+use SiteTree;
+use ArrayData;
+use EcommerceConfigAjax;
+use ClassInfo;
+
+
 /**
  * This class reviews all of the static configurations in e-commerce for review
  * (a) which configs are set, but not required

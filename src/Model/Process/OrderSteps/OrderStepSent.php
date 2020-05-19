@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
+
+use OrderStep;
+use OrderStepInterface;
+use HeaderField;
+use TextField;
+use HTMLEditorField;
+use Order;
+use FieldList;
+
+
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

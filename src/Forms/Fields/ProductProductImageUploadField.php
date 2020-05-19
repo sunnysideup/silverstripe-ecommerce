@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use UploadField;
+use SS_List;
+use Config;
+
+
 /**
  * This is a preset upload field for product images.
  *

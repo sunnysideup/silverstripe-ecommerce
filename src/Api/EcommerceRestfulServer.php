@@ -1,4 +1,10 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Api;
+
+use RestfulServer;
+use XMLDataFormatter;
+
 /**
  * extends the standard RestfulServer to provide better access to extended classes.
  *

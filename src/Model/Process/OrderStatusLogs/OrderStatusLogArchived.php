@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+use OrderStatusLog;
+use Member;
+use HiddenField;
+use ReadonlyField;
+
+
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

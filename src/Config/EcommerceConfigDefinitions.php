@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Config;
+
+use Director;
+use ClassInfo;
+
+
 
 /**
  * This class sets out the static config variables for e-commerce.

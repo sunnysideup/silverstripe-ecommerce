@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use LiteralField;
+use DataObject;
+use DB;
+
+
 class EcommerceSearchHistoryFormField extends LiteralField
 {
     /**

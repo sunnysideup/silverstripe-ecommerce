@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Api;
+
+use ViewableData;
+use EcommerceGEOipProvider;
+use Geoip;
+use Config;
+use Controller;
+
+
 /**
  * this is a very basic class with as its sole purpose providing
  * the country of the customer.

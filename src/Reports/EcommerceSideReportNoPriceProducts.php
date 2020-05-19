@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Reports;
+
+use SS_Report;
+use Product;
+
+
 /**
  * Selects all products without a price.
  *

@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Money;
+
+use Extension;
+use Money;
+use Zend_Currency;
+use EcommerceConfig;
+
+
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###

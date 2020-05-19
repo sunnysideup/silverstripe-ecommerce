@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Money;
+
+
+
+
 
 /***
  * the sole purpose of this class is to provide an exchange rate

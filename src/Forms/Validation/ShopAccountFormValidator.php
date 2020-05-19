@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+use RequiredFields;
+use Member;
+use Convert;
+use EcommerceConfig;
+use Config;
+
+
 
 class ShopAccountFormValidator extends RequiredFields
 {

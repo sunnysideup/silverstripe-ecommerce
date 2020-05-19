@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DB;
+use EcommerceConfig;
+use DataObject;
+use OrderStep;
+use Order;
+
+
 
 /**
  * @description: cleans up old (abandonned) carts...

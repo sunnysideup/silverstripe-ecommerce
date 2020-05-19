@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Email;
+
+
+
+
 /**
  * @Description: This class handles the error email which can be sent
  * to the admin only if something untowards is happening.

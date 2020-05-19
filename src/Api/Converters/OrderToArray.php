@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Api\Converters;
+
+use OrderConverter;
+
+
 class OrderToArray extends OrderConverter
 {
     public function convert(): array

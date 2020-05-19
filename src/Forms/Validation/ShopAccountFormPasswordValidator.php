@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+use ViewableData;
+use Convert;
+
+
 /***
  * extra checks to make sure the password is valid....
  *

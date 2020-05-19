@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Filesystem;
+
+use Image;
+use EcommerceConfig;
+use DBField;
+
+
 
 class ProductImage extends Image
 {

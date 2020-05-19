@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use Director;
+use DB;
+use Order;
+use DataObject;
+
+
 
 /**
  * @description (see $this->description)

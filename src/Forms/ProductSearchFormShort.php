@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Config;
+
+
 class ProductSearchFormShort extends ProductSearchForm
 {
     public function __construct($controller, $name, $nameOfProductsBeingSearched = '', $productsToSearch = null)

@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use DatalessField;
+use Order;
+use Member;
+use OrderStep;
+use Convert;
+use Requirements;
+
+
 
 /**
  * This field shows the admin (and maybe the customer) where the Order is at (which orderstep).

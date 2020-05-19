@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+use GridFieldConfig_RecordEditor;
+use GridFieldAddNewButtonOriginalPage;
+use GridFieldEditButtonOriginalPage;
+
+
 
 class GridFieldEditOriginalPageConfigWithDelete extends GridFieldConfig_RecordEditor
 {

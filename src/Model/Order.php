@@ -1,5 +1,69 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model;
+
+use DataObject;
+use EditableEcommerceObject;
+use Controller;
+use Validator;
+use ArrayList;
+use ArrayData;
+use OrderStep;
+use EcommerceConfig;
+use CheckboxSetField;
+use Injector;
+use DropdownField;
+use CMSEditLinkAPI;
+use Tab;
+use Member;
+use GridFieldConfig_Base;
+use LiteralField;
+use HeaderField;
+use GridField;
+use OrderStatusLog;
+use GridFieldConfig_RecordViewer;
+use EcommerceCMSButtonField;
+use EcommerceRole;
+use GridFieldConfig_RecordEditor;
+use ReadonlyField;
+use EcommercePaymentController;
+use OrderFeedback;
+use CheckboxField;
+use EcommerceCurrency;
+use GridFieldConfigForOrderItems;
+use GridFieldAddNewButton;
+use GridFieldDetailForm;
+use GridFieldEditButton;
+use OrderStepField;
+use DB;
+use OrderStatusLogCancel;
+use OrderStepCreated;
+use Config;
+use OrderEmail;
+use ShoppingCart;
+use Permission;
+use Director;
+use OrderConfirmationPage;
+use CartPage;
+use ShoppingCartController;
+use DBField;
+use BillingAddress;
+use ShippingAddress;
+use EcommerceCountry;
+use EcommerceRegion;
+use EcommerceConfigAjax;
+use EcommerceDBConfig;
+use EcommerceTaskDebugCart;
+use GridFieldConfig;
+use GridFieldToolbarHeader;
+use GridFieldSortableHeader;
+use GridFieldDataColumns;
+use GridFieldPaginator;
+use FieldList;
+use ClassInfo;
+use GridFieldConfig_RelationEditor;
+
+
 /**
  * @description:
  * The order class is a databound object for handling Orders within SilverStripe.

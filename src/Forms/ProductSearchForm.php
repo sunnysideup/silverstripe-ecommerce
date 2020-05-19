@@ -1,5 +1,29 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use DataList;
+use FieldList;
+use TextField;
+use FormAction;
+use Config;
+use NumericField;
+use CheckboxField;
+use Director;
+use Permission;
+use ProductSearchFormValidator;
+use EcommerceConfig;
+use Injector;
+use EcommerceDBConfig;
+use Controller;
+use Convert;
+use SearchHistory;
+use ProductGroup;
+use DataObject;
+use SearchReplacement;
+
+
 /**
  * @description: Allows user to specifically search products
  **/

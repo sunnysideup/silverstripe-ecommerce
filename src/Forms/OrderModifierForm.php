@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use Controller;
+use FieldList;
+use Validator;
+use EcommerceConfig;
+use Requirements;
+use ShoppingCart;
+
+
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
  *

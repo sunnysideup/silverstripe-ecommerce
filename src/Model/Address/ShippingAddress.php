@@ -1,5 +1,19 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Address;
+
+use Injector;
+use ReadonlyField;
+use Member;
+use EcommerceConfig;
+use CompositeField;
+use HeaderField;
+use LiteralField;
+use SelectOrderAddressField;
+use TextField;
+use GoogleAddressField;
+
+
 /**
  * @description: each order has a shipping address.
  *

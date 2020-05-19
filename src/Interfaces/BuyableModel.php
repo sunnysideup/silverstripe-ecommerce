@@ -1,4 +1,9 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Interfaces;
+
+use Member;
+
 /**
  * describes the buyable classes
  * CONTENT:

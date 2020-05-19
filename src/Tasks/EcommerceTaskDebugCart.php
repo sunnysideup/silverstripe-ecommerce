@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use ShoppingCart;
+use Config;
+
+
 
 class EcommerceTaskDebugCart extends BuildTask
 {

@@ -1,4 +1,10 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Reports;
+
+use SS_Report;
+use SiteTree;
+
 /**
  * EcommerceSideReport classes are to allow quick reports that can be accessed
  * on the Reports tab to the left inside the SilverStripe CMS.

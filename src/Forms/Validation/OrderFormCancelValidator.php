@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Validation;
+
+use RequiredFields;
+
+
 
 class OrderFormCancelValidator extends RequiredFields
 {

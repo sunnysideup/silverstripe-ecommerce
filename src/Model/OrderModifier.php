@@ -1,5 +1,26 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model;
+
+use ReadonlyField;
+use Tab;
+use CheckboxField;
+use NumericField;
+use EcommerceConfig;
+use LiteralField;
+use EcommerceClassNameOrTypeDropdownField;
+use Controller;
+use Validator;
+use FieldList;
+use OrderModifierForm;
+use EcommerceCurrency;
+use ShoppingCartController;
+use EcommerceTaskDebugCart;
+use HeaderField;
+use Convert;
+use DataObject;
+
+
 /**
  * which returns an array of IDs
  * SEQUENCE - USE FOR ALL MODIFIERS!!!

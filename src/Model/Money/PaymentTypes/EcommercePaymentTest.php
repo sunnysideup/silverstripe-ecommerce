@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
+
+use EcommercePayment;
+
+
 
 /**
  * Payment object representing a generic test payment.

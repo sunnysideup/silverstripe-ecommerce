@@ -1,5 +1,27 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use Controller;
+use Requirements;
+use EcommerceConfig;
+use FieldList;
+use HeaderField;
+use ShoppingCart;
+use Member;
+use CheckboxField;
+use HiddenField;
+use CompositeField;
+use LiteralField;
+use Convert;
+use FormAction;
+use OrderFormAddressValidator;
+use SS_HTTPRequest;
+use CheckoutPage;
+use ShopAccountFormPasswordValidator;
+
+
 /**
  * This class is the form for editing the Order Addresses.
  * It is also used to link the order to a member.

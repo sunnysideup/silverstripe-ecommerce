@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use EcommerceConfig;
+use Order;
+use OrderItem;
+use SS_HTTPRequest;
+
+
 /**
  * set the order id number.
  *

@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use EcommerceCountry;
+use EcommerceConfig;
+use DataObject;
+use Convert;
+use DB;
+
+
 /**
  * create standard country and regions.
  *

@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use Config;
+use Email;
+use EcommerceDummyMailer;
+use Injector;
+
+
 
 /**
  * @description:

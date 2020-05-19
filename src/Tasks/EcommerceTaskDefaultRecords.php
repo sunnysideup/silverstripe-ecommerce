@@ -1,5 +1,17 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DataObject;
+use AccountPage;
+use DB;
+use CheckoutPage;
+use OrderConfirmationPage;
+use EcommerceDBConfig;
+use Email;
+
+
 
 /**
  * create default records for e-commerce

@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use Injector;
+use db;
+use EcommerceConfig;
+
+
 
 /**
  * create the e-commerce specific Member Groups.

@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use SS_HTTPResponse;
+
+
 /**
  * @description: This class is a base class for Ecommerce Responses such as Cart Response
  *

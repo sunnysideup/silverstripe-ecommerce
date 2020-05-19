@@ -1,5 +1,20 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use Controller;
+use Order;
+use FieldList;
+use HiddenField;
+use convert;
+use CompositeField;
+use EcommercePayment;
+use FormAction;
+use OrderFormPaymentValidator;
+use Convert;
+
+
 class OrderFormPayment extends Form
 {
     /**

@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Search\Filters;
+
+use ExactMatchFilter;
+use DataQuery;
+use BillingAddress;
+use ShippingAddress;
+use Member;
+
+
 
 
 

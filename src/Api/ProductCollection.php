@@ -1,4 +1,10 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Api;
+
+use ArrayList;
+use DB;
+
 /**
  * @description: Sometimes you need a large collection of products
  * returned as an array or ArrayList. Using the ORM can be inefficient to retrieve these collections.

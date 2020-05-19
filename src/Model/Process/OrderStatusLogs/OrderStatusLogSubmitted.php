@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
+
+use OrderStatusLog;
+use Member;
+use EcommerceConfig;
+use DataObject;
+
+
 
 /**
  * OrderStatusLogSubmitted is an important class that is created when an order is submitted.

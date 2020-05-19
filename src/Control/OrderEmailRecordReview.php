@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Controller;
+use Config;
+use OrderEmailRecord;
+
+
 
 class OrderEmailRecordReview extends Controller
 {

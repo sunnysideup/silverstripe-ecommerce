@@ -1,5 +1,15 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use NumericField;
+use Requirements;
+use BuyableModel;
+use ShoppingCart;
+use FormField;
+use ShoppingCartController;
+
+
 
 /**
  * @Description: A links-based field for increasing, decreasing and setting a order item quantity

@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Address;
+
+use DataObject;
+use EditableEcommerceObject;
+use Config;
+use CMSEditLinkAPI;
+use ShoppingCart;
+use EcommerceConfig;
+use EcommerceCodeFilter;
+
+
 /**
  * @description: This class helps you to manage regions within the context of e-commerce.
  * The regions can be states (e.g. we only sell within New York and Penn State), suburbs (pizza delivery place),

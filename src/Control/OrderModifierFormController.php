@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Controller;
+use ShoppingCart;
+use Config;
+use Director;
+use Form;
+
+
 
 /**
  * This controller allows you to submit modifier forms from anywhere on the site,

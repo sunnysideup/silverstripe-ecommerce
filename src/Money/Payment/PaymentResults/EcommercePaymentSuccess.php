@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Money\Payment\PaymentResults;
+
+use EcommercePaymentResult;
+
+
 class EcommercePaymentSuccess extends EcommercePaymentResult
 {
     public function isSuccess()

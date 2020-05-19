@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DB;
+
+
 /**
  * After a bug in the saving of orders in the CMS
  * This "fixer"  was introduced to fix older orders

@@ -1,4 +1,14 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model\Search;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use CMSEditLinkAPI;
+
 /**
  * This dataobject
  * saves search replacements

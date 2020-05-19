@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Search;
+
+use DataObject;
+use Member;
+use Permission;
+use Config;
+
+
 class SearchHistory extends DataObject
 {
 

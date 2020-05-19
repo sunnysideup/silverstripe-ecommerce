@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Money;
+
+use ViewableData;
+use EcommercePaymentSupportedMethodsProviderInterface;
+use Director;
+use EcommerceConfig;
+use ArrayLib;
+use Order;
+use ShoppingCart;
+
+
 /**
  * if you want to implement rules around selecting
  * specific payment gateways for specific orders then

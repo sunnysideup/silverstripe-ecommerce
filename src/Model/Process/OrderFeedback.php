@@ -1,5 +1,17 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Process;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use CMSEditLinkField;
+use Injector;
+use CMSEditLinkAPI;
+
+
 
 /***
  * Class used to describe the steps in the checkout

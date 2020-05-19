@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Interfaces;
+
+
+
+
 
 interface EcommerceGEOipProvider
 {

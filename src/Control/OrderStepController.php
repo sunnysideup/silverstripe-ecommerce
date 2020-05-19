@@ -1,5 +1,16 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Controller;
+use Config;
+use Injector;
+use Convert;
+use SS_HTTPRequest;
+use Order;
+use DataObject;
+
+
 /**
  * This call can be used when you need input from the customer
  * in the order process.

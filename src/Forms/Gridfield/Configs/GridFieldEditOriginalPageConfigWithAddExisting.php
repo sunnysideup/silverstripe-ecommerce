@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
+
+use GridFieldConfig_RelationEditor;
+use GridFieldEditButtonOriginalPage;
+
+
 
 /**
  * @author nicolaas <github@sunnysideup.co.nz>

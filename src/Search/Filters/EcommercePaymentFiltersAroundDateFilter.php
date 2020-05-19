@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Search\Filters;
+
+use ExactMatchFilter;
+use DataQuery;
+use Date;
+use DB;
+use PostgreSQLDatabase;
+
+
 
 /**
  * @description: provides a bunch of filters for search in ModelAdmin (CMS)

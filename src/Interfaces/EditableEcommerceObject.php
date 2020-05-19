@@ -1,4 +1,9 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Interfaces;
+
+
+
 /**
  * describes any dataobject (apart from pages)
  * that is editable in the CMS.

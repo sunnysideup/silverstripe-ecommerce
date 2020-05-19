@@ -1,5 +1,21 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Address;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use EcommerceConfig;
+use Geoip;
+use ShoppingCart;
+use LiteralField;
+use CMSEditLinkAPI;
+use EcommerceTaskCountryAndRegion;
+use EcommerceCodeFilter;
+
+
 /**
  * @description: This class helps you to manage countries within the context of e-commerce.
  * For example: To what countries can be sold.

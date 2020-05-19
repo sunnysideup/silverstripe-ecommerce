@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Controller;
+use ShoppingCart;
+use Config;
+use Director;
+
+
 
 /**
  * This controller allows you to submit Log forms from anywhere on the site,

@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DB;
+use Product;
+
+
 /**
  * @description: see description
  *

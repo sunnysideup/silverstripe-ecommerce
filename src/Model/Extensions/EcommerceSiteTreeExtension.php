@@ -1,5 +1,13 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Extensions;
+
+use SiteTreeExtension;
+use EcommerceConfigAjax;
+use EcommerceDBConfig;
+use ProductGroup;
+
+
 /**
  * @description: adds a few functions to SiteTree to give each page
  * some e-commerce related functionality.

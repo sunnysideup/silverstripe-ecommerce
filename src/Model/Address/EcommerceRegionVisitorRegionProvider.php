@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Address;
+
+use ViewableData;
+use DataObject;
+
+
 
 /**
   * ### @@@@ START REPLACEMENT @@@@ ###

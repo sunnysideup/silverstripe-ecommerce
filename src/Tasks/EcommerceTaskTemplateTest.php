@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DB;
+
+
 /**
  * Get examples for building templates.
  *

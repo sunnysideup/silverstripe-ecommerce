@@ -1,5 +1,14 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Config;
+use ShoppingCart;
+use EcommerceConfig;
+use DBField;
+use Director;
+
+
 /**
  * @description: returns the cart as JSON
  *

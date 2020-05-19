@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use DB;
+
+
 /**
  * shows you the link to remove the current cart.
  *

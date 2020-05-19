@@ -1,4 +1,23 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Forms;
+
+use Form;
+use Member;
+use ShoppingCartController;
+use Convert;
+use ReadonlyField;
+use FieldList;
+use ShoppingCart;
+use FormAction;
+use Director;
+use Controller;
+use LiteralField;
+use PasswordField;
+use ShopAccountFormValidator;
+use CheckoutPage;
+use ShopAccountFormPasswordValidator;
+
 /**
  * @description: ShopAccountForm allows shop members to update their details.
  *

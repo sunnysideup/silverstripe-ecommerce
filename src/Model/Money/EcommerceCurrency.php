@@ -1,5 +1,26 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Model\Money;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use EcommerceConfig;
+use Order;
+use Currency;
+use ShoppingCart;
+use Injector;
+use DBField;
+use ReadonlyField;
+use HeaderField;
+use CMSEditLinkAPI;
+use EcommerceMoney;
+use ShoppingCartController;
+use EcommerceTaskDebugCart;
+
+
 /**
  * Object to manage currencies.
  *

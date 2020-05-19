@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Tasks;
+
+use BuildTask;
+use Director;
+
+
 /**
  * This class reviews all of the static configurations in e-commerce for review
  * (a) which configs are set, but not required

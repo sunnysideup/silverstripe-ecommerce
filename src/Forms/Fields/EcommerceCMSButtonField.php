@@ -1,5 +1,10 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use LiteralField;
+
+
 
 class EcommerceCMSButtonField extends LiteralField
 {

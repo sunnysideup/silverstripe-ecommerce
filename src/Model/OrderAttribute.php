@@ -1,4 +1,19 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model;
+
+use DataObject;
+use EditableEcommerceObject;
+use Member;
+use Permission;
+use Config;
+use CMSEditLinkAPI;
+use ShoppingCart;
+use EcommerceConfigAjax;
+use EcommerceDBConfig;
+use EcommerceCurrency;
+use EcommerceTaskDebugCart;
+
 /**
  * @description: base class for OrderItem (item in cart) and OrderModifier (extra - e.g. Tax)
  *

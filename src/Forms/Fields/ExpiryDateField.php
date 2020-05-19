@@ -1,5 +1,11 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Forms\Fields;
+
+use TextField;
+use EcommerceConfig;
+
+
 /**
  * @Description: ExpiryDate field, contains validation and formspec for expirydate fields.
  * This can be useful when collecting a credit card.

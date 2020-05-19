@@ -1,4 +1,19 @@
 <?php
+
+namespace Sunnysideup\Ecommerce\Model\Process;
+
+use DataObject;
+use Member;
+use Permission;
+use Config;
+use EcommerceRole;
+use DB;
+use Order;
+use DBField;
+use ReadonlyField;
+use LiteralField;
+use CMSEditLinkField;
+
 /**
  * This class provides a bunch of Meta Objects
  * that do not interact with the object at hand, but rather with the datalist as a whole.

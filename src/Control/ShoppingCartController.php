@@ -1,5 +1,27 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Control;
+
+use Controller;
+use ShoppingCart;
+use Order;
+use SS_HTTPRequest;
+use Convert;
+use EcommerceRole;
+use SiteTree;
+use Security;
+use Director;
+use Member;
+use CheckoutPage;
+use CartPage;
+use EcommerceDBConfig;
+use ProductVariation;
+use DataObject;
+use Permission;
+use Config;
+use SecurityToken;
+
+
 
 /**
  * ShoppingCartController.
