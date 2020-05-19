@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Fieldtypes;
 
+use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
-use CompositeDBField;
 
 
 
