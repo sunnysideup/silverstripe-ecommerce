@@ -1,5 +1,7 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Pages;
+
 use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use SilverStripe\Security\Member;
