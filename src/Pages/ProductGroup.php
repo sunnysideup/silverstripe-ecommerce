@@ -28,6 +28,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Versioned\Versioned;
+use Page;
 
 /**
  * Product Group is a 'holder' for Products within the CMS

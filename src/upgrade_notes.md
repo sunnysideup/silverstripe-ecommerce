@@ -735,3 +735,13 @@ Array
     [1] => [2020-05-19 16:18:29] Applying ApiChangeWarningsRule to OrderConverter.php...
     [2] => PHP Fatal error:  Class 'Sunnysideup\Ecommerce\Pages\Page' not found in /var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Pages/ProductGroup.php on line 107
 )
+
+# running php upgrade inspect see: https://github.com/silverstripe/silverstripe-upgrader
+cd /var/www/ss3/upgrades/ecommerce-root
+php /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code inspect /var/www/ss3/upgrades/ecommerce-root/ecommerce/src  --root-dir=/var/www/ss3/upgrades/ecommerce-root --write -vvv
+Array
+(
+    [0] => Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
+    [1] => [2020-05-19 16:19:18] Applying ApiChangeWarningsRule to OrderConverter.php...
+    [2] => PHP Fatal error:  Class 'DBTextField' not found in /var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Forms/Fields/EcommerceCreditCardField.php on line 16
+)
