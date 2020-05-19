@@ -1,0 +1,237 @@
+unchanged:	src/Api/EcommerceRestfulServer.php
+Warnings for src/Api/EcommerceRestfulServer.php:
+ - src/Api/EcommerceRestfulServer.php:92 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 92
+
+unchanged:	src/Api/ShoppingCart.php
+Warnings for src/Api/ShoppingCart.php:
+ - src/Api/ShoppingCart.php:629 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 629
+
+ - src/Api/ShoppingCart.php:1172 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1172
+
+unchanged:	src/Dev/EcommerceCodeFilter.php
+Warnings for src/Dev/EcommerceCodeFilter.php:
+ - src/Dev/EcommerceCodeFilter.php:68 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 68
+
+unchanged:	src/Config/EcommerceConfigDefinitions.php
+Warnings for src/Config/EcommerceConfigDefinitions.php:
+ - src/Config/EcommerceConfigDefinitions.php:223 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 223
+
+unchanged:	src/Config/EcommerceConfigAjax.php
+Warnings for src/Config/EcommerceConfigAjax.php:
+ - src/Config/EcommerceConfigAjax.php:78 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 78
+
+unchanged:	src/Control/BuyableSelectFieldDataList.php
+Warnings for src/Control/BuyableSelectFieldDataList.php:
+ - src/Control/BuyableSelectFieldDataList.php:162 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 162
+
+unchanged:	src/Control/ShoppingCartController.php
+Warnings for src/Control/ShoppingCartController.php:
+ - src/Control/ShoppingCartController.php:669 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 669
+
+ - src/Control/ShoppingCartController.php:844 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 844
+
+ - src/Control/ShoppingCartController.php:880 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 880
+
+ - src/Control/ShoppingCartController.php:1050 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1050
+
+unchanged:	src/Model/Config/EcommerceDBConfig.php
+Warnings for src/Model/Config/EcommerceDBConfig.php:
+ - src/Model/Config/EcommerceDBConfig.php:478 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 478
+
+unchanged:	src/Model/Address/EcommerceRegion.php
+Warnings for src/Model/Address/EcommerceRegion.php:
+ - src/Model/Address/EcommerceRegion.php:409 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 409
+
+unchanged:	src/Model/Address/EcommerceCountry.php
+Warnings for src/Model/Address/EcommerceCountry.php:
+ - src/Model/Address/EcommerceCountry.php:335 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 335
+
+ - src/Model/Address/EcommerceCountry.php:352 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 352
+
+unchanged:	src/Model/Process/OrderSteps/OrderStepSubmitted.php
+Warnings for src/Model/Process/OrderSteps/OrderStepSubmitted.php:
+ - src/Model/Process/OrderSteps/OrderStepSubmitted.php:137 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 137
+
+unchanged:	src/Model/Process/OrderSteps/OrderStepConfirmed.php
+Warnings for src/Model/Process/OrderSteps/OrderStepConfirmed.php:
+ - src/Model/Process/OrderSteps/OrderStepConfirmed.php:88 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 88
+
+unchanged:	src/Model/Process/OrderStep.php
+Warnings for src/Model/Process/OrderStep.php:
+ - src/Model/Process/OrderStep.php:1114 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1114
+
+ - src/Model/Process/OrderStep.php:1530 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1530
+
+unchanged:	src/Model/Money/EcommerceCurrency.php
+Warnings for src/Model/Money/EcommerceCurrency.php:
+ - src/Model/Money/EcommerceCurrency.php:665 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 665
+
+unchanged:	src/Model/Money/EcommercePayment.php
+Warnings for src/Model/Money/EcommercePayment.php:
+ - src/Model/Money/EcommercePayment.php:567 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 567
+
+unchanged:	src/Model/OrderItem.php
+Warnings for src/Model/OrderItem.php:
+ - src/Model/OrderItem.php:835 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 835
+
+ - src/Model/OrderItem.php:851 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 851
+
+ - src/Model/OrderItem.php:888 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 888
+
+ - src/Model/OrderItem.php:989 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 989
+
+unchanged:	src/Model/Order.php
+Warnings for src/Model/Order.php:
+ - src/Model/Order.php:1245 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1245
+
+ - src/Model/Order.php:1760 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1760
+
+ - src/Model/Order.php:3344 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 3344
+
+ - src/Model/Order.php:3922 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 3922
+
+ - src/Model/Order.php:4066 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 4066
+
+ - src/Model/Order.php:4117 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 4117
+
+unchanged:	src/Model/Extensions/EcommerceRole.php
+Warnings for src/Model/Extensions/EcommerceRole.php:
+ - src/Model/Extensions/EcommerceRole.php:763 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 763
+
+unchanged:	src/Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php
+Warnings for src/Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php:
+ - src/Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php:92 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 92
+
+unchanged:	src/Forms/Fields/EcomQuantityField.php
+Warnings for src/Forms/Fields/EcomQuantityField.php:
+ - src/Forms/Fields/EcomQuantityField.php:107 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 107
+
+unchanged:	src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php
+Warnings for src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php:
+ - src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php:166 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 166
+
+ - src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php:335 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 335
+
+unchanged:	src/Forms/OrderStatusLogForm.php
+Warnings for src/Forms/OrderStatusLogForm.php:
+ - src/Forms/OrderStatusLogForm.php:59 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 59
+
+ - src/Forms/OrderStatusLogForm.php:63 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 63
+
+unchanged:	src/Forms/OrderModifierForm.php
+Warnings for src/Forms/OrderModifierForm.php:
+ - src/Forms/OrderModifierForm.php:58 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 58
+
+ - src/Forms/OrderModifierForm.php:62 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 62
+
+unchanged:	src/Forms/ProductSearchForm.php
+Warnings for src/Forms/ProductSearchForm.php:
+ - src/Forms/ProductSearchForm.php:427 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 427
+
+ - src/Forms/ProductSearchForm.php:525 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 525
+
+unchanged:	src/Cms/Dev/EcommerceDatabaseAdmin.php
+Warnings for src/Cms/Dev/EcommerceDatabaseAdmin.php:
+ - src/Cms/Dev/EcommerceDatabaseAdmin.php:306 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 306
+
+ - src/Cms/Dev/EcommerceDatabaseAdmin.php:347 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 347
+
+unchanged:	src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php
+Warnings for src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:
+ - src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:101 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 101
+
+ - src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:119 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 119
+
+ - src/Tasks/EcommerceTaskArchiveAllOrdersWithItems.php:123 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 123
+
+unchanged:	src/Tasks/EcommerceTaskCartCleanup.php
+Warnings for src/Tasks/EcommerceTaskCartCleanup.php:
+ - src/Tasks/EcommerceTaskCartCleanup.php:320 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 320
+
+ - src/Tasks/EcommerceTaskCartCleanup.php:384 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 384
+
+unchanged:	src/Tasks/EcommerceTaskDeleteAllOrders.php
+Warnings for src/Tasks/EcommerceTaskDeleteAllOrders.php:
+ - src/Tasks/EcommerceTaskDeleteAllOrders.php:135 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 135
+
+ - src/Tasks/EcommerceTaskDeleteAllOrders.php:182 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 182
+
+unchanged:	src/Tasks/EcommerceTaskDeleteProducts.php
+Warnings for src/Tasks/EcommerceTaskDeleteProducts.php:
+ - src/Tasks/EcommerceTaskDeleteProducts.php:38 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 38
+
+unchanged:	src/Pages/ProductGroupController.php
+Warnings for src/Pages/ProductGroupController.php:
+ - src/Pages/ProductGroupController.php:405 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 405
+
+ - src/Pages/ProductGroupController.php:937 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 937
+
+unchanged:	src/Pages/CartPageController.php
+Warnings for src/Pages/CartPageController.php:
+ - src/Pages/CartPageController.php:252 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 252
+
+unchanged:	src/Pages/Product.php
+Warnings for src/Pages/Product.php:
+ - src/Pages/Product.php:867 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 867
+
+unchanged:	src/Pages/ProductGroup.php
+Warnings for src/Pages/ProductGroup.php:
+ - src/Pages/ProductGroup.php:1508 PhpParser\Node\Expr\Variable
+ - WARNING: New class instantiated by a dynamic value on line 1508
+
