@@ -1,9 +1,10 @@
 ---
 Name: ecommerce
-Before: 'mysite/*'
+Before:
+  - 'mysite/*'
 After:
-   - 'framework/*'
-   - 'cms/*'
+  - 'framework/*'
+  - 'cms/*'
 ---
 
 

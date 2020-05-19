@@ -1,6 +1,10 @@
 ---
 Name: ecommerce_routes
-After: framework/routes#coreroutes
+Before:
+  - 'mysite/*'
+After:
+  - 'framework/*'
+  - 'cms/*'
 ---
 Director:
   rules:

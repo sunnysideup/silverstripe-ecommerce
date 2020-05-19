@@ -1,7 +1,10 @@
 ---
 Name: ecommerce_payment_settings
-Before: 'mysite/*'
-After: 'framework/*','cms/*'
+Before:
+  - 'mysite/*'
+After:
+  - 'framework/*'
+  - 'cms/*'
 only:
   environment: 'dev'
 ---
@@ -10,5 +13,3 @@ EcommercePayment:
     EcommercePaymentTestSuccess : "Test Success Payment"
     EcommercePaymentTestPending : "Test Pending Payment"
     EcommercePaymentTestFailure : "Test Failure Payment"
-
-
