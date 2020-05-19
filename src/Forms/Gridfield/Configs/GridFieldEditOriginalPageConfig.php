@@ -2,19 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-
-
-
-use SilverStripe\Forms\GridField\GridFieldEditButton;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldAddNewButtonOriginalPage;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldEditButtonOriginalPage;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-
-
-
 
 /**
  * @author nicolaas <github@sunnysideup.co.nz>
@@ -36,4 +30,3 @@ class GridFieldEditOriginalPageConfig extends GridFieldConfig_RecordEditor
             ->addComponent(new GridFieldEditButtonOriginalPage());
     }
 }
-

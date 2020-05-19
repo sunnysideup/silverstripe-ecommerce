@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
 use convert;
 
 
@@ -14,22 +12,17 @@ use convert;
 
 
 
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
-use SilverStripe\Control\Session;
-use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
-use SilverStripe\ORM\ArrayList;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-
-
-
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 
 class CheckoutPageController extends CartPageController
 {
@@ -98,14 +91,14 @@ class CheckoutPageController extends CartPageController
         // this is only applicable when people submit order (start to pay)
         // and then return back
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($checkoutPageCurrentOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
             if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
                 $this->clearRetrievalOrderID();
@@ -144,14 +137,14 @@ class CheckoutPageController extends CartPageController
         $this->data()->extend('updateOrderFormAddress', $form);
         //load session data
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
             $form->loadDataFrom($data);
         }
@@ -314,15 +307,14 @@ class CheckoutPageController extends CartPageController
         if ($this->request->isAjax()) {
             Requirements::clear();
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: ->RenderWith( (ignore case)
+             * NEW: ->RenderWith( (COMPLEX)
+             * EXP: Check that the template location is still valid!
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return $this->RenderWith('LayoutCheckoutPageInner');
         }
 
@@ -463,4 +455,3 @@ class CheckoutPageController extends CartPageController
         //reset current step if different
     }
 }
-

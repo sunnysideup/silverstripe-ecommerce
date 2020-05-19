@@ -2,46 +2,24 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Dev\Debug;
-use SilverStripe\Forms\Tab;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\NumericField;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Forms\LiteralField;
-use Sunnysideup\Ecommerce\Model\OrderModifier;
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\Validator;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\Debug;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
 use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
-use SilverStripe\ORM\DataObject;
-
-
 
 /**
  * which returns an array of IDs
@@ -126,28 +104,24 @@ class OrderModifier extends OrderAttribute
      *            stardard SS definition
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderModifier';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
@@ -175,14 +149,14 @@ class OrderModifier extends OrderAttribute
     private static $searchable_fields = [
         'OrderID' => [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -275,14 +249,14 @@ class OrderModifier extends OrderAttribute
         $fields->removeByName('GroupSort');
         $fields->replaceField('Name', $nameField = new ReadonlyField('Name'));
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->dontEscape (case sensitive)
-  * NEW: ->dontEscape (COMPLEX)
-  * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->dontEscape (case sensitive)
+         * NEW: ->dontEscape (COMPLEX)
+         * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $nameField->dontEscape = true;
         $fields->removeByName('TableValue');
         $fields->removeByName('CalculatedTotal');
@@ -307,14 +281,14 @@ class OrderModifier extends OrderAttribute
             $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
         } else {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $fields->replaceField('OrderID', new NumericField('OrderID'));
         }
 
@@ -351,14 +325,14 @@ class OrderModifier extends OrderAttribute
     {
         $fields = parent::scaffoldSearchFields($_params);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: NumericField (case sensitive)
+         * NEW: NumericField (COMPLEX)
+         * EXP: check the number of decimals required and add as ->Step(123)
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
 
         return $fields;
@@ -368,15 +342,14 @@ class OrderModifier extends OrderAttribute
 
     // ########################################  *** 5. init and update functions
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function init_for_order($className)
     {
         user_error('the init_for_order method has been depreciated, instead, use $myModifier->init()', E_USER_ERROR);
@@ -421,7 +394,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array())
+    public function canCreate($member = null, $context = [])
     {
         return false;
     }
@@ -917,14 +890,14 @@ class OrderModifier extends OrderAttribute
     protected function headingField()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $name = $this->ClassName . 'Heading';
         if ($this->Heading()) {
             return new HeaderField($name, $this->Heading(), 4);
@@ -939,14 +912,14 @@ class OrderModifier extends OrderAttribute
     protected function descriptionField()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $name = $this->ClassName . 'Description';
         if ($this->Description()) {
             return new LiteralField($name, '<div id="' . Convert::raw2att($name) . 'DescriptionHolder" class="descriptionHolder">' . Convert::raw2xml($this->Description()) . '</div>');
@@ -965,15 +938,14 @@ class OrderModifier extends OrderAttribute
         if ($this->orderModifier_Descriptor === null) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $this->ClassName (case sensitive)
+                 * NEW: $this->ClassName (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 ['ModifierClassName' => $this->ClassName]
             );
         }
@@ -986,14 +958,14 @@ class OrderModifier extends OrderAttribute
     protected function LiveName()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         user_error('The "LiveName" method has be defined in ...' . $this->ClassName, E_USER_NOTICE);
         $defaults = $this->config()->get('defaults');
 
@@ -1021,4 +993,3 @@ class OrderModifier extends OrderAttribute
         return $this->Type ?? 'Other';
     }
 }
-

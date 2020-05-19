@@ -2,37 +2,22 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-
-
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\View\Requirements;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
-use SilverStripe\ORM\ArrayList;
+use Sunnysideup\Ecommerce\Email\OrderEmail;
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
 use Sunnysideup\Ecommerce\Forms\OrderFormCancel;
 use Sunnysideup\Ecommerce\Forms\OrderFormFeedback;
 use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
-use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
-use Sunnysideup\Ecommerce\Email\OrderEmail;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-
-
-
 
 class OrderConfirmationPageController extends CartPageController
 {
@@ -63,28 +48,28 @@ class OrderConfirmationPageController extends CartPageController
         //we retrieve the order in the parent page
         //the parent page also takes care of the security
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($sessionOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
             $this->currentOrder = Order::get()->byID($sessionOrderID);
             if ($this->currentOrder) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: Session:: (case sensitive)
+                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $validUntil = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime')) - 0;
                 if ($validUntil < time()) {
                     $this->clearRetrievalOrderID();
@@ -451,4 +436,3 @@ class OrderConfirmationPageController extends CartPageController
         return false;
     }
 }
-

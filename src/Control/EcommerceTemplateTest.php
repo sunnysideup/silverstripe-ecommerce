@@ -2,18 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-use Sunnysideup\Ecommerce\Control\EcommerceTemplateTest;
-use Sunnysideup\Ecommerce\Pages\Product;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\ORM\DataObject;
 use PageController;
-
-
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * @description: used to display a random product in the Template Test.
@@ -80,4 +73,3 @@ class EcommerceTemplateTest extends PageController
         return true;
     }
 }
-

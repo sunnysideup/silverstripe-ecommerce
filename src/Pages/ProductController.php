@@ -2,41 +2,22 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use SilverStripe\View\Requirements;
+use PageController;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\View\SSViewer;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Form;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\View\Requirements;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use PageController;
-
-
-
+use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 
 class ProductController extends PageController
 {
@@ -53,24 +34,6 @@ class ProductController extends PageController
         'addproductfromform',
         'debug' => 'ADMIN',
     ];
-
-    /**
-     * Standard SS method.
-     */
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD:     public function init() (ignore case)
-  * NEW:     protected function init() (COMPLEX)
-  * EXP: Controller init functions are now protected  please check that is a controller.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    protected function init()
-    {
-        parent::init();
-        Requirements::themedCSS('sunnysideup/ecommerce: Product', 'ecommerce');
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomProducts.js');
-    }
 
     /**
      * view earlier version of a product
@@ -111,14 +74,14 @@ class ProductController extends PageController
         Config::nest();
         Config::modify()->update(SSViewer::class, 'theme_enabled', true);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $html = $this->RenderWith('ProductGroupItemMoreDetail');
         Config::unnest();
 
@@ -136,14 +99,14 @@ class ProductController extends PageController
             $farray = [];
             $fields = new FieldList($farray);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $fields->push(new NumericField('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
             $actions = new FieldList(
                 new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))
@@ -271,6 +234,24 @@ class ProductController extends PageController
     }
 
     /**
+     * Standard SS method.
+     */
+
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD:     public function init() (ignore case)
+     * NEW:     protected function init() (COMPLEX)
+     * EXP: Controller init functions are now protected  please check that is a controller.
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
+    protected function init()
+    {
+        parent::init();
+        Requirements::themedCSS('sunnysideup/ecommerce: Product', 'ecommerce');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomProducts.js');
+    }
+
+    /**
      * returns an array of product IDs, as saved in the last
      * ProductGroup view (saved using session).
      *
@@ -279,14 +260,14 @@ class ProductController extends PageController
     protected function getListOfIDs()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'));
         if ($listOfIDs) {
             $arrayOfIDs = explode(',', $listOfIDs);
@@ -298,4 +279,3 @@ class ProductController extends PageController
         return [];
     }
 }
-

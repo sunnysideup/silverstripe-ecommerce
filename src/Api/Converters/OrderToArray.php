@@ -2,10 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Api\Converters;
 
-
 use Sunnysideup\Ecommerce\Api\OrderConverter;
-
-
 
 class OrderToArray extends OrderConverter
 {
@@ -96,4 +93,3 @@ class OrderToArray extends OrderConverter
         return $array;
     }
 }
-

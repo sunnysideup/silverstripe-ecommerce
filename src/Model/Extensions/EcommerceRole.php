@@ -2,26 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 use CMSEditLinkAPI;
 
 
@@ -30,40 +10,38 @@ use CMSEditLinkAPI;
 
 
 
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Security\Group;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Security\Member;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Control\Email\Email;
-use SilverStripe\Forms\HeaderField;
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\EmailField;
-use SilverStripe\View\Requirements;
 use SilverStripe\Forms\PasswordField;
-use SilverStripe\Core\Convert;
-use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
-
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * @description EcommerceRole provides specific customisations to the {@link Member}
@@ -90,41 +68,36 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * standard SS method.
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'EcommerceRole';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Notes' => 'Text',
     ];
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'PreferredCurrency' => EcommerceCurrency::class,
     ];
@@ -547,15 +520,14 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: EmailField('Email' (case sensitive)
-  * NEW: EmailField('Email' (COMPLEX)
-  * EXP: make sure that this does not end up as Email::class
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: EmailField('Email' (case sensitive)
+                 * NEW: EmailField('Email' (COMPLEX)
+                 * EXP: make sure that this does not end up as Email::class
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class))
             );
         } else {
@@ -613,15 +585,14 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: EmailField('Email' (case sensitive)
-  * NEW: EmailField('Email' (COMPLEX)
-  * EXP: make sure that this does not end up as Email::class
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: EmailField('Email' (case sensitive)
+                 * NEW: EmailField('Email' (COMPLEX)
+                 * EXP: make sure that this does not end up as Email::class
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class)),
                 $loginDetailsHeader,
                 $loginDetailsDescription,
@@ -826,4 +797,3 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         return CMSEditLinkAPI::find_edit_link_for_object($this->owner);
     }
 }
-

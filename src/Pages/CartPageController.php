@@ -2,36 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\HTTP;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Security\Security;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\Member;
-use SilverStripe\ORM\FieldType\DBField;
-use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
 use PageController;
-
-
+use SilverStripe\Control\HTTP;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
+use Sunnysideup\Ecommerce\Model\Order;
 
 class CartPageController extends PageController
 {
@@ -97,98 +81,6 @@ class CartPageController extends PageController
     {
         $sessionCode = EcommerceConfig::get('CartPage_Controller', 'session_code');
         Session::set($sessionCode, $s);
-    }
-
-    /**
-     * @standard SS method
-     */
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD:     public function init() (ignore case)
-  * NEW:     protected function init() (COMPLEX)
-  * EXP: Controller init functions are now protected  please check that is a controller.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    protected function init()
-    {
-        HTTP::set_cache_age(0);
-        parent::init();
-        // find the current order if any
-        $orderID = 0;
-        //WE HAVE THIS FOR SUBMITTING FORMS!
-        if (isset($_REQUEST['OrderID'])) {
-            $orderID = intval($_REQUEST['OrderID']);
-            if ($orderID) {
-                $this->currentOrder = Order::get()->byID($orderID);
-            }
-        } elseif ($this->request && $this->request->param('ID') && $this->request->param('Action')) {
-            //we can not do intval here!
-            $id = $this->request->param('ID');
-            $action = $this->request->param('Action');
-            $otherID = intval($this->request->param('OtherID'));
-            //the code below is for submitted orders, but we still put it here so
-            //we can do all the retrieval options at once.
-            if (($action === 'retrieveorder') && $id && $otherID) {
-                $sessionID = Convert::raw2sql($id);
-                $retrievedOrder = Order::get()->filter(
-                    [
-                        'SessionID' => $sessionID,
-                        'ID' => $otherID,
-                    ]
-                )->first();
-                if ($retrievedOrder) {
-                    $this->currentOrder = $retrievedOrder;
-                    $this->overrideCanView = true;
-                    $this->setRetrievalOrderID($this->currentOrder->ID);
-                }
-            } elseif (intval($id) && in_array($action, $this->stat('allowed_actions'), true)) {
-                $this->currentOrder = Order::get()->byID(intval($id));
-            }
-        }
-        if (! $this->currentOrder) {
-            $this->currentOrder = ShoppingCart::current_order();
-            if ($this->currentOrder) {
-                if ($this->currentOrder->IsSubmitted()) {
-                    $this->overrideCanView = true;
-                }
-            }
-        }
-        //redirect if we are viewing the order with the wrong page!
-        if ($this->currentOrder) {
-            if ($this->overrideCanView) {
-                $canView = $this->currentOrder->canOverrideCanView();
-            } else {
-                $canView = $this->currentOrder->canView();
-            }
-            //IMPORTANT SECURITY QUESTION!
-            if ($canView) {
-                if ($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
-                    $this->redirect($this->currentOrder->Link());
-                } elseif (! $this->currentOrder->IsSubmitted() && $this->onlyShowSubmittedOrders()) {
-                    $this->redirect($this->currentOrder->Link());
-                }
-            } else {
-                if (! $this->LoginToOrderLinkLabel) {
-                    $this->LoginToOrderLinkLabel = _t('CartPage.LOGINFIRST', 'You will need to log in before you can access the requested order order. ');
-                }
-                $messages = [
-                    'default' => '<p class="message good">' . $this->LoginToOrderLinkLabel . '</p>',
-                    'logInAgain' => _t('CartPage.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
-                ];
-                Security::permissionFailure($this, $messages);
-
-                return false;
-            }
-            if (! $this->currentOrder->IsSubmitted()) {
-                //we always want to make sure the order is up-to-date.
-                $this->currentOrder->init($force = false);
-                $this->currentOrder->calculateOrderAttributes($force = true);
-                $this->currentOrder->calculateOrderAttributes($force = true);
-            }
-        } else {
-            $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
-        }
     }
 
     /***********************
@@ -451,24 +343,24 @@ class CartPageController extends PageController
     public function ShowCreateAccountForm()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CartPageCreateAccountForm')) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
 
             return true;
@@ -477,14 +369,14 @@ class CartPageController extends PageController
             return false;
         }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CartPageCreateAccountForm', true);
 
         return true;
@@ -501,6 +393,98 @@ class CartPageController extends PageController
     }
 
     /**
+     * @standard SS method
+     */
+
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD:     public function init() (ignore case)
+     * NEW:     protected function init() (COMPLEX)
+     * EXP: Controller init functions are now protected  please check that is a controller.
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
+    protected function init()
+    {
+        HTTP::set_cache_age(0);
+        parent::init();
+        // find the current order if any
+        $orderID = 0;
+        //WE HAVE THIS FOR SUBMITTING FORMS!
+        if (isset($_REQUEST['OrderID'])) {
+            $orderID = intval($_REQUEST['OrderID']);
+            if ($orderID) {
+                $this->currentOrder = Order::get()->byID($orderID);
+            }
+        } elseif ($this->request && $this->request->param('ID') && $this->request->param('Action')) {
+            //we can not do intval here!
+            $id = $this->request->param('ID');
+            $action = $this->request->param('Action');
+            $otherID = intval($this->request->param('OtherID'));
+            //the code below is for submitted orders, but we still put it here so
+            //we can do all the retrieval options at once.
+            if (($action === 'retrieveorder') && $id && $otherID) {
+                $sessionID = Convert::raw2sql($id);
+                $retrievedOrder = Order::get()->filter(
+                    [
+                        'SessionID' => $sessionID,
+                        'ID' => $otherID,
+                    ]
+                )->first();
+                if ($retrievedOrder) {
+                    $this->currentOrder = $retrievedOrder;
+                    $this->overrideCanView = true;
+                    $this->setRetrievalOrderID($this->currentOrder->ID);
+                }
+            } elseif (intval($id) && in_array($action, $this->stat('allowed_actions'), true)) {
+                $this->currentOrder = Order::get()->byID(intval($id));
+            }
+        }
+        if (! $this->currentOrder) {
+            $this->currentOrder = ShoppingCart::current_order();
+            if ($this->currentOrder) {
+                if ($this->currentOrder->IsSubmitted()) {
+                    $this->overrideCanView = true;
+                }
+            }
+        }
+        //redirect if we are viewing the order with the wrong page!
+        if ($this->currentOrder) {
+            if ($this->overrideCanView) {
+                $canView = $this->currentOrder->canOverrideCanView();
+            } else {
+                $canView = $this->currentOrder->canView();
+            }
+            //IMPORTANT SECURITY QUESTION!
+            if ($canView) {
+                if ($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
+                    $this->redirect($this->currentOrder->Link());
+                } elseif (! $this->currentOrder->IsSubmitted() && $this->onlyShowSubmittedOrders()) {
+                    $this->redirect($this->currentOrder->Link());
+                }
+            } else {
+                if (! $this->LoginToOrderLinkLabel) {
+                    $this->LoginToOrderLinkLabel = _t('CartPage.LOGINFIRST', 'You will need to log in before you can access the requested order order. ');
+                }
+                $messages = [
+                    'default' => '<p class="message good">' . $this->LoginToOrderLinkLabel . '</p>',
+                    'logInAgain' => _t('CartPage.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
+                ];
+                Security::permissionFailure($this, $messages);
+
+                return false;
+            }
+            if (! $this->currentOrder->IsSubmitted()) {
+                //we always want to make sure the order is up-to-date.
+                $this->currentOrder->init($force = false);
+                $this->currentOrder->calculateOrderAttributes($force = true);
+                $this->currentOrder->calculateOrderAttributes($force = true);
+            }
+        } else {
+            $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
+        }
+    }
+
+    /**
      * We set sesssion ID for retrieval of order in non cart setting
      * @param int $orderID
      * @param int $validUntilTS timestamp (unix epoch) until which the current Order ID is valid
@@ -511,34 +495,34 @@ class CartPageController extends PageController
             $validUntilTS = time() + 3600;
         }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', $orderID);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
     }
 
@@ -548,54 +532,54 @@ class CartPageController extends PageController
     protected function clearRetrievalOrderID()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('CheckoutPageCurrentOrderID');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', 0);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('CheckoutPageCurrentRetrievalTime');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', 0);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
     }
 
@@ -841,4 +825,3 @@ class CartPageController extends PageController
         return true;
     }
 }
-

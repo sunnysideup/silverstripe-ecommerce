@@ -2,29 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-
-
-
-
-
-
-
-
 use CMSEditLinkAPI;
 
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\DropdownField;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /***
  * Class used to describe the steps in the checkout
@@ -39,28 +28,24 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * @Var Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'CheckoutPageStepDescription';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Heading' => 'Varchar',
         'Above' => 'Text',
@@ -356,4 +341,3 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         return $code;
     }
 }
-

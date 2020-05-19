@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
-
-
 
 /**
  * This class reviews all of the static configurations in e-commerce for review
@@ -56,4 +52,3 @@ class EcommerceTaskAPIandMore extends BuildTask
 html;
     }
 }
-

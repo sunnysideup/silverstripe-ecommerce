@@ -2,21 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Dev\BuildTask;
-
-
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * After a bug in the saving of orders in the CMS
@@ -100,14 +93,14 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         $submissionLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $obj = $submissionLogClassName::create();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  Object:: (case sensitive)
+         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+         * EXP: Check if this is the right implementation, this is highly speculative.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (! is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }
@@ -136,4 +129,3 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         }
     }
 }
-

@@ -2,15 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
-
-
-
-use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\FieldList;
-
-
-
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
 
 /**
  * Payment object representing a TEST = SUCCESS.
@@ -68,4 +62,3 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
         return;
     }
 }
-

@@ -2,33 +2,30 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
-use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\Security\Member;
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use SilverStripe\Control\Controller;
-use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
-use SilverStripe\ORM\DataList;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Page;
 use SilverStripe\Assets\Image;
-use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
-use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
-use Page;
+use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -234,28 +231,24 @@ class ProductGroup extends Page
      * @static Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW:
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'ProductGroup';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'NumberOfProductsPerPage' => 'Int',
         'LevelOfProductsToShow' => 'Int',
@@ -270,14 +263,14 @@ class ProductGroup extends Page
      * @static Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Image' => ProductImage::class,
     ];
@@ -317,14 +310,14 @@ class ProductGroup extends Page
 
     private static $summary_fields = [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  => 'Image' (case sensitive)
-  * NEW:  => 'Image' (COMPLEX)
-  * EXP: you may want to add ownership (owns)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  => 'Image' (case sensitive)
+         * NEW:  => 'Image' (COMPLEX)
+         * EXP: you may want to add ownership (owns)
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         'Image.CMSThumbnail' => 'Image',
         'Title' => 'Category',
         'NumberOfProducts' => 'Direct Product Count',
@@ -449,14 +442,14 @@ class ProductGroup extends Page
     public function canDelete($member = null, $context = [])
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  Object:: (case sensitive)
+         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+         * EXP: Check if this is the right implementation, this is highly speculative.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
@@ -608,15 +601,14 @@ class ProductGroup extends Page
                 _t('ProductGroup.DISPLAY', 'Display'),
                 $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->showProductLevels),
                 HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: NumericField (case sensitive)
+                 * NEW: NumericField (COMPLEX)
+                 * EXP: check the number of decimals required and add as ->Step(123)
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
             )
         );
@@ -961,14 +953,14 @@ class ProductGroup extends Page
     {
         if ($parent = $this->ParentGroup()) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return is_a($parent, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class)) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
         }
         return $this->ChildGroups($filter);
@@ -991,14 +983,14 @@ class ProductGroup extends Page
     {
         $image = $this->Image();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->getFullPath() (case sensitive)
-  * NEW: ->getFilename() (COMPLEX)
-  * EXP: You may need to add ASSETS_PATH."/" in front of this ...
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->getFullPath() (case sensitive)
+         * NEW: ->getFilename() (COMPLEX)
+         * EXP: You may need to add ASSETS_PATH."/" in front of this ...
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($image && $image->exists() && file_exists($image->getFilename())) {
             return $image;
         } elseif ($parent = $this->ParentGroup()) {
@@ -1217,14 +1209,14 @@ class ProductGroup extends Page
     {
         if (! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             self::$_result_array[$this->ID] = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable(false)));
         }
         if (! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
@@ -1252,14 +1244,14 @@ class ProductGroup extends Page
         if (! isset($this->configOptionsCache[$type])) {
             $configName = $this->sortFilterDisplayNames[$type]['configName'];
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $this->ClassName (case sensitive)
+             * NEW: $this->ClassName (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $this->configOptionsCache[$type] = EcommerceConfig::get($this->ClassName, $configName);
         }
 
@@ -1431,14 +1423,14 @@ class ProductGroup extends Page
             //clear bogus value from session ...
             $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, '');
         }
         if ($key) {
@@ -1835,8 +1827,7 @@ class ProductGroup extends Page
      */
     protected function getSilverstripeCoreCache()
     {
-
-        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class . '.'. 'EcomPG');
+        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class . '.' . 'EcomPG');
     }
 
     /**
@@ -1852,14 +1843,14 @@ class ProductGroup extends Page
         if ($this->AllowCaching()) {
             $cache = $this->getSilverstripeCoreCache();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $cache->load( (case sensitive)
-  * NEW: $cache->has( (COMPLEX)
-  * EXP: See: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache, you may also need to add $cache->get( !!!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $cache->load( (case sensitive)
+             * NEW: $cache->has( (COMPLEX)
+             * EXP: See: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache, you may also need to add $cache->get( !!!
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $data = $cache->has($cacheKey);
             if (! $data) {
                 return;
@@ -1891,14 +1882,14 @@ class ProductGroup extends Page
                 $data = serialize($data);
             }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $cache->save( (case sensitive)
-  * NEW: $cache->set( (COMPLEX)
-  * EXP: Cache key and value need to be swapped!!! Put key first. See: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $cache->save( (case sensitive)
+             * NEW: $cache->set( (COMPLEX)
+             * EXP: Cache key and value need to be swapped!!! Put key first. See: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $cache->set($data, $cacheKey);
             return true;
         }

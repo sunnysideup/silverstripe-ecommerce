@@ -1,11 +1,6 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Email;
-use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-
-
-
-
 
 /**
  * @Description: This class handles the invoice email which gets sent once an order is made.
@@ -23,4 +18,3 @@ class OrderInvoiceEmail extends OrderEmail
      */
     protected $ss_template = OrderInvoiceEmail::class;
 }
-

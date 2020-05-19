@@ -2,10 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-
-
-
-
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -32,4 +28,3 @@ class OrderStatusLogDispatchElectronicOrder extends OrderStatusLogDispatch
         return _t('OrderStatusLog.ORDERLOGELECTRONICDISPATCHENTRIES', 'Order Log Electronic Dispatch Entries');
     }
 }
-

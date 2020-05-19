@@ -2,9 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
-
-
-
 interface EcommercePaymentSupportedMethodsProviderInterface
 {
     /**

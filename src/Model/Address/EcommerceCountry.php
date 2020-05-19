@@ -2,35 +2,25 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-
-
-
-
+use CMSEditLinkAPI;
 
 
 use Geoip;
 
 
-use CMSEditLinkAPI;
-
-
-use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\LiteralField;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
 
 /**
  * @description: This class helps you to manage countries within the context of e-commerce.
@@ -828,4 +818,3 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         return $defaultArray;
     }
 }
-

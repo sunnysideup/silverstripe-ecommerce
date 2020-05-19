@@ -2,23 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
-use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Model\OrderItem;
 use SilverStripe\Forms\FormField;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use SilverStripe\Forms\NumericField;
-
-
-
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+use Sunnysideup\Ecommerce\Model\OrderItem;
 
 /**
  * @Description: A links-based field for increasing, decreasing and setting a order item quantity
@@ -86,35 +76,35 @@ class EcomQuantityField extends NumericField
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
             if (! $this->orderItem) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $className = $object->classNameForOrderItem();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $this->orderItem = new $className($object->dataRecord, 0);
             }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+              * ### @@@@ START REPLACEMENT @@@@ ###
+              * WHY: automated upgrade
+              * OLD:  Object:: (case sensitive)
+              * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+              * EXP: Check if this is the right implementation, this is highly speculative.
+              * ### @@@@ STOP REPLACEMENT @@@@ ###
+              */
         } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class)) && $object->BuyableID) {
             $this->orderItem = $object;
         } else {
@@ -135,25 +125,25 @@ class EcomQuantityField extends NumericField
     {
         if ($overwrite) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $this->class (case sensitive)
+             * NEW: $this->class (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $this->classes = array_merge($this->classes, $newClasses);
         } else {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $this->class (case sensitive)
+             * NEW: $this->class (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $this->classes = $newclasses;
         }
     }
@@ -276,4 +266,3 @@ class EcomQuantityField extends NumericField
         return 0;
     }
 }
-

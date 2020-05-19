@@ -2,19 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\FieldList;
+use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -131,4 +124,3 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
         );
     }
 }
-

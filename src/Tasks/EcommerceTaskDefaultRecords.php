@@ -2,26 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Pages\AccountPage;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 /**
  * create default records for e-commerce
@@ -143,4 +132,3 @@ class EcommerceTaskDefaultRecords extends BuildTask
         }
     }
 }
-

@@ -2,18 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
-
-
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * shows you the link to remove the current cart.
@@ -51,4 +44,3 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
         DB::alteration_message("${html}");
     }
 }
-

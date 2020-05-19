@@ -1,11 +1,6 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Email;
-use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
-
-
-
-
 
 /**
  * @Description: This class handles the error email which can be sent
@@ -25,4 +20,3 @@ class OrderErrorEmail extends OrderEmail
      */
     protected $ss_template = OrderErrorEmail::class;
 }
-

@@ -2,20 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Control\CartResponse;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Control\Director;
-
-
 
 /**
  * @description: returns the cart as JSON
@@ -186,14 +178,14 @@ class CartResponse extends EcommerceResponse
                 'p' => 'innerHTML',
                 //note the space is a hack to return something!
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: ->RenderWith( (ignore case)
+                 * NEW: ->RenderWith( (COMPLEX)
+                 * EXP: Check that the template location is still valid!
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 'v' => ' ' . $currentOrder->RenderWith($template),
             ];
         }
@@ -233,4 +225,3 @@ class CartResponse extends EcommerceResponse
         return $json;
     }
 }
-

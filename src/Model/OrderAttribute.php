@@ -2,31 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-
-
-
-
-
 use CMSEditLinkAPI;
 
 
 
 
 
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
 
 /**
  * @description: base class for OrderItem (item in cart) and OrderModifier (extra - e.g. Tax)
@@ -87,28 +79,24 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderAttribute';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
@@ -121,14 +109,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Order' => Order::class,
     ];
@@ -226,7 +214,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array())
+    public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Member::currentUser();
@@ -369,14 +357,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function OrderAttributeType()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $this->ClassName;
     }
 
@@ -412,14 +400,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             $class = get_parent_class($class);
         }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  Object:: (case sensitive)
+         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+         * EXP: Check if this is the right implementation, this is highly speculative.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class))) {
             $classes[] = strtolower($this->BuyableClassName);
         }
@@ -629,4 +617,3 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return self::$_price_has_been_fixed[$this->OrderID];
     }
 }
-

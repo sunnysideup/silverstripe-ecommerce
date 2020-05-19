@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-
-use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
-
-
-
+use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 
 /**
  * @description: Manages stuff related to products,
@@ -50,4 +46,3 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
         return $form;
     }
 }
-

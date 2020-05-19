@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -27,4 +23,3 @@ class EcommerceTaskBuildingModel extends BuildTask
         DB::alteration_message('<br /><br /><br /><br /><br /><br /><a href="/ecommerce/docs/en/DataModel.png" target="_debug">view</a>.<br /><br /><br /><br /><br /><br />');
     }
 }
-

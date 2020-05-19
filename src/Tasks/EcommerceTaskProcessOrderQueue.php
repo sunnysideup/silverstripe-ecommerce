@@ -2,20 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Email\Email;
-use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 
 /**
  * @description:
@@ -87,4 +79,3 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         }
     }
 }
-

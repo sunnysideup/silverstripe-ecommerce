@@ -2,20 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-
-
-
+use PageController;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use Sunnysideup\Ecommerce\Pages\AccountPage;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
-use SilverStripe\Security\Member;
-use PageController;
-
-
-
 
 class AccountPageController extends PageController
 {
@@ -73,4 +64,3 @@ class AccountPageController extends PageController
         return $link;
     }
 }
-

@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\TreeDropdownField;
-
-
 
 /**
  * TreeDropdown-like field that gives you a tree of items including an empty field, using ajax.
@@ -61,4 +57,3 @@ class OptionalTreeDropdownField extends TreeDropdownField
         return $this->preTree() . parent::tree($request) . self::$postTree;
     }
 }
-

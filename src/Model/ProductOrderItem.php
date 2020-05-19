@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\View\SSViewer;
-
-
 
 class ProductOrderItem extends OrderItem
 {
@@ -141,4 +137,3 @@ HTML;
         return $html;
     }
 }
-

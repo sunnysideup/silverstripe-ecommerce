@@ -2,15 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * set the order id number.
@@ -49,4 +44,3 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
         }
     }
 }
-

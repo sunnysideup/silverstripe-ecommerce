@@ -6,7 +6,6 @@ use SilverStripe\Forms\TextField;
 
 use SilverStripe\View\Requirements;
 
-
 /**
  * Allows input of credit card numbers via four separate form fields,
  * including generic validation of its numeric values.

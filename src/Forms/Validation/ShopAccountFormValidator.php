@@ -2,21 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-
-
-
-
-
-use SilverStripe\Security\Member;
-use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\RequiredFields;
-
-
-
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class ShopAccountFormValidator extends RequiredFields
 {
@@ -131,4 +122,3 @@ class ShopAccountFormValidator extends RequiredFields
         return $valid;
     }
 }
-

@@ -2,20 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-
-
-
-
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use SilverStripe\Forms\RequiredFields;
-
-
-
-
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
 /**
  * @Description: checks the data for the OrderForm, before submission.
@@ -72,4 +64,3 @@ class OrderFormValidator extends RequiredFields
         return $valid;
     }
 }
-

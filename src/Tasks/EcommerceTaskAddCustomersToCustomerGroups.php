@@ -2,17 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Dev\BuildTask;
-
-
 
 /**
  * Adds all members, who have bought something, to the customer group.
@@ -66,4 +60,3 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
         }
     }
 }
-

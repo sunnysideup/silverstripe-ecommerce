@@ -2,22 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Pages\Product;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
-use SilverStripe\ORM\DB;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Add any Image (or other file) to a product using the InternalItemID.
@@ -102,14 +94,14 @@ class EcommerceTaskLinkProductsWithImages extends BuildTask
                                 $collection = $product->{$method}();
                                 foreach ($images as $image) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                                    /**
+                                     * ### @@@@ START REPLACEMENT @@@@ ###
+                                     * WHY: automated upgrade
+                                     * OLD:  Object:: (case sensitive)
+                                     * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+                                     * EXP: Check if this is the right implementation, this is highly speculative.
+                                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                                     */
                                     if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class)) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class)) {
                                         $image = $image->newClassInstance(ProductImage::class);
                                         $image->write();

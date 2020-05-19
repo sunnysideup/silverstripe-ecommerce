@@ -2,17 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\ORM\DB;
-use SilverStripe\Dev\BuildTask;
-
-
-
 
 /**
  * @description: see EcommerceTaskAddDefaultProducts::$description
@@ -71,4 +64,3 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
         }
     }
 }
-

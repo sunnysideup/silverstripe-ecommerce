@@ -2,22 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\FieldList;
-use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Forms\LiteralField;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -122,4 +113,3 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
         return _t('OrderStep.CONFIRMED_DESCRIPTION', 'The shop administrator confirms all the details for the current order.');
     }
 }
-

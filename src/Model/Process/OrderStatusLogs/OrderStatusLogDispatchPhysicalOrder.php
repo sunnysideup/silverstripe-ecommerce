@@ -2,21 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-
-
-
-
-
-use SilverStripe\Security\Security;
-use SilverStripe\Security\Member;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
-
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -133,4 +125,3 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         return $html;
     }
 }
-

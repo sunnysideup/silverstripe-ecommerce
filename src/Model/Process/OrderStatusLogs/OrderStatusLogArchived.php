@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-
-
-
-
-use SilverStripe\Security\Member;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -87,18 +81,17 @@ class OrderStatusLogArchived extends OrderStatusLog
     {
         $fields = parent::getCMSFields();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $fields->replaceField('ClassName', new HiddenField('ClassName', 'ClassName', $this->ClassName));
         $fields->addFieldToTab('Root.Main', new ReadonlyField('Created', 'Created'));
 
         return $fields;
     }
 }
-

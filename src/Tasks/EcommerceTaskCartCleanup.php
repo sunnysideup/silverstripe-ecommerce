@@ -2,23 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-use SilverStripe\Security\Permission;
-use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -269,24 +259,24 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
         if (count($oneToOne)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             foreach ($oneToOne as $orderFieldName => $className) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 if (! in_array($className, $oneToMany, true) && ! in_array($className, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
@@ -309,14 +299,14 @@ class EcommerceTaskCartCleanup extends BuildTask
                     }
                     if (count($oneToOneIDArray)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: $className (case sensitive)
+                         * NEW: $className (COMPLEX)
+                         * EXP: Check if the class name can still be used as such
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         $unlinkedObjects = $className::get()
                             ->filter(['ID' => $oneToOneIDArray]);
                         if ($unlinkedObjects->count()) {
@@ -433,4 +423,3 @@ class EcommerceTaskCartCleanup extends BuildTask
         $objectToDelete->destroy();
     }
 }
-

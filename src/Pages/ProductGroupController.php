@@ -2,46 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use SilverStripe\View\Requirements;
+use PageController;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use SilverStripe\Control\Session;
-use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\Control\Director;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\PaginatedList;
-use PageController;
-
-
-
 
 class ProductGroupController extends PageController
 {
@@ -105,35 +82,6 @@ class ProductGroupController extends PageController
         'resetfilter' => true,
     ];
 
-    /**
-     * standard SS method.
-     */
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD:     public function init() (ignore case)
-  * NEW:     protected function init() (COMPLEX)
-  * EXP: Controller init functions are now protected  please check that is a controller.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    protected function init()
-    {
-        parent::init();
-        $this->originalTitle = $this->Title;
-        Requirements::themedCSS('sunnysideup/ecommerce: ProductGroup', 'ecommerce');
-        Requirements::themedCSS('sunnysideup/ecommerce: ProductGroupPopUp', 'ecommerce');
-        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomProducts.js');
-        //we save data from get variables...
-        $this->saveUserPreferences();
-        //makes sure best match only applies to search -i.e. reset otherwise.
-        if ($this->request->param('Action') !== 'searchresults') {
-            $sortKey = $this->getCurrentUserPreferences('SORT');
-            if ($sortKey === Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key')) {
-                $this->resetsort();
-            }
-        }
-    }
-
     /****************************************************
      *  ACTIONS
     /****************************************************/
@@ -148,14 +96,14 @@ class ProductGroupController extends PageController
         $this->products = $this->paginateList($this->ProductsShowable(null));
         if ($this->returnAjaxifiedProductList()) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: ->RenderWith( (ignore case)
+             * NEW: ->RenderWith( (COMPLEX)
+             * EXP: Check that the template location is still valid!
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return $this->RenderWith('AjaxProductList');
         }
         return [];
@@ -187,14 +135,14 @@ class ProductGroupController extends PageController
         $this->products = $this->paginateList($this->ProductsShowable(['ID' => $arrayOfIDs]));
         if ($this->returnAjaxifiedProductList()) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: ->RenderWith( (ignore case)
+             * NEW: ->RenderWith( (COMPLEX)
+             * EXP: Check that the template location is still valid!
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return $this->RenderWith('AjaxProductList');
         }
 
@@ -291,14 +239,14 @@ class ProductGroupController extends PageController
         }
         //save list for future use
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'), $stringOfIDs);
 
         return $this->products;
@@ -485,14 +433,14 @@ class ProductGroupController extends PageController
     public function SearchResultsChildGroups()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $groupArray = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable($isForGroup = true)));
         if (is_array($groupArray) && count($groupArray)) {
             $sortStatement = $this->createSortStatementFromIDArray($groupArray, ProductGroup::class);
@@ -605,14 +553,14 @@ class ProductGroupController extends PageController
     public function ActiveSearchTerm()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if (! empty($data['Keyword'])) {
             return $this->IsSearchResults();
@@ -905,35 +853,35 @@ class ProductGroupController extends PageController
         // /print_r($links);
         foreach ($links as $linkItem) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $className = $linkItem->ClassName;
             $id = $linkItem->ID;
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if ($className && $id) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $object = $className::get()->byID($id);
                 $linkItem->Object = $object;
             }
@@ -1142,6 +1090,35 @@ class ProductGroupController extends PageController
         return $html;
     }
 
+    /**
+     * standard SS method.
+     */
+
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD:     public function init() (ignore case)
+     * NEW:     protected function init() (COMPLEX)
+     * EXP: Controller init functions are now protected  please check that is a controller.
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
+    protected function init()
+    {
+        parent::init();
+        $this->originalTitle = $this->Title;
+        Requirements::themedCSS('sunnysideup/ecommerce: ProductGroup', 'ecommerce');
+        Requirements::themedCSS('sunnysideup/ecommerce: ProductGroupPopUp', 'ecommerce');
+        Requirements::javascript('sunnysideup/ecommerce: ecommerce/javascript/EcomProducts.js');
+        //we save data from get variables...
+        $this->saveUserPreferences();
+        //makes sure best match only applies to search -i.e. reset otherwise.
+        if ($this->request->param('Action') !== 'searchresults') {
+            $sortKey = $this->getCurrentUserPreferences('SORT');
+            if ($sortKey === Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key')) {
+                $this->resetsort();
+            }
+        }
+    }
+
     protected function getSearchResultsDefaultSort($idArray, $alternativeSort = null)
     {
         if (! $alternativeSort) {
@@ -1296,38 +1273,38 @@ class ProductGroupController extends PageController
             if ($newPreference) {
                 $optionsVariableName = $oneTypeArray['configName'];
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $this->ClassName (case sensitive)
+                 * NEW: $this->ClassName (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
                 if (isset($options[$newPreference])) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: Session:: (case sensitive)
+                     * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                     * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
                     //save in model as well...
                 }
             } else {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: Session:: (case sensitive)
+                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $newPreference = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ProductGroup_' . $sessionName);
             }
             //save data in model...
@@ -1349,24 +1326,24 @@ class ProductGroupController extends PageController
         if ($this->request->getVar('reload')) {
             //reset other session variables...
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
 
             return $this->redirect($this->Link());
@@ -1393,14 +1370,14 @@ class ProductGroupController extends PageController
     {
         $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($sessionValue = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ProductGroup_' . $sessionName)) {
             $key = Convert::raw2sql($sessionValue);
         } else {
@@ -1546,4 +1523,3 @@ class ProductGroupController extends PageController
         return $toAdd;
     }
 }
-

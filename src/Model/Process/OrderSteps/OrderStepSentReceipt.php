@@ -2,22 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
-use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\CheckboxField;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -32,29 +24,24 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      */
     protected $emailClassName = OrderReceiptEmail::class;
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderStepSentReceipt';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'SendReceiptToCustomer' => 'Boolean',
     ];
@@ -171,4 +158,3 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
         return _t('OrderStep.SENTRECEIPT_DESCRIPTION', 'The customer is sent a receipt.');
     }
 }
-

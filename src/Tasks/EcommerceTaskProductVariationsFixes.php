@@ -2,15 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\Versioned\Versioned;
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
+use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * see description in class.
@@ -45,4 +40,3 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
         }
     }
 }
-

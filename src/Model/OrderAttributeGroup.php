@@ -2,50 +2,37 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-
-
-
-
-
 use CMSEditLinkAPI;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * Allows you to group OrderAttributes.
  */
 class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
 {
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderAttributeGroup';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Name' => 'Varchar',
         'Sort' => 'Int',
@@ -188,4 +175,3 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 }
-

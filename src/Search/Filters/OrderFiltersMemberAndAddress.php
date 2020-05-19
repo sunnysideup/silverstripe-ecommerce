@@ -2,21 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-
-
-
-
-
 use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
+use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use SilverStripe\Security\Member;
-use SilverStripe\ORM\Filters\ExactMatchFilter;
-
-
-
-
-
 
 /**
  * Filter that searches the Two Addresses (billing + shipping)
@@ -79,4 +69,3 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
         return $query->where('(' . implode(') OR (', $where) . ')');
     }
 }
-

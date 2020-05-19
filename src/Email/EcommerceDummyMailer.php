@@ -2,9 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Email;
 
-
-
-
 class EcommerceDummyMailer
 {
     /**

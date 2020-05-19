@@ -2,11 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-
-
-use Spyc;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 
 
 
@@ -64,7 +62,8 @@ use SilverStripe\Control\Director;
  **/
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
+use Spyc;
+
 /**
  * This Class creates an array of configurations for e-commerce.
  * This class replaces static variables in individual classes, such as Blog::$allow_wysiwyg_editing.
@@ -119,23 +118,27 @@ class EcommerceConfig
     use Extensible;
     use Injectable;
     use Configurable;
+
     /**
      * The location(s) of the .yaml fixture file, relative to the site base dir.
      *
      * @var array
      */
-    private static $folder_and_file_locations = array('ecommerce/_config/ecommerce.yml', 'ecommerce/_config/payment.yml');
+    private static $folder_and_file_locations = ['ecommerce/_config/ecommerce.yml', 'ecommerce/_config/payment.yml'];
+
     /**
      * Array of fixture items.
      *
      * @var array
      */
-    private $fixtureDictionary = array();
+    private $fixtureDictionary = [];
+
     /**
      * Returns a configuration.  This is the main static method for this Object.
      *
      * @see Config::get()
      */
+
     /**
      * ### @@@@ START REPLACEMENT @@@@ ###
      * WHY: automated upgrade
@@ -156,6 +159,7 @@ class EcommerceConfig
          */
         return Config::inst()->get($className, $identifier, $sourceOptions, $result, $suppress);
     }
+
     /**
      * returns the complete Array of data.
      *
@@ -163,7 +167,7 @@ class EcommerceConfig
      */
     public function getCompleteDataSet($refresh = false)
     {
-        if ($refresh || !count($this->fixtureDictionary)) {
+        if ($refresh || ! count($this->fixtureDictionary)) {
             $this->loadData();
         }
         //remove reserved class-names
@@ -198,6 +202,7 @@ class EcommerceConfig
         }
         return $this->fixtureDictionary;
     }
+
     /**
      * returns a list of file locations.
      *
@@ -209,6 +214,7 @@ class EcommerceConfig
         //we reverse it so the default comes last
         return array_reverse($array);
     }
+
     /**
      * loads data from file.
      * We have this method to create a complete list of configs.
@@ -219,7 +225,7 @@ class EcommerceConfig
         $filesArray = $this->fileLocations();
         foreach ($filesArray as $folderAndFileLocation) {
             $fixtureFolderAndFile = Director::baseFolder() . '/' . $folderAndFileLocation;
-            if (!file_exists($fixtureFolderAndFile)) {
+            if (! file_exists($fixtureFolderAndFile)) {
                 user_error('No custom configuration has been setup for Ecommerce - I was looking for: "' . $fixtureFolderAndFile . '"', E_USER_NOTICE);
             }
             $parser = new Spyc();
@@ -228,4 +234,3 @@ class EcommerceConfig
         }
     }
 }
-

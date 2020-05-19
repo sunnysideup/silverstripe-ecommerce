@@ -2,19 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-
-
-
-
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-
-
-
 
 /**
  * OrderStatusLogSubmitted is an important class that is created when an order is submitted.
@@ -164,4 +156,3 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         }
     }
 }
-

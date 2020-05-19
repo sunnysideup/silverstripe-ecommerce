@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
 
 /**
  * After a bug in the saving of orders in the CMS
@@ -58,4 +54,3 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
         }
     }
 }
-

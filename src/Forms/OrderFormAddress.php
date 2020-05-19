@@ -2,50 +2,29 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\Control\Controller;
-use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Forms\FieldList;
-use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
-use SilverStripe\Forms\HeaderField;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\HiddenField;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use SilverStripe\Forms\CompositeField;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Core\Convert;
-use SilverStripe\Forms\FormAction;
-use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
-use SilverStripe\Forms\Form;
 use SilverStripe\Control\HTTPRequest;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Security\Member;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
-
-
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
 /**
  * This class is the form for editing the Order Addresses.
@@ -348,14 +327,14 @@ class OrderFormAddress extends Form
 
         //allow updating via decoration
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
@@ -401,24 +380,24 @@ class OrderFormAddress extends Form
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('BillingEcommerceGeocodingFieldValue', empty($data['BillingEcommerceGeocodingField']) ? null : $data['BillingEcommerceGeocodingField']);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ShippingEcommerceGeocodingFieldValue', empty($data['ShippingEcommerceGeocodingField']) ? null : $data['ShippingEcommerceGeocodingField']);
         $this->saveDataToSession();
 
@@ -463,14 +442,14 @@ class OrderFormAddress extends Form
             //this causes ERRORS ....
             $this->order->MemberID = $this->orderMember->ID;
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('Ecommerce_Member_For_Order', $this->orderMember->ID);
         }
 
@@ -517,14 +496,14 @@ class OrderFormAddress extends Form
         unset($data['PasswordCheck1']);
         unset($data['PasswordCheck2']);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 
@@ -535,14 +514,14 @@ class OrderFormAddress extends Form
     {
         $this->clearMessage();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", null);
     }
 
@@ -888,4 +867,3 @@ class OrderFormAddress extends Form
         return ShopAccountFormPasswordValidator::clean_password($data);
     }
 }
-

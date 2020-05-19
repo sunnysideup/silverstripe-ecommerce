@@ -2,36 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\Control\Controller;
-use Sunnysideup\Ecommerce\Model\Order;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\FormAction;
-use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
-use SilverStripe\Forms\Form;
-use SilverStripe\Control\HTTPRequest;
-use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use SilverStripe\ORM\DataObject;
-
-
-
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 class OrderFormFeedback extends Form
 {
@@ -68,15 +52,14 @@ class OrderFormFeedback extends Form
         $validator = OrderFormFeedbackValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
@@ -124,14 +107,14 @@ class OrderFormFeedback extends Form
     {
         $data = $this->getData();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 
@@ -155,4 +138,3 @@ class OrderFormFeedback extends Form
         return $this->_orderConfirmationPage;
     }
 }
-

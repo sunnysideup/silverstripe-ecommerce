@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
 use Page;
 
 
@@ -21,29 +20,25 @@ use Page;
 
 
 
-use Sunnysideup\Ecommerce\Pages\CartPage;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
 use SilverStripe\CMS\Model\SiteTree;
-use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
-use SilverStripe\Forms\TextField;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\GridField\GridFieldSortableHeader;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\Forms\GridField\GridFieldEditButton;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\GridField\GridField;
-
-
 
 /**
  * CheckoutPage is a CMS page-type that shows the order
@@ -98,28 +93,24 @@ class CheckoutPage extends CartPage
      * @Var Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'CheckoutPage';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'TermsAndConditionsMessage' => 'Varchar(200)',
         'EnableGoogleAnalytics' => 'Boolean(1)',
@@ -131,14 +122,14 @@ class CheckoutPage extends CartPage
      * @Var Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'TermsPage' => 'Page',
     ];
@@ -304,7 +295,7 @@ class CheckoutPage extends CartPage
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array())
+    public function canCreate($member = null, $context = [])
     {
         return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->Count() ? false : $this->canEdit($member);
     }
@@ -448,4 +439,3 @@ class CheckoutPage extends CartPage
         return new GridField(CheckoutPageStepDescription::class, $title, $source, $gridFieldConfig);
     }
 }
-

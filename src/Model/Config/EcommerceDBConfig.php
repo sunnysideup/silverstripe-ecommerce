@@ -2,88 +2,48 @@
 
 namespace Sunnysideup\Ecommerce\Model\Config;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use SilverStripe\Assets\Image;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
-use SilverStripe\Security\Member;
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use SilverStripe\Control\Email\Email;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\Tab;
-use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
-use SilverStripe\Forms\HiddenField;
+use SilverStripe\Assets\Image;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\Forms\GridField\GridFieldPaginator;
-use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use SilverStripe\Forms\GridField\GridField;
-use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Pages\AccountPage;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Pages\CartPage;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 /**
  * Database Settings for E-commerce
@@ -103,28 +63,24 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'EcommerceDBConfig';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Title' => 'Varchar(30)',
         'UseThisOne' => 'Boolean',
@@ -156,24 +112,24 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  => 'Image' (case sensitive)
-  * NEW:  => 'Image' (COMPLEX)
-  * EXP: you may want to add ownership (owns)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  => 'Image' (case sensitive)
+         * NEW:  => 'Image' (COMPLEX)
+         * EXP: you may want to add ownership (owns)
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         'EmailLogo' => Image::class,
         'DefaultProductImage' => ProductImage::class,
     ];
@@ -421,60 +377,59 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         if (! self::$_my_current_one) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $className = EcommerceConfig::get(EcommerceDBConfig::class, 'ecommerce_db_config_class_name');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if (! class_exists($className)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $className = EcommerceDBConfig::class;
             }
             self::$_my_current_one = DataObject::get_one(
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $className,
                 ['UseThisOne' => 1],
                 $cacheDataObjectGetOne = false
             );
             if (! self::$_my_current_one) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 self::$_my_current_one = $className::create();
             }
         }
@@ -605,15 +560,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     Tab::create(
                         'Products',
                         _t('EcommerceDBConfig.PRODUCTS', 'Products'),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: NumericField (case sensitive)
+                         * NEW: NumericField (COMPLEX)
+                         * EXP: check the number of decimals required and add as ->Step(123)
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
                         new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
                         new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
@@ -695,14 +649,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     ]
                 );
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->dontEscape (case sensitive)
-  * NEW: ->dontEscape (COMPLEX)
-  * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: ->dontEscape (case sensitive)
+                 * NEW: ->dontEscape (COMPLEX)
+                 * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $clearField->dontEscape = true;
                 //set cols
                 if ($f = $fields->dataFieldByName('CurrenciesExplanation')) {
@@ -777,25 +731,25 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @return bool
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function is_buyable($className)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $implementorsArray = class_implements($className);
         if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
             return true;
@@ -984,4 +938,3 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         return $this->UseThisOne ? 'YES' : 'NO';
     }
 }
-

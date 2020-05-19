@@ -2,8 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
-
-
+use CMSEditLinkAPI;
 
 
 
@@ -13,31 +12,22 @@ use Currency;
 
 
 
-
-
-use CMSEditLinkAPI;
-
-
-
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\HeaderField;
-use Sunnysideup\Ecommerce\Money\EcommerceMoney;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Money\EcommerceMoney;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * Object to manage currencies.
@@ -55,28 +45,24 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'EcommerceCurrency';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Code' => 'Varchar(3)',
         'Name' => 'Varchar(100)',
@@ -851,4 +837,3 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         return EcommerceTaskDebugCart::debug_object($this);
     }
 }
-

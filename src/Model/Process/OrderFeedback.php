@@ -2,25 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-
-
-
-
+use CMSEditLinkAPI;
 
 use CMSEditLinkField;
-
-use CMSEditLinkAPI;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /***
  * Class used to describe the steps in the checkout
@@ -35,28 +27,24 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @Var Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderFeedback';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Rating' => 'Varchar',
         'Note' => 'Text',
@@ -69,14 +57,14 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @Var Array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Order' => Order::class,
     ];
@@ -91,14 +79,14 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         'Note' => 'PartialMatchFilter',
         'OrderID' => [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -298,4 +286,3 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
     }
 }
-

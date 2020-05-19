@@ -2,13 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-
-
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -104,4 +99,3 @@ class OrderStatusLogCancel extends OrderStatusLog
         return false;
     }
 }
-

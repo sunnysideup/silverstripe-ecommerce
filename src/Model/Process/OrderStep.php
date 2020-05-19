@@ -2,56 +2,31 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
-use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
-use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 /**
  * @description: see OrderStep.md
@@ -89,28 +64,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @return array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderStep';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Name' => 'Varchar(50)',
         'Code' => 'Varchar(50)',
@@ -1093,24 +1064,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function RelevantLogEntries(Order $order)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($className = $this->getRelevantLogEntryClassName()) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return $className::get()->filter(
                 [
                     'OrderID' => $order->ID,
@@ -1519,14 +1490,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $oldObject->delete();
                         }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: $className (case sensitive)
+                         * NEW: $className (COMPLEX)
+                         * EXP: Check if the class name can still be used as such
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         $obj = $className::create($filter);
                         $obj->Code = $code;
                         $obj->Description = $obj->myDescription();
@@ -1574,4 +1545,3 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return _t('OrderStep.DESCRIPTION', 'No description has been provided for this step.');
     }
 }
-

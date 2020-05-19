@@ -2,28 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-
-
 
 /**
  * @description:
@@ -52,28 +40,24 @@ class OrderConfirmationPage extends CartPage
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderConfirmationPage';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'StartNewOrderLinkLabel' => 'Varchar(100)',
         'CopyOrderLinkLabel' => 'Varchar(100)',
@@ -451,4 +435,3 @@ class OrderConfirmationPage extends CartPage
         }
     }
 }
-

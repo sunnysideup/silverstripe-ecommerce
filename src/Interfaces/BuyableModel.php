@@ -2,9 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
-
 use SilverStripe\Security\Member;
-
 
 /**
  * describes the buyable classes

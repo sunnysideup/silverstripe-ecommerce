@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use SilverStripe\ORM\FieldType\DBBoolean;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
 
 class EcommerceTaskDebugCart extends BuildTask
 {
@@ -95,4 +89,3 @@ class EcommerceTaskDebugCart extends BuildTask
         return $value;
     }
 }
-

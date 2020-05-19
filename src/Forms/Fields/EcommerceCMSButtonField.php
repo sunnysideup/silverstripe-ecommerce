@@ -2,11 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
 use SilverStripe\Forms\LiteralField;
-
-
-
 
 class EcommerceCMSButtonField extends LiteralField
 {
@@ -31,4 +27,3 @@ class EcommerceCMSButtonField extends LiteralField
         );
     }
 }
-

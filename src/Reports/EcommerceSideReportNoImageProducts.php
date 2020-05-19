@@ -2,15 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-
-
-use Sunnysideup\Ecommerce\Pages\Product;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
-
-
-
-
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Selects all products without an image.
@@ -90,4 +84,3 @@ class EcommerceSideReportNoImageProducts extends Report
         return $field;
     }
 }
-

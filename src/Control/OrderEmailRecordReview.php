@@ -2,16 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
-use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use SilverStripe\Control\Controller;
-
-
-
+use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 
 class OrderEmailRecordReview extends Controller
 {
@@ -32,4 +25,3 @@ class OrderEmailRecordReview extends Controller
         return $email->Content;
     }
 }
-

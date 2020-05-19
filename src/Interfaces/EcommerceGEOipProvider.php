@@ -2,10 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
-
-
-
-
 interface EcommerceGEOipProvider
 {
     /**

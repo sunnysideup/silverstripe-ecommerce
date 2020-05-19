@@ -2,16 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Filesystem;
 
-
-
-
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Assets\Image;
-
-
-
+use SilverStripe\ORM\FieldType\DBField;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 class ProductImage extends Image
 {

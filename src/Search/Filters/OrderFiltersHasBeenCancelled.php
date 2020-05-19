@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-
-
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-
-
 
 /**
  * Allows you to filter for orders that have been cancelled.
@@ -33,4 +29,3 @@ class OrderFiltersHasBeenCancelled extends ExactMatchFilter
         return $query;
     }
 }
-

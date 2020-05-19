@@ -2,15 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
 /**
  * update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country.
@@ -41,4 +35,3 @@ class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
         }
     }
 }
-

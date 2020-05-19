@@ -2,21 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use SilverStripe\Core\Convert;
-use SilverStripe\View\Requirements;
 use SilverStripe\Forms\DatalessField;
-
-
-
+use SilverStripe\Security\Member;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * This field shows the admin (and maybe the customer) where the Order is at (which orderstep).
@@ -138,7 +129,7 @@ class OrderStepField extends DatalessField
      *
      * @param mixed $value
      */
-    public function setValue($value, $data = NULL)
+    public function setValue($value, $data = null)
     {
         return $this->setContent($value);
     }

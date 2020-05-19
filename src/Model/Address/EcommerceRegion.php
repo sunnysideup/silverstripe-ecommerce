@@ -2,24 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-
-
-
 use CMSEditLinkAPI;
 
 
 
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceRegionVisitorRegionProvider;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
 
 /**
  * @description: This class helps you to manage regions within the context of e-commerce.
@@ -61,28 +53,24 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'EcommerceRegion';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Code' => 'Varchar(20)',
         'Name' => 'Varchar(200)',
@@ -96,14 +84,14 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Country' => EcommerceCountry::class,
     ];
@@ -453,4 +441,3 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         return $defaultArray;
     }
 }
-

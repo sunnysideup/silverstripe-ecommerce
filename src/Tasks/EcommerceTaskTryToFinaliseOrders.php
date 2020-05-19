@@ -2,35 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-
-
-
-
 use Exception;
 
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskTryToFinaliseOrders;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\ORM\DB;
-use SilverStripe\Control\Director;
-use SilverStripe\Dev\BuildTask;
-
-
-
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -78,14 +64,14 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
         if (! intval($startAt)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class));
             if (! $startAt) {
                 $startAt = 0;
@@ -137,14 +123,14 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class)) {
             if (! $this->isCli()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
@@ -161,14 +147,14 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             foreach ($orders as $order) {
                 ++$startAt;
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: Session:: (case sensitive)
+                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
                 $stepBefore = OrderStep::get()->byID($order->StatusID);
                 try {
@@ -195,14 +181,14 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             }
         } else {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear(EcommerceTaskTryToFinaliseOrders::class);
             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
         }
@@ -215,4 +201,3 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         return Director::is_cli();
     }
 }
-

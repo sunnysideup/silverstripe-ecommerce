@@ -1,11 +1,6 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Email;
-use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
-
-
-
-
 
 /**
  * @Description: This class handles the receipt email which gets sent once an order is made.
@@ -23,4 +18,3 @@ class OrderReceiptEmail extends OrderEmail
      */
     protected $ss_template = OrderReceiptEmail::class;
 }
-

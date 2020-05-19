@@ -2,29 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Email;
 
-
-
-
-
-
-
-
-
-
 use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Email\OrderEmail;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Control\HTTP;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\SiteConfig\SiteConfig;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Config\Config;
-
-
-
+use SilverStripe\SiteConfig\SiteConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @Description: Email specifically for communicating with customer about order.
@@ -260,4 +247,3 @@ abstract class OrderEmail extends Email
         }
     }
 }
-

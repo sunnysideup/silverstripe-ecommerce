@@ -2,10 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-
-
 use SilverStripe\ORM\DB;
-
 
 /**
  * @description: Sometimes you need a large collection of products
@@ -58,4 +55,3 @@ abstract class ProductCollection
         ';
     }
 }
-

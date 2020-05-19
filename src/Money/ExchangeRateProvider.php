@@ -2,10 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-
-
-
-
 /***
  * the sole purpose of this class is to provide an exchange rate
  * from currency 1 to currency 2.
@@ -23,9 +19,10 @@ namespace Sunnysideup\Ecommerce\Money;
  * @sub-package: money
  **/
 
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
+
 /***
  * the sole purpose of this class is to provide an exchange rate
  * from currency 1 to currency 2.
@@ -47,18 +44,21 @@ class ExchangeRateProvider
     use Extensible;
     use Injectable;
     use Configurable;
+
     /**
      * adds a bit of additional cost to account for the exchange cost.
      *
      * @var floatval
      */
     protected $exchangeCostMultiplier = 1.05;
+
     /**
      * cache of exchange rates.
      *
      * @var array
      */
-    private static $_memory_cache = array();
+    private static $_memory_cache = [];
+
     /**
      * Get the exchange rate.
      *
@@ -81,7 +81,7 @@ class ExchangeRateProvider
          * WHY: automated upgrade
          * OLD: Session:: (case sensitive)
          * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
         if ($value = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($cacheCode)) {
@@ -94,13 +94,14 @@ class ExchangeRateProvider
              * WHY: automated upgrade
              * OLD: Session:: (case sensitive)
              * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($cacheCode, $value);
         }
         return self::$_memory_cache[$cacheCode];
     }
+
     /**
      * gets a rate from a FROM and a TO currency.
      * see https://free.currencyconverterapi.com/ for limitations
@@ -124,7 +125,7 @@ class ExchangeRateProvider
             $record = curl_exec($ch);
             curl_close($ch);
         }
-        if (!$record) {
+        if (! $record) {
             /**
              * ### @@@@ START REPLACEMENT @@@@ ###
              * WHY: automated upgrade
@@ -138,7 +139,7 @@ class ExchangeRateProvider
         if ($record) {
             $currencyData = json_decode($record);
             $rate = $currencyData->{$reference}->val;
-            if (!$rate) {
+            if (! $rate) {
                 user_error('There was a problem retrieving the exchange rate.');
             }
         }
@@ -148,4 +149,3 @@ class ExchangeRateProvider
         return $rate;
     }
 }
-

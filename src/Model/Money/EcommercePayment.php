@@ -2,9 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
-
-
-
 use CMSEditLinkAPI;
 
 
@@ -18,27 +15,24 @@ use CMSEditLinkAPI;
 
 
 
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use SilverStripe\Forms\OptionsetField;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\HeaderField;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * "Abstract" class for a number of different payment
@@ -72,28 +66,24 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Pending: Payment awaiting receipt/bank transfer etc.
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'EcommercePayment';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
@@ -104,15 +94,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'AlternativeEndPoint' => 'Varchar(255)',
     ];
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'PaidBy' => Member::class,
         'Order' => Order::class,
@@ -136,14 +125,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $searchable_fields = [
         'OrderID' => [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -415,14 +404,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         parent::onAfterWrite();
         $order = $this->Order();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  Object:: (case sensitive)
+         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+         * EXP: Check if this is the right implementation, this is highly speculative.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class)) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }
@@ -471,24 +460,24 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $supportedMethods = self::get_supported_methods($this->Order());
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (isset($supportedMethods[$this->ClassName])) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $this->ClassName (case sensitive)
+             * NEW: $this->ClassName (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return $supportedMethods[$this->ClassName];
         }
     }
@@ -591,14 +580,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getPaymentFormFields($amount = 0, $order = null)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->class (case sensitive)
+         * NEW: $this->class (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         user_error("Please implement getPaymentFormFields() on {$this->class}", E_USER_ERROR);
     }
 
@@ -614,14 +603,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getPaymentFormRequirements()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->class (case sensitive)
+         * NEW: $this->class (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         user_error("Please implement getPaymentFormRequirements() on {$this->class}", E_USER_ERROR);
     }
 
@@ -656,14 +645,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function processPayment($data, $form)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->class (case sensitive)
+         * NEW: $this->class (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         user_error("Please implement processPayment() on {$this->class}", E_USER_ERROR);
     }
 
@@ -743,4 +732,3 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return $this->ecommercePaymentFormSetupAndValidationObject;
     }
 }
-

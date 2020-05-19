@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
 
 /**
  * shows you the link to remove the current cart.
@@ -30,4 +26,3 @@ class EcommerceTaskCartManipulationCurrent extends BuildTask
         DB::alteration_message('<br /><br /><br /><br /><br /><br /><a href="/shoppingcart/clear/" target="_debug">click here to clear the current cart from your session</a>.<br /><br /><br /><br /><br /><br />');
     }
 }
-

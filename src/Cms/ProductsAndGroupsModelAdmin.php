@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-
-
-
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridField;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfig;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
-
-
-
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfig;
 
 /**
  * @description: for the management of Product and Product Groups only
@@ -58,4 +52,3 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
         return $form;
     }
 }
-

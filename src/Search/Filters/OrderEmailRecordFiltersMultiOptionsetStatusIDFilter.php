@@ -2,13 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-
-
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-
-
-
 
 /**
  * Allows you to filter orders for multiple statusIDs.
@@ -34,4 +29,3 @@ class OrderEmailRecordFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilt
         return $query;
     }
 }
-

@@ -2,17 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-
-
-
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
-use SilverStripe\View\ViewableData;
-
-
 
 /**
  * This class defines all the names for IDs and Classes that are used
@@ -339,4 +333,3 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
         return $object->getAjaxMethod($name);
     }
 }
-

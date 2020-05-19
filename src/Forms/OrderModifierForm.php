@@ -2,23 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-
-
-
-
-
-
-
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Validator;
-use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\View\Requirements;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\Validator;
+use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
-
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
@@ -73,27 +63,27 @@ class OrderModifierForm extends Form
 
         $this->setAttribute('autocomplete', 'off');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         Requirements::themedCSS($this->ClassName, 'ecommerce');
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
@@ -133,14 +123,14 @@ class OrderModifierForm extends Form
     {
         $data = $this->getData();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 
@@ -158,4 +148,3 @@ class OrderModifierForm extends Form
         }
     }
 }
-

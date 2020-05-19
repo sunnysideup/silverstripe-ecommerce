@@ -2,32 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-
-
-
-
-
-
-
-
-
 use GoogleAddressField;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\CompositeField;
-use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-
-
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * @description: each order has a shipping address.
@@ -65,28 +50,24 @@ class ShippingAddress extends OrderAddress
      * @return array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'ShippingAddress';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'ShippingPrefix' => 'Varchar(10)',
         'ShippingFirstName' => 'Varchar(100)',
@@ -151,14 +132,14 @@ class ShippingAddress extends OrderAddress
     private static $searchable_fields = [
         'OrderID' => [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -306,15 +287,14 @@ class ShippingAddress extends OrderAddress
                     $shippingEcommerceGeocodingField = new GoogleAddressField(
                         'ShippingEcommerceGeocodingField',
                         _t('ShippingAddress.Find_Address', 'Find address'),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: Session:: (case sensitive)
+                         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ShippingEcommerceGeocodingFieldValue')
                     )
                 );
@@ -351,4 +331,3 @@ class ShippingAddress extends OrderAddress
         return $this->Config()->get('required_fields');
     }
 }
-

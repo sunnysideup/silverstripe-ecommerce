@@ -2,19 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-
-
-
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
+use SilverStripe\CMS\Controllers\CMSPageAddController;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\CMS\Controllers\CMSPageAddController;
-
-
-
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 class CMSPageAddControllerProducts extends CMSPageAddController
 {
@@ -54,24 +47,24 @@ class CMSPageAddControllerProducts extends CMSPageAddController
         $pageTypes = parent::PageTypes();
         $result = new ArrayList();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  Object:: (case sensitive)
+         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+         * EXP: Check if this is the right implementation, this is highly speculative.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD:  Object:: (case sensitive)
+         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+         * EXP: Check if this is the right implementation, this is highly speculative.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class);
 
         $acceptedClasses1 = ClassInfo::subclassesFor($productClass);
@@ -90,4 +83,3 @@ class CMSPageAddControllerProducts extends CMSPageAddController
         return $result;
     }
 }
-

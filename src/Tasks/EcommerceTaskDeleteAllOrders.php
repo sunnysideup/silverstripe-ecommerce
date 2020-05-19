@@ -2,26 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\OrderAttribute;
+use SilverStripe\Control\Director;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderAttribute;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
-use SilverStripe\Control\Director;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Dev\BuildTask;
-
-
-
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * @description (see $this->description)
@@ -197,4 +189,3 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
         }
     }
 }
-

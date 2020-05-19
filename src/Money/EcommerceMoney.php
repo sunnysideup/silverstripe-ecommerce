@@ -2,25 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-
 use Money;
-use Zend_Currency;
-
-use Sunnysideup\Ecommerce\Money\EcommerceMoney;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Core\Extension;
 
-
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Zend_Currency;
 
 /**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  extends Extension (ignore case)
-  * NEW:  extends Extension (COMPLEX)
-  * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+ * ### @@@@ START REPLACEMENT @@@@ ###
+ * WHY: automated upgrade
+ * OLD:  extends Extension (ignore case)
+ * NEW:  extends Extension (COMPLEX)
+ * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
+ * ### @@@@ STOP REPLACEMENT @@@@ ###
+ */
 class EcommerceMoney extends Extension
 {
     /**
@@ -166,4 +161,3 @@ class EcommerceMoney extends Extension
         return $this->owner->{$function}($html);
     }
 }
-

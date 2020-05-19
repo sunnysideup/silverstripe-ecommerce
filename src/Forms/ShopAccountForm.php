@@ -2,37 +2,21 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use SilverStripe\Core\Convert;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\FieldList;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
-use SilverStripe\Forms\Form;
-
 
 /**
  * @description: ShopAccountForm allows shop members to update their details.
@@ -66,14 +50,14 @@ class ShopAccountForm extends Form
                     $loginMessage
                 );
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->dontEscape (case sensitive)
-  * NEW: ->dontEscape (COMPLEX)
-  * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: ->dontEscape (case sensitive)
+                 * NEW: ->dontEscape (COMPLEX)
+                 * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $loginField->dontEscape = true;
                 $fields->push($loginField);
             }
@@ -132,14 +116,14 @@ class ShopAccountForm extends Form
             $this->loadDataFrom($member);
         }
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
@@ -219,14 +203,14 @@ class ShopAccountForm extends Form
         unset($data['PasswordCheck1']);
         unset($data['PasswordCheck2']);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 
@@ -261,4 +245,3 @@ class ShopAccountForm extends Form
         }
     }
 }
-

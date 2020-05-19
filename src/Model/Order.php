@@ -2,17 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-
-
-
-
-
-
-
-
-
-
-
 use CMSEditLinkAPI;
 
 
@@ -62,89 +51,83 @@ use CMSEditLinkAPI;
 
 
 
-use Sunnysideup\Ecommerce\Email\OrderEmail;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Model\OrderAttribute;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
-use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\Validator;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Cms\SalesAdmin;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ErrorPage\ErrorPage;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\Tab;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldConfig_Base;
-use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
-use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ReadonlyField;
-use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
-use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
-use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use SilverStripe\Forms\CheckboxField;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForOrderItems;
-use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\GridField\GridFieldEditButton;
-use Sunnysideup\Ecommerce\Forms\Fields\OrderStepField;
-use Sunnysideup\Ecommerce\Model\OrderModifier;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\Validator;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel;
-use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
-use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\RandomGenerator;
+use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Cms\SalesAdmin;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use SilverStripe\ORM\FieldType\DBField;
+use Sunnysideup\Ecommerce\Email\OrderEmail;
+use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
+use Sunnysideup\Ecommerce\Forms\Fields\OrderStepField;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForOrderItems;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
-use SilverStripe\ORM\FieldType\DBDatetime;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use SilverStripe\ErrorPage\ErrorPage;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use SilverStripe\Security\RandomGenerator;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
+use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldSortableHeader;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Control\Email\Email;
-use Sunnysideup\Ecommerce\Model\OrderItem;
-use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
 
 /**
  * @description:
@@ -286,28 +269,24 @@ class Order extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW:
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'Order';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'SessionID' => 'Varchar(32)', //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
         'UseShippingAddress' => 'Boolean',
@@ -317,15 +296,14 @@ class Order extends DataObject implements EditableEcommerceObject
         //'TotalItemsTimesQuantity_Saved' => 'Double'
     ];
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Member' => Member::class,
         'BillingAddress' => BillingAddress::class,
@@ -760,14 +738,14 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->init(true);
             $this->calculateOrderAttributes(true);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: Session:: (case sensitive)
+             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
         }
         if ($submitted) {
@@ -1204,44 +1182,44 @@ class Order extends DataObject implements EditableEcommerceObject
                 $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
                 if (is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     foreach ($modifiersToAdd as $numericKey => $className) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: $className (case sensitive)
+                         * NEW: $className (COMPLEX)
+                         * EXP: Check if the class name can still be used as such
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         if (! in_array($className, $createdModifiersClassNames, true)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                            /**
+                             * ### @@@@ START REPLACEMENT @@@@ ###
+                             * WHY: automated upgrade
+                             * OLD: $className (case sensitive)
+                             * NEW: $className (COMPLEX)
+                             * EXP: Check if the class name can still be used as such
+                             * ### @@@@ STOP REPLACEMENT @@@@ ###
+                             */
                             if (class_exists($className)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                                /**
+                                 * ### @@@@ START REPLACEMENT @@@@ ###
+                                 * WHY: automated upgrade
+                                 * OLD: $className (case sensitive)
+                                 * NEW: $className (COMPLEX)
+                                 * EXP: Check if the class name can still be used as such
+                                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                                 */
                                 $modifier = new $className();
                                 //only add the ones that should be added automatically
                                 if (! $modifier->DoNotAddAutomatically()) {
@@ -1257,14 +1235,14 @@ class Order extends DataObject implements EditableEcommerceObject
                                 }
                             } else {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                                /**
+                                 * ### @@@@ START REPLACEMENT @@@@ ###
+                                 * WHY: automated upgrade
+                                 * OLD: $className (case sensitive)
+                                 * NEW: $className (COMPLEX)
+                                 * EXP: Check if the class name can still be used as such
+                                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                                 */
                                 user_error('reference to a non-existing class: ' . $className . ' in modifiers', E_USER_NOTICE);
                             }
                         }
@@ -1846,14 +1824,14 @@ class Order extends DataObject implements EditableEcommerceObject
             user_error('Can not set the currency after the order has been submitted', E_USER_NOTICE);
         } else {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if (! is_a($newCurrency, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(EcommerceCurrency::class))) {
                 $newCurrency = EcommerceCurrency::default_currency();
             }
@@ -1950,14 +1928,14 @@ class Order extends DataObject implements EditableEcommerceObject
         Config::nest();
         Config::modify()->update(SSViewer::class, 'theme_enabled', true);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $html = $arrayData->RenderWith($emailClassName);
         Config::unnest();
 
@@ -2162,7 +2140,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array())
+    public function canCreate($member = null, $context = [])
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -2817,14 +2795,14 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($items->count()) {
             foreach ($items as $item) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD:  Object:: (case sensitive)
+                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+                 * EXP: Check if this is the right implementation, this is highly speculative.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 if (is_a($item, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderAttribute::class))) {
                     $result += $item->Total();
                 }
@@ -3921,14 +3899,14 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             $email = new $emailClassName();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if (! is_a($email, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Email::class))) {
                 user_error('No correct email class provided.', E_USER_ERROR);
             }
@@ -4027,42 +4005,41 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function itemsFromDatabase($filterOrClassName = '')
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $className = OrderItem::class;
         $extrafilter = '';
         if ($filterOrClassName) {
             if (class_exists($filterOrClassName)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $className = $filterOrClassName;
             } else {
                 $extrafilter = " AND ${filterOrClassName}";
             }
         }
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $className::get()->filter(['OrderID' => $this->ID])->where($extrafilter);
     }
 
@@ -4078,42 +4055,41 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function modifiersFromDatabase($filterOrClassName = '')
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $className = OrderModifier::class;
         $extrafilter = '';
         if ($filterOrClassName) {
             if (class_exists($filterOrClassName)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $className (case sensitive)
+                 * NEW: $className (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 $className = $filterOrClassName;
             } else {
                 $extrafilter = " AND ${filterOrClassName}";
             }
         }
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $className::get()->where('"OrderAttribute"."OrderID" = ' . $this->ID . " ${extrafilter}");
     }
 

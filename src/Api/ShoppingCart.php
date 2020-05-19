@@ -2,45 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
-use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use SilverStripe\Forms\Form;
-use Sunnysideup\Ecommerce\Model\OrderItem;
-use Sunnysideup\Ecommerce\Model\OrderModifier;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use SilverStripe\Control\Director;
-use SilverStripe\Security\Permission;
-use SilverStripe\Control\Controller;
-use SilverStripe\Core\Convert;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderItem;
 
 
 
@@ -78,9 +60,10 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
  * @sub-package: control
 
  **/
-use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
+
 /**
  * ShoppingCart - provides a global way to interface with the cart (current order).
  *
@@ -119,38 +102,45 @@ class ShoppingCart
     use Extensible;
     use Injectable;
     use Configurable;
+
     /**
      * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
      *
      *@var array
      **/
-    protected $messages = array();
+    protected $messages = [];
+
     /**
      * stores a reference to the current order object.
      *
      * @var object
      **/
     protected $order = null;
+
     /**
      * This variable is set to YES when we actually need an order (i.e. write it).
      *
      * @var bool
      */
     protected $requireSavedOrder = false;
+
     /**
      * List of names that can be used as session variables.
      * Also @see ShoppingCart::sessionVariableName.
      *
      * @var array
      */
-    private static $session_variable_names = array('OrderID', 'Messages');
+    private static $session_variable_names = ['OrderID', 'Messages'];
+
     /**
      * This is where we hold the (singleton) Shoppingcart.
      *
      * @var object (ShoppingCart)
      */
     private static $_singletoncart = null;
+
     private static $_allow_writes_cache = null;
+
     /**
      * Allows access to the cart from anywhere in code.
      *
@@ -158,11 +148,12 @@ class ShoppingCart
      */
     public static function singleton()
     {
-        if (!self::$_singletoncart) {
+        if (! self::$_singletoncart) {
             self::$_singletoncart = Injector::inst()->get(ShoppingCart::class);
         }
         return self::$_singletoncart;
     }
+
     /**
      * Allows access to the current order from anywhere in the code..
      *
@@ -176,6 +167,7 @@ class ShoppingCart
     {
         return self::singleton()->currentOrder(0, $order);
     }
+
     /**
      * useful when the order has been updated ...
      */
@@ -183,6 +175,7 @@ class ShoppingCart
     {
         return self::singleton()->order = null;
     }
+
     /**
      * looks up current order id.
      * you may supply an ID here, so that it looks up the current order ID
@@ -195,7 +188,7 @@ class ShoppingCart
     public static function current_order_id($orderOrOrderID = 0)
     {
         $orderID = 0;
-        if (!$orderOrOrderID) {
+        if (! $orderOrOrderID) {
             $order = self::current_order();
             if ($order && $order->exists()) {
                 $orderID = $order->ID;
@@ -208,6 +201,7 @@ class ShoppingCart
         }
         return $orderID;
     }
+
     /**
      * Allows access to the current order from anywhere in the code..
      *
@@ -227,6 +221,7 @@ class ShoppingCart
         $orderIDFromSession = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
         return Order::get()->byID($orderIDFromSession);
     }
+
     /**
      * set a specific order, other than the one from session ....
      *
@@ -239,6 +234,7 @@ class ShoppingCart
         $this->order = $order;
         return $this->order;
     }
+
     /**
      * Gets or creates the current order.
      * Based on the session ONLY unless the order has been explictely set.
@@ -259,24 +255,24 @@ class ShoppingCart
             $this->order = $order;
         }
         if ($this->allowWrites()) {
-            if (!$this->order) {
+            if (! $this->order) {
                 $this->order = self::session_order();
                 $loggedInMember = Member::currentUser();
                 if ($this->order) {
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {
                         $this->order = null;
-                    } elseif (!$this->order->canView()) {
+                    } elseif (! $this->order->canView()) {
                         //second reason to set to null: make sure we have permissions
                         $this->order = null;
                     } elseif ($loggedInMember && $loggedInMember->exists()) {
                         //logged in, add Member.ID to order->MemberID
                         if ($this->order->MemberID !== $loggedInMember->ID) {
                             $updateMember = false;
-                            if (!$this->order->MemberID) {
+                            if (! $this->order->MemberID) {
                                 $updateMember = true;
                             }
-                            if (!$loggedInMember->IsShopAdmin()) {
+                            if (! $loggedInMember->IsShopAdmin()) {
                                 $updateMember = true;
                             }
                             if ($updateMember) {
@@ -319,7 +315,7 @@ class ShoppingCart
                         }
                     }
                 }
-                if (!$this->order) {
+                if (! $this->order) {
                     if ($loggedInMember) {
                         //find previour order...
                         $firstStep = DataObject::get_one(OrderStep::class);
@@ -332,10 +328,10 @@ class ShoppingCart
                             }
                         }
                     }
-                    if ($this->order && !$this->order->exists()) {
+                    if ($this->order && ! $this->order->exists()) {
                         $this->order = null;
                     }
-                    if (!$this->order) {
+                    if (! $this->order) {
                         //here we cleanup old orders, because they should be
                         //cleaned at the same rate that they are created...
                         if (EcommerceConfig::get(ShoppingCart::class, 'cleanup_every_time')) {
@@ -364,7 +360,7 @@ class ShoppingCart
                     if ($this->order->exists()) {
                         $this->order->calculateOrderAttributes($force = false);
                     }
-                    if (!$this->order->SessionID) {
+                    if (! $this->order->SessionID) {
                         $this->order->write();
                     }
                     //add session ID...
@@ -373,7 +369,7 @@ class ShoppingCart
             //try it again
             //but limit to three, just in case ...
             //just in case ...
-            if (!$this->order && $recurseCount < 3) {
+            if (! $this->order && $recurseCount < 3) {
                 ++$recurseCount;
                 return $this->currentOrder($recurseCount, $order);
             }
@@ -382,6 +378,7 @@ class ShoppingCart
         //we still return an order so that we do not end up with errors...
         return Order::create();
     }
+
     /**
      * Allows access to the current order from anywhere in the code..
      *
@@ -396,6 +393,7 @@ class ShoppingCart
             return $order->Link();
         }
     }
+
     /**
      * Adds any number of items to the cart.
      * Returns the order item on succes OR false on failure.
@@ -408,14 +406,14 @@ class ShoppingCart
      *
      * @return false | DataObject (OrderItem)
      */
-    public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = array())
+    public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = [])
     {
         if ($this->allowWrites()) {
-            if (!$buyable) {
+            if (! $buyable) {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEFOUND', 'This item could not be found.'), 'bad');
                 return false;
             }
-            if (!$buyable->canPurchase()) {
+            if (! $buyable->canPurchase()) {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'This item is not for sale.'), 'bad');
                 return false;
             }
@@ -435,7 +433,7 @@ class ShoppingCart
                     $msg = _t('Order.ITEMADDED', 'Item added.');
                 }
                 $this->addMessage($msg, 'good');
-            } elseif (!$item) {
+            } elseif (! $item) {
                 $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
             } else {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'Item could not be added.'), 'bad');
@@ -443,6 +441,7 @@ class ShoppingCart
             return $item;
         }
     }
+
     /**
      * Sets quantity for an item in the cart.
      *
@@ -454,7 +453,7 @@ class ShoppingCart
      *
      * @return false | DataObject (OrderItem) | null
      */
-    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = array())
+    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
     {
         if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
@@ -470,6 +469,7 @@ class ShoppingCart
             return false;
         }
     }
+
     /**
      * Removes any number of items from the cart.
      *
@@ -481,7 +481,7 @@ class ShoppingCart
      *
      * @return false | OrderItem | null
      */
-    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = array())
+    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = [])
     {
         if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
@@ -505,6 +505,7 @@ class ShoppingCart
             return false;
         }
     }
+
     /**
      * Delete item from the cart.
      *
@@ -515,7 +516,7 @@ class ShoppingCart
      *
      * @return bool | item | null - successfully removed
      */
-    public function deleteBuyable(BuyableModel $buyable, array $parameters = array())
+    public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
     {
         if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = true);
@@ -530,6 +531,7 @@ class ShoppingCart
             return false;
         }
     }
+
     /**
      * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
      *
@@ -541,7 +543,7 @@ class ShoppingCart
      *
      * @return bool | DataObject ($orderItem)
      */
-    public function prepareOrderItem(BuyableModel $buyable, $parameters = array(), $mustBeExistingItem = true)
+    public function prepareOrderItem(BuyableModel $buyable, $parameters = [], $mustBeExistingItem = true)
     {
         $parametersArray = $parameters;
         $form = null;
@@ -549,10 +551,10 @@ class ShoppingCart
             $parametersArray = [];
             $form = $parameters;
         }
-        if (!$buyable) {
+        if (! $buyable) {
             user_error('No buyable was provided', E_USER_WARNING);
         }
-        if (!$buyable->canPurchase()) {
+        if (! $buyable->canPurchase()) {
             return false;
         }
         $item = null;
@@ -562,7 +564,7 @@ class ShoppingCart
             $item = $this->findOrMakeItem($buyable, $parametersArray);
             //find existing order item or make one
         }
-        if (!$item) {
+        if (! $item) {
             //check for existence of item
             return false;
         }
@@ -571,6 +573,7 @@ class ShoppingCart
         }
         return $item;
     }
+
     /**
      * @todo: what does this method do???
      *
@@ -588,6 +591,7 @@ class ShoppingCart
         $this->addMessage(_t('Order.INVALIDQUANTITY', 'Invalid quantity.'), 'warning');
         return 0;
     }
+
     /**
      * Helper function for making / retrieving order items.
      * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
@@ -598,14 +602,14 @@ class ShoppingCart
      *
      * @return OrderItem
      */
-    public function findOrMakeItem(BuyableModel $buyable, array $parameters = array())
+    public function findOrMakeItem(BuyableModel $buyable, array $parameters = [])
     {
         if ($this->allowWrites()) {
             if ($item = $this->getExistingItem($buyable, $parameters)) {
                 //do nothing
             } else {
                 //otherwise create a new item
-                if (!$buyable instanceof BuyableModel) {
+                if (! $buyable instanceof BuyableModel) {
                     $this->addMessage(_t('ShoppingCart.ITEMNOTFOUND', 'Item is not buyable.'), 'bad');
                     return false;
                 }
@@ -643,6 +647,7 @@ class ShoppingCart
         }
         return OrderItem::create();
     }
+
     /**
      * submit the order so that it is no longer available
      * in the cart but will continue its journey through the
@@ -661,6 +666,7 @@ class ShoppingCart
         }
         return false;
     }
+
     /**
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
@@ -674,6 +680,7 @@ class ShoppingCart
             return true;
         }
     }
+
     /**
      * Clears the cart contents completely by removing the orderID from session, and
      * thus creating a new cart on next request.
@@ -722,7 +729,7 @@ class ShoppingCart
             $orders = Order::get()->filter(['MemberID' => $memberID]);
             if ($orders && $orders->count()) {
                 foreach ($orders as $order) {
-                    if (!$order->IsSubmitted()) {
+                    if (! $order->IsSubmitted()) {
                         $order->delete();
                     }
                 }
@@ -730,6 +737,7 @@ class ShoppingCart
         }
         return true;
     }
+
     /**
      * alias for clear.
      */
@@ -737,6 +745,7 @@ class ShoppingCart
     {
         return $this->clear();
     }
+
     /**
      * Removes a modifier from the cart
      * It does not actually remove it, but it just
@@ -753,11 +762,11 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             $modifier = is_numeric($modifier) ? OrderModifier::get()->byID($modifier) : $modifier;
-            if (!$modifier) {
+            if (! $modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
                 return false;
             }
-            if (!$modifier->CanBeRemoved()) {
+            if (! $modifier->CanBeRemoved()) {
                 $this->addMessage(_t('Order.MODIFIERCANNOTBEREMOVED', 'Modifier can not be removed.'), 'bad');
                 return false;
             }
@@ -769,6 +778,7 @@ class ShoppingCart
             return true;
         }
     }
+
     /**
      * Removes a modifier from the cart.
      *
@@ -783,18 +793,18 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (is_numeric($modifier)) {
                 $modifier = OrderModifier::get()->byID($modifier);
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD:  Object:: (case sensitive)
-                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-                 * EXP: Check if this is the right implementation, this is highly speculative.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-            } elseif (!is_a($modifier, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderModifier::class))) {
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
+            } elseif (! is_a($modifier, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderModifier::class))) {
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
             }
-            if (!$modifier) {
+            if (! $modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
                 return false;
             }
@@ -804,6 +814,7 @@ class ShoppingCart
             return true;
         }
     }
+
     /**
      * Sets an order as the current order.
      *
@@ -818,14 +829,14 @@ class ShoppingCart
             //TODO: permission check - does this belong to another member? ...or should permission be assumed already?
             if (is_numeric($order)) {
                 $this->order = Order::get()->byID($order);
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD:  Object:: (case sensitive)
-                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-                 * EXP: Check if this is the right implementation, this is highly speculative.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             } elseif (is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class))) {
                 $this->order = $order;
             } else {
@@ -858,6 +869,7 @@ class ShoppingCart
         $this->addMessage(_t('Order.NOSAVE', 'You can not load orders as your session functionality is turned off.'), 'bad');
         return false;
     }
+
     /**
      * NOTE: tried to copy part to the Order Class - but that was not much of a go-er.
      *
@@ -902,6 +914,7 @@ class ShoppingCart
             return false;
         }
     }
+
     /**
      * @param Order $oldOrder
      * @param Order $newOrder
@@ -922,6 +935,7 @@ class ShoppingCart
         $newOrder->write();
         return $newOrder;
     }
+
     /**
      * add buyables into new Order
      *
@@ -931,7 +945,7 @@ class ShoppingCart
      *
      * @return Order (same order as was passed)
      */
-    public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = array())
+    public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = [])
     {
         foreach ($buyables as $buyable) {
             if ($buyable && $buyable->canPurchase()) {
@@ -948,6 +962,7 @@ class ShoppingCart
         }
         return $newOrder;
     }
+
     /**
      * sets country in order so that modifiers can be recalculated, etc...
      *
@@ -967,6 +982,7 @@ class ShoppingCart
             return false;
         }
     }
+
     /**
      * sets region in order so that modifiers can be recalculated, etc...
      *
@@ -984,6 +1000,7 @@ class ShoppingCart
         $this->addMessage(_t('ORDER.NOTUPDATEDREGION', 'Could not update region.'), 'bad');
         return false;
     }
+
     /**
      * sets the display currency for the cart.
      *
@@ -1010,6 +1027,7 @@ class ShoppingCart
         $this->addMessage($msg, 'bad');
         return false;
     }
+
     /**
      * Produces a debug of the shopping cart.
      */
@@ -1090,6 +1108,7 @@ class ShoppingCart
             echo 'Please log in as admin first';
         }
     }
+
     /**
      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
      *
@@ -1103,14 +1122,16 @@ class ShoppingCart
         $status = strtolower($status);
         str_replace(['success', 'failure'], ['good', 'bad'], $status);
         $statusOptions = ['good', 'bad', 'warning'];
-        if (!in_array($status, $statusOptions, true)) {
+        if (! in_array($status, $statusOptions, true)) {
             user_error('Message status should be one of the following: ' . implode(',', $statusOptions), E_USER_NOTICE);
         }
         $this->messages[] = ['Message' => $message, 'Type' => $status];
     }
+
     /*******************************************************
      * UI MESSAGE HANDLING
      *******************************************************/
+
     /**
      * Retrieves all good, bad, and ugly messages that have been produced during the current request.
      *
@@ -1145,6 +1166,7 @@ class ShoppingCart
         }
         return $this->messages;
     }
+
     /**
      * This method is used to return data after an ajax call was made.
      * When a asynchronious request is made to the shopping cart (ajax),
@@ -1180,7 +1202,7 @@ class ShoppingCart
             // now we can (re)calculate the order
             $this->order->calculateOrderAttributes($force = false);
             $form->sessionMessage($message, $status);
-            // let the form controller do the redirectback or whatever else is needed.
+        // let the form controller do the redirectback or whatever else is needed.
         } else {
             if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
                 Controller::curr()->redirectBack();
@@ -1190,6 +1212,7 @@ class ShoppingCart
         }
         return;
     }
+
     /**
      * can the current user use sessions and therefore write to cart???
      * the method also returns if an order has explicitely been set
@@ -1214,9 +1237,11 @@ class ShoppingCart
         }
         return self::$_allow_writes_cache;
     }
+
     /*******************************************************
      * HELPER FUNCTIONS
      *******************************************************/
+
     /**
      * Gets an existing order item based on buyable and passed parameters.
      *
@@ -1225,7 +1250,7 @@ class ShoppingCart
      *
      * @return OrderItem | null
      */
-    protected function getExistingItem(BuyableModel $buyable, array $parameters = array())
+    protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
     {
         $filterString = $this->parametersToSQL($parameters);
         if ($order = $this->currentOrder()) {
@@ -1234,6 +1259,7 @@ class ShoppingCart
                 "OrderID" = ' . $orderID . ' ' . $filterString, $cacheDataObjectGetOne = false);
         }
     }
+
     /**
      * Removes parameters that aren't in the default array, merges with default parameters, and converts raw2SQL.
      *
@@ -1241,12 +1267,12 @@ class ShoppingCart
      *
      * @return cleaned array
      */
-    protected function cleanParameters(array $params = array())
+    protected function cleanParameters(array $params = [])
     {
         $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
         $newarray = array_merge([], $defaultParamFilters);
         //clone array
-        if (!count($newarray)) {
+        if (! count($newarray)) {
             return [];
             //no use for this if there are not parameters defined
         }
@@ -1257,14 +1283,15 @@ class ShoppingCart
         }
         return $newarray;
     }
+
     /**
      * Converts parameter array to SQL query filter
      * @param array $parameters
      */
-    protected function parametersToSQL(array $parameters = array())
+    protected function parametersToSQL(array $parameters = [])
     {
         $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
-        if (!count($defaultParamFilters)) {
+        if (! count($defaultParamFilters)) {
             return '';
             //no use for this if there are not parameters defined
         }
@@ -1278,6 +1305,7 @@ class ShoppingCart
         }
         return '';
     }
+
     /**
      *Saves current messages in session for retrieving them later.
      *
@@ -1296,6 +1324,7 @@ class ShoppingCart
          */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, serialize($this->messages));
     }
+
     /**
      * @return EcommerceDBConfig
      */
@@ -1303,6 +1332,7 @@ class ShoppingCart
     {
         return EcommerceDBConfig::current_ecommerce_db_config();
     }
+
     /**
      * Return the name of the session variable that should be used.
      *
@@ -1312,7 +1342,7 @@ class ShoppingCart
      */
     protected function sessionVariableName($name = '')
     {
-        if (!in_array($name, self::$session_variable_names, true)) {
+        if (! in_array($name, self::$session_variable_names, true)) {
             user_error("Tried to set session variable {$name}, that is not in use", E_USER_NOTICE);
         }
         $sessionCode = EcommerceConfig::get(ShoppingCart::class, 'session_code');

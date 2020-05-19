@@ -2,16 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
-
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use SilverStripe\Forms\LiteralField;
-
-
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 class EcommerceSearchHistoryFormField extends LiteralField
 {
@@ -260,4 +255,3 @@ class EcommerceSearchHistoryFormField extends LiteralField
         return $content;
     }
 }
-

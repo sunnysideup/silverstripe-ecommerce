@@ -2,14 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\Dev\BuildTask;
-
-
 
 /**
  * @description: see description
@@ -91,4 +86,3 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
         }
     }
 }
-

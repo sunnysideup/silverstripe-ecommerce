@@ -2,47 +2,44 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-
-
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\SiteConfig\SiteConfig;
-use Sunnysideup\Ecommerce\Cms\StoreAdmin;
-use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin;
+use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Cms\StoreAdmin;
+use Sunnysideup\Ecommerce\Control\CartResponse;
+use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Email\OrderEmail;
 use Sunnysideup\Ecommerce\Filesystem\ProductImage;
+use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
+use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
+use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
+use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use Sunnysideup\Ecommerce\Control\CartResponse;
-use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
-use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
-use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
-use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
-use SilverStripe\Control\Email\Email;
-use Sunnysideup\Ecommerce\Email\OrderEmail;
-use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
-use Sunnysideup\Ecommerce\Money\EcommerceMoney;
-use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
-use SilverStripe\Control\Director;
-use SilverStripe\Core\ClassInfo;
 
 
 
@@ -56,9 +53,10 @@ use SilverStripe\Core\ClassInfo;
  * @sub-package: configuration
 
  **/
-use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
+use Sunnysideup\Ecommerce\Money\EcommerceMoney;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
+
 /**
  * This class sets out the static config variables for e-commerce.
  * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
@@ -72,17 +70,21 @@ class EcommerceConfigDefinitions
     use Extensible;
     use Injectable;
     use Configurable;
+
     /**
      * LIST of ajax methods.
      */
-    protected $ajaxMethods = array('SideBarCartID' => 'The sidebar cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.', 'SmallCartID' => 'The small cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.', 'TinyCartClassName' => 'The tiny cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used. ', 'TotalItemsClassName' => 'The total number of items in the order. Use in the following context: AjaxDefinitions.TotalItemsClassName', 'TotalItemsTimesQuantityClassName' => 'The total number of items times their quantity in the order. Use in the following context: AjaxDefinitions.TotalItemsClassNameTimesQuantity', 'TableID' => 'The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID', 'TableTotalID' => 'The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID', 'HiddenPageTitleID' => 'The ID used to identify a (hidden) element that contains the title of the page. This can be used for ajax updates of the product list.  It will be used to update the title of the page. For example, we can change the PageTitle to MyPage - sorted by Price.', 'ProductListHolderID' => 'The ID used to identify the product group list holder.  This list can be replaced using ajax. ', 'ProductListAjaxifiedLinkClassName' => 'The class name use for sections that contain links for showing alternative views of the product group list. ', 'ProductListItemClassName' => 'The class used to identify each LI item in the list of product items on the product group page (or elsewhere).', 'ProductListItemInCartClassName' => 'The class used to identify the product actions of each LI list item of the list of products that is in the cart right now.', 'ProductListItemNotInCartClassName' => 'The class used to identify each LI item of the list of products that is NOT in the cart right now.', 'TableMessageID' => 'The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID', 'TableSubTotalID' => 'The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID', 'ExpectedCountryClassName' => 'The holder of the expected country name. Use in the following context: AjaxDefinitions.ExpectedCountryClassName', 'CountryFieldID' => 'The field used for selecting the country. Use in the following context: AjaxDefinitions.CountryFieldID', 'RegionFieldID' => 'The field used for selecting the region. Use in the following context: AjaxDefinitions.RegionFieldID', 'TableTitleID' => 'The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID', 'CartTitleID' => 'The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID', 'TableSubTitleID' => 'The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ', 'CartSubTitleID' => 'The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ', 'QuantityFieldName' => 'The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName', 'UniqueIdentifier' => 'Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier');
+    protected $ajaxMethods = ['SideBarCartID' => 'The sidebar cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.', 'SmallCartID' => 'The small cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.', 'TinyCartClassName' => 'The tiny cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used. ', 'TotalItemsClassName' => 'The total number of items in the order. Use in the following context: AjaxDefinitions.TotalItemsClassName', 'TotalItemsTimesQuantityClassName' => 'The total number of items times their quantity in the order. Use in the following context: AjaxDefinitions.TotalItemsClassNameTimesQuantity', 'TableID' => 'The main definition on which a lot of others are based. Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID', 'TableTotalID' => 'The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID', 'HiddenPageTitleID' => 'The ID used to identify a (hidden) element that contains the title of the page. This can be used for ajax updates of the product list.  It will be used to update the title of the page. For example, we can change the PageTitle to MyPage - sorted by Price.', 'ProductListHolderID' => 'The ID used to identify the product group list holder.  This list can be replaced using ajax. ', 'ProductListAjaxifiedLinkClassName' => 'The class name use for sections that contain links for showing alternative views of the product group list. ', 'ProductListItemClassName' => 'The class used to identify each LI item in the list of product items on the product group page (or elsewhere).', 'ProductListItemInCartClassName' => 'The class used to identify the product actions of each LI list item of the list of products that is in the cart right now.', 'ProductListItemNotInCartClassName' => 'The class used to identify each LI item of the list of products that is NOT in the cart right now.', 'TableMessageID' => 'The cart message (e.g. product added). Use in the following context: Order.AjaxDefinitions.TableMessageID', 'TableSubTotalID' => 'The sub-total for the order. Use in the following context: Order.AjaxDefinitions.TableMessageID', 'ExpectedCountryClassName' => 'The holder of the expected country name. Use in the following context: AjaxDefinitions.ExpectedCountryClassName', 'CountryFieldID' => 'The field used for selecting the country. Use in the following context: AjaxDefinitions.CountryFieldID', 'RegionFieldID' => 'The field used for selecting the region. Use in the following context: AjaxDefinitions.RegionFieldID', 'TableTitleID' => 'The title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableTitleID OR OrderModifier.AjaxDefinitions.TableTitleID', 'CartTitleID' => 'The title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartTitleID OR OrderModifier.AjaxDefinitions.CartTitleID', 'TableSubTitleID' => 'The sub-title for the item in the checkout page. Use in the following context: OrderItem.AjaxDefinitions.TableSubTitleID OR OrderModifier.AjaxDefinitions.TableSubTitleID ', 'CartSubTitleID' => 'The sub-title for the item in the cart (not on the checkout page). Use in the following context: OrderItem.AjaxDefinitions.CartSubTitleID OR OrderModifier.AjaxDefinitions.CartSubTitleID ', 'QuantityFieldName' => 'The quantity field for the order item. Use in the following context: OrderItem.AjaxDefinitions.QuantityFieldName', 'UniqueIdentifier' => 'Unique identifier for the buyable (product). Use in the following context: Buyable.AjaxDefinitions.UniqueIdentifier'];
+
     /**
      * Tells us what version of e-commerce we are using.
      *
      * @var float
      */
     private $version = 1;
-    private $definitionGrouping = array('GENERAL AND CMS CONFIG' => array(EcommerceDBConfig::class, SiteConfig::class, StoreAdmin::class, ProductsAndGroupsModelAdmin::class, ProductConfigModelAdmin::class, SalesAdmin::class), 'TEMPLATES' => array('Templates', EcommerceConfigAjax::class), 'PRODUCTS' => array(ProductGroup::class, ProductImage::class, ProductSearchForm::class), 'ORDER OBJECTS' => array(Order::class, OrderItem::class, OrderModifier::class), 'CART' => array(ShoppingCart::class, ShoppingCartController::class, CartResponse::class), 'CHECKOUT' => array('Pages', 'CartPage_Controller', 'CheckoutPage_Controller', ShopAccountFormValidator::class, OrderModifierForm::class, EcommercePaymentController::class, OrderFormAddress::class), 'POST SALE PROCESSING' => array('OrderConfirmationPage_Controller', OrderStep::class, OrderStepConfirmed::class, OrderStatusLog::class, OrderStatusLogForm::class, Email::class, OrderEmail::class), 'CUSTOMERS' => array(OrderAddress::class, EcommerceRole::class, BillingAddress::class, ShippingAddress::class, EcommerceCountry::class, EcommerceRegion::class), 'PAYMENT AND MONEY' => array(EcommerceCurrency::class, EcommerceMoney::class, EcommercePayment::class, ExpiryDateField::class), 'CLEANUP AND OTHER TASKS' => array(EcommerceTaskCartCleanup::class));
+
+    private $definitionGrouping = ['GENERAL AND CMS CONFIG' => [EcommerceDBConfig::class, SiteConfig::class, StoreAdmin::class, ProductsAndGroupsModelAdmin::class, ProductConfigModelAdmin::class, SalesAdmin::class], 'TEMPLATES' => ['Templates', EcommerceConfigAjax::class], 'PRODUCTS' => [ProductGroup::class, ProductImage::class, ProductSearchForm::class], 'ORDER OBJECTS' => [Order::class, OrderItem::class, OrderModifier::class], 'CART' => [ShoppingCart::class, ShoppingCartController::class, CartResponse::class], 'CHECKOUT' => ['Pages', 'CartPage_Controller', 'CheckoutPage_Controller', ShopAccountFormValidator::class, OrderModifierForm::class, EcommercePaymentController::class, OrderFormAddress::class], 'POST SALE PROCESSING' => ['OrderConfirmationPage_Controller', OrderStep::class, OrderStepConfirmed::class, OrderStatusLog::class, OrderStatusLogForm::class, Email::class, OrderEmail::class], 'CUSTOMERS' => [OrderAddress::class, EcommerceRole::class, BillingAddress::class, ShippingAddress::class, EcommerceCountry::class, EcommerceRegion::class], 'PAYMENT AND MONEY' => [EcommerceCurrency::class, EcommerceMoney::class, EcommercePayment::class, ExpiryDateField::class], 'CLEANUP AND OTHER TASKS' => [EcommerceTaskCartCleanup::class]];
+
     /**
      * Tells us the version of e-commerce in use.
      *
@@ -92,6 +94,7 @@ class EcommerceConfigDefinitions
     {
         return $this->version;
     }
+
     /**
      * returns defition of Ajax Method.
      *
@@ -103,6 +106,7 @@ class EcommerceConfigDefinitions
     {
         return $this->ajaxMethods[$name];
     }
+
     /**
      * returns the definition of an ajax definition.
      *
@@ -112,6 +116,7 @@ class EcommerceConfigDefinitions
     {
         return $this->ajaxMethods;
     }
+
     /**
      * Tells us the svn revision of e-commerce in use.
      *
@@ -129,6 +134,7 @@ class EcommerceConfigDefinitions
         }
         return $svnrev;
     }
+
     /**
      * @return array
      */
@@ -136,6 +142,7 @@ class EcommerceConfigDefinitions
     {
         return $this->definitionGrouping + ['OTHER' => []];
     }
+
     /**
      * Get a list of all definitions required for e-commerce.
      * We have this here so that we can check that all static variables have been defined.
@@ -148,6 +155,7 @@ class EcommerceConfigDefinitions
      *
      * @return array | String
      */
+
     /**
      * ### @@@@ START REPLACEMENT @@@@ ###
      * WHY: automated upgrade
@@ -244,14 +252,14 @@ class EcommerceConfigDefinitions
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
             return $array[$className][$variable];
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         } elseif ($className) {
             /**
              * ### @@@@ START REPLACEMENT @@@@ ###
@@ -266,4 +274,3 @@ class EcommerceConfigDefinitions
         return $array;
     }
 }
-

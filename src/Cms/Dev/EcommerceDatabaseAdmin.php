@@ -2,26 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCleanupProducts;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\TaskRunner;
-
-
-
-
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DB;
+use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCleanupProducts;
 
 class EcommerceDatabaseAdmin extends TaskRunner
 {

@@ -2,18 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
-
-
-
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
-
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\View\Requirements;
 
 /**
  * Text input field that allows the user to select a Buyable.
@@ -109,7 +102,7 @@ class BuyableSelectField extends FormField
     /**
      * Do we do anything with data???
      */
-    public function setValue($value, $data = NULL)
+    public function setValue($value, $data = null)
     {
         if ($this->buyable) {
             // $value = $this->buyable->FullName ?: $this->buyable->getTitle();

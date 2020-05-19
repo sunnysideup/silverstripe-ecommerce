@@ -2,20 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\OrderItem;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * set the order id number.
@@ -130,4 +123,3 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         return '';
     }
 }
-

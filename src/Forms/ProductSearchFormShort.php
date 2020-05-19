@@ -2,11 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-
-
 
 class ProductSearchFormShort extends ProductSearchForm
 {
@@ -15,18 +11,17 @@ class ProductSearchFormShort extends ProductSearchForm
         $this->isShortForm = true;
         parent::__construct($controller, $name, $nameOfProductsBeingSearched, $productsToSearch);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             //$this->loadDataFrom($oldData);
         }
     }
 }
-

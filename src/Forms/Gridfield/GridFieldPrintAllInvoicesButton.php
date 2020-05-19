@@ -2,28 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-
-
-
-
-
-
-
-
-
-use SilverStripe\Forms\GridField\GridField_FormAction;
-use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+use SilverStripe\Forms\GridField\GridField_URLHandler;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\GridField\GridField_HTMLProvider;
-use SilverStripe\Forms\GridField\GridField_ActionProvider;
-use SilverStripe\Forms\GridField\GridField_URLHandler;
-
-
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
@@ -121,15 +109,14 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
         $curr = Controller::curr();
         $curr->Orders = $al;
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $curr->RenderWith('PrintAllInvoices');
     }
 }
-

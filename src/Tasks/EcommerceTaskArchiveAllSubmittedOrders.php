@@ -2,24 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use SilverStripe\ORM\DB;
-use SilverStripe\Dev\BuildTask;
-
-
 
 /**
  * After a bug in the saving of orders in the CMS
@@ -87,4 +78,3 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
         }
     }
 }
-

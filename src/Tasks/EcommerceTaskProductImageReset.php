@@ -2,16 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Filesystem\ProductImage;
-use SilverStripe\Dev\BuildTask;
-
-
+use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * see description in class.
@@ -76,14 +71,14 @@ class EcommerceTaskProductImageReset extends BuildTask
                         ++$removeCount;
                         DB::query("UPDATE \"${tableName}\" SET \"ImageID\" = 0 WHERE \"${tableName}\".\"ID\" = " . $row['ID'] . " AND \"${tableName}\".\"ImageID\" = " . $row['ImageID'] . ';');
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                      * ### @@@@ START REPLACEMENT @@@@ ###
+                      * WHY: automated upgrade
+                      * OLD:  Object:: (case sensitive)
+                      * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+                      * EXP: Check if this is the right implementation, this is highly speculative.
+                      * ### @@@@ STOP REPLACEMENT @@@@ ###
+                      */
                     } elseif (! is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class))) {
                         ++$updateClassCount;
                         $image = $image->newClassInstance(ProductImage::class);
@@ -109,4 +104,3 @@ class EcommerceTaskProductImageReset extends BuildTask
         }
     }
 }
-

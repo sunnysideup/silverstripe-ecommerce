@@ -2,30 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-
-
-
-
-
-
-
-
-
-
-use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Forms\GridField\GridField_FormAction;
-use Sunnysideup\Ecommerce\Model\OrderItem;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
-use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
-
-
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderItem;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
@@ -224,4 +211,3 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             ->limit($count, $offset);
     }
 }
-

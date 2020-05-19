@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-
-
-
-
 use SilverStripe\Control\Controller;
-use SilverStripe\View\ArrayData;
-use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
-
-
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\View\ArrayData;
 
 /**
  * Provides the entry point to editing a single record presented by the
@@ -41,18 +35,16 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
                 'Link' => Controller::join_links($record->CMSEditLink()),
             ]);
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: ->RenderWith( (ignore case)
+             * NEW: ->RenderWith( (COMPLEX)
+             * EXP: Check that the template location is still valid!
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             return $data->RenderWith('GridFieldEditButtonInSiteTree');
         }
         return parent::getColumnContent($gridField, $record, $columnName);
     }
 }
-

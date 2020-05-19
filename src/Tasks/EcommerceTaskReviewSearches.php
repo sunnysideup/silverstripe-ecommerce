@@ -2,22 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
+use SilverStripe\Dev\BuildTask;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\Form;
-use SilverStripe\Dev\BuildTask;
-
-
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -101,57 +92,53 @@ class EcommerceTaskReviewSearches extends BuildTask
                 'ShowResultsFor',
                 'Show results for ...'
             ),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             NumericField::create(
                 'days',
                 'Number of days',
                 isset($_GET['days']) ? $_GET['days'] : $this->defaultDays
             )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             NumericField::create(
                 'maxrows',
                 'Maximum Number of Rows?',
                 isset($_GET['maxrows']) ? $_GET['maxrows'] : $this->defaultMaxRows
             )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             NumericField::create(
                 'ago',
                 'Up to how many days go',
                 isset($_GET['ago']) ? $_GET['ago'] : $this->endingDaysBack
             )->setRightTitle('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             NumericField::create(
                 'min',
                 'Count treshold',
@@ -174,4 +161,3 @@ class EcommerceTaskReviewSearches extends BuildTask
         return '/dev/tasks/EcommerceTaskReviewSearches/';
     }
 }
-

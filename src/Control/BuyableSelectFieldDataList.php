@@ -2,25 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-
-
-
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Versioned\Versioned;
-
-
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 class BuyableSelectFieldDataList extends Controller
 {
@@ -40,17 +30,17 @@ class BuyableSelectFieldDataList extends Controller
     public function Link($action = null)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->class (case sensitive)
+         * NEW: $this->class (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $URLSegment = Config::inst()->get($this->class, 'url_segment');
         if (! $URLSegment) {
-            $URLSegment = get_class($this);
+            $URLSegment = static::class;
         }
 
         return Controller::join_links(
@@ -92,14 +82,14 @@ class BuyableSelectFieldDataList extends Controller
             $buyables[$key]['ClassName'] = $buyableClassName;
             $buyables[$key]['TableName'] = $buyableClassName;
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(SiteTree::class))) {
                 if (Versioned::get_stage() === 'Live') {
                     $buyables[$key]['TableName'] .= '_Live';
@@ -115,35 +105,35 @@ class BuyableSelectFieldDataList extends Controller
                     $buyableArray = $buyables[$j];
                     $singleton = $buyableArray['Singleton'];
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     $className = $buyableArray['ClassName'];
                     $tableName = $buyableArray['TableName'];
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     if (! isset($arrayOfAddedItemIDsByClassName[$className])) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: $className (case sensitive)
+                         * NEW: $className (COMPLEX)
+                         * EXP: Check if the class name can still be used as such
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         $arrayOfAddedItemIDsByClassName[$className] = [-1 => -1];
                     }
                     if ($singleton->hasDatabaseField($fieldName)) {
@@ -151,41 +141,41 @@ class BuyableSelectFieldDataList extends Controller
                         //         AND \"" . $tableName . '"."ID" NOT IN
                         //         AND "AllowPurchase" = 1';
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: $className (case sensitive)
+                         * NEW: $className (COMPLEX)
+                         * EXP: Check if the class name can still be used as such
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         $obj = $className::get()
                             ->filter([
                                 $fieldName . ':PartialMatch' => $term,
                                 'AllowPurchase' => 1,
                             ])
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                            /**
+                             * ### @@@@ START REPLACEMENT @@@@ ###
+                             * WHY: automated upgrade
+                             * OLD: $className (case sensitive)
+                             * NEW: $className (COMPLEX)
+                             * EXP: Check if the class name can still be used as such
+                             * ### @@@@ STOP REPLACEMENT @@@@ ###
+                             */
                             ->where("\"${tableName}\".\"ID\" NOT IN (" . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
                             ->First();
                         if ($obj) {
                             //we found an object, we dont need to find it again.
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                            /**
+                             * ### @@@@ START REPLACEMENT @@@@ ###
+                             * WHY: automated upgrade
+                             * OLD: $className (case sensitive)
+                             * NEW: $className (COMPLEX)
+                             * EXP: Check if the class name can still be used as such
+                             * ### @@@@ STOP REPLACEMENT @@@@ ###
+                             */
                             $arrayOfAddedItemIDsByClassName[$className][$obj->ID] = $obj->ID;
                             //now we are only going to add it, if it is available!
                             if ($obj->canPurchase()) {
@@ -199,24 +189,24 @@ class BuyableSelectFieldDataList extends Controller
                                 if (! $useVariationsInstead) {
                                     $name = $obj->FullName ?: $obj->getTitle();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                                    /**
+                                     * ### @@@@ START REPLACEMENT @@@@ ###
+                                     * WHY: automated upgrade
+                                     * OLD: $className (case sensitive)
+                                     * NEW: $className (COMPLEX)
+                                     * EXP: Check if the class name can still be used as such
+                                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                                     */
                                     $array[$className . $obj->ID] = [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                                        /**
+                                         * ### @@@@ START REPLACEMENT @@@@ ###
+                                         * WHY: automated upgrade
+                                         * OLD: $className (case sensitive)
+                                         * NEW: $className (COMPLEX)
+                                         * EXP: Check if the class name can still be used as such
+                                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                                         */
                                         'ClassName' => $className,
                                         'ID' => $obj->ID,
                                         'Version' => $obj->Version,
@@ -255,4 +245,3 @@ class BuyableSelectFieldDataList extends Controller
         return Convert::array2json($array);
     }
 }
-

@@ -2,13 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-
-use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-
-
-
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 
 /**
  * @author nicolaas <github@sunnysideup.co.nz>
@@ -26,4 +22,3 @@ class GridFieldBasicPageRelationConfig extends GridFieldConfig_RelationEditor
             ->removeComponentsByType(GridFieldAddNewButton::class);
     }
 }
-

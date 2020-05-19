@@ -2,51 +2,27 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\Control\Controller;
-use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\HeaderField;
-use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use SilverStripe\Forms\HiddenField;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\FormAction;
-use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
 use SilverStripe\Forms\Form;
-use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-
-
-
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
 /**
  * @Description: form to submit order.
@@ -286,14 +262,14 @@ class OrderForm extends Form
         unset($data['PasswordCheck1']);
         unset($data['PasswordCheck2']);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 
@@ -304,14 +280,14 @@ class OrderForm extends Form
     {
         $this->clearMessage();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", null);
     }
 
@@ -325,4 +301,3 @@ class OrderForm extends Form
         return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }
-

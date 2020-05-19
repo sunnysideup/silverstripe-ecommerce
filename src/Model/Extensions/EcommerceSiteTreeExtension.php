@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
-
-
-
-
+use SilverStripe\CMS\Model\SiteTreeExtension;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\CMS\Model\SiteTreeExtension;
-
-
 
 /**
  * @description: adds a few functions to SiteTree to give each page
@@ -82,4 +76,3 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         }
     }
 }
-

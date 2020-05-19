@@ -2,20 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Core\Convert;
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Dev\BuildTask;
-
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
 /**
  * create standard country and regions.
@@ -64,4 +56,3 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         DB::alteration_message("Created / Checked ${count} Ecommerce Countries", 'edited');
     }
 }
-

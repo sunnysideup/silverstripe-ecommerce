@@ -2,21 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-
-use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-use SilverStripe\Forms\HeaderField;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HeaderField;
+use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -31,29 +23,24 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      */
     protected $emailClassName = OrderInvoiceEmail::class;
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderStepSentInvoice';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'SendInvoiceToCustomer' => 'Boolean',
     ];
@@ -173,4 +160,3 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
         return _t('OrderStep.SENTINVOICE_DESCRIPTION', 'Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as the order itself.');
     }
 }
-

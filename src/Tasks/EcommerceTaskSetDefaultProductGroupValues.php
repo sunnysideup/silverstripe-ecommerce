@@ -2,17 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Dev\BuildTask;
-
-
-
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * @description: resets fields in the product group class to "inherit" in case their value does not exist.
@@ -63,4 +56,3 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
         }
     }
 }
-

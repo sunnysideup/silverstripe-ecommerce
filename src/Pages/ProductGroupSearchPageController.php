@@ -2,10 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-
-
-
 class ProductGroupSearchPageController extends ProductGroupController
 {
     /**
@@ -20,23 +16,6 @@ class ProductGroupSearchPageController extends ProductGroupController
         'searchresults' => true,
         'resetfilter' => true,
     ];
-
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD:     public function init() (ignore case)
-  * NEW:     protected function init() (COMPLEX)
-  * EXP: Controller init functions are now protected  please check that is a controller.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    protected function init()
-    {
-        parent::init();
-        $array = $this->searchResultsArrayFromSession();
-        if (count($array) > 1) {
-            $this->isSearchResults = true;
-        }
-    }
 
     /**
      * returns child product groups for use in
@@ -69,5 +48,21 @@ class ProductGroupSearchPageController extends ProductGroupController
         $this->extend('UpdateCanonicalLink', $link);
 
         return $link;
+    }
+
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD:     public function init() (ignore case)
+     * NEW:     protected function init() (COMPLEX)
+     * EXP: Controller init functions are now protected  please check that is a controller.
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
+    protected function init()
+    {
+        parent::init();
+        $array = $this->searchResultsArrayFromSession();
+        if (count($array) > 1) {
+            $this->isSearchResults = true;
+        }
     }
 }

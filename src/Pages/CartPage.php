@@ -12,20 +12,17 @@ use Page;
 
 
 
-use SilverStripe\ORM\FieldType\DBField;
-use Sunnysideup\Ecommerce\Pages\CartPage;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Permission;
 use SilverStripe\View\SSViewer;
-
-
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * @description: This is a page that shows the cart content,
@@ -54,28 +51,24 @@ class CartPage extends Page
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'CartPage';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'ContinueShoppingLabel' => 'Varchar(100)',
         'ProceedToCheckoutLabel' => 'Varchar(100)',
@@ -383,4 +376,3 @@ class CartPage extends Page
         return parent::LinkOrCurrent() . ' cartlink';
     }
 }
-

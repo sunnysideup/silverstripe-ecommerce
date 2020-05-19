@@ -1,11 +1,6 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Config;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
-
-
-
-
 
 /**
  * This class returns the Ajax Definitions class.
@@ -19,9 +14,10 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
  * @sub-package: configuration
 
  **/
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
+
 /**
  * This class returns the Ajax Definitions class.
  * The Ajax Definitions class is an object that contains all the values
@@ -38,6 +34,7 @@ class EcommerceConfigAjax
     use Extensible;
     use Injectable;
     use Configurable;
+
     /**
      * implements singleton pattern so that there is only ever one instance
      * of this class.
@@ -45,7 +42,8 @@ class EcommerceConfigAjax
      *
      * @static object
      */
-    private static $singleton = array();
+    private static $singleton = [];
+
     /**
      * Returns the singleton instance of the Ajax Config definitions class.
      * This class basically contains a bunch of methods that return
@@ -57,7 +55,7 @@ class EcommerceConfigAjax
      */
     public static function get_one($requestor)
     {
-        if (!isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
+        if (! isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
             /**
              * ### @@@@ START REPLACEMENT @@@@ ###
              * WHY: automated upgrade
@@ -81,4 +79,3 @@ class EcommerceConfigAjax
         return self::$singleton[$requestor->ClassName][$requestor->ID];
     }
 }
-

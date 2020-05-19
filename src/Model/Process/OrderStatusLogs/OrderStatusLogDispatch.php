@@ -2,11 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-
-
-
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -34,4 +30,3 @@ class OrderStatusLogDispatch extends OrderStatusLog
         return _t('OrderStatusLog.ORDERLOGDISPATCHENTRIES', 'Order Log Dispatch Entries');
     }
 }
-

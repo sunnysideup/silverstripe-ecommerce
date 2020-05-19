@@ -2,17 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
 use db;
 
 use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * create the e-commerce specific Member Groups.
@@ -106,4 +101,3 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         );
     }
 }
-

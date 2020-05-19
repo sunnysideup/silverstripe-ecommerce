@@ -2,18 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-
-
 use Geoip;
 
 
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
-
-
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
 /**
  * this is a very basic class with as its sole purpose providing
@@ -24,13 +20,13 @@ use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
  */
 
 /**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  extends Object (ignore case)
-  * NEW:  extends ViewableData (COMPLEX)
-  * EXP: This used to extend Object, but object does not exist anymore. You can also manually add use Extensible, use Injectable, and use Configurable
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+ * ### @@@@ START REPLACEMENT @@@@ ###
+ * WHY: automated upgrade
+ * OLD:  extends Object (ignore case)
+ * NEW:  extends ViewableData (COMPLEX)
+ * EXP: This used to extend Object, but object does not exist anymore. You can also manually add use Extensible, use Injectable, and use Configurable
+ * ### @@@@ STOP REPLACEMENT @@@@ ###
+ */
 class EcommerceCountryVisitorCountryProvider extends ViewableData implements EcommerceGEOipProvider
 {
     /**
@@ -52,4 +48,3 @@ class EcommerceCountryVisitorCountryProvider extends ViewableData implements Eco
         return Controller::curr()->getRequest()->getIP();
     }
 }
-

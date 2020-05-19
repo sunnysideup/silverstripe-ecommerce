@@ -2,22 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
-
-
-
-use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Dev\BuildTask;
-
-
-
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -85,4 +76,3 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         }
     }
 }
-

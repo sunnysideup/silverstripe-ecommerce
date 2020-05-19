@@ -2,14 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
 use SilverStripe\Forms\ReadonlyField;
-use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Forms\TextField;
-
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @Description: ExpiryDate field, contains validation and formspec for expirydate fields.
@@ -288,4 +283,3 @@ class ExpiryDateField extends TextField
         ];
     }
 }
-

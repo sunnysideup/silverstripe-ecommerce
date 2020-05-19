@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-use SilverStripe\ORM\DB;
 use SilverStripe\Dev\BuildTask;
-
-
+use SilverStripe\ORM\DB;
 
 /**
  * works out how many products have been sold, per product.
@@ -80,4 +76,3 @@ class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask
         }
     }
 }
-

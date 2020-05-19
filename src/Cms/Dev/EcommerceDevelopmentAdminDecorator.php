@@ -2,13 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
-
-
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extension;
-
-
-
 
 /**
  * EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin
@@ -37,4 +32,3 @@ class EcommerceDevelopmentAdminDecorator extends Extension
         return EcommerceDatabaseAdmin::create();
     }
 }
-

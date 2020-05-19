@@ -2,14 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
-
-
-
-use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentProcessing;
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\FieldList;
-
-
+use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentProcessing;
 
 /**
  * Payment object representing a TEST = PENDING.
@@ -62,4 +57,3 @@ class EcommercePaymentTestPending extends EcommercePaymentTest
         );
     }
 }
-

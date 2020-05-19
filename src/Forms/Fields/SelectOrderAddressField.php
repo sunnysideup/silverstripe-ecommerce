@@ -2,15 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
-
-
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\OptionsetField;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\Requirements;
-use SilverStripe\Forms\OptionsetField;
-
 
 /**
  * A field that allows the user to select an old address for the current order.
@@ -79,4 +74,3 @@ class SelectOrderAddressField extends OptionsetField
         return parent::Field();
     }
 }
-

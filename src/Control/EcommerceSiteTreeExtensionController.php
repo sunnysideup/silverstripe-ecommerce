@@ -2,35 +2,24 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-
-
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Pages\CartPage;
-use SilverStripe\Core\Extension;
-
-
-
-
 
 /**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  extends Extension (ignore case)
-  * NEW:  extends Extension (COMPLEX)
-  * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+ * ### @@@@ START REPLACEMENT @@@@ ###
+ * WHY: automated upgrade
+ * OLD:  extends Extension (ignore case)
+ * NEW:  extends Extension (COMPLEX)
+ * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
+ * ### @@@@ STOP REPLACEMENT @@@@ ###
+ */
 class EcommerceSiteTreeExtensionController extends Extension
 {
     /**
@@ -41,39 +30,38 @@ class EcommerceSiteTreeExtensionController extends Extension
     {
         //$this->secureHostSwitcher();
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: THIRDPARTY_DIR . '/jquery/jquery.js' (case sensitive)
-  * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
-  * EXP: Check for best usage and inclusion of Jquery
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: THIRDPARTY_DIR . '/jquery/jquery.js' (case sensitive)
+         * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
+         * EXP: Check for best usage and inclusion of Jquery
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         Requirements::javascript('sunnysideup/ecommerce: silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
         if ($this->owner->dataRecord) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if (is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class)) || is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: Session:: (case sensitive)
+                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
             }
         }
@@ -120,14 +108,14 @@ class EcommerceSiteTreeExtensionController extends Extension
     public function ContinueShoppingLink()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: Session:: (case sensitive)
+         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $link = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ContinueShoppingLink');
         if (! $link) {
             $link = Director::baseURL();
@@ -197,4 +185,3 @@ class EcommerceSiteTreeExtensionController extends Extension
     *}
     */
 }
-

@@ -2,18 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-
-
 use SilverStripe\CMS\Model\SiteTree;
-use Sunnysideup\Ecommerce\Pages\CartPage;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\Reports\Report;
-
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 /**
  * EcommerceSideReport classes are to allow quick reports that can be accessed
@@ -100,4 +97,3 @@ class EcommerceSideReportEcommercePages extends Report
         return $field;
     }
 }
-

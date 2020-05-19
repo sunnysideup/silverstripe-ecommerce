@@ -2,9 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-
-
-
 class ExchangeRateProviderDummy extends ExchangeRateProvider
 {
     /**
@@ -16,4 +13,3 @@ class ExchangeRateProviderDummy extends ExchangeRateProvider
         return 1;
     }
 }
-

@@ -2,21 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Admin\ModelAdmin;
-
-
 
 /**
  * @see: http://doc.silverstripe.org/framework/en/reference/ModelAdmin
@@ -38,23 +29,23 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     public function getManagedModels()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class == (case sensitive)
-  * NEW: $this->ClassName == (COMPLEX)
-  * EXP: Check for usage of class ...
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->class == (case sensitive)
+         * NEW: $this->ClassName == (COMPLEX)
+         * EXP: Check for usage of class ...
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($this->ClassName === ModelAdminEcommerceBaseClass::class) {
             //never used
             return ['NothingGoesHere' => ['title' => 'All Orders']];
@@ -107,4 +98,3 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
         return $obj->summaryFields();
     }
 }
-

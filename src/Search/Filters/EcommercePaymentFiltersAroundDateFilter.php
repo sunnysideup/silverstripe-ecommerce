@@ -2,18 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-
-
-
-
 use PostgreSQLDatabase;
 use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-
-
-
 
 /**
  * @description: provides a bunch of filters for search in ModelAdmin (CMS)
@@ -56,14 +49,14 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
         $distanceFromToday = time() - strtotime($value);
         $maxDays = round($distanceFromToday / (($this->divider * 2) * 86400)) + 1;
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->format( (case sensitive)
-  * NEW: ->format( (COMPLEX)
-  * EXP: If this is a PHP Date format call then this needs to be changed to new Date formatting system. (see http://userguide.icu-project.org/formatparse/datetime)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->format( (case sensitive)
+         * NEW: ->format( (COMPLEX)
+         * EXP: If this is a PHP Date format call then this needs to be changed to new Date formatting system. (see http://userguide.icu-project.org/formatparse/datetime)
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $formattedDate = $date->format('Y-m-d');
 
         // changed for PostgreSQL compatability
@@ -81,4 +74,3 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
         return $query;
     }
 }
-

@@ -8,15 +8,13 @@ use Page;
 
 
 
-use Sunnysideup\Ecommerce\Pages\AccountPage;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-
 
 /**
  * @description:
@@ -98,7 +96,7 @@ class AccountPage extends Page
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array())
+    public function canCreate($member = null, $context = [])
     {
         return AccountPage::get()->filter(['ClassName' => AccountPage::class])->Count() ? false : $this->canEdit($member);
     }
@@ -287,4 +285,3 @@ class AccountPage extends Page
         return 0;
     }
 }
-

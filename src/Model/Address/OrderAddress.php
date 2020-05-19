@@ -2,9 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-
-
-
 use CMSEditLinkAPI;
 
 
@@ -18,30 +15,24 @@ use CMSEditLinkAPI;
 
 
 
-use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use SilverStripe\Forms\NumericField;
-use SilverStripe\View\SSViewer;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
-
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * @description: each order has an address: a Shipping and a Billing address
@@ -289,14 +280,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $fields = parent::scaffoldSearchFields($_params);
         $fields = parent::scaffoldSearchFields();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: NumericField (case sensitive)
+         * NEW: NumericField (COMPLEX)
+         * EXP: check the number of decimals required and add as ->Step(123)
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
 
         return $fields;
@@ -365,23 +356,23 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         Config::nest();
         Config::modify()->update(SSViewer::class, 'theme_enabled', true);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $html = $this->RenderWith('Order_Address' . str_replace('Address', '', $this->ClassName) . 'FullString');
         Config::unnest();
 
@@ -440,14 +431,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
             //copy data from  member
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD:  Object:: (case sensitive)
+             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+             * EXP: Check if this is the right implementation, this is highly speculative.
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class))) {
                 $this->Email = $member->Email;
             }
@@ -455,14 +446,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             foreach ($fieldNameArray as $memberField => $fieldName) {
                 //NOTE, we always override the Billing Address (which does not have a fieldPrefix)
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  Object:: (case sensitive)
-  * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-  * EXP: Check if this is the right implementation, this is highly speculative.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD:  Object:: (case sensitive)
+                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
+                 * EXP: Check if this is the right implementation, this is highly speculative.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 if (! $this->{$fieldName} || (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class)))) {
                     $this->{$fieldName} = $member->{$memberField};
                 }
@@ -527,15 +518,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($this->exists()) {
             $order = DataObject::get_one(
                 Order::class,
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $this->ClassName (case sensitive)
+                 * NEW: $this->ClassName (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 [$this->ClassName . 'ID' => $this->ID],
                 $cacheDataObjectGetOne = false
             );
@@ -554,14 +544,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function RemoveLink()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return ShoppingCartController::remove_address_link($this->ID, $this->ClassName);
     }
 
@@ -779,4 +769,3 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return 'Shipping';
     }
 }
-

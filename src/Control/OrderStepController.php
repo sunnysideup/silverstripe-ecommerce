@@ -2,23 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-
-
-
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Convert;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Control\Controller;
-
-
 
 /**
  * This call can be used when you need input from the customer
@@ -55,15 +46,14 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $this->RenderWith('Page');
     }
 
@@ -74,15 +64,14 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $this->RenderWith('Page');
     }
 
@@ -263,4 +252,3 @@ abstract class OrderStepController extends Controller
         );
     }
 }
-

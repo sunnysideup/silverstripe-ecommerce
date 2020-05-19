@@ -2,25 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Security\Member;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\CheckboxField;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
-
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * This is the first Order Step.
@@ -155,4 +144,3 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
         return _t('OrderStep.CREATED_DESCRIPTION', 'During this step the customer creates her or his order. The shop admininistrator does not do anything during this step.');
     }
 }
-

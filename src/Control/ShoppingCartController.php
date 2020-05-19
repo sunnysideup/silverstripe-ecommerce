@@ -2,49 +2,32 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 use ProductVariation;
 
 
 
 
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Pages\Product;
-use Sunnysideup\Ecommerce\Model\Order;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Convert;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Security\Security;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Pages\CartPage;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Pages\AccountPage;
-use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Control\ShoppingCartController;
-use SilverStripe\Control\Controller;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
-
-
-
+use Sunnysideup\Ecommerce\Pages\AccountPage;
+use Sunnysideup\Ecommerce\Pages\CartPage;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * ShoppingCartController.
@@ -120,46 +103,6 @@ class ShoppingCartController extends Controller
         'ajaxtest', // no need to set to  => 'ADMIN',
     ];
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD:     public function init() (ignore case)
-  * NEW:     protected function init() (COMPLEX)
-  * EXP: Controller init functions are now protected  please check that is a controller.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    protected function init()
-    {
-        parent::init();
-        $action = $this->request->param('Action');
-        if (! isset($_GET['cached'])) {
-            if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: Session:: (case sensitive)
-  * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-  * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly. 
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-                $savedSecurityID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('SecurityID');
-                if ($savedSecurityID) {
-                    if (! isset($_GET['SecurityID'])) {
-                        $_GET['SecurityID'] = '';
-                    }
-                    if ($savedSecurityID) {
-                        if ($_GET['SecurityID'] !== $savedSecurityID) {
-                            $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
-                        }
-                        //all OK!
-                    }
-                }
-            }
-        }
-        $this->cart = ShoppingCart::singleton();
-    }
-
     public function index()
     {
         if ($this->cart) {
@@ -194,25 +137,25 @@ class ShoppingCartController extends Controller
      * @return string
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return self::create_link('additem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
@@ -224,25 +167,25 @@ class ShoppingCartController extends Controller
      * @return string
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function remove_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return self::create_link('removeitem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
@@ -254,25 +197,25 @@ class ShoppingCartController extends Controller
      * @return string
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function remove_all_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return self::create_link('removeallitem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
@@ -284,25 +227,25 @@ class ShoppingCartController extends Controller
      * @return string
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function remove_all_item_and_edit_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return self::create_link('removeallitemandedit/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
@@ -314,25 +257,25 @@ class ShoppingCartController extends Controller
      * @return string
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function set_quantity_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return self::create_link('setquantityitem/' . $buyableID . '/' . $classNameForBuyable . '/' . self::params_to_get_string($parameters));
     }
 
@@ -440,25 +383,25 @@ class ShoppingCartController extends Controller
      * @return string
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: $className (case sensitive)
+     * NEW: $className (COMPLEX)
+     * EXP: Check if the class name can still be used as such
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     public static function remove_from_sale_link($id, $className)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return self::create_link('removefromsale/' . $className . '/' . $id . '/');
     }
 
@@ -773,14 +716,14 @@ class ShoppingCartController extends Controller
     public function showcart(HTTPRequest $request)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: ->RenderWith( (ignore case)
+         * NEW: ->RenderWith( (COMPLEX)
+         * EXP: Check that the template location is still valid!
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         return $this->customise($this->cart->CurrentOrder())->RenderWith('AjaxCart');
     }
 
@@ -813,34 +756,34 @@ class ShoppingCartController extends Controller
     {
         $id = intval($request->param('ID'));
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $className = Convert::raw2sql($request->param('OtherID'));
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if (class_exists($className)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $address = $className::get()->byID($id);
             if ($address && $address->canView()) {
                 $member = Member::currentUser();
@@ -1000,6 +943,45 @@ class ShoppingCartController extends Controller
     }
 
     /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD:     public function init() (ignore case)
+     * NEW:     protected function init() (COMPLEX)
+     * EXP: Controller init functions are now protected  please check that is a controller.
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
+    protected function init()
+    {
+        parent::init();
+        $action = $this->request->param('Action');
+        if (! isset($_GET['cached'])) {
+            if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
+
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: Session:: (case sensitive)
+                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
+                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
+                $savedSecurityID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('SecurityID');
+                if ($savedSecurityID) {
+                    if (! isset($_GET['SecurityID'])) {
+                        $_GET['SecurityID'] = '';
+                    }
+                    if ($savedSecurityID) {
+                        if ($_GET['SecurityID'] !== $savedSecurityID) {
+                            $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
+                        }
+                        //all OK!
+                    }
+                }
+            }
+        }
+        $this->cart = ShoppingCart::singleton();
+    }
+
+    /**
      * returns ABSOLUTE link to the shopping cart controller.
      * @param array|string|null $actionAndOtherLinkVariables
      * @return string
@@ -1102,4 +1084,3 @@ class ShoppingCartController extends Controller
         return $this->redirect('page-not-found');
     }
 }
-

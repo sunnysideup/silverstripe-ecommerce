@@ -2,11 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
-
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 
 /**
  * ensures that order items can not be auto-linked or deleted
@@ -37,4 +35,3 @@ class GridFieldConfigForOrderItems extends GridFieldConfig_RelationEditor
         //$this->removeComponentsByType("GridFieldDetailForm");
     }
 }
-

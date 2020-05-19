@@ -2,15 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-
-
-use Sunnysideup\Ecommerce\Pages\Product;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
-
-
-
-
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /** @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -87,4 +81,3 @@ class EcommerceSideReportFeaturedProducts extends Report
         return $field;
     }
 }
-

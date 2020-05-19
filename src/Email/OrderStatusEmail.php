@@ -1,11 +1,6 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Email;
-use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
-
-
-
-
 
 /**
  * @Description: This class handles the status email which can be sent
@@ -23,4 +18,3 @@ class OrderStatusEmail extends OrderEmail
      */
     protected $ss_template = OrderStatusEmail::class;
 }
-

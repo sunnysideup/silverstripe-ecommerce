@@ -2,14 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
-
+use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Pages\Product;
-use SilverStripe\Dev\BuildTask;
-
-
 
 /**
  * @description: see description
@@ -97,4 +92,3 @@ class EcommerceTaskCleanupProducts extends BuildTask
         DB::query('INSERT INTO Product_ProductGroups(ProductID, ProductGroupID) SELECT ProductID, ProductGroupID FROM Product_ProductGroups_temp; ');
     }
 }
-

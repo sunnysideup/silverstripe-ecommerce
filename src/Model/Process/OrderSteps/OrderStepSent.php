@@ -2,24 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-
-
-
-use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\FieldList;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\TextField;
+use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -41,29 +32,24 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      */
     protected $relevantLogEntryClassName = OrderStatusLogDispatchPhysicalOrder::class;
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderStepSent';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'SendDetailsToCustomer' => 'Boolean',
         'EmailSubjectGift' => 'Varchar(200)',
@@ -233,4 +219,3 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return _t('OrderStep.SENT_DESCRIPTION', 'During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.');
     }
 }
-

@@ -2,19 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
-
-
-
-
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\Form;
-
-
-
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
 
 /**
  * This controller allows you to submit modifier forms from anywhere on the site,
@@ -40,24 +32,6 @@ class OrderModifierFormController extends Controller
     ];
 
     /**
-     * sets virtual methods and order.
-     */
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD:     public function init() (ignore case)
-  * NEW:     protected function init() (COMPLEX)
-  * EXP: Controller init functions are now protected  please check that is a controller.
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    protected function init()
-    {
-        parent::init();
-        $this->currentOrder = ShoppingCart::current_order();
-        $this->initVirtualMethods();
-    }
-
-    /**
      * @ToDO: check this method
      * It looks like this: /$ClassName/$action/
      *
@@ -66,17 +40,17 @@ class OrderModifierFormController extends Controller
     public function Link($action = null)
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->class (case sensitive)
-  * NEW: $this->class (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->class (case sensitive)
+         * NEW: $this->class (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $URLSegment = Config::inst()->get($this->class, 'url_segment');
         if (! $URLSegment) {
-            $URLSegment = get_class($this);
+            $URLSegment = static::class;
         }
 
         return Controller::join_links(
@@ -89,6 +63,24 @@ class OrderModifierFormController extends Controller
     public function removemodifier()
     {
         //@TODO: See issue 149
+    }
+
+    /**
+     * sets virtual methods and order.
+     */
+
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD:     public function init() (ignore case)
+     * NEW:     protected function init() (COMPLEX)
+     * EXP: Controller init functions are now protected  please check that is a controller.
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
+    protected function init()
+    {
+        parent::init();
+        $this->currentOrder = ShoppingCart::current_order();
+        $this->initVirtualMethods();
     }
 
     /**
@@ -134,4 +126,3 @@ class OrderModifierFormController extends Controller
         }
     }
 }
-

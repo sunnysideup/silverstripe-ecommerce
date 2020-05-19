@@ -2,14 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-
-
-
-use SilverStripe\ORM\SS_List;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-
-
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\SS_List;
 
 /**
  * This is a preset upload field for product images.
@@ -167,4 +162,3 @@ class ProductProductImageUploadField extends UploadField
         }
     }
 }
-

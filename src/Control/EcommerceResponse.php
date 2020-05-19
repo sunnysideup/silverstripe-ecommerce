@@ -2,10 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-
 use SilverStripe\Control\HTTPResponse;
-
-
 
 /**
  * @description: This class is a base class for Ecommerce Responses such as Cart Response
@@ -27,4 +24,3 @@ abstract class EcommerceResponse extends HTTPResponse
         user_error('Make sure to extend the EcommerceResponse::ReturnCartData class for your own purposes.', E_USER_NOTICE);
     }
 }
-

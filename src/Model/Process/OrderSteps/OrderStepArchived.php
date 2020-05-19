@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-
-
-
-
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\FieldList;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
-
-
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -103,4 +97,3 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
         return _t('OrderStep.ARCHIVED_DESCRIPTION', 'This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.');
     }
 }
-

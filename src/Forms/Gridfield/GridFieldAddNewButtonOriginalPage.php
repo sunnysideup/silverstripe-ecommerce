@@ -2,21 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
-
-
-
-
-
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
-use SilverStripe\View\ArrayData;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-
-
+use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * Provides the entry point to editing a single record presented by the
@@ -56,14 +49,14 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
 
         return [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: ->RenderWith( (ignore case)
-  * NEW: ->RenderWith( (COMPLEX)
-  * EXP: Check that the template location is still valid!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: ->RenderWith( (ignore case)
+             * NEW: ->RenderWith( (COMPLEX)
+             * EXP: Check that the template location is still valid!
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $this->targetFragment => $data->RenderWith('GridFieldAddNewbutton'),
         ];
     }
@@ -95,4 +88,3 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         }
     }
 }
-

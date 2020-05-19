@@ -2,24 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-
-
-
-
-
-
-
 use SilverStripe\Control\Director;
-use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\ORM\ArrayLib;
+use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use SilverStripe\View\ViewableData;
-use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
-
-
 
 /**
  * if you want to implement rules around selecting
@@ -41,13 +32,13 @@ use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInt
  */
 
 /**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD:  extends Object (ignore case)
-  * NEW:  extends ViewableData (COMPLEX)
-  * EXP: This used to extend Object, but object does not exist anymore. You can also manually add use Extensible, use Injectable, and use Configurable
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+ * ### @@@@ START REPLACEMENT @@@@ ###
+ * WHY: automated upgrade
+ * OLD:  extends Object (ignore case)
+ * NEW:  extends ViewableData (COMPLEX)
+ * EXP: This used to extend Object, but object does not exist anymore. You can also manually add use Extensible, use Injectable, and use Configurable
+ * ### @@@@ STOP REPLACEMENT @@@@ ###
+ */
 class EcommercePaymentSupportedMethodsProvider extends ViewableData implements EcommercePaymentSupportedMethodsProviderInterface
 {
     /**
@@ -110,4 +101,3 @@ class EcommercePaymentSupportedMethodsProvider extends ViewableData implements E
         user_error("Can't find an order to use");
     }
 }
-

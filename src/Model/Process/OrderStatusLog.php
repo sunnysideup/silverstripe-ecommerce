@@ -2,9 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-
-
-
+use CMSEditLinkAPI;
 
 
 
@@ -14,31 +12,23 @@ use CMSEditLinkField;
 
 
 
-
-
-use CMSEditLinkAPI;
-
-
-
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use SilverStripe\Security\Security;
-use SilverStripe\Forms\DropdownField;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\ReadonlyField;
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
 use SilverStripe\Forms\NumericField;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * @description: see OrderStep.md
@@ -56,28 +46,24 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderStatusLog';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'Title' => 'Varchar(100)',
         'Note' => 'HTMLText',
@@ -90,14 +76,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Author' => Member::class,
         'Order' => Order::class,
@@ -144,14 +130,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     private static $searchable_fields = [
         'OrderID' => [
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: NumericField (case sensitive)
+             * NEW: NumericField (COMPLEX)
+             * EXP: check the number of decimals required and add as ->Step(123)
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             'field' => 'NumericField',
             'title' => 'Order Number',
         ],
@@ -300,14 +286,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if ($order = $this->Order()) {
             //Order Status Logs are so basic, anyone can edit them
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $this->ClassName (case sensitive)
+             * NEW: $this->ClassName (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             if ($this->ClassName === OrderStatusLog::class) {
                 return $order->canView($member);
             }
@@ -404,47 +390,47 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
         $availableLogsAssociative = [];
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $className (case sensitive)
+         * NEW: $className (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         foreach ($availableLogs as $className) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }
         $title = _t('OrderStatusLog.TYPE', 'Type');
         if (($this->exists() || $this->limitedToOneClassName())
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $this->ClassName (case sensitive)
+                 * NEW: $this->ClassName (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 && $this->ClassName &&
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                /**
+                 * ### @@@@ START REPLACEMENT @@@@ ###
+                 * WHY: automated upgrade
+                 * OLD: $this->ClassName (case sensitive)
+                 * NEW: $this->ClassName (COMPLEX)
+                 * EXP: Check if the class name can still be used as such
+                 * ### @@@@ STOP REPLACEMENT @@@@ ###
+                 */
                 isset($availableLogsAssociative[$this->ClassName])
         ) {
             $fields->removeByName('ClassName');
@@ -455,15 +441,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                     ReadonlyField::create(
                         'ClassNameTitle',
                         $title,
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                        /**
+                         * ### @@@@ START REPLACEMENT @@@@ ###
+                         * WHY: automated upgrade
+                         * OLD: $this->ClassName (case sensitive)
+                         * NEW: $this->ClassName (COMPLEX)
+                         * EXP: Check if the class name can still be used as such
+                         * ### @@@@ STOP REPLACEMENT @@@@ ###
+                         */
                         $availableLogsAssociative[$this->ClassName]
                     ),
                 ],
@@ -527,14 +512,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::scaffoldSearchFields($_params);
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: NumericField (case sensitive)
-  * NEW: NumericField (COMPLEX)
-  * EXP: check the number of decimals required and add as ->Step(123)
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: NumericField (case sensitive)
+         * NEW: NumericField (COMPLEX)
+         * EXP: check the number of decimals required and add as ->Step(123)
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
         $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
@@ -602,14 +587,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     protected function limitedToOneClassName()
     {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $this->ClassName (case sensitive)
-  * NEW: $this->ClassName (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+        /**
+         * ### @@@@ START REPLACEMENT @@@@ ###
+         * WHY: automated upgrade
+         * OLD: $this->ClassName (case sensitive)
+         * NEW: $this->ClassName (COMPLEX)
+         * EXP: Check if the class name can still be used as such
+         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         */
         if ($this->ClassName === OrderStatusLog::class) {
             return false;
         }
@@ -626,4 +611,3 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }
-

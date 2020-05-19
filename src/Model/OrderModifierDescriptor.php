@@ -2,36 +2,23 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-
-
-
-
-
-
-
-
 use CMSEditLinkAPI;
 
 
 
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use SilverStripe\Security\Permission;
-use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\TreeDropdownField;
-use SilverStripe\Forms\TextareaField;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-
-
-
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {
@@ -41,28 +28,24 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * OLD: private static $db (case sensitive)
-  * NEW: 
-    private static $table_name = '[SEARCH_REPLACE_CLASS_NAME_GOES_HERE]';
-
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * OLD: private static $db (case sensitive)
+     * NEW:
     private static $db (COMPLEX)
-  * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-    
+     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $table_name = 'OrderModifierDescriptor';
 
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $db = (case sensitive)
-  * NEW: private static $db = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $db = (case sensitive)
+     * NEW: private static $db = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $db = [
         'ModifierClassName' => 'Varchar(100)',
         'Heading' => 'Varchar',
@@ -75,14 +58,14 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      * @var array
      */
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: private static $has_one = (case sensitive)
-  * NEW: private static $has_one = (COMPLEX)
-  * EXP: Make sure to add a private static $table_name!
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+    /**
+     * ### @@@@ START REPLACEMENT @@@@ ###
+     * WHY: automated upgrade
+     * OLD: private static $has_one = (case sensitive)
+     * NEW: private static $has_one = (COMPLEX)
+     * EXP: Make sure to add a private static $table_name!
+     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     */
     private static $has_one = [
         'Link' => SiteTree::class,
     ];
@@ -166,7 +149,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      *
      * @return bool
      **/
-    public function canCreate($member = NULL, $context = Array())
+    public function canCreate($member = null, $context = [])
     {
         return false;
     }
@@ -278,62 +261,61 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         }
         if (count($arrayOfModifiers)) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+            /**
+             * ### @@@@ START REPLACEMENT @@@@ ###
+             * WHY: automated upgrade
+             * OLD: $className (case sensitive)
+             * NEW: $className (COMPLEX)
+             * EXP: Check if the class name can still be used as such
+             * ### @@@@ STOP REPLACEMENT @@@@ ###
+             */
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
                     OrderModifierDescriptor::class,
-
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     ['ModifierClassName' => $className],
                     $cacheDataObjectGetOne = false
                 );
                 if (! $orderModifier_Descriptor) {
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     $modifier = Injector::inst()->get($className);
                     $orderModifier_Descriptor = OrderModifierDescriptor::create();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     $orderModifier_Descriptor->ModifierClassName = $className;
                     $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
                     $orderModifier_Descriptor->write();
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $className (case sensitive)
-  * NEW: $className (COMPLEX)
-  * EXP: Check if the class name can still be used as such
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
+                    /**
+                     * ### @@@@ START REPLACEMENT @@@@ ###
+                     * WHY: automated upgrade
+                     * OLD: $className (case sensitive)
+                     * NEW: $className (COMPLEX)
+                     * EXP: Check if the class name can still be used as such
+                     * ### @@@@ STOP REPLACEMENT @@@@ ###
+                     */
                     DB::alteration_message('Creating description for ' . $className, 'created');
                 }
             }
@@ -350,4 +332,3 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         }
     }
 }
-

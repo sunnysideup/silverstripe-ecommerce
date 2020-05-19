@@ -2,27 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-
-
-
-
-
-
-
-
-use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use SilverStripe\ORM\DataList;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\DataList;
+use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
-
-
-
+use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -140,4 +129,3 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         return $form;
     }
 }
-

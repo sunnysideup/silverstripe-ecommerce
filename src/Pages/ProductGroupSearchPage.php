@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-
-
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
-
+use SilverStripe\ORM\DataList;
 
 /**
  * This page manages searching for products.
@@ -112,4 +108,3 @@ class ProductGroupSearchPage extends ProductGroup
         return $this->getUserSettingsOptionSQL('SORT', $sortKey);
     }
 }
-

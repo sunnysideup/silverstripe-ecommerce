@@ -2,16 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-
-
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
-
-
-
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)
@@ -101,4 +96,3 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
         return $form;
     }
 }
-
