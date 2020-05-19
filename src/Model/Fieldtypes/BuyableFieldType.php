@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Fieldtypes;
 
-use PolymorphicForeignKey;
+use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use CompositeDBField;
 
 
@@ -23,7 +23,7 @@ use SilverStripe\ORM\DB;
  * @subpackage: model
 
  **/
-class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
+class BuyableFieldType extends DBPolymorphicForeignKey implements CompositeDBField
 {
     public function scaffoldFormField($title = null, $params = null)
     {
@@ -89,4 +89,3 @@ class BuyableFieldType extends PolymorphicForeignKey implements CompositeDBField
         ];
     }
 }
-
