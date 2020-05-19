@@ -319,7 +319,6 @@ class CheckoutPage extends CartPage
                 )->setRows(5)
             ]
         );
-        $htmlEditorField;
         if (OrderModifier_Descriptor::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
