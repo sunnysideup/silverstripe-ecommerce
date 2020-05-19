@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use DBTextField;
+use SilverStripe\Forms\TextField;
 
 use SilverStripe\View\Requirements;
 
@@ -13,7 +13,7 @@ use SilverStripe\View\Requirements;
  *
  * @todo Validate
  */
-class EcommerceCreditCardField extends DBTextField
+class EcommerceCreditCardField extends TextField
 {
     /**
      * Add default attributes for use on all inputs.
@@ -108,4 +108,3 @@ class EcommerceCreditCardField extends DBTextField
         }
     }
 }
-
