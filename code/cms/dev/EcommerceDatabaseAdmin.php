@@ -10,50 +10,50 @@
  *
  * Here is an example:
 
- <code php>
- <?php
-
- ####################### in mysite/code/tasks/MyMigration.php
-
- class MyMigration extends BuildTask {
-
- protected $title = "Mysite Database Fixes";
-
- protected $description = "General DB fixes";
-
- function run(SS_HTTPRequest $request) {
- DB::query("TRUNCATE TABLE MyUselessTable;");
- }
-
- }
-
- class MyMigration_EXT extends Extension {
-
- private static $allowed_actions = array(
- "mymigration" => true
- );
-
- //NOTE THAT updateEcommerceDevMenuConfig adds to Config options
- //but you can als have: updateEcommerceDevMenuDebugActions, or updateEcommerceDevMenuMaintenanceActions
- function updateEcommerceDevMenuConfig($buildTasks){
- $buildTasks[] = "mymigration";
- return $buildTasks;
- }
-
- function mymigration(SS_HTTPRequest $request){
- $this->owner->runTask("MyMigration", $request);
- }
-
- }
-
-
- ####################### in mysite/_config.php:
-
- Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
-
-
- </code>
-
+ *  <code php>
+ *  <?php
+ *
+ *  ####################### in mysite/code/tasks/MyMigration.php
+ *
+ *  class MyMigration extends BuildTask {
+ *
+ *  protected $title = "Mysite Database Fixes";
+ *
+ *  protected $description = "General DB fixes";
+ *
+ *  function run(SS_HTTPRequest $request) {
+ *  DB::query("TRUNCATE TABLE MyUselessTable;");
+ *  }
+ *
+ *  }
+ *
+ *  class MyMigration_EXT extends Extension {
+ *
+ *  private static $allowed_actions = array(
+ *  "mymigration" => true
+ *  );
+ *
+ *  //NOTE THAT updateEcommerceDevMenuConfig adds to Config options
+ *  //but you can als have: updateEcommerceDevMenuDebugActions, or updateEcommerceDevMenuMaintenanceActions
+ *  function updateEcommerceDevMenuConfig($buildTasks){
+ *  $buildTasks[] = "mymigration";
+ *  return $buildTasks;
+ *  }
+ *
+ *  function mymigration(SS_HTTPRequest $request){
+ *  $this->owner->runTask("MyMigration", $request);
+ *  }
+ *
+ *  }
+ *
+ *
+ *  ####################### in mysite/_config.php:
+ *
+ *  Object::add_extension("EcommerceDatabaseAdmin", "MyMigration_EXT");
+ *
+ *
+ *  </code>
+ *
  *
  * SECTIONS
  *
