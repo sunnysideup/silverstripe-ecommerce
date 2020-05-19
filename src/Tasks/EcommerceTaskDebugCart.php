@@ -22,7 +22,7 @@ class EcommerceTaskDebugCart extends BuildTask
     public static function debug_object($obj)
     {
         $html = '
-			<h2>' . $obj->ClassName . '</h2><ul>';
+            <h2>' . $obj->ClassName . '</h2><ul>';
         $fields = Config::inst()->get($obj->ClassName, 'db', Config::INHERITED);
 
         //db

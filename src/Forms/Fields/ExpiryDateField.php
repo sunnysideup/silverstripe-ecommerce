@@ -61,14 +61,14 @@ class ExpiryDateField extends TextField
             $yearValue = substr($this->value, 2, 2);
         }
         return '
-			<span id="' . $this->getName() . '_Holder" class="expiryDateField">
-				<select class="expiryDate expiryDateMonth" name="' . $this->getName() . '[month]" autocomplete="off" >
-					<option value="" selected="selected">Month</option>' . $this->makeSelectList($this->monthArray(), $monthValue) . '
-				</select>
-				<select class="expiryDate expiryDateYear" name="' . $this->getName() . '[year]" autocomplete="off" >
-					<option value="" selected="selected">Year</option>' . $this->makeSelectList($this->yearArray(), $yearValue) . '
-				</select>
-			</span>';
+            <span id="' . $this->getName() . '_Holder" class="expiryDateField">
+                <select class="expiryDate expiryDateMonth" name="' . $this->getName() . '[month]" autocomplete="off" >
+                    <option value="" selected="selected">Month</option>' . $this->makeSelectList($this->monthArray(), $monthValue) . '
+                </select>
+                <select class="expiryDate expiryDateYear" name="' . $this->getName() . '[year]" autocomplete="off" >
+                    <option value="" selected="selected">Year</option>' . $this->makeSelectList($this->yearArray(), $yearValue) . '
+                </select>
+            </span>';
     }
 
     /**

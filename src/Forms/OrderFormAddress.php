@@ -555,7 +555,7 @@ class OrderFormAddress extends Form
                 //on behalf of someone else.
                 //that is,
                 //if($this->orderMember->ID == $this->loggedInMember->ID) {
-                //	return false;
+                //    return false;
                 //}
             } else {
                 return false;

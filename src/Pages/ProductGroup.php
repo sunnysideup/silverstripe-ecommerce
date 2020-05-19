@@ -26,6 +26,7 @@ use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -450,7 +451,7 @@ class ProductGroup extends Page
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
+        if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
         if (! $member) {
@@ -961,7 +962,7 @@ class ProductGroup extends Page
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            return is_a($parent, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class)) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
+            return is_a($parent, EcommerceConfigClassNames::getName(ProductGroup::class)) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
         }
         return $this->ChildGroups($filter);
     }

@@ -7,6 +7,7 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 /**
  * @description: see description
@@ -34,7 +35,7 @@ class EcommerceTaskDeleteProducts extends BuildTask
             if ($allproducts->count()) {
                 foreach ($allproducts as $product) {
                     DB::alteration_message('Deleting ' . $product->ClassName . ' ID = ' . $product->ID, 'deleted');
-                    if (is_a($product, Object::getCustomClass(SiteTree::class))) {
+                    if (is_a($product, EcommerceConfigClassNames::getName(SiteTree::class))) {
                         $product->deleteFromStage('Live');
                         $product->deleteFromStage('Draft');
                     } else {

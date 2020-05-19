@@ -14,6 +14,8 @@ use SilverStripe\ORM\DataList;
  **/
 class ProductGroupSearchPage extends ProductGroup
 {
+    private static $table_name = 'ProductGroupSearchPage';
+
     /**
      * Can product list (and related) be cached at all?
      *

@@ -33,6 +33,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 /**
  * @description: each order has an address: a Shipping and a Billing address
@@ -439,7 +440,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class))) {
+            if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
                 $this->Email = $member->Email;
             }
             $fieldNameArray = ['FirstName' => $fieldPrefix . 'FirstName', 'Surname' => $fieldPrefix . 'Surname'];
@@ -454,7 +455,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                  * EXP: Check if this is the right implementation, this is highly speculative.
                  * ### @@@@ STOP REPLACEMENT @@@@ ###
                  */
-                if (! $this->{$fieldName} || (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(BillingAddress::class)))) {
+                if (! $this->{$fieldName} || (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class)))) {
                     $this->{$fieldName} = $member->{$memberField};
                 }
             }
@@ -749,9 +750,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      **/
     protected function baseClassLinkingToOrder()
     {
-        if (is_a($this, Object::getCustomClass(BillingAddress::class))) {
+        if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
             return BillingAddress::class;
-        } elseif (is_a($this, Object::getCustomClass(ShippingAddress::class))) {
+        } elseif (is_a($this, EcommerceConfigClassNames::getName(ShippingAddress::class))) {
             return ShippingAddress::class;
         }
     }
@@ -763,7 +764,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      **/
     protected function fieldPrefix()
     {
-        if ($this->baseClassLinkingToOrder() === Object::getCustomClass(BillingAddress::class)) {
+        if ($this->baseClassLinkingToOrder() === EcommerceConfigClassNames::getName(BillingAddress::class)) {
             return '';
         }
         return 'Shipping';

@@ -18,6 +18,8 @@ use SilverStripe\View\SSViewer;
  **/
 class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 {
+    private static $table_name = 'OrderStatusLogDispatchPhysicalOrder';
+
     private static $db = [
         'DispatchedBy' => 'Varchar(100)',
         'DispatchedOn' => 'Date',

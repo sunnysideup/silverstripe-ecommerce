@@ -33,6 +33,8 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 /**
  * "Abstract" class for a number of different payment
@@ -56,7 +58,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $dependencies = [
-        'supportedMethodsProvider' => '%$EcommercePaymentSupportedMethodsProvider',
+        'supportedMethodsProvider' => '%$'.EcommercePaymentSupportedMethodsProvider::class,
     ];
 
     /**
@@ -412,7 +414,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        if ($order && is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class)) && $order->IsSubmitted()) {
+        if ($order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }
     }
@@ -486,7 +488,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Static method to quickly update the payment method on runtime
      * associative array that goes like ClassName => Description ...
      *
-     * e.g. MyPaymentClass => Best Payment Method Ever	 * @param array $array -
+     * e.g. MyPaymentClass => Best Payment Method Ever     * @param array $array -
      * @param array $array
      */
     public static function set_supported_methods($array)

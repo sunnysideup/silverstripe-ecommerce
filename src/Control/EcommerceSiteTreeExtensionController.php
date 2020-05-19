@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Control;
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
@@ -11,6 +11,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * ### @@@@ START REPLACEMENT @@@@ ###
@@ -52,7 +53,16 @@ class EcommerceSiteTreeExtensionController extends Extension
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            if (is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class)) || is_a($this->owner->dataRecord, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
+            if (
+                is_a(
+                    $this->owner->dataRecord,
+                    EcommerceConfigClassNames::getName(Product::class)
+                ) ||
+                is_a(
+                    $this->owner->dataRecord,
+                    EcommerceConfigClassNames::getName(ProductGroup::class)
+                )
+            ) {
 
                 /**
                  * ### @@@@ START REPLACEMENT @@@@ ###

@@ -28,9 +28,9 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
         if ($customerGroup) {
             $allCombos = DB::query(
                 '
-				SELECT "Group_Members"."ID", "Group_Members"."MemberID", "Group_Members"."GroupID"
-				FROM "Group_Members"
-				WHERE "Group_Members"."GroupID" = ' . $customerGroup->ID . ';'
+                SELECT "Group_Members"."ID", "Group_Members"."MemberID", "Group_Members"."GroupID"
+                FROM "Group_Members"
+                WHERE "Group_Members"."GroupID" = ' . $customerGroup->ID . ';'
             );
             //make an array of all combos
             $alreadyAdded = [];

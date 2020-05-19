@@ -7,7 +7,7 @@ use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 /**
  * see description in class.
  *
@@ -79,7 +79,7 @@ class EcommerceTaskProductImageReset extends BuildTask
                       * EXP: Check if this is the right implementation, this is highly speculative.
                       * ### @@@@ STOP REPLACEMENT @@@@ ###
                       */
-                    } elseif (! is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class))) {
+                    } elseif (! is_a($image, EcommerceConfigClassNames::getName(ProductImage::class))) {
                         ++$updateClassCount;
                         $image = $image->newClassInstance(ProductImage::class);
                         $image - write();

@@ -12,6 +12,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 /**
  * @Description: Email specifically for communicating with customer about order.
@@ -178,7 +179,7 @@ abstract class OrderEmail extends Email
     public function hasBeenSent(): bool
     {
         $orderStep = $this->order->Status();
-        if (is_a($orderStep, Object::getCustomClass(OrderStep::class))) {
+        if (is_a($orderStep, EcommerceConfigClassNames::getName(OrderStep::class))) {
             return $orderStep->hasBeenSent($this->order);
         }
 

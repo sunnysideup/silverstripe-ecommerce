@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
@@ -359,7 +360,7 @@ class OrderConfirmationPageController extends CartPageController
             $message = '';
             $emailClassName = OrderReceiptEmail::class;
             if (class_exists($request->param('OtherID'))) {
-                if (is_a(singleton($request->param('OtherID')), Object::getCustomClass(OrderEmail::class))) {
+                if (is_a(singleton($request->param('OtherID')), EcommerceConfigClassNames::getName(OrderEmail::class))) {
                     $emailClassName = $request->param('OtherID');
                 }
             }

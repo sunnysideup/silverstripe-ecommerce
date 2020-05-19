@@ -19,9 +19,9 @@ class EcommerceTaskCleanupProducts extends BuildTask
     protected $title = 'Cleanup Product Full SiteTree Sorting';
 
     protected $description = '
-	Resets all the sorting values in the Full Site Tree Sorting field in Products (not for the ProductVariations).
-	This field includes the sorting number for the product at hand, as well as all the sorting number of its parent pages...
-	Allowing you to keep the SiteTree sort order for a collection of random products. ';
+    Resets all the sorting values in the Full Site Tree Sorting field in Products (not for the ProductVariations).
+    This field includes the sorting number for the product at hand, as well as all the sorting number of its parent pages...
+    Allowing you to keep the SiteTree sort order for a collection of random products. ';
 
     protected $deleteFirst = true;
 
@@ -41,28 +41,28 @@ class EcommerceTaskCleanupProducts extends BuildTask
             }
             for ($i = 30; $i > 0; --$i) {
                 $joinStatement = "
-					INNER JOIN SiteTree${extension} AS UP0 ON UP0.ID = Product${extension}.ID";
+                    INNER JOIN SiteTree${extension} AS UP0 ON UP0.ID = Product${extension}.ID";
                 $concatStatement = 'CONCAT(';
                 for ($j = 1; $j < $i; ++$j) {
                     $concatStatement .= 'UP' . ($i - $j) . ".Sort,',',";
                     $joinStatement .= "
-						INNER JOIN SiteTree${extension} AS UP${j} ON UP${j}.ID = UP" . ($j - 1) . '.ParentID';
+                        INNER JOIN SiteTree${extension} AS UP${j} ON UP${j}.ID = UP" . ($j - 1) . '.ParentID';
                 }
                 $concatStatement .= 'UP0.Sort)';
                 $sql = "
-					SELECT COUNT(\"Product${extension}\".\"ID\")
-					FROM  \"Product${extension}\"
-					${joinStatement}
-					WHERE \"Product${extension}\".\"FullSiteTreeSort\" IS NULL OR \"Product${extension}\".\"FullSiteTreeSort\" = '';
-				";
+                    SELECT COUNT(\"Product${extension}\".\"ID\")
+                    FROM  \"Product${extension}\"
+                    ${joinStatement}
+                    WHERE \"Product${extension}\".\"FullSiteTreeSort\" IS NULL OR \"Product${extension}\".\"FullSiteTreeSort\" = '';
+                ";
                 $count = DB::query($sql)->value();
                 if ($count) {
                     DB::alteration_message("We are about to update ${count} Products", 'created');
                     $sql = "
-						UPDATE \"Product${extension}\"
-						${joinStatement}
-						SET \"Product${extension}\".\"FullSiteTreeSort\" = ${concatStatement}
-						WHERE \"Product${extension}\".\"FullSiteTreeSort\" IS NULL OR \"Product${extension}\".\"FullSiteTreeSort\" = '';";
+                        UPDATE \"Product${extension}\"
+                        ${joinStatement}
+                        SET \"Product${extension}\".\"FullSiteTreeSort\" = ${concatStatement}
+                        WHERE \"Product${extension}\".\"FullSiteTreeSort\" IS NULL OR \"Product${extension}\".\"FullSiteTreeSort\" = '';";
                     DB::query($sql);
                     $outcome = DB::query($sql);
                     echo '<p style="font-size: 10px; color: grey;">' . $sql . ': ' . ($outcome ? 'SUCCESS' : 'ERROR') . '</p>';

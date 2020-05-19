@@ -42,7 +42,10 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     ];
 
     private static $indexes = [
-        'SearchIndex' => 'unique("Search")',
+        'SearchIndex' => [
+            'type' => 'unique',
+            'columns' => ['Search'],
+        ],
         'Replace' => true,
     ];
 

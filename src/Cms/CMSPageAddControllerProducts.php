@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\CMS\Controllers\CMSPageAddController;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayList;
@@ -55,7 +56,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        $productClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Product::class);
+        $productClass = EcommerceConfigClassNames::getName(Product::class);
 
         /**
          * ### @@@@ START REPLACEMENT @@@@ ###
@@ -65,7 +66,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        $productGroupClass = SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class);
+        $productGroupClass = EcommerceConfigClassNames::getName(ProductGroup::class);
 
         $acceptedClasses1 = ClassInfo::subclassesFor($productClass);
         $acceptedClasses1[$productClass] = $productClass;

@@ -25,7 +25,7 @@ class EcommerceTaskReviewReports extends BuildTask
      * @var string
      */
     protected $description = '
-		Review a bunch of reports that provide information on the e-commerce pages created, such as the Products without Images.';
+        Review a bunch of reports that provide information on the e-commerce pages created, such as the Products without Images.';
 
     public function run($request)
     {

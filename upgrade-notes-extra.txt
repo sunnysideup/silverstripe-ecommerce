@@ -1,3 +1,113 @@
+
+------------------- EXIT WITH ERROR -------------------------
+Found errors in use statements: 
+---
+---
+---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Api/EcommerceCountryVisitorCountryProvider.php: use Geoip;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Api/ShoppingCart.php: use Extensible;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Api/ShoppingCart.php: use Injectable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Api/ShoppingCart.php: use Configurable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfigDefinitions.php: use Extensible;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfigDefinitions.php: use Injectable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfigDefinitions.php: use Configurable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfig.php: use Spyc;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfig.php: use Extensible;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfig.php: use Injectable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfig.php: use Configurable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfigAjax.php: use Extensible;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfigAjax.php: use Injectable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Config/EcommerceConfigAjax.php: use Configurable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Control/ShoppingCartController.php: use ProductVariation;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/OrderAttribute.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/OrderModifierDescriptor.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/OrderItem.php: use Translatable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Order.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/OrderAttributeGroup.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Address/EcommerceRegion.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Address/ShippingAddress.php: use GoogleAddressField;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Address/EcommerceCountry.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Address/EcommerceCountry.php: use Geoip;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Address/OrderAddress.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Address/BillingAddress.php: use GoogleAddressField;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/CheckoutPageStepDescription.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/OrderEmailRecord.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/OrderProcessQueue.php: use CMSEditLinkField;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/OrderStatusLog.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/OrderStatusLog.php: use CMSEditLinkField;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/OrderFeedback.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Process/OrderFeedback.php: use CMSEditLinkField;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Money/EcommerceCurrency.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Money/EcommerceCurrency.php: use Currency;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Money/EcommercePayment.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Search/SearchReplacement.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Extensions/EcommerceRole.php: use CMSEditLinkAPI;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Money/EcommerceMoney.php: use Money;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Money/EcommerceMoney.php: use Zend_Currency;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Money/ExchangeRateProvider.php: use Extensible;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Money/ExchangeRateProvider.php: use Injectable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Money/ExchangeRateProvider.php: use Configurable;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Tasks/EcommerceTaskCreateMemberGroups.php: use db;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Tasks/EcommerceTaskTryToFinaliseOrders.php: use Exception;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Tasks/EcommerceTaskCheckConfiguration.php: use Spyc;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Search/Filters/EcommercePaymentFiltersAroundDateFilter.php: use PostgreSQLDatabase;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Pages/CheckoutPageController.php: use convert;
+ ---
+/var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Pages/Product.php: use UploadFIeld;
+
+
+------------------- EXIT WITH ERROR -------------------------
+
+
+
+
 unchanged:	src/Api/EcommerceRestfulServer.php
 Warnings for src/Api/EcommerceRestfulServer.php:
  - src/Api/EcommerceRestfulServer.php:92 PhpParser\Node\Expr\Variable

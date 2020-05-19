@@ -6,7 +6,7 @@ use Page;
 
 
 
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 
 
@@ -549,7 +549,7 @@ class Product extends Page implements BuyableModel
                  * EXP: Check if this is the right implementation, this is highly speculative.
                  * ### @@@@ STOP REPLACEMENT @@@@ ###
                  */
-                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
+                if (is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))) {
                     $parentTitleArray[] = $obj->Title;
                 }
             }
@@ -612,7 +612,7 @@ class Product extends Page implements BuyableModel
                      * EXP: Check if this is the right implementation, this is highly speculative.
                      * ### @@@@ STOP REPLACEMENT @@@@ ###
                      */
-                    if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductGroup::class))) {
+                    if (is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))) {
                         $allParentsArray[$obj->ID] = $obj->ID;
                     }
                 }
@@ -1393,7 +1393,7 @@ class Product extends Page implements BuyableModel
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        if (is_a(Controller::curr(), SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductsAndGroupsModelAdmin::class))) {
+        if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
         if (! $member) {

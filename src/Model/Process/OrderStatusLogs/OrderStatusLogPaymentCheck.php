@@ -22,6 +22,9 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  **/
 class OrderStatusLogPaymentCheck extends OrderStatusLog
 {
+
+    private static $table_name = 'OrderStatusLogPaymentCheck';
+
     private static $defaults = [
         'InternalUseOnly' => true,
     ];

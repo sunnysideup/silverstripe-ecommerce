@@ -28,10 +28,10 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
                 $productGroup1 = new ProductGroup();
                 $productGroup1->Title = 'Products';
                 $productGroup1->Content = "
-					<p>This is the top level products page, it uses the <em>product group</em> page type, and it allows you to show your products checked as 'featured' on it. It also allows you to nest <em>product group</em> pages inside it.</p>
-					<p>For example, you have a product group called 'DVDs', and inside you have more product groups like 'sci-fi', 'horrors' or 'action'.</p>
-					<p>In this example we have setup a main product group (this page), with a nested product group containing 2 example products.</p>
-				";
+                    <p>This is the top level products page, it uses the <em>product group</em> page type, and it allows you to show your products checked as 'featured' on it. It also allows you to nest <em>product group</em> pages inside it.</p>
+                    <p>For example, you have a product group called 'DVDs', and inside you have more product groups like 'sci-fi', 'horrors' or 'action'.</p>
+                    <p>In this example we have setup a main product group (this page), with a nested product group containing 2 example products.</p>
+                ";
                 $productGroup1->URLSegment = 'products';
                 $productGroup1->writeToStage('Stage');
                 $productGroup1->publish('Stage', 'Live');

@@ -38,6 +38,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  **/
 class CartPage extends Page
 {
+
     /**
      * Standard SS variable.
      *

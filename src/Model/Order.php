@@ -4,7 +4,7 @@ namespace Sunnysideup\Ecommerce\Model;
 
 use CMSEditLinkAPI;
 
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 
 
@@ -1602,7 +1602,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsPaid()) {
             return $this->Payments("\"Status\" = 'Success'");
             //EcommercePayment::get()->
-            //	filter(array("OrderID" => $this->ID, "Status" => "Success"));
+            //    filter(array("OrderID" => $this->ID, "Status" => "Success"));
         }
         return $this->Payments();
     }
@@ -1832,7 +1832,7 @@ class Order extends DataObject implements EditableEcommerceObject
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            if (! is_a($newCurrency, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(EcommerceCurrency::class))) {
+            if (! is_a($newCurrency, EcommerceConfigClassNames::getName(EcommerceCurrency::class))) {
                 $newCurrency = EcommerceCurrency::default_currency();
             }
             $this->CurrencyUsedID = $newCurrency->ID;
@@ -2128,7 +2128,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $modifiers = $this->Modifiers();
         if ($modifiers->count()) {
             foreach ($modifiers as $modifier) {
-                if (is_a($modifier, Object::getCustomClass($className))) {
+                if (is_a($modifier, EcommerceConfigClassNames::getName($className))) {
                     return $modifier;
                 }
             }
@@ -2803,7 +2803,7 @@ class Order extends DataObject implements EditableEcommerceObject
                  * EXP: Check if this is the right implementation, this is highly speculative.
                  * ### @@@@ STOP REPLACEMENT @@@@ ###
                  */
-                if (is_a($item, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderAttribute::class))) {
+                if (is_a($item, EcommerceConfigClassNames::getName(OrderAttribute::class))) {
                     $result += $item->Total();
                 }
             }
@@ -3907,7 +3907,7 @@ class Order extends DataObject implements EditableEcommerceObject
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            if (! is_a($email, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Email::class))) {
+            if (! is_a($email, EcommerceConfigClassNames::getName(Email::class))) {
                 user_error('No correct email class provided.', E_USER_ERROR);
             }
             $email->setFrom($from);

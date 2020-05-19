@@ -3,7 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\Image;
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 
 
@@ -78,7 +78,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * Array of definitions - set like this:
      * ClassName
-     * 		VariableName: Description.
+     *         VariableName: Description.
      *
      * @var array
      */
@@ -87,7 +87,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * Array of definitions Header - set like this:
      * HEADER TITLE
-     * 		ClassName.
+     *         ClassName.
      *
      * @var array
      */
@@ -96,7 +96,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * Array of defaults - set like this:
      * ClassName
-     * 		VariableName: Default Variable Value.
+     *         VariableName: Default Variable Value.
      *
      * @var array
      */
@@ -105,7 +105,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * Array of configs - set like this:
      * ClassName
-     * 		VariableName: VariableValue.
+     *         VariableName: VariableValue.
      *
      * @var array
      */
@@ -114,7 +114,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * which values are derived from DB
      * ClassName
-     * 		VariableName: TRUE | FALSE.
+     *         VariableName: TRUE | FALSE.
      *
      * @var array
      */
@@ -123,7 +123,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * set in default yml, but not customised.
      * ClassName
-     * 		VariableName: TRUE | FALSE.
+     *         VariableName: TRUE | FALSE.
      *
      * @var array
      */
@@ -132,7 +132,7 @@ class EcommerceTaskCheckConfiguration extends BuildTask
     /**
      * Other configs
      * ClassName
-     * 		VariableName: TRUE | FLASE.
+     *         VariableName: TRUE | FLASE.
      *
      * @var array
      */
@@ -800,7 +800,7 @@ EcommerceConfig:
                             $actualValueRaw = EcommerceConfig::get($className, $key);
                         }
                         //if(!$actualValueRaw && $manuallyAddedValue) {
-                        //	$actualValueRaw = $manuallyAddedValue;
+                        //    $actualValueRaw = $manuallyAddedValue;
                         //}
 
                         $actualValue = print_r($actualValueRaw, 1);
@@ -923,7 +923,7 @@ EcommerceConfig:
                              * EXP: Check if this is the right implementation, this is highly speculative.
                              * ### @@@@ STOP REPLACEMENT @@@@ ###
                              */
-                            if ($image->exists() && is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class))) {
+                            if ($image->exists() && is_a($image, EcommerceConfigClassNames::getName(Image::class))) {
                                 $this->configs[EcommerceDBConfig::class][$field] = '[Image]  --- <img src="' . $image->Link() . '" />';
                                 $this->databaseValues[EcommerceDBConfig::class][$field] = true;
                             }

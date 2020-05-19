@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
@@ -102,7 +103,7 @@ class EcommerceTaskLinkProductsWithImages extends BuildTask
                                      * EXP: Check if this is the right implementation, this is highly speculative.
                                      * ### @@@@ STOP REPLACEMENT @@@@ ###
                                      */
-                                    if (is_a($image, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Image::class)) && $image->ClassName !== SilverStripe\Core\Injector\Injector::inst()->getCustomClass(ProductImage::class)) {
+                                    if (is_a($image, EcommerceConfigClassNames::getName(Image::class)) && $image->ClassName !== EcommerceConfigClassNames::getName(ProductImage::class)) {
                                         $image = $image->newClassInstance(ProductImage::class);
                                         $image->write();
                                     }

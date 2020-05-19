@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -101,7 +102,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        if (! is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
+        if (! is_a($obj, EcommerceConfigClassNames::getName(OrderStatusLog::class))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }
         $orderStatusLogClassName = OrderStatusLog::class;

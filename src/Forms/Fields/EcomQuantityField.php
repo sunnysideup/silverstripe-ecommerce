@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\View\Requirements;
@@ -105,7 +106,7 @@ class EcomQuantityField extends NumericField
               * EXP: Check if this is the right implementation, this is highly speculative.
               * ### @@@@ STOP REPLACEMENT @@@@ ###
               */
-        } elseif (is_a($object, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class)) && $object->BuyableID) {
+        } elseif (is_a($object, EcommerceConfigClassNames::getName(OrderItem::class)) && $object->BuyableID) {
             $this->orderItem = $object;
         } else {
             user_error('EcomQuantityField: no/bad order item or buyable passed to constructor.', E_USER_WARNING);

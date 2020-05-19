@@ -1,10 +1,5 @@
 ---
 Name: ecommerce_default_settings
-Before:
-  - 'app/*'
-After:
-  - 'framework/*'
-  - 'cms/*'
 ---
 Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig:
   ecommerce_db_config_class_name: Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig

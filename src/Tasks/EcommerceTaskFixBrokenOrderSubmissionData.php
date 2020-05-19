@@ -36,13 +36,13 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
                 $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = ${orderID}");
                 if ($inners->value() < 1) {
                     $sql = "
-					SELECT *
-					FROM OrderStatusLogSubmitted
-					WHERE
-						\"OrderAsString\" LIKE '%s:7:\"OrderID\";i:" . $orderID . "%'
-						OR \"OrderAsHTML\" LIKE '%Order #" . $orderID . "%'
+                    SELECT *
+                    FROM OrderStatusLogSubmitted
+                    WHERE
+                        \"OrderAsString\" LIKE '%s:7:\"OrderID\";i:" . $orderID . "%'
+                        OR \"OrderAsHTML\" LIKE '%Order #" . $orderID . "%'
 
-					LIMIT 1";
+                    LIMIT 1";
                     if ($innerInners = DB::query($sql)) {
                         foreach ($innerInners as $innerInnerRow) {
                             DB::alteration_message('FOUND ' . $innerInnerRow['ID'], 'created');

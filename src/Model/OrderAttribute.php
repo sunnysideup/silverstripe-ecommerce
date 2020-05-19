@@ -6,7 +6,7 @@ use CMSEditLinkAPI;
 
 
 
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
@@ -408,7 +408,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
          * EXP: Check if this is the right implementation, this is highly speculative.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        if (is_a($this, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderItem::class))) {
+        if (is_a($this, EcommerceConfigClassNames::getName(OrderItem::class))) {
             $classes[] = strtolower($this->BuyableClassName);
         }
 

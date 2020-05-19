@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
@@ -127,7 +127,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                  * EXP: Check if this is the right implementation, this is highly speculative.
                  * ### @@@@ STOP REPLACEMENT @@@@ ###
                  */
-                if (is_a($obj, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderStatusLog::class))) {
+                if (is_a($obj, EcommerceConfigClassNames::getName(OrderStatusLog::class))) {
                     $obj->OrderID = $order->ID;
                     $obj->Title = $this->Name;
                     //it is important we add this here so that we can save the 'submitted' version.
@@ -210,7 +210,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null	(next step OrderStep)
+     * @return OrderStep | Null    (next step OrderStep)
      **/
     public function nextStep(Order $order)
     {

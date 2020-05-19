@@ -29,6 +29,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  **/
 class AccountPage extends Page
 {
+    private static $table_name = 'AccountPage';
+
     /**
      *@var float
      */

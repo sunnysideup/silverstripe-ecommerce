@@ -11,6 +11,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 class BuyableSelectFieldDataList extends Controller
 {
@@ -90,7 +91,7 @@ class BuyableSelectFieldDataList extends Controller
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            if (is_a($singleton, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(SiteTree::class))) {
+            if (is_a($singleton, EcommerceConfigClassNames::getName(SiteTree::class))) {
                 if (Versioned::get_stage() === 'Live') {
                     $buyables[$key]['TableName'] .= '_Live';
                 }

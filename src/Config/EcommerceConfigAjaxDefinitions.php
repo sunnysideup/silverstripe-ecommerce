@@ -25,9 +25,9 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * the ids and classes, using the requestor.
      * e.g.
      * <code>
-     * 	MyTableRowID(){
-     * 		return $this->requestor->ClassName."_bla".$this->requestor->ID;
-     * 	}
+     *     MyTableRowID(){
+     *         return $this->requestor->ClassName."_bla".$this->requestor->ID;
+     *     }
      * </code>.
      *
      * @var DataObject

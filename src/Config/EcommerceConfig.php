@@ -22,7 +22,7 @@ use SilverStripe\Core\Config\Configurable;
  * In the copied file, set your configs as you see fit, using the YAML format.  E.g.
  *
  * Order:
- * 	Test: 1
+ *     Test: 1
  *
  * Next, include in ecommerce.yml file:
  * <code yml>
@@ -77,7 +77,7 @@ use Spyc;
  * In the copied file, set your configs as you see fit, using the YAML format.  E.g.
  *
  * Order:
- * 	Test: 1
+ *     Test: 1
  *
  * Next, include in ecommerce.yml file:
  * <code yml>

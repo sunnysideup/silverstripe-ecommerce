@@ -43,12 +43,12 @@ class EcommerceTaskAPIandMore extends BuildTask
     {
         $baseURL = Director::baseURL();
         echo <<<html
-		<h2>usefull links</h2>
-		<ul>
-			<li><a href="{$baseURL}ecommerce/docs/api/">API for the e-commerce project</a></li>
-			<li><a href="{$baseURL}ecommerce/docs/README.md">Information on how to update the API</a></li>
-			<li><a href="http://www.silverstripe-ecommerce.com/">demo site with lots more help and links</a></li>
-		</ul>
+        <h2>usefull links</h2>
+        <ul>
+            <li><a href="{$baseURL}ecommerce/docs/api/">API for the e-commerce project</a></li>
+            <li><a href="{$baseURL}ecommerce/docs/README.md">Information on how to update the API</a></li>
+            <li><a href="http://www.silverstripe-ecommerce.com/">demo site with lots more help and links</a></li>
+        </ul>
 html;
     }
 }

@@ -8,14 +8,14 @@ use SilverStripe\Forms\TreeDropdownField;
 /**
  * TreeDropdown-like field that gives you a tree of items including an empty field, using ajax.
  * Author: Marijn Kampf www.exadium.com
- * Date:						24 Nov 2009
- * Version:				2.2
- * Revision date:	9 May 2011
- * Changes:				Fixed ajax sub tree request
- * Revision date:	8 October 2010
- * Changes:				Changed $this->postTree to OptionalTreeDropdownField::$postTree to avoid Undefined error
- * Revision date:	17 June 2010
- * Changes:				Updated to work with SilverStripe 2.4, tree function added.
+ * Date:                        24 Nov 2009
+ * Version:                2.2
+ * Revision date:    9 May 2011
+ * Changes:                Fixed ajax sub tree request
+ * Revision date:    8 October 2010
+ * Changes:                Changed $this->postTree to OptionalTreeDropdownField::$postTree to avoid Undefined error
+ * Revision date:    17 June 2010
+ * Changes:                Updated to work with SilverStripe 2.4, tree function added.
  */
 class OptionalTreeDropdownField extends TreeDropdownField
 {

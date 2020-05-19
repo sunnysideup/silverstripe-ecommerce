@@ -36,41 +36,41 @@ class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask
     protected function linkOrderWithBillingAndShippingAddress($verbose = false)
     {
         DB::query('
-			UPDATE "Order"
-				INNER JOIN "BillingAddress" ON "Order"."BillingAddressID" = "BillingAddress"."ID"
-			SET "BillingAddress"."OrderID" = "Order"."ID"
-			WHERE
-				("BillingAddress"."OrderID" IS NULL OR "BillingAddress"."OrderID" <> "Order"."ID")
-				AND
-				("Order"."BillingAddressID" IS NOT NULL AND "Order"."BillingAddressID" > 0)
-		');
+            UPDATE "Order"
+                INNER JOIN "BillingAddress" ON "Order"."BillingAddressID" = "BillingAddress"."ID"
+            SET "BillingAddress"."OrderID" = "Order"."ID"
+            WHERE
+                ("BillingAddress"."OrderID" IS NULL OR "BillingAddress"."OrderID" <> "Order"."ID")
+                AND
+                ("Order"."BillingAddressID" IS NOT NULL AND "Order"."BillingAddressID" > 0)
+        ');
         DB::query('
-			UPDATE "Order"
-				INNER JOIN "BillingAddress" ON "BillingAddress"."OrderID" = "Order"."ID"
-			SET "Order"."BillingAddressID" = "BillingAddress"."ID"
-			WHERE
-				("Order"."BillingAddressID" IS NULL OR "Order"."BillingAddressID" <> "BillingAddress"."ID")
-				AND
-				("BillingAddress"."OrderID" IS NOT NULL AND "BillingAddress"."OrderID" > 0)
-		');
+            UPDATE "Order"
+                INNER JOIN "BillingAddress" ON "BillingAddress"."OrderID" = "Order"."ID"
+            SET "Order"."BillingAddressID" = "BillingAddress"."ID"
+            WHERE
+                ("Order"."BillingAddressID" IS NULL OR "Order"."BillingAddressID" <> "BillingAddress"."ID")
+                AND
+                ("BillingAddress"."OrderID" IS NOT NULL AND "BillingAddress"."OrderID" > 0)
+        ');
         DB::query('
-			UPDATE "Order"
-				INNER JOIN "ShippingAddress" ON "Order"."ShippingAddressID" = "ShippingAddress"."ID"
-			SET "ShippingAddress"."OrderID" = "Order"."ID"
-			WHERE
-				("ShippingAddress"."OrderID" IS NULL OR "ShippingAddress"."OrderID" <> "Order"."ID")
-				AND
-				("Order"."ShippingAddressID" IS NOT NULL AND "Order"."ShippingAddressID" > 0)
-		');
+            UPDATE "Order"
+                INNER JOIN "ShippingAddress" ON "Order"."ShippingAddressID" = "ShippingAddress"."ID"
+            SET "ShippingAddress"."OrderID" = "Order"."ID"
+            WHERE
+                ("ShippingAddress"."OrderID" IS NULL OR "ShippingAddress"."OrderID" <> "Order"."ID")
+                AND
+                ("Order"."ShippingAddressID" IS NOT NULL AND "Order"."ShippingAddressID" > 0)
+        ');
         DB::query('
-			UPDATE "Order"
-				INNER JOIN "ShippingAddress" ON "ShippingAddress"."OrderID" = "Order"."ID"
-			SET "Order"."ShippingAddressID" = "ShippingAddress"."ID"
-			WHERE
-				("Order"."ShippingAddressID" IS NULL OR "Order"."ShippingAddressID" <> "ShippingAddress"."ID")
-				AND
-				("ShippingAddress"."OrderID" IS NOT NULL AND "ShippingAddress"."OrderID" > 0)
-		');
+            UPDATE "Order"
+                INNER JOIN "ShippingAddress" ON "ShippingAddress"."OrderID" = "Order"."ID"
+            SET "Order"."ShippingAddressID" = "ShippingAddress"."ID"
+            WHERE
+                ("Order"."ShippingAddressID" IS NULL OR "Order"."ShippingAddressID" <> "ShippingAddress"."ID")
+                AND
+                ("ShippingAddress"."OrderID" IS NOT NULL AND "ShippingAddress"."OrderID" > 0)
+        ');
         if ($verbose) {
             DB::alteration_message('Linking Order to Billing and Shipping Address on both sides');
         }

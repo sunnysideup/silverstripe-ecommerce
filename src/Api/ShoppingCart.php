@@ -23,7 +23,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 
 /**
@@ -801,7 +801,7 @@ class ShoppingCart
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            } elseif (! is_a($modifier, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(OrderModifier::class))) {
+         } elseif (! is_a($modifier, EcommerceConfigClassNames::getName(OrderModifier::class))) {
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
             }
             if (! $modifier) {
@@ -837,7 +837,7 @@ class ShoppingCart
              * EXP: Check if this is the right implementation, this is highly speculative.
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            } elseif (is_a($order, SilverStripe\Core\Injector\Injector::inst()->getCustomClass(Order::class))) {
+            } elseif (is_a($order, EcommerceConfigClassNames::getName(Order::class))) {
                 $this->order = $order;
             } else {
                 user_error('Bad order provided as parameter to ShoppingCart::loadOrder()');
@@ -884,7 +884,7 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (is_numeric($oldOrder)) {
                 $oldOrder = Order::get()->byID(intval($oldOrder));
-            } elseif (is_a($oldOrder, Object::getCustomClass(Order::class))) {
+            } elseif (is_a($oldOrder, EcommerceConfigClassNames::getName(Order::class))) {
                 //$oldOrder = $oldOrder;
             } else {
                 user_error('Bad order provided as parameter to ShoppingCart::loadOrder()');

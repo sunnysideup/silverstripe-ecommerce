@@ -3,7 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\Control\Director;
-
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 
 
 
@@ -606,7 +606,7 @@ class OrderItem extends OrderAttribute
      **/
     public function hasSameContent(OrderItem $orderItem)
     {
-        return is_a($orderItem, Object::getCustomClass(OrderItem::class)) &&
+        return is_a($orderItem, EcommerceConfigClassNames::getName(OrderItem::class)) &&
             $this->BuyableID === $orderItem->BuyableID &&
             $this->BuyableClassName === $orderItem->BuyableClassName &&
             $this->Version === $orderItem->Version;

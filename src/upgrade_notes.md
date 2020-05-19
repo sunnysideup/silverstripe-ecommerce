@@ -1207,7 +1207,7 @@ Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
 [2020-05-19 16:29:09] Applying UpdateVisibilityRule to EcommerceSideReportNotForSale.php...
 [2020-05-19 16:29:09] Applying ApiChangeWarningsRule to EcommerceSideReportNoInternalIDProducts.php...
 [2020-05-19 16:29:09] Applying UpdateVisibilityRule to EcommerceSideReportNoInternalIDProducts.php...
-modified:	Email/OrderEmail.php
+modified:    Email/OrderEmail.php
 @@ -142,7 +142,7 @@
              if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
                  if ($memberEmail = self::get_from_email()) {
@@ -1251,16 +1251,16 @@ Warnings for Email/OrderEmail.php:
  - Email/OrderEmail.php:222 SilverStripe\Control\Email\Email->Cc(): Renamed to getCc()
  - Email/OrderEmail.php:224 SilverStripe\Control\Email\Email->Bcc(): Renamed to getBcc()
  - Email/OrderEmail.php:225 SilverStripe\Control\Email\Email->Bcc(): Renamed to getBcc()
-unchanged:	Control/OrderModifierFormController.php
+unchanged:    Control/OrderModifierFormController.php
 Warnings for Control/OrderModifierFormController.php:
  - Control/OrderModifierFormController.php:77 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/OrderStatusLogFormController.php
+unchanged:    Control/OrderStatusLogFormController.php
 Warnings for Control/OrderStatusLogFormController.php:
  - Control/OrderStatusLogFormController.php:71 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/EcommercePaymentController.php
+unchanged:    Control/EcommercePaymentController.php
 Warnings for Control/EcommercePaymentController.php:
  - Control/EcommercePaymentController.php:143 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-modified:	Control/BuyableSelectFieldDataList.php
+modified:    Control/BuyableSelectFieldDataList.php
 @@ -101,7 +101,7 @@
    * ### @@@@ STOP REPLACEMENT @@@@ ###
    */
@@ -1274,32 +1274,32 @@ modified:	Control/BuyableSelectFieldDataList.php
 Warnings for Control/BuyableSelectFieldDataList.php:
  - Control/BuyableSelectFieldDataList.php:104 SilverStripe\Versioned\Versioned::current_stage(): Moved to SilverStripe\Versioned\Versioned::get_stage()
  - Control/BuyableSelectFieldDataList.php:51 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/ProductOrderItem.php
+unchanged:    Model/ProductOrderItem.php
 Warnings for Model/ProductOrderItem.php:
  - Model/ProductOrderItem.php:67 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Address/ShippingAddress.php
+unchanged:    Model/Address/ShippingAddress.php
 Warnings for Model/Address/ShippingAddress.php:
  - Model/Address/ShippingAddress.php:274 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Address/BillingAddress.php
+unchanged:    Model/Address/BillingAddress.php
 Warnings for Model/Address/BillingAddress.php:
  - Model/Address/BillingAddress.php:276 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepCreated.php
+unchanged:    Model/Process/OrderSteps/OrderStepCreated.php
 Warnings for Model/Process/OrderSteps/OrderStepCreated.php:
  - Model/Process/OrderSteps/OrderStepCreated.php:138 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentReceipt.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentReceipt.php
 Warnings for Model/Process/OrderSteps/OrderStepSentReceipt.php:
  - Model/Process/OrderSteps/OrderStepSentReceipt.php:75 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSent.php
+unchanged:    Model/Process/OrderSteps/OrderStepSent.php
 Warnings for Model/Process/OrderSteps/OrderStepSent.php:
  - Model/Process/OrderSteps/OrderStepSent.php:90 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderSteps/OrderStepSent.php:94 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSubmitted.php
+unchanged:    Model/Process/OrderSteps/OrderStepSubmitted.php
 Warnings for Model/Process/OrderSteps/OrderStepSubmitted.php:
  - Model/Process/OrderSteps/OrderStepSubmitted.php:93 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentInvoice.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentInvoice.php
 Warnings for Model/Process/OrderSteps/OrderStepSentInvoice.php:
  - Model/Process/OrderSteps/OrderStepSentInvoice.php:74 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderStep.php
+unchanged:    Model/Process/OrderStep.php
 Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:573 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:665 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -1308,27 +1308,27 @@ Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:668 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:669 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:542 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Money/EcommerceCurrency.php
+unchanged:    Model/Money/EcommerceCurrency.php
 Warnings for Model/Money/EcommerceCurrency.php:
  - Model/Money/EcommerceCurrency.php:540 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Money/EcommercePayment.php
+unchanged:    Model/Money/EcommercePayment.php
 Warnings for Model/Money/EcommercePayment.php:
  - Model/Money/EcommercePayment.php:577 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Money/EcommercePayment.php:602 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:625 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:667 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderItem.php
+unchanged:    Model/OrderItem.php
 Warnings for Model/OrderItem.php:
  - Model/OrderItem.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:292 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:299 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:358 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:835 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderModifier.php
+unchanged:    Model/OrderModifier.php
 Warnings for Model/OrderModifier.php:
  - Model/OrderModifier.php:930 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderModifier.php:286 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Model/Order.php
+unchanged:    Model/Order.php
 Warnings for Model/Order.php:
  - Model/Order.php:794 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:801 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -1339,7 +1339,7 @@ Warnings for Model/Order.php:
  - Model/Order.php:1058 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:1063 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:624 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Extensions/EcommerceRole.php
+unchanged:    Model/Extensions/EcommerceRole.php
 Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:518 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Extensions/EcommerceRole.php:584 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -1347,7 +1347,7 @@ Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:506 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:509 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:512 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-modified:	Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php
+modified:    Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php
 @@ -86,7 +86,7 @@
                  return $result;
              }
@@ -1360,14 +1360,14 @@ modified:	Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php
 
 Warnings for Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php:
  - Forms/Gridfield/GridFieldAddNewButtonOriginalPage.php:89 SilverStripe\Versioned\Versioned::current_stage(): Moved to SilverStripe\Versioned\Versioned::get_stage()
-unchanged:	Forms/OrderFormAddress.php
+unchanged:    Forms/OrderFormAddress.php
 Warnings for Forms/OrderFormAddress.php:
  - Forms/OrderFormAddress.php:127 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderFormAddress.php:176 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Forms/OrderFormCancel.php
+unchanged:    Forms/OrderFormCancel.php
 Warnings for Forms/OrderFormCancel.php:
  - Forms/OrderFormCancel.php:47 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-modified:	Forms/OrderForm.php
+modified:    Forms/OrderForm.php
 @@ -264,7 +264,7 @@
          }
          //there is an error with payment
@@ -1382,19 +1382,19 @@ Warnings for Forms/OrderForm.php:
  - Forms/OrderForm.php:84 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:267 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Forms/Validation/OrderFormAddressValidator.php
+unchanged:    Forms/Validation/OrderFormAddressValidator.php
 Warnings for Forms/Validation/OrderFormAddressValidator.php:
  - Forms/Validation/OrderFormAddressValidator.php:59 SilverStripe\Forms\Form->messageForForm(): Use setMessage() or sessionMessage() instead
-unchanged:	Forms/ShopAccountForm.php
+unchanged:    Forms/ShopAccountForm.php
 Warnings for Forms/ShopAccountForm.php:
  - Forms/ShopAccountForm.php:77 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderStatusLogForm.php
+unchanged:    Forms/OrderStatusLogForm.php
 Warnings for Forms/OrderStatusLogForm.php:
  - Forms/OrderStatusLogForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-unchanged:	Forms/OrderModifierForm.php
+unchanged:    Forms/OrderModifierForm.php
 Warnings for Forms/OrderModifierForm.php:
  - Forms/OrderModifierForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-modified:	Forms/ProductSearchForm.php
+modified:    Forms/ProductSearchForm.php
 @@ -490,7 +490,7 @@
                      $list1 = $baseList->filter(['InternalItemID' => $keywordPhrase]);
                      $count = $list1->count();
@@ -1417,25 +1417,25 @@ modified:	Forms/ProductSearchForm.php
 Warnings for Forms/ProductSearchForm.php:
  - Forms/ProductSearchForm.php:493 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
  - Forms/ProductSearchForm.php:701 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Cms/Dev/EcommerceDatabaseAdminDebugView.php
+unchanged:    Cms/Dev/EcommerceDatabaseAdminDebugView.php
 Warnings for Cms/Dev/EcommerceDatabaseAdminDebugView.php:
  - Cms/Dev/EcommerceDatabaseAdminDebugView.php:35 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Money/ExchangeRateProvider.php
+unchanged:    Money/ExchangeRateProvider.php
 Warnings for Money/ExchangeRateProvider.php:
  - Money/ExchangeRateProvider.php:136 file_get_contents(): Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage)
-unchanged:	Tasks/EcommerceTaskReviewSearches.php
+unchanged:    Tasks/EcommerceTaskReviewSearches.php
 Warnings for Tasks/EcommerceTaskReviewSearches.php:
  - Tasks/EcommerceTaskReviewSearches.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/OrderConfirmationPage.php
+unchanged:    Pages/OrderConfirmationPage.php
 Warnings for Pages/OrderConfirmationPage.php:
  - Pages/OrderConfirmationPage.php:272 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:275 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:278 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/Product.php
+unchanged:    Pages/Product.php
 Warnings for Pages/Product.php:
  - Pages/Product.php:439 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-modified:	Pages/ProductGroup.php
+modified:    Pages/ProductGroup.php
 @@ -1821,7 +1821,7 @@
      protected function getStage()
      {
@@ -1873,44 +1873,44 @@ Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
 [2020-05-19 16:30:50] Applying UpdateVisibilityRule to EcommerceSideReportNotForSale.php...
 [2020-05-19 16:30:50] Applying ApiChangeWarningsRule to EcommerceSideReportNoInternalIDProducts.php...
 [2020-05-19 16:30:50] Applying UpdateVisibilityRule to EcommerceSideReportNoInternalIDProducts.php...
-unchanged:	Control/OrderModifierFormController.php
+unchanged:    Control/OrderModifierFormController.php
 Warnings for Control/OrderModifierFormController.php:
  - Control/OrderModifierFormController.php:77 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/OrderStatusLogFormController.php
+unchanged:    Control/OrderStatusLogFormController.php
 Warnings for Control/OrderStatusLogFormController.php:
  - Control/OrderStatusLogFormController.php:71 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/EcommercePaymentController.php
+unchanged:    Control/EcommercePaymentController.php
 Warnings for Control/EcommercePaymentController.php:
  - Control/EcommercePaymentController.php:143 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/BuyableSelectFieldDataList.php
+unchanged:    Control/BuyableSelectFieldDataList.php
 Warnings for Control/BuyableSelectFieldDataList.php:
  - Control/BuyableSelectFieldDataList.php:51 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/ProductOrderItem.php
+unchanged:    Model/ProductOrderItem.php
 Warnings for Model/ProductOrderItem.php:
  - Model/ProductOrderItem.php:67 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Address/ShippingAddress.php
+unchanged:    Model/Address/ShippingAddress.php
 Warnings for Model/Address/ShippingAddress.php:
  - Model/Address/ShippingAddress.php:274 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Address/BillingAddress.php
+unchanged:    Model/Address/BillingAddress.php
 Warnings for Model/Address/BillingAddress.php:
  - Model/Address/BillingAddress.php:276 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepCreated.php
+unchanged:    Model/Process/OrderSteps/OrderStepCreated.php
 Warnings for Model/Process/OrderSteps/OrderStepCreated.php:
  - Model/Process/OrderSteps/OrderStepCreated.php:138 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentReceipt.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentReceipt.php
 Warnings for Model/Process/OrderSteps/OrderStepSentReceipt.php:
  - Model/Process/OrderSteps/OrderStepSentReceipt.php:75 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSent.php
+unchanged:    Model/Process/OrderSteps/OrderStepSent.php
 Warnings for Model/Process/OrderSteps/OrderStepSent.php:
  - Model/Process/OrderSteps/OrderStepSent.php:90 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderSteps/OrderStepSent.php:94 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSubmitted.php
+unchanged:    Model/Process/OrderSteps/OrderStepSubmitted.php
 Warnings for Model/Process/OrderSteps/OrderStepSubmitted.php:
  - Model/Process/OrderSteps/OrderStepSubmitted.php:93 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentInvoice.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentInvoice.php
 Warnings for Model/Process/OrderSteps/OrderStepSentInvoice.php:
  - Model/Process/OrderSteps/OrderStepSentInvoice.php:74 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderStep.php
+unchanged:    Model/Process/OrderStep.php
 Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:573 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:665 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -1919,27 +1919,27 @@ Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:668 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:669 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:542 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Money/EcommerceCurrency.php
+unchanged:    Model/Money/EcommerceCurrency.php
 Warnings for Model/Money/EcommerceCurrency.php:
  - Model/Money/EcommerceCurrency.php:540 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Money/EcommercePayment.php
+unchanged:    Model/Money/EcommercePayment.php
 Warnings for Model/Money/EcommercePayment.php:
  - Model/Money/EcommercePayment.php:577 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Money/EcommercePayment.php:602 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:625 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:667 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderItem.php
+unchanged:    Model/OrderItem.php
 Warnings for Model/OrderItem.php:
  - Model/OrderItem.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:292 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:299 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:358 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:835 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderModifier.php
+unchanged:    Model/OrderModifier.php
 Warnings for Model/OrderModifier.php:
  - Model/OrderModifier.php:930 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderModifier.php:286 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Model/Order.php
+unchanged:    Model/Order.php
 Warnings for Model/Order.php:
  - Model/Order.php:794 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:801 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -1950,7 +1950,7 @@ Warnings for Model/Order.php:
  - Model/Order.php:1058 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:1063 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:624 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Extensions/EcommerceRole.php
+unchanged:    Model/Extensions/EcommerceRole.php
 Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:518 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Extensions/EcommerceRole.php:584 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -1958,14 +1958,14 @@ Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:506 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:509 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:512 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderFormAddress.php
+unchanged:    Forms/OrderFormAddress.php
 Warnings for Forms/OrderFormAddress.php:
  - Forms/OrderFormAddress.php:127 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderFormAddress.php:176 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Forms/OrderFormCancel.php
+unchanged:    Forms/OrderFormCancel.php
 Warnings for Forms/OrderFormCancel.php:
  - Forms/OrderFormCancel.php:47 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-modified:	Forms/OrderForm.php
+modified:    Forms/OrderForm.php
 @@ -264,7 +264,7 @@
          }
          //there is an error with payment
@@ -1980,19 +1980,19 @@ Warnings for Forms/OrderForm.php:
  - Forms/OrderForm.php:84 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:267 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Forms/Validation/OrderFormAddressValidator.php
+unchanged:    Forms/Validation/OrderFormAddressValidator.php
 Warnings for Forms/Validation/OrderFormAddressValidator.php:
  - Forms/Validation/OrderFormAddressValidator.php:59 SilverStripe\Forms\Form->messageForForm(): Use setMessage() or sessionMessage() instead
-unchanged:	Forms/ShopAccountForm.php
+unchanged:    Forms/ShopAccountForm.php
 Warnings for Forms/ShopAccountForm.php:
  - Forms/ShopAccountForm.php:77 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderStatusLogForm.php
+unchanged:    Forms/OrderStatusLogForm.php
 Warnings for Forms/OrderStatusLogForm.php:
  - Forms/OrderStatusLogForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-unchanged:	Forms/OrderModifierForm.php
+unchanged:    Forms/OrderModifierForm.php
 Warnings for Forms/OrderModifierForm.php:
  - Forms/OrderModifierForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-modified:	Forms/ProductSearchForm.php
+modified:    Forms/ProductSearchForm.php
 @@ -490,7 +490,7 @@
                      $list1 = $baseList->filter(['InternalItemID' => $keywordPhrase]);
                      $count = $list1->count();
@@ -2015,25 +2015,25 @@ modified:	Forms/ProductSearchForm.php
 Warnings for Forms/ProductSearchForm.php:
  - Forms/ProductSearchForm.php:493 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
  - Forms/ProductSearchForm.php:701 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Cms/Dev/EcommerceDatabaseAdminDebugView.php
+unchanged:    Cms/Dev/EcommerceDatabaseAdminDebugView.php
 Warnings for Cms/Dev/EcommerceDatabaseAdminDebugView.php:
  - Cms/Dev/EcommerceDatabaseAdminDebugView.php:35 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Money/ExchangeRateProvider.php
+unchanged:    Money/ExchangeRateProvider.php
 Warnings for Money/ExchangeRateProvider.php:
  - Money/ExchangeRateProvider.php:136 file_get_contents(): Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage)
-unchanged:	Tasks/EcommerceTaskReviewSearches.php
+unchanged:    Tasks/EcommerceTaskReviewSearches.php
 Warnings for Tasks/EcommerceTaskReviewSearches.php:
  - Tasks/EcommerceTaskReviewSearches.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/OrderConfirmationPage.php
+unchanged:    Pages/OrderConfirmationPage.php
 Warnings for Pages/OrderConfirmationPage.php:
  - Pages/OrderConfirmationPage.php:272 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:275 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:278 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/Product.php
+unchanged:    Pages/Product.php
 Warnings for Pages/Product.php:
  - Pages/Product.php:439 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/ProductGroup.php
+unchanged:    Pages/ProductGroup.php
 Warnings for Pages/ProductGroup.php:
  - Pages/ProductGroup.php:610 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/ProductGroup.php:674 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -2460,44 +2460,44 @@ Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
 [2020-05-19 16:32:19] Applying UpdateVisibilityRule to EcommerceSideReportNotForSale.php...
 [2020-05-19 16:32:19] Applying ApiChangeWarningsRule to EcommerceSideReportNoInternalIDProducts.php...
 [2020-05-19 16:32:19] Applying UpdateVisibilityRule to EcommerceSideReportNoInternalIDProducts.php...
-unchanged:	Control/OrderModifierFormController.php
+unchanged:    Control/OrderModifierFormController.php
 Warnings for Control/OrderModifierFormController.php:
  - Control/OrderModifierFormController.php:77 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/OrderStatusLogFormController.php
+unchanged:    Control/OrderStatusLogFormController.php
 Warnings for Control/OrderStatusLogFormController.php:
  - Control/OrderStatusLogFormController.php:71 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/EcommercePaymentController.php
+unchanged:    Control/EcommercePaymentController.php
 Warnings for Control/EcommercePaymentController.php:
  - Control/EcommercePaymentController.php:143 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/BuyableSelectFieldDataList.php
+unchanged:    Control/BuyableSelectFieldDataList.php
 Warnings for Control/BuyableSelectFieldDataList.php:
  - Control/BuyableSelectFieldDataList.php:51 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/ProductOrderItem.php
+unchanged:    Model/ProductOrderItem.php
 Warnings for Model/ProductOrderItem.php:
  - Model/ProductOrderItem.php:67 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Address/ShippingAddress.php
+unchanged:    Model/Address/ShippingAddress.php
 Warnings for Model/Address/ShippingAddress.php:
  - Model/Address/ShippingAddress.php:274 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Address/BillingAddress.php
+unchanged:    Model/Address/BillingAddress.php
 Warnings for Model/Address/BillingAddress.php:
  - Model/Address/BillingAddress.php:276 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepCreated.php
+unchanged:    Model/Process/OrderSteps/OrderStepCreated.php
 Warnings for Model/Process/OrderSteps/OrderStepCreated.php:
  - Model/Process/OrderSteps/OrderStepCreated.php:138 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentReceipt.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentReceipt.php
 Warnings for Model/Process/OrderSteps/OrderStepSentReceipt.php:
  - Model/Process/OrderSteps/OrderStepSentReceipt.php:75 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSent.php
+unchanged:    Model/Process/OrderSteps/OrderStepSent.php
 Warnings for Model/Process/OrderSteps/OrderStepSent.php:
  - Model/Process/OrderSteps/OrderStepSent.php:90 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderSteps/OrderStepSent.php:94 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSubmitted.php
+unchanged:    Model/Process/OrderSteps/OrderStepSubmitted.php
 Warnings for Model/Process/OrderSteps/OrderStepSubmitted.php:
  - Model/Process/OrderSteps/OrderStepSubmitted.php:93 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentInvoice.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentInvoice.php
 Warnings for Model/Process/OrderSteps/OrderStepSentInvoice.php:
  - Model/Process/OrderSteps/OrderStepSentInvoice.php:74 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderStep.php
+unchanged:    Model/Process/OrderStep.php
 Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:573 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:665 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -2506,27 +2506,27 @@ Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:668 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:669 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:542 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Money/EcommerceCurrency.php
+unchanged:    Model/Money/EcommerceCurrency.php
 Warnings for Model/Money/EcommerceCurrency.php:
  - Model/Money/EcommerceCurrency.php:540 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Money/EcommercePayment.php
+unchanged:    Model/Money/EcommercePayment.php
 Warnings for Model/Money/EcommercePayment.php:
  - Model/Money/EcommercePayment.php:577 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Money/EcommercePayment.php:602 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:625 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:667 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderItem.php
+unchanged:    Model/OrderItem.php
 Warnings for Model/OrderItem.php:
  - Model/OrderItem.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:292 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:299 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:358 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:835 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderModifier.php
+unchanged:    Model/OrderModifier.php
 Warnings for Model/OrderModifier.php:
  - Model/OrderModifier.php:930 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderModifier.php:286 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Model/Order.php
+unchanged:    Model/Order.php
 Warnings for Model/Order.php:
  - Model/Order.php:794 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:801 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -2537,7 +2537,7 @@ Warnings for Model/Order.php:
  - Model/Order.php:1058 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:1063 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:624 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Extensions/EcommerceRole.php
+unchanged:    Model/Extensions/EcommerceRole.php
 Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:518 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Extensions/EcommerceRole.php:584 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -2545,14 +2545,14 @@ Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:506 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:509 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:512 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderFormAddress.php
+unchanged:    Forms/OrderFormAddress.php
 Warnings for Forms/OrderFormAddress.php:
  - Forms/OrderFormAddress.php:127 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderFormAddress.php:176 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Forms/OrderFormCancel.php
+unchanged:    Forms/OrderFormCancel.php
 Warnings for Forms/OrderFormCancel.php:
  - Forms/OrderFormCancel.php:47 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-modified:	Forms/OrderForm.php
+modified:    Forms/OrderForm.php
 @@ -264,7 +264,7 @@
          }
          //there is an error with payment
@@ -2567,19 +2567,19 @@ Warnings for Forms/OrderForm.php:
  - Forms/OrderForm.php:84 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:267 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Forms/Validation/OrderFormAddressValidator.php
+unchanged:    Forms/Validation/OrderFormAddressValidator.php
 Warnings for Forms/Validation/OrderFormAddressValidator.php:
  - Forms/Validation/OrderFormAddressValidator.php:59 SilverStripe\Forms\Form->messageForForm(): Use setMessage() or sessionMessage() instead
-unchanged:	Forms/ShopAccountForm.php
+unchanged:    Forms/ShopAccountForm.php
 Warnings for Forms/ShopAccountForm.php:
  - Forms/ShopAccountForm.php:77 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderStatusLogForm.php
+unchanged:    Forms/OrderStatusLogForm.php
 Warnings for Forms/OrderStatusLogForm.php:
  - Forms/OrderStatusLogForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-unchanged:	Forms/OrderModifierForm.php
+unchanged:    Forms/OrderModifierForm.php
 Warnings for Forms/OrderModifierForm.php:
  - Forms/OrderModifierForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-modified:	Forms/ProductSearchForm.php
+modified:    Forms/ProductSearchForm.php
 @@ -490,7 +490,7 @@
                      $list1 = $baseList->filter(['InternalItemID' => $keywordPhrase]);
                      $count = $list1->count();
@@ -2602,25 +2602,25 @@ modified:	Forms/ProductSearchForm.php
 Warnings for Forms/ProductSearchForm.php:
  - Forms/ProductSearchForm.php:493 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
  - Forms/ProductSearchForm.php:701 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Cms/Dev/EcommerceDatabaseAdminDebugView.php
+unchanged:    Cms/Dev/EcommerceDatabaseAdminDebugView.php
 Warnings for Cms/Dev/EcommerceDatabaseAdminDebugView.php:
  - Cms/Dev/EcommerceDatabaseAdminDebugView.php:35 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Money/ExchangeRateProvider.php
+unchanged:    Money/ExchangeRateProvider.php
 Warnings for Money/ExchangeRateProvider.php:
  - Money/ExchangeRateProvider.php:136 file_get_contents(): Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage)
-unchanged:	Tasks/EcommerceTaskReviewSearches.php
+unchanged:    Tasks/EcommerceTaskReviewSearches.php
 Warnings for Tasks/EcommerceTaskReviewSearches.php:
  - Tasks/EcommerceTaskReviewSearches.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/OrderConfirmationPage.php
+unchanged:    Pages/OrderConfirmationPage.php
 Warnings for Pages/OrderConfirmationPage.php:
  - Pages/OrderConfirmationPage.php:272 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:275 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:278 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/Product.php
+unchanged:    Pages/Product.php
 Warnings for Pages/Product.php:
  - Pages/Product.php:439 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/ProductGroup.php
+unchanged:    Pages/ProductGroup.php
 Warnings for Pages/ProductGroup.php:
  - Pages/ProductGroup.php:610 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/ProductGroup.php:674 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -3047,44 +3047,44 @@ Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
 [2020-05-19 16:40:12] Applying UpdateVisibilityRule to EcommerceSideReportNotForSale.php...
 [2020-05-19 16:40:12] Applying ApiChangeWarningsRule to EcommerceSideReportNoInternalIDProducts.php...
 [2020-05-19 16:40:12] Applying UpdateVisibilityRule to EcommerceSideReportNoInternalIDProducts.php...
-unchanged:	Control/OrderModifierFormController.php
+unchanged:    Control/OrderModifierFormController.php
 Warnings for Control/OrderModifierFormController.php:
  - Control/OrderModifierFormController.php:77 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/OrderStatusLogFormController.php
+unchanged:    Control/OrderStatusLogFormController.php
 Warnings for Control/OrderStatusLogFormController.php:
  - Control/OrderStatusLogFormController.php:71 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/EcommercePaymentController.php
+unchanged:    Control/EcommercePaymentController.php
 Warnings for Control/EcommercePaymentController.php:
  - Control/EcommercePaymentController.php:143 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Control/BuyableSelectFieldDataList.php
+unchanged:    Control/BuyableSelectFieldDataList.php
 Warnings for Control/BuyableSelectFieldDataList.php:
  - Control/BuyableSelectFieldDataList.php:51 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/ProductOrderItem.php
+unchanged:    Model/ProductOrderItem.php
 Warnings for Model/ProductOrderItem.php:
  - Model/ProductOrderItem.php:67 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Address/ShippingAddress.php
+unchanged:    Model/Address/ShippingAddress.php
 Warnings for Model/Address/ShippingAddress.php:
  - Model/Address/ShippingAddress.php:274 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Address/BillingAddress.php
+unchanged:    Model/Address/BillingAddress.php
 Warnings for Model/Address/BillingAddress.php:
  - Model/Address/BillingAddress.php:276 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepCreated.php
+unchanged:    Model/Process/OrderSteps/OrderStepCreated.php
 Warnings for Model/Process/OrderSteps/OrderStepCreated.php:
  - Model/Process/OrderSteps/OrderStepCreated.php:138 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentReceipt.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentReceipt.php
 Warnings for Model/Process/OrderSteps/OrderStepSentReceipt.php:
  - Model/Process/OrderSteps/OrderStepSentReceipt.php:75 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSent.php
+unchanged:    Model/Process/OrderSteps/OrderStepSent.php
 Warnings for Model/Process/OrderSteps/OrderStepSent.php:
  - Model/Process/OrderSteps/OrderStepSent.php:90 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderSteps/OrderStepSent.php:94 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSubmitted.php
+unchanged:    Model/Process/OrderSteps/OrderStepSubmitted.php
 Warnings for Model/Process/OrderSteps/OrderStepSubmitted.php:
  - Model/Process/OrderSteps/OrderStepSubmitted.php:93 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderSteps/OrderStepSentInvoice.php
+unchanged:    Model/Process/OrderSteps/OrderStepSentInvoice.php
 Warnings for Model/Process/OrderSteps/OrderStepSentInvoice.php:
  - Model/Process/OrderSteps/OrderStepSentInvoice.php:74 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Process/OrderStep.php
+unchanged:    Model/Process/OrderStep.php
 Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:573 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:665 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -3093,27 +3093,27 @@ Warnings for Model/Process/OrderStep.php:
  - Model/Process/OrderStep.php:668 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:669 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Process/OrderStep.php:542 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Money/EcommerceCurrency.php
+unchanged:    Model/Money/EcommerceCurrency.php
 Warnings for Model/Money/EcommerceCurrency.php:
  - Model/Money/EcommerceCurrency.php:540 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Model/Money/EcommercePayment.php
+unchanged:    Model/Money/EcommercePayment.php
 Warnings for Model/Money/EcommercePayment.php:
  - Model/Money/EcommercePayment.php:577 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Money/EcommercePayment.php:602 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:625 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
  - Model/Money/EcommercePayment.php:667 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderItem.php
+unchanged:    Model/OrderItem.php
 Warnings for Model/OrderItem.php:
  - Model/OrderItem.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:292 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:299 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:358 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderItem.php:835 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/OrderModifier.php
+unchanged:    Model/OrderModifier.php
 Warnings for Model/OrderModifier.php:
  - Model/OrderModifier.php:930 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/OrderModifier.php:286 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Model/Order.php
+unchanged:    Model/Order.php
 Warnings for Model/Order.php:
  - Model/Order.php:794 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:801 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -3124,7 +3124,7 @@ Warnings for Model/Order.php:
  - Model/Order.php:1058 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:1063 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Order.php:624 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Model/Extensions/EcommerceRole.php
+unchanged:    Model/Extensions/EcommerceRole.php
 Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:518 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Model/Extensions/EcommerceRole.php:584 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
@@ -3132,14 +3132,14 @@ Warnings for Model/Extensions/EcommerceRole.php:
  - Model/Extensions/EcommerceRole.php:506 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:509 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
  - Model/Extensions/EcommerceRole.php:512 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderFormAddress.php
+unchanged:    Forms/OrderFormAddress.php
 Warnings for Forms/OrderFormAddress.php:
  - Forms/OrderFormAddress.php:127 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderFormAddress.php:176 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Forms/OrderFormCancel.php
+unchanged:    Forms/OrderFormCancel.php
 Warnings for Forms/OrderFormCancel.php:
  - Forms/OrderFormCancel.php:47 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-modified:	Forms/OrderForm.php
+modified:    Forms/OrderForm.php
 @@ -264,7 +264,7 @@
          }
          //there is an error with payment
@@ -3154,19 +3154,19 @@ Warnings for Forms/OrderForm.php:
  - Forms/OrderForm.php:84 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Forms/OrderForm.php:267 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Forms/Validation/OrderFormAddressValidator.php
+unchanged:    Forms/Validation/OrderFormAddressValidator.php
 Warnings for Forms/Validation/OrderFormAddressValidator.php:
  - Forms/Validation/OrderFormAddressValidator.php:59 SilverStripe\Forms\Form->messageForForm(): Use setMessage() or sessionMessage() instead
-unchanged:	Forms/ShopAccountForm.php
+unchanged:    Forms/ShopAccountForm.php
 Warnings for Forms/ShopAccountForm.php:
  - Forms/ShopAccountForm.php:77 SilverStripe\Forms\Formfield->dontEscape: FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.
-unchanged:	Forms/OrderStatusLogForm.php
+unchanged:    Forms/OrderStatusLogForm.php
 Warnings for Forms/OrderStatusLogForm.php:
  - Forms/OrderStatusLogForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-unchanged:	Forms/OrderModifierForm.php
+unchanged:    Forms/OrderModifierForm.php
 Warnings for Forms/OrderModifierForm.php:
  - Forms/OrderModifierForm.php:86 THIRDPARTY_DIR: Path constants have been deprecated. Use the Requirements and ModuleResourceLoader APIs (https://docs.silverstripe.org/en/4/changelogs/4.0.0#module-paths)
-modified:	Forms/ProductSearchForm.php
+modified:    Forms/ProductSearchForm.php
 @@ -490,7 +490,7 @@
                      $list1 = $baseList->filter(['InternalItemID' => $keywordPhrase]);
                      $count = $list1->count();
@@ -3189,25 +3189,25 @@ modified:	Forms/ProductSearchForm.php
 Warnings for Forms/ProductSearchForm.php:
  - Forms/ProductSearchForm.php:493 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
  - Forms/ProductSearchForm.php:701 SilverStripe\Forms\Form->Link(): Moved to FormRequestHandler
-unchanged:	Cms/Dev/EcommerceDatabaseAdminDebugView.php
+unchanged:    Cms/Dev/EcommerceDatabaseAdminDebugView.php
 Warnings for Cms/Dev/EcommerceDatabaseAdminDebugView.php:
  - Cms/Dev/EcommerceDatabaseAdminDebugView.php:35 class: $this->class access has been removed (https://docs.silverstripe.org/en/4/changelogs/4.0.0#object-replace)
-unchanged:	Money/ExchangeRateProvider.php
+unchanged:    Money/ExchangeRateProvider.php
 Warnings for Money/ExchangeRateProvider.php:
  - Money/ExchangeRateProvider.php:136 file_get_contents(): Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage)
-unchanged:	Tasks/EcommerceTaskReviewSearches.php
+unchanged:    Tasks/EcommerceTaskReviewSearches.php
 Warnings for Tasks/EcommerceTaskReviewSearches.php:
  - Tasks/EcommerceTaskReviewSearches.php:100 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/OrderConfirmationPage.php
+unchanged:    Pages/OrderConfirmationPage.php
 Warnings for Pages/OrderConfirmationPage.php:
  - Pages/OrderConfirmationPage.php:272 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:275 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:278 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/OrderConfirmationPage.php:281 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/Product.php
+unchanged:    Pages/Product.php
 Warnings for Pages/Product.php:
  - Pages/Product.php:439 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
-unchanged:	Pages/ProductGroup.php
+unchanged:    Pages/ProductGroup.php
 Warnings for Pages/ProductGroup.php:
  - Pages/ProductGroup.php:610 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)
  - Pages/ProductGroup.php:674 SilverStripe\Forms\HeaderField: Requires an explicit $name constructor argument (in addition to $title)

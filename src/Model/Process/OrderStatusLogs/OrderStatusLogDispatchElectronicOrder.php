@@ -10,6 +10,8 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
  **/
 class OrderStatusLogDispatchElectronicOrder extends OrderStatusLogDispatch
 {
+    private static $table_name = 'OrderStatusLogDispatchElectronicOrder';
+
     private static $db = [
         'Link' => 'Text',
     ];
