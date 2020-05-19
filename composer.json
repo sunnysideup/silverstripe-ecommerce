@@ -43,7 +43,13 @@
         "micmania1/silverstripe-lumberjack": "great way to take product and product groups out of the sitetree",
         "sunnysideup/cms_edit_link_field": "easier ways to link through within ecommerce objects and other objects that have the CMSEditLink"
     },
-    "extra": [],
+    "extra": {
+        "expose": [
+            "client/javascript",
+            "client/images",
+            "client/css"
+        ]
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
