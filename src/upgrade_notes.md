@@ -619,3 +619,79 @@ Array
     [162] => inspect [-d|--root-dir ROOT-DIR] [-w|--write] [--skip-visibility] [--] <path>
     [163] => 
 )
+
+# running php upgrade inspect see: https://github.com/silverstripe/silverstripe-upgrader
+cd /var/www/ss3/upgrades/ecommerce-root
+php /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code inspect /var/www/ss3/upgrades/ecommerce-root/ecommerce/src  --root-dir=/var/www/ss3/upgrades/ecommerce-root --write -vvv
+Array
+(
+    [0] => Running post-upgrade on "/var/www/ss3/upgrades/ecommerce-root/ecommerce/src"
+    [1] => [2020-05-19 15:56:51] Applying ApiChangeWarningsRule to OrderConverter.php...
+    [2] => 
+    [3] => In Broker.php line 224:
+    [4] => 
+    [5] =>   [PHPStan\Broker\ClassAutoloadingException]
+    [6] =>   ParseError (syntax error, unexpected ')', expecting '(') thrown while autoloading class Sunnysideup\Ecommerce\Model\Order.
+    [7] => 
+    [8] => 
+    [9] => Exception trace:
+    [10] =>   at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Broker/Broker.php:224
+    [11] =>  PHPStan\Broker\Broker->hasClass() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Rules/ClassCaseSensitivityCheck.php:27
+    [12] =>  PHPStan\Rules\ClassCaseSensitivityCheck->checkClassNames() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Rules/Namespaces/ExistingNamesInUseRule.php:117
+    [13] =>  PHPStan\Rules\Namespaces\ExistingNamesInUseRule->checkClasses() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Rules/Namespaces/ExistingNamesInUseRule.php:62
+    [14] =>  PHPStan\Rules\Namespaces\ExistingNamesInUseRule->processNode() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/Visitor/PHPStanScopeVisitor.php:80
+    [15] =>  SilverStripe\Upgrader\UpgradeRule\PHP\Visitor\PHPStanScopeVisitor->SilverStripe\Upgrader\UpgradeRule\PHP\Visitor\{closure}() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:316
+    [16] =>  PHPStan\Analyser\NodeScopeResolver->processNode() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:176
+    [17] =>  PHPStan\Analyser\NodeScopeResolver->processNodes() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:699
+    [18] =>  PHPStan\Analyser\NodeScopeResolver->processNode() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:176
+    [19] =>  PHPStan\Analyser\NodeScopeResolver->processNodes() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/Visitor/PHPStanScopeVisitor.php:82
+    [20] =>  SilverStripe\Upgrader\UpgradeRule\PHP\Visitor\PHPStanScopeVisitor->enterNode() at /var/www/ss3/upgrader/vendor/nikic/php-parser/lib/PhpParser/NodeTraverser.php:159
+    [21] =>  PhpParser\NodeTraverser->traverseArray() at /var/www/ss3/upgrader/vendor/nikic/php-parser/lib/PhpParser/NodeTraverser.php:85
+    [22] =>  PhpParser\NodeTraverser->traverse() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/PHPUpgradeRule.php:28
+    [23] =>  SilverStripe\Upgrader\UpgradeRule\PHP\PHPUpgradeRule->transformWithVisitors() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/ApiChangeWarningsRule.php:88
+    [24] =>  SilverStripe\Upgrader\UpgradeRule\PHP\ApiChangeWarningsRule->mutateSourceWithVisitors() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/ApiChangeWarningsRule.php:60
+    [25] =>  SilverStripe\Upgrader\UpgradeRule\PHP\ApiChangeWarningsRule->upgradeFile() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/Upgrader.php:61
+    [26] =>  SilverStripe\Upgrader\Upgrader->upgrade() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/Console/InspectCommand.php:88
+    [27] =>  SilverStripe\Upgrader\Console\InspectCommand->execute() at /var/www/ss3/upgrader/vendor/symfony/console/Command/Command.php:255
+    [28] =>  Symfony\Component\Console\Command\Command->run() at /var/www/ss3/upgrader/vendor/symfony/console/Application.php:1001
+    [29] =>  Symfony\Component\Console\Application->doRunCommand() at /var/www/ss3/upgrader/vendor/symfony/console/Application.php:271
+    [30] =>  Symfony\Component\Console\Application->doRun() at /var/www/ss3/upgrader/vendor/symfony/console/Application.php:147
+    [31] =>  Symfony\Component\Console\Application->run() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code:55
+    [32] => 
+    [33] => In Order.php line 2165:
+    [34] => 
+    [35] =>   [ParseError]
+    [36] =>   syntax error, unexpected ')', expecting '('
+    [37] => 
+    [38] => 
+    [39] => Exception trace:
+    [40] =>   at /var/www/ss3/upgrades/ecommerce-root/ecommerce/src/Model/Order.php:2165
+    [41] =>  Composer\Autoload\includeFile() at /var/www/ss3/upgrader/vendor/composer/ClassLoader.php:322
+    [42] =>  Composer\Autoload\ClassLoader->loadClass() at n/a:n/a
+    [43] =>  spl_autoload_call() at n/a:n/a
+    [44] =>  class_exists() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Broker/Broker.php:220
+    [45] =>  PHPStan\Broker\Broker->hasClass() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Rules/ClassCaseSensitivityCheck.php:27
+    [46] =>  PHPStan\Rules\ClassCaseSensitivityCheck->checkClassNames() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Rules/Namespaces/ExistingNamesInUseRule.php:117
+    [47] =>  PHPStan\Rules\Namespaces\ExistingNamesInUseRule->checkClasses() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Rules/Namespaces/ExistingNamesInUseRule.php:62
+    [48] =>  PHPStan\Rules\Namespaces\ExistingNamesInUseRule->processNode() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/Visitor/PHPStanScopeVisitor.php:80
+    [49] =>  SilverStripe\Upgrader\UpgradeRule\PHP\Visitor\PHPStanScopeVisitor->SilverStripe\Upgrader\UpgradeRule\PHP\Visitor\{closure}() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:316
+    [50] =>  PHPStan\Analyser\NodeScopeResolver->processNode() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:176
+    [51] =>  PHPStan\Analyser\NodeScopeResolver->processNodes() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:699
+    [52] =>  PHPStan\Analyser\NodeScopeResolver->processNode() at /var/www/ss3/upgrader/vendor/phpstan/phpstan/src/Analyser/NodeScopeResolver.php:176
+    [53] =>  PHPStan\Analyser\NodeScopeResolver->processNodes() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/Visitor/PHPStanScopeVisitor.php:82
+    [54] =>  SilverStripe\Upgrader\UpgradeRule\PHP\Visitor\PHPStanScopeVisitor->enterNode() at /var/www/ss3/upgrader/vendor/nikic/php-parser/lib/PhpParser/NodeTraverser.php:159
+    [55] =>  PhpParser\NodeTraverser->traverseArray() at /var/www/ss3/upgrader/vendor/nikic/php-parser/lib/PhpParser/NodeTraverser.php:85
+    [56] =>  PhpParser\NodeTraverser->traverse() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/PHPUpgradeRule.php:28
+    [57] =>  SilverStripe\Upgrader\UpgradeRule\PHP\PHPUpgradeRule->transformWithVisitors() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/ApiChangeWarningsRule.php:88
+    [58] =>  SilverStripe\Upgrader\UpgradeRule\PHP\ApiChangeWarningsRule->mutateSourceWithVisitors() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/UpgradeRule/PHP/ApiChangeWarningsRule.php:60
+    [59] =>  SilverStripe\Upgrader\UpgradeRule\PHP\ApiChangeWarningsRule->upgradeFile() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/Upgrader.php:61
+    [60] =>  SilverStripe\Upgrader\Upgrader->upgrade() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/src/Console/InspectCommand.php:88
+    [61] =>  SilverStripe\Upgrader\Console\InspectCommand->execute() at /var/www/ss3/upgrader/vendor/symfony/console/Command/Command.php:255
+    [62] =>  Symfony\Component\Console\Command\Command->run() at /var/www/ss3/upgrader/vendor/symfony/console/Application.php:1001
+    [63] =>  Symfony\Component\Console\Application->doRunCommand() at /var/www/ss3/upgrader/vendor/symfony/console/Application.php:271
+    [64] =>  Symfony\Component\Console\Application->doRun() at /var/www/ss3/upgrader/vendor/symfony/console/Application.php:147
+    [65] =>  Symfony\Component\Console\Application->run() at /var/www/ss3/upgrader/vendor/silverstripe/upgrader/bin/upgrade-code:55
+    [66] => 
+    [67] => inspect [-d|--root-dir ROOT-DIR] [-w|--write] [--skip-visibility] [--] <path>
+    [68] => 
+)

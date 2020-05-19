@@ -3,7 +3,7 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 
-use Shoppingcart;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
 
 use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\View\ViewableData;
@@ -40,7 +40,7 @@ abstract class OrderConverter extends ViewableData
     {
         parent::__construct();
         if ($order === null) {
-            $order = Shoppingcart::current_order();
+            $order = ShoppingCart::current_order();
         }
         if ($order instanceof Order) {
             $this->order = $order;
@@ -98,4 +98,3 @@ abstract class OrderConverter extends ViewableData
         );
     }
 }
-
