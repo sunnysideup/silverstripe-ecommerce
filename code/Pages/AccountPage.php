@@ -12,6 +12,9 @@
  **/
 class AccountPage extends Page
 {
+
+    private static $table_name = 'AccountPage';
+
     /**
      *@var float
      */

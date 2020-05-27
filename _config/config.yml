@@ -1,10 +1,5 @@
 ---
 Name: ecommerce
-Before:
-  - 'mysite/*'
-After:
-  - 'framework/*'
-  - 'cms/*'
 ---
 
 
