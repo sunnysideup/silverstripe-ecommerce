@@ -374,7 +374,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
          * EXP: Check that the template location is still valid!
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        $html = $this->RenderWith('Order_Address' . str_replace('Address', '', $this->ClassName) . 'FullString');
+        $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\Order_Address' . str_replace('Address', '', $this->ClassName) . 'FullString');
         Config::unnest();
 
         return $html;

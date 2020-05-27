@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
@@ -109,7 +110,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->where($where . $withoutMemberWhere)
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin(Member::class, $joinShort);
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, "table_name"), $joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -177,7 +178,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->where($where)
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin(Member::class, $joinShort);
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, "table_name"), $joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -268,7 +269,7 @@ class EcommerceTaskCartCleanup extends BuildTask
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
             foreach ($oneToOne as $orderFieldName => $className) {
-
+                $tableName = Config::inst()->get($className, "table_name");
                 /**
                  * ### @@@@ START REPLACEMENT @@@@ ###
                  * WHY: automated upgrade
@@ -283,10 +284,10 @@ class EcommerceTaskCartCleanup extends BuildTask
                         DB::alteration_message("looking for ${className} objects without link to order.");
                     }
                     $rows = DB::query("
-                        SELECT \"${className}\".\"ID\"
-                        FROM \"${className}\"
+                        SELECT \"${tableName}\".\"ID\"
+                        FROM \"${tableName}\"
                             LEFT JOIN \"Order\"
-                                ON \"Order\".\"${orderFieldName}\" = \"${className}\".\"ID\"
+                                ON \"Order\".\"${orderFieldName}\" = \"${tableName}\".\"ID\"
                         WHERE \"Order\".\"ID\" IS NULL
                         LIMIT 0, " . $maximumNumberOfObjectsDeleted);
                     //the code below is a bit of a hack, but because of the one-to-one relationship we
@@ -352,16 +353,17 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
         if (count($oneToMany)) {
             foreach ($oneToMany as $classWithOrderID => $classWithLastEdited) {
+                $tableWithOrderID = Config::inst()->get($classWithOrderID, "table_name");
                 if (! in_array($classWithLastEdited, $oneToOne, true) && ! in_array($classWithLastEdited, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("looking for ${classWithOrderID} objects without link to order.");
+                        DB::alteration_message("looking for ${$tableWithOrderID} objects without link to order.");
                     }
                     $rows = DB::query("
-                        SELECT \"${classWithOrderID}\".\"ID\"
-                        FROM \"${classWithOrderID}\"
+                        SELECT \"${tableWithOrderID}\".\"ID\"
+                        FROM \"${tableWithOrderID}\"
                             LEFT JOIN \"Order\"
-                                ON \"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"
+                                ON \"Order\".\"ID\" = \"${tableWithOrderID}\".\"OrderID\"
                         WHERE \"Order\".\"ID\" IS NULL
                         LIMIT 0, " . $maximumNumberOfObjectsDeleted);
                     $oneToManyIDArray = [];

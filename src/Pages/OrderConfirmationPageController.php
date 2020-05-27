@@ -106,7 +106,7 @@ class OrderConfirmationPageController extends CartPageController
             // TODO: find replacement for: Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::inst()->update(SSViewer::class, 'theme_enabled', true);
-            $html = $this->renderWith('Invoice');
+            $html = $this->renderWith('Sunnysideup\Ecommerce\Invoice');
             Config::unnest();
 
             return $html;
@@ -117,7 +117,7 @@ class OrderConfirmationPageController extends CartPageController
             // TODO: find replacement for: Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::inst()->update(SSViewer::class, 'theme_enabled', true);
-            $html = $this->renderWith('PackingSlip');
+            $html = $this->renderWith('Sunnysideup\Ecommerce\PackingSlip');
             Config::unnest();
 
             return $html;

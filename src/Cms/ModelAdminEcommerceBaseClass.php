@@ -16,6 +16,7 @@ use SilverStripe\Forms\LiteralField;
  */
 class ModelAdminEcommerceBaseClass extends ModelAdmin
 {
+    private static $url_segment = 'ecommerce-base';
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
      * This variable can be a boolean or an array.

@@ -20,7 +20,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @sub-package: tasks
 
  **/
-class EcommerceTaskLinkProductsWithImages extends BuildTask
+class EcommerceTaskLinkProductWithImages extends BuildTask
 {
     /**
      * output messages?

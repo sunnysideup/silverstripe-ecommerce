@@ -28,9 +28,6 @@ Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
 Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN
-SilverStripe\Admin\LeftAndMain:
-  extra_requirements_css:
-    - ecommerce/css/ecommercecmsfixes.css
 ---
 Only:
   moduleexists: 'grouped-cms-menu'

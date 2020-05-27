@@ -3517,6 +3517,9 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         Config::nest();
         Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+         /**
+         * ### @@@@ TODO UPGRADE CHECK THIS IS WORKING @@@@ ###
+         */
         $html = $this->renderWith(Order::class);
         Config::unnest();
         $html = preg_replace('/(\s)+/', ' ', $html);

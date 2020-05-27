@@ -116,7 +116,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
         if ($this->Author()) {
             Config::nest();
             Config::inst()->update(SSViewer::class, 'theme_enabled', true);
-            $html = $this->renderWith('Order_CustomerNote_PaymentCheck');
+            $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\Order_CustomerNote_PaymentCheck');
             Config::unnest();
 
             return $html;

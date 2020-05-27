@@ -116,6 +116,6 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
          * EXP: Check that the template location is still valid!
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        return $curr->RenderWith('PrintAllPackingSlips');
+        return $curr->RenderWith('Sunnysideup\Ecommerce\Includes\PrintAllPackingSlips');
     }
 }

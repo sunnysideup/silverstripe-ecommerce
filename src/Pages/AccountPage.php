@@ -52,8 +52,6 @@ class AccountPage extends Page
      */
     protected $pastOrders = null;
 
-    private static $table_name = 'AccountPage';
-
     /**
      * standard SS variable.
      *

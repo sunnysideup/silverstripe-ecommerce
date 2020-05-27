@@ -104,7 +104,7 @@ class ProductGroupController extends PageController
              * EXP: Check that the template location is still valid!
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            return $this->RenderWith('AjaxProductList');
+            return $this->RenderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
         }
         return [];
     }
@@ -143,7 +143,7 @@ class ProductGroupController extends PageController
              * EXP: Check that the template location is still valid!
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            return $this->RenderWith('AjaxProductList');
+            return $this->RenderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
         }
 
         return [];

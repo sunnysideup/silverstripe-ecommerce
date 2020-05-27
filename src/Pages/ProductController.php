@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
@@ -82,7 +83,7 @@ class ProductController extends PageController
          * EXP: Check that the template location is still valid!
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        $html = $this->RenderWith('ProductGroupItemMoreDetail');
+        $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\ProductGroupItemMoreDetail');
         Config::unnest();
 
         return $html;
@@ -259,16 +260,7 @@ class ProductController extends PageController
      */
     protected function getListOfIDs()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $listOfIDs = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'));
+        $listOfIDs = $this->getRequest()->getSession()->get(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'));
         if ($listOfIDs) {
             $arrayOfIDs = explode(',', $listOfIDs);
             if (is_array($arrayOfIDs)) {

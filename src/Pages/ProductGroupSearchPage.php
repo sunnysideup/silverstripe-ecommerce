@@ -23,8 +23,6 @@ class ProductGroupSearchPage extends ProductGroup
      */
     protected $allowCaching = false;
 
-    private static $table_name = 'ProductGroupSearchPage';
-
     /**
      * standard SS variable.
      *

@@ -32,7 +32,9 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
      *
      * @var string
      */
-    private static $menu_icon = 'ecommerce/images/icons/product-file.gif';
+    
+    /* TODO UPGRADE: fix the following line */
+    //private static $menu_icon = 'ecommerce/client/images/icons/product-file.gif';
 
     public function getEditForm($id = null, $fields = null)
     {

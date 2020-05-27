@@ -117,6 +117,6 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
          * EXP: Check that the template location is still valid!
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        return $curr->RenderWith('PrintAllInvoices');
+        return $curr->RenderWith('Sunnysideup\Ecommerce\Includes\PrintAllInvoices');
     }
 }

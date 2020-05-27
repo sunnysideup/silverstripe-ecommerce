@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
@@ -63,15 +64,7 @@ class EcommerceSiteTreeExtensionController extends Extension
                 )
             ) {
 
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
+                Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
             }
         }
     }
@@ -117,15 +110,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     public function ContinueShoppingLink()
     {
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $link = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ContinueShoppingLink');
+        $link = Controller::curr()->getRequest()->getSession()->get('ContinueShoppingLink');
         if (! $link) {
             $link = Director::baseURL();
         }

@@ -77,7 +77,7 @@ class ProductOrderItem extends OrderItem
         if ($product = $this->Product()) {
             Config::nest();
             Config::inst()->update(SSViewer::class, 'theme_enabled', true);
-            $tableTitle = strip_tags($product->renderWith('ProductTableTitle'));
+            $tableTitle = strip_tags($product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
             Config::unnest();
         }
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);

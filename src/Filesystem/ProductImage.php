@@ -113,7 +113,8 @@ class ProductImage extends Image
 
     public function Thumbnail($width, $height)
     {
-        return $this->getFormattedImage('Thumbnail');
+        /* TODO UPGRADE: what should getFormattedImage be replace with? */ 
+        //return $this->getFormattedImage('Thumbnail');
     }
 
     /**
@@ -130,7 +131,8 @@ class ProductImage extends Image
 
     public function SmallImage()
     {
-        return $this->getFormattedImage('SmallImage');
+        /* TODO UPGRADE: what should getFormattedImage be replace with? */
+        //return $this->getFormattedImage('SmallImage');
     }
 
     /**
@@ -161,18 +163,7 @@ class ProductImage extends Image
 
         return $gd->resizeByWidth($this->LargeWidth() * 2);
     }
-
-    public function exists()
-    {
-        if (isset($this->ID)) {
-            if ($this->ID) {
-                if (file_exists($this->getFullPath())) {
-                    return true;
-                }
-            }
-        }
-    }
-
+    
     /**
      * @return string HTML
      */

@@ -724,7 +724,7 @@ class ShoppingCartController extends Controller
          * EXP: Check that the template location is still valid!
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        return $this->customise($this->cart->CurrentOrder())->RenderWith('AjaxCart');
+        return $this->customise($this->cart->CurrentOrder())->RenderWith('Sunnysideup\Ecommerce\AjaxCart');
     }
 
     /**
@@ -955,16 +955,7 @@ class ShoppingCartController extends Controller
         $action = $this->request->param('Action');
         if (! isset($_GET['cached'])) {
             if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                $savedSecurityID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('SecurityID');
+                $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
                 if ($savedSecurityID) {
                     if (! isset($_GET['SecurityID'])) {
                         $_GET['SecurityID'] = '';

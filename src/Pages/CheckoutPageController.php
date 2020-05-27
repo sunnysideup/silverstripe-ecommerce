@@ -315,7 +315,7 @@ class CheckoutPageController extends CartPageController
              * EXP: Check that the template location is still valid!
              * ### @@@@ STOP REPLACEMENT @@@@ ###
              */
-            return $this->RenderWith('LayoutCheckoutPageInner');
+            return $this->RenderWith('Sunnysideup\Ecommerce\Includes\LayoutCheckoutPageInner');
         }
 
         return [];

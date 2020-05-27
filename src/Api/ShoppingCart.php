@@ -218,7 +218,7 @@ class ShoppingCart
          * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        $orderIDFromSession = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
+        $orderIDFromSession = intval(Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
         return Order::get()->byID($orderIDFromSession);
     }
 
@@ -354,7 +354,7 @@ class ShoppingCart
                      * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
                      * ### @@@@ STOP REPLACEMENT @@@@ ###
                      */
-                    SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, intval($this->order->ID));
+                    Controller::curr()->getRequest()->getSession()->set($sessionVariableName, intval($this->order->ID));
                 }
                 if ($this->order) {
                     if ($this->order->exists()) {

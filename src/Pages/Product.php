@@ -4,39 +4,8 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
 
-
-
+use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -76,7 +45,6 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
-use UploadFIeld;
 
 /**
  * This is a standard Product page-type with fields like
@@ -123,24 +91,10 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'Product';
 
     /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
+     * Standard SS variable.
      */
     private static $db = [
         'Price' => 'Currency',
@@ -159,15 +113,6 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $has_one = [
         'Image' => ProductImage::class,
     ];
@@ -177,17 +122,14 @@ class Product extends Page implements BuyableModel
      */
     private static $many_many = [
         'ProductGroups' => ProductGroup::class,
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  => 'Image' (case sensitive)
-         * NEW:  => 'Image' (COMPLEX)
-         * EXP: you may want to add ownership (owns)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         'AdditionalImages' => Image::class,
         'AdditionalFiles' => File::class,
+    ];
+
+    private static $owns = [
+        'Image',
+        'AdditionalImages',
+        'AdditionalFiles',
     ];
 
     /**
@@ -246,20 +188,11 @@ class Product extends Page implements BuyableModel
     private static $searchable_fields = [
         'FullName' => [
             'title' => 'Keyword',
-            'field' => 'TextField',
+            'field' => TextField::class,
         ],
         'Price' => [
             'title' => 'Price',
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            'field' => 'NumericField',
+            'field' => NumericField::class,
         ],
         'InternalItemID' => [
             'title' => 'Internal Item ID',
@@ -308,9 +241,10 @@ class Product extends Page implements BuyableModel
      */
     public function scaffoldSearchFields($_params = null)
     {
+       
         $fields = parent::scaffoldSearchFields($_params);
         $fields->fieldByName('AllowPurchase')->setValue(1);
-
+        
         return $fields;
     }
 
@@ -343,16 +277,10 @@ class Product extends Page implements BuyableModel
         $htmlEditorField->setRows(3);
         $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
         //dirty hack to show images!
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: UploadField('Image (case sensitive)
-         * NEW: UploadField('Image (COMPLEX)
-         * EXP: make sure that Image does not end up as Image::class where this is not required
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField(Image::class, _t('Product.IMAGE', 'Product Image')));
+        $fields->addFieldToTab(
+            'Root.Images', 
+            $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image'))
+        );
         $uploadField->setCallingClass(Product::class);
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
@@ -993,7 +921,8 @@ class Product extends Page implements BuyableModel
          * EXP: Check if the class name can still be used as such
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('add'));
+        $className = ClassInfo::shortName($this);
+        return ShoppingCartController::add_item_link($this->ID, $this->className, $this->linkParameters('add'));
     }
 
     /**

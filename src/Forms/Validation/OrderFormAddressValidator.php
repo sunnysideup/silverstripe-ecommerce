@@ -20,7 +20,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
      *
      * @return bool
      */
-    public function php($data)
+    public function php($data, $allowExistingEmail = false)
     {
         $this->form->saveDataToSession();
         if (Member::currentUserID()) {
