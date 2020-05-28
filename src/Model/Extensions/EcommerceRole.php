@@ -478,7 +478,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $memberTitle = new ReadonlyField('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . _t('Member.TITLE', 'Name') . ': ' . $this->owner->getTitle() . '</p>');
         $memberTitle->dontEscape = true;
         $fields->push($memberTitle);
-        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', Email::class), '<p>' . _t('Member.EMAIL', Email::class) . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
+        $memberEmail = new ReadonlyField('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>' . _t('Member.EMAIL', 'Email') . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
         $memberEmail->dontEscape = true;
         $fields->push($memberEmail);
         $lastLogin = new ReadonlyField('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . _t('Member.LASTLOGIN', 'Last Login') . ': ' . $this->owner->dbObject('LastVisited')->Nice() . '</p>');
@@ -520,15 +520,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: EmailField('Email' (case sensitive)
-                 * NEW: EmailField('Email' (COMPLEX)
-                 * EXP: make sure that this does not end up as Email::class
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class))
+                new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email'))
             );
         } else {
             Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPasswordField.js');
@@ -585,15 +577,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: EmailField('Email' (case sensitive)
-                 * NEW: EmailField('Email' (COMPLEX)
-                 * EXP: make sure that this does not end up as Email::class
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                new EmailField(Email::class, _t('EcommerceRole.EMAIL', Email::class)),
+                new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email')),
                 $loginDetailsHeader,
                 $loginDetailsDescription,
                 $updatePasswordLinkField,
@@ -617,7 +601,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $fields = [
             'FirstName',
             'Surname',
-            Email::class,
+            'Email',
         ];
         if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
             $passwordFieldIsRequired = true;
@@ -726,7 +710,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     {
         $returnArrayList = new ArrayList();
         if ($this->owner->exists()) {
-            $fieldName = $type . 'ID';
+            $fieldName = Config::inst()->get($type, 'table_name') . 'ID';
             $limit = 999;
             if ($onlyLastRecord) {
                 $limit = 1;
@@ -738,7 +722,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 ->sort('LastEdited', 'DESC')
                 ->exclude(['ID' => $excludeID])
                 ->limit($limit)
-                ->innerJoin(Order::class, '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
+                ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
             if ($addresses->count()) {
                 if ($keepDoubles) {
                     foreach ($addresses as $address) {

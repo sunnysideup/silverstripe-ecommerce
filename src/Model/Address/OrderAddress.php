@@ -4,17 +4,6 @@ namespace Sunnysideup\Ecommerce\Model\Address;
 
 use CMSEditLinkAPI;
 
-
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\DropdownField;
@@ -77,6 +66,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * standard SS static definition.
      */
     private static $plural_name = 'Order Addresses';
+
+    /**
+     * standard SS static definition.
+     */
+    private static $table_name = 'OrderAddress';
 
     /**
      * standard SS static definition.
@@ -519,15 +513,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($this->exists()) {
             $order = DataObject::get_one(
                 Order::class,
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                [$this->ClassName . 'ID' => $this->ID],
+                [Config::inst()->get($this->ClassName, 'table_name') . 'ID' => $this->ID],
                 $cacheDataObjectGetOne = false
             );
             if ($order && $order->ID !== $this->OrderID) {
@@ -705,7 +691,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
         }
         $countryField = new DropdownField($name, $title, $countriesForDropdown, $countryCode);
-        $countryField->setRightTitle(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ''));
+        $countryField->setRightTitle(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ' '));
         if (count($countriesForDropdown) < 2) {
             $countryField = $countryField->performReadonlyTransformation();
             if (count($countriesForDropdown) < 1) {

@@ -111,7 +111,7 @@ class EcommercePaymentController extends Controller
     {
         if ($this->currentOrder) {
             if ($this->currentOrder->canPay()) {
-                Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+                Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder, $this->Link('thankyou'));
             }

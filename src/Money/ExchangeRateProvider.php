@@ -76,28 +76,12 @@ class ExchangeRateProvider
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
         }
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if ($value = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($cacheCode)) {
+        if ($value = Controller::curr()->getRequest()->getSession()->get($cacheCode)) {
             self::$_memory_cache[$cacheCode] = $value;
         } else {
             $value = $this->getRate($fromCode, $toCode);
             self::$_memory_cache[$cacheCode] = $value;
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($cacheCode, $value);
+            Controller::curr()->getRequest()->getSession()->set($cacheCode, $value);
         }
         return self::$_memory_cache[$cacheCode];
     }

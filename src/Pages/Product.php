@@ -866,8 +866,8 @@ class Product extends Page implements BuyableModel
     public function getHasBeenSold()
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false);
-        $dataList = $dataList->innerJoin(OrderAttribute::class, '"OrderAttribute"."OrderID" = "Order"."ID"');
-        $dataList = $dataList->innerJoin(OrderItem::class, '"OrderAttribute"."ID" = "OrderItem"."ID"');
+        $dataList = $dataList->innerJoin("OrderAttribute", '"OrderAttribute"."OrderID" = "Order"."ID"');
+        $dataList = $dataList->innerJoin("OrderItem", '"OrderAttribute"."ID" = "OrderItem"."ID"');
         $dataList = $dataList->filter(
             [
                 'BuyableID' => $this->ID,
@@ -912,16 +912,6 @@ class Product extends Page implements BuyableModel
      */
     public function AddLink()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $className = ClassInfo::shortName($this);
         return ShoppingCartController::add_item_link($this->ID, $this->className, $this->linkParameters('add'));
     }
 
@@ -932,17 +922,7 @@ class Product extends Page implements BuyableModel
      */
     public function IncrementLink()
     {
-        //we can do this, because by default add link adds one
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('increment'));
+        return ShoppingCartController::add_item_link($this->ID, $this->className, $this->linkParameters('increment'));
     }
 
     /**

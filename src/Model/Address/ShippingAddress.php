@@ -287,15 +287,7 @@ class ShippingAddress extends OrderAddress
                     $shippingEcommerceGeocodingField = new GoogleAddressField(
                         'ShippingEcommerceGeocodingField',
                         _t('ShippingAddress.Find_Address', 'Find address'),
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: Session:: (case sensitive)
-                         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
-                        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('ShippingEcommerceGeocodingFieldValue')
+                        Controller::curr()->getRequest()->getSession()->get('ShippingEcommerceGeocodingFieldValue')
                     )
                 );
                 $shippingEcommerceGeocodingField->setFieldMap($mappingArray);

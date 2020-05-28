@@ -216,7 +216,7 @@ class CheckoutPage extends CartPage
     public static function find_last_step_link($step = '')
     {
         if (! $step) {
-            $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
+            $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
             if ($steps && count($steps)) {
                 $step = array_pop($steps);
             }
@@ -240,7 +240,7 @@ class CheckoutPage extends CartPage
     {
         $nextStep = null;
         if ($link = self::find_link()) {
-            $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
+            $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
             if (in_array($currentStep, $steps, true)) {
                 $key = array_search($currentStep, $steps, true);
                 if ($key !== false) {

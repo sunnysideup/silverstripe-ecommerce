@@ -438,7 +438,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function bad_order_step_ids()
     {
         $badorderStatus = Order::get()
-            ->leftJoin(OrderStep::class, '"OrderStep"."ID" = "Order"."StatusID"')
+            ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
             ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
             ->column('StatusID');
         if (is_array($badorderStatus)) {
@@ -1377,7 +1377,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
                     ->sort('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
-                    ->innerJoin(OrderStep::class, '"OrderStep"."ID" = "Order"."StatusID"')
+                    ->innerJoin("OrderStep", '"OrderStep"."ID" = "Order"."StatusID"')
                     ->first();
             }
             if ($order) {

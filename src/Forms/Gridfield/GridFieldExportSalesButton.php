@@ -207,7 +207,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         return Order::get()
             ->sort('"Order"."ID" ASC')
             ->filter(['ID' => $idArray])
-            ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
+            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset);
     }
 }

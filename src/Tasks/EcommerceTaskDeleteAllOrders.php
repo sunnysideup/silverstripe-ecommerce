@@ -131,7 +131,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                 }
                 $unlinkedObjects = $unlinkedObjects
                     ->where($where)
-                    ->leftJoin(Order::class, "\"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"");
+                    ->leftJoin('Order', "\"Order\".\"ID\" = \"${classWithOrderID}\".\"OrderID\"");
 
                 if ($unlinkedObjects->count()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {

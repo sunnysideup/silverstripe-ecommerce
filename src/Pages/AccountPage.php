@@ -282,7 +282,7 @@ class AccountPage extends Page
                     '"Order"."MemberID" = ' . $memberID . '
                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
                 )
-                ->innerJoin(OrderStep::class, '"Order"."StatusID" = "OrderStep"."ID"');
+                ->innerJoin("OrderStep", '"Order"."StatusID" = "OrderStep"."ID"');
         }
 
         return 0;

@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\View\HTML;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -71,7 +72,7 @@ class EcomQuantityField extends NumericField
      **/
     public function __construct($object, $parameters = [])
     {
-        Requirements::javascript('ecommerce/javascript/EcomQuantityField.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomQuantityField.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         if ($object instanceof BuyableModel) {
             $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
@@ -197,9 +198,7 @@ class EcomQuantityField extends NumericField
             'tabindex' => self::$tabindex[$name],
             'disabled' => 'disabled',
         ];
-        $formfield = new FormField($name);
-
-        return $formfield->createTag('input', $attributes);
+        return HTML::createTag('input', $attributes);
     }
 
     /**
@@ -219,7 +218,7 @@ class EcomQuantityField extends NumericField
             ];
             $formfield = new FormField($name);
 
-            return $formfield->createTag('input', $attributes);
+            return HTML::createTag('input', $attributes);
         }
     }
 

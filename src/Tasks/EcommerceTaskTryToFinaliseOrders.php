@@ -63,16 +63,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             $startAt = intval($_GET['startat']);
         }
         if (! intval($startAt)) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $startAt = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class));
+            $startAt = intval(Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class));
             if (! $startAt) {
                 $startAt = 0;
             }
@@ -105,7 +96,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->where('StatusID <> ' . $lastOrderStep->ID)
                         ->exclude(['ID' => $ordersInQueueArray])
                         ->innerJoin(
-                            OrderStatusLog::class,
+                            'OrderStatusLog',
                             '"OrderStatusLog"."OrderID" = "Order"."ID"'
                         )
                         ->innerJoin(
@@ -123,15 +114,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class)) {
+        if (Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class)) {
             if (! $this->isCli()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
@@ -147,15 +130,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             foreach ($orders as $order) {
                 ++$startAt;
 
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
+                Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
                 $stepBefore = OrderStep::get()->byID($order->StatusID);
                 try {
                     $order->tryToFinaliseOrder();
@@ -180,16 +155,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 }
             }
         } else {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear(EcommerceTaskTryToFinaliseOrders::class);
+            Controller::curr()->getRequest()->getSession()->clear(EcommerceTaskTryToFinaliseOrders::class);
             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
         }
 

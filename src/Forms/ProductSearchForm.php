@@ -258,16 +258,7 @@ class ProductSearchForm extends Form
         $this->setActions($actions);
         $this->extend('updateValidator', $validator);
         $this->setValidator($validator);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->Config()->get('form_data_session_variable'));
+        $oldData = Controller::curr()->getRequest()->getSession()->get($this->Config()->get('form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
@@ -282,16 +273,7 @@ class ProductSearchForm extends Form
     public static function get_last_search_phrase()
     {
         $string = '';
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+        $oldData = Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             if (isset($oldData['ShortKeyword'])) {
                 $string = $oldData['ShortKeyword'];
@@ -307,30 +289,13 @@ class ProductSearchForm extends Form
      */
     public static function set_last_search_phrase($phrase)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $oldData = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+        $oldData = Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $oldData['ShortKeyword'] = $phrase;
             $oldData['Keyword'] = $phrase;
         }
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'), $phrase);
+        Controller::curr()->getRequest()->getSession()->set(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'), $phrase);
     }
 
     public function setControllerSearchResultDisplayMethod($s)
@@ -586,58 +551,16 @@ class ProductSearchForm extends Form
         if ($this->debug) {
             $this->debugOutput(
                 '<hr />' .
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                '<h3>Previous Search Products: ' . $sessionNameProducts . '</h3><p>' . print_r(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionNameProducts), 1) . '</p>' .
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                '<h3>Previous Search Groups: ' . $sessionNameGroups . '</h3><p>' . print_r(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionNameGroups), 1) . '</p>'
+                '<h3>Previous Search Products: ' . $sessionNameProducts . '</h3><p>' . print_r(Controller::curr()->getRequest()->getSession()->get($sessionNameProducts), 1) . '</p>' .
+                '<h3>Previous Search Groups: ' . $sessionNameGroups . '</h3><p>' . print_r(Controller::curr()->getRequest()->getSession()->get($sessionNameGroups), 1) . '</p>'
             );
         }
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionNameProducts, implode(',', $this->resultArray));
+        Controller::curr()->getRequest()->getSession()->set($sessionNameProducts, implode(',', $this->resultArray));
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionNameGroups, implode(',', $this->productGroupIDs));
+        Controller::curr()->getRequest()->getSession()->set($sessionNameGroups, implode(',', $this->productGroupIDs));
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
+        Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         if ($searchHistoryObject) {
             $searchHistoryObject->ProductCount = count($this->resultArray);
             $searchHistoryObject->GroupCount = count($this->productGroupIDs);
@@ -646,26 +569,8 @@ class ProductSearchForm extends Form
         if ($this->debug) {
             $this->debugOutput(
                 '<hr />' .
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                '<h3>SAVING Products to session: ' . $sessionNameProducts . '</h3><p>' . print_r(explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionNameProducts)), 1) . '</p>' .
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                '<h3>SAVING Groups to session: ' . $sessionNameGroups . '</h3><p>' . print_r(explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionNameGroups)), 1) . '</p>' .
+                '<h3>SAVING Products to session: ' . $sessionNameProducts . '</h3><p>' . print_r(explode(',', Controller::curr()->getRequest()->getSession()->get($sessionNameProducts)), 1) . '</p>' .
+                '<h3>SAVING Groups to session: ' . $sessionNameGroups . '</h3><p>' . print_r(explode(',', Controller::curr()->getRequest()->getSession()->get($sessionNameGroups)), 1) . '</p>' .
                 '<h3>Internal Item IDs for Products</h3><p>' . print_r($this->resultArrayPerIternalItemID, 1) . '</p>'
             );
         }
@@ -706,15 +611,7 @@ class ProductSearchForm extends Form
             $data['ShortKeyword'] = $data['Keyword'];
         }
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($this->Config()->get('form_data_session_variable'), $data);
+        Controller::curr()->getRequest()->getSession()->set($this->Config()->get('form_data_session_variable'), $data);
     }
 
     /**

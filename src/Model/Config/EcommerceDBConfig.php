@@ -30,6 +30,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
@@ -677,7 +678,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         }
                     }
                 }
-                Requirements::block('ecommerce/javascript/EcomPrintAndMail.js');
+                Requirements::block('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
                 if (strnatcmp(PHP_VERSION, '5.5.1') >= 0) {
                     $fields->addFieldToTab('Root.ProductImages', new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
                 }
@@ -730,26 +731,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: $className (case sensitive)
-     * NEW: $className (COMPLEX)
-     * EXP: Check if the class name can still be used as such
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     public static function is_buyable($className)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
+        $className = ClassHelpers::unsanitise_class_name($className);
         $implementorsArray = class_implements($className);
         if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
             return true;

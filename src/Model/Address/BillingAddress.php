@@ -41,7 +41,7 @@ class BillingAddress extends OrderAddress
             'RegionCode',
             'Country',
             'Phone',
-            Email::class,
+            'Email',
         ],
     ];
 
@@ -179,9 +179,9 @@ class BillingAddress extends OrderAddress
      * @return array
      */
     private static $field_labels = [
-        'Order.Title' => Order::class,
+        'Order.Title' => 'Order',
         'Obsolete' => 'Do not use for future transactions',
-        'Email' => Email::class,
+        'Email' => 'Email',
     ];
 
     /**
@@ -237,7 +237,7 @@ class BillingAddress extends OrderAddress
     {
         $fields = parent::getCMSFields();
         $fields->replaceField('OrderID', new ReadonlyField('OrderID', _t('BillingAddress.ORDERID', 'Order #')));
-        $fields->replaceField(Email::class, new EmailField(Email::class, _t('BillingAddress.EMAIL', Email::class)));
+        $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));
         //We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
         $fields->removeByName('RegionCode');
         $fields->removeByName('RegionID');
@@ -295,15 +295,7 @@ class BillingAddress extends OrderAddress
                 $billingEcommerceGeocodingField = GoogleAddressField::create(
                     'BillingEcommerceGeocodingField',
                     _t('BillingAddress.FIND_ADDRESS', 'Find address'),
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: Session:: (case sensitive)
-                     * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                     * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
-                    SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('BillingEcommerceGeocodingFieldValue')
+                    Controller::curr()->getRequest()->getSession()->get('BillingEcommerceGeocodingFieldValue')
                 )
             );
             $billingEcommerceGeocodingField->setFieldMap($mappingArray);
@@ -311,7 +303,7 @@ class BillingAddress extends OrderAddress
             //$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
         }
         $billingFields->push(new TextField('Address', _t('BillingAddress.ADDRESS', 'Address')));
-        $billingFields->push(new TextField('Address2', _t('BillingAddress.ADDRESS2', '')));
+        $billingFields->push(new TextField('Address2', _t('BillingAddress.ADDRESS2', 'Address Line 2')));
         $billingFields->push(new TextField('City', _t('BillingAddress.CITY', 'Town')));
         $billingFields->push($this->getPostalCodeField('PostalCode'));
         $billingFields->push($this->getRegionField('RegionID', 'RegionCode'));

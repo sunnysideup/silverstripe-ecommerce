@@ -2,7 +2,7 @@
 
 <% if ShowOnlyCurrentStep %><% if CanCheckout %><% include Sunnysideup\Ecommerce\Includes\CheckoutStepsList %><% end_if %><% end_if %>
 
-<% include CartActionsAndMessages %>
+<% include Sunnysideup\Ecommerce\Includes\CartActionsAndMessages %>
 
 <% if CanCheckout %>
 

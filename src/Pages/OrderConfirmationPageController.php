@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
@@ -49,29 +50,12 @@ class OrderConfirmationPageController extends CartPageController
         //we retrieve the order in the parent page
         //the parent page also takes care of the security
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if ($sessionOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
+        if ($sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
             $this->currentOrder = Order::get()->byID($sessionOrderID);
             if ($this->currentOrder) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                $validUntil = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime')) - 0;
+                $validUntil = intval($this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime')) - 0;
                 if ($validUntil < time()) {
                     $this->clearRetrievalOrderID();
                     $this->overrideCanView = false;
@@ -168,7 +152,7 @@ class OrderConfirmationPageController extends CartPageController
         if ($number) {
             $where = "\"CheckoutPageStepDescription\".\"ID\" = ${number}";
         }
-        if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
+        if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
             if ($this->currentOrder->IsInSession()) {
                 $dos = CheckoutPageStepDescription::get()->where($where)->sort('ID', 'ASC');
                 if ($number) {
@@ -335,7 +319,7 @@ class OrderConfirmationPageController extends CartPageController
     {
         if ($this->currentOrder) {
             if ($this->currentOrder->canPay()) {
-                Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+                Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
             }

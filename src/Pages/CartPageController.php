@@ -79,7 +79,7 @@ class CartPageController extends PageController
 
     public static function set_message($s)
     {
-        $sessionCode = EcommerceConfig::get('CartPage_Controller', 'session_code');
+        $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
         Session::set($sessionCode, $s);
     }
 
@@ -283,8 +283,9 @@ class CartPageController extends PageController
     {
         $this->workOutMessagesAndActions();
         if (! $this->message) {
-            $sessionCode = EcommerceConfig::get('CartPage_Controller', 'session_code');
-            if ($sessionMessage = Session::get($sessionCode)) {
+            $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
+           
+            if ($sessionMessage = $this->getRequest()->getSession()->get($sessionCode)) {
                 $this->message = $sessionMessage;
                 Session::set($sessionCode, '');
                 Session::clear($sessionCode);
@@ -343,41 +344,15 @@ class CartPageController extends PageController
     public function ShowCreateAccountForm()
     {
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CartPageCreateAccountForm')) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
-
+        if ($this->getRequest()->getSession()->get('CartPageCreateAccountForm')) {
+            $this->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
             return true;
         }
         if (Member::currentUser() || $this->currentOrder->MemberID) {
             return false;
         }
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CartPageCreateAccountForm', true);
+        $this->getRequest()->getSession()->set('CartPageCreateAccountForm', true);
 
         return true;
     }
@@ -494,36 +469,11 @@ class CartPageController extends PageController
         if (! $validUntilTS) {
             $validUntilTS = time() + 3600;
         }
+        $this->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', $orderID);
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', $orderID);
+        $this->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', $validUntilTS);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
+        $this->getRequest()->getSession()->save($this->getRequest());
     }
 
     /**
@@ -531,56 +481,11 @@ class CartPageController extends PageController
      */
     protected function clearRetrievalOrderID()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('CheckoutPageCurrentOrderID');
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', 0);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('CheckoutPageCurrentRetrievalTime');
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', 0);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
+        $this->getRequest()->getSession()->clear('CheckoutPageCurrentOrderID');
+        $this->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', 0);
+        $this->getRequest()->getSession()->clear('CheckoutPageCurrentRetrievalTime');
+        $this->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', 0);
+        $this->getRequest()->getSession()->save($this->getRequest());
     }
 
     /**

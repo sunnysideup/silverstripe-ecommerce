@@ -210,14 +210,6 @@ class ShoppingCart
     public static function session_order()
     {
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $orderIDFromSession = intval(Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
         return Order::get()->byID($orderIDFromSession);
     }
@@ -346,14 +338,6 @@ class ShoppingCart
                         $this->order->write();
                     }
                     $sessionVariableName = $this->sessionVariableName('OrderID');
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: Session:: (case sensitive)
-                     * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                     * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
                     Controller::curr()->getRequest()->getSession()->set($sessionVariableName, intval($this->order->ID));
                 }
                 if ($this->order) {
@@ -696,33 +680,9 @@ class ShoppingCart
         $this->messages = [];
         foreach (self::$session_variable_names as $name) {
             $sessionVariableName = $this->sessionVariableName($name);
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, null);
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
+            Controller::curr()->getRequest()->getSession()->set($sessionVariableName, null);
+            Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
+            Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         }
         $memberID = Intval(Member::currentUserID());
         if ($memberID) {
@@ -848,15 +808,7 @@ class ShoppingCart
                     $this->order->init(true);
                     $sessionVariableName = $this->sessionVariableName('OrderID');
                     //we set session ID after can view check ...
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: Session:: (case sensitive)
-                     * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                     * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
-                    SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, $this->order->ID);
+                    Controller::curr()->getRequest()->getSession()->set($sessionVariableName, $this->order->ID);
                     $this->addMessage(_t('Order.LOADEDEXISTING', 'Order loaded.'), 'good');
                     return true;
                 }
@@ -1141,25 +1093,9 @@ class ShoppingCart
     {
         $sessionVariableName = $this->sessionVariableName('Messages');
         //get old messages
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $messages = unserialize(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($sessionVariableName));
+        $messages = unserialize(Controller::curr()->getRequest()->getSession()->get($sessionVariableName));
         //clear old messages
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear($sessionVariableName, '');
+        Controller::curr()->getRequest()->getSession()->clear($sessionVariableName, '');
         //set to form????
         if ($messages && count($messages)) {
             $this->messages = array_merge($messages, $this->messages);
@@ -1314,15 +1250,7 @@ class ShoppingCart
     protected function StoreMessagesInSession()
     {
         $sessionVariableName = $this->sessionVariableName('Messages');
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set($sessionVariableName, serialize($this->messages));
+        Controller::curr()->getRequest()->getSession()->set($sessionVariableName, serialize($this->messages));
     }
 
     /**

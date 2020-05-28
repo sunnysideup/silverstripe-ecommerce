@@ -1209,16 +1209,7 @@ class ProductGroup extends Page
     public function searchResultsArrayFromSession()
     {
         if (! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            self::$_result_array[$this->ID] = explode(',', SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable(false)));
+            self::$_result_array[$this->ID] = explode(',', Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable(false)));
         }
         if (! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
             self::$_result_array[$this->ID] = [0 => 0];
@@ -1423,16 +1414,7 @@ class ProductGroup extends Page
             $this->getSortFilterDisplayNames($type, 'getVariable');
             //clear bogus value from session ...
             $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, '');
+            Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, '');
         }
         if ($key) {
             if ($variable) {

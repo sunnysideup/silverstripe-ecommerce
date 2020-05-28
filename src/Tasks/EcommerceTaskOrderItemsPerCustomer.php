@@ -40,9 +40,9 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         $count = 50;
         $orders = Order::get()
             ->sort('"Order"."ID" ASC')
-            ->innerJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
             ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-            ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
+            ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset);
         $ordersCount = $orders->count();
         while ($orders && $ordersCount) {
@@ -70,9 +70,9 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             }
             $orders = Order::get()
                 ->sort('"Order"."ID" ASC')
-                ->innerJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
-                ->leftJoin(Member::class, '"Member"."ID" = "Order"."MemberID"')
+                ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
                 ->limit($count, $offset);
             $ordersCount = $orders->count();
         }

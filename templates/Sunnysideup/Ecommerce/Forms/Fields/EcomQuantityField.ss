@@ -6,5 +6,5 @@
 	<a class="addOneLink" href="$IncrementLink" title="<%t Order.ADDONE 'Add one &quot;{name}&quot; to your cart.' name=$Item.TableTitle.ATT %>">
 		+
 	</a>
-	$AJAXLinkHiddenField
+	$AJAXLinkHiddenField.RAW
 </div>

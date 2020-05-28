@@ -2,16 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use convert;
-
-
-
-
-
-
-
-
-
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
@@ -66,21 +58,21 @@ class CheckoutPageController extends CartPageController
         parent::init();
 
         // TODO: find replacement for: Requirements::themedCSS(CheckoutPage::class, 'ecommerce');
-        $ajaxifyArray = EcommerceConfig::get('CheckoutPage_Controller', 'ajaxify_steps');
-        if (count($ajaxifyArray)) {
+        $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
+        if (is_array($ajaxifyArray) &&  count($ajaxifyArray)) {
             foreach ($ajaxifyArray as $js) {
                 Requirements::javascript($js);
             }
         }
-        Requirements::javascript('ecommerce/javascript/EcomPayment.js');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
         Requirements::customScript(
             '
             if (typeof EcomOrderForm != "undefined") {
-                EcomOrderForm.set_TermsAndConditionsMessage(\'' . convert::raw2js($this->TermsAndConditionsMessage) . '\');
+                EcomOrderForm.set_TermsAndConditionsMessage(\'' . Convert::raw2js($this->TermsAndConditionsMessage) . '\');
             }',
             'TermsAndConditionsMessage'
         );
-        $this->steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
+        $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $this->currentStep = $this->request->Param('ID');
         if ($this->currentStep && in_array($this->currentStep, $this->steps, true)) {
             //do nothing
@@ -91,15 +83,7 @@ class CheckoutPageController extends CartPageController
         // this is only applicable when people submit order (start to pay)
         // and then return back
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if ($checkoutPageCurrentOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
+        if ($checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
             if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
                 $this->clearRetrievalOrderID();
             }
@@ -133,19 +117,10 @@ class CheckoutPageController extends CartPageController
      */
     public function OrderFormAddress()
     {
-        $form = OrderFormAddress::create($this, OrderFormAddress::class);
+        $form = OrderFormAddress::create($this, 'OrderFormAddress');
         $this->data()->extend('updateOrderFormAddress', $form);
         //load session data
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if ($data = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
+        if ($data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
             $form->loadDataFrom($data);
         }
 
@@ -199,7 +174,7 @@ class CheckoutPageController extends CartPageController
      */
     public function CheckoutSteps($number = 0)
     {
-        $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
+        $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         if ($number) {
             $code = $steps[$number - 1];
 
@@ -229,7 +204,7 @@ class CheckoutPageController extends CartPageController
                 }
             }
         }
-        if (EcommerceConfig::get('OrderConfirmationPage_Controller', 'include_as_checkout_step')) {
+        if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
             $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
             if ($orderConfirmationPage) {
                 $do = $orderConfirmationPage->CurrentCheckoutStep(false);
@@ -385,7 +360,7 @@ class CheckoutPageController extends CartPageController
     protected function includeGoogleAnalyticsCode()
     {
         if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
-            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
+            $var = EcommerceConfig::get(OrderConfirmationPageController::class, 'google_analytics_variable');
             if ($var) {
                 $currencyUsedObject = $this->currentOrder->CurrencyUsed();
                 if ($currencyUsedObject) {

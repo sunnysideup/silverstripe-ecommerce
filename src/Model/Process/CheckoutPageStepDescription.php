@@ -203,7 +203,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      */
     public function canDelete($member = null, $context = [])
     {
-        $array = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
+        $array = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         if (in_array($this->getCode, $array, true)) {
             return false;
         }
@@ -238,8 +238,8 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                 'Code',
                 'Code',
                 array_combine(
-                    EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps'),
-                    EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps')
+                    EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps'),
+                    EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps')
                 )
             )
         );
@@ -280,7 +280,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        $steps = EcommerceConfig::get('CheckoutPage_Controller', 'checkout_steps');
+        $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         if (is_array($steps) && count($steps)) {
             $idArray = [];
             $addCodeSteps = CheckoutPageStepDescription::get()

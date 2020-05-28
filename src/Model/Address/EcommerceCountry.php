@@ -47,6 +47,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * standard SS static definition.
+     */
+    private static $table_name = 'EcommerceCountry';
+
+    /**
      * Standard SS Variable.
      *
      * @var array

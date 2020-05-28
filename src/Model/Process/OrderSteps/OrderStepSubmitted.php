@@ -156,46 +156,10 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             //add member if needed...
             if (! $order->MemberID) {
                 //lets see if we can find a member
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                $memberOrderID = SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('Ecommerce_Member_For_Order');
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->clear('Ecommerce_Member_For_Order');
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('Ecommerce_Member_For_Order', 0);
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: Session:: (case sensitive)
-                 * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-                 * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                SilverStripe\Control\Controller::curr()->getRequest()->getSession()->save();
+                $memberOrderID = Controller::curr()->getRequest()->getSession()->get('Ecommerce_Member_For_Order');
+                Controller::curr()->getRequest()->getSession()->clear('Ecommerce_Member_For_Order');
+                Controller::curr()->getRequest()->getSession()->set('Ecommerce_Member_For_Order', 0);
+                Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
                 if ($memberOrderID) {
                     $order->MemberID = $memberOrderID;
                 }

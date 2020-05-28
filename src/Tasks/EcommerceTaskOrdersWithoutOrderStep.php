@@ -46,7 +46,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                 $orders = Order::get()
                     ->where('StatusID NOT IN (' . implode(',', $orderStepsIDArray) . ')')
                     ->innerJoin(
-                        OrderStatusLog::class,
+                        'OrderStatusLog',
                         '"OrderStatusLog"."OrderID" = "Order"."ID"'
                     )
                     ->innerJoin(

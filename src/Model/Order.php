@@ -562,7 +562,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($onlySubmittedOrders) {
             $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
             $list = Order::get()
-                ->LeftJoin(OrderStatusLog::class, '"Order"."ID" = "OrderStatusLog"."OrderID"')
+                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
                 ->Sort('OrderStatusLog.Created', 'ASC');
             $where = ' ("OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\') ';
@@ -737,16 +737,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $this->init(true);
             $this->calculateOrderAttributes(true);
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            SilverStripe\Control\Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
+            Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
         }
         if ($submitted) {
             $this->fieldsAndTabsToBeRemoved[] = 'CustomerOrderNote';
@@ -1722,14 +1713,14 @@ class Order extends DataObject implements EditableEcommerceObject
     public function CreateOrReturnExistingAddress($className = BillingAddress::class, $alternativeMethodName = '')
     {
         if ($this->exists()) {
-            $methodName = $className;
+            $methodName = Config::inst()->get($className, 'table_name');
             if ($alternativeMethodName) {
                 $methodName = $alternativeMethodName;
             }
             if ($this->IsSubmitted()) {
                 return $this->{$methodName}();
             }
-            $variableName = $className . 'ID';
+            $variableName = $fieldName = Config::inst()->get($className, 'table_name') . 'ID';
             $address = null;
             if ($this->{$variableName}) {
                 $address = $this->{$methodName}();

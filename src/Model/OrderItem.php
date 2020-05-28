@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\HeaderField;
 
@@ -531,38 +532,11 @@ class OrderItem extends OrderAttribute
      */
     public function onBeforeWrite()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: Session:: (case sensitive)
-         * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-         * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if (SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: Session:: (case sensitive)
-             * NEW: SilverStripe\Control\Controller::curr()->getRequest()->getSession()-> (COMPLEX)
-             * EXP: If THIS is a controller than you can write: $this->getRequest(). You can also try to access the HTTPRequest directly.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $this->OrderID = intval(SilverStripe\Control\Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack'));
+        if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
+            $this->OrderID = intval(Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack'));
         }
         if (! $this->exists()) {
             if ($buyable = $this->Buyable(true)) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 if ($this->ClassName === OrderItem::class && $this->BuyableClassName !== OrderItem::class) {
                     $this->setClassName($buyable->classNameForOrderItem());
                 }

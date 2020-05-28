@@ -82,7 +82,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             if (Versioned::get_stage() === 'Live') {
                 $stage = '_Live';
             }
-            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin(SiteTree::class . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
+            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin(Config::inst()->get(SiteTree::class, 'table_name') . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
                 return $result;
             }
         }
