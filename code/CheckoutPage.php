@@ -458,6 +458,24 @@ class CheckoutPage_Controller extends CartPage_Controller
                 if (empty($currencyUsedString)) {
                     $currencyUsedString = EcommerceCurrency::default_currency_code();
                 }
+                $orderItems = $this->currentOrder->OrderItems();
+                $items = '';
+                foreach ($orderItems as $orderItem) {
+                    $product = Product::get()->byID($orderItem->BuyableID);
+                    $sku = $product->InternalItemID ? $product->InternalItemID : $product->ID;
+                    $items .= 
+                        'ga(
+                            \'ecommerce:addItem\', 
+                            {
+                                \'id\': \''.$this->currentOrder->ID.'\',
+                                \'name\': \''.$orderItem->TableTitle().'\',
+                                \'sku\': \''.$sku.'\',
+                                \'category\': \''. $product->TopParentGroup()->Title.'\',
+                                \'price\': \''.$orderItem->CalculatedTotal.'\',
+                                \'quantity\': \''.$orderItem->Quantity.'\',
+                            }
+                        );';
+                }
                 $js = '
                 jQuery("#OrderForm_OrderForm").on(
                     "submit",
@@ -471,6 +489,7 @@ class CheckoutPage_Controller extends CartPage_Controller
                                 \'currency\': \''.$currencyUsedString.'\'
                             }
                         );
+                        '.$items.'
                         '.$var.'(\'ecommerce:send\');
                     }
                 );
