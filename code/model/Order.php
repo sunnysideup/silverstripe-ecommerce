@@ -1275,6 +1275,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function Archive($avoidWrites = true)
     {
+        $this->extend('onBeforeArchive', $this);
         $lastOrderStep = OrderStep::last_order_step();
         if ($lastOrderStep) {
             if ($avoidWrites) {
