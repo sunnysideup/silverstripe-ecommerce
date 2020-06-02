@@ -27,25 +27,8 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @Var Array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'CheckoutPageStepDescription';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Heading' => 'Varchar',
         'Above' => 'Text',

@@ -80,15 +80,6 @@ class OrderStatusLogArchived extends OrderStatusLog
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $fields->replaceField('ClassName', new HiddenField('ClassName', 'ClassName', $this->ClassName));
         $fields->addFieldToTab('Root.Main', new ReadonlyField('Created', 'Created'));
 

@@ -281,15 +281,6 @@ class CheckoutPageController extends CartPageController
     {
         if ($this->request->isAjax()) {
             Requirements::clear();
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->RenderWith( (ignore case)
-             * NEW: ->RenderWith( (COMPLEX)
-             * EXP: Check that the template location is still valid!
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $this->RenderWith('Sunnysideup\Ecommerce\Includes\LayoutCheckoutPageInner');
         }
 

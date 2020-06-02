@@ -78,25 +78,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderAttribute';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
@@ -107,15 +90,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS variable.
      *
      * @var array
-     */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
      */
     private static $has_one = [
         'Order' => Order::class,

@@ -274,15 +274,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::scaffoldSearchFields($_params);
         $fields = parent::scaffoldSearchFields();
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: NumericField (case sensitive)
-         * NEW: NumericField (COMPLEX)
-         * EXP: check the number of decimals required and add as ->Step(123)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
 
         return $fields;

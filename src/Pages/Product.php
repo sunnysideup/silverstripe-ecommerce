@@ -167,15 +167,6 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $summary_fields = [
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  => 'Image' (case sensitive)
-         * NEW:  => 'Image' (COMPLEX)
-         * EXP: you may want to add ownership (owns)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         'Image.CMSThumbnail' => 'Image',
         'FullName' => 'Description',
         'Price' => 'Price',
@@ -304,28 +295,16 @@ class Product extends Page implements BuyableModel
         }
 
         $fields->addFieldToTab('Root.Details', new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: NumericField (case sensitive)
-         * NEW: NumericField (COMPLEX)
-         * EXP: check the number of decimals required and add as ->Step(123)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $fields->addFieldToTab('Root.Details', new NumericField('Price', _t('Product.PRICE', 'Price'), '', 12));
+        $fields->addFieldToTab(
+            'Root.Details', 
+            NumericField::create('Price', _t('Product.PRICE', 'Price'), '', 12)->setScale(2)
+        );
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
         if ($this->EcomConfig()->ProductsHaveWeight) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $fields->addFieldToTab('Root.Details', new NumericField('Weight', _t('Product.WEIGHT', 'Weight')));
+            $fields->addFieldToTab(
+                'Root.Details', 
+                NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
+            );
         }
         if ($this->EcomConfig()->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));

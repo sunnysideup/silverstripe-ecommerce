@@ -32,24 +32,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      */
     protected $relevantLogEntryClassName = OrderStatusLogDispatchPhysicalOrder::class;
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderStepSent';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'SendDetailsToCustomer' => 'Boolean',
         'EmailSubjectGift' => 'Varchar(200)',

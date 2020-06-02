@@ -233,25 +233,8 @@ class ProductGroup extends Page
      *
      * @static Array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'ProductGroup';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'NumberOfProductsPerPage' => 'Int',
         'LevelOfProductsToShow' => 'Int',
@@ -266,16 +249,17 @@ class ProductGroup extends Page
      * @static Array
      */
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $has_one = [
         'Image' => ProductImage::class,
+    ];
+    
+    /**
+     * standard SS variable.
+     *
+     * @static Array
+     */
+    private static $owns = [
+        'Image'
     ];
 
     /**
@@ -312,15 +296,6 @@ class ProductGroup extends Page
     ];
 
     private static $summary_fields = [
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  => 'Image' (case sensitive)
-         * NEW:  => 'Image' (COMPLEX)
-         * EXP: you may want to add ownership (owns)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         'Image.CMSThumbnail' => 'Image',
         'Title' => 'Category',
         'NumberOfProducts' => 'Direct Product Count',
@@ -444,15 +419,6 @@ class ProductGroup extends Page
      */
     public function canDelete($member = null, $context = [])
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  Object:: (case sensitive)
-         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-         * EXP: Check if this is the right implementation, this is highly speculative.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
@@ -604,14 +570,6 @@ class ProductGroup extends Page
                 _t('ProductGroup.DISPLAY', 'Display'),
                 $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->showProductLevels),
                 HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: NumericField (case sensitive)
-                 * NEW: NumericField (COMPLEX)
-                 * EXP: check the number of decimals required and add as ->Step(123)
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
             )
         );
@@ -955,15 +913,6 @@ class ProductGroup extends Page
     public function GroupsMenu($filter = 'ShowInMenus = 1')
     {
         if ($parent = $this->ParentGroup()) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD:  Object:: (case sensitive)
-             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-             * EXP: Check if this is the right implementation, this is highly speculative.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return is_a($parent, EcommerceConfigClassNames::getName(ProductGroup::class)) ? $parent->GroupsMenu() : $this->ChildGroups($filter);
         }
         return $this->ChildGroups($filter);

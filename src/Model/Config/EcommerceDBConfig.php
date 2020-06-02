@@ -63,25 +63,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'EcommerceDBConfig';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Title' => 'Varchar(30)',
         'UseThisOne' => 'Boolean',
@@ -112,27 +95,19 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $has_one = [
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  => 'Image' (case sensitive)
-         * NEW:  => 'Image' (COMPLEX)
-         * EXP: you may want to add ownership (owns)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         'EmailLogo' => Image::class,
         'DefaultProductImage' => ProductImage::class,
+    ];
+
+    /**
+     * Standard SS Variable.
+     *
+     * @var array
+     */
+    private static $owns = [
+        'EmailLogo',
+        'DefaultProductImage',
     ];
 
     /**
@@ -561,14 +536,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     Tab::create(
                         'Products',
                         _t('EcommerceDBConfig.PRODUCTS', 'Products'),
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: NumericField (case sensitive)
-                         * NEW: NumericField (COMPLEX)
-                         * EXP: check the number of decimals required and add as ->Step(123)
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
                         new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
                         new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),

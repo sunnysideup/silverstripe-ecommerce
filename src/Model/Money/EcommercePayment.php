@@ -67,25 +67,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Failure: Payment failed during process
      * Pending: Payment awaiting receipt/bank transfer etc.
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'EcommercePayment';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
@@ -96,14 +79,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'AlternativeEndPoint' => 'Varchar(255)',
     ];
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $has_one = [
         'PaidBy' => Member::class,
         'Order' => Order::class,
@@ -126,21 +101,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     private static $searchable_fields = [
         'OrderID' => [
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            'field' => 'NumericField',
+            'field' => NumericField::class,
             'title' => 'Order Number',
         ],
         'Created' => [
             'title' => 'Date (e.g. today)',
-            'field' => 'TextField',
+            'field' => TextField::class,
             'filter' => 'EcommercePaymentFiltersAroundDateFilter',
         ],
         'IP' => [

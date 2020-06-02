@@ -34,7 +34,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 
     private static $searchable_fields = [
         'OrderID' => [
-            'field' => 'NumericField',
+            'field' => NumericField::class,
             'title' => 'Order Number',
         ],
         'Title' => 'PartialMatchFilter',

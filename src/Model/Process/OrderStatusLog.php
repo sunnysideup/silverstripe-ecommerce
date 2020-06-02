@@ -45,25 +45,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderStatusLog';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Title' => 'Varchar(100)',
         'Note' => 'HTMLText',
@@ -74,15 +57,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * standard SS variable.
      *
      * @var array
-     */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
      */
     private static $has_one = [
         'Author' => Member::class,
@@ -129,16 +103,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     private static $searchable_fields = [
         'OrderID' => [
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            'field' => 'NumericField',
+            'field' => NumericField::class,
             'title' => 'Order Number',
         ],
         'ClassName' => [
@@ -511,15 +476,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: NumericField (case sensitive)
-         * NEW: NumericField (COMPLEX)
-         * EXP: check the number of decimals required and add as ->Step(123)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
         $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);

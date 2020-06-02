@@ -70,46 +70,13 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
         }
         if ($classes) {
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             foreach ($classes as $key => $className) {
                 if (class_exists($key)) {
 
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: $className (case sensitive)
-                     * NEW: $className (COMPLEX)
-                     * EXP: Check if the class name can still be used as such
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
                     if (in_array($className, $this->availableClasses, true)) {
 
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $className (case sensitive)
-                         * NEW: $className (COMPLEX)
-                         * EXP: Check if the class name can still be used as such
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $obj = singleton($className);
                         if ($obj) {
-
-                            /**
-                             * ### @@@@ START REPLACEMENT @@@@ ###
-                             * WHY: automated upgrade
-                             * OLD: $className (case sensitive)
-                             * NEW: $className (COMPLEX)
-                             * EXP: Check if the class name can still be used as such
-                             * ### @@@@ STOP REPLACEMENT @@@@ ###
-                             */
                             $dropdownArray[$className] = $obj->i18n_singular_name();
                         }
                     }

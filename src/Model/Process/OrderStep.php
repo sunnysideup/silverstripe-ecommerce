@@ -63,25 +63,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderStep';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Name' => 'Varchar(50)',
         'Code' => 'Varchar(50)',
@@ -1063,25 +1046,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function RelevantLogEntries(Order $order)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if ($className = $this->getRelevantLogEntryClassName()) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $className::get()->filter(
                 [
                     'OrderID' => $order->ID,
@@ -1490,14 +1455,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $oldObject->delete();
                         }
 
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $className (case sensitive)
-                         * NEW: $className (COMPLEX)
-                         * EXP: Check if the class name can still be used as such
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $obj = $className::create($filter);
                         $obj->Code = $code;
                         $obj->Description = $obj->myDescription();

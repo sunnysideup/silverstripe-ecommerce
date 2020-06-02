@@ -103,25 +103,8 @@ class OrderModifier extends OrderAttribute
      * @var array
      *            stardard SS definition
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderModifier';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
@@ -148,16 +131,7 @@ class OrderModifier extends OrderAttribute
      */
     private static $searchable_fields = [
         'OrderID' => [
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            'field' => 'NumericField',
+            'field' => NumericField::class,
             'title' => 'Order Number',
         ],
         //"TableTitle" => "PartialMatchFilter",
@@ -280,15 +254,6 @@ class OrderModifier extends OrderAttribute
         if ($this->OrderID && $this->exists()) {
             $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
         } else {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $fields->replaceField('OrderID', new NumericField('OrderID'));
         }
 
@@ -324,15 +289,6 @@ class OrderModifier extends OrderAttribute
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: NumericField (case sensitive)
-         * NEW: NumericField (COMPLEX)
-         * EXP: check the number of decimals required and add as ->Step(123)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
 
         return $fields;

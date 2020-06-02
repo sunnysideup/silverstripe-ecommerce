@@ -99,15 +99,6 @@ class ProductController extends PageController
         if ($this->canPurchase()) {
             $farray = [];
             $fields = new FieldList($farray);
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $fields->push(new NumericField('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
             $actions = new FieldList(
                 new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))

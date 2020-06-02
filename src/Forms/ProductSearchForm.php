@@ -207,24 +207,8 @@ class ProductSearchForm extends Form
             if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
                 $fields = FieldList::create(
                     $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords')),
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: NumericField (case sensitive)
-                     * NEW: NumericField (COMPLEX)
-                     * EXP: check the number of decimals required and add as ->Step(123)
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
-                    NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price')),
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: NumericField (case sensitive)
-                     * NEW: NumericField (COMPLEX)
-                     * EXP: check the number of decimals required and add as ->Step(123)
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
-                    NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'))
+                    NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'))->setScale(2),
+                    NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'))->setScale(2)
                 );
             } else {
                 $fields = FieldList::create(

@@ -29,24 +29,8 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     protected $relevantLogEntryClassName = OrderStatusLogSubmitted::class;
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderStepSubmitted';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'SaveOrderAsHTML' => 'Boolean',
         'SaveOrderAsSerializedObject' => 'Boolean',
@@ -110,24 +94,8 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                 //add currency if needed.
                 $order->getHasAlternativeCurrency();
 
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $obj = $className::create();
 
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD:  Object:: (case sensitive)
-                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-                 * EXP: Check if this is the right implementation, this is highly speculative.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 if (is_a($obj, EcommerceConfigClassNames::getName(OrderStatusLog::class))) {
                     $obj->OrderID = $order->ID;
                     $obj->Title = $this->Name;

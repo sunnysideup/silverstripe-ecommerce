@@ -92,53 +92,21 @@ class EcommerceTaskReviewSearches extends BuildTask
                 'ShowResultsFor',
                 'Show results for ...'
             ),
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             NumericField::create(
                 'days',
                 'Number of days',
                 isset($_GET['days']) ? $_GET['days'] : $this->defaultDays
             )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             NumericField::create(
                 'maxrows',
                 'Maximum Number of Rows?',
                 isset($_GET['maxrows']) ? $_GET['maxrows'] : $this->defaultMaxRows
             )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             NumericField::create(
                 'ago',
                 'Up to how many days go',
                 isset($_GET['ago']) ? $_GET['ago'] : $this->endingDaysBack
             )->setRightTitle('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             NumericField::create(
                 'min',
                 'Count treshold',

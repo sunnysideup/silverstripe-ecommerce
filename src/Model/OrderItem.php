@@ -84,25 +84,8 @@ class OrderItem extends OrderAttribute
      *
      * @var array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'OrderItem';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'Quantity' => 'Double',
         'BuyableID' => 'Int',
@@ -148,16 +131,7 @@ class OrderItem extends OrderAttribute
      */
     private static $searchable_fields = [
         'OrderID' => [
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            'field' => 'NumericField',
+            'field' => NumericField::class,
             'title' => 'Order Number',
         ],
         //"TableTitle" => "PartialMatchFilter",
@@ -308,15 +282,6 @@ class OrderItem extends OrderAttribute
              */
             $linkField2->dontEscape = true;
         } else {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: NumericField (case sensitive)
-             * NEW: NumericField (COMPLEX)
-             * EXP: check the number of decimals required and add as ->Step(123)
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', Order::class)));
         }
         $fields->removeByName('Sort');
@@ -392,17 +357,7 @@ class OrderItem extends OrderAttribute
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: NumericField (case sensitive)
-         * NEW: NumericField (COMPLEX)
-         * EXP: check the number of decimals required and add as ->Step(123)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
-
         return $fields;
     }
 

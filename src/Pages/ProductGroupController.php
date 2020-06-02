@@ -1240,15 +1240,6 @@ class ProductGroupController extends PageController
             }
             if ($newPreference) {
                 $optionsVariableName = $oneTypeArray['configName'];
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
                 if (isset($options[$newPreference])) {
 
