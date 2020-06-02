@@ -52,11 +52,10 @@ class CheckoutPage extends CartPage
      *
      * @Var Array
      */
-    private static $db = array(
+    private static $db = [
         'ContentAboveCheckout' => 'HTMLText',
-        'TermsAndConditionsMessage' => 'Varchar(200)',
-        'EnableGoogleAnalytics' => 'Boolean(1)',
-    );
+        'TermsAndConditionsMessage' => 'Varchar(200)'
+    ];
 
     /**
      * standard SS variable.
@@ -325,8 +324,7 @@ class CheckoutPage extends CartPage
         if (CheckoutPage_StepDescription::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }
-        $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.'));
-
+        
         return $fields;
     }
 
@@ -443,61 +441,8 @@ class CheckoutPage_Controller extends CartPage_Controller
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
         }
-        $this->includeGoogleAnalyticsCode();
     }
 
-    protected function includeGoogleAnalyticsCode()
-    {
-        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
-            $var = EcommerceConfig::get('OrderConfirmationPage_Controller', 'google_analytics_variable');
-            if ($var) {
-                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
-                if ($currencyUsedObject) {
-                    $currencyUsedString = $currencyUsedObject->Code;
-                }
-                if (empty($currencyUsedString)) {
-                    $currencyUsedString = EcommerceCurrency::default_currency_code();
-                }
-                $orderItems = $this->currentOrder->OrderItems();
-                $items = '';
-                foreach ($orderItems as $orderItem) {
-                    $product = Product::get()->byID($orderItem->BuyableID);
-                    $sku = $product->InternalItemID ? $product->InternalItemID : $product->ID;
-                    $items .= 
-                        'ga(
-                            \'ecommerce:addItem\', 
-                            {
-                                \'id\': \''.$this->currentOrder->ID.'\',
-                                \'name\': \''.$orderItem->TableTitle().'\',
-                                \'sku\': \''.$sku.'\',
-                                \'category\': \''. $product->TopParentGroup()->Title.'\',
-                                \'price\': \''.$orderItem->CalculatedTotal.'\',
-                                \'quantity\': \''.$orderItem->Quantity.'\',
-                            }
-                        );';
-                }
-                $js = '
-                jQuery("#OrderForm_OrderForm").on(
-                    "submit",
-                    function(){
-                        '.$var.'(\'require\', \'ecommerce\');
-                        '.$var.'(
-                            \'ecommerce:addTransaction\',
-                            {
-                                \'id\': \''.$this->currentOrder->ID.'\',
-                                \'revenue\': \''.$this->currentOrder->getSubTotal().'\',
-                                \'currency\': \''.$currencyUsedString.'\'
-                            }
-                        );
-                        '.$items.'
-                        '.$var.'(\'ecommerce:send\');
-                    }
-                );
-    ';
-                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
-            }
-        }
-    }
 
     /**
      * Returns a ArrayList of {@link OrderModifierForm} objects. These
