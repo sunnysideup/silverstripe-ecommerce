@@ -83,16 +83,7 @@ class EcommercePaymentController extends Controller
      */
     public function Link($action = null)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->class (case sensitive)
-         * NEW: $this->class (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $URLSegment = Config::inst()->get($this->class, 'url_segment');
+        $URLSegment = Config::inst()->get(get_class($this), 'url_segment');
         if (! $URLSegment) {
             $URLSegment = static::class;
         }
@@ -132,27 +123,12 @@ class EcommercePaymentController extends Controller
     {
         return $this->goodMessage;
     }
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD:     public function init() (ignore case)
-     * NEW:     protected function init() (COMPLEX)
-     * EXP: Controller init functions are now protected  please check that is a controller.
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
+=
     protected function init()
     {
         parent::init();
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'app';
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: THIRDPARTY_DIR . '/jquery/jquery.js' (case sensitive)
-         * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
-         * EXP: Check for best usage and inclusion of Jquery
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");

@@ -159,8 +159,8 @@ class EcommerceDatabaseAdmin extends TaskRunner
             }
         } else {
             $renderer = new EcommerceDatabaseAdminDebugView();
-            $renderer->writeHeader();
-            $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
+            $renderer->renderHeader();
+            $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
             $renderer->writeContent($this);
             $renderer->writeFooter();
         }
@@ -281,8 +281,8 @@ class EcommerceDatabaseAdmin extends TaskRunner
     {
         $taskName = $request->param('TaskName');
         $renderer = new EcommerceDatabaseAdminDebugView();
-        $renderer->writeHeader();
-        $renderer->writeInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
+        $renderer->renderHeader();
+        $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
         $renderer->writePreOutcome();
         if (class_exists($taskName) && is_subclass_of($taskName, BuildTask::class)) {
             $title = singleton($taskName)->getTitle();

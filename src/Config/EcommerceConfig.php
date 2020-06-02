@@ -138,25 +138,8 @@ class EcommerceConfig
      *
      * @see Config::get()
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: $className (case sensitive)
-     * NEW: $className (COMPLEX)
-     * EXP: Check if the class name can still be used as such
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     public static function get($className, $identifier, $sourceOptions = 0, $result = null, $suppress = null)
     {
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         return Config::inst()->get($className, $identifier, $sourceOptions, $result, $suppress);
     }
 

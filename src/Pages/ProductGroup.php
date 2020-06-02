@@ -3,9 +3,11 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridField;
@@ -1810,7 +1812,7 @@ class ProductGroup extends Page
      */
     protected function getSilverstripeCoreCache()
     {
-        return $this->silverstripeCoreCache ?: SS_SilverStripe\Core\Injector\Injector::inst()->get(Psr\SimpleCache\CacheInterface::class . '.' . 'EcomPG');
+        return $this->silverstripeCoreCache ?: Injector::inst()->get(CacheInterface::class . '.' . 'EcomPG');
     }
 
     /**

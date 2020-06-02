@@ -14,14 +14,6 @@ use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
-/**
- * ### @@@@ START REPLACEMENT @@@@ ###
- * WHY: automated upgrade
- * OLD:  extends Extension (ignore case)
- * NEW:  extends Extension (COMPLEX)
- * EXP: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait
- * ### @@@@ STOP REPLACEMENT @@@@ ###
- */
 class EcommerceSiteTreeExtensionController extends Extension
 {
     /**
@@ -31,29 +23,12 @@ class EcommerceSiteTreeExtensionController extends Extension
     public function onBeforeInit()
     {
         //$this->secureHostSwitcher();
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: THIRDPARTY_DIR . '/jquery/jquery.js' (case sensitive)
-         * NEW: 'silverstripe/admin: thirdparty/jquery/jquery.js' (COMPLEX)
-         * EXP: Check for best usage and inclusion of Jquery
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
         if ($this->owner->dataRecord) {
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD:  Object:: (case sensitive)
-             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-             * EXP: Check if this is the right implementation, this is highly speculative.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             if (is_a(
                 $this->owner->dataRecord,
                 EcommerceConfigClassNames::getName(Product::class)

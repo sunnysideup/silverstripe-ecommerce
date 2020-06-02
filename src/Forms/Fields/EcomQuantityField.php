@@ -126,26 +126,8 @@ class EcomQuantityField extends NumericField
     public function setClasses(array $newClasses, $overwrite = false)
     {
         if ($overwrite) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $this->class (case sensitive)
-             * NEW: $this->class (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $this->classes = array_merge($this->classes, $newClasses);
         } else {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $this->class (case sensitive)
-             * NEW: $this->class (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $this->classes = $newclasses;
         }
     }

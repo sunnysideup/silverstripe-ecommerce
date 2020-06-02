@@ -4,22 +4,6 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;

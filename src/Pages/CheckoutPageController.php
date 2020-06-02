@@ -135,10 +135,10 @@ class CheckoutPageController extends CartPageController
      */
     public function OrderForm()
     {
-        $form = OrderForm::create($this, OrderForm::class);
+        $form = OrderForm::create($this, 'OrderForm');
         $this->data()->extend('updateOrderForm', $form);
         //load session data
-        if ($data = Session :: get("FormInfo.{$form->FormName()}.data")) {
+        if ($data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {  
             $form->loadDataFrom($data);
         }
 

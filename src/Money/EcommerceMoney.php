@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-use Money;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Core\Extension;
 
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -27,7 +27,7 @@ class EcommerceMoney extends Extension
      */
     public static function get_default_symbol($currency)
     {
-        $money = Money::create();
+        $money = DBMoney::create();
 
         return $money->getSymbol($currency);
     }

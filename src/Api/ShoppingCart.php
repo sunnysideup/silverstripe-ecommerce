@@ -597,23 +597,8 @@ class ShoppingCart
                     $this->addMessage(_t('ShoppingCart.ITEMNOTFOUND', 'Item is not buyable.'), 'bad');
                     return false;
                 }
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $className = $buyable->classNameForOrderItem();
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
+                
                 $item = new $className();
                 if ($order = $this->currentOrder()) {
                     $item->OrderID = $order->ID;
@@ -753,14 +738,6 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (is_numeric($modifier)) {
                 $modifier = OrderModifier::get()->byID($modifier);
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD:  Object:: (case sensitive)
-             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-             * EXP: Check if this is the right implementation, this is highly speculative.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             } elseif (! is_a($modifier, EcommerceConfigClassNames::getName(OrderModifier::class))) {
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
             }

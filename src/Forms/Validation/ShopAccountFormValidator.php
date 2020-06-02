@@ -23,7 +23,7 @@ class ShopAccountFormValidator extends RequiredFields
     {
         $this->form->saveDataToSession();
         $valid = parent::php($data);
-        $uniqueFieldName = Member::get_unique_identifier_field();
+        $uniqueFieldName = Member::config()->get('unique_identifier_field');
         $loggedInMember = Member::currentUser();
         $loggedInMemberID = 0;
         if (isset($data[$uniqueFieldName]) && $data[$uniqueFieldName]) {

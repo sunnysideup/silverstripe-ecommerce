@@ -581,16 +581,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormFields($amount = 0, $order = null)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->class (case sensitive)
-         * NEW: $this->class (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        user_error("Please implement getPaymentFormFields() on {$this->class}", E_USER_ERROR);
+        user_error("Please implement getPaymentFormFields() on {$this->ClassName}", E_USER_ERROR);
     }
 
     /**
@@ -604,16 +595,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormRequirements()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->class (case sensitive)
-         * NEW: $this->class (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        user_error("Please implement getPaymentFormRequirements() on {$this->class}", E_USER_ERROR);
+        user_error("Please implement getPaymentFormRequirements() on {$this->ClassName}", E_USER_ERROR);
     }
 
     /**
@@ -646,16 +628,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function processPayment($data, $form)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->class (case sensitive)
-         * NEW: $this->class (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        user_error("Please implement processPayment() on {$this->class}", E_USER_ERROR);
+        user_error("Please implement processPayment() on {$this->ClassName}", E_USER_ERROR);
     }
 
     public function PaidObject()

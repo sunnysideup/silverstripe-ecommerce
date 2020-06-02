@@ -30,16 +30,7 @@ class BuyableSelectFieldDataList extends Controller
 
     public function Link($action = null)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->class (case sensitive)
-         * NEW: $this->class (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $URLSegment = Config::inst()->get($this->class, 'url_segment');
+        $URLSegment = Config::inst()->get(get_class($this), 'url_segment');
         if (! $URLSegment) {
             $URLSegment = static::class;
         }

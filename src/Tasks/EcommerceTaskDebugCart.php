@@ -23,7 +23,7 @@ class EcommerceTaskDebugCart extends BuildTask
     {
         $html = '
             <h2>' . $obj->ClassName . '</h2><ul>';
-        $fields = Config::inst()->get($obj->ClassName, 'db', Config::INHERITED);
+        $fields = Config::inst()->get($obj->ClassName, 'db');
 
         //db
         if (count($fields)) {

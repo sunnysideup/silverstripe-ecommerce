@@ -748,7 +748,7 @@ class OrderFormAddress extends Form
      **/
     protected function anotherExistingMemberWithSameUniqueFieldValue(array $data)
     {
-        $uniqueFieldName = Member::get_unique_identifier_field();
+        $uniqueFieldName = Member::config()->get('unique_identifier_field');
         //The check below covers both Scenario 3 and 4....
         if (isset($data[$uniqueFieldName])) {
             if ($this->loggedInMember) {
@@ -790,7 +790,7 @@ class OrderFormAddress extends Form
         if ($this->loggedInMember) {
             $DBUniqueFieldName = $this->loggedInMember->Email;
             if ($DBUniqueFieldName) {
-                $uniqueFieldName = Member::get_unique_identifier_field();
+                $uniqueFieldName = Member::config()->get('unique_identifier_field');
                 if (isset($data[$uniqueFieldName])) {
                     $enteredUniqueFieldName = $data[$uniqueFieldName];
                     if ($enteredUniqueFieldName) {

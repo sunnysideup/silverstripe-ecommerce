@@ -64,14 +64,6 @@ class OrderStatusLogForm extends Form
 
         $this->setAttribute('autocomplete', 'off');
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         // TODO: find replacement for: Requirements::themedCSS($this->ClassName, 'ecommerce');
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log

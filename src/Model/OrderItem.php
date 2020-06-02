@@ -770,24 +770,7 @@ class OrderItem extends OrderAttribute
              */
             $className = $this->BuyableClassName;
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $this->class (case sensitive)
-             * NEW: $this->class (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            if ($className::has_extension($this->class, 'Translatable')) {
+            if ($className::has_extension($this->ClassName, 'Translatable')) {
                 Translatable::disable_locale_filter();
                 $turnTranslatableBackOn = true;
             }

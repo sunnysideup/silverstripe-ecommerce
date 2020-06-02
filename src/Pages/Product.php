@@ -214,6 +214,7 @@ class Product extends Page implements BuyableModel
      */
     private static $plural_name = 'Products';
 
+
     /**
      * Standard SS variable.
      *
@@ -250,7 +251,7 @@ class Product extends Page implements BuyableModel
 
     public function i18n_singular_name()
     {
-        return _t('Order.PRODUCT', Product::class);
+        return _t('Order.PRODUCT', 'Product');
     }
 
     public function i18n_plural_name()
@@ -1350,15 +1351,6 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Shop Open:</b> ' . ($this->EcomConfig() ? ($this->EcomConfig()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->class (case sensitive)
-         * NEW: $this->class (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
         $html .= '<li><b>Quantity Decimals:</b> ' . $this->QuantityDecimals() . ' </li>';
         $html .= '<li><b>Is In Cart:</b> ' . ($this->IsInCart() ? 'YES' : 'NO') . ' </li>';

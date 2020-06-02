@@ -4,7 +4,7 @@
 		<% if CanHaveShippingAddress %><th scope="col"><% _t("Order.DELIVERTO","Deliver To") %></th><% end_if %>
 	</tr>
 	<tr>
-		<td><% include Order_AddressBilling %></td>
+		<td><% include Sunnysideup\Ecommerce\Includes\Order_AddressBilling %></td>
 		<% if CanHaveShippingAddress %><td><% include Sunnysideup\Ecommerce\Includes\Order_AddressShipping %></td><% end_if %>
 	</tr>
 </table>

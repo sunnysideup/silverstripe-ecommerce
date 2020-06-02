@@ -80,7 +80,9 @@ use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\ArrayList;
@@ -127,6 +129,10 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelled;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter ;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
@@ -230,7 +236,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     private static $api_access = [
         'view' => [
-            OrderEmail::class,
+            'OrderEmail',
             'EmailLink',
             'PrintLink',
             'RetrieveLink',
@@ -253,9 +259,9 @@ class Order extends DataObject implements EditableEcommerceObject
             'CanHaveShippingAddress',
             'CancelledBy',
             'CurrencyUsed',
-            BillingAddress::class,
+            'BillingAddress',
             'UseShippingAddress',
-            ShippingAddress::class,
+            'ShippingAddress',
             'Status',
             'Attributes',
             'OrderStatusLogs',
@@ -268,25 +274,8 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * OLD: private static $db (case sensitive)
-     * NEW:
-    private static $db (COMPLEX)
-     * EXP: Check that is class indeed extends DataObject and that it is not a data-extension!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $table_name = 'Order';
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $db = (case sensitive)
-     * NEW: private static $db = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $db = [
         'SessionID' => 'Varchar(32)', //so that in the future we can link sessions with Orders.... One session can have several orders, but an order can onnly have one session
         'UseShippingAddress' => 'Boolean',
@@ -296,14 +285,6 @@ class Order extends DataObject implements EditableEcommerceObject
         //'TotalItemsTimesQuantity_Saved' => 'Double'
     ];
 
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: private static $has_one = (case sensitive)
-     * NEW: private static $has_one = (COMPLEX)
-     * EXP: Make sure to add a private static $table_name!
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     private static $has_one = [
         'Member' => Member::class,
         'BillingAddress' => BillingAddress::class,
@@ -429,25 +410,25 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     private static $searchable_fields = [
         'ID' => [
-            'field' => 'NumericField',
+            'field' => NumericField::class,
             'title' => 'Order Number',
         ],
         'MemberID' => [
-            'field' => 'TextField',
-            'filter' => 'OrderFiltersMemberAndAddress',
+            'field' => TextField::class,
+            'filter' => OrderFiltersMemberAndAddress::class,
             'title' => 'Customer Details',
         ],
         'Created' => [
-            'field' => 'TextField',
-            'filter' => 'OrderFiltersAroundDateFilter',
+            'field' => TextField::class,
+            'filter' => OrderFiltersAroundDateFilter::class,
             'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
         ],
         //make sure to keep the items below, otherwise they do not show in form
         'StatusID' => [
-            'filter' => 'OrderFiltersMultiOptionsetStatusIDFilter',
+            'filter' => OrderFiltersMultiOptionsetStatusIDFilter::class,
         ],
         'CancelledByID' => [
-            'filter' => 'OrderFiltersHasBeenCancelled',
+            'filter' => OrderFiltersHasBeenCancelled::class,
             'title' => 'Cancelled by ...',
         ],
     ];
@@ -561,9 +542,10 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($onlySubmittedOrders) {
             $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
             $list = Order::get()
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
+                ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
                 ->Sort('OrderStatusLog.Created', 'ASC');
             $where = ' ("OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\') ';
         } else {

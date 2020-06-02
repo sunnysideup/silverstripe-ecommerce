@@ -162,15 +162,6 @@ class EcommerceTaskCheckConfiguration extends BuildTask
                 if ($this->defaults) {
                     $this->checkFiles();
                     $this->configsNotSet();
-
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: $this->class (case sensitive)
-                     * NEW: $this->class (COMPLEX)
-                     * EXP: Check if the class name can still be used as such
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
                     $this->classesThatDoNotExist();
                     $this->definitionsNotSet();
                     $this->addEcommerceDBConfigToConfigs();

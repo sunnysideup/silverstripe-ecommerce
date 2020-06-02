@@ -20,7 +20,7 @@ SilverStripe\CMS\Model\SiteTree:
 PageController:
   extensions:
     - Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
-Money:
+SilverStripe\ORM\FieldType\DBMoney:
   extensions:
     - Sunnysideup\Ecommerce\Money\EcommerceMoney
 Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:

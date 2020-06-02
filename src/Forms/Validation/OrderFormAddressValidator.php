@@ -39,7 +39,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
         if ($this->form->uniqueMemberFieldCanBeUsed($data)) {
             //do nothing
         } else {
-            $uniqueFieldName = Member::get_unique_identifier_field();
+            $uniqueFieldName = Member::config()->get('unique_identifier_field');
             $this->validationError(
                 $uniqueFieldName,
                 _t(

@@ -11,15 +11,7 @@
     <% if Items %>
         <% loop Items %>
 
-/**
-  * ### @@@@ START REPLACEMENT @@@@ ###
-  * WHY: automated upgrade
-  * OLD: $ClassName (case sensitive)
-  * NEW: $`ClassName.ShortName (COMPLEX)
-  * EXP: Check if the class name can still be used as such. The ShortName provides the name without NameSpace
-  * ### @@@@ STOP REPLACEMENT @@@@ ###
-  */
-        <tr  class="itemRow $EvenOdd $FirstLast orderItem $`ClassName.ShortName orderattribute">
+        <tr  class="itemRow $EvenOdd $FirstLast orderItem $ClassName.ShortName orderattribute">
             <td class="product title">
                 <% if Link %>
                     <a href="$Buyable.Link" data-popup="true">$TableTitle</a>

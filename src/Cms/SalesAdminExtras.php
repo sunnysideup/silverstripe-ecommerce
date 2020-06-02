@@ -76,7 +76,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         if ($orderModelManagement) {
             unset($models[Order::class]);
 
-            return ['Order' => $orderModelManagement] + $models;
+            return [ Order::class => $orderModelManagement] + $models;
         }
 
         return $models;
@@ -90,9 +90,10 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
             $list = $list
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->LeftJoin($submittedOrderStatusLogClassName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogClassName . '"."ID"')
+                ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
                 ->where('"OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\'');
         }
         $newLists = $this->extend('updateGetList', $list);

@@ -94,14 +94,6 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         $submissionLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $obj = $submissionLogClassName::create();
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  Object:: (case sensitive)
-         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-         * EXP: Check if this is the right implementation, this is highly speculative.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if (! is_a($obj, EcommerceConfigClassNames::getName(OrderStatusLog::class))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }

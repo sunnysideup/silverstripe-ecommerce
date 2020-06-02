@@ -48,24 +48,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
         $pageTypes = parent::PageTypes();
         $result = new ArrayList();
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  Object:: (case sensitive)
-         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-         * EXP: Check if this is the right implementation, this is highly speculative.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $productClass = EcommerceConfigClassNames::getName(Product::class);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  Object:: (case sensitive)
-         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-         * EXP: Check if this is the right implementation, this is highly speculative.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $productGroupClass = EcommerceConfigClassNames::getName(ProductGroup::class);
 
         $acceptedClasses1 = ClassInfo::subclassesFor($productClass);

@@ -62,15 +62,6 @@ class OrderModifierForm extends Form
         $this->setValidator($optionalValidator);
 
         $this->setAttribute('autocomplete', 'off');
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         // TODO: find replacement for: Requirements::themedCSS($this->ClassName, 'ecommerce');
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
         Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
