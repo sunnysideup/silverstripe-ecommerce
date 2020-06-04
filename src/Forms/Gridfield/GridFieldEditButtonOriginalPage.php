@@ -34,16 +34,7 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
             $data = new ArrayData([
                 'Link' => Controller::join_links($record->CMSEditLink()),
             ]);
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->RenderWith( (ignore case)
-             * NEW: ->RenderWith( (COMPLEX)
-             * EXP: Check that the template location is still valid!
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            return $data->RenderWith('GridFieldEditButtonInSiteTree');
+            return $data->RenderWith('Sunnysideup/Ecommerce/Forms/Fields/GridFieldEditButtonInSiteTree');
         }
         return parent::getColumnContent($gridField, $record, $columnName);
     }

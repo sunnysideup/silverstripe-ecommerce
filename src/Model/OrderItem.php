@@ -9,6 +9,7 @@ use SilverStripe\Forms\HeaderField;
 
 
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\FieldType\DBField;
@@ -75,7 +76,7 @@ class OrderItem extends OrderAttribute
             'Version',
             'UnitPrice',
             'Total',
-            Order::class,
+            'Order',
         ],
     ];
 
@@ -239,14 +240,14 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('BuyableIDCheck', 'BuyableID', $this->BuyableID),
                     ReadonlyField::create('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName),
                     ReadonlyField::create('VersionCheck', 'Version', $this->Version),
-                    $linkField1 = ReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="' . $this->BuyableLink() . '">' . $this->BuyableLink() . '</a>'),
+                    HTMLReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="' . $this->BuyableLink() . '">' . $this->BuyableLink() . '</a>'),
                     ReadonlyField::create('TableTitle', 'TableTitle', $this->TableTitle),
                     ReadonlyField::create('Subtitle', 'Table SubTitle', $this->TableSubTitleNOHTML()),
                     ReadonlyField::create('InternalItemID', 'InternalItemID', $this->InternalItemID()),
                     ReadonlyField::create('Name', 'Name', $this->Name),
 
                     HeaderField::create('OrderItemHeading', 'Order Item'),
-                    $linkField2 = ReadonlyField::create('LinkExample', 'Link', '<a href="' . $this->Link() . '">' . $this->Link() . '</a>'),
+                    HTMLReadonlyField::create('LinkExample', 'Link', '<a href="' . $this->Link() . '">' . $this->Link() . '</a>'),
 
                     ReadonlyField::create('ClassName'),
                     ReadonlyField::create('Created'),
@@ -261,26 +262,6 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice()),
                 ]
             );
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->dontEscape (case sensitive)
-             * NEW: ->dontEscape (COMPLEX)
-             * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $linkField1->dontEscape = true;
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->dontEscape (case sensitive)
-             * NEW: ->dontEscape (COMPLEX)
-             * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $linkField2->dontEscape = true;
         } else {
             $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', Order::class)));
         }

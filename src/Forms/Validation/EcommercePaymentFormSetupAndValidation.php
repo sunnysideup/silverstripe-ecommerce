@@ -21,15 +21,6 @@ use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
 //validate_expiry_month: :validateExpiryMonth
 //validate_CVV: validateCVV
 
-
-/**
- * ### @@@@ START REPLACEMENT @@@@ ###
- * WHY: automated upgrade
- * OLD:  extends Object (ignore case)
- * NEW:  extends ViewableData (COMPLEX)
- * EXP: This used to extend Object, but object does not exist anymore. You can also manually add use Extensible, use Injectable, and use Configurable
- * ### @@@@ STOP REPLACEMENT @@@@ ###
- */
 class EcommercePaymentFormSetupAndValidation extends ViewableData
 {
     /**
@@ -201,15 +192,6 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
                     );
                     $cardNumber = $this->paymentObject->{$dbFieldName};
                     if (! $this->validateCardNumber($this->paymentObject->{$dbFieldName})) {
-
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $form->addErrorMessage( (case sensitive)
-                         * NEW: $form->sessionError( (COMPLEX)
-                         * EXP: SilverStripe\Forms\Form->addErrorMessage(): Removed. Use `sessionMessage()` or `sessionError()` to add a form level message, throw a `ValidationException` during submission, or add a custom validator.
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $form->sessionError(
                             $formFieldName,
                             _t('EcommercePaymentFormSetupAndValidation.INVALID_CREDIT_CARD', 'Invalid credit card number.'),
@@ -223,15 +205,6 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
                         $data[$formFieldName]['month'] .
                         $data[$formFieldName]['year'];
                     if (! $this->validateExpiryMonth($this->paymentObject->{$dbFieldName})) {
-
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $form->addErrorMessage( (case sensitive)
-                         * NEW: $form->sessionError( (COMPLEX)
-                         * EXP: SilverStripe\Forms\Form->addErrorMessage(): Removed. Use `sessionMessage()` or `sessionError()` to add a form level message, throw a `ValidationException` during submission, or add a custom validator.
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $form->sessionError(
                             $formFieldName,
                             _t('EcommercePaymentFormSetupAndValidation.INVALID_EXPIRY_DATE', 'Expiry date not valid.'),
@@ -243,15 +216,6 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
                 case 'CVVNumber':
                     $this->paymentObject->{$dbFieldName} = trim($data[$formFieldName]);
                     if (! $this->validateCVV($cardNumber, $this->paymentObject->{$dbFieldName})) {
-
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $form->addErrorMessage( (case sensitive)
-                         * NEW: $form->sessionError( (COMPLEX)
-                         * EXP: SilverStripe\Forms\Form->addErrorMessage(): Removed. Use `sessionMessage()` or `sessionError()` to add a form level message, throw a `ValidationException` during submission, or add a custom validator.
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $form->sessionError(
                             $formFieldName,
                             _t('EcommercePaymentFormSetupAndValidation.INVALID_CVV_NUMBER', 'Invalid security number.'),
@@ -262,15 +226,6 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
                 case 'NameOnCard':
                     $this->paymentObject->{$dbFieldName} = trim($data[$formFieldName]);
                     if (strlen($this->paymentObject->{$dbFieldName}) < 3) {
-
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $form->addErrorMessage( (case sensitive)
-                         * NEW: $form->sessionError( (COMPLEX)
-                         * EXP: SilverStripe\Forms\Form->addErrorMessage(): Removed. Use `sessionMessage()` or `sessionError()` to add a form level message, throw a `ValidationException` during submission, or add a custom validator.
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $form->sessionError(
                             $formFieldName,
                             _t('EcommercePaymentFormSetupAndValidation.NO_CARD_NAME', 'No card name provided.'),

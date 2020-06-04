@@ -107,15 +107,6 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
         // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Order_PackingSlip', 'ecommerce');
         $curr = Controller::curr();
         $curr->Orders = $al;
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->RenderWith( (ignore case)
-         * NEW: ->RenderWith( (COMPLEX)
-         * EXP: Check that the template location is still valid!
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         return $curr->RenderWith('Sunnysideup\Ecommerce\Includes\PrintAllPackingSlips');
     }
 }

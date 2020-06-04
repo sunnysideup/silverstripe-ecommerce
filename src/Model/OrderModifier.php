@@ -8,6 +8,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -93,7 +94,7 @@ class OrderModifier extends OrderAttribute
             'Name',
             'TableValue',
             'HasBeenRemoved',
-            Order::class,
+            'Order',
         ],
     ];
 
@@ -221,17 +222,7 @@ class OrderModifier extends OrderAttribute
         $fields = parent::getCMSFields();
         $fields->removeByName('Sort');
         $fields->removeByName('GroupSort');
-        $fields->replaceField('Name', $nameField = new ReadonlyField('Name'));
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->dontEscape (case sensitive)
-         * NEW: ->dontEscape (COMPLEX)
-         * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        $nameField->dontEscape = true;
+        $fields->replaceField('Name', HTMLReadonlyField::create('Name'));
         $fields->removeByName('TableValue');
         $fields->removeByName('CalculatedTotal');
         $fields->removeByName('HasBeenRemoved');

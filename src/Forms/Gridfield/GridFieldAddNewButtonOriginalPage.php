@@ -48,16 +48,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         ]);
 
         return [
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->RenderWith( (ignore case)
-             * NEW: ->RenderWith( (COMPLEX)
-             * EXP: Check that the template location is still valid!
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $this->targetFragment => $data->RenderWith('GridFieldAddNewbutton'),
+            $this->targetFragment => $data->renderWith('SilverStripe/Forms/GridField/GridFieldAddNewbutton'),
         ];
     }
 
@@ -82,7 +73,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             if (Versioned::get_stage() === 'Live') {
                 $stage = '_Live';
             }
-            if ($result = $rootParentClass::get()->filter('MyParentPage.ParentID', 0)->innerJoin(Config::inst()->get(SiteTree::class, 'table_name') . $stage, 'MyParentPage.ID = SiteTree' . $stage . '.ParentID', 'MyParentPage')->First()) {
+            if ($result = $rootParentClass::get()->filter('Parent.ParentID', 0)->innerJoin(Config::inst()->get(SiteTree::class, 'table_name') . $stage, 'Parent.ID = SiteTree' . $stage . '.ParentID', 'Parent')->First()) {
                 return $result;
             }
         }

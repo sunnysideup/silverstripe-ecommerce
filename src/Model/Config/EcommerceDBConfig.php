@@ -18,6 +18,7 @@ use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -466,11 +467,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $self = $this;
+        
         foreach (array_keys($self->customFieldLabels()) as $name) {
             $fields->removeByName($name);
         }
-
-        $self = $this;
+        
         $self->beforeUpdateCMSFields(
             function ($fields) use ($self) {
                 //new section
@@ -570,7 +572,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     [
                         new CheckboxField('UseThisOne', $fieldLabels['UseThisOne']),
                         new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
-                        $clearField = ReadonlyField::create(
+                        HTMLReadonlyField::create(
                             'RefreshWebsite',
                             'Update site',
                             '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
@@ -578,15 +580,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     ]
                 );
 
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: ->dontEscape (case sensitive)
-                 * NEW: ->dontEscape (COMPLEX)
-                 * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                $clearField->dontEscape = true;
                 //set cols
                 if ($f = $fields->dataFieldByName('CurrenciesExplanation')) {
                     $f->setRows(2);

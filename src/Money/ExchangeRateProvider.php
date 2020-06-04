@@ -19,6 +19,7 @@ namespace Sunnysideup\Ecommerce\Money;
  * @sub-package: money
  **/
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
@@ -110,14 +111,6 @@ class ExchangeRateProvider
             curl_close($ch);
         }
         if (! $record) {
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: file_get_contents (case sensitive)
-             * NEW: file_get_contents (COMPLEX)
-             * EXP: Use new asset abstraction (https://docs.silverstripe.org/en/4/changelogs/4.0.0#asset-storage
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $record = file_get_contents($url);
         }
         if ($record) {

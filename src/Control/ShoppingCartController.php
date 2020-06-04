@@ -626,7 +626,7 @@ class ShoppingCartController extends Controller
          * EXP: Check that the template location is still valid!
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        return $this->customise($this->cart->CurrentOrder())->RenderWith('Sunnysideup\Ecommerce\AjaxCart');
+        return $this->customise($this->cart->CurrentOrder())->renderWith('Sunnysideup\Ecommerce\AjaxCart');
     }
 
     /**
@@ -658,34 +658,10 @@ class ShoppingCartController extends Controller
     {
         $id = intval($request->param('ID'));
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $className = Convert::raw2sql($request->param('OtherID'));
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if (class_exists($className)) {
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $address = $className::get()->byID($id);
             if ($address && $address->canView()) {
                 $member = Member::currentUser();

@@ -8,6 +8,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\ReadonlyField;
@@ -44,21 +45,11 @@ class ShopAccountForm extends Form
                 . '<a href="' . $clearCartAndLogoutLink . '">' . _t('Account.LOGOUT', 'Log out now?') .
                 '</a>';
             if ($loginMessage) {
-                $loginField = new ReadonlyField(
+                $loginField = HTMLReadonlyField::create(
                     'LoggedInAsNote',
                     _t('Account.LOGGEDIN', 'You are currently logged in as '),
                     $loginMessage
                 );
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: ->dontEscape (case sensitive)
-                 * NEW: ->dontEscape (COMPLEX)
-                 * EXP: dontEscape is not longer in use for form fields, please use HTMLReadonlyField (or similar) instead.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
-                $loginField->dontEscape = true;
                 $fields->push($loginField);
             }
             $actions = new FieldList();

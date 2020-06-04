@@ -90,8 +90,14 @@ class EcommerceMoney extends Extension
             $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">${symbol}</span></span>";
         }
         $amount = $this->owner->getAmount();
+        $currency = $this->owner->getCurrency();
 
-        return is_numeric($amount) ? $this->owner->currencyLib->toCurrency($amount, ['symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL]) : '';
+        $formatter = $this->owner->getFormatter();
+        if (!$currency) {
+            return $formatter->format($amount);
+        }
+
+        return $formatter->formatCurrency($amount, $currency);
     }
 
     /**
@@ -113,8 +119,14 @@ class EcommerceMoney extends Extension
             $symbol = $pre . $short;
         }
         $amount = $this->owner->getAmount();
+        $currency = $this->owner->getCurrency();
 
-        return is_numeric($amount) ? $this->owner->currencyLib->toCurrency($amount, ['symbol' => $symbol, 'display' => Zend_Currency::USE_SYMBOL]) : '';
+        $formatter = $this->owner->getFormatter();
+        if (!$currency) {
+            return $formatter->format($amount);
+        }
+
+        return $formatter->formatCurrency($amount, $currency);
     }
 
     /**
@@ -136,7 +148,7 @@ class EcommerceMoney extends Extension
         }
         $amount = $this->owner->getAmount();
 
-        return is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
+        //return is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
     }
 
     /**

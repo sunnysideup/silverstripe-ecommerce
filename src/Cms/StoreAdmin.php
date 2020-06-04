@@ -71,7 +71,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
         if ($ecommerceDBConfig) {
             unset($models[EcommerceDBConfig::class]);
 
-            return ['EcommerceDBConfig' => $ecommerceDBConfig] + $models;
+            return [ EcommerceDBConfig::class => $ecommerceDBConfig] + $models;
         }
 
         return $models;

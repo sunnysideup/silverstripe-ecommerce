@@ -18,16 +18,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  * but you can switch it to your own system by changing
  * the classname in the ecommerce.yml config file.
  */
-
-/**
- * ### @@@@ START REPLACEMENT @@@@ ###
- * WHY: automated upgrade
- * OLD:  extends Object (ignore case)
- * NEW:  extends ViewableData (COMPLEX)
- * EXP: This used to extend Object, but object does not exist anymore. You can also manually add use Extensible, use Injectable, and use Configurable
- * ### @@@@ STOP REPLACEMENT @@@@ ###
- */
-class EcommerceCountryVisitorCountryProvider extends ViewableData implements EcommerceGEOipProvider
+class EcommerceCountryVisitorCountryProvider implements EcommerceGEOipProvider
 {
     /**
      * @return string (Country Code - e.g. NZ, AU, or AF)
