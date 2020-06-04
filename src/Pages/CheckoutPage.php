@@ -79,8 +79,8 @@ class CheckoutPage extends CartPage
     private static $table_name = 'CheckoutPage';
 
     private static $db = [
-        'TermsAndConditionsMessage' => 'Varchar(200)',
-        'EnableGoogleAnalytics' => 'Boolean(1)',
+        'ContentAboveCheckout' => 'HTMLText',
+        'TermsAndConditionsMessage' => 'Varchar(200)'
     ];
 
     /**
@@ -332,15 +332,25 @@ class CheckoutPage extends CartPage
         );
         //The Content field has a slightly different meaning for the Checkout Page.
         $fields->removeFieldFromTab('Root.Main', 'Content');
-        $fields->addFieldToTab('Root.Messages.Messages.AlwaysVisible', $htmlEditorField = new HTMLEditorField('Content', _t('CheckoutPage.CONTENT', 'General note - always visible on the checkout page')));
-        $htmlEditorField->setRows(3);
+        $fields->addFieldsToTab(
+            'Root.Messages.Messages.AlwaysVisible', 
+            [
+                HTMLEditorField::create(
+                    'ContentAboveCheckout', 
+                    _t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page')
+                )->setRows(5),
+                HTMLEditorField::create(
+                    'Content', 
+                    _t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page ')
+                )->setRows(5)
+            ]
+        );
         if (OrderModifierDescriptor::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
         if (CheckoutPageStepDescription::get()->count()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }
-        $fields->addFieldToTab('Root.Analytics', CheckboxField::create('EnableGoogleAnalytics', 'Enable E-commerce Google Analytics.  Make sure it is turned on in your Google Analytics account.'));
 
         return $fields;
     }

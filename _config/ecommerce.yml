@@ -15,7 +15,6 @@ Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator:
   minimum_password_length: 7
 Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController:
   include_as_checkout_step: true
-  google_analytics_variable: ga
 Sunnysideup\Ecommerce\Pages\ProductGroup:
   base_buyable_class: Sunnysideup\Ecommerce\Pages\Product
   actively_check_for_can_purchase: false

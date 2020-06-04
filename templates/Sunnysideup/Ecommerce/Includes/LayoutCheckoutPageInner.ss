@@ -2,6 +2,8 @@
 
 <% if ShowOnlyCurrentStep %><% if CanCheckout %><% include Sunnysideup\Ecommerce\Includes\CheckoutStepsList %><% end_if %><% end_if %>
 
+<% if ContentAboveCheckout %><div id="TopContentHolder">$ContentAboveCheckout</div><% end_if %>
+
 <% include Sunnysideup\Ecommerce\Includes\CartActionsAndMessages %>
 
 <% if CanCheckout %>

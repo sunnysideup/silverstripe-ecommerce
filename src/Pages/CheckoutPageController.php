@@ -91,7 +91,6 @@ class CheckoutPageController extends CartPageController
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
         }
-        $this->includeGoogleAnalyticsCode();
     }
 
     /**
@@ -346,40 +345,6 @@ class CheckoutPageController extends CartPageController
     public function PercentageDone()
     {
         return round($this->currentStepNumber() / $this->numberOfSteps(), 2) * 100;
-    }
-
-    protected function includeGoogleAnalyticsCode()
-    {
-        if ($this->EnableGoogleAnalytics && $this->currentOrder && (Director::isLive() || isset($_GET['testanalytics']))) {
-            $var = EcommerceConfig::get(OrderConfirmationPageController::class, 'google_analytics_variable');
-            if ($var) {
-                $currencyUsedObject = $this->currentOrder->CurrencyUsed();
-                if ($currencyUsedObject) {
-                    $currencyUsedString = $currencyUsedObject->Code;
-                }
-                if (empty($currencyUsedString)) {
-                    $currencyUsedString = EcommerceCurrency::default_currency_code();
-                }
-                $js = '
-                jQuery("#OrderForm_OrderForm").on(
-                    "submit",
-                    function(){
-                        ' . $var . '(\'require\', \'ecommerce\');
-                        ' . $var . '(
-                            \'ecommerce:addTransaction\',
-                            {
-                                \'id\': \'' . $this->currentOrder->ID . '\',
-                                \'revenue\': \'' . $this->currentOrder->getSubTotal() . '\',
-                                \'currency\': \'' . $currencyUsedString . '\'
-                            }
-                        );
-                        ' . $var . '(\'ecommerce:send\');
-                    }
-                );
-    ';
-                Requirements::customScript($js, 'GoogleAnalyticsEcommerce');
-            }
-        }
     }
 
     /**

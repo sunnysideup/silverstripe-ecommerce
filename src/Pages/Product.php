@@ -532,14 +532,11 @@ class Product extends Page implements BuyableModel
     public function TopParentGroup()
     {
         $parent = $this->MainParentGroup();
-        $x = 0;
-        while ($parent && $x < 100) {
+        while ($parent) {
             $returnValue = $parent;
-            $parent = DataObject::get_one(
-                ProductGroup::class,
-                ['ID' => $parent->ParentID]
-            );
-            ++$x;
+            if($parent->ParentID){
+                $parent = ProductGroup::get()->byID($parent->ParentID);
+            }
         }
 
         return $returnValue;

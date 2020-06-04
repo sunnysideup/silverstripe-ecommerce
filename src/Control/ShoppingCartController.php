@@ -617,15 +617,6 @@ class ShoppingCartController extends Controller
      */
     public function showcart(HTTPRequest $request)
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->RenderWith( (ignore case)
-         * NEW: ->RenderWith( (COMPLEX)
-         * EXP: Check that the template location is still valid!
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         return $this->customise($this->cart->CurrentOrder())->renderWith('Sunnysideup\Ecommerce\AjaxCart');
     }
 
