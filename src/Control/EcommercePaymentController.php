@@ -123,7 +123,7 @@ class EcommercePaymentController extends Controller
     {
         return $this->goodMessage;
     }
-=
+
     protected function init()
     {
         parent::init();

@@ -243,15 +243,6 @@ class EcommerceConfigDefinitions
      *
      * @return array | String
      */
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: $className (case sensitive)
-     * NEW: $className (COMPLEX)
-     * EXP: Check if the class name can still be used as such
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
     public function Definitions($className = '', $variable = '')
     {
         $array = [
@@ -512,41 +503,9 @@ class EcommerceConfigDefinitions
             }
         }
         //return what is appropriate
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if ($className && $variable) {
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $array[$className][$variable];
-        /**
-        * ### @@@@ START REPLACEMENT @@@@ ###
-        * WHY: automated upgrade
-        * OLD: $className (case sensitive)
-        * NEW: $className (COMPLEX)
-        * EXP: Check if the class name can still be used as such
-        * ### @@@@ STOP REPLACEMENT @@@@ ###
-        */
         } elseif ($className) {
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $array[$className];
         }
         return $array;

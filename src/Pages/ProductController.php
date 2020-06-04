@@ -74,15 +74,6 @@ class ProductController extends PageController
     {
         Config::nest();
         Config::modify()->update(SSViewer::class, 'theme_enabled', true);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->RenderWith( (ignore case)
-         * NEW: ->RenderWith( (COMPLEX)
-         * EXP: Check that the template location is still valid!
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\ProductGroupItemMoreDetail');
         Config::unnest();
 

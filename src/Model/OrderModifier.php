@@ -297,15 +297,7 @@ class OrderModifier extends OrderAttribute
     // ######################################## *** 4. CRUD functions (e.g. canEdit)
 
     // ########################################  *** 5. init and update functions
-
-    /**
-     * ### @@@@ START REPLACEMENT @@@@ ###
-     * WHY: automated upgrade
-     * OLD: $className (case sensitive)
-     * NEW: $className (COMPLEX)
-     * EXP: Check if the class name can still be used as such
-     * ### @@@@ STOP REPLACEMENT @@@@ ###
-     */
+    
     public static function init_for_order($className)
     {
         user_error('the init_for_order method has been depreciated, instead, use $myModifier->init()', E_USER_ERROR);
@@ -845,15 +837,6 @@ class OrderModifier extends OrderAttribute
      */
     protected function headingField()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $name = $this->ClassName . 'Heading';
         if ($this->Heading()) {
             return new HeaderField($name, $this->Heading(), 4);
@@ -867,15 +850,6 @@ class OrderModifier extends OrderAttribute
      */
     protected function descriptionField()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $name = $this->ClassName . 'Description';
         if ($this->Description()) {
             return new LiteralField($name, '<div id="' . Convert::raw2att($name) . 'DescriptionHolder" class="descriptionHolder">' . Convert::raw2xml($this->Description()) . '</div>');
@@ -894,14 +868,7 @@ class OrderModifier extends OrderAttribute
         if ($this->orderModifier_Descriptor === null) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
+
                 ['ModifierClassName' => $this->ClassName]
             );
         }
@@ -913,15 +880,6 @@ class OrderModifier extends OrderAttribute
 
     protected function LiveName()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         user_error('The "LiveName" method has be defined in ...' . $this->ClassName, E_USER_NOTICE);
         $defaults = $this->config()->get('defaults');
 

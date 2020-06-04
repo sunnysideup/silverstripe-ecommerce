@@ -250,15 +250,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
         if ($order = $this->Order()) {
             //Order Status Logs are so basic, anyone can edit them
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $this->ClassName (case sensitive)
-             * NEW: $this->ClassName (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             if ($this->ClassName === OrderStatusLog::class) {
                 return $order->canView($member);
             }
@@ -354,48 +345,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
         $availableLogsAssociative = [];
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
+       
         foreach ($availableLogs as $className) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }
         $title = _t('OrderStatusLog.TYPE', 'Type');
         if (($this->exists() || $this->limitedToOneClassName())
 
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 && $this->ClassName &&
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 isset($availableLogsAssociative[$this->ClassName])
         ) {
             $fields->removeByName('ClassName');
@@ -406,14 +363,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                     ReadonlyField::create(
                         'ClassNameTitle',
                         $title,
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $this->ClassName (case sensitive)
-                         * NEW: $this->ClassName (COMPLEX)
-                         * EXP: Check if the class name can still be used as such
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         $availableLogsAssociative[$this->ClassName]
                     ),
                 ],
@@ -542,15 +491,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     protected function limitedToOneClassName()
     {
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $this->ClassName (case sensitive)
-         * NEW: $this->ClassName (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if ($this->ClassName === OrderStatusLog::class) {
             return false;
         }

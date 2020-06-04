@@ -328,14 +328,6 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
         // Process payment, get the result back
         $result = $this->paymentObject->processPayment($data, $form);
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD:  Object:: (case sensitive)
-         * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-         * EXP: Check if this is the right implementation, this is highly speculative.
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         if (! is_a($result, EcommerceConfigClassNames::getName(EcommercePaymentResult::class))) {
             $form->controller->redirectBack();
 

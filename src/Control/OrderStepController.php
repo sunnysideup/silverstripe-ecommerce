@@ -46,15 +46,7 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->RenderWith( (ignore case)
-         * NEW: ->RenderWith( (COMPLEX)
-         * EXP: Check that the template location is still valid!
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        return $this->RenderWith('Page');
+        return $this->renderWith('Page');
     }
 
     /**
@@ -64,15 +56,7 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->RenderWith( (ignore case)
-         * NEW: ->RenderWith( (COMPLEX)
-         * EXP: Check that the template location is still valid!
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        return $this->RenderWith('Page');
+        return $this->renderWith('Page');
     }
 
     /**

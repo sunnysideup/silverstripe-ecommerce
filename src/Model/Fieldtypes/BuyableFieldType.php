@@ -41,41 +41,15 @@ class BuyableFieldType extends DBPolymorphicForeignKey
         if (empty(self::$classname_spec_cache[$this->tableName][$this->name])) {
             // Get all class names
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $classNames = ClassInfo::implementorsOf(BuyableModel::class);
 
             $schema = DB::get_schema();
             if ($schema->hasField($this->tableName, "{$this->name}Class")) {
                 $existing = DB::query("SELECT DISTINCT \"{$this->name}Class\" FROM \"{$this->tableName}\"")->column();
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $classNames = array_unique(array_merge($classNames, $existing));
             }
 
             self::$classname_spec_cache[$this->tableName][$this->name]
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 = "Enum(array('" . implode("', '", array_filter($classNames)) . "'))";
         }
 

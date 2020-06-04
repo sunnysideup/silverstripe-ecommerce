@@ -1155,44 +1155,12 @@ class Order extends DataObject implements EditableEcommerceObject
                 $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
                 if (is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
 
-                    /**
-                     * ### @@@@ START REPLACEMENT @@@@ ###
-                     * WHY: automated upgrade
-                     * OLD: $className (case sensitive)
-                     * NEW: $className (COMPLEX)
-                     * EXP: Check if the class name can still be used as such
-                     * ### @@@@ STOP REPLACEMENT @@@@ ###
-                     */
                     foreach ($modifiersToAdd as $numericKey => $className) {
 
-                        /**
-                         * ### @@@@ START REPLACEMENT @@@@ ###
-                         * WHY: automated upgrade
-                         * OLD: $className (case sensitive)
-                         * NEW: $className (COMPLEX)
-                         * EXP: Check if the class name can still be used as such
-                         * ### @@@@ STOP REPLACEMENT @@@@ ###
-                         */
                         if (! in_array($className, $createdModifiersClassNames, true)) {
 
-                            /**
-                             * ### @@@@ START REPLACEMENT @@@@ ###
-                             * WHY: automated upgrade
-                             * OLD: $className (case sensitive)
-                             * NEW: $className (COMPLEX)
-                             * EXP: Check if the class name can still be used as such
-                             * ### @@@@ STOP REPLACEMENT @@@@ ###
-                             */
                             if (class_exists($className)) {
 
-                                /**
-                                 * ### @@@@ START REPLACEMENT @@@@ ###
-                                 * WHY: automated upgrade
-                                 * OLD: $className (case sensitive)
-                                 * NEW: $className (COMPLEX)
-                                 * EXP: Check if the class name can still be used as such
-                                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                                 */
                                 $modifier = new $className();
                                 //only add the ones that should be added automatically
                                 if (! $modifier->DoNotAddAutomatically()) {
@@ -1207,15 +1175,6 @@ class Order extends DataObject implements EditableEcommerceObject
                                     }
                                 }
                             } else {
-
-                                /**
-                                 * ### @@@@ START REPLACEMENT @@@@ ###
-                                 * WHY: automated upgrade
-                                 * OLD: $className (case sensitive)
-                                 * NEW: $className (COMPLEX)
-                                 * EXP: Check if the class name can still be used as such
-                                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                                 */
                                 user_error('reference to a non-existing class: ' . $className . ' in modifiers', E_USER_NOTICE);
                             }
                         }
@@ -1796,15 +1755,6 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             user_error('Can not set the currency after the order has been submitted', E_USER_NOTICE);
         } else {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD:  Object:: (case sensitive)
-             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-             * EXP: Check if this is the right implementation, this is highly speculative.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             if (! is_a($newCurrency, EcommerceConfigClassNames::getName(EcommerceCurrency::class))) {
                 $newCurrency = EcommerceCurrency::default_currency();
             }
@@ -2767,15 +2717,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $items = $this->Items();
         if ($items->count()) {
             foreach ($items as $item) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD:  Object:: (case sensitive)
-                 * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-                 * EXP: Check if this is the right implementation, this is highly speculative.
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 if (is_a($item, EcommerceConfigClassNames::getName(OrderAttribute::class))) {
                     $result += $item->Total();
                 }
@@ -3874,15 +3815,6 @@ class Order extends DataObject implements EditableEcommerceObject
                 user_error('Invalid Email ClassName provided: ' . $emailClassName, E_USER_ERROR);
             }
             $email = new $emailClassName();
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD:  Object:: (case sensitive)
-             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-             * EXP: Check if this is the right implementation, this is highly speculative.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             if (! is_a($email, EcommerceConfigClassNames::getName(Email::class))) {
                 user_error('No correct email class provided.', E_USER_ERROR);
             }
@@ -3981,41 +3913,15 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function itemsFromDatabase($filterOrClassName = '')
     {
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $className = OrderItem::class;
         $extrafilter = '';
         if ($filterOrClassName) {
             if (class_exists($filterOrClassName)) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $className = $filterOrClassName;
             } else {
                 $extrafilter = " AND ${filterOrClassName}";
             }
         }
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         return $className::get()->filter(['OrderID' => $this->ID])->where($extrafilter);
     }
 
@@ -4031,41 +3937,15 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function modifiersFromDatabase($filterOrClassName = '')
     {
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $className = OrderModifier::class;
         $extrafilter = '';
         if ($filterOrClassName) {
             if (class_exists($filterOrClassName)) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $className = $filterOrClassName;
             } else {
                 $extrafilter = " AND ${filterOrClassName}";
             }
         }
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: $className (case sensitive)
-         * NEW: $className (COMPLEX)
-         * EXP: Check if the class name can still be used as such
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         return $className::get()->where('"OrderAttribute"."OrderID" = ' . $this->ID . " ${extrafilter}");
     }
 

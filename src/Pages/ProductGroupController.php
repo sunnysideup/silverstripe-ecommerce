@@ -96,15 +96,6 @@ class ProductGroupController extends PageController
         $this->addSecondaryTitle();
         $this->products = $this->paginateList($this->ProductsShowable(null));
         if ($this->returnAjaxifiedProductList()) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->RenderWith( (ignore case)
-             * NEW: ->RenderWith( (COMPLEX)
-             * EXP: Check that the template location is still valid!
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $this->RenderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
         }
         return [];
@@ -135,15 +126,6 @@ class ProductGroupController extends PageController
         $this->addSecondaryTitle();
         $this->products = $this->paginateList($this->ProductsShowable(['ID' => $arrayOfIDs]));
         if ($this->returnAjaxifiedProductList()) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: ->RenderWith( (ignore case)
-             * NEW: ->RenderWith( (COMPLEX)
-             * EXP: Check that the template location is still valid!
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $this->RenderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
         }
 
@@ -828,35 +810,9 @@ class ProductGroupController extends PageController
         // /print_r($links);
         foreach ($links as $linkItem) {
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $className = $linkItem->ClassName;
             $id = $linkItem->ID;
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             if ($className && $id) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $object = $className::get()->byID($id);
                 $linkItem->Object = $object;
             }

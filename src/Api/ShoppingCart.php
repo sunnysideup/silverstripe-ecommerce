@@ -766,14 +766,6 @@ class ShoppingCart
             //TODO: permission check - does this belong to another member? ...or should permission be assumed already?
             if (is_numeric($order)) {
                 $this->order = Order::get()->byID($order);
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD:  Object:: (case sensitive)
-             * NEW:  SilverStripe\\Core\\Injector\\Injector::inst()-> (COMPLEX)
-             * EXP: Check if this is the right implementation, this is highly speculative.
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             } elseif (is_a($order, EcommerceConfigClassNames::getName(Order::class))) {
                 $this->order = $order;
             } else {

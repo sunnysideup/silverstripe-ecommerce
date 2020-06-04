@@ -702,27 +702,10 @@ class OrderItem extends OrderAttribute
             }
             //start hack
             if (! $this->BuyableClassName) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $this->ClassName (case sensitive)
-                 * NEW: $this->ClassName (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $this->BuyableClassName = str_replace('_OrderItem', '', $this->ClassName);
             }
             $turnTranslatableBackOn = false;
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $className = $this->BuyableClassName;
 
             if ($className::has_extension($this->ClassName, 'Translatable')) {
@@ -732,15 +715,6 @@ class OrderItem extends OrderAttribute
             //end hack!
             $obj = null;
             if ($currentOrVersion === 'current') {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $obj = $className::get()->byID($this->BuyableID);
             }
 
@@ -769,15 +743,6 @@ class OrderItem extends OrderAttribute
             }
             //our final backup
             if (! $obj || (! $obj->exists())) {
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: $className (case sensitive)
-                 * NEW: $className (COMPLEX)
-                 * EXP: Check if the class name can still be used as such
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 $obj = $className::get()->byID($this->BuyableID);
             }
             if ($turnTranslatableBackOn) {
@@ -859,26 +824,8 @@ class OrderItem extends OrderAttribute
     public function getBuyableExists()
     {
         if ($buyable = $this->Buyable(true)) {
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $className = $buyable->ClassName;
             $id = $buyable->ID;
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $className (case sensitive)
-             * NEW: $className (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             return $className::get()->byID($id) ? true : false;
         }
 

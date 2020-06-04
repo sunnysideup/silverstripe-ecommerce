@@ -934,16 +934,7 @@ class ProductGroup extends Page
     public function BestAvailableImage()
     {
         $image = $this->Image();
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->getFullPath() (case sensitive)
-         * NEW: ->getFilename() (COMPLEX)
-         * EXP: You may need to add ASSETS_PATH."/" in front of this ...
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
-        if ($image && $image->exists() && file_exists($image->getFilename())) {
+        if ($image && $image->exists() && file_exists(ASSETS_PATH . "/" . $image->getFilename())) {
             return $image;
         } elseif ($parent = $this->ParentGroup()) {
             return $parent->BestAvailableImage();
@@ -1186,15 +1177,6 @@ class ProductGroup extends Page
     {
         if (! isset($this->configOptionsCache[$type])) {
             $configName = $this->sortFilterDisplayNames[$type]['configName'];
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $this->ClassName (case sensitive)
-             * NEW: $this->ClassName (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
             $this->configOptionsCache[$type] = EcommerceConfig::get($this->ClassName, $configName);
         }
 
@@ -1777,18 +1759,13 @@ class ProductGroup extends Page
         if ($this->AllowCaching()) {
             $cache = $this->getSilverstripeCoreCache();
 
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $cache->load( (case sensitive)
-             * NEW: $cache->has( (COMPLEX)
-             * EXP: See: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache, you may also need to add $cache->get( !!!
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $data = $cache->has($cacheKey);
-            if (! $data) {
+            $data = $cache->get($cacheKey);
+            if (! $cache->has($cacheKey)) {
                 return;
             }
+            /**
+             * UPGRADE TO DO: 'automatic_serialization' no longer exists, what do we replace it with
+             */
             if (! $cache->getOption('automatic_serialization')) {
                 $data = @unserialize($data);
             }
@@ -1812,19 +1789,13 @@ class ProductGroup extends Page
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
             $cache = $this->getSilverstripeCoreCache();
+            /**
+             * UPGRADE TO DO: 'automatic_serialization' no longer exists, what do we replace it with
+             */
             if (! $cache->getOption('automatic_serialization')) {
                 $data = serialize($data);
             }
-
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $cache->save( (case sensitive)
-             * NEW: $cache->set( (COMPLEX)
-             * EXP: Cache key and value need to be swapped!!! Put key first. See: https://docs.silverstripe.org/en/4/changelogs/4.0.0#cache
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $cache->set($data, $cacheKey);
+            $cache->set($cacheKey, $data);
             return true;
         }
 
