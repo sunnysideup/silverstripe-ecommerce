@@ -60,7 +60,7 @@ class ProductOrderItem extends OrderItem
     {
         $parentIsTheSame = parent::hasSameContent($orderItem);
 
-        return $parentIsTheSame && is_a($orderItem, $this->class);
+        return $parentIsTheSame && is_a($orderItem, $this->ClassName);
     }
 
     /**

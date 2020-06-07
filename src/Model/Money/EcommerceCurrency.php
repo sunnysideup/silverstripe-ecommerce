@@ -506,7 +506,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRateExplanation', $fieldLabels['ExchangeRateExplanation'], $this->ExchangeRateExplanation()));
         }
         $fields->addFieldsToTab('Root.Main', [
-            new HeaderField('Symbols'),
+            new HeaderField('Symbols', 'Symbols'),
             new ReadonlyField('DefaultSymbol', 'Default'),
             new ReadonlyField('ShortSymbol', 'Short'),
             new ReadonlyField('LongSymbol', 'Long'),

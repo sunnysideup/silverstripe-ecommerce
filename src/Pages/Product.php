@@ -343,9 +343,6 @@ class Product extends Page implements BuyableModel
                 ]
             );
         }
-        //if($siteTreeFieldExtensions) {
-        //$this->extend('updateSettingsFields', $fields);
-        //}
         return $fields;
     }
 
@@ -810,7 +807,7 @@ class Product extends Page implements BuyableModel
      */
     public function AddLink()
     {
-        return ShoppingCartController::add_item_link($this->ID, $this->className, $this->linkParameters('add'));
+        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('add'));
     }
 
     /**
@@ -820,7 +817,7 @@ class Product extends Page implements BuyableModel
      */
     public function IncrementLink()
     {
-        return ShoppingCartController::add_item_link($this->ID, $this->className, $this->linkParameters('increment'));
+        return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $this->linkParameters('increment'));
     }
 
     /**

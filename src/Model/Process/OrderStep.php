@@ -493,7 +493,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $array = Config::inst()->get($this->ClassName, 'defaults', Config::UNINHERITED);
         if (! isset($array['Code'])) {
-            user_error($this->class . ' does not have a default code specified');
+            user_error($this->ClassName . ' does not have a default code specified');
         }
 
         return $array['Code'];

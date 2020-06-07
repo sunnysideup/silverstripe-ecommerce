@@ -317,7 +317,7 @@ class ProductGroup extends Page
      *
      * @static String | Array
      */
-    private static $icon = 'ecommerce/images/icons/productgroup';
+    private static $icon = 'ecommerce/client/images/icons/productgroup';
 
     /**
      * Standard SS variable.

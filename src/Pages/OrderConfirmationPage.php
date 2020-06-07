@@ -236,16 +236,16 @@ class OrderConfirmationPage extends CartPage
         $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
         $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
         $fields->addFieldsToTab('Root.Messages.Messages.Payment', [
-            HeaderField::create('Successful'),
+            HeaderField::create('Successful', 'Successful'),
             TextField::create('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
             HTMLEditorField::create('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage'])->setRows(3),
-            HeaderField::create('Unsuccessful'),
+            HeaderField::create('Unsuccessful', 'Unsuccessful'),
             TextField::create('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
             HTMLEditorField::create('PaymentNotSuccessfulMessage', $fieldLabels['PaymentNotSuccessfulMessage'])->setRows(3),
-            HeaderField::create('Pending'),
+            HeaderField::create('Pending', 'Pending'),
             TextField::create('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
             HTMLEditorField::create('PaymentPendingMessage', $fieldLabels['PaymentPendingMessage'])->setRows(3),
-            HeaderField::create('Cancelled'),
+            HeaderField::create('Cancelled', 'Cancelled'),
             TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
             HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
         ]);

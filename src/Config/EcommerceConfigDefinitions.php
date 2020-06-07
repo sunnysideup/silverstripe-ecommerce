@@ -471,7 +471,9 @@ class EcommerceConfigDefinitions
             then orders with a member linked to it will never be deleted.',
                 'one_to_one_classes' => 'An array of key / value pairs that are linked to orders as one-to-one relationships.  The key is the order field name (e.g. BillingAddressID) and the value is the class name (e.g. BillingAddress)',
                 'one_to_many_classes' => 'An array of key / value pairs that are linked to orders as one-to-many relationships.  The key is the class with the order ID and the value is the class name with the LastEdited field.',
-                'many_to_many_classes' => 'An array of key / value pairs that are linked to orders as many-to-many relationships.  Currently not in use.', ],
+                'many_to_many_classes' => 'An array of key / value pairs that are linked to orders as many-to-many relationships.  Currently not in use.', 
+            ],
+            ]
 
         ];
         //add more stuff through extensions

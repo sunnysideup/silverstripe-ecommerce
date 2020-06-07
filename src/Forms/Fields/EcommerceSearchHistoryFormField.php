@@ -181,7 +181,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 . ' between ' . date('j-M-Y', strtotime('-' . $totalNumberOfDaysBack . ' days')) . ' and ' . date('j-M-Y', strtotime('-' . $this->endingDaysBack . ' days')) . '
             </h3>';
         $count = 0;
-        if ($data && count($data)) {
+        if (is_array($data) && count($data)) {
             $tableContent .= '
                 <table class="highToLow" style="widht: 100%">';
             $list = [];

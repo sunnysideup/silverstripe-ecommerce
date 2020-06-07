@@ -130,7 +130,6 @@ class EcommercePaymentController extends Controller
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'app';
 
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
-        //Requirements::block(THIRDPARTY_DIR."/jquery/jquery.js");
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         $id = intval($this->request->param('ID'));
         if (! $id && isset($_REQUEST['OrderID'])) {

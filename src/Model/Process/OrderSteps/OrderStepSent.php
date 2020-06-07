@@ -57,7 +57,15 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldToTab('Root.Main', new HeaderField('ActuallySendDetails', _t('OrderStep.ACTUALLYSENDDETAILS', 'Send details to the customer?'), 3), 'SendDetailsToCustomer');
+        $fields->addFieldToTab(
+            'Root.Main', 
+            HeaderField::create(
+                'ActuallySendDetails', 
+                _t('OrderStep.ACTUALLYSENDDETAILS', 'Send details to the customer?'), 
+                3
+            ), 
+            'SendDetailsToCustomer'
+        );
         $fields->addFieldsToTab(
             'Root.CustomerMessage',
             [

@@ -17,6 +17,8 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
  **/
 class EcommerceTaskReviewSearches extends BuildTask
 {
+
+    private static $segment = 'EcommerceTaskReviewSearches';
     /**
      * number of days shown.
      *
@@ -114,7 +116,7 @@ class EcommerceTaskReviewSearches extends BuildTask
             )->setRightTitle('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
         );
         $actions = FieldList::create(FormAction::create('run')->setTitle('show results'));
-        $form = Form::create($this, 'SearchFields', $fields, $actions, null);
+        $form = Form::create(null, 'SearchFields', $fields, $actions, null);
         $form->setAttribute('method', 'get');
         $form->setAttribute('action', $this->Link());
         echo $form->forTemplate();
