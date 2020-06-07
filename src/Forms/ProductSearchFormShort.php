@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
 
 class ProductSearchFormShort extends ProductSearchForm
 {

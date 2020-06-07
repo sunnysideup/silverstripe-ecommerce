@@ -76,7 +76,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         if ($orderModelManagement) {
             unset($models[Order::class]);
 
-            return [ Order::class => $orderModelManagement] + $models;
+            return [Order::class => $orderModelManagement] + $models;
         }
 
         return $models;

@@ -205,7 +205,6 @@ class Product extends Page implements BuyableModel
      */
     private static $plural_name = 'Products';
 
-
     /**
      * Standard SS variable.
      *
@@ -233,10 +232,9 @@ class Product extends Page implements BuyableModel
      */
     public function scaffoldSearchFields($_params = null)
     {
-       
         $fields = parent::scaffoldSearchFields($_params);
         $fields->fieldByName('AllowPurchase')->setValue(1);
-        
+
         return $fields;
     }
 
@@ -271,7 +269,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
         //dirty hack to show images!
         $fields->addFieldToTab(
-            'Root.Images', 
+            'Root.Images',
             $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image'))
         );
         $uploadField->setCallingClass(Product::class);
@@ -297,13 +295,13 @@ class Product extends Page implements BuyableModel
 
         $fields->addFieldToTab('Root.Details', new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
         $fields->addFieldToTab(
-            'Root.Details', 
+            'Root.Details',
             NumericField::create('Price', _t('Product.PRICE', 'Price'), '', 12)->setScale(2)
         );
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
         if ($this->EcomConfig()->ProductsHaveWeight) {
             $fields->addFieldToTab(
-                'Root.Details', 
+                'Root.Details',
                 NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
             );
         }
@@ -531,7 +529,7 @@ class Product extends Page implements BuyableModel
         $parent = $this->MainParentGroup();
         while ($parent) {
             $returnValue = $parent;
-            if($parent->ParentID){
+            if ($parent->ParentID) {
                 $parent = ProductGroup::get()->byID($parent->ParentID);
             }
         }
@@ -577,7 +575,7 @@ class Product extends Page implements BuyableModel
         if ($product && $product->ImageID) {
             $image = Image::get()->byID($product->ImageID);
             if ($image) {
-                if (file_exists(ASSETS_PATH . "/" . $image->getFilename())) {
+                if (file_exists(ASSETS_PATH . '/' . $image->getFilename())) {
                     return $image;
                 }
             }
@@ -770,8 +768,8 @@ class Product extends Page implements BuyableModel
     public function getHasBeenSold()
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false);
-        $dataList = $dataList->innerJoin("OrderAttribute", '"OrderAttribute"."OrderID" = "Order"."ID"');
-        $dataList = $dataList->innerJoin("OrderItem", '"OrderAttribute"."ID" = "OrderItem"."ID"');
+        $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
+        $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
         $dataList = $dataList->filter(
             [
                 'BuyableID' => $this->ID,

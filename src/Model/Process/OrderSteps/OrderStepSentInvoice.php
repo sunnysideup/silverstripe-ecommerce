@@ -43,12 +43,12 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
-            'Root.Main', 
+            'Root.Main',
             HeaderField::create(
-                'ActuallySendTheInvoice', 
-                _t('OrderStep.ACTUALLYSENDTHEINVOICE', 'Actually send the invoice? '), 
+                'ActuallySendTheInvoice',
+                _t('OrderStep.ACTUALLYSENDTHEINVOICE', 'Actually send the invoice? '),
                 3
-            ), 
+            ),
             'SendInvoiceToCustomer'
         );
 

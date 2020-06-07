@@ -59,13 +59,14 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
-            'Root.Main', HeaderField::create(
-                'HowToSaveSubmittedOrder', 
-                _t('OrderStep.HOWTOSAVESUBMITTEDORDER', 'How would you like to make a backup of your order at the moment it is submitted?'
-            ), 
-            3
-        ), 
-        'SaveOrderAsHTML');
+            'Root.Main',
+            HeaderField::create(
+                'HowToSaveSubmittedOrder',
+                _t('OrderStep.HOWTOSAVESUBMITTEDORDER', 'How would you like to make a backup of your order at the moment it is submitted?'),
+                3
+            ),
+            'SaveOrderAsHTML'
+        );
 
         return $fields;
     }

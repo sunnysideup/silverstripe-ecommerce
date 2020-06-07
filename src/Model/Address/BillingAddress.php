@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Model\Address;
 
 use GoogleAddressField;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\HeaderField;

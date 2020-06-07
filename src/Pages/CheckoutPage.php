@@ -6,7 +6,6 @@ use Page;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -80,7 +79,7 @@ class CheckoutPage extends CartPage
 
     private static $db = [
         'ContentAboveCheckout' => 'HTMLText',
-        'TermsAndConditionsMessage' => 'Varchar(200)'
+        'TermsAndConditionsMessage' => 'Varchar(200)',
     ];
 
     /**
@@ -333,16 +332,16 @@ class CheckoutPage extends CartPage
         //The Content field has a slightly different meaning for the Checkout Page.
         $fields->removeFieldFromTab('Root.Main', 'Content');
         $fields->addFieldsToTab(
-            'Root.Messages.Messages.AlwaysVisible', 
+            'Root.Messages.Messages.AlwaysVisible',
             [
                 HTMLEditorField::create(
-                    'ContentAboveCheckout', 
+                    'ContentAboveCheckout',
                     _t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page')
                 )->setRows(5),
                 HTMLEditorField::create(
-                    'Content', 
+                    'Content',
                     _t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page ')
-                )->setRows(5)
+                )->setRows(5),
             ]
         );
         if (OrderModifierDescriptor::get()->count()) {

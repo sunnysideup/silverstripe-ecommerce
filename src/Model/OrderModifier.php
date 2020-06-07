@@ -288,7 +288,7 @@ class OrderModifier extends OrderAttribute
     // ######################################## *** 4. CRUD functions (e.g. canEdit)
 
     // ########################################  *** 5. init and update functions
-    
+
     public static function init_for_order($className)
     {
         user_error('the init_for_order method has been depreciated, instead, use $myModifier->init()', E_USER_ERROR);
@@ -859,7 +859,6 @@ class OrderModifier extends OrderAttribute
         if ($this->orderModifier_Descriptor === null) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
-
                 ['ModifierClassName' => $this->ClassName]
             );
         }

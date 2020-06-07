@@ -69,12 +69,9 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
             $dropdownArray[''] = $this->emptyString;
         }
         if ($classes) {
-
             foreach ($classes as $key => $className) {
                 if (class_exists($key)) {
-
                     if (in_array($className, $this->availableClasses, true)) {
-
                         $obj = singleton($className);
                         if ($obj) {
                             $dropdownArray[$className] = $obj->i18n_singular_name();

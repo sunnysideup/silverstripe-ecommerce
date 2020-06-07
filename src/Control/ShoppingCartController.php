@@ -137,7 +137,6 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-
     public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
         $classNameForBuyable = ClassHelpers::sanitise_class_name($classNameForBuyable);
@@ -151,8 +150,6 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-
-
     public static function remove_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
     {
         $classNameForBuyable = ClassHelpers::sanitise_class_name($classNameForBuyable);
@@ -652,7 +649,6 @@ class ShoppingCartController extends Controller
         $className = Convert::raw2sql($request->param('OtherID'));
 
         if (class_exists($className)) {
-
             $address = $className::get()->byID($id);
             if ($address && $address->canView()) {
                 $member = Member::currentUser();

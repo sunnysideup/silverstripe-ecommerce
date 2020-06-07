@@ -44,12 +44,13 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
-            'Root.CustomerMessage', 
+            'Root.CustomerMessage',
             HeaderField::create(
-                'ActuallySendReceiptToCustomer', 
-                _t('OrderStep.ACTUALLYSENDRECEIPT', 
+                'ActuallySendReceiptToCustomer',
+                _t(
+                    'OrderStep.ACTUALLYSENDRECEIPT',
                     'Actually send the receipt?'
-                ), 
+                ),
                 3
             )
         );

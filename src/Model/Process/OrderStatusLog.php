@@ -345,7 +345,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
         $availableLogsAssociative = [];
-       
+
         foreach ($availableLogs as $className) {
             $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }

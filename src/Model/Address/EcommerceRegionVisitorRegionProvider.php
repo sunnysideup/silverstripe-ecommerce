@@ -3,9 +3,8 @@
 namespace Sunnysideup\Ecommerce\Model\Address;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
 
-class EcommerceRegionVisitorRegionProvider 
+class EcommerceRegionVisitorRegionProvider
 {
     /**
      * @return int - region ID

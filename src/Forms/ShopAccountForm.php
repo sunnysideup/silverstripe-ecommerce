@@ -11,7 +11,6 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;

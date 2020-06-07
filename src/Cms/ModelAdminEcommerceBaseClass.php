@@ -16,13 +16,14 @@ use SilverStripe\Forms\LiteralField;
  */
 class ModelAdminEcommerceBaseClass extends ModelAdmin
 {
-    private static $url_segment = 'ecommerce-base';
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
      * This variable can be a boolean or an array.
      * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
      */
     public $showImportForm = false;
+
+    private static $url_segment = 'ecommerce-base';
 
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})

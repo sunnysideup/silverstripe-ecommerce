@@ -83,7 +83,7 @@ class EcommercePaymentController extends Controller
      */
     public function Link($action = null)
     {
-        $URLSegment = Config::inst()->get(get_class($this), 'url_segment');
+        $URLSegment = Config::inst()->get(static::class, 'url_segment');
         if (! $URLSegment) {
             $URLSegment = static::class;
         }

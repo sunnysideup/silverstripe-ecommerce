@@ -27,7 +27,6 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      *
      * @var array
      */
-
     private static $table_name = 'OrderModifierDescriptor';
 
     private static $db = [
@@ -235,7 +234,6 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
             $arrayOfModifiers = [];
         }
         if (count($arrayOfModifiers)) {
-
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
                     OrderModifierDescriptor::class,

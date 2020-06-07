@@ -284,7 +284,7 @@ class CartPageController extends PageController
         $this->workOutMessagesAndActions();
         if (! $this->message) {
             $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
-           
+
             if ($sessionMessage = $this->getRequest()->getSession()->get($sessionCode)) {
                 $this->message = $sessionMessage;
                 Session::set($sessionCode, '');
@@ -343,7 +343,6 @@ class CartPageController extends PageController
      */
     public function ShowCreateAccountForm()
     {
-
         if ($this->getRequest()->getSession()->get('CartPageCreateAccountForm')) {
             $this->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
             return true;

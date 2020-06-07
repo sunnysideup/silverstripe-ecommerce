@@ -3,13 +3,12 @@
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\View\ViewableData;
 
 /***
  * extra checks to make sure the password is valid....
  *
  */
-class ShopAccountFormPasswordValidator 
+class ShopAccountFormPasswordValidator
 {
     /**
      * returns a valid, mysql safe password OR an empty string.

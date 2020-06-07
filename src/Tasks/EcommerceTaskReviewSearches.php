@@ -17,8 +17,6 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
  **/
 class EcommerceTaskReviewSearches extends BuildTask
 {
-
-    private static $segment = 'EcommerceTaskReviewSearches';
     /**
      * number of days shown.
      *
@@ -62,6 +60,8 @@ class EcommerceTaskReviewSearches extends BuildTask
      */
     protected $description = '
         What did people search for on the website, you can use the days, min and ago GET variables to query different sets.';
+
+    private static $segment = 'EcommerceTaskReviewSearches';
 
     public function run($request)
     {

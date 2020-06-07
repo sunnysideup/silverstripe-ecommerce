@@ -7,7 +7,6 @@ use Geoip;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 

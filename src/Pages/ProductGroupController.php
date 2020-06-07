@@ -809,7 +809,6 @@ class ProductGroupController extends PageController
         $links = $this->ProductGroupFilterLinks();
         // /print_r($links);
         foreach ($links as $linkItem) {
-
             $className = $linkItem->ClassName;
             $id = $linkItem->ID;
             if ($className && $id) {
@@ -1024,7 +1023,6 @@ class ProductGroupController extends PageController
     /**
      * standard SS method.
      */
-
     protected function init()
     {
         parent::init();
@@ -1198,12 +1196,11 @@ class ProductGroupController extends PageController
                 $optionsVariableName = $oneTypeArray['configName'];
                 $options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
                 if (isset($options[$newPreference])) {
-
                     $this->getRequest()->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
                     //save in model as well...
                 }
             } else {
-                $newPreference =$this->getRequest()->getSession()->get('ProductGroup_' . $sessionName);
+                $newPreference = $this->getRequest()->getSession()->get('ProductGroup_' . $sessionName);
             }
             //save data in model...
             if ($newPreference) {

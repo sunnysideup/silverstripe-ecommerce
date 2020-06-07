@@ -14,7 +14,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @description:
@@ -29,9 +28,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  **/
 class AccountPage extends Page
 {
-
-    private static $table_name = 'AccountPage';
-
     /**
      *@var float
      */
@@ -51,6 +47,8 @@ class AccountPage extends Page
      *@var DataList
      */
     protected $pastOrders = null;
+
+    private static $table_name = 'AccountPage';
 
     /**
      * standard SS variable.
@@ -282,7 +280,7 @@ class AccountPage extends Page
                     '"Order"."MemberID" = ' . $memberID . '
                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
                 )
-                ->innerJoin("OrderStep", '"Order"."StatusID" = "OrderStep"."ID"');
+                ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
         }
 
         return 0;

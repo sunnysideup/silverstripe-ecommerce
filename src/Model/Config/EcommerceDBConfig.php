@@ -30,8 +30,8 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
@@ -353,10 +353,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public static function current_ecommerce_db_config()
     {
         if (! self::$_my_current_one) {
-
             $className = EcommerceConfig::get(EcommerceDBConfig::class, 'ecommerce_db_config_class_name');
-
-           
 
             if (! class_exists($className)) {
                 $className = EcommerceDBConfig::class;
@@ -366,7 +363,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 ['UseThisOne' => 1],
                 $cacheDataObjectGetOne = false
             );
-            
+
             if (! self::$_my_current_one) {
                 self::$_my_current_one = $className::create();
             }
@@ -468,11 +465,11 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         $self = $this;
-        
+
         foreach (array_keys($self->customFieldLabels()) as $name) {
             $fields->removeByName($name);
         }
-        
+
         $self->beforeUpdateCMSFields(
             function ($fields) use ($self) {
                 //new section

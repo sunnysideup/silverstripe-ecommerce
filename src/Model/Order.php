@@ -82,8 +82,8 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
@@ -132,7 +132,7 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelled;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress;
-use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter ;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
@@ -1154,13 +1154,9 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
                 if (is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
-
                     foreach ($modifiersToAdd as $numericKey => $className) {
-
                         if (! in_array($className, $createdModifiersClassNames, true)) {
-
                             if (class_exists($className)) {
-
                                 $modifier = new $className();
                                 //only add the ones that should be added automatically
                                 if (! $modifier->DoNotAddAutomatically()) {
@@ -3432,7 +3428,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         Config::nest();
         Config::inst()->update(SSViewer::class, 'theme_enabled', true);
-         /**
+        /**
          * ### @@@@ TODO UPGRADE CHECK THIS IS WORKING @@@@ ###
          */
         $html = $this->renderWith(Order::class);
@@ -3913,7 +3909,6 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected function itemsFromDatabase($filterOrClassName = '')
     {
-
         $className = OrderItem::class;
         $extrafilter = '';
         if ($filterOrClassName) {
@@ -3937,7 +3932,6 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected function modifiersFromDatabase($filterOrClassName = '')
     {
-
         $className = OrderModifier::class;
         $extrafilter = '';
         if ($filterOrClassName) {

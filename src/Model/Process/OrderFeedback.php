@@ -26,7 +26,6 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      *
      * @Var Array
      */
-
     private static $table_name = 'OrderFeedback';
 
     private static $db = [

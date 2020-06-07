@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;

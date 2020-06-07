@@ -311,13 +311,11 @@ EcommerceConfig:
         $allOK = true;
 
         foreach (array_keys($this->configs) as $className) {
-
             if (! isset($this->definitions[$className])) {
                 $allOK = false;
                 $this->missingClasses[$className] = $className;
                 DB::alteration_message("${className}", 'deleted');
             } else {
-
                 $classConfigs = $this->configs[$className];
                 foreach (array_keys($classConfigs) as $key) {
                     if (! isset($this->definitions[$className][$key])) {
@@ -365,13 +363,11 @@ EcommerceConfig:
         //print_r($this->configs["EcommercePayment"]);
 
         foreach (array_keys($this->definitions) as $className) {
-
             if (! isset($this->configs[$className])) {
                 DB::alteration_message("No settings found for ${className} in /ecommerce/_config/config.yml", 'deleted');
             } else {
                 $classConfigs = $this->definitions[$className];
                 foreach (array_keys($classConfigs) as $key) {
-
                     if (! isset($this->configs[$className][$key])) {
                         $this->customisedValues[$className][$key] = false;
                     //fallback to Configs...
@@ -484,7 +480,6 @@ EcommerceConfig:
             }
 
             foreach ($classesArray as $className) {
-
                 $completedListOfClasses[$className] = $className;
                 if (! isset($this->configs[$className])) {
                     $this->configs[$className] = [];
@@ -559,7 +554,6 @@ EcommerceConfig:
                         if (! isset($this->definitions[$className][$key])) {
                             $description = '<span style="color: red; font-weight: bold">ERROR: no longer required in configs!</span>';
                         } else {
-
                             $description = $this->definitions[$className][$key];
                             $description .= $this->specialCases($className, $key, $actualValue);
                         }

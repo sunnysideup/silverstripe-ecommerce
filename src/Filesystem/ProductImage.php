@@ -113,8 +113,8 @@ class ProductImage extends Image
 
     public function Thumbnail($width = 0, $height = 0)
     {
-        $width = $width ? $width : $this->ThumbWidth();
-        $height = $height ? $height : $this->ThumbHeight();
+        $width = $width ?: $this->ThumbWidth();
+        $height = $height ?: $this->ThumbHeight();
         return $this->Fill($width, $height);
     }
 
@@ -164,7 +164,7 @@ class ProductImage extends Image
 
         return $gd->resizeByWidth($this->LargeWidth() * 2);
     }
-    
+
     /**
      * @return string HTML
      */

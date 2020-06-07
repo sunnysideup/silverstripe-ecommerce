@@ -370,7 +370,6 @@ class OrderFormAddress extends Form
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
-
         Controller::curr()->getRequest()->getSession()->set('BillingEcommerceGeocodingFieldValue', empty($data['BillingEcommerceGeocodingField']) ? null : $data['BillingEcommerceGeocodingField']);
         Controller::curr()->getRequest()->getSession()->set('ShippingEcommerceGeocodingFieldValue', empty($data['ShippingEcommerceGeocodingField']) ? null : $data['ShippingEcommerceGeocodingField']);
         $this->saveDataToSession();

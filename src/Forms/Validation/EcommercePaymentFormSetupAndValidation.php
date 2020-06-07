@@ -38,7 +38,6 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      *
      * @var array
      */
-
     private static $table_name = 'EcommercePaymentFormSetupAndValidation';
 
     private static $db_field_map = [];

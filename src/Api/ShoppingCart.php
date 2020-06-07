@@ -598,7 +598,7 @@ class ShoppingCart
                     return false;
                 }
                 $className = $buyable->classNameForOrderItem();
-                
+
                 $item = new $className();
                 if ($order = $this->currentOrder()) {
                     $item->OrderID = $order->ID;

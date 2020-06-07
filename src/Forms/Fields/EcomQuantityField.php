@@ -77,7 +77,6 @@ class EcomQuantityField extends NumericField
             $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
             if (! $this->orderItem) {
-
                 $className = $object->classNameForOrderItem();
                 $this->orderItem = new $className($object->dataRecord, 0);
             }
@@ -172,8 +171,6 @@ class EcomQuantityField extends NumericField
                 'name' => $name,
                 'value' => $quantitylink,
             ];
-            $formfield = new FormField($name);
-
             return HTML::createTag('input', $attributes);
         }
     }

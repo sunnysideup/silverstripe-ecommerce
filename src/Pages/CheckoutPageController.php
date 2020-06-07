@@ -2,18 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
-use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 
 class CheckoutPageController extends CartPageController
@@ -59,7 +57,7 @@ class CheckoutPageController extends CartPageController
 
         // TODO: find replacement for: Requirements::themedCSS(CheckoutPage::class, 'ecommerce');
         $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
-        if (is_array($ajaxifyArray) &&  count($ajaxifyArray)) {
+        if (is_array($ajaxifyArray) && count($ajaxifyArray)) {
             foreach ($ajaxifyArray as $js) {
                 Requirements::javascript($js);
             }
@@ -137,7 +135,7 @@ class CheckoutPageController extends CartPageController
         $form = OrderForm::create($this, 'OrderForm');
         $this->data()->extend('updateOrderForm', $form);
         //load session data
-        if ($data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {  
+        if ($data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
             $form->loadDataFrom($data);
         }
 

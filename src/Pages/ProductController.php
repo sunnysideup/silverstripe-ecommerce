@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
@@ -219,7 +218,6 @@ class ProductController extends PageController
     /**
      * Standard SS method.
      */
-
     protected function init()
     {
         parent::init();

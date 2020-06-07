@@ -56,7 +56,6 @@ class EcommerceConfigAjax
     public static function get_one($requestor)
     {
         if (! isset(self::$singleton[$requestor->ClassName][$requestor->ID])) {
-   
             $className = EcommerceConfig::get(EcommerceConfigAjax::class, 'definitions_class_name');
 
             self::$singleton[$requestor->ClassName][$requestor->ID] = new $className();

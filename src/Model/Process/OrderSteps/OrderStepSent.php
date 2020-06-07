@@ -58,12 +58,12 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
-            'Root.Main', 
+            'Root.Main',
             HeaderField::create(
-                'ActuallySendDetails', 
-                _t('OrderStep.ACTUALLYSENDDETAILS', 'Send details to the customer?'), 
+                'ActuallySendDetails',
+                _t('OrderStep.ACTUALLYSENDDETAILS', 'Send details to the customer?'),
                 3
-            ), 
+            ),
             'SendDetailsToCustomer'
         );
         $fields->addFieldsToTab(
@@ -120,15 +120,14 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         if ($log = $this->RelevantLogEntry($order)) {
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
-            } else {
-                return $order->sendEmail(
-                    $this->getEmailClassName(),
-                    $subject = $this->CalculatedEmailSubject($order),
-                    $message = $this->CalculatedCustomerMessage($order),
-                    $resend = false,
-                    $this->SendDetailsToCustomer ? false : true
-                );
             }
+            return $order->sendEmail(
+                $this->getEmailClassName(),
+                $subject = $this->CalculatedEmailSubject($order),
+                $message = $this->CalculatedCustomerMessage($order),
+                $resend = false,
+                $this->SendDetailsToCustomer ? false : true
+            );
         }
     }
 
@@ -145,7 +144,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     public function nextStep(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
-        if (!$this->SendDetailsToCustomer || $log->InternalUseOnly || $this->hasBeenSent($order, false)) {
+        if (! $this->SendDetailsToCustomer || $log->InternalUseOnly || $this->hasBeenSent($order, false)) {
             return parent::nextStep($order);
         }
 

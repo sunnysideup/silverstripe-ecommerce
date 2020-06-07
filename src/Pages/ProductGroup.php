@@ -248,18 +248,17 @@ class ProductGroup extends Page
      *
      * @static Array
      */
-
     private static $has_one = [
         'Image' => ProductImage::class,
     ];
-    
+
     /**
      * standard SS variable.
      *
      * @static Array
      */
     private static $owns = [
-        'Image'
+        'Image',
     ];
 
     /**
@@ -934,7 +933,7 @@ class ProductGroup extends Page
     public function BestAvailableImage()
     {
         $image = $this->Image();
-        if ($image && $image->exists() && file_exists(ASSETS_PATH . "/" . $image->getFilename())) {
+        if ($image && $image->exists() && file_exists(ASSETS_PATH . '/' . $image->getFilename())) {
             return $image;
         } elseif ($parent = $this->ParentGroup()) {
             return $parent->BestAvailableImage();

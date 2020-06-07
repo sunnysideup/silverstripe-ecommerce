@@ -2,11 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Core\Extension;
+use SilverStripe\ORM\FieldType\DBMoney;
 
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Zend_Currency;
 
 class EcommerceMoney extends Extension
 {
@@ -93,7 +92,7 @@ class EcommerceMoney extends Extension
         $currency = $this->owner->getCurrency();
 
         $formatter = $this->owner->getFormatter();
-        if (!$currency) {
+        if (! $currency) {
             return $formatter->format($amount);
         }
 
@@ -122,7 +121,7 @@ class EcommerceMoney extends Extension
         $currency = $this->owner->getCurrency();
 
         $formatter = $this->owner->getFormatter();
-        if (!$currency) {
+        if (! $currency) {
             return $formatter->format($amount);
         }
 

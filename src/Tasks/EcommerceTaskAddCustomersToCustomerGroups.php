@@ -6,7 +6,6 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * Adds all members, who have bought something, to the customer group.

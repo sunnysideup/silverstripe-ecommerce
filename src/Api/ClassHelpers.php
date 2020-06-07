@@ -2,9 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-class ClassHelpers 
+class ClassHelpers
 {
-     /**
+    /**
      * Sanitise a model class' name for inclusion in a link
      *
      * @param string $class
@@ -15,7 +15,7 @@ class ClassHelpers
         return str_replace('\\', '-', $class);
     }
 
-     /**
+    /**
      * Unsanitise a model class' name from a URL param
      *
      * @param string $class

@@ -27,7 +27,6 @@ class EcommerceSiteTreeExtensionController extends Extension
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
         if ($this->owner->dataRecord) {
-
             if (is_a(
                 $this->owner->dataRecord,
                 EcommerceConfigClassNames::getName(Product::class)
@@ -37,7 +36,6 @@ class EcommerceSiteTreeExtensionController extends Extension
                     EcommerceConfigClassNames::getName(ProductGroup::class)
                 )
             ) {
-
                 Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
             }
         }
@@ -83,7 +81,6 @@ class EcommerceSiteTreeExtensionController extends Extension
      */
     public function ContinueShoppingLink()
     {
-
         $link = Controller::curr()->getRequest()->getSession()->get('ContinueShoppingLink');
         if (! $link) {
             $link = Director::baseURL();

@@ -110,7 +110,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->where($where . $withoutMemberWhere)
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, "table_name"), $joinShort);
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -178,7 +178,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->where($where)
             ->sort($sort)
             ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, "table_name"), $joinShort);
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -260,7 +260,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
         if (count($oneToOne)) {
             foreach ($oneToOne as $orderFieldName => $className) {
-                $tableName = Config::inst()->get($className, "table_name");
+                $tableName = Config::inst()->get($className, 'table_name');
                 if (! in_array($className, $oneToMany, true) && ! in_array($className, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
@@ -327,7 +327,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
         if (count($oneToMany)) {
             foreach ($oneToMany as $classWithOrderID => $classWithLastEdited) {
-                $tableWithOrderID = Config::inst()->get($classWithOrderID, "table_name");
+                $tableWithOrderID = Config::inst()->get($classWithOrderID, 'table_name');
                 if (! in_array($classWithLastEdited, $oneToOne, true) && ! in_array($classWithLastEdited, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();

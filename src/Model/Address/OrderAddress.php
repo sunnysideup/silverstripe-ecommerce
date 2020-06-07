@@ -398,7 +398,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 }
             }
             //copy data from  member
-            if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) { 
+            if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
                 $this->Email = $member->Email;
             }
             $fieldNameArray = ['FirstName' => $fieldPrefix . 'FirstName', 'Surname' => $fieldPrefix . 'Surname'];

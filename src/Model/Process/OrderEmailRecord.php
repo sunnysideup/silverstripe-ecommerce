@@ -39,7 +39,6 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @var array
      */
-
     private static $table_name = 'OrderEmailRecord';
 
     private static $db = [
