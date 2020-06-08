@@ -29,9 +29,8 @@
     ],
     "require": {
         "pelago/emogrifier": "3.1.0",
-        "sunnysideup/google_address_field": "3.x-dev",
-        "sunnysideup/permission_provider": "3.x-dev",
-        "sunnysideup/cms_edit_link_field": "3.x-dev",
+        "sunnysideup/google_address_field": "dev-master",
+        "sunnysideup/cms_edit_link_field": "dev-master",
         "silverstripe/recipe-cms": "~4.5"
     },
     "suggest": {
