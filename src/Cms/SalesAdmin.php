@@ -87,7 +87,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         if ($orderModelManagement) {
             unset($models[Order::class]);
 
-            return ['Order' => $orderModelManagement] + $models;
+            return [Order::class => $orderModelManagement] + $models;
         }
 
         return $models;
@@ -106,14 +106,16 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                 ->filter(
                     [
                         'CancelledByID' => 0,
-                        'StatusID:greaterThan' => 0,
+                        'StatusID:GreaterThan' => 0,
                     ]
-                )
-                ->exclude(
+                    );
+            if(!empty($ordersinQueue->column('ID'))){
+                $list = $list->exclude(
                     [
                         'ID' => $ordersinQueue->column('ID'),
                     ]
                 );
+            }
             //you can only do one exclude at the same time.
             $list = $list
                 ->exclude(

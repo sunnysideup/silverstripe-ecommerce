@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use CMSEditLinkField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;

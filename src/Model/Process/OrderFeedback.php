@@ -7,6 +7,7 @@ use CMSEditLinkAPI;
 use CMSEditLinkField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;

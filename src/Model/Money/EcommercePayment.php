@@ -22,9 +22,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -34,7 +37,9 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
+use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+
 
 /**
  * "Abstract" class for a number of different payment
@@ -107,7 +112,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'Created' => [
             'title' => 'Date (e.g. today)',
             'field' => TextField::class,
-            'filter' => 'EcommercePaymentFiltersAroundDateFilter',
+            'filter' => EcommercePaymentFiltersAroundDateFilter::class,
         ],
         'IP' => [
             'title' => 'IP Address',
@@ -381,7 +386,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      **/
     public function Status()
     {
-        return _t('Payment.' . strtoupper($this->Status), $this->Status);
+        return DBField::create_field(
+            'Enum', 
+            _t('Payment.' . strtoupper($this->Status), $this->Status ? $this->Status : 'Incomplete')
+        );
     }
 
     /**

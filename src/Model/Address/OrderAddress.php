@@ -273,9 +273,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-        $fields = parent::scaffoldSearchFields();
-        $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
-
+        $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
         return $fields;
     }
 

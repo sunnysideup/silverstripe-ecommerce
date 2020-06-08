@@ -7,6 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;

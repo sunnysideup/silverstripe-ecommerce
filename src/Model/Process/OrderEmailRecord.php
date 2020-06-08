@@ -5,8 +5,6 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use CMSEditLinkAPI;
 
 
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxSetField;
@@ -20,7 +18,9 @@ use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Search\Filters\OrderEmailRecordFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+
 
 /**
  * @Description: DataObject recording all order emails sent.
@@ -113,9 +113,9 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         'Subject' => 'PartialMatchFilter',
         //make sure to keep the item below, otherwise they do not show in form
         'OrderStepID' => [
-            'filter' => 'OrderEmailRecordFiltersMultiOptionsetStatusIDFilter',
+            'filter' => OrderEmailRecordFiltersMultiOptionsetStatusIDFilter::class,
         ],
-        'Result' => true,
+        'Result'
     ];
 
     /**
