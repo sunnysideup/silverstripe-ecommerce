@@ -101,13 +101,11 @@ class OrderFormPayment extends Form
     /**
      * saves the form into session.
      *
-     * @param array $data - data from form.
      */
     public function saveDataToSession()
     {
         $data = $this->getData();
         unset($data['LoggedInAsNote']);
-
         Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 }

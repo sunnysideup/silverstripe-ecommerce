@@ -17,7 +17,7 @@ interface OrderStepInterface
      * Initiate the step. REturns true if the step is ready to run.
      * You should be able to run this method many times without causing problems.
      *
-     * @param Order - $order
+     * @param Order $order
      *
      * @return bool
      **/
@@ -28,7 +28,7 @@ interface OrderStepInterface
      * Returns true if the step runs successfully.
      * You should be able to run this method many times without causing problems.
      *
-     * @param Order - $order
+     * @param Order $order
      *
      * @return bool
      **/
@@ -40,7 +40,7 @@ interface OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (nextStep DataObject)
+     * @return Sunnysideup\Ecommerce\Model\Process\OrderStep | Null (nextStep DataObject)
      **/
     public function nextStep(Order $order);
 

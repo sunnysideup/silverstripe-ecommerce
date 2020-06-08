@@ -14,6 +14,7 @@ use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
 
 /***
  * Class used to describe the steps in the checkout
@@ -207,7 +208,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {

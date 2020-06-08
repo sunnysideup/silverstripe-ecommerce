@@ -21,7 +21,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 class OrderModifierForm extends Form
 {
     /**
-     * @var Order
+     * @var Sunnysideup\Ecommerce\Model\Order
      */
     protected $order;
 

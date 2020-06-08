@@ -51,7 +51,7 @@ class BuyableSelectFieldDataList extends Controller
      *  Title => $name
      * );.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return string (JSON)
      */
@@ -152,7 +152,7 @@ class BuyableSelectFieldDataList extends Controller
      *
      * @param array $array
      *
-     * @return JSON
+     * @return string
      */
     protected function array2json(array $array)
     {

@@ -34,7 +34,7 @@ abstract class OrderStepController extends Controller
     ];
 
     /**
-     * @var Order
+     * @var Sunnysideup\Ecommerce\Model\Order
      */
     private static $_order = null;
 
@@ -138,7 +138,7 @@ abstract class OrderStepController extends Controller
     /**
      * the form on the field.
      *
-     * @return Form
+     * @return SilverStripe\Forms\Form
      */
     protected function Form()
     {
@@ -226,7 +226,7 @@ abstract class OrderStepController extends Controller
     }
 
     /**
-     * @return OrderStep
+     * @return DataObject | OrderStep | null
      */
     protected function orderStep()
     {

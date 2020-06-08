@@ -41,12 +41,11 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
         $title = 'Type',
         $sourceClass = '',
         $availableClasses = [],
-        $value = '',
-        $form = null
+        $value = ''
     ) {
         $this->sourceClass = $sourceClass;
         $this->availableClasses = $availableClasses;
-        parent::__construct($name, $title, [], $value, $form);
+        parent::__construct($name, $title, [], $value);
         $this->addExtraClass('dropdown');
     }
 
@@ -81,7 +80,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
             }
         }
         if (! count($dropdownArray)) {
-            $dropdownArray = [$this->sourceClass => _t('EcommerceClassNameOrTypeDropdownField.CAN_NOT_CREATE', "Can't create.") . $title];
+            $dropdownArray = [$this->sourceClass => _t('EcommerceClassNameOrTypeDropdownField.CAN_NOT_CREATE', "Can't create.")];
         }
 
         return $dropdownArray;

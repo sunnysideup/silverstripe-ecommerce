@@ -69,7 +69,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     /**
      * returns the current order.
      *
-     * @return Order
+     * @return Sunnysideup\Ecommerce\Model\Order
      **/
     public function Cart()
     {
@@ -92,7 +92,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     /**
      * Is the page a secure page?
      *
-     * @return true/false
+     * @return bool
      */
     public function isSecurePage()
     {

@@ -153,10 +153,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     public function index()
     {
         if (Director::is_cli()) {
-            echo "SILVERSTRIPE ECOMMERCE TOOLS: Tasks\n--------------------------\n\n";
-            foreach ($tasks as $task) {
-                echo " * {$task['title']}: sake dev/tasks/" . $task['class'] . "\n";
-            }
+            
         } else {
             $renderer = new EcommerceDatabaseAdminDebugView();
             $renderer->renderHeader();
@@ -310,6 +307,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         $renderer->writePostOutcome();
         $renderer->writeContent($this);
         $renderer->writeFooter();
+        return [];
     }
 
     //##############################

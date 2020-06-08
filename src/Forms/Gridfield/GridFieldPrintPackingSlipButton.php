@@ -27,7 +27,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      * Return any special attributes that will be used for FormField::create_tag()
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param SilverStripe\ORM\DataObject $record
      * @param string $columnName
      * @return array
      */
@@ -52,7 +52,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
 
     /**
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param SilverStripe\ORM\DataObject $record
      * @param string $columnName
      *
      * @return string - the HTML for the column

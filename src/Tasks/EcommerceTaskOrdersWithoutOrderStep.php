@@ -29,9 +29,6 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
     protected $description = '
         Orders where the order step does not exist.';
 
-    /**
-     * @param SS_Request $request
-     **/
     public function run($request)
     {
         $doCancel = $request->getVar('cancel');

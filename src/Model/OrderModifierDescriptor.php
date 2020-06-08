@@ -166,7 +166,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {

@@ -35,7 +35,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
     /**
      * standard SS variable.
      *
-     * @var int
+     * @var float
      */
     private static $menu_priority = 3.3;
 
@@ -77,6 +77,12 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
         return $models;
     }
 
+    /**
+     * @param int $id
+     * @param int SilverStripe\Forms\FieldList
+     *
+     * @return SilverStripe\Forms\Form
+     */
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);

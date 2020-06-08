@@ -49,7 +49,7 @@ class ExchangeRateProvider
     /**
      * adds a bit of additional cost to account for the exchange cost.
      *
-     * @var floatval
+     * @var float
      */
     protected $exchangeCostMultiplier = 1.05;
 

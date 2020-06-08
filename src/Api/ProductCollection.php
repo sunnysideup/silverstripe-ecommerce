@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 
 /**

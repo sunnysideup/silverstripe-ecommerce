@@ -38,7 +38,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
     private $divider = 90;
 
     /**
-     *@return SQLQuery
+     * @return SilverStripe\ORM\DataQuery
      **/
     public function applyOne(DataQuery $query)
     {

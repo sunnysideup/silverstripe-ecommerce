@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
@@ -90,6 +91,9 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
         return _t('OrderStatusLog.PAYMENTCONFIRMATIONS', 'Payment Confirmations');
     }
 
+    /**
+     * @return SilverStripe\Forms\FieldList
+     **/
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();

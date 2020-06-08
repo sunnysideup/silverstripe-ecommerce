@@ -40,9 +40,9 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     /**
      * @param DataObject $record
      *
-     * @return Form
+     * @return SilverStripe\Forms\Form
      */
-    public function oneItemForm($record)
+    public function oneItemForm(DataObject $record)
     {
         Config::modify()->update(LeftAndMain::class, 'tree_class', $record->ClassName);
         $form = LeftAndMain::getEditForm($record);

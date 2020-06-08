@@ -114,7 +114,7 @@ class ProductProductImageUploadField extends UploadField
      *
      *                       @link $record}, with the same name as the field name.
      *
-     * @param Form $form Reference to the container form
+     * @param SilverStripe\Forms\Form $form Reference to the container form
      */
     public function __construct($name, $title = null, SS_List $items = null)
     {

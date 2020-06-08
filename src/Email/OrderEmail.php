@@ -38,7 +38,7 @@ abstract class OrderEmail extends Email
      * turns an html document into a formatted html document
      * using the emogrify method.
      *
-     * @param $html
+     * @param string $html
      *
      * @return string HTML
      */
@@ -143,9 +143,9 @@ abstract class OrderEmail extends Email
             }
 
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
-                $result = parent::sendPlain($messageID);
+                $result = parent::sendPlain();
             } else {
-                $result = parent::send($messageID);
+                $result = parent::send();
             }
 
             $orderEmailRecord = $this->createRecord($result);
@@ -199,7 +199,7 @@ abstract class OrderEmail extends Email
     /**
      * @param bool $result: how did the email go? 1 = sent, 0 = not sent
      *
-     * @return DataObject (OrderEmailRecord)
+     * @return OrderEmailRecord
      **/
     protected function createRecord($result)
     {

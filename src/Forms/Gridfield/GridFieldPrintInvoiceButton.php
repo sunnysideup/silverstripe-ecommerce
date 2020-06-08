@@ -27,7 +27,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
      * Return any special attributes that will be used for FormField::create_tag()
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param SilverStripe\ORM\DataObject $record
      * @param string $columnName
      * @return array
      */
@@ -52,7 +52,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
 
     /**
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param SilverStripe\ORM\DataObject $record
      * @param string $columnName
      *
      * @return string - the HTML for the column

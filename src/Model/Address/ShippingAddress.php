@@ -190,7 +190,7 @@ class ShippingAddress extends OrderAddress
     }
 
     /**
-     *@return FieldList
+     *@return SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -220,7 +220,7 @@ class ShippingAddress extends OrderAddress
      *
      * @param Member $member
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      **/
     public function getFields(Member $member = null)
     {

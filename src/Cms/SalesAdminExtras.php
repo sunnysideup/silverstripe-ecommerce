@@ -47,7 +47,7 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
     /**
      * standard SS variable.
      *
-     * @var int
+     * @var float
      */
     private static $menu_priority = 3.11;
 

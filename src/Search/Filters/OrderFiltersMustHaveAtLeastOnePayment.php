@@ -16,7 +16,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 class OrderFiltersMustHaveAtLeastOnePayment extends ExactMatchFilter
 {
     /**
-     *@return SQLQuery
+     *@return SilverStripe\ORM\DataQuery
      **/
     public function apply(DataQuery $query)
     {

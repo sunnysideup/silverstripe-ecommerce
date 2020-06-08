@@ -25,7 +25,7 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
     protected $additionalDaysPerMonth = 1;
 
     /**
-     *@return SQLQuery
+     *  @return SilverStripe\ORM\DataQuery 
      **/
     public function apply(DataQuery $query)
     {

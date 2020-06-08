@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 class OrderModifierFormController extends Controller
 {
     /**
-     * @var Order
+     * @var Sunnysideup\Ecommerce\Model\Order
      */
     protected $currentOrder = null;
 
@@ -90,7 +90,7 @@ class OrderModifierFormController extends Controller
      *
      * @param string $name The name of the form to return
      *
-     * @return Form
+     * @return SilverStripe\Forms\Form
      */
     protected function getOrderModifierForm($name)
     {

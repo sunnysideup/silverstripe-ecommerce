@@ -13,7 +13,7 @@ class ShopAccountFormPasswordValidator
     /**
      * returns a valid, mysql safe password OR an empty string.
      *
-     * @param $data (data from form)
+     * @param array $data (data from form)
      *
      * @return string
      */

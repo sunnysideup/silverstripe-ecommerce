@@ -709,7 +709,7 @@ EcommerceConfig:
     {
         if ($page) {
             $fields = Config::inst()->get($page->ClassName, 'db');
-            $defaultsArray = $page->stat('defaults', true);
+            $defaultsArray = $page->config()->get('defaults');
             $configArray = [];
             if ($fields) {
                 foreach (array_keys($fields) as $fieldKey) {

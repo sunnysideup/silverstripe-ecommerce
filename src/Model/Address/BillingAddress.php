@@ -205,7 +205,7 @@ class BillingAddress extends OrderAddress
     }
 
     /**
-     *@return FieldList
+     *@return SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -224,7 +224,7 @@ class BillingAddress extends OrderAddress
     /**
      * @param Member $member
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      **/
     public function getFields(Member $member = null)
     {

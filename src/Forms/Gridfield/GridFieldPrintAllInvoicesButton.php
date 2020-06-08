@@ -37,7 +37,6 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
 
     /**
      * @param string $targetFragment The HTML fragment to write the button into
-     * @param array $exportColumns The columns to include in the export
      */
     public function __construct($targetFragment = 'after')
     {

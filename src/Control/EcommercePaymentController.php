@@ -20,7 +20,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 class EcommercePaymentController extends Controller
 {
     /**
-     * @var Order
+     * @var Order | null
      */
     protected $currentOrder = null;
 
@@ -96,7 +96,7 @@ class EcommercePaymentController extends Controller
     }
 
     /**
-     * @return Form (OrderFormPayment) | Array
+     * @return SilverStripe\Forms\Form | Array (OrderFormPayment) 
      **/
     public function PaymentForm()
     {

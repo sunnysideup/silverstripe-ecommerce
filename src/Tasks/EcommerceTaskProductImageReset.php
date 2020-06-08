@@ -74,7 +74,7 @@ class EcommerceTaskProductImageReset extends BuildTask
                     } elseif (! is_a($image, EcommerceConfigClassNames::getName(ProductImage::class))) {
                         ++$updateClassCount;
                         $image = $image->newClassInstance(ProductImage::class);
-                        $image - write();
+                        $image->write();
                     }
                 }
             }

@@ -20,8 +20,8 @@ use SilverStripe\View\ArrayData;
 class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements GridField_ColumnProvider
 {
     /**
-     * @param GridField  $gridField
-     * @param DataObject $record
+     * @param SilverStripe\Forms\GridField\GridField  $gridField
+     * @param SilverStripe\ORM\DataObject $record
      * @param string     $columnName
      *
      * @return string - the HTML for the column

@@ -77,6 +77,9 @@ class OrderStatusLogArchived extends OrderStatusLog
         return true;
     }
 
+    /**
+     * @return SilverStripe\Forms\FieldList
+     **/
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();

@@ -20,7 +20,7 @@ class EcommerceMoney extends Extension
     {
         $money = DBMoney::create();
 
-        return $money->getSymbol($currency);
+        return $money->getSymbol();
     }
 
     /**

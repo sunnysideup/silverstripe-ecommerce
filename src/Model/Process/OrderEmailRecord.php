@@ -251,7 +251,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {

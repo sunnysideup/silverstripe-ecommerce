@@ -60,7 +60,7 @@ class CartResponse extends EcommerceResponse
      * @param array  $additionalData
      * @param string $status
      *
-     * @return HEADER + JSON
+     * @return string HEADER + JSON
      **/
     public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
     {

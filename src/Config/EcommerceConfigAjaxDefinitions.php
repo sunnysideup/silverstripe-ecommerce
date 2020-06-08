@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Config;
 
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -30,7 +31,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      *     }
      * </code>.
      *
-     * @var DataObject
+     * @var DataObject | null
      */
     protected $requestor = null;
 
@@ -46,7 +47,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      *
      * @param DataObject $do - the object that requested the data.
      */
-    public function setRequestor($do)
+    public function setRequestor(DataObject $do)
     {
         if (self::$prefix === null) {
             self::$prefix = EcommerceConfig::get(Order::class, 'template_id_prefix');

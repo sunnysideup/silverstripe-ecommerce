@@ -176,7 +176,7 @@ class EcommerceConfigDefinitions
     /**
      * Tells us the version of e-commerce in use.
      *
-     * @return int
+     * @return float
      */
     public function Version()
     {
@@ -205,23 +205,6 @@ class EcommerceConfigDefinitions
         return $this->ajaxMethods;
     }
 
-    /**
-     * Tells us the svn revision of e-commerce in use.
-     *
-     * @return int
-     */
-    public function SvnVersion()
-    {
-        $svnrev = '0';
-        $file = Director::baseFolder() . '/ecommerce/.svn/entries';
-        if (file_exists($file)) {
-            $svn = @File($file);
-            if ($svn && isset($svn[3])) {
-                $svnrev = $svn[3];
-            }
-        }
-        return $svnrev;
-    }
 
     /**
      * @return array

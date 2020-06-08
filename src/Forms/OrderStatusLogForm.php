@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 class OrderStatusLogForm extends Form
 {
     /**
-     * @var Order
+     * @var Sunnysideup\Ecommerce\Model\Order
      */
     protected $order;
 
@@ -76,13 +76,10 @@ class OrderStatusLogForm extends Form
 
     /**
      * saves the form into session.
-     *
-     * @param array $data - data from form.
      */
     public function saveDataToSession()
     {
         $data = $this->getData();
-
         Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 }

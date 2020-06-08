@@ -39,9 +39,6 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         It will only move orders if they can be moved through order steps.
         You may need to run this task several times to move all orders.';
 
-    /**
-     * @param SS_Request $request
-     **/
     public function run($request)
     {
         //IMPORTANT!

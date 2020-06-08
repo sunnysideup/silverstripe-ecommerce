@@ -113,7 +113,7 @@ class ShoppingCart
     /**
      * stores a reference to the current order object.
      *
-     * @var object
+     * @var object | null
      **/
     protected $order = null;
 
@@ -181,7 +181,7 @@ class ShoppingCart
      * you may supply an ID here, so that it looks up the current order ID
      * only when none is supplied.
      *
-     * @param int (optional) | Order $orderOrOrderID
+     * @param Order $orderOrOrderID | int (optional)
      *
      * @return int;
      */
@@ -368,7 +368,7 @@ class ShoppingCart
      *
      * @param Order $order (optional)
      *
-     * @return ShoppingCart Object
+     * @return string
      */
     public function Link($order = null)
     {
@@ -382,7 +382,7 @@ class ShoppingCart
      * Adds any number of items to the cart.
      * Returns the order item on succes OR false on failure.
      *
-     * @param DataObject $buyable    - the buyable (generally a product) being added to the cart
+     * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param float      $quantity   - number of items add.
      * @param mixed      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *                                 if you make it a form, it will save the form into the orderitem
@@ -390,7 +390,7 @@ class ShoppingCart
      *
      * @return false | DataObject (OrderItem)
      */
-    public function addBuyable(BuyableModel $buyable, $quantity = 1, $parameters = [])
+    public function addBuyable(BuyableModel $buyable, $quantity = 1.00, $parameters = [])
     {
         if ($this->allowWrites()) {
             if (! $buyable) {
@@ -431,7 +431,7 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param DataObject $buyable    - the buyable (generally a product) being added to the cart
+     * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param float      $quantity   - number of items add.
      * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
@@ -459,13 +459,13 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param DataObject $buyable    - the buyable (generally a product) being added to the cart
+     * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param float      $quantity   - number of items add.
      * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
      * @return false | OrderItem | null
      */
-    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = [])
+    public function decrementBuyable(BuyableModel $buyable, $quantity = 1.00, array $parameters = [])
     {
         if ($this->allowWrites()) {
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
@@ -495,7 +495,7 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param OrderItem $buyable    - the buyable (generally a product) being added to the cart
+     * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param array     $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
      * @return bool | item | null - successfully removed
@@ -519,8 +519,8 @@ class ShoppingCart
     /**
      * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
      *
-     * @param DataObject    $buyable             - the buyable (generally a product) being added to the cart
-     * @param float         $quantity            - number of items add.
+     * @param BuyableModel    $buyable             - the buyable (generally a product) being added to the cart
+     * @param array         $parameters            
      * @param bool          $mustBeExistingItem - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
      * @param array | Form  $parameters          - array of parameters to target a specific order item. eg: group=1, length=5*
      *                                           - form saved into item...
@@ -561,10 +561,10 @@ class ShoppingCart
     /**
      * @todo: what does this method do???
      *
-     * @param DataObject ($buyable)
+     * @param BuyableModel $buyable
      * @param float $quantity
      *
-     * @return int
+     * @return float
      */
     public function prepareQuantity(BuyableModel $buyable, $quantity)
     {
@@ -581,10 +581,10 @@ class ShoppingCart
      * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
      * NOTE: does not write!
      *
-     * @param DataObject $buyable
+     * @param BuyableModel $buyable
      * @param array      $parameters
      *
-     * @return OrderItem
+     * @return OrderItem | false
      */
     public function findOrMakeItem(BuyableModel $buyable, array $parameters = [])
     {
@@ -699,11 +699,11 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param OrderModifier $modifier
+     * @param OrderModifier $modifier | int
      *
      * @return bool | null
      */
-    public function removeModifier(OrderModifier $modifier)
+    public function removeModifier($modifier)
     {
         if ($this->allowWrites()) {
             $modifier = is_numeric($modifier) ? OrderModifier::get()->byID($modifier) : $modifier;
@@ -729,7 +729,7 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param Int/ $modifier OrderModifier
+     * @param OrderModifier $modifier | int
      *
      * @return bool
      */
@@ -840,7 +840,7 @@ class ShoppingCart
      * @param Order $oldOrder
      * @param Order $newOrder
      *
-     * @return Ordeer (the new order)
+     * @return Order (the new order)
      */
     public function CopyOrderOnly($oldOrder, $newOrder)
     {
@@ -871,7 +871,7 @@ class ShoppingCart
         foreach ($buyables as $buyable) {
             if ($buyable && $buyable->canPurchase()) {
                 $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
-                $quantity = $this->prepareQuantity($buyable, $quantity);
+                $quantity = $this->prepareQuantity($buyable, $item->Quantity);
                 if ($item && $quantity) {
                     $item->Quantity = $quantity;
                     $item->write();
@@ -887,7 +887,7 @@ class ShoppingCart
     /**
      * sets country in order so that modifiers can be recalculated, etc...
      *
-     * @param string - $countryCode
+     * @param string $countryCode
      *
      * @return bool
      **/
@@ -907,7 +907,7 @@ class ShoppingCart
     /**
      * sets region in order so that modifiers can be recalculated, etc...
      *
-     * @param int | String - $regionID you can use the ID or the code.
+     * @param int | String $regionID you can use the ID or the code.
      *
      * @return bool
      **/
@@ -1033,8 +1033,8 @@ class ShoppingCart
     /**
      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
      *
-     * @param $message - the message, which could be a notification of successful action, or reason for failure
-     * @param $status - please use good, bad, warning
+     * $message the message, which could be a notification of successful action, or reason for failure
+     * @param $status please use good, bad, warning
      */
     public function addMessage($message, $status = 'good')
     {
@@ -1064,7 +1064,7 @@ class ShoppingCart
         //get old messages
         $messages = unserialize(Controller::curr()->getRequest()->getSession()->get($sessionVariableName));
         //clear old messages
-        Controller::curr()->getRequest()->getSession()->clear($sessionVariableName, '');
+        Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
         //set to form????
         if ($messages && count($messages)) {
             $this->messages = array_merge($messages, $this->messages);
@@ -1150,7 +1150,7 @@ class ShoppingCart
     /**
      * Gets an existing order item based on buyable and passed parameters.
      *
-     * @param DataObject $buyable
+     * @param BuyableModel $buyable
      * @param array      $parameters
      *
      * @return OrderItem | null
@@ -1170,7 +1170,7 @@ class ShoppingCart
      *
      * @param array $params
      *
-     * @return cleaned array
+     * @return array cleaned 
      */
     protected function cleanParameters(array $params = [])
     {

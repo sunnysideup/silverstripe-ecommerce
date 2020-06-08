@@ -27,9 +27,6 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
     protected $description = 'Go through order queue and try to finalise all the orders in it.';
 
-    /**
-     *@return int - number of carts destroyed
-     **/
     public function run($request)
     {
         //as this may run every minute, we have to limit it to fifty seconds.
@@ -61,7 +58,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     /**
      * @param  DataList $orders orders to be processsed.
      */
-    protected function tryToFinaliseOrders($orders)
+    protected function tryToFinaliseOrders(DataList $orders)
     {
         //limit orders
         $orders = $orders->limit($this->limit);

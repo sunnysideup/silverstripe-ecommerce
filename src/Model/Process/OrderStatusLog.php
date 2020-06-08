@@ -305,7 +305,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return FieldList
+     * @return SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
