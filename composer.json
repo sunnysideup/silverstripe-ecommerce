@@ -32,7 +32,7 @@
         "sunnysideup/google_address_field": "3.x-dev",
         "sunnysideup/permission_provider": "3.x-dev",
         "sunnysideup/cms_edit_link_field": "3.x-dev",
-        "silverstripe/recipe-cms": "^4.5"
+        "silverstripe/recipe-cms": "~4.5"
     },
     "suggest": {
         "sunnysideup/flush": "dev-master",
