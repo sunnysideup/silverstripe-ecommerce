@@ -1738,11 +1738,10 @@ class ProductGroup extends Page
     /**
      * Get the cache object to use when storing / retrieving stuff in the Silverstripe Cache
      *
-     * @return Zend_Cache_Core
      */
     protected function getSilverstripeCoreCache()
     {
-        return $this->silverstripeCoreCache ?: Injector::inst()->get(CacheInterface::class . '.' . 'EcomPG');
+        return $this->silverstripeCoreCache ?: Injector::inst()->get(CacheInterface::class . '.EcomPG');
     }
 
     /**
@@ -1765,9 +1764,9 @@ class ProductGroup extends Page
             /**
              * UPGRADE TO DO: 'automatic_serialization' no longer exists, what do we replace it with
              */
-            if (! $cache->getOption('automatic_serialization')) {
-                $data = @unserialize($data);
-            }
+            // if (! $cache->getOption('automatic_serialization')) {
+            //     $data = @unserialize($data);
+            // }
 
             return $data;
         }
@@ -1791,9 +1790,9 @@ class ProductGroup extends Page
             /**
              * UPGRADE TO DO: 'automatic_serialization' no longer exists, what do we replace it with
              */
-            if (! $cache->getOption('automatic_serialization')) {
-                $data = serialize($data);
-            }
+            // if (! $cache->getOption('automatic_serialization')) {
+            //     $data = serialize($data);
+            // }
             $cache->set($cacheKey, $data);
             return true;
         }

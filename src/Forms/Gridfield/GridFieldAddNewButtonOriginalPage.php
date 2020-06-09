@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;

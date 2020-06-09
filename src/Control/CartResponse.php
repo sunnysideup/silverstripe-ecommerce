@@ -177,15 +177,6 @@ class CartResponse extends EcommerceResponse
                 's' => $selector,
                 'p' => 'innerHTML',
                 //note the space is a hack to return something!
-
-                /**
-                 * ### @@@@ START REPLACEMENT @@@@ ###
-                 * WHY: automated upgrade
-                 * OLD: ->RenderWith( (ignore case)
-                 * NEW: ->RenderWith( (COMPLEX)
-                 * EXP: Check that the template location is still valid!
-                 * ### @@@@ STOP REPLACEMENT @@@@ ###
-                 */
                 'v' => ' ' . $currentOrder->RenderWith($template),
             ];
         }

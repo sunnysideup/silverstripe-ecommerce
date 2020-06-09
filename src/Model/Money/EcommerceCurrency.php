@@ -411,7 +411,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         }
 
         return DBField::create_field(
-            'DBMoney',
+            'Money',
             [
                 'Amount' => $price,
                 'Currency' => $currencyCode,

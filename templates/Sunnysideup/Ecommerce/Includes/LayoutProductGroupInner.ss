@@ -14,7 +14,7 @@
 <div id="Products" class="category">
 
     <div class="resultsBar">
-    <% include ProductGroupSortAndList %>
+    <% include Sunnysideup\Ecommerce\Includes\ProductGroupSortAndList %>
     </div>
 
     <ul class="productList displayStyle$MyDefaultDisplayStyle <% if IsShowFullList %>fullList<% end_if %>">

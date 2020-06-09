@@ -1160,8 +1160,11 @@ class ShoppingCart
         $filterString = $this->parametersToSQL($parameters);
         if ($order = $this->currentOrder()) {
             $orderID = $order->ID;
-            return DataObject::get_one(OrderItem::class, " \"BuyableClassName\" = '" . $buyable->ClassName . "' AND\n                \"BuyableID\" = " . $buyable->ID . ' AND
-                "OrderID" = ' . $orderID . ' ' . $filterString, $cacheDataObjectGetOne = false);
+            return DataObject::get_one(
+                OrderItem::class, 
+                "\"BuyableClassName\" = " . Convert::raw2sql($buyable->ClassName, true) . " AND \"BuyableID\" = " . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString, 
+                $cacheDataObjectGetOne = false
+            );
         }
     }
 
