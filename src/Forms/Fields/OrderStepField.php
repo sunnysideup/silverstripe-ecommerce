@@ -87,7 +87,7 @@ class OrderStepField extends DatalessField
      *
      * @param array $properties
      *
-     * @return HTML
+     * @return string
      */
     public function FieldHolder($properties = [])
     {
@@ -99,7 +99,7 @@ class OrderStepField extends DatalessField
      *
      * @param array $properties
      *
-     * @return HTML
+     * @return string
      */
     public function Field($properties = [])
     {
@@ -137,7 +137,7 @@ class OrderStepField extends DatalessField
     /**
      * standard SS method.
      *
-     * @return Field
+     * @return OrderStepField
      */
     public function performReadonlyTransformation()
     {

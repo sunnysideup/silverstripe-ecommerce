@@ -5,18 +5,12 @@ namespace Sunnysideup\Ecommerce\Model\Money;
 use CMSEditLinkAPI;
 
 
-
-
-
-use Currency;
-
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -42,7 +36,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'EcommerceCurrency';
 
@@ -135,7 +129,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var string
+     * @var array
      */
     private static $default_sort = [
         'InUse' => 'DESC',
@@ -226,7 +220,6 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         'SKK' => 'slovakia koruny',
         'SIT' => 'slovenia tolars',
         'ZAR' => 'south africa rand',
-        'KRW' => 'south korea won',
         'LKR' => 'sri lanka rupees',
         'SDD' => 'sudan dinars',
         'SEK' => 'sweden kronor',
@@ -354,7 +347,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * NOTE: when there is only one currency we return an empty DataList
      * as one currency is meaningless.
      *
-     * @return DataList | null
+     * @return SilverStripe\ORM\DataList | null
      */
     public static function ecommerce_currency_list()
     {
@@ -368,7 +361,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                 ]
             );
         if ($dos->count() < 2) {
-            return;
+            return null;
         }
 
         return $dos;
@@ -388,14 +381,14 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param float | Currency $price
+     * @param float | DBCurrency $price
      * @param Order $order
      *
-     * @return Money
+     * @return SilverStripe\ORM\FieldType\DBMoney | SilverStripe\ORM\FieldType\DBField
      */
     public static function get_money_object_from_order_currency($price, Order $order = null)
     {
-        if ($price instanceof Currency) {
+        if ($price instanceof DBCurrency) {
             $price = $price->getValue();
         }
         if (! $order) {
@@ -418,7 +411,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         }
 
         return DBField::create_field(
-            'Money',
+            'DBMoney',
             [
                 'Amount' => $price,
                 'Currency' => $currencyCode,
@@ -447,6 +440,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function default_currency_code()
     {
+        $code = '';
         $obj = self::default_currency();
         if ($obj) {
             $code = $obj->Code;
@@ -476,7 +470,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @param string $currencyCode - the code of the currency, e.g. nzd
      *
-     * @return EcommerceCurrency | Null
+     * @return EcommerceCurrency | DataObject null
      */
     public static function get_one_from_code($currencyCode)
     {

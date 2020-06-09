@@ -76,7 +76,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'OrderAttribute';
 
@@ -112,7 +112,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS variable.
      *
-     * @var string
+     * @var array
      **/
     private static $default_sort = [
         'OrderAttribute.GroupSort' => 'ASC',
@@ -336,7 +336,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * returns the order - for some unknown reason it seems we need this.
      *
-     * @return Order | null
+     * @return Order | SilverStripe\ORM\DataObject | null
      */
     public function Order()
     {
@@ -376,7 +376,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * In templates, it is used like this:
      * $EcommerceConfigAjax.TableID.
      *
-     * @return EcommerceConfigAjax
+     * @return EcommerceConfigAjaxDefinitions
      **/
     public function AJAXDefinitions()
     {
@@ -386,7 +386,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * returns the instance of EcommerceDBConfig.
      *
-     * @return EcommerceDBConfig
+     * @return EcommerceDBConfig | Object
      **/
     public function EcomConfig()
     {
@@ -494,7 +494,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Returns the Money object of the CalculatedTotal.
      *
-     * @return Money
+     * @return SilverStripe\ORM\FieldType\DBMoney
      **/
     public function CalculatedTotalAsMoney()
     {

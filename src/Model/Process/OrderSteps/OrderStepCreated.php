@@ -49,7 +49,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Add the member to the order, in case the member is not an admin.
      *
-     * @param DataObject - $order Order
+     * @param SilverStripe\ORM\DataObject | Order $order
      *
      * @return bool
      **/
@@ -75,7 +75,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (next step OrderStep object)
+     * @return OrderStep | null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {
@@ -83,7 +83,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
             return parent::nextStep($order);
         }
 
-        return;
+        return null;
     }
 
     /**

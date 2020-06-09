@@ -99,7 +99,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * Generate export fields for CSV.
      *
      * @param GridField $gridField
-     * @return array
+     * @return string | null
      */
     public function generateExportFileData($gridField)
     {
@@ -199,7 +199,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * @param  array    $idArray Order IDs
      * @param  int      $count
      * @param  int      $offset
-     * @return DataList
+     * @return SilverStripe\ORM\DataList
      */
     protected function getMyOrders($idArray, $count, $offset)
     {

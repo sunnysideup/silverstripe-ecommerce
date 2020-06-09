@@ -25,7 +25,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'OrderModifierDescriptor';
 

@@ -34,7 +34,7 @@ class OrderModifierForm extends Form
      *@param string $name
      *@param FieldList $fields
      *@param FieldList $actions
-     *@param SS_Validator $optionalValidator
+     *@param Validator $optionalValidator
      **/
     public function __construct(
         Controller $optionalController = null,
@@ -99,13 +99,10 @@ class OrderModifierForm extends Form
 
     /**
      * saves the form into session.
-     *
-     * @param array $data - data from form.
      */
     public function saveDataToSession()
     {
         $data = $this->getData();
-
         Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
     }
 

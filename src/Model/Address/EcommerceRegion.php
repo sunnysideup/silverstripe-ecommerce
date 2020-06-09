@@ -50,7 +50,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'EcommerceRegion';
 
@@ -73,7 +73,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var string
+     * @var array
      */
     private static $indexes = [
         'Name' => true,
@@ -84,7 +84,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var string
+     * @var array
      */
     private static $default_sort = [
         'Name' => 'ASC',

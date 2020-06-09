@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\TreeDropdownField;
 
 /**
@@ -44,9 +45,9 @@ class OptionalTreeDropdownField extends TreeDropdownField
     /**
      * Get the whole tree of a part of the tree via an AJAX request with empty / none item prepended.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
-     * @return string
+     * @return HTTPResponse
      *                for version 2.4 and later
      */
     public function tree(HTTPRequest $request)

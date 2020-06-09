@@ -21,6 +21,8 @@ use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
  **/
 class BuyableFieldType extends DBPolymorphicForeignKey
 {
+    private static $classname_spec_cache = [];
+    
     public function scaffoldFormField($title = null, $params = null)
     {
         // Opt-out of form field generation - Scaffolding should be performed on

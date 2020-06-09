@@ -18,7 +18,7 @@ use SilverStripe\View\Requirements;
 class SelectOrderAddressField extends OptionsetField
 {
     /**
-     * @var DataList
+     * @var SilverStripe\ORM\DataList | null
      */
     protected $addresses = null;
 
@@ -27,7 +27,7 @@ class SelectOrderAddressField extends OptionsetField
      *
      * @param string    $name      The field name
      * @param string    $title     The field title
-     * @param ArrayList $addresses
+     * @param SilverStripe\ORM\ArrayList $addresses
      * @param string    $value     The current value
      * @param Form      $form      - The parent form
      */
@@ -41,14 +41,14 @@ class SelectOrderAddressField extends OptionsetField
                 $source[$address->ID] = $address->FullString();
             }
         }
-        parent::__construct($name, $title, $source, $value, $form);
+        parent::__construct($name, $title, $source, $value);
     }
 
     /**
      * Standard SS method - returns the string for the Field.
      * Note that we include JS from this method.
      *
-     * @return HTML
+     * @return SilverStripe\ORM\FieldType\DBHTMLText
      */
     public function Field($properties = [])
     {

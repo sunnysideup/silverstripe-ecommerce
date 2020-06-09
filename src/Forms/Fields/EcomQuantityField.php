@@ -23,7 +23,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 class EcomQuantityField extends NumericField
 {
     /**
-     *@var order OrderItem DataObject
+     *@var OrderItem | DataObject | null
      **/
     protected $orderItem = null;
 
@@ -132,7 +132,7 @@ class EcomQuantityField extends NumericField
     }
 
     /**
-     * @param $properties
+     * @param array $properties
      *
      * @return string (HTML)
      **/

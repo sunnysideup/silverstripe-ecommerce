@@ -292,7 +292,7 @@ class OrderProcessQueue extends DataObject
      * @param int $id force this Order to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
      *
-     * @return DataList (of orders)
+     * @return SilverStripe\ORM\DataList (of orders)
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
     {
@@ -322,10 +322,9 @@ class OrderProcessQueue extends DataObject
 
     /**
      * META METHOD: all orders with a queue object
-     * @param int $id force this Order to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
      *
-     * @return DataList (of orders)
+     * @return SilverStripe\ORM\DataList (of orders)
      */
     public function AllOrdersInQueue($limit = 9999)
     {
@@ -341,7 +340,7 @@ class OrderProcessQueue extends DataObject
      * META METHOD: returns a list of orders NOT YET to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
      *
-     * @return DataList (of orders)
+     * @return SilverStripe\ORM\DataList (of orders)
      */
     public function OrdersInQueueThatAreNotReady($limit = 9999)
     {
@@ -379,7 +378,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return SS_DateTime
+     * @return SilverStripe\ORM\FieldType\DBDateTime | SilverStripe\ORM\FieldType\DBField 
      */
     public function ToBeProcessedAt()
     {
@@ -388,7 +387,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return SS_DateTime
+     * @return SilverStripe\ORM\FieldType\DBDateTime | SilverStripe\ORM\FieldType\DBField
      */
     public function getToBeProcessedAt()
     {
@@ -397,7 +396,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return SS_DateTime
+     * @return SilverStripe\ORM\FieldType\DBDateTime | SilverStripe\ORM\FieldType\DBField
      */
     public function HasBeenInQueueForSince()
     {
@@ -406,7 +405,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return SS_DateTime
+     * @return SilverStripe\ORM\FieldType\DBDateTime | SilverStripe\ORM\FieldType\DBField
      */
     public function getHasBeenInQueueForSince()
     {

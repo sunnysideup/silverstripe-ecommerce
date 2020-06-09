@@ -78,7 +78,7 @@ class EcommercePaymentSupportedMethodsProvider extends ViewableData implements E
      *
      * @param Order $order (optional) | Int
      *
-     * @return Order
+     * @return Order | DataObject
      */
     protected function orderToUse($order = null)
     {

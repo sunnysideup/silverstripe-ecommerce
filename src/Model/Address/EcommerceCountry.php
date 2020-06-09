@@ -119,7 +119,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Variable.
      *
-     * @var string
+     * @var array
      **/
     private static $default_sort = [
         'DoNotAllowSales' => 'ASC',
@@ -169,7 +169,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Memory for allow country to check.
      *
-     * @var boolean|null
+     * @var array | null
      */
     private static $_allow_sales_cache = [];
 
@@ -443,7 +443,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int (optional) $orderID
+     * @param int $orderID (optional)
      */
     public static function reset_get_country_cache($orderID = 0)
     {
@@ -452,7 +452,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int (optional) $orderID
+     * @param int $orderID (optional)
      */
     public static function get_country_cache($orderID = 0)
     {
@@ -463,7 +463,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
     /**
      * @param string         $countryCode
-     * @param int (optional) $orderID
+     * @param int            $orderID (optional)
      */
     public static function set_country_cache($countryCode, $orderID = 0)
     {
@@ -474,8 +474,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * This function works out the most likely country for the current order.
      *
-     * @param bool (optional) $recalculate
-     * @param int (optional)  $orderID
+     * @param bool $recalculate (optional)
+     * @param int  $orderID (optional)
      *
      * @return string - Country Code - e.g. NZ
      **/
@@ -557,10 +557,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * This function works out the most likely country for the current order
      * and returns the Country Object, if any.
      *
-     * @param bool    (optional)   $recalculate
-     * @param string  (optional)   $countryCode
+     * @param bool    $recalculate (optional)
+     * @param string  $countryCode (optional)
      *
-     * @return EcommerceCountry | Null
+     * @return EcommerceCountry | SilverStripe\ORM\DataObject | Null
      **/
     public static function get_country_object($recalculate = false, $countryCode = null)
     {
@@ -577,8 +577,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * returns the ID of the country or 0.
      *
-     * @param string (optional)   $countryCode
-     * @param bool   (optional)   $recalculate
+     * @param string  $countryCode (optional)
+     * @param bool    $recalculate (optional)
      *
      * @return int
      **/
@@ -611,7 +611,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Checks if we are allowed to sell to the current country.
      *
-     * @param int (optional) $orderID
+     * @param int $orderID (optional)
      *
      * @return bool
      */

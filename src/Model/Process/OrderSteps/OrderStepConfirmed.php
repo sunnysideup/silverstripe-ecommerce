@@ -69,9 +69,9 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     /**
      * can go to next step if order payment has been confirmed...
      *
-     * @param DataObject $order Order
+     * @param SilverStripe\ORM\DataObject | Order $order 
      *
-     * @return DataObject | Null - DataObject = OrderStep
+     * @return OrderStep | null 
      **/
     public function nextStep(Order $order)
     {
@@ -82,7 +82,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
             return parent::nextStep($order);
         }
 
-        return;
+        return null;
     }
 
     /**

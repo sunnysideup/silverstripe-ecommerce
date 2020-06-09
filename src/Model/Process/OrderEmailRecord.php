@@ -37,7 +37,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'OrderEmailRecord';
 
@@ -301,7 +301,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {

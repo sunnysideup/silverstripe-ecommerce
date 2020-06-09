@@ -159,7 +159,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             return parent::nextStep($order);
         }
 
-        return;
+        return null;
     }
 
     /**

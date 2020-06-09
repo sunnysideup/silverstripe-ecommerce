@@ -37,9 +37,9 @@ class EcommercePaymentTestPending extends EcommercePaymentTest
 
     /**
      * @param array     $data The form request data - see OrderForm
-     * @param OrderForm $form The form object submitted on
+     * @param Sunnysideup\Ecommerce\Forms\OrderForm $form The form object submitted on
      *
-     * @return EcommercePaymentResult
+     * @return EcommercePaymentProcessing
      */
     public function processPayment($data, $form)
     {

@@ -372,7 +372,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *@todo: are there times when the Shipping rather than the Billing address should be linked?
      * Copies the last address used by the member.
      *
-     * @param object (Member) $member
+     * @param SilverStripe\Security\Member $member
      * @param bool            $write  - should the address be written
      *
      * @return OrderAddress | ShippingAddress | BillingAddress
@@ -500,11 +500,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function JSONData()
     {
         $jsArray = [];
-        if (! isset($fields)) {
-            $fields = $this->stat('db');
-            $regionFieldName = $this->fieldPrefix() . 'RegionID';
-            $fields[$regionFieldName] = $regionFieldName;
-        }
+        $fields = $this->stat('db');
+        $regionFieldName = $this->fieldPrefix() . 'RegionID';
+        $fields[$regionFieldName] = $regionFieldName;
+
         if ($fields) {
             foreach (array_keys($fields) as $name) {
                 $jsArray[$name] = $this->{$name};
@@ -517,7 +516,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * returns the instance of EcommerceDBConfig.
      *
-     * @return EcommerceDBConfig
+     * @return EcommerceDBConfig | Object
      **/
     public function EcomConfig()
     {
@@ -656,7 +655,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * makes selected fields into read only using the $this->readOnlyFields array.
      *
-     * @param FieldList | Composite $fields
+     * @param FieldList | SilverStripe\Forms\Composite $fields
      *
      * @return FieldList
      */

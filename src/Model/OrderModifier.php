@@ -101,8 +101,8 @@ class OrderModifier extends OrderAttribute
     // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
     /**
-     * @var array
-     *            stardard SS definition
+     * @var string
+     * stardard SS definition
      */
     private static $table_name = 'OrderModifier';
 
@@ -472,7 +472,7 @@ class OrderModifier extends OrderAttribute
     /**
      * returns a page for a more info link... (if there is one).
      *
-     * @return object (SiteTree)
+     * @return string
      **/
     public function MoreInfoPage()
     {
@@ -480,7 +480,7 @@ class OrderModifier extends OrderAttribute
             return $obj->Link();
         }
 
-        return;
+        return '';
     }
 
     /**
@@ -503,7 +503,7 @@ class OrderModifier extends OrderAttribute
     /**
      * Returns the Money object of the Table Value.
      *
-     * @return Money
+     * @return SilverStripe\ORM\FieldType\DBMoney
      **/
     public function TableValueAsMoney()
     {
@@ -588,7 +588,7 @@ class OrderModifier extends OrderAttribute
             }
         }
 
-        return ShoppingCartController::add_modifier_link($this->ID, $params, $this->ClassName);
+        return ShoppingCartController::add_modifier_link($this->ID, $params);
     }
 
     /**
@@ -606,7 +606,7 @@ class OrderModifier extends OrderAttribute
             }
         }
 
-        return ShoppingCartController::remove_modifier_link($this->ID, $param, $this->ClassName);
+        return ShoppingCartController::remove_modifier_link($this->ID, $param);
     }
 
     /**
@@ -833,7 +833,7 @@ class OrderModifier extends OrderAttribute
             return new HeaderField($name, $this->Heading(), 4);
         }
 
-        return new LiteralField($name, '<!-- EmptyHeading -->', '<!-- EmptyHeading -->');
+        return new LiteralField($name, '<!-- EmptyHeading -->');
     }
 
     /**
@@ -846,13 +846,13 @@ class OrderModifier extends OrderAttribute
             return new LiteralField($name, '<div id="' . Convert::raw2att($name) . 'DescriptionHolder" class="descriptionHolder">' . Convert::raw2xml($this->Description()) . '</div>');
         }
 
-        return new LiteralField($name, '<!-- EmptyDescription -->', '<!-- EmptyDescription -->');
+        return new LiteralField($name, '<!-- EmptyDescription -->');
     }
 
     /**
      * returns the relevant orderModifier_Descriptor.
      *
-     * @return OrderModifierDescriptor | Null
+     * @return OrderModifierDescriptor | DataObject | Null
      */
     protected function getOrderModifierDescriptor()
     {
@@ -885,7 +885,7 @@ class OrderModifier extends OrderAttribute
      * This function is always called to determine the
      * amount this modifier needs to charge or deduct - if any.
      *
-     * @return Currency
+     * @return SilverStripe\ORM\FieldType\DBCurrency
      */
     protected function LiveCalculatedTotal()
     {

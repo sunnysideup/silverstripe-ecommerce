@@ -55,7 +55,7 @@ class EcommerceCreditCardField extends TextField
      *
      * @param int $increment Increase current tabindex by this value
      *
-     * @return string
+     * @return string | bool
      */
     public function getTabIndexHTML($increment = 0)
     {

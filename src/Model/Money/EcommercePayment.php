@@ -143,7 +143,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var string
+     * @var array
      */
     private static $default_sort = [
         'LastEdited' => 'DESC',
@@ -466,11 +466,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @param null $order | Array
      *
-     * @return An array suitable for passing to CustomRequiredFields
+     * @return array An array suitable for passing to CustomRequiredFields
      */
     public static function combined_form_requirements($order = null)
     {
-        return;
+        return [];
     }
 
     /**
@@ -551,7 +551,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * do not have any fields required here.
      *
      * @param array     $data The form request data - see OrderForm
-     * @param OrderForm $form The form object submitted on
+     * @param Sunnysideup\Ecommerce\Forms\OrderForm $form The form object submitted on
      */
     public function validatePayment($data, $form)
     {
@@ -569,9 +569,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * submitted.
      *
      * @param array     $data The form request data - see OrderForm
-     * @param OrderForm $form The form object submitted on
-     *
-     * @return EcommercePaymentResult
+     * @param Sunnysideup\Ecommerce\Forms\OrderForm $form The form object submitted on
      */
     public function processPayment($data, $form)
     {

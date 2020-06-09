@@ -25,7 +25,7 @@ class ProductOrderItem extends OrderItem
             'Version',
             'UnitPrice',
             'Total',
-            Order::class,
+            'Order',
             'InternalItemID',
         ],
     ];
@@ -44,7 +44,7 @@ class ProductOrderItem extends OrderItem
      *                      If set to FALSE, returns the set version number of the Product
      *                      (instead of the latest published version)
      *
-     * @return Product object
+     * @return Product | SilverStripe\ORM\DataObject object
      */
     public function Product($current = false)
     {

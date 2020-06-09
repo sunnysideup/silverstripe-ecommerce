@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\Requirements;
 
 /**
@@ -52,7 +53,7 @@ class BuyableSelectField extends FormField
     protected $fieldSelectedBuyable = null;
 
     /**
-     * @var DataObject
+     * @var SilverStripe\ORM\DataObject | null
      */
     protected $buyable = null;
 
@@ -61,7 +62,7 @@ class BuyableSelectField extends FormField
      * @param string $title
      * @param object $buyable            - currently selected buyable
      * @param int    $countOfSuggestions - number of suggestions shown (max)
-     * @param Form   $form
+     * @param SilverStripe\Forms\Form   $form
      */
     public function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 100, $form = null)
     {
@@ -74,7 +75,7 @@ class BuyableSelectField extends FormField
         } else {
             $value = '';
         }
-        parent::__construct($name, $title, $value, $form);
+        parent::__construct($name, $title, $value);
     }
 
     public function hasData()
@@ -83,7 +84,7 @@ class BuyableSelectField extends FormField
     }
 
     /**
-     * @return string
+     * @return SilverStripe\ORM\FieldType\DBHTMLText
      */
     public function Field($properties = [])
     {
@@ -93,10 +94,13 @@ class BuyableSelectField extends FormField
         Requirements::customScript($this->getJavascript(), BuyableSelectField::class . $this->id());
         // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: BuyableSelectField', 'ecommerce');
 
-        return '<div class="fieldgroup">' .
+        $field =  
+        '<div class="fieldgroup">' .
             '<div class="findBuyable fieldGroupInner">' . $this->fieldFindBuyable->SmallFieldHolder() . '</div>' .
             '<div class="selectedBuyable fieldGroupInner">' . $this->fieldSelectedBuyable->SmallFieldHolder() . '</div>' .
         '</div>';
+
+         return DBField::create_field('HTMLText', $field);
     }
 
     /**

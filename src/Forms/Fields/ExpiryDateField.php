@@ -49,9 +49,6 @@ class ExpiryDateField extends TextField
         $this->setValue($value);
     }
 
-    /**
-     *@return HTML
-     **/
     public function Field($properties = [])
     {
         $monthValue = '';
@@ -89,7 +86,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param Validator $validator
+     * @param SilverStripe\Forms\Validator $validator
      *
      * @return bool
      **/
@@ -138,7 +135,7 @@ class ExpiryDateField extends TextField
     /**
      * Makes a read only field with some stars in it to replace the password.
      *
-     * @return ReadonlyField
+     * @return ReadonlyField | FormField
      */
     public function performReadonlyTransformation()
     {
@@ -150,7 +147,7 @@ class ExpiryDateField extends TextField
     /**
      * @param string $title
      *
-     * @return ConfirmedPasswordField
+     * @return ExpiryDateField
      */
     public function setRightTitle($title)
     {
@@ -164,26 +161,6 @@ class ExpiryDateField extends TextField
         return $this;
     }
 
-    /**
-     * @param array $titles 2 entry array with the customized title for each
-     *                      of the 2 children.
-     *
-     * @return ConfirmedPasswordField
-     */
-    public function setChildrenTitles($titles)
-    {
-        /*
-        if(is_array($titles) && count($titles) == 2) {
-            foreach($this->children as $field) {
-                if(isset($titles[0])) {
-                    $field->setTitle($titles[0]);
-                    array_shift($titles);
-                }
-            }
-        }
-        return $this;
-        */
-    }
 
     /**
      * Value is sometimes an array, and sometimes a single value, so we need
@@ -191,7 +168,7 @@ class ExpiryDateField extends TextField
      *
      * @param mixed $value
      *
-     * @return ConfirmedPasswordField
+     * @return ExpiryDateField
      */
     public function setValue($value, $data = null)
     {
@@ -226,7 +203,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param $array - list of options...
+     * @param $array list of options...
      * @param string $currentValue
      *
      * @return string (html)

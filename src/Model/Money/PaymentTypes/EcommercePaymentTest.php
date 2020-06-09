@@ -35,6 +35,6 @@ class EcommercePaymentTest extends EcommercePayment
 
     public function getPaymentFormRequirements()
     {
-        return;
+        return [];
     }
 }

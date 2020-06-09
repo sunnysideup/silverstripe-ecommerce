@@ -43,7 +43,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'OrderStatusLog';
 
@@ -138,7 +138,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var string
+     * @var array
      */
     private static $default_sort = [
         'ID' => 'DESC',
@@ -420,7 +420,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return FieldList
+     * @return SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -500,7 +500,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * returns the standard EcommerceDBConfig for use within OrderSteps.
      *
-     * @return EcommerceDBConfig
+     * @return EcommerceDBConfig | Object
      */
     protected function EcomConfig()
     {

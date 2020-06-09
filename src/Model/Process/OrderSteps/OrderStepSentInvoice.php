@@ -78,7 +78,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
      *
-     * @param DataObject $order Order
+     * @param SilverStripe\ORM\DataObject | Order $order 
      *
      * @return bool
      **/
@@ -104,7 +104,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (next step OrderStep object)
+     * @return OrderStep | null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {
@@ -112,7 +112,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
             return parent::nextStep($order);
         }
 
-        return;
+        return null;
     }
 
     /**

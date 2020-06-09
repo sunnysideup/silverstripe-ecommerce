@@ -51,7 +51,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     /**
      * minimum number of searches for the data to show up.
      *
-     * @var bool
+     * @var bool | int
      */
     protected $showMoreLink = false;
 
@@ -121,7 +121,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param $b
+     * @param string $b
      *
      * @return EcommerceSearchHistoryFormField
      */
@@ -133,7 +133,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param $b
+     * @param bool $b
      *
      * @return EcommerceSearchHistoryFormField
      */

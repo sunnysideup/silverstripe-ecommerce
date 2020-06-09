@@ -104,7 +104,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null - DataObject = next OrderStep
+     * @return OrderStep | null - DataObject = next OrderStep
      **/
     public function nextStep(Order $order)
     {
@@ -112,7 +112,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
             return parent::nextStep($order);
         }
 
-        return;
+        return null;
     }
 
     /**

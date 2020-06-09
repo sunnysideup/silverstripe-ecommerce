@@ -67,7 +67,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (next step OrderStep object)
+     * @return OrderStep | null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {
@@ -75,7 +75,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
             return parent::nextStep($order);
         }
 
-        return;
+        return null;
     }
 
     /**

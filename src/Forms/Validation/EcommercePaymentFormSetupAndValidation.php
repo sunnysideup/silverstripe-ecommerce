@@ -36,7 +36,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      *         CVVNumber: MyCVVNumberDBField
      *         ExpiryDate: MyExpiryDateDBField.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'EcommercePaymentFormSetupAndValidation';
 
@@ -109,9 +109,9 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
     }
 
     /**
-     * @param Order $order - the order that is being paid
+     * @param Sunnysideup\Ecommerce\Model\Order $order - the order that is being paid
      * @param array $data  - Array of data that is submittted
-     * @param Form  $form  - the form that is being submitted
+     * @param SilverStripe\Forms\Form  $form  - the form that is being submitted
      *
      * @return bool - true if the data is valid
      */
@@ -152,7 +152,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      * If there are no errors, then the payment object will also be written...
      * If there are errors, the errors will be added to the form.
      *
-     * @param Form             $form
+     * @param SilverStripe\Forms\Form             $form
      * @param array            $data
      * @param EcommercePayment $paymentObject
      *
@@ -254,8 +254,8 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      * 2. save form into payment
      * 3. return payment result.
      *
-     * @param Order $order - the order that is being paid
-     * @param Form  $form  - the form that is being submitted
+     * @param Sunnysideup\Ecommerce\Model\Order $order - the order that is being paid
+     * @param SilverStripe\Forms\Form  $form  - the form that is being submitted
      * @param array $data  - Array of data that is submittted
      *
      * @return bool - if successful, this method will return TRUE
