@@ -7,6 +7,7 @@ use CMSEditLinkAPI;
 use CMSEditLinkField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
@@ -189,7 +190,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

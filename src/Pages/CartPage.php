@@ -4,14 +4,6 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
 
-
-
-
-
-
-
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\Tab;

@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use SilverStripe\Forms\Form;
 use SilverStripe\Forms\OptionsetField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\Requirements;
 
@@ -29,9 +29,8 @@ class SelectOrderAddressField extends OptionsetField
      * @param string    $title     The field title
      * @param SilverStripe\ORM\ArrayList $addresses
      * @param string    $value     The current value
-     * @param Form      $form      - The parent form
      */
-    public function __construct($name, $title = '', $addresses = null, $value = '', Form $form = null)
+    public function __construct($name, $title = '', $addresses = null, $value = '')
     {
         $this->addresses = $addresses;
         $source = [];
@@ -48,7 +47,7 @@ class SelectOrderAddressField extends OptionsetField
      * Standard SS method - returns the string for the Field.
      * Note that we include JS from this method.
      *
-     * @return SilverStripe\ORM\FieldType\DBHTMLText
+     * @return DBHTMLText
      */
     public function Field($properties = [])
     {

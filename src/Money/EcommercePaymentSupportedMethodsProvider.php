@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Money;
 
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\ArrayLib;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;

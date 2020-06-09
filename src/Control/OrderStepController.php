@@ -7,6 +7,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -138,7 +139,7 @@ abstract class OrderStepController extends Controller
     /**
      * the form on the field.
      *
-     * @return SilverStripe\Forms\Form
+     * @return Form
      */
     protected function Form()
     {

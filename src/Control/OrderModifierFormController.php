@@ -90,7 +90,7 @@ class OrderModifierFormController extends Controller
      *
      * @param string $name The name of the form to return
      *
-     * @return SilverStripe\Forms\Form
+     * @return Form
      */
     protected function getOrderModifierForm($name)
     {

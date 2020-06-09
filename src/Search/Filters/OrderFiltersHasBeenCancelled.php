@@ -16,7 +16,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 class OrderFiltersHasBeenCancelled extends ExactMatchFilter
 {
     /**
-     *  @return SilverStripe\ORM\DataQuery
+     *  @return DataQuery
      **/
     public function apply(DataQuery $query)
     {

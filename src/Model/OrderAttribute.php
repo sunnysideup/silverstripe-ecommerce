@@ -13,6 +13,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
@@ -336,7 +337,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * returns the order - for some unknown reason it seems we need this.
      *
-     * @return Order | SilverStripe\ORM\DataObject | null
+     * @return Order | DataObject | null
      */
     public function Order()
     {
@@ -494,7 +495,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Returns the Money object of the CalculatedTotal.
      *
-     * @return SilverStripe\ORM\FieldType\DBMoney
+     * @return \SilverStripe\ORM\FieldType\DBMoney
      **/
     public function CalculatedTotalAsMoney()
     {

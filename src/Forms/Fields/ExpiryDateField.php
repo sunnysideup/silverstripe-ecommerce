@@ -2,8 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\Validator;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
@@ -86,7 +88,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param SilverStripe\Forms\Validator $validator
+     * @param Validator $validator
      *
      * @return bool
      **/
@@ -161,7 +163,6 @@ class ExpiryDateField extends TextField
         return $this;
     }
 
-
     /**
      * Value is sometimes an array, and sometimes a single value, so we need
      * to handle both cases.
@@ -203,7 +204,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param $array list of options...
+     * @param list $array of options...
      * @param string $currentValue
      *
      * @return string (html)

@@ -7,6 +7,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\ORM\DataObject;
 
 class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridField_ActionProvider
 {
@@ -27,7 +28,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
      * Return any special attributes that will be used for FormField::create_tag()
      *
      * @param GridField $gridField
-     * @param SilverStripe\ORM\DataObject $record
+     * @param DataObject $record
      * @param string $columnName
      * @return array
      */
@@ -52,7 +53,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
 
     /**
      * @param GridField $gridField
-     * @param SilverStripe\ORM\DataObject $record
+     * @param DataObject $record
      * @param string $columnName
      *
      * @return string - the HTML for the column

@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Control;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\Form;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
@@ -96,7 +97,7 @@ class EcommercePaymentController extends Controller
     }
 
     /**
-     * @return SilverStripe\Forms\Form | Array (OrderFormPayment) 
+     * @return Form | Array (OrderFormPayment)
      **/
     public function PaymentForm()
     {

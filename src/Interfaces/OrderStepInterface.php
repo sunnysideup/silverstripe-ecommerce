@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Interfaces;
 
 use SilverStripe\Forms\FieldList;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -40,7 +41,7 @@ interface OrderStepInterface
      *
      * @param Order $order
      *
-     * @return Sunnysideup\Ecommerce\Model\Process\OrderStep | Null (nextStep DataObject)
+     * @return OrderStep | Null (nextStep DataObject)
      **/
     public function nextStep(Order $order);
 

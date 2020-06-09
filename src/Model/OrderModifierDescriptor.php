@@ -9,6 +9,7 @@ use CMSEditLinkAPI;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TreeDropdownField;
@@ -166,7 +167,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

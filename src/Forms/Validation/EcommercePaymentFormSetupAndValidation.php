@@ -4,12 +4,14 @@ namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCreditCardField;
 use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
 
 //get_credit_card_payment_form_fields: $formHelper->getCreditCardPaymentFormFields
@@ -109,9 +111,9 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
     }
 
     /**
-     * @param Sunnysideup\Ecommerce\Model\Order $order - the order that is being paid
+     * @param Order $order - the order that is being paid
      * @param array $data  - Array of data that is submittted
-     * @param SilverStripe\Forms\Form  $form  - the form that is being submitted
+     * @param Form  $form  - the form that is being submitted
      *
      * @return bool - true if the data is valid
      */
@@ -152,7 +154,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      * If there are no errors, then the payment object will also be written...
      * If there are errors, the errors will be added to the form.
      *
-     * @param SilverStripe\Forms\Form             $form
+     * @param Form             $form
      * @param array            $data
      * @param EcommercePayment $paymentObject
      *
@@ -254,13 +256,13 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      * 2. save form into payment
      * 3. return payment result.
      *
-     * @param Sunnysideup\Ecommerce\Model\Order $order - the order that is being paid
-     * @param SilverStripe\Forms\Form  $form  - the form that is being submitted
+     * @param Order $order - the order that is being paid
      * @param array $data  - Array of data that is submittted
-     *
+     * @param Form  $form  - the form that is being submitted
+     * *
      * @return bool - if successful, this method will return TRUE
      */
-    public function processPaymentFormAndReturnNextStep($order, $data, $form)
+    public function processPaymentFormAndReturnNextStep(Order $order, $data, Form $form)
     {
         if (! $this->paymentObject) {
             $paymentClass = ! empty($data['PaymentMethod']) ? $data['PaymentMethod'] : null;

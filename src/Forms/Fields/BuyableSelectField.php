@@ -7,6 +7,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
 
 /**
@@ -62,9 +63,8 @@ class BuyableSelectField extends FormField
      * @param string $title
      * @param object $buyable            - currently selected buyable
      * @param int    $countOfSuggestions - number of suggestions shown (max)
-     * @param SilverStripe\Forms\Form   $form
      */
-    public function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 100, $form = null)
+    public function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 100)
     {
         $this->countOfSuggestions = $countOfSuggestions;
         $this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Enter product code or title'));
@@ -84,7 +84,7 @@ class BuyableSelectField extends FormField
     }
 
     /**
-     * @return SilverStripe\ORM\FieldType\DBHTMLText
+     * @return DBHTMLText
      */
     public function Field($properties = [])
     {
@@ -94,13 +94,13 @@ class BuyableSelectField extends FormField
         Requirements::customScript($this->getJavascript(), BuyableSelectField::class . $this->id());
         // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: BuyableSelectField', 'ecommerce');
 
-        $field =  
+        $field =
         '<div class="fieldgroup">' .
             '<div class="findBuyable fieldGroupInner">' . $this->fieldFindBuyable->SmallFieldHolder() . '</div>' .
             '<div class="selectedBuyable fieldGroupInner">' . $this->fieldSelectedBuyable->SmallFieldHolder() . '</div>' .
         '</div>';
 
-         return DBField::create_field('HTMLText', $field);
+        return DBField::create_field('HTMLText', $field);
     }
 
     /**

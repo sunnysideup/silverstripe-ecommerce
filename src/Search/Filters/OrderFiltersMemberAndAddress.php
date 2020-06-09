@@ -20,7 +20,7 @@ use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 class OrderFiltersMemberAndAddress extends ExactMatchFilter
 {
     /**
-     * @return SilverStripe\ORM\DataQuery
+     * @return DataQuery
      **/
     public function apply(DataQuery $query)
     {

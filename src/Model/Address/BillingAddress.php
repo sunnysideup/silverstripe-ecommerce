@@ -5,9 +5,10 @@ namespace Sunnysideup\Ecommerce\Model\Address;
 use GoogleAddressField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -205,7 +206,7 @@ class BillingAddress extends OrderAddress
     }
 
     /**
-     *@return SilverStripe\Forms\FieldList
+     *@return FieldList
      **/
     public function getCMSFields()
     {
@@ -224,7 +225,7 @@ class BillingAddress extends OrderAddress
     /**
      * @param Member $member
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      **/
     public function getFields(Member $member = null)
     {

@@ -52,7 +52,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
      *
-     * @param SilverStripe\ORM\DataObject | Order $order 
+     * @param SilverStripe\ORM\DataObject | Order $order
      *
      * @return bool
      **/

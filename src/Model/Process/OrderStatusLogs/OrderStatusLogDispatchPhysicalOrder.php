@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -86,7 +87,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     }
 
     /**
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      **/
     public function getCMSFields()
     {

@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Control;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\Form;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 
 /**

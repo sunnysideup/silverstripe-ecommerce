@@ -6,8 +6,10 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataObject;
 
 /**
  * @see: http://doc.silverstripe.org/framework/en/reference/ModelAdmin
@@ -40,7 +42,7 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     /**
      * @param DataObject $record
      *
-     * @return SilverStripe\Forms\Form
+     * @return Form
      */
     public function oneItemForm(DataObject $record)
     {

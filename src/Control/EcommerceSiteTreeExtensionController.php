@@ -10,6 +10,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -69,7 +70,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     /**
      * returns the current order.
      *
-     * @return Sunnysideup\Ecommerce\Model\Order
+     * @return Order
      **/
     public function Cart()
     {

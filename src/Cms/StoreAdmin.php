@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
@@ -79,9 +80,9 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
 
     /**
      * @param int $id
-     * @param int SilverStripe\Forms\FieldList
+     * @param int $fields SilverStripe\Forms\FieldList
      *
-     * @return SilverStripe\Forms\Form
+     * @return Form
      */
     public function getEditForm($id = null, $fields = null)
     {

@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
@@ -204,7 +203,6 @@ class EcommerceConfigDefinitions
     {
         return $this->ajaxMethods;
     }
-
 
     /**
      * @return array

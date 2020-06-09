@@ -7,6 +7,7 @@ use CMSEditLinkAPI;
 
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -172,7 +173,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS FieldList.
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      **/
     public function getCMSFields()
     {

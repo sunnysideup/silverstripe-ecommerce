@@ -100,7 +100,6 @@ class OrderFormPayment extends Form
 
     /**
      * saves the form into session.
-     *
      */
     public function saveDataToSession()
     {

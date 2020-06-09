@@ -83,7 +83,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     ];
 
     /**
-     *@return Group | SilverStripe\ORM\DataObject | NULL
+     *@return Group | \SilverStripe\ORM\DataObject | NULL
      **/
     public static function get_customer_group()
     {
@@ -304,7 +304,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * we need this function because $this->Orders does not return anything
      * that is probably because Order links the member twice (placed by and cancelled by).
      *
-     * @return SilverStripe\ORM\DataList
+     * @return \SilverStripe\ORM\DataList
      */
     public function Orders()
     {

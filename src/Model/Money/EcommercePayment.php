@@ -32,6 +32,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -39,7 +40,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
 use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-
 
 /**
  * "Abstract" class for a number of different payment
@@ -387,8 +387,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function Status()
     {
         return DBField::create_field(
-            'Enum', 
-            _t('Payment.' . strtoupper($this->Status), $this->Status ? $this->Status : 'Incomplete')
+            'Enum',
+            _t('Payment.' . strtoupper($this->Status), $this->Status ?: 'Incomplete')
         );
     }
 
@@ -551,9 +551,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * do not have any fields required here.
      *
      * @param array     $data The form request data - see OrderForm
-     * @param Sunnysideup\Ecommerce\Forms\OrderForm $form The form object submitted on
+     * @param OrderForm $form The form object submitted on
      */
-    public function validatePayment($data, $form)
+    public function validatePayment($data, OrderForm $form)
     {
         return true;
     }
@@ -569,9 +569,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * submitted.
      *
      * @param array     $data The form request data - see OrderForm
-     * @param Sunnysideup\Ecommerce\Forms\OrderForm $form The form object submitted on
+     * @param OrderForm $form The form object submitted on
      */
-    public function processPayment($data, $form)
+    public function processPayment($data, OrderForm $form)
     {
         user_error("Please implement processPayment() on {$this->ClassName}", E_USER_ERROR);
     }

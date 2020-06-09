@@ -3,7 +3,9 @@
 namespace Sunnysideup\Ecommerce\Filesystem;
 
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 class ProductImage extends Image
@@ -166,7 +168,7 @@ class ProductImage extends Image
     }
 
     /**
-     * @return SilverStripe\Assets\Storage\DBFile|SilverStripe\ORM\FieldType\DBHTMLText
+     * @return DBFile|DBHTMLText
      */
     public function CMSThumbnail()
     {
@@ -174,7 +176,7 @@ class ProductImage extends Image
     }
 
     /**
-     * @return SilverStripe\Assets\Storage\DBFile|SilverStripe\ORM\FieldType\DBHTMLText
+     * @return DBFile|DBHTMLText
      */
     public function getCMSThumbnail()
     {

@@ -17,7 +17,7 @@ abstract class EcommerceResponse extends HTTPResponse
     /**
      * @param string       $status  the status to return
      * @param string       $additionalData the message to return with the retur
-     * @param array|null   that should be included
+     * @param array|null $messages   that should be included
      */
     public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
     {

@@ -4,7 +4,9 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
@@ -58,7 +60,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -92,7 +94,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     }
 
     /**
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      **/
     public function getCMSFields()
     {

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Security\Member;
@@ -78,7 +79,7 @@ class OrderStatusLogArchived extends OrderStatusLog
     }
 
     /**
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      **/
     public function getCMSFields()
     {

@@ -498,7 +498,7 @@ class ShoppingCart
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param array     $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return bool | item | null - successfully removed
+     * @return bool | OrderItem | null - successfully removed
      */
     public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
     {
@@ -520,7 +520,7 @@ class ShoppingCart
      * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
      *
      * @param BuyableModel    $buyable             - the buyable (generally a product) being added to the cart
-     * @param array         $parameters            
+     * @param array         $parameters
      * @param bool          $mustBeExistingItem - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
      * @param array | Form  $parameters          - array of parameters to target a specific order item. eg: group=1, length=5*
      *                                           - form saved into item...
@@ -1034,7 +1034,7 @@ class ShoppingCart
      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
      *
      * $message the message, which could be a notification of successful action, or reason for failure
-     * @param $status please use good, bad, warning
+     * @param please $status use good, bad, warning
      */
     public function addMessage($message, $status = 'good')
     {
@@ -1170,7 +1170,7 @@ class ShoppingCart
      *
      * @param array $params
      *
-     * @return array cleaned 
+     * @return array cleaned
      */
     protected function cleanParameters(array $params = [])
     {

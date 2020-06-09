@@ -347,7 +347,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * NOTE: when there is only one currency we return an empty DataList
      * as one currency is meaningless.
      *
-     * @return SilverStripe\ORM\DataList | null
+     * @return \SilverStripe\ORM\DataList | null
      */
     public static function ecommerce_currency_list()
     {
@@ -384,7 +384,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @param float | DBCurrency $price
      * @param Order $order
      *
-     * @return SilverStripe\ORM\FieldType\DBMoney | SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBMoney | \SilverStripe\ORM\FieldType\DBField
      */
     public static function get_money_object_from_order_currency($price, Order $order = null)
     {

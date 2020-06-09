@@ -8,6 +8,7 @@ use CMSEditLinkAPI;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -20,7 +21,6 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Search\Filters\OrderEmailRecordFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-
 
 /**
  * @Description: DataObject recording all order emails sent.
@@ -115,7 +115,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         'OrderStepID' => [
             'filter' => OrderEmailRecordFiltersMultiOptionsetStatusIDFilter::class,
         ],
-        'Result'
+        'Result',
     ];
 
     /**
@@ -251,7 +251,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -301,7 +301,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {

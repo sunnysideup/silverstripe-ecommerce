@@ -3,7 +3,9 @@
 namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 class ProductOrderItem extends OrderItem
 {
@@ -44,7 +46,7 @@ class ProductOrderItem extends OrderItem
      *                      If set to FALSE, returns the set version number of the Product
      *                      (instead of the latest published version)
      *
-     * @return Product | SilverStripe\ORM\DataObject object
+     * @return Product | DataObject object
      */
     public function Product($current = false)
     {

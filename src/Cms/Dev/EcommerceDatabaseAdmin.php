@@ -153,7 +153,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
     public function index()
     {
         if (Director::is_cli()) {
-            
         } else {
             $renderer = new EcommerceDatabaseAdminDebugView();
             $renderer->renderHeader();

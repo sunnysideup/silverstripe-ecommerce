@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -391,9 +392,9 @@ class EcommerceTaskCartCleanup extends BuildTask
 
     /**
      * delete an object
-     * @param  SilverStripe\ORM\DataObject $objectToDelete
+     * @param  DataObject $objectToDelete
      */
-    private function deleteObject($objectToDelete)
+    private function deleteObject(DataObject $objectToDelete)
     {
         $objectToDelete->delete();
         $objectToDelete->destroy();

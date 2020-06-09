@@ -560,7 +560,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @param bool    $recalculate (optional)
      * @param string  $countryCode (optional)
      *
-     * @return EcommerceCountry | SilverStripe\ORM\DataObject | Null
+     * @return EcommerceCountry | DataObject | Null
      **/
     public static function get_country_object($recalculate = false, $countryCode = null)
     {

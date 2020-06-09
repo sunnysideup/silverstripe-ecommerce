@@ -6,6 +6,7 @@ use CMSEditLinkAPI;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -208,7 +209,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

@@ -108,8 +108,8 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
                         'CancelledByID' => 0,
                         'StatusID:GreaterThan' => 0,
                     ]
-                    );
-            if(!empty($ordersinQueue->column('ID'))){
+                );
+            if (! empty($ordersinQueue->column('ID'))) {
                 $list = $list->exclude(
                     [
                         'ID' => $ordersinQueue->column('ID'),

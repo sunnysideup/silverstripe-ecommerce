@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Requirements;

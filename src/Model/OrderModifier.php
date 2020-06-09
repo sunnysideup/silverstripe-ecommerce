@@ -503,7 +503,7 @@ class OrderModifier extends OrderAttribute
     /**
      * Returns the Money object of the Table Value.
      *
-     * @return SilverStripe\ORM\FieldType\DBMoney
+     * @return \SilverStripe\ORM\FieldType\DBMoney
      **/
     public function TableValueAsMoney()
     {
@@ -885,7 +885,7 @@ class OrderModifier extends OrderAttribute
      * This function is always called to determine the
      * amount this modifier needs to charge or deduct - if any.
      *
-     * @return SilverStripe\ORM\FieldType\DBCurrency
+     * @return \SilverStripe\ORM\FieldType\DBCurrency
      */
     protected function LiveCalculatedTotal()
     {

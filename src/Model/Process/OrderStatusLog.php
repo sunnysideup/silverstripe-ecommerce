@@ -15,6 +15,7 @@ use CMSEditLinkField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -305,7 +306,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      **/
     public function getCMSFields()
     {
@@ -420,7 +421,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {

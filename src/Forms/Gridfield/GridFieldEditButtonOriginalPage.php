@@ -3,8 +3,10 @@
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -20,8 +22,8 @@ use SilverStripe\View\ArrayData;
 class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements GridField_ColumnProvider
 {
     /**
-     * @param SilverStripe\Forms\GridField\GridField  $gridField
-     * @param SilverStripe\ORM\DataObject $record
+     * @param GridField  $gridField
+     * @param DataObject $record
      * @param string     $columnName
      *
      * @return string - the HTML for the column
