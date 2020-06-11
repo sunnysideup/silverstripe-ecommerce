@@ -414,19 +414,20 @@ class Order extends DataObject implements EditableEcommerceObject
             'filter' => 'OrderFilters_MemberAndAddress',
             'title' => 'Customer Details',
         ),
-        'Created' => array(
+        'LastEdited' => array(
             'field' => 'TextField',
             'filter' => 'OrderFilters_AroundDateFilter',
             'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
         ),
-        'LastEdited' => array(
+        'Created' => array(
             'field' => 'TextField',
-            'filter' => 'OrderFilters_SinceDateFilter',
-            'title' => 'Since (e.g. Today, 1 jan 2007, or last week)',
+            'filter' => 'OrderFilters_FromDateFilter',
+            'title' => 'From (e.g. Today, 1 jan 2007, or last week)',
         ),
-        //make sure to keep the items below, otherwise they do not show in form
-        'StatusID' => array(
-            'filter' => 'OrderFilters_MultiOptionsetStatusIDFilter',
+        'SessionID' => array(
+            'field' => 'TextField',
+            'filter' => 'OrderFilters_UntilDateFilter',
+            'title' => 'Until (e.g. Today, 1 jan 2007, or last week)',
         ),
         'CancelledByID' => array(
             'filter' => 'OrderFilters_HasBeenCancelled',

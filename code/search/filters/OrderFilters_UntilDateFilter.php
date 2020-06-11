@@ -8,7 +8,7 @@
  * @sub-package: search
  * @inspiration: Silverstripe Ltd, Jeremy
  **/
-class OrderFilters_SinceDateFilter extends ExactMatchFilter
+class OrderFilters_UntilDateFilter extends ExactMatchFilter
 {
     /**
      *@return SQLQuery
@@ -21,7 +21,7 @@ class OrderFilters_SinceDateFilter extends ExactMatchFilter
         $date->setValue($value);
         $formattedDate = $date->format('Y-m-d');
 
-        $query->where("\"Order\".\"LastEdited\"  >= '$formattedDate' OR \"Order\".\"Created\" >= '$formattedDate'");
+        $query->where("\"Order\".\"Created\" <= '$formattedDate'");
         return $query;
     }
 }
