@@ -507,7 +507,9 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     public function getExportFields()
     {
-        return EcommerceConfig::get(Order::class, 'csv_export_fields');
+        $defaultFields = EcommerceConfig::get(Order::class, 'csv_export_fields');
+        $this->extend('updateOrderExportFields', $defaultFields);
+        return $defaultFields;
     }
 
     /**
