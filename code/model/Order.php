@@ -369,9 +369,11 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * STANDARD SILVERSTRIPE STUFF.
+     * @var array
      **/
     private static $summary_fields = array(
         'Title' => 'Title',
+        'Created' => 'Created',
         'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
         'Member.Surname' => 'Last Name',
@@ -380,6 +382,22 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid'
     );
+
+    /**
+     * @var array
+     **/
+    private static $csv_export_fields = [
+        'Created' => 'Created',
+        'LastEdited' => 'Last Updated',
+        'Title' => 'Title',
+        'Member.Email' => 'Email',
+        'TotalAsMoney' => 'Total',
+        'CurrencyUsed.Code' => 'Currency',
+        'TotalItemsTimesQuantity' => 'Units',
+        'IsPaidNice' => 'Paid',
+        'IsCancelledNice' => 'Cancelled',
+        'CancelledBy.Email' => 'Cancelled By'  
+    ];
 
     /**
      * STANDARD SILVERSTRIPE STUFF.
@@ -400,6 +418,11 @@ class Order extends DataObject implements EditableEcommerceObject
             'field' => 'TextField',
             'filter' => 'OrderFilters_AroundDateFilter',
             'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
+        ),
+        'LastEdited' => array(
+            'field' => 'TextField',
+            'filter' => 'OrderFilters_SinceDateFilter',
+            'title' => 'Since (e.g. Today, 1 jan 2007, or last week)',
         ),
         //make sure to keep the items below, otherwise they do not show in form
         'StatusID' => array(
@@ -475,6 +498,16 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('scaffoldSearchFields', $fieldList, $_params);
 
         return $fieldList;
+    }
+
+     /**
+     * fields contains in CSV export for ModelAdmin GridField 
+     *
+     * @return array
+     **/
+    public function getExportFields()
+    {
+        return EcommerceConfig::get(Order::class, 'csv_export_fields');
     }
 
     /**
@@ -1505,10 +1538,27 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         return $this->getIsCancelled();
     }
+
     public function getIsCancelled()
     {
         return $this->CancelledByID ? true : false;
     }
+
+     /**
+     * @alias for getIsCancelledNice
+     * @return string
+     */
+
+    public function IsCancelledNice()
+    {
+        return $this->getIsCancelledNice();
+    }
+
+    public function getIsCancelledNice()
+    {
+        return $this->IsCancelled() ? 'yes' : 'no';
+    }
+
 
     /**
      * Has the order been cancelled by the customer?
