@@ -32,7 +32,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         This task is basically for orders that never got archived.
     ";
 
-    private static $payment_table = EcommercePayment::class;
+    private static $payment_table = 'EcommercePayment';
 
     public function run($request)
     {
@@ -74,12 +74,12 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         $this->createSubmissionLogForArchivedOrders();
     }
 
-    public function getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset)
+    public function getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogTableName, $offset)
     {
         return Order::get()
             ->filter(['StatusID' => $lastOrderStep->ID])
-            ->leftJoin($orderStatusLogClassName, "\"${orderStatusLogClassName}\".\"OrderID\" = \"Order\".\"ID\"")
-            ->where("\"${orderStatusLogClassName}\".\"ID\" IS NULL")
+            ->leftJoin($orderStatusLogTableName, "\"${orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"")
+            ->where("\"${orderStatusLogTableName}\".\"ID\" IS NULL")
             ->limit(100, $offset);
     }
 
@@ -97,9 +97,9 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         if (! is_a($obj, EcommerceConfigClassNames::getName(OrderStatusLog::class))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }
-        $orderStatusLogClassName = OrderStatusLog::class;
+        $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $offset = 0;
-        $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
+        $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogTableName, $offset);
         while ($orders->count()) {
             foreach ($orders as $order) {
                 $isSubmitted = $submissionLogClassName::get()
@@ -118,7 +118,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
                 }
             }
             $offset += 100;
-            $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogClassName, $offset);
+            $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogTableName, $offset);
         }
     }
 }

@@ -16,7 +16,7 @@ class EcommerceTaskDebugCart extends BuildTask
     public function run($request)
     {
         $order = ShoppingCart::current_order();
-        self::debug_object($order);
+        echo self::debug_object($order);
     }
 
     public static function debug_object($obj)

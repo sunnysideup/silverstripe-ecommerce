@@ -1,4 +1,4 @@
-<% include Sunnysideup\Ecommerce\Includes\BasicPageHeader Title='Packing Slip' %>
+<% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageHeader Title='Packing Slip' %>
 
 
 <div style="page-break-after: always;" id="Wrapper">
@@ -26,4 +26,4 @@
 <script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 
 
-<% include Sunnysideup\Ecommerce\Includes\BasicPageFooter %>
+<% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageFooter %>

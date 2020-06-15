@@ -127,7 +127,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             } else {
                 user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
             }
-            $order->LastEdited = "'" . DBDatetime::now()->Rfc2822() . "'";
+            $order->LastEdited = DBDatetime::now()->Rfc2822();
 
             //add member if needed...
             if (! $order->MemberID) {

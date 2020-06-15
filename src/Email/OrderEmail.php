@@ -6,6 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -49,11 +50,12 @@ abstract class OrderEmail extends Email
         if (! class_exists('\Pelago\Emogrifier')) {
             require_once $baseFolder . '/ecommerce/thirdparty/Emogrifier.php';
         }
-        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
+        /* UPGRADE TODO: find better solution for the following (without hardcoded path) */
+        $cssFileLocation = Director::baseFolder() . '/vendor/sunnysideup/ecommerce/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
-        $emogrifier = new \Pelago\Emogrifier($html, $css);
+        $emogrifier = new \Pelago\Emogrifier($html->getValue(), $css);
         $html = $emogrifier->emogrify();
         //make links absolute!
         $html = HTTP::absoluteURLs($html);

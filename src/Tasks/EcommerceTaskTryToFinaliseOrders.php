@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use Exception;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
@@ -44,7 +45,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
-            Email::set_mailer(new EcommerceDummyMailer());
+            Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         }
 
         //get limits
@@ -72,6 +73,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         //find any other order that may need help ...
 
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogTableName = EcommerceConfig::get(OrderStatusLog::class, 'table_name');
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
@@ -82,7 +84,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     } else {
                         $sort = ['ID' => 'ASC'];
                     }
-                    $ordersInQueueArray = $ordersinQueue->column('ID');
+                    $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->column('ID') : [];
                     if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
                         //do nothing...
                     } else {
@@ -97,8 +99,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                             '"OrderStatusLog"."OrderID" = "Order"."ID"'
                         )
                         ->innerJoin(
-                            $submittedOrderStatusLogClassName,
-                            "\"${submittedOrderStatusLogClassName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                            $submittedOrderStatusLogTableName,
+                            "\"${submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                         );
                     $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {

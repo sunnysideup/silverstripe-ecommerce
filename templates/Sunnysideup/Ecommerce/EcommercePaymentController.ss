@@ -1,4 +1,4 @@
-<% include BasicPageHeader Title='Payment' %>
+<% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageHeader Title='Payment' %>
 
 
 <% if ErrorMessage %><div id="Error" class="typography">$ErrorMessage</div><% end_if %>
@@ -6,4 +6,4 @@
 <% if PaymentForm %><div id="Outer" class="typography">$PaymentForm</div><% end_if %>
 
 
-<% include BasicPageFooter %>
+<% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageFooter %>

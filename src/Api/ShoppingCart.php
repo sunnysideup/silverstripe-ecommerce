@@ -868,10 +868,17 @@ class ShoppingCart
      */
     public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = [])
     {
+        
+                     
         foreach ($buyables as $buyable) {
+           
             if ($buyable && $buyable->canPurchase()) {
                 $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+              
                 $quantity = $this->prepareQuantity($buyable, $item->Quantity);
+                   echo '<pre>';
+                print_r($buyable);
+                echo '</pre>';
                 if ($item && $quantity) {
                     $item->Quantity = $quantity;
                     $item->write();
@@ -881,6 +888,8 @@ class ShoppingCart
             }
             $newOrder->write();
         }
+        
+                die('sdfsdf');
         return $newOrder;
     }
 

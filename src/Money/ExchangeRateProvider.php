@@ -98,6 +98,9 @@ class ExchangeRateProvider
      */
     protected function getRate($fromCode, $toCode)
     {
+        if($fromCode === $toCode){
+            return 1;
+        }
         $rate = 0;
         $reference = $fromCode . '_' . $toCode;
         $url = 'http://free.currencyconverterapi.com/api/v5/convert?q=' . $reference . '&compact=y';

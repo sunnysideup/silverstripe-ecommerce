@@ -117,6 +117,7 @@ var EcomQuantityField = {
                         else {
                             jQuery(this).siblings(EcomQuantityField.removeSelector).css("visibility", "visible");
                         }
+                        
                         if(EcomQuantityField.lastValue[jQuery(this).attr("name")] != jQuery(this).val()) {
                             EcomQuantityField.lastValue[jQuery(this).attr("name")] = jQuery(this).val();
                             if(URLSegment.indexOf("?") == -1) {
@@ -125,7 +126,7 @@ var EcomQuantityField = {
                             else {
                                 URLSegment = URLSegment + "&";
                             }
-                            var url = jQuery('base').attr('href') + URLSegment + 'quantity=' + this.value;
+                            var url = jQuery('base').attr('href').replace(/\/$/, "") + URLSegment + 'quantity=' + this.value;
                             url = url.replace("&amp;", "&");
                             if(typeof EcomQuantityField.EcomCart !== 'undefined') {
                                 EcomQuantityField.EcomCart.getChanges(url, null, this);

@@ -436,7 +436,7 @@ class ProductGroupController extends PageController
         }
         $form = ProductSearchForm::create(
             $this,
-            ProductSearchForm::class,
+            'ProductSearchForm',
             $onlySearchTitle,
             $this->currentInitialProducts(null, $this->getMyUserPreferencesDefault('FILTER'))
         );
@@ -977,7 +977,7 @@ class ProductGroupController extends PageController
 
         $html .= '<li><hr /><h3>Search</h3><hr /></li>';
         $resultArray = $this->searchResultsArrayFromSession();
-        $productGroupArray = explode(',', Session::get($this->SearchResultsSessionVariable(true)));
+        $productGroupArray = explode(',', $this->getRequest()->getSession()->get($this->SearchResultsSessionVariable(true)));
         $html .= '<li><b>Is Search Results:</b> ' . ($this->IsSearchResults() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Products In Search (session variable : ' . $this->SearchResultsSessionVariable(false) . '):</b> ' . print_r($resultArray, 1) . ' </li>';
         $html .= '<li><b>Product Groups In Search (session variable : ' . $this->SearchResultsSessionVariable(true) . '):</b> ' . print_r($productGroupArray, 1) . ' </li>';

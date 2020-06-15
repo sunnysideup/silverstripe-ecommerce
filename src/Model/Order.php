@@ -396,7 +396,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function i18n_singular_name()
     {
-        return _t('Order.ORDER', Order::class);
+        return _t('Order.ORDER', 'Order');
     }
 
     public function i18n_plural_name()
@@ -501,8 +501,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
             $list = Order::get()
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-                ->Sort('OrderStatusLog.Created', 'ASC');
+                ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"');
             $where = ' ("OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\') ';
         } else {
             $list = Order::get();
@@ -1712,6 +1711,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $newCurrency = EcommerceCurrency::default_currency();
             }
             $this->CurrencyUsedID = $newCurrency->ID;
+            //getExchangeRate no longer works
             $this->ExchangeRate = $newCurrency->getExchangeRate();
             $this->write();
         }
@@ -3384,10 +3384,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         Config::nest();
         Config::inst()->update(SSViewer::class, 'theme_enabled', true);
-        /**
-         * ### @@@@ TODO UPGRADE CHECK THIS IS WORKING @@@@ ###
-         */
-        $html = $this->renderWith(Order::class);
+        $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\Order');
         Config::unnest();
         $html = preg_replace('/(\s)+/', ' ', $html);
 
@@ -3843,10 +3840,10 @@ class Order extends DataObject implements EditableEcommerceObject
         $replacementArray['CC'] = '';
         $replacementArray['BCC'] = '';
         $replacementArray['OrderStepMessage'] = $message;
-        $replacementArray[Order::class] = $this;
+        $replacementArray['Order'] = $this;
         $replacementArray['EmailLogo'] = $config->EmailLogo();
         $replacementArray['ShopPhysicalAddress'] = $config->ShopPhysicalAddress;
-        $replacementArray['CurrentDateAndTime'] = DBField::create_field(DBDatetime::class, 'Now');
+        $replacementArray['CurrentDateAndTime'] = DBDatetime::now()->Rfc2822();
         $replacementArray['BaseURL'] = Director::baseURL();
         $arrayData = ArrayData::create($replacementArray);
         $this->extend('updateReplacementArrayForEmail', $arrayData);

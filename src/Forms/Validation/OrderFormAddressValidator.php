@@ -51,8 +51,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
             $valid = false;
         }
         if (! $valid) {
-            $this->form->sessionMessage(_t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
-            $this->form->sessionMessage(OrderForm::class, _t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'bad');
+            $this->form->sessionMessage(_t('OrderForm.ERRORINFORM', 'We could not proceed with your order, please check your errors below.'), 'error');
         }
 
         return $valid;

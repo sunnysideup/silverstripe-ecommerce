@@ -305,8 +305,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                     }
                     if ($this->verbose) {
                         $this->flush();
-                        $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"${className}\"")->value();
-                        $countUnlinkedOnes = DB::query("SELECT COUNT(\"${className}\".\"ID\") FROM \"${className}\" LEFT JOIN \"Order\" ON \"${className}\".\"ID\" = \"Order\".\"${orderFieldName}\" WHERE \"Order\".\"ID\" IS NULL")->value();
+                        $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"${tableName}\"")->value();
+                        $countUnlinkedOnes = DB::query("SELECT COUNT(\"${tableName}\".\"ID\") FROM \"${tableName}\" LEFT JOIN \"Order\" ON \"${tableName}\".\"ID\" = \"Order\".\"${orderFieldName}\" WHERE \"Order\".\"ID\" IS NULL")->value();
                         DB::alteration_message("In total there are ${countAll} ${className} (${orderFieldName}), of which there are ${countUnlinkedOnes} not linked to an order. ", 'created');
                         if ($countUnlinkedOnes) {
                             DB::alteration_message("There should be NO ${orderFieldName} (${className}) without link to Order - un error is suspected", 'deleted');
@@ -332,7 +332,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 if (! in_array($classWithLastEdited, $oneToOne, true) && ! in_array($classWithLastEdited, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("looking for ${$tableWithOrderID} objects without link to order.");
+                        DB::alteration_message("looking for " . $tableWithOrderID . " objects without link to order.");
                     }
                     $rows = DB::query("
                         SELECT \"${tableWithOrderID}\".\"ID\"
@@ -367,8 +367,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                     }
                     if ($this->verbose) {
                         $this->flush();
-                        $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"${classWithLastEdited}\"")->value();
-                        $countUnlinkedOnes = DB::query("SELECT COUNT(\"${classWithOrderID}\".\"ID\") FROM \"${classWithOrderID}\" LEFT JOIN \"Order\" ON \"${classWithOrderID}\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
+                        $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"${tableWithOrderID}\"")->value();
+                        $countUnlinkedOnes = DB::query("SELECT COUNT(\"${tableWithOrderID}\".\"ID\") FROM \"${tableWithOrderID}\" LEFT JOIN \"Order\" ON \"${tableWithOrderID}\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
                         DB::alteration_message("In total there are ${countAll} ${classWithOrderID} (${classWithLastEdited}), of which there are ${countUnlinkedOnes} not linked to an order. ", 'created');
                     }
                 }

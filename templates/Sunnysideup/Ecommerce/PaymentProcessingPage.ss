@@ -1,4 +1,4 @@
-<% include Sunnysideup\Ecommerce\Includes\BasicPageHeader Title='Processing' %>
+<% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageHeader Title='Processing' %>
 <script type="text/javascript" src="/framework/thirdparty/jquery/jquery.js"></script>
 
 <div id="Outer">
@@ -40,4 +40,4 @@
         border: 0;
     }
 </style>
-<% include Sunnysideup\Ecommerce\Includes\BasicPageFooter %>
+<% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageFooter %>

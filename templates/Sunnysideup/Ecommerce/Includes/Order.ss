@@ -20,5 +20,5 @@
 </div>
 
 
-<% require themedCSS(Order, ecommerce) %>
-<% require themedCSS(Order_Print, ecommerce, print) %>
+<% require themedCSS("client/css/Order.css") %>
+<% require themedCSS("client/css/Order_Print.css", print) %>

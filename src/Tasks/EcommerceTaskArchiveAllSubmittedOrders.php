@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -33,9 +34,11 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
     {
         //IMPORTANT!
         Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
-        Email::set_mailer(new EcommerceDummyMailer());
+        Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         $orderStatusLogClassName = OrderStatusLog::class;
+        $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName($submittedOrderStatusLogClassName);
         if ($submittedOrderStatusLogClassName) {
             $sampleSubmittedStatusLog = DataObject::get_one(
                 $submittedOrderStatusLogClassName
@@ -48,8 +51,8 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                     ['Sort' => 'DESC']
                 );
                 if ($lastOrderStep) {
-                    $joinSQL = "INNER JOIN \"${orderStatusLogClassName}\" ON \"${orderStatusLogClassName}\".\"OrderID\" = \"Order\".\"ID\"";
-                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"${orderStatusLogClassName}\".ClassName = '${submittedOrderStatusLogClassName}'";
+                    $joinSQL = "INNER JOIN \"${orderStatusLogTableName}\" ON \"${orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"";
+                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"${orderStatusLogTableName}\".ClassName = '${submittedOrderStatusLogTableName}'";
                     $count = DB::query("
                         SELECT COUNT (\"Order\".\"ID\")
                         FROM \"Order\"

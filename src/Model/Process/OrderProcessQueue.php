@@ -330,7 +330,7 @@ class OrderProcessQueue extends DataObject
     {
         $orderIDs = OrderProcessQueue::get()->column('OrderID');
 
-        return Order::get()
+        return empty($orderIDs) ? null : Order::get()
             ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs))
             ->limit($limit);

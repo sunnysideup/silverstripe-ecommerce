@@ -34,13 +34,14 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        $orderStatusSubmissionLogTableName = $orderStatusSubmissionLog::getSchema()->tableName($orderStatusSubmissionLog);
         $fileData = '';
         $offset = 0;
         $count = 50;
         $orders = Order::get()
             ->sort('"Order"."ID" ASC')
             ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-            ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+            ->innerJoin($orderStatusSubmissionLogTableName, "\"${orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset);
         $ordersCount = $orders->count();
@@ -70,7 +71,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             $orders = Order::get()
                 ->sort('"Order"."ID" ASC')
                 ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->innerJoin($orderStatusSubmissionLog, "\"${orderStatusSubmissionLog}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+                ->innerJoin($orderStatusSubmissionLogTableName, "\"${orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
                 ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
                 ->limit($count, $offset);
             $ordersCount = $orders->count();

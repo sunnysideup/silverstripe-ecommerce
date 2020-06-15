@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
@@ -80,7 +81,7 @@ class CartPageController extends PageController
     public static function set_message($s)
     {
         $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
-        Session::set($sessionCode, $s);
+        Controller::curr()->getRequest()->getSession()->set($sessionCode, $s);
     }
 
     /***********************
@@ -284,11 +285,10 @@ class CartPageController extends PageController
         $this->workOutMessagesAndActions();
         if (! $this->message) {
             $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
-
             if ($sessionMessage = $this->getRequest()->getSession()->get($sessionCode)) {
                 $this->message = $sessionMessage;
-                Session::set($sessionCode, '');
-                Session::clear($sessionCode);
+                Controller::curr()->getRequest()->getSession()->set($sessionCode, '');
+                Controller::curr()->getRequest()->getSession()->clear($sessionCode);
             }
         }
         return DBField::create_field('HTMLText', $this->message);

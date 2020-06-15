@@ -23,14 +23,14 @@ class OrderFormPayment extends Form
      */
     public function __construct(Controller $controller, $name, Order $order, $returnToLink = '')
     {
+        $requiredFields = [];
         $fields = new FieldList(
             new HiddenField('OrderID', '', $order->ID)
         );
         if ($returnToLink) {
             $fields->push(new HiddenField('returntolink', '', Convert::raw2att($returnToLink)));
         }
-
-        $bottomFields = new CompositeField();
+        $botomFields = new CompositeField();
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
             $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
@@ -44,11 +44,10 @@ class OrderFormPayment extends Form
             $bottomFields->push(new HiddenField('PaymentMethod', '', ''));
         }
         $fields->push($bottomFields);
-
         $actions = new FieldList(
             new FormAction('dopayment', _t('OrderForm.PAYORDER', 'Pay balance'))
         );
-        $requiredFields = [];
+        
         $validator = OrderFormPaymentValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
 

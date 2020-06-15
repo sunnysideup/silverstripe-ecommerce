@@ -25,7 +25,7 @@ class EcommerceTaskProductImageReset extends BuildTask
 
     public function run($request)
     {
-        $tables = [ProductGroup::class, 'ProductGroup_Live', Product::class, 'Product_Live'];
+        $tables = ['ProductGroup', 'ProductGroup_Live', 'Product', 'Product_Live'];
         if (class_exists('ProductVariation')) {
             $tables[] = 'ProductVariation';
         }

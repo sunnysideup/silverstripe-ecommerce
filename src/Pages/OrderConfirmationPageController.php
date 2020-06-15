@@ -368,7 +368,7 @@ class OrderConfirmationPageController extends CartPageController
                         $adminOnlyOrToEmail = $email
                     );
                 }
-            } elseif ($request->getVar('send')) {
+            } elseif ($statusID = $request->getVar('send')) {
                 if ($email = $this->currentOrder->getOrderEmail()) {
                     $step = OrderStep::get()->byID($statusID);
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);

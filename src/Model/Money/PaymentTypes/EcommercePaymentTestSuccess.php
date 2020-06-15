@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
+use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
 
 /**
@@ -37,11 +38,11 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
 
     /**
      * @param array     $data The form request data - see OrderForm
-     * @param \Sunnysideup\Ecommerce\Forms\OrderForm $form The form object submitted on
+     * @param OrderForm $form The form object submitted on
      *
      * @return EcommercePaymentSuccess
      */
-    public function processPayment($data, $form)
+    public function processPayment($data, OrderForm $form)
     {
         $this->Status = 'Success';
         $this->Message = '<div>PAYMENT TEST: SUCCESS</div>';

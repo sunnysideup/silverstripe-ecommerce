@@ -36,6 +36,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
             DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
         }
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogTableName = EcommerceConfig::get(OrderStatusLog::class, 'table_name');
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
@@ -47,8 +48,8 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                         '"OrderStatusLog"."OrderID" = "Order"."ID"'
                     )
                     ->innerJoin(
-                        $submittedOrderStatusLogClassName,
-                        "\"${submittedOrderStatusLogClassName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                        $submittedOrderStatusLogTableName,
+                        "\"${submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                     );
                 if ($orders->count()) {
                     foreach ($orders as $order) {

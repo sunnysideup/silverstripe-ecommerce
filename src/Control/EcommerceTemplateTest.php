@@ -20,7 +20,7 @@ class EcommerceTemplateTest extends PageController
 {
     public function index()
     {
-        return $this->renderWith([EcommerceTemplateTest::class, 'Page']);
+        return $this->renderWith('Sunnysideup\Ecommerce\Layout\EcommerceTemplateTest');
     }
 
     /**

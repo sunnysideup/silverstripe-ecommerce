@@ -181,7 +181,6 @@ class ProductSearchForm extends Form
      */
     public function __construct($controller, $name, $nameOfProductsBeingSearched = '', $productsToSearch = null)
     {
-
         //turn of security to allow caching of the form:
         $this->disableSecurityToken();
 
@@ -432,6 +431,7 @@ class ProductSearchForm extends Form
                         $this->debugOutput('<hr /><h3>FULL KEYWORD SEARCH</h3>');
                     }
                     if ($this->resultArrayPos < $this->maximumNumberOfResults) {
+                        $fieldArray = [];
                         $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
                         //now we are going to look for synonyms
                         $words = explode(' ', trim(preg_replace('!\s+!', ' ', $keywordPhrase)));
@@ -561,7 +561,7 @@ class ProductSearchForm extends Form
         if ($immediateRedirectLink) {
             $link = $immediateRedirectLink;
         } else {
-            $link = $redirectToPage->getRequestHandler()->getRequestHandler()->getRequestHandler()->getRequestHandler()->Link($this->controllerSearchResultDisplayMethod);
+            $link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
         }
         if ($this->additionalGetParameters) {
             $link .= '?' . $this->additionalGetParameters;
@@ -664,8 +664,8 @@ class ProductSearchForm extends Form
         $count = -1;
         //@todo: make this smarter!
         if (in_array('Title', $fields, true)) {
-            $searches[++$count][] = "LOWER(\"Title\") = '${$wordsAsLikeString}'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"Title\") LIKE '%${$wordsAsLikeString}%'"; // b) Full match within a bigger string
+            //$searches[++$count][] = "LOWER(\"Title\") = '${$wordsAsLikeString}'"; // a) Exact match
+            //$searches[++$count][] = "LOWER(\"Title\") LIKE '%${$wordsAsLikeString}%'"; // b) Full match within a bigger string
             if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'Title', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually

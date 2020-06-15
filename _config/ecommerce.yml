@@ -173,7 +173,7 @@ ExpirySilverStripe\Forms\DateField:
   short_months: true
 Sunnysideup\Ecommerce\Email\OrderEmail:
   send_all_emails_plain: false
-  css_file_location: ecommerce/css/OrderReport.css
+  css_file_location: client/css/OrderReport.css
   copy_to_admin_for_all_emails: true
 Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency:
   exchange_provider_class: Sunnysideup\Ecommerce\Money\ExchangeRateProvider
