@@ -1737,7 +1737,6 @@ class ProductGroup extends Page
 
     /**
      * Get the cache object to use when storing / retrieving stuff in the Silverstripe Cache
-     *
      */
     protected function getSilverstripeCoreCache()
     {

@@ -501,9 +501,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
         // Add the amount and subtotal fields for the payment amount
         $fields->push(
-            HeaderField::create('Amount', 
+            HeaderField::create(
+                'Amount',
                 DBField::create_field(
-                    'HTMLText', 
+                    'HTMLText',
                     _t('Payment.AMOUNT_COLON', 'Amount to be charged: ') . '<u class="totalAmountToBeCharged">' . $amount . '</u>'
                 ),
                 4

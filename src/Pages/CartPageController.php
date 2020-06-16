@@ -6,7 +6,6 @@ use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;

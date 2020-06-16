@@ -6,7 +6,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;

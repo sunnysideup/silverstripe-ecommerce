@@ -98,7 +98,7 @@ class ExchangeRateProvider
      */
     protected function getRate($fromCode, $toCode)
     {
-        if($fromCode === $toCode){
+        if ($fromCode === $toCode) {
             return 1;
         }
         $rate = 0;

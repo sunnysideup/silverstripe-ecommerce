@@ -2390,8 +2390,8 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($this->IsSubmitted()) {
                 return Director::AbsoluteURL(
                     OrderConfirmationPage::get_email_link(
-                        $this->ID, 
-                        ClassHelpers::sanitise_class_name($this->MyStep()->getEmailClassName()), 
+                        $this->ID,
+                        ClassHelpers::sanitise_class_name($this->MyStep()->getEmailClassName()),
                         $actuallySendEmail = true
                     )
                 );

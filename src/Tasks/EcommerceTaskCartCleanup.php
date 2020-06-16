@@ -332,7 +332,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 if (! in_array($classWithLastEdited, $oneToOne, true) && ! in_array($classWithLastEdited, $manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("looking for " . $tableWithOrderID . " objects without link to order.");
+                        DB::alteration_message('looking for ' . $tableWithOrderID . ' objects without link to order.');
                     }
                     $rows = DB::query("
                         SELECT \"${tableWithOrderID}\".\"ID\"

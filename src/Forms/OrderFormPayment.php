@@ -30,7 +30,7 @@ class OrderFormPayment extends Form
         if ($returnToLink) {
             $fields->push(new HiddenField('returntolink', '', Convert::raw2att($returnToLink)));
         }
-        $botomFields = new CompositeField();
+        $bottomFields = new CompositeField();
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
             $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
@@ -47,7 +47,7 @@ class OrderFormPayment extends Form
         $actions = new FieldList(
             new FormAction('dopayment', _t('OrderForm.PAYORDER', 'Pay balance'))
         );
-        
+
         $validator = OrderFormPaymentValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
 

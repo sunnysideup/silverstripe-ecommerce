@@ -74,7 +74,6 @@ class EcommerceMoney extends Extension
         return self::get_default_symbol($this->owner->currency) === self::get_short_symbol($this->owner->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
     }
 
-    
     /**
      * returns the short symbol for a site.
      * with or without html.

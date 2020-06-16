@@ -868,15 +868,12 @@ class ShoppingCart
      */
     public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = [])
     {
-        
-                     
         foreach ($buyables as $buyable) {
-           
             if ($buyable && $buyable->canPurchase()) {
                 $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
-              
+
                 $quantity = $this->prepareQuantity($buyable, $item->Quantity);
-                   echo '<pre>';
+                echo '<pre>';
                 print_r($buyable);
                 echo '</pre>';
                 if ($item && $quantity) {
@@ -888,8 +885,8 @@ class ShoppingCart
             }
             $newOrder->write();
         }
-        
-                die('sdfsdf');
+
+        die('sdfsdf');
         return $newOrder;
     }
 
@@ -1170,8 +1167,8 @@ class ShoppingCart
         if ($order = $this->currentOrder()) {
             $orderID = $order->ID;
             return DataObject::get_one(
-                OrderItem::class, 
-                "\"BuyableClassName\" = " . Convert::raw2sql($buyable->ClassName, true) . " AND \"BuyableID\" = " . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString, 
+                OrderItem::class,
+                '"BuyableClassName" = ' . Convert::raw2sql($buyable->ClassName, true) . ' AND "BuyableID" = ' . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString,
                 $cacheDataObjectGetOne = false
             );
         }
