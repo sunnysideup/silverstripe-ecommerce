@@ -68,7 +68,7 @@ class BuyableSelectField extends FormField
     {
         $this->countOfSuggestions = $countOfSuggestions;
         $this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Enter product code or title'));
-        $this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ''), _t('BuyableSelectField.NONE', 'No product selected yet.'));
+        $this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ' '), _t('BuyableSelectField.NONE', 'No product selected yet.'));
         $this->buyable = $buyable;
         if ($this->buyable) {
             $value = $this->buyable->FullName ?: $this->buyable->getTitle();
