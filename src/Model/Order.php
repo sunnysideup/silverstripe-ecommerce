@@ -2,11 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use CMSEditLinkAPI;
-
 use SilverStripe\Control\Controller;
-
-
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\ClassInfo;
@@ -51,6 +47,8 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -1803,15 +1801,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         Config::nest();
         Config::modify()->update(SSViewer::class, 'theme_enabled', true);
-
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->RenderWith( (ignore case)
-         * NEW: ->RenderWith( (COMPLEX)
-         * EXP: Check that the template location is still valid!
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
-         */
         $html = $arrayData->RenderWith($emailClassName);
         Config::unnest();
 
@@ -2399,7 +2388,13 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if (! isset($_REQUEST['print'])) {
             if ($this->IsSubmitted()) {
-                return Director::AbsoluteURL(OrderConfirmationPage::get_email_link($this->ID, $this->MyStep()->getEmailClassName(), $actuallySendEmail = true));
+                return Director::AbsoluteURL(
+                    OrderConfirmationPage::get_email_link(
+                        $this->ID, 
+                        ClassHelpers::sanitise_class_name($this->MyStep()->getEmailClassName()), 
+                        $actuallySendEmail = true
+                    )
+                );
             }
         }
     }
@@ -3780,7 +3775,10 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($bcc = $arrayData->getField('BCC')) {
                 $email->setBcc($bcc);
             }
-            $email->populateTemplate($arrayData);
+
+            foreach ($arrayData as $key => $value) {
+                $email->addData($key, $value);
+            }
             // This might be called from within the CMS,
             // so we need to restore the theme, just in case
             // templates within the theme exist

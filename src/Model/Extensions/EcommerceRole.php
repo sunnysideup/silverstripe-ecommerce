@@ -2,14 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
-use CMSEditLinkAPI;
-
-
-
-
-
-
-
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -36,6 +28,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\View\Requirements;
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
@@ -454,7 +447,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $fields->push($memberTitle);
         $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>' . _t('Member.EMAIL', 'Email') . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
         $fields->push($memberEmail);
-        $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . _t('Member.LASTLOGIN', 'Last Login') . ': ' . $this->owner->dbObject('LastVisited')->Nice() . '</p>');
+        $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . _t('Member.LASTLOGIN', 'Last Login') . ': ' . $this->owner->dbObject('LastVisited') . '</p>');
         $fields->push($lastLogin);
         $group = self::get_customer_group();
         if (! $group) {

@@ -74,6 +74,7 @@ class EcommerceMoney extends Extension
         return self::get_default_symbol($this->owner->currency) === self::get_short_symbol($this->owner->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
     }
 
+    
     /**
      * returns the short symbol for a site.
      * with or without html.
@@ -89,14 +90,9 @@ class EcommerceMoney extends Extension
             $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">${symbol}</span></span>";
         }
         $amount = $this->owner->getAmount();
-        $currency = $this->owner->getCurrency();
 
         $formatter = $this->owner->getFormatter();
-        if (! $currency) {
-            return $formatter->format($amount);
-        }
-
-        return $formatter->formatCurrency($amount, $currency);
+        return $formatter->format($amount);
     }
 
     /**

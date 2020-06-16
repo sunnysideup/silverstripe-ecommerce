@@ -465,11 +465,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         $self = $this;
-
-        foreach (array_keys($self->customFieldLabels()) as $name) {
-            $fields->removeByName($name);
-        }
-
         $self->beforeUpdateCMSFields(
             function ($fields) use ($self) {
                 //new section
@@ -487,7 +482,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 );
                 $fields->addFieldsToTab('Root', [
                     Tab::create(
-                        'Pricing',
+                        'Root.Pricing',
                         _t('EcommerceDBConfig.PRICING', 'Pricing'),
                         new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
                         new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
@@ -609,7 +604,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 );
             }
         );
-        return parent::getCMSFields();
+        return $fields;
     }
 
     /**

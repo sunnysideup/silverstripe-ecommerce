@@ -2,13 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use CMSEditLinkAPI;
-
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;

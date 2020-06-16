@@ -23,6 +23,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -45,6 +46,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
+
 
 /**
  * This is a standard Product page-type with fields like
@@ -890,15 +892,7 @@ class Product extends Page implements BuyableModel
             Director::baseURL(),
             EcommerceConfig::get(ShoppingCartController::class, 'url_segment'),
             'submittedbuyable',
-            /**
-             * ### @@@@ START REPLACEMENT @@@@ ###
-             * WHY: automated upgrade
-             * OLD: $this->ClassName (case sensitive)
-             * NEW: $this->ClassName (COMPLEX)
-             * EXP: Check if the class name can still be used as such
-             * ### @@@@ STOP REPLACEMENT @@@@ ###
-             */
-            $this->ClassName,
+            ClassHelpers::sanitise_class_name($this->ClassName),
             $this->ID,
             $this->Version
         );

@@ -2,15 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use CMSEditLinkAPI;
-
-
-
 use SilverStripe\Core\Config\Config;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;

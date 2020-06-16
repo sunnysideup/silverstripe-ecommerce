@@ -206,8 +206,10 @@ abstract class OrderEmail extends Email
     protected function createRecord($result)
     {
         $orderEmailRecord = OrderEmailRecord::create();
-        $orderEmailRecord->From = $this->emailToVarchar($this->from);
-        $orderEmailRecord->To = $this->emailToVarchar($this->to);
+        $from = is_array($this->from) ? array_key_first($this->from) : $this->from;
+        $to = is_array($this->to) ? array_key_first($this->to) : $this->to;
+        $orderEmailRecord->From = $this->emailToVarchar($from);
+        $orderEmailRecord->To = $this->emailToVarchar($to);
         if ($this->getCc()) {
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
@@ -234,19 +236,5 @@ abstract class OrderEmail extends Email
         $orderEmailRecord->write();
 
         return $orderEmailRecord;
-    }
-
-    /**
-     * moves CSS to inline CSS in email.
-     *
-     * @param bool $isPlain - should we send the email as HTML or as TEXT
-     */
-    protected function parseVariables($isPlain = false)
-    {
-        //start parsing
-        parent::parseVariables($isPlain);
-        if (! $isPlain) {
-            $this->body = self::emogrify_html($this->body);
-        }
     }
 }

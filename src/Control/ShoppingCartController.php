@@ -681,6 +681,7 @@ class ShoppingCartController extends Controller
     public function submittedbuyable(HTTPRequest $request)
     {
         $buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
+        $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
         $buyableID = intval($this->getRequest()->param('OtherID'));
         $version = intval($this->getRequest()->param('Version'));
         if ($buyableClassName && $buyableID) {
