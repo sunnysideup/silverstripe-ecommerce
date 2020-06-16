@@ -1302,7 +1302,7 @@ class ProductGroup extends Page
      *
      * @return array
      */
-    protected function getUserPreferencesOptionsForDropdown($type)
+    public function getUserPreferencesOptionsForDropdown($type)
     {
         $options = $this->getConfigOptions($type);
         $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');

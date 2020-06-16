@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
@@ -90,11 +91,11 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
+            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName($submittedOrderStatusLogClassName);
             $list = $list
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-                ->where('"OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . '\'');
+                ->where('"OrderStatusLog"."ClassName" = ' . Convert::raw2sql($submittedOrderStatusLogClassName, true));
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
