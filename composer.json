@@ -31,6 +31,7 @@
         "pelago/emogrifier": "3.1.0",
         "sunnysideup/google_address_field": "dev-master",
         "sunnysideup/cms_edit_link_field": "dev-master",
+	"sunnysideup/permission_provider": "dev-master",
         "silverstripe/recipe-cms": "~4.5"
     },
     "suggest": {

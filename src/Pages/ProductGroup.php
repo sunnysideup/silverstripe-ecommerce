@@ -558,7 +558,7 @@ class ProductGroup extends Page
     {
         $fields = parent::getCMSFields();
         //dirty hack to show images!
-        $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create(Image::class, _t('Product.IMAGE', 'Product Group Image')));
+        $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
         //number of products
         $calculatedNumberOfProductsPerPage = $this->MyNumberOfProductsPerPage();
         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
@@ -1302,7 +1302,7 @@ class ProductGroup extends Page
      *
      * @return array
      */
-    public function getUserPreferencesOptionsForDropdown($type)
+    protected function getUserPreferencesOptionsForDropdown($type)
     {
         $options = $this->getConfigOptions($type);
         $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
