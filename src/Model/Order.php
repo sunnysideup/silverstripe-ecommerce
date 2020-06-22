@@ -84,9 +84,11 @@ use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersFromDateFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelled;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersUntilDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
@@ -345,9 +347,11 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * STANDARD SILVERSTRIPE STUFF.
+     * @var array
      **/
     private static $summary_fields = [
         'Title' => 'Title',
+        'Created' => 'Created',
         'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
         'Member.Surname' => 'Last Name',
@@ -355,6 +359,19 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalAsMoney.Nice' => 'Total',
         'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
+    ];
+
+    private static $csv_export_fields = [
+        'Created' => 'Created',
+        'LastEdited' => 'Last Updated',
+        'Title' => 'Title',
+        'Member.Email' => 'Email',
+        'TotalAsMoney' => 'Total',
+        'CurrencyUsed.Code' => 'Currency',
+        'TotalItemsTimesQuantity' => 'Units',
+        'IsPaidNice' => 'Paid',
+        'IsCancelledNice' => 'Cancelled',
+        'CancelledBy.Email' => 'Cancelled By'  
     ];
 
     /**
@@ -372,10 +389,20 @@ class Order extends DataObject implements EditableEcommerceObject
             'filter' => OrderFiltersMemberAndAddress::class,
             'title' => 'Customer Details',
         ],
-        'Created' => [
+        'LastEdited' => [
             'field' => TextField::class,
             'filter' => OrderFiltersAroundDateFilter::class,
             'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
+        ],
+        'Created' => [
+            'field' => TextField::class,
+            'filter' => OrderFiltersFromDateFilter::class,
+            'title' => 'From (e.g. Today, 1 jan 2007, or last week)',
+        ],
+        'SessionID' => [
+            'field' => TextField::class,
+            'filter' => OrderFiltersUntilDateFilter::class,
+            'title' => 'Until (e.g. Today, 1 jan 2007, or last week)',
         ],
         //make sure to keep the items below, otherwise they do not show in form
         'StatusID' => [
@@ -386,6 +413,18 @@ class Order extends DataObject implements EditableEcommerceObject
             'title' => 'Cancelled by ...',
         ],
     ];
+
+    /**
+     * fields contains in CSV export for ModelAdmin GridField 
+     *
+     * @return array
+     **/
+    public function getExportFields()
+    {
+        $exportFields = EcommerceConfig::get(Order::class, 'csv_export_fields');
+        $this->extend('updateOrderExportFields', $exportFields);
+        return $exportFields;
+    }
 
     /**
      * @var array
@@ -1502,6 +1541,21 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getIsCancelled()
     {
         return $this->CancelledByID ? true : false;
+    }
+
+    /**
+     * @alias for getIsCancelledNice
+     * @return string
+    */
+
+    public function IsCancelledNice()
+    {
+        return $this->getIsCancelledNice();
+    }
+
+    public function getIsCancelledNice()
+    {
+        return $this->IsCancelled() ? 'yes' : 'no';
     }
 
     /**
