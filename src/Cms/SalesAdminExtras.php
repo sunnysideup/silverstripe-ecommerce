@@ -57,6 +57,13 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
      *
      * @var string
      */
+    private static $required_permission_codes = 'CMS_ACCESS_SalesAdminExtras';
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
     /* TODO UPGRADE: fix the following line */
     //private static $menu_icon = 'ecommerce/client/images/icons/money-file.gif';
 

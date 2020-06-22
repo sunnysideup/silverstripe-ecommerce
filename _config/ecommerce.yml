@@ -127,10 +127,10 @@ Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole:
   must_have_account_to_purchase: false
   automatically_update_member_details: true
   customer_group_code: shopcustomers
-  customer_group_name: 'shop customers'
+  customer_group_name: 'Shop Customers'
   customer_permission_code: SHOPCUSTOMER
   admin_group_code: shopadministrators
-  admin_group_name: 'shop administrators'
+  admin_group_name: 'Shop Administrators'
   admin_group_user_first_name: ''
   admin_group_user_surname: ''
   admin_group_user_email: ''

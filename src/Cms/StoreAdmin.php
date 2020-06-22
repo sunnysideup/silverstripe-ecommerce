@@ -39,6 +39,13 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
      * @var float
      */
     private static $menu_priority = 3.3;
+    
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $required_permission_codes = 'CMS_ACCESS_StoreAdmin';
 
     /**
      * standard SS variable.

@@ -19,9 +19,26 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
 {
     private static $menu_priority = 3.19;
 
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
     private static $url_segment = 'product-config';
 
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
     private static $menu_title = 'Product Details';
+
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $required_permission_codes = 'CMS_ACCESS_ProductConfigModelAdmin';
 
     /**
      * standard SS variable.

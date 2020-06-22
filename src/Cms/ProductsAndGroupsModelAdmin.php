@@ -17,16 +17,32 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfi
 class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
 {
     private static $menu_priority = 3.2;
-
+    
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
     private static $url_segment = 'products';
 
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
     private static $menu_title = 'Products';
-
+    
     private static $allowed_actions = [
         'editinsitetree',
         'ItemEditForm',
     ];
 
+    /**
+     * standard SS variable.
+     *
+     * @var string
+     */
+    private static $required_permission_codes = 'CMS_ACCESS_ProductsAndGroupsModelAdmin';
     /**
      * standard SS variable.
      *
