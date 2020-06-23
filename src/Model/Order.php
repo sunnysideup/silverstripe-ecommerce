@@ -552,100 +552,6 @@ class Order extends DataObject implements EditableEcommerceObject
         return $list->where($where);
     }
 
-    /*******************************************************
-       * 1. CMS STUFF
-    *******************************************************/
-
-    /**
-     * fields that we remove from the parent::getCMSFields object set.
-     *
-     * @var array
-     */
-    protected $fieldsAndTabsToBeRemoved = array(
-        'MemberID',
-        'Attributes',
-        'SessionID',
-        'Emails',
-        'BillingAddressID',
-        'ShippingAddressID',
-        'UseShippingAddress',
-        'OrderStatusLogs',
-        'Payments',
-        'OrderDate',
-        'ExchangeRate',
-        'CurrencyUsedID',
-        'StatusID',
-        'Currency',
-    );
-
-    /**
-     * STANDARD SILVERSTRIPE STUFF.
-     * @var array
-     **/
-    private static $summary_fields = array(
-        'Title' => 'Title',
-        'Created' => 'Created',
-        'OrderItemsSummaryNice' => 'Order Items',
-        'Status.Title' => 'Next Step',
-        'Member.Surname' => 'Last Name',
-        'Member.Email' => 'Email',
-        'TotalAsMoney.Nice' => 'Total',
-        'TotalItemsTimesQuantity' => 'Units',
-        'IsPaidNice' => 'Paid'
-    );
-
-    /**
-     * @var array
-     **/
-    private static $csv_export_fields = [
-        'Created' => 'Created',
-        'LastEdited' => 'Last Updated',
-        'Title' => 'Title',
-        'Member.Email' => 'Email',
-        'TotalAsMoney' => 'Total',
-        'CurrencyUsed.Code' => 'Currency',
-        'TotalItemsTimesQuantity' => 'Units',
-        'IsPaidNice' => 'Paid',
-        'IsCancelledNice' => 'Cancelled',
-        'CancelledBy.Email' => 'Cancelled By'  
-    ];
-
-    /**
-     * STANDARD SILVERSTRIPE STUFF.
-     *
-     * @todo: how to translate this?
-     **/
-    private static $searchable_fields = array(
-        'ID' => array(
-            'field' => 'NumericField',
-            'title' => 'Order Number',
-        ),
-        'MemberID' => array(
-            'field' => 'TextField',
-            'filter' => 'OrderFilters_MemberAndAddress',
-            'title' => 'Customer Details',
-        ),
-        'LastEdited' => array(
-            'field' => 'TextField',
-            'filter' => 'OrderFilters_AroundDateFilter',
-            'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
-        ),
-        'Created' => array(
-            'field' => 'TextField',
-            'filter' => 'OrderFilters_FromDateFilter',
-            'title' => 'From (e.g. Today, 1 jan 2007, or last week)',
-        ),
-        'SessionID' => array(
-            'field' => 'TextField',
-            'filter' => 'OrderFilters_UntilDateFilter',
-            'title' => 'Until (e.g. Today, 1 jan 2007, or last week)',
-        ),
-        'CancelledByID' => array(
-            'filter' => 'OrderFilters_HasBeenCancelled',
-            'title' => 'Cancelled by ...',
-        )
-    );
-
     /**
      * Determine which properties on the DataObject are
      * searchable, and map them to their default {@link FormField}
@@ -706,18 +612,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('scaffoldSearchFields', $fieldList, $_params);
 
         return $fieldList;
-    }
-
-     /**
-     * fields contains in CSV export for ModelAdmin GridField 
-     *
-     * @return array
-     **/
-    public function getExportFields()
-    {
-        $defaultFields = EcommerceConfig::get(Order::class, 'csv_export_fields');
-        $this->extend('updateOrderExportFields', $defaultFields);
-        return $defaultFields;
     }
 
     /**
@@ -1648,22 +1542,6 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         return $this->CancelledByID ? true : false;
     }
-
-     /**
-     * @alias for getIsCancelledNice
-     * @return string
-     */
-
-    public function IsCancelledNice()
-    {
-        return $this->getIsCancelledNice();
-    }
-
-    public function getIsCancelledNice()
-    {
-        return $this->IsCancelled() ? 'yes' : 'no';
-    }
-
 
     /**
      * @alias for getIsCancelledNice
