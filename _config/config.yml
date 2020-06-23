@@ -1,62 +1,43 @@
 ---
 Name: ecommerce
-Before: 'mysite/*'
-After:
-   - 'framework/*'
-   - 'cms/*'
 ---
-
-
-
-DevelopmentAdmin:
+SilverStripe\Dev\DevelopmentAdmin:
   extensions:
-    - EcommerceDevelopmentAdminDecorator
+    - Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator
   registered_controllers:
     ecommerce:
-      controller: 'EcommerceDatabaseAdmin'
+      controller: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
       links:
         ecommerce: 'The home page for everything e-commerce'
-
-Member:
+SilverStripe\Security\Member:
   extensions:
-    - EcommerceRole
-
-SiteTree:
+    - Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole
+SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - EcommerceSiteTreeExtension
-  #we add this index to make caching faster ....
+    - Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension
   indexes:
     LastEdited: true
-
-Page_Controller:
+PageController:
   extensions:
-    - EcommerceSiteTreeExtension_Controller
-
-Money:
+    - Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
+SilverStripe\ORM\FieldType\DBMoney:
   extensions:
-    - EcommerceMoney
-
-OrderEmailRecord_Review:
-  url_segment: "ecommerce-email-preview"
-
-EcommerceDatabaseAdmin:
+    - Sunnysideup\Ecommerce\Money\EcommerceMoney
+Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
+  url_segment: ecommerce-email-preview
+Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN
-
-LeftAndMain:
-  extra_requirements_css:
-    - ecommerce/css/ecommercecmsfixes.css
-
 ---
 Only:
   moduleexists: 'grouped-cms-menu'
 ---
-LeftAndMain:
+SilverStripe\Admin\LeftAndMain:
   menu_groups:
     Shop:
-      - StoreAdmin
-      - ProductsAndGroupsModelAdmin
-      - ProductConfigModelAdmin
-      - SalesAdmin
-      - SalesAdminExtras
+      - Sunnysideup\Ecommerce\Cms\StoreAdmin
+      - Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
+      - Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
+      - Sunnysideup\Ecommerce\Cms\SalesAdmin
+      - Sunnysideup\Ecommerce\Cms\SalesAdminExtras
       - refresh

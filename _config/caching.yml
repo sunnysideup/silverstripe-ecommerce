@@ -1,0 +1,8 @@
+---
+Name: ecommerce_caching
+---
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.EcomPG:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "EcomPG"

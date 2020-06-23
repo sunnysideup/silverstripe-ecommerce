@@ -1,12 +1,11 @@
 ---
 Name: ecommerce_routes
-After: framework/routes#coreroutes
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
-    'shoppingcart//$Action/$ID/$OtherID/$Version' : 'ShoppingCart_Controller'
-    'ecommercepayment//$Action/$ID/$OtherID' : 'EcommercePaymentController'
-    'ecommercetemplatetest//$Action/$ID/$OtherID' : 'EcommerceTemplateTest'
-    'ecommercebuyabledatalist//$Action/$ID/$OtherID' : 'BuyableSelectField_DataList'
-    'ecommerce-email-preview//$Action/$ID/$OtherID' : 'OrderEmailRecord_Review'
-    'ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version' : 'OrderModifierForm_Controller'
+    shoppingcart//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\ShoppingCartController
+    ecommercepayment//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommercePaymentController
+    ecommercetemplatetest//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
+    ecommercebuyabledatalist//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
+    ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
+    ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\OrderModifierFormController

@@ -60,7 +60,7 @@ For this, you can extend the basic class: OrderStatusLog.
 No logs are created "automatically", you will need to use the OrderSteps to create them.
 In the code you can see a bunch of examples on how these Logs are written.
 
-There is one special type of Order Status Log: OrderStatusLog_Submitted.
+There is one special type of Order Status Log: OrderStatusLogSubmitted.
 This one is basically hard-wired into the system.
 That is, for every order and all e-commerce applications you need to have a moment where the customer commits / submits an order.
 This order log basically stores the exact details of the order at the moment of submission.
@@ -71,12 +71,12 @@ more transactional so that submitted details can not be overriden, but the log o
 for the time being.
 
 Other logs that you may include:
-- OrderStatusLog_Cancel: record about cancellation
-- OrderStatusLog_Dispatch: record about dispatch
-- OrderStatusLog_PaymentCheck: payment was made (manual check)
+- OrderStatusLogCancel: record about cancellation
+- OrderStatusLogDispatch: record about dispatch
+- OrderStatusLogPaymentCheck: payment was made (manual check)
 - your own log thingy!
 
-HACK NOTE: we have included OrderStatusLog_Archived here as well.
+HACK NOTE: we have included OrderStatusLogArchived here as well.
 The reason we do this is that the Order CMS fields will try to look for the next Log Class in the
 Complex Table Field. This might be different in 3.0 and can be removed then.
 
