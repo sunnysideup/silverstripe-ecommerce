@@ -28,11 +28,11 @@
         }
     ],
     "require": {
-        "pelago/emogrifier": "3.1.0",
-        "sunnysideup/google_address_field": "~2.0@stable",
-        "sunnysideup/cms_edit_link_field": "~8.0@stable",
-	    "sunnysideup/permission_provider": "~3.0@stable",
-        "silverstripe/recipe-cms": "~4.0@stable"
+        "pelago/emogrifier": "^3.1@stable",
+        "sunnysideup/google_address_field": "^2.0@stable",
+        "sunnysideup/cms_edit_link_field": "^8.0@stable",
+	    "sunnysideup/permission_provider": "^3.0@stable",
+        "silverstripe/recipe-cms": "^4.0@stable"
     },
     "suggest": {
         "sunnysideup/flush": "dev-master",
