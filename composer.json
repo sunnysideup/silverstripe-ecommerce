@@ -29,10 +29,10 @@
     ],
     "require": {
         "pelago/emogrifier": "3.1.0",
-        "sunnysideup/google_address_field": "dev-master",
-        "sunnysideup/cms_edit_link_field": "dev-master",
-	"sunnysideup/permission_provider": "dev-master",
-        "silverstripe/recipe-cms": "~4.5"
+        "sunnysideup/google_address_field": "^2.0",
+        "sunnysideup/cms_edit_link_field": "^8.0",
+	    "sunnysideup/permission_provider": "^3.0",
+        "silverstripe/recipe-cms": "^4.0"
     },
     "suggest": {
         "sunnysideup/flush": "dev-master",
