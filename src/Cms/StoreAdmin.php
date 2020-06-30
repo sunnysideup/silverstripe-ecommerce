@@ -52,8 +52,7 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
      *
      * @var string
      */
-    /* TODO UPGRADE: fix the following line */
-    //private static $menu_icon = 'ecommerce/client/images/icons/cart-file.gif';
+    private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/cart-file.gif';
 
     public function init()
     {

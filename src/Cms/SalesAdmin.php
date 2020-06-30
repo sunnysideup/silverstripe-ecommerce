@@ -64,8 +64,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
      *
      * @var string
      */
-    /* TODO UPGRADE: fix the following line */
-    //private static $menu_icon = 'ecommerce/client/images/icons/money-file.gif';
+    private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/money-file.gif';
 
     public function init()
     {
