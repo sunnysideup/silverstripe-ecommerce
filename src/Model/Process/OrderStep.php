@@ -1372,7 +1372,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function humanReadeableDeferTimeInSeconds()
     {
         if ($this->canBeDefered()) {
-            $field = DBField::create_field('SS_DateTime', strtotime('+ ' . $this->DeferTimeInSeconds . ' seconds'));
+            $field = DBField::create_field('DBDatetime', strtotime('+ ' . $this->DeferTimeInSeconds . ' seconds'));
             $descr0 = _t('OrderStep.THE', 'The') . ' ' . '<span style="color: #338DC1">' . $this->getTitle() . '</span>';
             $descr1 = _t('OrderStep.DELAY_VALUE', 'Order Step, for any order, will run');
             $descr2 = $field->ago();

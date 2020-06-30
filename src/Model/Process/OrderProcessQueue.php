@@ -42,8 +42,8 @@ class OrderProcessQueue extends DataObject
     ];
 
     private static $casting = [
-        'ToBeProcessedAt' => 'SS_Datetime',
-        'HasBeenInQueueSince' => 'SS_Datetime',
+        'ToBeProcessedAt' => 'DBDatetime',
+        'HasBeenInQueueSince' => 'DBDatetime',
     ];
 
     private static $default_sort = [
