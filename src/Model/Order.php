@@ -1521,9 +1521,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function RelevantPayments()
     {
         if ($this->IsPaid()) {
-            return $this->Payments("\"Status\" = 'Success'");
-            //EcommercePayment::get()->
-            //    filter(array("OrderID" => $this->ID, "Status" => "Success"));
+            return $this->Payments()->filter(["Status" => "Success"]);
         }
         return $this->Payments();
     }

@@ -15,7 +15,7 @@
     <tbody>
     <% loop RelevantPayments %>
         <tr>
-            <td class="center">$LastEdited.Nice24</td>
+            <td class="center">$LastEdited.Format('dd-MM-y HH:mm')</td>
             <td class="center">$Status</td>
             <td class="center">$PaymentMethod.XML</td>
             <td class="left">$Message.NoHTML.XML</td>
