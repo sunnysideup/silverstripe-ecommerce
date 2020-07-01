@@ -918,7 +918,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $fields->addFieldToTab(
                     'Root.Account',
                     GridField::create(
-                        OrderFeedback::class,
+                        'OrderFeedback',
                         Injector::inst()->get(OrderFeedback::class)->singular_name(),
                         OrderFeedback::get()->filter(['OrderID' => $this->ID]),
                         GridFieldConfig_RecordViewer::create()
@@ -1059,7 +1059,8 @@ class Order extends DataObject implements EditableEcommerceObject
         );
         $title ?: $title = _t('OrderStatusLog.PLURALNAME', 'Order Status Logs');
         $source = $this->OrderStatusLogs()->Filter(['ClassName' => $sourceClass]);
-        $gf = new GridField($sourceClass, $title, $source, $gridFieldConfig);
+        $fieldName = ClassInfo::shortName($sourceClass);
+        $gf = new GridField($fieldName, $title, $source, $gridFieldConfig);
         $gf->setModelClass($sourceClass);
 
         return $gf;
@@ -2431,12 +2432,12 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function EmailLink($type = OrderStatusEmail::class)
+    public function EmailLink()
     {
         return $this->getEmailLink();
     }
 
-    public function getEmailLink($type = OrderStatusEmail::class)
+    public function getEmailLink()
     {
         if (! isset($_REQUEST['print'])) {
             if ($this->IsSubmitted()) {
@@ -3713,7 +3714,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //$source = $this->BillingAddress();
         $source = BillingAddress::get()->filter(['OrderID' => $this->ID]);
 
-        return new GridField(BillingAddress::class, _t('BillingAddress.SINGULARNAME', 'Billing Address'), $source, $gridFieldConfig);
+        return new GridField('BillingAddress', _t('BillingAddress.SINGULARNAME', 'Billing Address'), $source, $gridFieldConfig);
     }
 
     /**
@@ -3733,7 +3734,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //$source = $this->ShippingAddress();
         $source = ShippingAddress::get()->filter(['OrderID' => $this->ID]);
 
-        return new GridField(ShippingAddress::class, _t('BillingAddress.SINGULARNAME', 'Shipping Address'), $source, $gridFieldConfig);
+        return new GridField('ShippingAddress', _t('BillingAddress.SINGULARNAME', 'Shipping Address'), $source, $gridFieldConfig);
     }
 
     /**
@@ -3755,7 +3756,8 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($sourceClass !== OrderStatusLog::class && class_exists($sourceClass)) {
             $source = $source->filter(['ClassName' => ClassInfo::subclassesFor($sourceClass)]);
         }
-        $gridField = GridField::create($sourceClass, $title, $source, $config = GridFieldConfig_RelationEditor::create());
+        $fieldName = ClassInfo::shortName($sourceClass);
+        $gridField = GridField::create($fieldName, $title, $source, $config = GridFieldConfig_RelationEditor::create());
         $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
         $config->removeComponentsByType(GridFieldDeleteAction::class);
 

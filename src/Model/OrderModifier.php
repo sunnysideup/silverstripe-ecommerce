@@ -229,8 +229,8 @@ class OrderModifier extends OrderAttribute
         $fields->addFieldToTab(
             'Root',
             Tab::create(
-                Debug::class,
-                _t('OrderModifier.DEBUG', Debug::class),
+                'Debug',
+                _t('OrderModifier.DEBUG', 'Debug'),
                 new ReadonlyField('CreatedShown', 'Created', $this->Created),
                 new ReadonlyField('LastEditedShown', 'Last Edited', $this->LastEdited),
                 new ReadonlyField('TableValueShown', 'Table Value', $this->TableValue),

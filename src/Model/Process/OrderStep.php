@@ -19,6 +19,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
@@ -637,9 +638,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        // return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
-        // there is some weird error here...
-        return 'admin/shop/OrderStep/EditForm/field/OrderStep/item/' . $this->ID . '/edit';
+        $sanitisedClassName = ClassHelpers::sanitise_class_name(OrderStep::class);
+        return 'admin/shop/' . $sanitisedClassName . '/EditForm/field/' . $sanitisedClassName . '/item/' . $this->ID . '/edit';
     }
 
     /**
