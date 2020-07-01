@@ -3,11 +3,11 @@
 
 <div id="Outer">
     <div id="Inner">
-        <div id="PaymentLogoImage">$Logo</div>
+        <div id="PaymentLogoImage">$Logo.RAW</div>
         <div id="PaymentLoadingImage">
             <img src="$resourceURL('sunnysideup/ecommerce:client/images/loading.gif')" alt="Loading image" />
         </div>
-        <div id="PaymentFormHolder">$Form</div>
+        <div id="PaymentFormHolder">$Form.RAW</div>
     </div>
 </div>
 <style type="text/css">
