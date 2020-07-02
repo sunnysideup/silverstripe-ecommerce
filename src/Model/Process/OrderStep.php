@@ -689,7 +689,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             ->exclude(['ID' => intval($this->ID)])
             ->First();
         if ($anotherOrderStepWithSameNameOrCode) {
-            $result->error(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
+            $result->addError(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
         }
 
         return $result;

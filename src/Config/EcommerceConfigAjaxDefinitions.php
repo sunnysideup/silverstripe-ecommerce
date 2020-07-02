@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -169,7 +170,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function TableID()
     {
-        return self::$prefix . $this->requestor->ClassName . '_DB_' . $this->requestor->ID;
+        return self::$prefix . ClassHelpers::sanitise_class_name($this->requestor->ClassName) . '_DB_' . $this->requestor->ID;
     }
 
     /**

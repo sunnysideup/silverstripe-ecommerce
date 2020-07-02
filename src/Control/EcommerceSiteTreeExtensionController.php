@@ -50,6 +50,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     {
         Requirements::javascript('sunnysideup/ecommerce: ' . EcommerceConfig::get(EcommerceConfigAjax::class, 'cart_js_file_location'));
         Requirements::javascript('sunnysideup/ecommerce: ' . EcommerceConfig::get(EcommerceConfigAjax::class, 'dialogue_js_file_location'));
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomQuantityField.js');
         // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Cart');
         // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: client/js/jquery.colorbox', 'ecommerce');
     }
