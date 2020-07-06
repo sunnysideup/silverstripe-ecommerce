@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use GoogleAddressField;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
@@ -15,6 +14,7 @@ use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\GoogleAddressField\GoogleAddressField;
 
 /**
  * @description: each order has a shipping address.
@@ -36,7 +36,7 @@ class ShippingAddress extends OrderAddress
             'ShippingPrefix',
             'ShippingFirstName',
             'ShippingSurname',
-            ShippingAddress::class,
+            'ShippingAddress',
             'ShippingAddress2',
             'ShippingCity',
             'ShippingPostalCode',

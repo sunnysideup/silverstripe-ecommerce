@@ -674,7 +674,7 @@ class ShoppingCartController extends Controller
      * where only old versions exist.
      * this method should redirect.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */
@@ -687,7 +687,7 @@ class ShoppingCartController extends Controller
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $bestBuyable = $buyableClassName::get()->byID($buyableID);
-                if ($bestBuyable instanceof ProductVariation) {
+                if (is_a($bestBuyable, 'ProductVariation')) {
                     $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
                     $this->redirect($link);
 
