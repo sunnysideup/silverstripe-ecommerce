@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Cms;
 
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
+use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 
 /**
  * @description: Manages stuff related to products,
@@ -32,6 +33,16 @@ class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
      * @var string
      */
     private static $menu_title = 'Product Details';
+
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $managed_models = [
+        SearchReplacement::class,
+        SearchHistory::class,
+    ];
 
     /**
      * standard SS variable.

@@ -9,6 +9,12 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 class EcommerceMoney extends Extension
 {
+
+    /**
+     * @var string
+     */
+    private static $default_format = 'NiceShortSymbol';
+
     /**
      * returns the symbol for a currency, e.g. $.
      *

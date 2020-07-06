@@ -13,6 +13,12 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -44,6 +50,22 @@ class SalesAdminExtras extends ModelAdminEcommerceBaseClass
      * @var string
      */
     private static $menu_title = 'Sales Details';
+
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $managed_models = [
+        Order::class,
+        OrderStatusLog::class,
+        OrderItem::class,
+        OrderModifier::class,
+        OrderEmailRecord::class,
+        BillingAddress::class,
+        ShippingAddress::class,
+        EcommercePayment::class,
+    ];
 
     /**
      * standard SS variable.

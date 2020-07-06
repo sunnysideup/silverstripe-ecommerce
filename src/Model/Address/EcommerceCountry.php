@@ -44,6 +44,21 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * @var array
+     */
+    private static $allowed_country_codes = [];
+
+    /**
+     * @var string
+     */
+    private static $visitor_country_provider = EcommerceCountryVisitorCountryProvider::class;
+
+    /**
+     * @var string
+     */
+    private static $default_country_code = 'NZ';
+
+    /**
      * standard SS static definition.
      */
     private static $table_name = 'EcommerceCountry';

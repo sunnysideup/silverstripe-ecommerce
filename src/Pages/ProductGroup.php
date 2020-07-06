@@ -29,6 +29,7 @@ use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -227,6 +228,68 @@ class ProductGroup extends Page
      * @var Zend_Cache_Core
      */
     protected $silverstripeCoreCache = null;
+
+    /**
+     * @var string
+     */
+    private static $base_buyable_class = Product::class;
+
+    /**
+     * @var bool
+     */
+    private static $actively_check_for_can_purchase = false;
+
+    /**
+     * @var int
+     */
+    private static $maximum_number_of_products_to_list = 300;
+
+    /**
+     * @var array
+     */
+    private static $sort_options = [
+        'default' => [
+            'Title' => 'Default Order',
+            'SQL' => '"Sort" ASC, "Title" ASC',
+        ],
+        'price' => [
+            'Title' => 'Lowest Price',
+            'SQL' => '"Price" ASC, "Sort" ASC, "Title" ASC',
+        ],
+    ];
+
+    /**
+     * @var array
+     */
+    private static $filter_options = [
+        'default' => [
+            'Title' => 'All Products (default)',
+            'SQL' => [
+                'ShowInSearch' => 1,
+            ],
+        ],
+        'featuredonly' => [
+            'Title' => 'Featured Only',
+            'SQL' => [
+                'ShowInSearch' => 1,
+                'FeaturedProduct' => 1,
+            ],
+        ],
+    ];
+
+    /**
+     * @var array
+     */
+    private static $display_styles = [
+        'default' => [
+            'Title' => 'default',
+        ],
+    ];
+
+    /**
+     * @var string
+     */
+    private static $session_name_for_product_array = 'ProductGroupProductIDs';
 
     /**
      * standard SS variable.

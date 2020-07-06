@@ -43,6 +43,11 @@ class OrderConfirmationPageController extends CartPageController
     ];
 
     /**
+     * @var bool
+     */
+    private static $include_as_checkout_step = true;
+
+    /**
      * standard controller function.
      **/
     public function init()

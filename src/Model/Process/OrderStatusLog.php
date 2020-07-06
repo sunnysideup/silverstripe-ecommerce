@@ -22,6 +22,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 
 /**
  * @description: see OrderStep.md
@@ -33,6 +34,17 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  **/
 class OrderStatusLog extends DataObject implements EditableEcommerceObject
 {
+
+    /**
+     * @var array
+     */
+    private static $available_log_classes_array = [];
+
+    /**
+     * @var string
+     */
+    private static $order_status_log_class_used_for_submitting_order = OrderStatusLogSubmitted::class;
+
     /**
      * standard SS variable.
      *

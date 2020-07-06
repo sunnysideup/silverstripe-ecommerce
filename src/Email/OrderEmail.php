@@ -35,6 +35,21 @@ abstract class OrderEmail extends Email
     protected $resend = false;
 
     /**
+     * @var bool
+     */
+    private static $send_all_emails_plain = false;
+
+    /**
+     * @var string
+     */
+    private static $css_file_location = 'client/css/OrderReport.css';
+
+    /**
+     * @var bool
+     */
+    private static $copy_to_admin_for_all_emails = true;
+
+    /**
      * turns an html document into a formatted html document
      * using the emogrify method.
      *

@@ -11,6 +11,12 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class ShopAccountFormValidator extends RequiredFields
 {
+
+    /**
+     * @var int
+     */
+    private static $minimum_password_length = 7;
+
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *

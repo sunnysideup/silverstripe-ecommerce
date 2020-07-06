@@ -11,6 +11,11 @@ use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
+use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
+use Sunnysideup\Ecommerce\Model\OrderAttribute;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -32,6 +37,48 @@ class EcommerceTaskCartCleanup extends BuildTask
     protected $title = 'Clear old carts';
 
     protected $description = 'Deletes abandonned carts (add ?limit=xxxx to the end of the URL to set the number of records (xxx = number of records) to be deleted in one load).';
+
+    /**
+     * @var int
+     */
+    private static $clear_minutes_empty_carts = 120;
+
+    /**
+     * @var int
+     */
+    private static $clear_minutes = 10080;
+
+    /**
+     * @var int
+     */
+    private static $maximum_number_of_objects_deleted = 10;
+
+    /**
+     * @var bool
+     */
+    private static $never_delete_if_linked_to_member = true;
+
+    /**
+     * @var array
+     */
+    private static $one_to_one_classes = [
+        'BillingAddressID' => BillingAddress::class,
+        'ShippingAddressID' => ShippingAddress::class,
+    ];
+
+    /**
+     * @var array
+     */
+    private static $one_to_many_classes = [
+        OrderAttribute::class => OrderAttribute::class,
+        OrderStatusLog::class => OrderStatusLog::class,
+        OrderEmailRecord::class => OrderEmailRecord::class,
+    ];
+
+    /**
+     * @var array
+     */
+    private static $many_to_many_classes = [];
 
     /**
      * Standard SS Variable

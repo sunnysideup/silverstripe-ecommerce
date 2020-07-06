@@ -47,6 +47,11 @@ class BillingAddress extends OrderAddress
     ];
 
     /**
+     * @var bool
+     */
+    private static $allow_selection_of_previous_addresses_in_checkout = false;
+
+    /**
      * standard SS variable.
      *
      * @return array
@@ -146,6 +151,19 @@ class BillingAddress extends OrderAddress
         'PostalCode',
         'Country',
         'Phone',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $required_fields = [
+        'Phone',
+        'Email',
+        'FirstName',
+        'Surname',
+        'Address',
+        'City',
+        'PostalCode',
     ];
 
     /**

@@ -81,6 +81,14 @@ class OrderItem extends OrderAttribute
     ];
 
     /**
+     * @var array
+     */
+    private static $ajax_total_format = [
+        'CalculatedTotalAsMoney',
+        'NiceDefaultFormat',
+    ];
+
+    /**
      * stardard SS variable.
      *
      * @var array

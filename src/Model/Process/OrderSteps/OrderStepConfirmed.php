@@ -23,6 +23,14 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      */
     protected $relevantLogEntryClassName = OrderStatusLogPaymentCheck::class;
 
+    /**
+     * @var array
+     */
+    private static $list_of_things_to_check = [
+        'check1' => 'Payment has arrived in Bank Account',
+        'check2' => 'Products are available'
+    ];
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,

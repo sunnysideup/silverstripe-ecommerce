@@ -46,6 +46,16 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * @var string
+     */
+    private static $visitor_region_provider = 'EcommerceRegion_VisitorRegionProvider';
+
+    /**
+     * @var bool
+     */
+    private static $show_freetext_region_field = true;
+
+    /**
      * standard SS variable.
      *
      * @var string

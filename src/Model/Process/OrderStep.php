@@ -28,6 +28,9 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 
 /**
  * @description: see OrderStep.md
@@ -58,6 +61,20 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @var string
      */
     protected $relevantLogEntryClassName = '';
+
+    /**
+     * @var array
+     */
+    private static $order_steps_to_include = [
+        'step1' => OrderStepCreated::class,
+        'step2' => OrderStepSubmitted::class,
+        'step3' => OrderStepArchived::class,
+    ];
+
+    /**
+     * @var int
+     */
+    private static $number_of_days_to_send_update_email = 10;
 
     /**
      * standard SS variable.

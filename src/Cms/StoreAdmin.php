@@ -8,6 +8,9 @@ use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)
@@ -36,10 +39,22 @@ class StoreAdmin extends ModelAdminEcommerceBaseClass
     /**
      * standard SS variable.
      *
+     * @var array
+     */
+    private static $managed_models = [
+        EcommerceDBConfig::class,
+        OrderStep::class,
+        EcommerceCountry::class,
+        EcommerceCurrency::class,
+    ];
+
+    /**
+     * standard SS variable.
+     *
      * @var float
      */
     private static $menu_priority = 3.3;
-    
+
     /**
      * standard SS variable.
      *

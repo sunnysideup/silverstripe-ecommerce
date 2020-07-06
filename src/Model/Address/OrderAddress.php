@@ -57,6 +57,21 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     protected $_canView = null;
 
     /**
+     * @var bool
+     */
+    private static $use_separate_shipping_address = false;
+
+    /**
+     * @var bool
+     */
+    private static $use_shipping_address_for_main_region_and_country = false;
+
+    /**
+     * @var string
+     */
+    private static $field_class_and_id_prefix = '';
+
+    /**
      * standard SS static definition.
      */
     private static $singular_name = 'Order Address';

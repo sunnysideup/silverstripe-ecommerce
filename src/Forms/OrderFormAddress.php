@@ -40,6 +40,11 @@ class OrderFormAddress extends Form
     /**
      * @var bool
      */
+    private static $shipping_address_first = true;
+
+    /**
+     * @var bool
+     */
     protected $debug = false;
 
     /**

@@ -8,6 +8,8 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Control\OrderStatusLogFormController;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator;
 
 /**
  * @description: this class is the base class for Order Log Forms in the checkout form...
@@ -25,6 +27,16 @@ class OrderStatusLogForm extends Form
      * @var Sunnysideup\Ecommerce\Model\Order
      */
     protected $order;
+
+    /**
+     * @var string
+     */
+    private static $controller_class = OrderStatusLogFormController::class;
+
+    /**
+     * @var string
+     */
+    private static $validator_class = OrderStatusLogFormValidator::class;
 
     /**
      *NOTE: we semi-enforce using the OrderLog_Controller here to deal with the submission of the OrderStatusLogForm

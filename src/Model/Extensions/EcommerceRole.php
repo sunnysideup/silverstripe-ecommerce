@@ -58,6 +58,138 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     ];
 
     /**
+     * @var string
+     */
+    private static $permission_category = 'E-commerce';
+
+    /**
+     * @var bool
+     */
+    private static $allow_customers_to_setup_accounts = true;
+
+    /**
+     * @var bool
+     */
+    private static $must_have_account_to_purchase = false;
+
+    /**
+     * @var bool
+     */
+    private static $automatically_update_member_details = true;
+
+    /**
+     * @var string
+     */
+    private static $customer_group_code = 'shopcustomers';
+
+    /**
+     * @var string
+     */
+    private static $customer_group_name = 'Shop Customers';
+
+    /**
+     * @var string
+     */
+    private static $customer_permission_code = 'SHOPCUSTOMER';
+
+    /**
+     * @var string
+     */
+    private static $admin_group_code = 'shopadministrators';
+
+    /**
+     * @var string
+     */
+    private static $admin_group_name = 'Shop Administrators';
+
+    /**
+     * @var string
+     */
+    private static $admin_group_user_first_name = '';
+
+    /**
+     * @var string
+     */
+    private static $admin_group_user_surname = '';
+
+    /**
+     * @var string
+     */
+    private static $admin_group_user_email = '';
+
+    /**
+     * @var string
+     */
+    private static $admin_permission_code = 'SHOPADMIN';
+
+    /**
+     * @var string
+     */
+    private static $admin_role_title = 'Managing Store';
+
+    /**
+     * @var array
+     */
+    private static $admin_role_permission_codes = [
+        'CMS_ACCESS_ProductsAndGroupsModelAdmin',
+        'CMS_ACCESS_ProductConfigModelAdmin',
+        'CMS_ACCESS_SalesAdmin',
+        'CMS_ACCESS_SalesAdminExtras',
+        'CMS_ACCESS_StoreAdmin',
+        'CMS_ACCESS_AssetAdmin',
+        'CMS_ACCESS_CMSMain',
+        'CMS_ACCESS_SalesAdmin_PROCESS',
+    ];
+
+    /**
+     * @var string
+     */
+    private static $assistant_group_code = 'shopassistants';
+
+    /**
+     * @var string
+     */
+    private static $assistant_group_name = 'Shop Assistants';
+
+    /**
+     * @var string
+     */
+    private static $assistant_group_user_first_name = '';
+
+    /**
+     * @var string
+     */
+    private static $assistant_group_user_surname = '';
+
+    /**
+     * @var string
+     */
+    private static $assistant_group_user_email = '';
+
+    /**
+     * @var string
+     */
+    private static $assistant_permission_code = 'SHOPASSISTANTS';
+
+    /**
+     * @var string
+     */
+    private static $assistant_role_title = 'Store Assistant';
+
+    /**
+     * @var array
+     */
+    private static $assistant_role_permission_codes = [
+        'CMS_ACCESS_SalesAdmin',
+        'CMS_ACCESS_SalesAdminExtras',
+    ];
+
+    /**
+     * @var string
+     */
+    private static $process_orders_permission_code = 'CMS_ACCESS_SalesAdmin_PROCESS';
+
+    /**
      * standard SS method.
      */
     private static $table_name = 'EcommerceRole';

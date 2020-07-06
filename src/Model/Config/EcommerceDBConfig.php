@@ -46,6 +46,7 @@ use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Database Settings for E-commerce
@@ -59,6 +60,19 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
  **/
 class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 {
+
+    /**
+     * @var array
+     */
+    private static $array_of_buyables = [
+        Product::class,
+    ];
+
+    /**
+     * @var string
+     */
+    private static $ecommerce_db_config_class_name = self::class;
+
     /**
      * Standard SS Variable.
      *

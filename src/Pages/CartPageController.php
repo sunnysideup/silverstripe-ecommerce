@@ -53,6 +53,11 @@ class CartPageController extends PageController
     protected $showCreateAccountForm = false;
 
     /**
+     * @var string
+     */
+    private static $session_code = 'EcommerceCartPageMessage';
+
+    /**
      * @static array
      * standard SS variable
      * it is important that we list all the options here

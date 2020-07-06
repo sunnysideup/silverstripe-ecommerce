@@ -6,6 +6,8 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfig;
+use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * @description: for the management of Product and Product Groups only
@@ -17,7 +19,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldEditOriginalPageConfi
 class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
 {
     private static $menu_priority = 3.2;
-    
+
     /**
      * standard SS variable.
      *
@@ -31,7 +33,17 @@ class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
      * @var string
      */
     private static $menu_title = 'Products';
-    
+
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $managed_models = [
+        Product::class,
+        ProductGroup::class,
+    ];
+
     private static $allowed_actions = [
         'editinsitetree',
         'ItemEditForm',

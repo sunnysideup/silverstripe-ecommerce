@@ -68,6 +68,11 @@ class ShoppingCartController extends Controller
     protected $cart = null;
 
     /**
+     * @var string
+     */
+    private static $url_segment = 'shoppingcart';
+
+    /**
      * Default URL handlers - (Action)/(ID)/(OtherID).
      */
     private static $url_handlers = [

@@ -35,6 +35,11 @@ class EcommercePaymentController extends Controller
      */
     protected $goodMessage = '';
 
+    /**
+     * @var string
+     */
+    private static $url_segment = 'ecommercepayment';
+
     private static $allowed_actions = [
         'thankyou',
         'index',

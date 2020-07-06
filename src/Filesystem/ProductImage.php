@@ -10,6 +10,37 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 class ProductImage extends Image
 {
+
+    /**
+     * @var int
+     */
+    private static $thumbnail_width = 75;
+
+    /**
+     * @var int
+     */
+    private static $thumbnail_height = 75;
+
+    /**
+     * @var int
+     */
+    private static $small_image_width = 200;
+
+    /**
+     * @var int
+     */
+    private static $small_image_height = 200;
+
+    /**
+     * @var int
+     */
+    private static $content_image_width = 400;
+
+    /**
+     * @var int
+     */
+    private static $large_image_width = 600;
+
     /**
      * standard SS variable.
      *

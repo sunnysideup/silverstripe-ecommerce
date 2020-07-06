@@ -226,6 +226,57 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * @var array
+     */
+    private static $modifiers = [];
+
+    /**
+     * @var int
+     */
+    private static $minutes_an_order_can_be_viewed_without_logging_in = 4320;
+
+    /**
+     * @var float
+     */
+    private static $maximum_ignorable_sales_payments_difference = 0.01;
+
+    /**
+     * @var int
+     */
+    private static $order_id_start_number = 0;
+
+    /**
+     * @var string
+     */
+    private static $template_id_prefix = '';
+
+    /**
+     * @var array
+     */
+    private static $ajax_subtotal_format = [
+        'SubTotalAsMoney',
+        'NiceDefaultFormat',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $ajax_total_format = [
+        'TotalAsMoney',
+        'NiceDefaultFormat',
+    ];
+
+    /**
+     * @var string
+     */
+    private static $date_format_for_title = 'D j M Y, G:i T';
+
+    /**
+     * @var bool
+     */
+    private static $include_customer_name_in_title = true;
+
+    /**
      * standard SS variable.
      *
      * @var array
@@ -371,7 +422,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
         'IsCancelledNice' => 'Cancelled',
-        'CancelledBy.Email' => 'Cancelled By'  
+        'CancelledBy.Email' => 'Cancelled By'
     ];
 
     /**
@@ -415,7 +466,7 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
-     * fields contains in CSV export for ModelAdmin GridField 
+     * fields contains in CSV export for ModelAdmin GridField
      *
      * @return array
      **/
@@ -3074,7 +3125,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * return the title of the fixed country (if any).
      *
-     * @return string 
+     * @return string
      **/
     public function FixedCountry()
     {
@@ -3426,7 +3477,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Converts the Order into HTML, based on the Order Template.
      *
-     * @return \SilverStripe\ORM\FieldType\DBHTMLText 
+     * @return \SilverStripe\ORM\FieldType\DBHTMLText
      **/
     public function ConvertToHTML()
     {

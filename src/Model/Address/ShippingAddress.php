@@ -47,9 +47,12 @@ class ShippingAddress extends OrderAddress
     ];
 
     /**
+     * @var bool
+     */
+    private static $allow_selection_of_previous_addresses_in_checkout = false;
+
+    /**
      * standard SS variable.
-     *
-     * @return array
      */
     private static $table_name = 'ShippingAddress';
 
@@ -124,6 +127,19 @@ class ShippingAddress extends OrderAddress
         'ShippingCity' => 'PartialMatchFilter',
         'ShippingCountry' => 'PartialMatchFilter',
         'Obsolete',
+    ];
+
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $required_fields = [
+        'ShippingPhone',
+        'ShippingAddress',
+        'ShippingCity',
+        'ShippingPostalCode',
+        'ShippingCountry',
     ];
 
     /**

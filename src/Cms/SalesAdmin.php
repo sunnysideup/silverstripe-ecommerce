@@ -13,6 +13,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -48,6 +49,17 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
     /**
      * standard SS variable.
      *
+     * @var array
+     */
+    private static $managed_models = [
+        Order::class,
+        OrderProcessQueue::class,
+        OrderFeedback::class,
+    ];
+
+    /**
+     * standard SS variable.
+     *
      * @var float
      */
     private static $menu_priority = 3.1;
@@ -74,7 +86,7 @@ class SalesAdmin extends ModelAdminEcommerceBaseClass
         //// TODO: find replacement for: Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         //// TODO: find replacement for: Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         //// TODO: find replacement for: Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        
+
         //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
     }
 

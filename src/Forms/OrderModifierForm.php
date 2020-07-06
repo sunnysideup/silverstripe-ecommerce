@@ -9,6 +9,8 @@ use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Control\OrderModifierFormController;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderModifierFormValidator;
 
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
@@ -24,6 +26,16 @@ class OrderModifierForm extends Form
      * @var Sunnysideup\Ecommerce\Model\Order
      */
     protected $order;
+
+    /**
+     * @var string
+     */
+    private static $controller_class = OrderModifierFormController::class;
+
+    /**
+     * @var string
+     */
+    private static $controller_class = OrderModifierFormValidator::class;
 
     /**
      *NOTE: we semi-enforce using the OrderModifier_Controller here to deal with the submission of the OrderModifierForm

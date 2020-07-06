@@ -1,0 +1,5 @@
+---
+Name: expiry_silverstripe_settings
+---
+ExpirySilverStripe\Forms\DateField:
+  short_months: true

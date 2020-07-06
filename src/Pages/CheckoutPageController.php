@@ -44,6 +44,20 @@ class CheckoutPageController extends CartPageController
     ];
 
     /**
+     * @var array
+     */
+    private static $checkout_steps = [
+        'orderitems',
+        'orderformaddress',
+        'orderconfirmationandpayment',
+    ];
+
+    /**
+     * @var array
+     */
+    private static $ajaxify_steps = [];
+
+    /**
      * FOR STEP STUFF SEE BELOW.
      **/
 

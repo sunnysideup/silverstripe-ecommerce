@@ -20,6 +20,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommerceMoney;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Money\ExchangeRateProvider;
 
 /**
  * Object to manage currencies.
@@ -37,6 +38,16 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @var string
      */
     private static $table_name = 'EcommerceCurrency';
+
+    /**
+     * @var string
+     */
+    private static $exchange_provider_class = ExchangeRateProvider::class;
+
+    /**
+     * @var string
+     */
+    private static $default_currency = 'NZD';
 
     private static $db = [
         'Code' => 'Varchar(3)',

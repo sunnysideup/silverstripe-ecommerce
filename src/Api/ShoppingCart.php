@@ -24,6 +24,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Control\CartResponse;
 
 
 /**
@@ -131,6 +132,26 @@ class ShoppingCart
      * @var array
      */
     private static $session_variable_names = ['OrderID', 'Messages'];
+
+    /**
+     * @var string
+     */
+    private static $session_code = 'EcommerceShoppingCart';
+
+    /**
+     * @var bool
+     */
+    private static $cleanup_every_time = true;
+
+    /**
+     * @var array
+     */
+    private static $default_param_filters = [];
+
+    /**
+     * @var string
+     */
+    private static $response_class = CartResponse::class;
 
     /**
      * This is where we hold the (singleton) Shoppingcart.

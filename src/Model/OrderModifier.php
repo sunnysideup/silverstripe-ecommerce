@@ -98,6 +98,14 @@ class OrderModifier extends OrderAttribute
         ],
     ];
 
+    /**
+     * @var array
+     */
+    private static $ajax_total_format = [
+        'TableValueAsMoney',
+        'NiceDefaultFormat',
+    ];
+
     // ########################################  *** 1. model defining static variables (e.g. $db, $has_one)
 
     /**

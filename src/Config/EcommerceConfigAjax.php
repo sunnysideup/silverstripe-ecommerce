@@ -18,6 +18,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 
 /**
  * This class returns the Ajax Definitions class.
@@ -44,6 +45,21 @@ class EcommerceConfigAjax
      * @static object
      */
     private static $singleton = [];
+
+    /**
+     * @var string
+     */
+    private static $definitions_class_name = EcommerceConfigAjaxDefinitions::class;
+
+    /**
+     * @var string
+     */
+    private static $cart_js_file_location = 'client/javascript/EcomCart.js';
+
+    /**
+     * @var string
+     */
+    private static $dialogue_js_file_location = 'client/javascript/jquery.colorbox-min.js';
 
     /**
      * Returns the singleton instance of the Ajax Config definitions class.

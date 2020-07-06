@@ -90,6 +90,16 @@ class Product extends Page implements BuyableModel
     ];
 
     /**
+     * @var string
+     */
+    private static $folder_name_for_images = 'ProductImages';
+
+    /**
+     * @var bool
+     */
+    private static $add_data_to_meta_description_for_search = false;
+
+    /**
      * Standard SS variable.
      */
     private static $table_name = 'Product';
