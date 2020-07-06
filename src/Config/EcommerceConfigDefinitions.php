@@ -39,9 +39,9 @@ use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
-
-
-
+use Sunnysideup\Ecommerce\Pages\CartPageController;
+use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
 
 /**
  * This class sets out the static config variables for e-commerce.
@@ -136,16 +136,16 @@ class EcommerceConfigDefinitions
             CartResponse::class,
         ],
         'CHECKOUT' => [
-            'Pages',
-            'CartPage_Controller',
-            'CheckoutPage_Controller',
+            'Page',
+            CartPageController::class,
+            CheckoutPageController::class,
             ShopAccountFormValidator::class,
             OrderModifierForm::class,
             EcommercePaymentController::class,
             OrderFormAddress::class,
         ],
         'POST SALE PROCESSING' => [
-            'OrderConfirmationPage_Controller',
+            OrderConfirmationPageController::class,
             OrderStep::class,
             OrderStepConfirmed::class,
             OrderStatusLog::class,
