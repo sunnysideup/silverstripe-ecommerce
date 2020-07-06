@@ -389,7 +389,7 @@ class ProductGroup extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -412,7 +412,7 @@ class ProductGroup extends Page
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -438,7 +438,7 @@ class ProductGroup extends Page
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -552,7 +552,7 @@ class ProductGroup extends Page
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {
@@ -679,7 +679,7 @@ class ProductGroup extends Page
      * @param array | string $extraFilter          Additional SQL filters to apply to the Product retrieval
      * @param string         $alternativeFilterKey Alternative standard filter to be used.
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      **/
     public function currentInitialProducts($extraFilter = null, $alternativeFilterKey = '')
     {
@@ -791,7 +791,7 @@ class ProductGroup extends Page
      * @param array | string $alternativeSort      Additional SQL for sorting
      * @param string         $alternativeFilterKey alternative filter key to be used
      *
-     * @return DataList | Null
+     * @return \SilverStripe\ORM\DataList | Null
      */
     public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
     {
@@ -816,7 +816,7 @@ class ProductGroup extends Page
      * @param string | Array $filter             - additional filter to be added
      * @param int            $numberOfRecursions - current level of depth
      *
-     * @return ArrayList (ProductGroups)
+     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
     public function ChildGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
     {
@@ -883,13 +883,13 @@ class ProductGroup extends Page
             }
         }
 
-        return ProductGroup::get()->where("\"ProductGroup${stage}\".\"ID\" IN (" . implode(',', $ids) . ')' . $filterWithAND);
+        return ProductGroup::get()->where("\"ProductGroup${stage}\".\"ID\" IN (" . implode(',', $ids) . ')');
     }
 
     /**
      * returns the parent page, but only if it is an instance of Product Group.
      *
-     * @return DataObject | Null (ProductGroup)
+     * @return \SilverStripe\ORM\DataObject | Null (ProductGroup)
      **/
     public function ParentGroup()
     {
@@ -907,7 +907,7 @@ class ProductGroup extends Page
      *
      * @param string $filter
      *
-     * @return ArrayList (ProductGroups)
+     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
     public function GroupsMenu($filter = 'ShowInMenus = 1')
     {
@@ -957,7 +957,7 @@ class ProductGroup extends Page
      * With the method below you can work out a list of brands that apply to the
      * current product group (e.g. socks come in three brands - namely A, B and C)
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     public function ProductGroupsFromAlsoShowProducts()
     {
@@ -990,7 +990,7 @@ class ProductGroup extends Page
      * That is, it list the product groups that a product is primarily listed under (exact parents only)
      * from a "AlsoShow" product List.
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     public function ProductGroupsFromAlsoShowProductsInverse()
     {
@@ -1012,7 +1012,7 @@ class ProductGroup extends Page
      * given the products for this page,
      * retrieve the parent groups excluding the current one.
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     public function ProductGroupsParentGroups()
     {
@@ -1449,7 +1449,7 @@ class ProductGroup extends Page
      *
      * IMPORTANT: Adjusts allProducts and returns it...
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     protected function getGroupFilter()
     {
@@ -1517,7 +1517,7 @@ class ProductGroup extends Page
      *
      * @param string $alternativeFilterKey - filter key to be used... if none is specified then we use the current one.
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     protected function getStandardFilter($alternativeFilterKey = '')
     {
@@ -1541,7 +1541,7 @@ class ProductGroup extends Page
      *
      * IMPORTANT: Adjusts allProducts and returns it...
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     protected function getGroupJoin()
     {
@@ -1581,7 +1581,7 @@ class ProductGroup extends Page
      *
      * @param array | string $alternativeSort = Alternative Sort String or array
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      **/
     protected function currentFinalProducts($alternativeSort = null)
     {
@@ -1589,7 +1589,7 @@ class ProductGroup extends Page
             //limit to maximum number of products for speed's sake
             $this->allProducts = $this->sortCurrentFinalProducts($alternativeSort);
             $this->allProducts = $this->limitCurrentFinalProducts();
-            $this->allProducts = $this->removeExcludedProductsAndSaveIncludedProducts($this->allProducts);
+            $this->allProducts = $this->removeExcludedProductsAndSaveIncludedProducts();
 
             return $this->allProducts;
         }
@@ -1598,7 +1598,7 @@ class ProductGroup extends Page
     /**
      * returns the SORT part of the final selection of products.
      *
-     * @return DataList (allProducts)
+     * @return \SilverStripe\ORM\DataList (allProducts)
      */
     protected function sortCurrentFinalProducts($alternativeSort)
     {
@@ -1664,7 +1664,7 @@ class ProductGroup extends Page
     /**
      * limits the products to a maximum number (for speed's sake).
      *
-     * @return DataList (this->allProducts adjusted!)
+     * @return \SilverStripe\ORM\DataList (this->allProducts adjusted!)
      */
     protected function limitCurrentFinalProducts()
     {
@@ -1688,7 +1688,7 @@ class ProductGroup extends Page
      *
      * @todo: cache data per user ....
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     protected function removeExcludedProductsAndSaveIncludedProducts()
     {

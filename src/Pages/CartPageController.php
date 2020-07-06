@@ -252,7 +252,7 @@ class CartPageController extends PageController
     /**
      * This returns a ArraList, each dataobject has two vars: Title and Link.
      *
-     * @return ArraList
+     * @return \SilverStripe\ORM\ArraList | null
      **/
     public function ActionLinks()
     {
@@ -261,7 +261,7 @@ class CartPageController extends PageController
             return $this->actionLinks;
         }
 
-        return;
+        return ArrayList::create();
     }
 
     /**
@@ -294,7 +294,7 @@ class CartPageController extends PageController
     }
 
     /**
-     * @return DataObject | Null - Order
+     * @return \SilverStripe\ORM\DataObject | Null - Order
      **/
     public function Order()
     {

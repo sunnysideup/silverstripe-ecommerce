@@ -86,6 +86,7 @@ class OrderFormAddress extends Form
 
         //set basics
         $requiredFields = [];
+        $shippingAddress = null;
 
         //requirements
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomOrderFormAddress.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -344,7 +345,7 @@ class OrderFormAddress extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @param HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
@@ -366,7 +367,7 @@ class OrderFormAddress extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @param HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
@@ -559,7 +560,7 @@ class OrderFormAddress extends Form
      *
      * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
-     * @return Member | Null
+     * @return \SilverStripe\Security\Member | Null
      **/
     protected function createOrFindMember(array $data)
     {

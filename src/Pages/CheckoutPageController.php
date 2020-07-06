@@ -96,7 +96,7 @@ class CheckoutPageController extends CartPageController
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
      *
-     * @return ArrayList (ModifierForms) | Null
+     * @return \SilverStripe\ORM\ArrayList (ModifierForms) | Null
      */
     public function ModifierForms()
     {
@@ -328,10 +328,10 @@ class CheckoutPageController extends CartPageController
      */
     public function IsFinalStep()
     {
+        $finalStep = $this->currentStep;
         foreach ($this->steps as $finalStep) {
             //do nothing...
         }
-
         return $this->currentStep === $finalStep;
     }
 

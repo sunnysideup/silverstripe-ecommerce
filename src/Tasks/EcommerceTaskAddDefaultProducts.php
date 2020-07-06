@@ -37,6 +37,9 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
                 $productGroup1->publish('Stage', 'Live');
                 DB::alteration_message('Product group page \'Products\' created', 'created');
             }
+            else {
+                $productGroup1 = ProductGroup::get()->first();
+            }
             $content = '<p>This is a <em>product</em>. It\'s description goes into the Content field as a standard SilverStripe page would have it\'s content. This is an ideal place to describe your product.</p>';
 
             $page1 = new Product();

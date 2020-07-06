@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;

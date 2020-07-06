@@ -75,7 +75,7 @@ class OrderConfirmationPageController extends CartPageController
      * This method exists just so that template
      * sets CurrentOrder variable.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return array
      **/
@@ -313,7 +313,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * show the payment form.
      *
-     * @return Form (OrderFormPayment) or Null
+     * @return \SilverStripe\Forms\Form (OrderFormPayment) or Null
      **/
     public function PaymentForm()
     {
@@ -335,7 +335,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @param SS_HTTPRequest $request
      *
-     * @return HTML
+     * @return string
      **/
     public function sendemail(HTTPRequest $request)
     {

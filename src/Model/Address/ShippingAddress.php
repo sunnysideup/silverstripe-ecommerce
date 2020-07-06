@@ -191,7 +191,7 @@ class ShippingAddress extends OrderAddress
     }
 
     /**
-     *@return FieldList
+     *@return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -219,9 +219,9 @@ class ShippingAddress extends OrderAddress
     /**
      * Puts together the fields for the Order Form (and other front-end purposes).
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getFields(Member $member = null)
     {

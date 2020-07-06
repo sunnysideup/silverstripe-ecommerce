@@ -230,7 +230,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -252,7 +252,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -272,7 +272,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -295,7 +295,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -459,7 +459,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {
@@ -522,7 +522,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         'Emails',
                         _t('EcommerceDBConfig.EMAILS', 'Emails'),
                         new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
-                        new UploadField('EmailLogo', $fieldLabels['EmailLogo'], null, null, null, 'logos'),
+                        new UploadField('EmailLogo', $fieldLabels['EmailLogo']),
                         new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
                         $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage'])
                     ),
@@ -593,7 +593,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
                 Requirements::block('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
                 if (strnatcmp(PHP_VERSION, '5.5.1') >= 0) {
-                    $fields->addFieldToTab('Root.ProductImages', new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage'], null, null, null, 'default-product-image'));
+                    $fields->addFieldToTab('Root.ProductImages', new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage']));
                 }
                 $fields->replaceField(
                     'UseThisOne',
@@ -624,7 +624,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $gridFieldConfig = GridFieldConfig::create()->addComponents(
             new GridFieldToolbarHeader(),
             new GridFieldSortableHeader(),
-            new GridFieldDataColumns(10),
+            new GridFieldDataColumns(),
             new GridFieldPaginator(10),
             new GridFieldEditButton(),
             new GridFieldDeleteAction(),
@@ -687,7 +687,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * return null if there is less than two currencies in use
      * on the site.
      *
-     * @return DataList | Null
+     * @return \SilverStripe\ORM\DataList | Null
      */
     public function Currencies()
     {

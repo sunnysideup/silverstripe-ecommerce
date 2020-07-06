@@ -58,7 +58,7 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -81,7 +81,7 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -104,7 +104,7 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */
@@ -127,7 +127,7 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @var bool
      */

@@ -95,7 +95,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -118,7 +118,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -141,7 +141,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -164,7 +164,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */

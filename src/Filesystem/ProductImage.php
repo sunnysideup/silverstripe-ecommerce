@@ -102,9 +102,9 @@ class ProductImage extends Image
     /**
      * @usage can be used in a template like this $Image.Thumbnail.Link
      *
-     * @param \GD $gd
+     * @param resource $gd - GD
      *
-     * @return \GD
+     * @return resource - GD
      **/
     public function generateThumbnail($gd)
     {
@@ -123,7 +123,7 @@ class ProductImage extends Image
     /**
      * @usage can be used in a template like this $Image.SmallImage.Link
      *
-     * @return \GD
+     * @return resource - GD
      **/
     public function generateSmallImage($gd)
     {
@@ -141,7 +141,7 @@ class ProductImage extends Image
     /**
      * @usage can be used in a template like this $Image.ContentImage.Link
      *
-     * @return \GD
+     * @return resource - GD
      **/
     public function generateContentImage($gd)
     {
@@ -158,7 +158,7 @@ class ProductImage extends Image
     /**
      * @usage can be used in a template like this $Image.LargeImage.Link
      *
-     * @return \GD
+     * @return resource - GD
      **/
     public function generateLargeImage($gd)
     {

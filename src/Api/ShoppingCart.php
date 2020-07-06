@@ -1040,7 +1040,7 @@ class ShoppingCart
      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
      *
      * $message the message, which could be a notification of successful action, or reason for failure
-     * @param please $status use good, bad, warning
+     * @param $status - use good, bad, warning
      */
     public function addMessage($message, $status = 'good')
     {

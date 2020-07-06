@@ -609,6 +609,7 @@ class ProductSearchForm extends Form
      */
     protected function addToResults($listToAdd)
     {
+        $internalItemID = 0;
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
         $listToAdd = $listToAdd->sort('Price', 'DESC');
         foreach ($listToAdd as $page) {
@@ -650,6 +651,7 @@ class ProductSearchForm extends Form
         $wordsAsString = preg_replace('!\s+!', ' ', $keywordPhrase);
         $wordAsArray = explode(' ', $wordsAsString);
         $hasWordArray = false;
+        $searchStringAND = '';
         if (count($wordAsArray) > 1) {
             $hasWordArray = true;
             $searchStringArray = [];

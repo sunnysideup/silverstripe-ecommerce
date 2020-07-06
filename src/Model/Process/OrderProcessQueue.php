@@ -94,7 +94,7 @@ class OrderProcessQueue extends DataObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -106,7 +106,7 @@ class OrderProcessQueue extends DataObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -133,7 +133,7 @@ class OrderProcessQueue extends DataObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -146,7 +146,7 @@ class OrderProcessQueue extends DataObject
      * Standard SS method
      * Queues can be deleted if needed.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */

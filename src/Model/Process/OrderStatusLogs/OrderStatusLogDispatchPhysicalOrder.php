@@ -87,7 +87,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     }
 
     /**
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

@@ -309,7 +309,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return JSON
+     * @return string
      */
     public function json(HTTPRequest $request)
     {
@@ -319,7 +319,7 @@ class ShoppingCartController extends Controller
     /**
      * Adds item to cart via controller action; one by default.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -338,7 +338,7 @@ class ShoppingCartController extends Controller
      * Sets the exact passed quantity.
      * Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -357,7 +357,7 @@ class ShoppingCartController extends Controller
     /**
      * Removes item from cart via controller action; one by default.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -376,7 +376,7 @@ class ShoppingCartController extends Controller
     /**
      * Removes all of a specific item.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -398,7 +398,7 @@ class ShoppingCartController extends Controller
     /**
      * Removes all of a specific item AND return back.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -418,7 +418,7 @@ class ShoppingCartController extends Controller
     /**
      * Removes a specified modifier from the cart;.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -436,7 +436,7 @@ class ShoppingCartController extends Controller
     /**
      * Adds a specified modifier to the cart;.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -539,7 +539,7 @@ class ShoppingCartController extends Controller
     /**
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      **/
     public function clear(HTTPRequest $request)
     {
@@ -552,7 +552,7 @@ class ShoppingCartController extends Controller
     /**
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      **/
     public function clearandlogout(HTTPRequest $request)
     {
@@ -568,7 +568,7 @@ class ShoppingCartController extends Controller
     /**
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      **/
     public function deleteorder(HTTPRequest $request)
     {
@@ -610,7 +610,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return HTML
+     * @return \SilverStripe\ORM\FieldType\DBHTMLText
      */
     public function showcart(HTTPRequest $request)
     {
@@ -622,7 +622,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function loadorder(HTTPRequest $request)
     {
@@ -639,7 +639,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return string | REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      * @TODO: add non-ajax version of this request.
      */
     public function removeaddress(HTTPRequest $request)
@@ -676,7 +676,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function submittedbuyable(HTTPRequest $request)
     {
@@ -719,7 +719,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function placeorderformember(HTTPRequest $request)
     {
@@ -748,7 +748,7 @@ class ShoppingCartController extends Controller
      *
      * @param SS_HTTPRequest $request
      *
-     * @return REDIRECT
+     * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function loginas(HTTPRequest $request)
     {
@@ -785,7 +785,7 @@ class ShoppingCartController extends Controller
      * test the ajax response
      * for developers only.
      *
-     * @return output to buffer
+     * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function ajaxtest(HTTPRequest $request)
     {
@@ -871,7 +871,7 @@ class ShoppingCartController extends Controller
     /**
      * Gets a buyable object based on URL actions.
      *
-     * @return DataObject | Null - returns buyable
+     * @return \SilverStripe\ORM\DataObject | Null - returns buyable
      */
     protected function buyable()
     {

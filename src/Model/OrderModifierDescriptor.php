@@ -117,7 +117,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -129,7 +129,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -152,7 +152,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -164,7 +164,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {

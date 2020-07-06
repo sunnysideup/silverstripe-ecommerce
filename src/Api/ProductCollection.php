@@ -14,7 +14,7 @@ use SilverStripe\ORM\DB;
 abstract class ProductCollection
 {
     /**
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     abstract public function getArrayList(): ArrayList;
 

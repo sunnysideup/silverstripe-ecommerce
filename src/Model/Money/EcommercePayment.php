@@ -188,7 +188,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -231,7 +231,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -259,7 +259,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * set to false as a security measure...
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -469,7 +469,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * @param string       $amount formatted amount (e.g. 12.30) without the currency
      * @param Order|null $order
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public static function combined_form_fields($amount, $order = null)
     {
@@ -521,7 +521,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * this would be a set of fields to enter your
      * credit card details.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getPaymentFormFields($amount = 0, $order = null)
     {

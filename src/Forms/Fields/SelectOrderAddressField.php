@@ -27,7 +27,7 @@ class SelectOrderAddressField extends OptionsetField
      *
      * @param string    $name      The field name
      * @param string    $title     The field title
-     * @param SilverStripe\ORM\ArrayList $addresses
+     * @param \SilverStripe\ORM\ArrayList $addresses
      * @param string    $value     The current value
      */
     public function __construct($name, $title = '', $addresses = null, $value = '')

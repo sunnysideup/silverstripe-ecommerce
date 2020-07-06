@@ -127,7 +127,7 @@ class OrderConfirmationPage extends CartPage
      * Standard SS function, we only allow for one OrderConfirmation Page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -139,7 +139,7 @@ class OrderConfirmationPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -155,7 +155,7 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -167,7 +167,7 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -222,7 +222,7 @@ class OrderConfirmationPage extends CartPage
     }
 
     /**
-     *@return FieldList
+     *@return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -350,7 +350,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @param bool $isCurrentStep
      *
-     * @return Checkout_StepDescription
+     * @return \SilverStripe\ORM\DataObject
      */
     public function CurrentCheckoutStep($isCurrentStep = false)
     {

@@ -57,7 +57,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function __construct($name, $title = '')
     {
-        return parent::__construct($name, $title);
+        parent::__construct($name, $title);
     }
 
     /**
@@ -151,6 +151,8 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function Field($properties = [])
     {
+        $row = [];
+        $maxWidth = 100;
         $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
         $title = $this->getContent();
         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;

@@ -10894,7 +10894,7 @@ modified:	src/Model/Extensions/EcommerceRole.php
      /**
 @@ -717,7 +751,7 @@
       *
-      * @return ArrayList (BillingAddresses | ShippingAddresses)
+      * @return \SilverStripe\ORM\ArrayList (BillingAddresses | ShippingAddresses)
       **/
 -    public function previousOrderAddresses($type = 'BillingAddress', $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
 +    public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
@@ -11603,7 +11603,7 @@ modified:	src/Forms/OrderFormAddress.php
                  }
 @@ -351,7 +376,7 @@
       * @param Form        $form    Form object for this action
-      * @param HTTPRequest $request Request object for this action
+      * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
       */
 -    public function saveAddress(array $data, Form $form, SS_HTTPRequest $request)
 +    public function saveAddress(array $data, Form $form, HTTPRequest $request)
@@ -11612,7 +11612,7 @@ modified:	src/Forms/OrderFormAddress.php
 
 @@ -373,7 +398,7 @@
       * @param Form        $form    Form object for this action
-      * @param HTTPRequest $request Request object for this action
+      * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
       */
 -    public function saveAddressDetails(array $data, Form $form, SS_HTTPRequest $request)
 +    public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
@@ -12161,7 +12161,7 @@ modified:	src/Forms/OrderForm.php
                  $requiredFields[] = 'ReadTermsAndConditions';
 @@ -142,7 +164,7 @@
       * @param Form        $form    Form object for this action
-      * @param HTTPRequest $request Request object for this action
+      * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
       */
 -    public function processOrder(array $data, Form $form, SS_HTTPRequest $request)
 +    public function processOrder(array $data, Form $form, HTTPRequest $request)
@@ -12491,7 +12491,7 @@ modified:	src/Forms/OrderFormFeedback.php
 
 @@ -74,7 +89,7 @@
       * @param Form         $form The {@link Form} this was submitted on
-      * @param HTTPRequest  $request The {@link Form} this was submitted on
+      * @return \SilverStripe\Control\HTTPRequest  $request The {@link Form} this was submitted on
       */
 -    public function dofeedback(array $data, Form $form, SS_HTTPRequest $request)
 +    public function dofeedback(array $data, Form $form, HTTPRequest $request)

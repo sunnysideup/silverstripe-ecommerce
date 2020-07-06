@@ -127,7 +127,7 @@ class CartPage extends Page
      * Standard SS function, we only allow for one CartPage page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -139,7 +139,7 @@ class CartPage extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -155,7 +155,7 @@ class CartPage extends Page
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -167,7 +167,7 @@ class CartPage extends Page
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -177,7 +177,7 @@ class CartPage extends Page
     }
 
     /**
-     *@return FieldList
+     *@return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

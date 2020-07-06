@@ -41,7 +41,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
     }
 
     /**
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function PageTypes()
     {

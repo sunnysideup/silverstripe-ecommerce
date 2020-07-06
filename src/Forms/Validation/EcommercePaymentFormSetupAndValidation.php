@@ -53,7 +53,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
      *
      * @param EcommercePayment $paymentObject
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCreditCardPaymentFormFields($paymentObject = null)
     {
@@ -215,6 +215,7 @@ class EcommercePaymentFormSetupAndValidation extends ViewableData
                     }
                     break;
                 case 'CVVNumber':
+                    $cardNumber = $this->paymentObject->{$dbFieldName};
                     $this->paymentObject->{$dbFieldName} = trim($data[$formFieldName]);
                     if (! $this->validateCVV($cardNumber, $this->paymentObject->{$dbFieldName})) {
                         $form->sessionError(

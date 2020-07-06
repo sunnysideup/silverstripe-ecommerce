@@ -174,7 +174,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -208,7 +208,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -267,7 +267,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -420,7 +420,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @Note: this needs to be public to give DODS (extensions access to this)
      * @todo: can wre write $this->Order() instead????
      *
-     * @return DataObject (Member) | Null
+     * @return \SilverStripe\ORM\DataObject (Member) | Null
      **/
     public function getMemberFromOrder()
     {
@@ -438,7 +438,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * make an address obsolete and include all the addresses that are identical.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      */
     public function MakeObsolete(Member $member = null)
     {
@@ -546,7 +546,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     protected function getEcommerceFields()
     {
@@ -656,7 +656,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *
      * @param FieldList | \SilverStripe\Forms\CompositeField $fields
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     protected function makeSelectedFieldsReadOnly($fields)
     {

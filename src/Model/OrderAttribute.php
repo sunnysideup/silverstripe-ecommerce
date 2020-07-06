@@ -182,7 +182,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -206,7 +206,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -242,7 +242,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -268,7 +268,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/

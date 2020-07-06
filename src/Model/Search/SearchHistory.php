@@ -98,7 +98,7 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -110,7 +110,7 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -133,7 +133,7 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -145,7 +145,7 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */

@@ -12,7 +12,7 @@ class EcommerceCMSButtonField extends LiteralField
         if ($newWindow) {
             $target = 'target="_blank"';
         }
-        return parent::__construct(
+        parent::__construct(
             $name,
             '
             <h3>

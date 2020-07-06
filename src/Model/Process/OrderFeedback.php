@@ -130,7 +130,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * these are only created programmatically
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -142,7 +142,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -165,7 +165,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -177,7 +177,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -189,7 +189,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {

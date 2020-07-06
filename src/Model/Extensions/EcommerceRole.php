@@ -181,7 +181,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param Member | Null $member
+     * @param \SilverStripe\Security\Member | Null $member
      *
      * @return bool
      */
@@ -200,7 +200,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param Member | Null $member
+     * @param \SilverStripe\Security\Member | Null $member
      *
      * @return bool
      */
@@ -219,7 +219,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member can process the orders
      *
-     * @param Member | Null $member
+     * @param \SilverStripe\Security\Member | Null $member
      *
      * @return bool
      */
@@ -236,7 +236,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return DataObject (Group) | NULL
+     * @return \SilverStripe\ORM\DataObject (Group) | NULL
      **/
     public static function get_admin_group()
     {
@@ -249,7 +249,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return DataObject (Group) | NULL
+     * @return \SilverStripe\ORM\DataObject (Group) | NULL
      **/
     public static function get_assistant_group()
     {
@@ -262,7 +262,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return DataObject (Member) | NULL
+     * @return \SilverStripe\ORM\DataObject (Member) | NULL
      **/
     public static function get_default_shop_admin_user()
     {
@@ -273,7 +273,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return DataObject (Member) | NULL
+     * @return \SilverStripe\ORM\DataObject (Member) | NULL
      **/
     public static function get_default_shop_assistant_user()
     {
@@ -379,7 +379,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @param FieldList $fields
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function updateCMSFields(FieldList $fields)
     {
@@ -476,7 +476,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * @param bool $mustCreateAccount: add extra fields.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getEcommerceFields($mustCreateAccount = false)
     {
@@ -532,6 +532,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
             }
 
+            $passwordDoubleCheckField = '';
             if (empty($passwordField)) {
                 $passwordField = new PasswordField('PasswordCheck1', _t('Account.CREATE_PASSWORD', 'Password'));
                 $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_PASSWORD', 'Confirm Password'));
@@ -669,7 +670,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * @param bool   $onlyLastRecord - only select one
      * @param bool   $keepDoubles    - keep addresses that are the same (if set to false, only unique addresses are returned)
      *
-     * @return ArrayList (BillingAddresses | ShippingAddresses)
+     * @return \SilverStripe\ORM\ArrayList (BillingAddresses | ShippingAddresses)
      **/
     public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
     {

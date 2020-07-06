@@ -61,7 +61,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -73,7 +73,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -85,7 +85,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */

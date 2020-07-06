@@ -229,7 +229,7 @@ class Product extends Page implements BuyableModel
      * By default we search for products that are allowed to be purchased only
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -461,7 +461,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns all the parent groups for the product.
      *
-     *@return DataList (ProductGroups)
+     *@return \SilverStripe\ORM\DataList (ProductGroups)
      **/
     public function AllParentGroups()
     {
@@ -478,7 +478,7 @@ class Product extends Page implements BuyableModel
      * Returns all the parent groups for the product,
      * including the parents and parents and so on.
      *
-     * @return DataList (ProductGroups)
+     * @return \SilverStripe\ORM\DataList (ProductGroups)
      */
     public function AllParentGroupsIncludingParents()
     {
@@ -527,6 +527,7 @@ class Product extends Page implements BuyableModel
      **/
     public function TopParentGroup()
     {
+        $returnValue = null;
         $parent = $this->MainParentGroup();
         while ($parent) {
             $returnValue = $parent;
@@ -541,7 +542,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns products in the same group.
      *
-     * @return DataList (Products)
+     * @return \SilverStripe\ORM\DataList (Products)
      **/
     public function Siblings()
     {
@@ -654,14 +655,14 @@ class Product extends Page implements BuyableModel
      *
      * @param string $component - the has many relationship you are looking at, e.g. OrderAttribute
      *
-     * @return DataList (CHECK!)
+     * @return \SilverStripe\ORM\DataList (CHECK!)
      */
     public function getVersionedComponents($component = 'ProductVariations')
     {
         return;
-        $baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
-        $query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
-        return singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
+        //$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
+        //$query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
+        //return singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
     }
 
     /**
@@ -673,7 +674,7 @@ class Product extends Page implements BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return DataObject | Null
+     * @return \SilverStripe\ORM\DataObject | Null
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
@@ -1009,7 +1010,7 @@ class Product extends Page implements BuyableModel
     /**
      * How do we display the price?
      *
-     * @return Money
+     * @return \SilverStripe\ORM\FieldType\DBMoney
      */
     public function CalculatedPriceAsMoney()
     {
@@ -1026,7 +1027,7 @@ class Product extends Page implements BuyableModel
     /**
      * Is the product for sale?
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      * @param bool   $checkPrice
      *
      * @return bool
@@ -1087,7 +1088,7 @@ class Product extends Page implements BuyableModel
     /**
      * Shop Admins can edit.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -1110,7 +1111,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -1133,7 +1134,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */

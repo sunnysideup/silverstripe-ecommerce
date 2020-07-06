@@ -103,8 +103,8 @@ class OrderForm extends Form
                     $submitErrorsString .= '<li>' . $error->Title . '</li>';
                 }
                 $message = '<div class="submitErrors"><p class="message bad">' . _t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ') . '</p><ul>' . $submitErrorsString . '</ul></div>';
+                $actions->push(LiteralField::create('SubmitErrors', $message));
             }
-            $actions->push(LiteralField::create('SubmitErrors', $message));
         }
         $actions->push(new FormAction('processOrder', _t('OrderForm.PROCESSORDER', 'Place order and make payment')));
         $validator = OrderFormValidator::create($requiredFields);
@@ -138,11 +138,11 @@ class OrderForm extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @param HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
      */
     public function processOrder(array $data, Form $form, HTTPRequest $request)
     {
-        $this->saveDataToSession($data); //save for later if necessary
+        $this->saveDataToSession(); //save for later if necessary
         $order = ShoppingCart::current_order();
         $this->extend('onRawSubmit', $data, $form, $order);
         //check for cart items

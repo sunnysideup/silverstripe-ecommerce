@@ -49,7 +49,7 @@ class EcommerceSideReportFeaturedProducts extends Report
     /**
      * working out the items.
      *
-     * @return SS_List
+     * @return \SilverStripe\ORM\DataList
      */
     public function sourceRecords($params = null)
     {

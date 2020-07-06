@@ -27,7 +27,7 @@ class OrderStepField extends DatalessField
     /**
      * @param string $name
      * @param Order  $order
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      */
     public function __construct($name, Order $order, Member $member = null)
     {

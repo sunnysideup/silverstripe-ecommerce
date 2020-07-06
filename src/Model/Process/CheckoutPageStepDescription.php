@@ -123,7 +123,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * these are only created programmatically
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -135,7 +135,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -158,7 +158,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -181,7 +181,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -208,7 +208,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {

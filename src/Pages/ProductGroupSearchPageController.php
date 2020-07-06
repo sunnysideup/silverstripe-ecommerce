@@ -22,20 +22,11 @@ class ProductGroupSearchPageController extends ProductGroupController
      * 'in this section'. For example the vegetable Product Group
      * May have listed here: Carrot, Cabbage, etc...
      *
-     * @return ArrayList (ProductGroups)
+     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
     public function MenuChildGroups()
     {
         return;
-    }
-
-    public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
-    {
-        $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
-
-        $this->allProducts = parent::ProductsShowable($extraFilter, $alternativeSort, $alternativeFilterKey);
-
-        return $this->allProducts;
     }
 
     /**

@@ -186,7 +186,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -198,7 +198,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -225,7 +225,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -237,7 +237,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -249,7 +249,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
     {
@@ -299,7 +299,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {

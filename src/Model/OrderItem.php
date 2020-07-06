@@ -207,7 +207,7 @@ class OrderItem extends OrderAttribute
      * @param int    $id
      * @param int    $version
      *
-     * @return DataObject | Null
+     * @return \SilverStripe\ORM\DataObject | Null
      */
     public static function get_version($class, $id, $version)
     {
@@ -310,7 +310,7 @@ class OrderItem extends OrderAttribute
     /**
      * standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -333,7 +333,7 @@ class OrderItem extends OrderAttribute
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -348,7 +348,7 @@ class OrderItem extends OrderAttribute
      * @param BuyableModel $buyable
      * @param float        $quantity
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function addBuyableToOrderItem(BuyableModel $buyable, $quantity = 1)
     {
@@ -595,7 +595,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param bool $recalculate - forces recalculation of price
      *
-     * @return Money
+     * @return \SilverStripe\ORM\FieldType\DBMoney
      */
     public function TotalAsMoney($recalculate = false)
     {
@@ -624,7 +624,7 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @return Field (EcomQuantityField)
+     * @return EcomQuantityField
      **/
     public function QuantityField()
     {
@@ -632,7 +632,7 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @return Currency (DB Object)
+     * @return \SilverStripe\ORM\FieldType\DBCurrency (DB Object)
      **/
     public function TotalAsCurrencyObject()
     {
@@ -654,7 +654,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param bool $current - is this a current one, or an older VERSION ?
      *
-     * @return DataObject (Any type of Data Object that is buyable)
+     * @return \SilverStripe\ORM\DataObject (Any type of Data Object that is buyable)
      **/
     public function Buyable($current = false)
     {
@@ -664,7 +664,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param string $current - is this a current one, or an older VERSION ?
      *
-     * @return DataObject (Any type of Data Object that is buyable)
+     * @return \SilverStripe\ORM\DataObject (Any type of Data Object that is buyable)
      **/
     public function getBuyable($current = '')
     {

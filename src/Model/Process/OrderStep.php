@@ -378,7 +378,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * returns all the order steps
      * that the admin should / can edit....
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     public static function admin_manageable_steps()
     {
@@ -391,7 +391,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * returns all the order steps
      * that the admin should / can edit....
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      */
     public static function non_admin_manageable_steps()
     {
@@ -510,7 +510,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return FieldList
+     *@return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -666,7 +666,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param FieldList $fields
      * @param Order     $order
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
@@ -674,7 +674,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return ValidationResult
+     *@return \SilverStripe\ORM\ValidationResult
      **/
     public function validate()
     {
@@ -1042,7 +1042,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return DataObjectSet | null
+     * @return \SilverStripe\ORM\DataList | null
      */
     public function RelevantLogEntries(Order $order)
     {
@@ -1063,7 +1063,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * These are only created programmatically.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -1075,7 +1075,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -1116,7 +1116,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param Member $member | NULL
+     * @param \SilverStripe\Security\Member $member | NULL
      *
      * @return bool
      */
@@ -1139,7 +1139,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */

@@ -147,7 +147,7 @@ class ProductController extends PageController
     /**
      * This method can be extended to show products in the side bar.
      *
-     * @return DataList (Products)
+     * @return \SilverStripe\ORM\DataList (Products)
      */
     public function SidebarProducts()
     {

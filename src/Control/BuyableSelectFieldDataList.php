@@ -51,7 +51,7 @@ class BuyableSelectFieldDataList extends Controller
      *  Title => $name
      * );.
      *
-     * @param HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return string (JSON)
      */

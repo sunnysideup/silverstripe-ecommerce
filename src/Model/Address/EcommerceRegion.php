@@ -170,7 +170,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS FieldList.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

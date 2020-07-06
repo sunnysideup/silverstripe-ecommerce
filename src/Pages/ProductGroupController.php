@@ -106,7 +106,7 @@ class ProductGroupController extends PageController
      *
      * e.g. socks (current product group) for brand A or B (the secondary product group)
      *
-     * @param HTTPRequest $request
+     * @return \SilverStripe\Control\HTTPRequest $request
      */
     public function filterforgroup($request)
     {
@@ -135,7 +135,7 @@ class ProductGroupController extends PageController
     /**
      * get the search results.
      *
-     * @param HTTPRequest $request
+     * @return \SilverStripe\Control\HTTPRequest $request
      */
     public function searchresults($request)
     {
@@ -205,7 +205,7 @@ class ProductGroupController extends PageController
      * This is the call that is made from the template...
      * The actual final products being shown.
      *
-     * @return DataList
+     * @return \SilverStripe\ORM\DataList
      **/
     public function Products()
     {
@@ -391,7 +391,7 @@ class ProductGroupController extends PageController
      * 'in this section'. For example the vegetable Product Group
      * May have listed here: Carrot, Cabbage, etc...
      *
-     * @return ArrayList (ProductGroups)
+     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
     public function MenuChildGroups()
     {
@@ -403,7 +403,7 @@ class ProductGroupController extends PageController
      * of recommended product groups. They will be returned here...
      * We sort the list in the order that it is provided.
      *
-     * @return DataList | Null (ProductGroups)
+     * @return \SilverStripe\ORM\DataList | Null (ProductGroups)
      */
     public function SearchResultsChildGroups()
     {
@@ -718,7 +718,7 @@ class ProductGroupController extends PageController
     /**
      * Provides a ArrayList of links for filters products.
      *
-     * @return ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
      */
     public function FilterLinks()
     {
@@ -757,7 +757,7 @@ class ProductGroupController extends PageController
     /**
      * returns a list of items (with links).
      *
-     * @return ArrayList( ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))
      */
     public function ProductGroupFilterLinks()
     {
@@ -802,7 +802,7 @@ class ProductGroupController extends PageController
      * @see ProductGroupFilterLinks
      * same as ProductGroupFilterLinks, but with originating Object...
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function ProductGroupFilterOriginalObjects()
     {
@@ -1083,8 +1083,8 @@ class ProductGroupController extends PageController
     /**
      * counts the total number in the combination....
      *
-     * @param DataList $items     - list of
-     * @param Arary    $baseArray - list of products on the current page
+     * @param \SilverStripe\ORM\DataList $items     - list of
+     * @param Array    $baseArray - list of products on the current page
      *
      * @return array
      */
@@ -1261,7 +1261,7 @@ class ProductGroupController extends PageController
      *
      * @param string $type SORT | FILTER | DISPLAY - e.g. sort_options
      *
-     * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
      */
     protected function userPreferencesLinks($type)
     {

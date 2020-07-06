@@ -60,7 +60,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -94,7 +94,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     }
 
     /**
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

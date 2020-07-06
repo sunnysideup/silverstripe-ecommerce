@@ -32,7 +32,7 @@ class EcomQuantityField extends NumericField
     protected $parameters = [];
 
     /**
-     *@var Array()
+     * @var array
      **/
     protected $classes = ['ajaxQuantityField'];
 
@@ -87,6 +87,7 @@ class EcomQuantityField extends NumericField
         if ($parameters) {
             $this->parameters = $parameters;
         }
+
     }
 
     /**
@@ -100,7 +101,7 @@ class EcomQuantityField extends NumericField
         if ($overwrite) {
             $this->classes = array_merge($this->classes, $newClasses);
         } else {
-            $this->classes = $newclasses;
+            $this->classes = $newClasses;
         }
     }
 

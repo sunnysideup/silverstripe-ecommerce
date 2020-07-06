@@ -248,7 +248,7 @@ class CheckoutPage extends CartPage
      * Standard SS function, we only allow for one checkout page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
@@ -260,7 +260,7 @@ class CheckoutPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -276,7 +276,7 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -288,7 +288,7 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -300,7 +300,7 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS function.
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

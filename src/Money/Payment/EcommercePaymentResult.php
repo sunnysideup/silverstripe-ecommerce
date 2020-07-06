@@ -11,6 +11,8 @@ abstract class EcommercePaymentResult extends ViewableData
     public function __construct($value = null)
     {
         $this->value = $value;
+
+        parent::__construct();
     }
 
     public function getValue()

@@ -14,7 +14,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 class OrderFiltersFromDateFilter extends ExactMatchFilter
 {
     /**
-     *@return SQLQuery
+     *@return DataQuery
      **/
     public function apply(DataQuery $query)
     {

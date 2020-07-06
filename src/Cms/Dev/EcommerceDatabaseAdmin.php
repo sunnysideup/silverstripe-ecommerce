@@ -83,7 +83,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         'ecommercetaskprocessorderqueue',
         'ecommercetaskarchiveallsubmittedorders',
         'ecommercetasklinkorderaddressesatbothends',
-        EcommerceTaskCleanupProducts::class,
+        'ecommercetaskcleanupproducts',
     ];
 
     //##############################
@@ -181,7 +181,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of config tasks.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function OverallConfig()
     {
@@ -191,7 +191,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data setup tasks.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function EcommerceSetup()
     {
@@ -201,7 +201,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function DataReview()
     {
@@ -211,7 +211,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function RegularMaintenance()
     {
@@ -221,7 +221,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data debug actions.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function DebugActions()
     {
@@ -231,7 +231,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of migration tasks.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function Migrations()
     {
@@ -241,7 +241,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of crazy actions tasks.
      *
-     * @return ArrayList
+     * @return \SilverStripe\ORM\ArrayList
      */
     public function CrazyShit()
     {
@@ -275,6 +275,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
 
     public function runTask($request)
     {
+        $task = null;
         $taskName = $request->param('TaskName');
         $renderer = new EcommerceDatabaseAdminDebugView();
         $renderer->renderHeader();
@@ -317,7 +318,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      * @param array  $buildTasksArray array of build tasks
      * @param string $type
      *
-     * @return ArrayList(ArrayData(Link, Title, Description))
+     * @return \SilverStripe\ORM\ArrayList(ArrayData(Link, Title, Description))
      */
     protected function createMenuDOSFromArray(array $buildTasksArray, $type = '')
     {

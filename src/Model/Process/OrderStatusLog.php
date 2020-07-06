@@ -164,7 +164,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -191,7 +191,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -227,7 +227,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -259,7 +259,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * logs can never be deleted...
      *
-     * @param Member $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -298,7 +298,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -413,7 +413,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {

@@ -168,7 +168,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      * @param FieldList $fields
      * @param Order     $order
      *
-     * @return FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
