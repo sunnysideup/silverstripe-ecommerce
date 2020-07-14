@@ -101,7 +101,7 @@ class ExchangeRateProvider
         if ($fromCode === $toCode) {
             return 1;
         }
-        $rate = 0;
+        $rate = 1;
         $reference = $fromCode . '_' . $toCode;
         $url = 'http://free.currencyconverterapi.com/api/v5/convert?q=' . $reference . '&compact=y';
         if ($ch = @curl_init()) {
@@ -118,9 +118,11 @@ class ExchangeRateProvider
         }
         if ($record) {
             $currencyData = json_decode($record);
-            $rate = $currencyData->{$reference}->val;
-            if (! $rate) {
-                user_error('There was a problem retrieving the exchange rate.');
+            if(property_exists($currencyData, $reference)){
+                $rate = $currencyData->{$reference}->val;
+                if (! $rate) {
+                    user_error('There was a problem retrieving the exchange rate.');
+                }
             }
         }
         if ($rate !== 1) {
