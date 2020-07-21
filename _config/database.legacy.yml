@@ -54,15 +54,15 @@ SilverStripe\ORM\DatabaseAdmin:
     OrderProcessQueue: Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue
     OrderStatusLog: Sunnysideup\Ecommerce\Model\Process\OrderStatusLog
     OrderFeedback: Sunnysideup\Ecommerce\Model\Process\OrderFeedback
-    OrderStepCreated: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated
-    OrderStepSentReceipt: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentReceipt
+    OrderStep_Created: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated
+    OrderStep_SentReceipt: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentReceipt
     OrderStepSendAdminNotification: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSendAdminNotification
-    OrderStepSent: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSent
-    OrderStepSubmitted: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted
-    OrderStepArchived: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived
-    OrderStepConfirmed: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed
-    OrderStepPaid: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepPaid
-    OrderStepSentInvoice: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentInvoice
+    OrderStep_Sent: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSent
+    OrderStep_Submitted: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted
+    OrderStep_Archived: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived
+    OrderStep_Confirmed: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed
+    OrderStep_Paid: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepPaid
+    OrderStep_SentInvoice: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentInvoice
     OrderStatusLogCancel: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel
     OrderStatusLogDispatchElectronicOrder: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchElectronicOrder
     OrderStatusLogDispatch: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatch
