@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
@@ -113,7 +114,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      **/
     public function ProductListHolderID()
     {
-        return self::$prefix . ProductGroup::class;
+        return self::$prefix . ClassInfo::shortName(ProductGroup::class);
     }
 
     /**

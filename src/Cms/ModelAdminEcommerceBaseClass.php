@@ -10,6 +10,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * @see: http://doc.silverstripe.org/framework/en/reference/ModelAdmin
@@ -26,6 +27,11 @@ class ModelAdminEcommerceBaseClass extends ModelAdmin
     public $showImportForm = false;
 
     private static $url_segment = 'ecommerce-base';
+
+    private static $managed_models = [
+        Order::class
+    ];
+
 
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
