@@ -15,6 +15,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -83,7 +84,15 @@ class OrderForm extends Form
             } else {
                 $alreadyTicked = true;
             }
-            $finalFields->push(new CheckboxField('ReadTermsAndConditions', _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'), $alreadyTicked));
+            $finalFields->push(
+                CheckboxField::create(
+                    'ReadTermsAndConditions',
+                    DBField::create_field(
+                        'HTMLText',
+                        _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'), $alreadyTicked)
+                    )
+                );
+
         }
         $textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE', 'Note / Question'));
         $finalFields->push($textAreaField);
