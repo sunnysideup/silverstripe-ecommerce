@@ -8,6 +8,7 @@ use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
@@ -47,8 +48,9 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             'ButtonName' => $this->buttonName,
         ]);
 
+        $templates = SSViewer::get_templates_by_class($this, '', GridFieldAddNewButton::class);
         return [
-            $this->targetFragment => $data->renderWith('SilverStripe/Forms/GridField/GridFieldAddNewbutton'),
+            $this->targetFragment => $data->renderWith($templates),
         ];
     }
 
