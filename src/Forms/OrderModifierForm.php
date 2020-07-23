@@ -32,6 +32,8 @@ class OrderModifierForm extends Form
      */
     private static $controller_class = OrderModifierFormController::class;
 
+    private static $validator_class = OrderModifierFormValidator::class;
+
     /**
      *NOTE: we semi-enforce using the OrderModifier_Controller here to deal with the submission of the OrderModifierForm
      * You can use your own modifiers or an extension of OrderModifier_Controller by setting the first parameter (optionalController)
