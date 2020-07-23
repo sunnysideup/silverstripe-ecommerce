@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use GoogleAddressField;
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
@@ -14,7 +14,7 @@ use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
 use Sunnysideup\Ecommerce\Model\Order;
-
+use Sunnysideup\GoogleAddressField\GoogleAddressField;
 /**
  * @description: each order has a billing address.
  *
@@ -281,7 +281,7 @@ class BillingAddress extends OrderAddress
 
         $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
         if (is_array($mappingArray) && count($mappingArray)) {
-            if (! class_exists('GoogleAddressField')) {
+            if (! class_exists(GoogleAddressField::class)) {
                 user_error('You must install the Sunny Side Up google_address_field module OR remove entries from: BillingAddress.fields_to_google_geocode_conversion');
             }
             $billingFields->push(
