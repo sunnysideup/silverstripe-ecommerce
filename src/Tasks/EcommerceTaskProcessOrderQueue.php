@@ -21,6 +21,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
  **/
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
+    private static $segment = 'EcommerceTaskProcessOrderQueue';
+
     protected $sendEmails = true;
 
     protected $limit = 1;

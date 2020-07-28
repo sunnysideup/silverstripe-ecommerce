@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
-use CMSEditLinkField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
@@ -13,6 +12,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 
