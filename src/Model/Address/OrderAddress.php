@@ -10,6 +10,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\SSViewer;
@@ -582,7 +583,12 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $postalCodeLabel = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;
         if ($postalCodeURL && $postalCodeLabel) {
             $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
-            $field->setRightTitle('<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>');
+            $field->setRightTitle(
+                DBField::create(
+                    'HTMLText',
+                    '<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>'
+                )
+            );
         }
 
         return $field;

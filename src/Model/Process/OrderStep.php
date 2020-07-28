@@ -534,9 +534,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         //replacing
         $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
-        $config = $queueField->getConfig();
-        $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-        $config->removeComponentsByType(GridFieldDeleteAction::class);
+        if($queueField){
+            $config = $queueField->getConfig();
+            $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+            $config->removeComponentsByType(GridFieldDeleteAction::class);
+        }
         $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
             if ($this->DeferTimeInSeconds) {

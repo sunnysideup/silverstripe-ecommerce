@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Forms\Fields;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBField;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
@@ -254,6 +255,9 @@ class EcommerceSearchHistoryFormField extends LiteralField
         $content .= '
         </div>';
 
-        return $content;
+        return DBField::create_field(
+            'HTMLText',
+            $content
+        );
     }
 }
