@@ -584,7 +584,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($postalCodeURL && $postalCodeLabel) {
             $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
             $field->setRightTitle(
-                DBField::create(
+                DBField::create_field(
                     'HTMLText',
                     '<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>'
                 )
