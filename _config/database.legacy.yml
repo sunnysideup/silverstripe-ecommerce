@@ -34,7 +34,7 @@ SilverStripe\ORM\DatabaseAdmin:
     ShoppingCartController: Sunnysideup\Ecommerce\Control\ShoppingCartController
     CartResponse: Sunnysideup\Ecommerce\Control\CartResponse
     OrderEmailRecordReview: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
-    ProductOrderItem: Sunnysideup\Ecommerce\Model\ProductOrderItem
+    Product_OrderItem: Sunnysideup\Ecommerce\Model\ProductOrderItem
     OrderAttribute: Sunnysideup\Ecommerce\Model\OrderAttribute
     OrderModifierDescriptor: Sunnysideup\Ecommerce\Model\OrderModifierDescriptor
     OrderItem: Sunnysideup\Ecommerce\Model\OrderItem
