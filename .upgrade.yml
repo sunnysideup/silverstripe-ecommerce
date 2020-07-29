@@ -71,10 +71,10 @@ mappings:
   OrderStatusLogDispatchPhysicalOrder: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder
   EcommerceCurrency: Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency
   EcommercePayment: Sunnysideup\Ecommerce\Model\Money\EcommercePayment
-  EcommercePaymentTest: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest
-  EcommercePaymentTestPending: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestPending
-  EcommercePaymentTestSuccess: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestSuccess
-  EcommercePaymentTestFailure: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestFailure
+  EcommercePayment_Test: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest
+  EcommercePayment_TestPending: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestPending
+  EcommercePayment_TestSuccess: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestSuccess
+  EcommercePayment_TestFailure: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTestFailure
   SearchReplacement: Sunnysideup\Ecommerce\Model\Search\SearchReplacement
   SearchHistory: Sunnysideup\Ecommerce\Model\Search\SearchHistory
   BuyableFieldType: Sunnysideup\Ecommerce\Model\Fieldtypes\BuyableFieldType
