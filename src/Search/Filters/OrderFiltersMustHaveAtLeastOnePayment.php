@@ -22,7 +22,7 @@ class OrderFiltersMustHaveAtLeastOnePayment extends ExactMatchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $value = $this->getValue();
-        if ($value && in_array($value, [0, 1], true)) {
+        if ($value) {
             $query->innerJoin(
                 $table = 'Payment', // framework already applies quotes to table names here!
                 $onPredicate = '"Payment"."OrderID" = "Order"."ID"',
