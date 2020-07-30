@@ -575,11 +575,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function getEcommerceFieldsForCMS()
     {
         $fields = new CompositeField();
-        $memberTitle = HTMLReadonlyField::create('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . _t('Member.TITLE', 'Name') . ': ' . $this->owner->getTitle() . '</p>');
+        $memberTitle = HTMLReadonlyField::create('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . $this->owner->getTitle() . '</p>');
         $fields->push($memberTitle);
-        $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p>' . _t('Member.EMAIL', 'Email') . ': <a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
+        $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p><a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
         $fields->push($memberEmail);
-        $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . _t('Member.LASTLOGIN', 'Last Login') . ': ' . $this->owner->dbObject('LastVisited') . '</p>');
+        $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . $this->owner->dbObject('LastVisited') . '</p>');
         $fields->push($lastLogin);
         $group = self::get_customer_group();
         if (! $group) {
