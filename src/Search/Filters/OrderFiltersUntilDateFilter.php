@@ -25,10 +25,7 @@ class OrderFiltersUntilDateFilter extends ExactMatchFilter
         $formattedDate = $date->format('y-MM-dd');
 
         $query->where("\"Order\".\"Created\" <= '$formattedDate'");
-        echo '<pre>';
-        print_r($query->query()->__toString());
-        echo '</pre>';
-        die('sdfsdf');
+
         return $query;
     }
 }
