@@ -63,13 +63,13 @@ SilverStripe\ORM\DatabaseAdmin:
     OrderStep_Confirmed: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed
     OrderStep_Paid: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepPaid
     OrderStep_SentInvoice: Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentInvoice
-    OrderStatusLogCancel: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel
-    OrderStatusLogDispatchElectronicOrder: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchElectronicOrder
-    OrderStatusLogDispatch: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatch
-    OrderStatusLogSubmitted: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted
-    OrderStatusLogArchived: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogArchived
-    OrderStatusLogPaymentCheck: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck
-    OrderStatusLogDispatchPhysicalOrder: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder
+    OrderStatusLog_Cancel: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel
+    OrderStatusLog_DispatchElectronicOrder: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchElectronicOrder
+    OrderStatusLog_Dispatch: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatch
+    OrderStatusLog_Submitted: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted
+    OrderStatusLog_Archived: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogArchived
+    OrderStatusLog_PaymentCheck: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck
+    OrderStatusLog_DispatchPhysicalOrder: Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder
     EcommerceCurrency: Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency
     EcommercePayment: Sunnysideup\Ecommerce\Model\Money\EcommercePayment
     EcommercePayment_Test: Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest
