@@ -13,7 +13,7 @@ SilverStripe\ORM\DatabaseAdmin:
     OrderStatusEmail: Sunnysideup\Ecommerce\Email\OrderStatusEmail
     OrderReceiptEmail: Sunnysideup\Ecommerce\Email\OrderReceiptEmail
     OrderEmail: Sunnysideup\Ecommerce\Email\OrderEmail
-    ProductImage: Sunnysideup\Ecommerce\Filesystem\ProductImage
+    Product_Image: Sunnysideup\Ecommerce\Filesystem\ProductImage
     EcommercePaymentSupportedMethodsProviderInterface: Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface
     OrderStepInterface: Sunnysideup\Ecommerce\Interfaces\OrderStepInterface
     EcommerceGEOipProvider: Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider
