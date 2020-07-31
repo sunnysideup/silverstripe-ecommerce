@@ -9,7 +9,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**

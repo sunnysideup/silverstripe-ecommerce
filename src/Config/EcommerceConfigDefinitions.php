@@ -17,7 +17,6 @@ use Sunnysideup\Ecommerce\Control\CartResponse;
 use Sunnysideup\Ecommerce\Control\EcommercePaymentController;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Email\OrderEmail;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;
 use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
 use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
@@ -122,7 +121,6 @@ class EcommerceConfigDefinitions
         ],
         'PRODUCTS' => [
             ProductGroup::class,
-            ProductImage::class,
             ProductSearchForm::class,
         ],
         'ORDER OBJECTS' => [
@@ -274,15 +272,6 @@ class EcommerceConfigDefinitions
 
             'Product' => ['folder_name_for_images' => 'Default folder for uploading product images.',
                 'add_data_to_meta_description_for_search' => 'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details', ],
-
-            'ProductImage' => ['thumbnail_width' => 'Thumbnail width in pixels. For thumbnails,
-            we use paddedResize.',
-                'thumbnail_height' => 'Thumbnail height in pixels. For thumbnails,
-            we use paddedResize.',
-                'small_image_width' => 'Width for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
-                'small_image_height' => 'Height for the small image (this is usually the product group image). We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
-                'content_image_width' => 'Width for the content image. We use these settings to improve image quality and to set strict standard sizes. For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.',
-                'large_image_width' => 'Width for the large (zoom) image. We use these settings to improve image quality and to set strict standard sizes.  For the thumbnail and small image we set both height and width. For the content and large image we use the SetWidth method.', ],
 
             'ProductSearchForm' => ['include_price_filters' => 'For the product search form,
             make sure that there are no filter fields for minimum and maximum price',

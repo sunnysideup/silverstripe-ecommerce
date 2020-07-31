@@ -31,7 +31,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
@@ -125,7 +124,7 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $has_one = [
-        'Image' => ProductImage::class,
+        'Image' => Image::class,
     ];
 
     /**
@@ -281,7 +280,7 @@ class Product extends Page implements BuyableModel
         //dirty hack to show images!
         $fields->addFieldToTab(
             'Root.Images',
-            $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image'))
+            $uploadField = new UploadField('Image', _t('Product.IMAGE', 'Product Image'))
         );
         $uploadField->setCallingClass(Product::class);
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
@@ -415,12 +414,6 @@ class Product extends Page implements BuyableModel
     public function onAfterWrite()
     {
         parent::onAfterWrite();
-        if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(['ClassName' => ProductImage::class])->byID($this->ImageID)) {
-                $normalImage = $normalImage->newClassInstance(ProductImage::class);
-                $normalImage->write();
-            }
-        }
     }
 
     /**
@@ -635,16 +628,6 @@ class Product extends Page implements BuyableModel
         return $this->EcomConfig()->DefaultImage();
     }
 
-    /**
-     * returns a product image for use in templates
-     * e.g. $DummyImage.Width();.
-     *
-     * @return ProductImage
-     */
-    public function DummyImage()
-    {
-        return new ProductImage();
-    }
 
     // VERSIONING
 

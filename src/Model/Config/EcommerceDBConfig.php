@@ -33,7 +33,6 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
@@ -112,7 +111,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $has_one = [
         'EmailLogo' => Image::class,
-        'DefaultProductImage' => ProductImage::class,
+        'DefaultProductImage' => Image::class,
     ];
 
     /**
@@ -484,7 +483,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 //new section
                 $fieldDescriptions = $self->customDescriptionsForFields();
                 $fieldLabels = $self->fieldLabels();
-                $productImage = new ProductImage();
                 $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
                 $fields->InsertAfter(
                     'Root.Main',
@@ -513,15 +511,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         new CheckboxField('ProductsHaveModelNames', $fieldLabels['ProductsHaveModelNames']),
                         new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers'])
                         //new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
-                    ),
-                    Tab::create(
-                        'ProductImages',
-                        _t('EcommerceDBConfig.PRODUCT_IMAGES', 'Product Images'),
-                        //new ProductProductImageUploadField("DefaultProductImage", $fieldLabels["DefaultProductImage"], null, null, null, "default-product-image"),
-                        new ReadonlyField('DefaultThumbnailImageSize', $fieldLabels['DefaultThumbnailImageSize'], $productImage->ThumbWidth() . 'px x ' . $productImage->ThumbHeight() . 'px '),
-                        new ReadonlyField('DefaultSmallImageSize', $fieldLabels['DefaultSmallImageSize'], $productImage->SmallWidth() . 'px x ' . $productImage->SmallHeight() . 'px '),
-                        new ReadonlyField('DefaultContentImageSize', $fieldLabels['DefaultContentImageSize'], $productImage->ContentWidth() . 'px wide'),
-                        new ReadonlyField('DefaultLargeImageSize', $fieldLabels['DefaultLargeImageSize'], $productImage->LargeWidth() . 'px wide')
                     ),
                     Tab::create(
                         'AddressAndDelivery',
@@ -776,7 +765,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        $obj = ProductImage::create();
+        $obj = Image::create();
         $obj->Link = $this->DefaultImageLink();
         $obj->URL = $this->DefaultImageLink();
 

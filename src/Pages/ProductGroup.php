@@ -24,7 +24,6 @@ use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-use Sunnysideup\Ecommerce\Filesystem\ProductImage;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
@@ -312,7 +311,7 @@ class ProductGroup extends Page
      * @static Array
      */
     private static $has_one = [
-        'Image' => ProductImage::class,
+        'Image' => Image::class,
     ];
 
     /**
@@ -1107,13 +1106,6 @@ class ProductGroup extends Page
     public function onAfterWrite()
     {
         parent::onAfterWrite();
-
-        if ($this->ImageID) {
-            if ($normalImage = Image::get()->exclude(['ClassName' => ProductImage::class])->byID($this->ImageID)) {
-                $normalImage = $normalImage->newClassInstance(ProductImage::class);
-                $normalImage->write();
-            }
-        }
     }
 
     public function requireDefaultRecords()
