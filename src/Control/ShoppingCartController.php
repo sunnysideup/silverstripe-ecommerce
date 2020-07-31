@@ -757,17 +757,17 @@ class ShoppingCartController extends Controller
      */
     public function loginas(HTTPRequest $request)
     {
+
         if (Permission::check('ADMIN')) {
             $newMember = Member::get()->byID(intval($request->param('ID')));
+
             if ($newMember) {
-                //$memberToTest->logout();
-                $newMember->logIn();
+                Security::setCurrentUser($newMember);
                 if ($accountPage = DataObject::get_one(AccountPage::class)) {
                     return $this->redirect($accountPage->Link());
                 }
                 return $this->redirect(Director::baseURL());
             }
-            user_error('Can not find this member.');
         } else {
             return Security::permissionFailure($this);
         }
