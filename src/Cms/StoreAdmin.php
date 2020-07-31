@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
@@ -20,8 +21,9 @@ use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
  * @sub-package: cms
 
  **/
-class StoreAdmin extends ModelAdminEcommerceBaseClass
+class StoreAdmin extends ModelAdmin
 {
+    use EcommerceModelAdminTrait;
     /**
      * standard SS variable.
      *

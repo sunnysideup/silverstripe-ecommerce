@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
@@ -16,8 +17,10 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @sub-package: cms
  **/
-class ProductsAndGroupsModelAdmin extends ModelAdminEcommerceBaseClass
+class ProductsAndGroupsModelAdmin extends ModelAdmin
 {
+    use EcommerceModelAdminTrait;
+
     private static $menu_priority = 3.2;
 
     /**

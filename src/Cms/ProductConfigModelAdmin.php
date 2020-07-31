@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Admin\ModelAdmin;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
@@ -16,8 +17,10 @@ use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
  * @package: ecommerce
  * @sub-package: cms
  **/
-class ProductConfigModelAdmin extends ModelAdminEcommerceBaseClass
+class ProductConfigModelAdmin extends ModelAdmin
 {
+    use EcommerceModelAdminTrait;
+
     private static $menu_priority = 3.19;
 
     /**

@@ -3,46 +3,15 @@
 namespace Sunnysideup\Ecommerce\Cms;
 
 use SilverStripe\Admin\LeftAndMain;
-use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Model\Order;
 
-/**
- * @see: http://doc.silverstripe.org/framework/en/reference/ModelAdmin
- *
- * @author Nicolaas [at] sunnyside up . co .nz
- */
-class ModelAdminEcommerceBaseClass extends ModelAdmin
+trait EcommerceModelAdminTrait
 {
-    /**
-     * Change this variable if you don't want the Import from CSV form to appear.
-     * This variable can be a boolean or an array.
-     * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo').
-     */
-    public $showImportForm = false;
-
-    private static $url_segment = 'ecommerce-base';
-
-    private static $managed_models = [];
-
-
-    /**
-     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
-     */
-    public function getManagedModels()
-    {
-        if ($this->ClassName === ModelAdminEcommerceBaseClass::class) {
-            //never used
-            return ['NothingGoesHere' => ['title' => 'All Orders']];
-        }
-        return parent::getManagedModels();
-    }
-
     /**
      * @param DataObject $record
      *

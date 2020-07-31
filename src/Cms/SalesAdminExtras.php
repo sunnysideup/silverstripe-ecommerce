@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
@@ -28,8 +29,9 @@ use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
  * @sub-package: cms
 
  **/
-class SalesAdminExtras extends ModelAdminEcommerceBaseClass
+class SalesAdminExtras extends ModelAdmin
 {
+    use EcommerceModelAdminTrait;
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
      * This variable can be a boolean or an array.
