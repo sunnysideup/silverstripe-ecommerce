@@ -280,9 +280,8 @@ class Product extends Page implements BuyableModel
         //dirty hack to show images!
         $fields->addFieldToTab(
             'Root.Images',
-            $uploadField = new UploadField('Image', _t('Product.IMAGE', 'Product Image'))
+            UploadField::create('Image', _t('Product.IMAGE', 'Product Image'))
         );
-        $uploadField->setCallingClass(Product::class);
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
