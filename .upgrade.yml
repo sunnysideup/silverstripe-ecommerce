@@ -12,7 +12,7 @@ mappings:
   OrderStatusEmail: Sunnysideup\Ecommerce\Email\OrderStatusEmail
   OrderReceiptEmail: Sunnysideup\Ecommerce\Email\OrderReceiptEmail
   OrderEmail: Sunnysideup\Ecommerce\Email\OrderEmail
-  Product_Image: Sunnysideup\Ecommerce\Filesystem\ProductImage
+  Product_Image: SilverStripe\Assets\Image
   EcommercePaymentSupportedMethodsProviderInterface: Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface
   OrderStepInterface: Sunnysideup\Ecommerce\Interfaces\OrderStepInterface
   EcommerceGEOipProvider: Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider

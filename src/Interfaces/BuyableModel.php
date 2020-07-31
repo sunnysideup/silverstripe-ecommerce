@@ -67,14 +67,6 @@ interface BuyableModel
      */
     public function DefaultImageLink();
 
-    /**
-     * returns a product image for use in templates
-     * e.g. $DummyImage.Width();.
-     *
-     * @return \Sunnysideup\Ecommerce\Filesystem\ProductImage
-     */
-    public function DummyImage();
-
     // VERSIONING
 
     /**
