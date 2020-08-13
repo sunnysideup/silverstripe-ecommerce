@@ -16,7 +16,7 @@ Can it be fixed by changing the config files?:
   Create and update mysite/_config/ecommerce.yml:
     - Go to http://www.mysite.com/dev/ecommerce/ecommercetaskcheckconfiguration and carefully review options.
     - Check ecommerce/_config.php and the ecommerce/config/ folder for further ideas.
-    - Update mysite/_config/ecommerce.yml with the required settings.  Bear in mind, that by default, arrays settings are added to any existing array elements.  To replace an array outright, use Config::inst()->update("MyClassName", "my_variable_as_array", $newArray);.
+    - Update mysite/_config/ecommerce.yml with the required settings.  Bear in mind, that by default, arrays settings are added to any existing array elements.  To replace an array outright, use Config::modify()->update("MyClassName", "my_variable_as_array", $newArray);.
 
 Can it be fixed with CSS:
   Theme appropriate CSS file and change:
@@ -33,7 +33,7 @@ Can it be fixed with Javascript (JS):
 
 Can it be fixed by adjusting the HTML?:
   Theme appropriate template file (.ss) and change as needed.:
-    - Check the source to see what HTML files are used (add Config::inst()->update("SSViewer", "source_file_comments", true); to your _config.php file.
+    - Check the source to see what HTML files are used (add Config::modify()->update("SSViewer", "source_file_comments", true); to your _config.php file.
     - "Theme" the most appropriate HTML template (.ss) file - use 'unthemed" file as starting point and check the relevant Controllers for available "Controls". Only theme what is needed.
     - For more information on themeing, visit - <a href="http://docs.silverstripe.org/framework/en/topics/theme-development">http://docs.silverstripe.org/framework/en/topics/theme-development</a>.
 
