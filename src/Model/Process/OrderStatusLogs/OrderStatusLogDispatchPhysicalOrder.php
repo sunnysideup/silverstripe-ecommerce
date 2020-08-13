@@ -122,7 +122,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     public function getCustomerNote()
     {
         Config::nest();
-        Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
         $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\LogDispatchPhysicalOrderCustomerNote');
         Config::unnest();
 

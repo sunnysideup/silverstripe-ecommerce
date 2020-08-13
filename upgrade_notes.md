@@ -6434,7 +6434,7 @@ modified:	src/Model/ProductOrderItem.php
          if ($product = $this->Product()) {
              Config::nest();
 -            Config::inst()->update('SSViewer', 'theme_enabled', true);
-+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
              $tableTitle = strip_tags($product->renderWith('ProductTableTitle'));
              Config::unnest();
          }
@@ -8449,7 +8449,7 @@ modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogPaymentCheck.php
          if ($this->Author()) {
              Config::nest();
 -            Config::inst()->update('SSViewer', 'theme_enabled', true);
-+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
              $html = $this->renderWith('Order_CustomerNote_PaymentCheck');
              Config::unnest();
 
@@ -8494,7 +8494,7 @@ modified:	src/Model/Process/OrderStatusLogs/OrderStatusLogDispatchPhysicalOrder.
      {
          Config::nest();
 -        Config::inst()->update('SSViewer', 'theme_enabled', true);
-+        Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
          $html = $this->renderWith('LogDispatchPhysicalOrderCustomerNote');
          Config::unnest();
 
@@ -10314,7 +10314,7 @@ modified:	src/Model/Order.php
          Config::nest();
 -        Config::inst()->update('SSViewer', 'theme_enabled', true);
 -        $html = $this->renderWith('Order');
-+        Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
 +        $html = $this->renderWith(Order::class);
          Config::unnest();
          $html = preg_replace('/(\s)+/', ' ', $html);
@@ -16842,7 +16842,7 @@ modified:	src/Pages/CartPage.php
 -            $oldSSViewer = Config::inst()->get('SSViewer', 'source_file_comments');
 -            Config::inst()->update('SSViewer', 'source_file_comments', false);
 +            $oldSSViewer = Config::inst()->get(SSViewer::class, 'source_file_comments');
-+            Config::inst()->update(SSViewer::class, 'source_file_comments', false);
++            Config::modify()->update(SSViewer::class, 'source_file_comments', false);
              $this->customise(['Count' => $count, 'OriginalMenuTitle' => $this->MenuTitle]);
              $s = $this->renderWith('AjaxNumItemsInCart');
 -            Config::inst()->update('SSViewer', 'source_file_comments', $oldSSViewer);
@@ -16914,7 +16914,7 @@ modified:	src/Pages/OrderConfirmationPageController.php
              Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
              Config::nest();
 -            Config::inst()->update('SSViewer', 'theme_enabled', true);
-+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
              $html = $this->renderWith('Invoice');
              Config::unnest();
 
@@ -16923,7 +16923,7 @@ modified:	src/Pages/OrderConfirmationPageController.php
              Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
              Config::nest();
 -            Config::inst()->update('SSViewer', 'theme_enabled', true);
-+            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
++            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
              $html = $this->renderWith('PackingSlip');
              Config::unnest();
 

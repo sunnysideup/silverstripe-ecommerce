@@ -296,7 +296,7 @@ class CartPage extends Page
         if ($order) {
             $count = $order->TotalItems();
             $oldSSViewer = Config::inst()->get(SSViewer::class, 'source_file_comments');
-            Config::inst()->update(SSViewer::class, 'source_file_comments', false);
+            Config::modify()->update(SSViewer::class, 'source_file_comments', false);
             $this->customise(['Count' => $count, 'OriginalMenuTitle' => $this->MenuTitle]);
             $s = $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxNumItemsInCart');
             Config::inst()->update(SSViewer::class, 'source_file_comments', $oldSSViewer);
