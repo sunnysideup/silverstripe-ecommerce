@@ -78,7 +78,7 @@ class ProductOrderItem extends OrderItem
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         if ($product = $this->Product()) {
             Config::nest();
-            Config::inst()->update(SSViewer::class, 'theme_enabled', true);
+            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
             $tableTitle = strip_tags($product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
             Config::unnest();
         }
