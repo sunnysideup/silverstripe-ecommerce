@@ -129,7 +129,7 @@ class OrderFormAddress extends Form
             }
         }
 
-        //member fields
+        // member fields
         if ($this->orderMember) {
             $memberFields = $this->orderMember->getEcommerceFields();
             $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());

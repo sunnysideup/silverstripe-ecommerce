@@ -13,8 +13,10 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -748,29 +750,32 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * This can be used by admins to log in as customers
-     * to place orders on their behalf...
+     * This can be used by admins to log in as customers to place orders on
+     * their behalf...
      *
-     * @param SS_HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function loginas(HTTPRequest $request)
     {
-
         if (Permission::check('ADMIN')) {
             $newMember = Member::get()->byID(intval($request->param('ID')));
 
             if ($newMember) {
-                Security::setCurrentUser($newMember);
-                if ($accountPage = DataObject::get_one(AccountPage::class)) {
+                Injector::inst()->get(IdentityStore::class)->logIn($newMember);
+
+                $accountPage = AccountPage::get()->first();
+
+                if ($accountPage) {
                     return $this->redirect($accountPage->Link());
                 }
+
                 return $this->redirect(Director::baseURL());
             }
-        } else {
-            return Security::permissionFailure($this);
         }
+
+        return Security::permissionFailure($this);
     }
 
     /**

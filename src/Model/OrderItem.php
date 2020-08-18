@@ -672,8 +672,8 @@ class OrderItem extends OrderAttribute
     /**
      * @param string $current - is this a current one, or an older VERSION ?
      *
-     * @return \SilverStripe\ORM\DataObject (Any type of Data Object that is buyable)
-     **/
+     * @return Sunnysideup\Ecommerce\Interfaces\BuyableModel
+     */
     public function getBuyable($current = '')
     {
         $currentOrVersion = $current ? 'current' : 'version';

@@ -546,7 +546,7 @@ class ShoppingCart
      * @param array | Form  $parameters          - array of parameters to target a specific order item. eg: group=1, length=5*
      *                                           - form saved into item...
      *
-     * @return bool | DataObject ($orderItem)
+     * @return DataObject
      */
     public function prepareOrderItem(BuyableModel $buyable, $parameters = [], $mustBeExistingItem = true)
     {
@@ -556,26 +556,30 @@ class ShoppingCart
             $parametersArray = [];
             $form = $parameters;
         }
+
         if (! $buyable) {
             user_error('No buyable was provided', E_USER_WARNING);
         }
         if (! $buyable->canPurchase()) {
-            return false;
+            return null;
         }
+
         $item = null;
+
         if ($mustBeExistingItem) {
             $item = $this->getExistingItem($buyable, $parametersArray);
         } else {
             $item = $this->findOrMakeItem($buyable, $parametersArray);
-            //find existing order item or make one
         }
+
         if (! $item) {
-            //check for existence of item
-            return false;
+            return null;
         }
+
         if ($form) {
             $form->saveInto($item);
         }
+
         return $item;
     }
 
@@ -831,22 +835,24 @@ class ShoppingCart
             } else {
                 user_error('Bad order provided as parameter to ShoppingCart::loadOrder()');
             }
+
             if ($oldOrder) {
                 if ($oldOrder->canView() && $oldOrder->IsSubmitted()) {
                     $this->addMessage(_t('Order.ORDERCOPIED', 'Order has been copied.'), 'good');
+
                     $newOrder = Order::create();
                     $newOrder = $this->CopyOrderOnly($oldOrder, $newOrder);
-                    $buyables = [];
-                    $items = OrderItem::get()->filter(['OrderID' => $oldOrder->ID]);
-                    if ($items->count()) {
-                        foreach ($items as $item) {
-                            $buyables[] = $item->Buyable($current = true);
-                        }
+
+                    $items = OrderItem::get()->filter([
+                        'OrderID' => $oldOrder->ID
+                    ]);
+
+                    if (count($items)) {
+                        $newOrder = $this->CopyBuyablesToNewOrder($newOrder, $items);
                     }
-                    if (count($buyables)) {
-                        $newOrder = $this->CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = []);
-                    }
+
                     $this->loadOrder($newOrder);
+
                     return $newOrder;
                 }
                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
@@ -879,35 +885,34 @@ class ShoppingCart
     }
 
     /**
-     * add buyables into new Order
+     * Add buyables into new Order
      *
      * @param  Order $newOrder
-     * @param  array $buyables   can also be another iterable object (e.g. ArrayList)
+     * @param  OrderItem[] $items
      * @param  array  $parameters
      *
-     * @return Order (same order as was passed)
+     * @return Order
      */
-    public function CopyBuyablesToNewOrder($newOrder, $buyables, $parameters = [])
+    public function CopyBuyablesToNewOrder($newOrder, $items, $parameters = [])
     {
-        foreach ($buyables as $buyable) {
-            if ($buyable && $buyable->canPurchase()) {
-                $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
+        foreach ($items as $item) {
+            $buyable = $item->Buyable(true);
 
+            if ($buyable && $buyable->canPurchase()) {
+                $orderItem = $this->prepareOrderItem($buyable, $parameters, false);
                 $quantity = $this->prepareQuantity($buyable, $item->Quantity);
-                echo '<pre>';
-                print_r($buyable);
-                echo '</pre>';
-                if ($item && $quantity) {
-                    $item->Quantity = $quantity;
-                    $item->write();
-                    $newOrder->Attributes()->add($item);
-                    //save to new order order
+
+                if ($orderItem && $quantity) {
+                    $orderItem->Quantity = $quantity;
+                    $orderItem->write();
+
+                    $newOrder->Attributes()->add($orderItem);
                 }
             }
+
             $newOrder->write();
         }
 
-        die('sdfsdf');
         return $newOrder;
     }
 

@@ -589,7 +589,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $linkField1 = EcommerceCMSButtonField::create(
             'MemberLinkFieldEditThisCustomer',
             $this->owner->CMSEditLink(),
-            _t('Member.EDIT', 'Edit') . ' <i>' . $this->owner->getTitle() . 'd</i>'
+            _t('Member.EDIT', 'Edit') . ' <i>' . $this->owner->getTitle() . '</i>'
         );
         $fields->push($headerField);
         $fields->push($linkField1);
@@ -664,7 +664,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
             }
 
-            $passwordDoubleCheckField = '';
+            $passwordDoubleCheckField = null;
+
             if (empty($passwordField)) {
                 $passwordField = new PasswordField('PasswordCheck1', _t('Account.CREATE_PASSWORD', 'Password'));
                 $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_PASSWORD', 'Confirm Password'));
@@ -679,10 +680,14 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 $loginDetailsHeader,
                 $loginDetailsDescription,
                 $updatePasswordLinkField,
-                $passwordField,
-                $passwordDoubleCheckField
+                $passwordField
             );
+
+            if ($passwordDoubleCheckField) {
+                $fields->push($passwordDoubleCheckField);
+            }
         }
+
         $this->owner->extend('augmentEcommerceFields', $fields);
 
         return $fields;
