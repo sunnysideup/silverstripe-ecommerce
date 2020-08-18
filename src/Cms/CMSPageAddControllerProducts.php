@@ -14,7 +14,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
 {
     private static $url_segment = 'addproductorproductgroup';
 
-    private static $url_rule = '/$Action/$ID/$OtherID';
+    private static $url_rule = '$Action/$ID/$OtherID';
 
     private static $url_priority = 41;
 
