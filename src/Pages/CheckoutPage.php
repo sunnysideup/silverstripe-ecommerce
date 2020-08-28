@@ -68,7 +68,7 @@ class CheckoutPage extends CartPage
      *
      * @Var string
      */
-    private static $icon = 'ecommerce/images/icons/CheckoutPage';
+    private static $icon = 'sunnysideup/ecommerce: client/images/icons/CheckoutPage-file.gif';
 
     /**
      * standard SS variable.

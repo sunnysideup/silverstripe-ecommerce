@@ -48,7 +48,7 @@ class ProductGroupSearchPage extends ProductGroup
      *
      * @static String | Array
      */
-    private static $icon = 'ecommerce/images/icons/productgroupsearchpage';
+    private static $icon = 'sunnysideup/ecommerce: client/images/icons/productgroupsearchpage-file.gif';
 
     /**
      * Standard SS variable.

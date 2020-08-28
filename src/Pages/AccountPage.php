@@ -66,7 +66,7 @@ class AccountPage extends Page
      *
      * @Var String
      */
-    private static $icon = 'ecommerce/images/icons/AccountPage';
+    private static $icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
 
     /**
      * standard SS variable.

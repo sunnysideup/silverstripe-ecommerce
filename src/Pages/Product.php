@@ -230,7 +230,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-    private static $icon = 'ecommerce/images/icons/product';
+    private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
     private static $_calculated_price_cache = [];
 

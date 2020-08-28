@@ -32,7 +32,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @var string
      */
-    private static $icon = 'ecommerce/images/icons/OrderConfirmationPage';
+    private static $icon = 'sunnysideup/ecommerce: client/images/icons/OrderConfirmationPage-file.gif';
 
     /**
      * Standard SS variable.

@@ -35,7 +35,7 @@ class CartPage extends Page
      *
      * @var string
      */
-    private static $icon = 'ecommerce/images/icons/CartPage';
+    private static $icon = 'sunnysideup/ecommerce: client/images/icons/CartPage-file.gif';
 
     /**
      * Standard SS variable.
