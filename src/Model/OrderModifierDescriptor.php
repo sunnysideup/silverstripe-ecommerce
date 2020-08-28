@@ -185,7 +185,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      */
     public function CMSEditLink($action = null)
     {
-        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
+        return 'error';
     }
 
     /**
@@ -203,7 +203,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         if (class_exists($this->ModifierClassName)) {
             $singleton = singleton($this->ModifierClassName);
 
-            return $singleton->i18n_singular_name() . ' (' . $this->ModifierClassName . ')';
+            return $singleton->i18n_singular_name();
         }
 
         return $this->ModifierClassName;
