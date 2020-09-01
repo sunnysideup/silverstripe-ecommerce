@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use Geoip;
+use Sunnysideup\Geoip\Geoip;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;

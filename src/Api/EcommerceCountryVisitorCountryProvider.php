@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use Geoip;
+use Sunnysideup\Geoip\Geoip;
 
 
 use SilverStripe\Control\Controller;
@@ -24,7 +24,7 @@ class EcommerceCountryVisitorCountryProvider implements EcommerceGEOipProvider
      */
     public function getCountry()
     {
-        if (class_exists('Geoip')) {
+        if (class_exists(Geoip::class)) {
             return Geoip::visitor_country();
         }
         return Config::inst()->get(EcommerceCountry::class, 'default_country_code');
