@@ -366,35 +366,14 @@ class ProductGroup extends Page
         'NumberOfProducts' => 'Int',
     ];
 
-    /**
-     * standard SS variable.
-     *
-     * @static String
-     */
     private static $default_child = Product::class;
 
-    /**
-     * standard SS variable.
-     *
-     * @static String | Array
-     */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/productgroup-file.gif';
+    private static $icon = 'sunnysideup/ecommerce client/images/icons/productgroup-file.gif';
 
-    /**
-     * Standard SS variable.
-     */
     private static $singular_name = 'Product Category';
 
-    /**
-     * Standard SS variable.
-     */
     private static $plural_name = 'Product Categories';
 
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
     private static $description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
 
     private $_numberOfProductsPerPage = null;
@@ -1103,11 +1082,6 @@ class ProductGroup extends Page
         return true;
     }
 
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-    }
-
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -1158,6 +1132,7 @@ class ProductGroup extends Page
     public function cacheKey($cacheKey)
     {
         $cacheKey .= '_' . $this->ID;
+
         if (self::$_product_group_cache_key_cache === null) {
             self::$_product_group_cache_key_cache = '_PR_'
                 . strtotime(Product::get()->max('LastEdited')) . '_'
@@ -1165,11 +1140,6 @@ class ProductGroup extends Page
             self::$_product_group_cache_key_cache .= 'PG_'
                 . strtotime(ProductGroup::get()->max('LastEdited')) . '_'
                 . ProductGroup::get()->count();
-            if (class_exists('ProductVariation')) {
-                self::$_product_group_cache_key_cache .= 'PV_'
-                  . strtotime(ProductVariation::get()->max('LastEdited')) . '_'
-                  . ProductVariation::get()->count();
-            }
         }
 
         return $cacheKey . self::$_product_group_cache_key_cache;
@@ -1815,12 +1785,6 @@ class ProductGroup extends Page
             if (! $cache->has($cacheKey)) {
                 return;
             }
-            /**
-             * UPGRADE TO DO: 'automatic_serialization' no longer exists, what do we replace it with
-             */
-            // if (! $cache->getOption('automatic_serialization')) {
-            //     $data = @unserialize($data);
-            // }
 
             return $data;
         }
@@ -1841,13 +1805,8 @@ class ProductGroup extends Page
         $cacheKey = $this->cacheKey($cacheKey);
         if ($this->AllowCaching()) {
             $cache = $this->getSilverstripeCoreCache();
-            /**
-             * UPGRADE TO DO: 'automatic_serialization' no longer exists, what do we replace it with
-             */
-            // if (! $cache->getOption('automatic_serialization')) {
-            //     $data = serialize($data);
-            // }
             $cache->set($cacheKey, $data);
+
             return true;
         }
 

@@ -24,8 +24,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      * @var array
      */
     protected $overallconfig = [
-        'ecommercetaskcheckconfiguration',
-        'ecommercetaskapiandmore',
+        'Sunnysideup\Ecommerce\Tasks\EcommerceTaskCheckConfiguration'
     ];
 
     //##############################
@@ -185,7 +184,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      */
     public function OverallConfig()
     {
-        return $this->createMenuDOSFromArray($this->overallconfig, $type = Config::class);
+        return $this->createMenuDOSFromArray($this->overallconfig, Config::class);
     }
 
     /**
@@ -195,7 +194,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      */
     public function EcommerceSetup()
     {
-        return $this->createMenuDOSFromArray($this->ecommerceSetup, $type = 'EcommerceSetup');
+        return $this->createMenuDOSFromArray($this->ecommerceSetup, 'EcommerceSetup');
     }
 
     /**
@@ -205,7 +204,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      */
     public function DataReview()
     {
-        return $this->createMenuDOSFromArray($this->dataReview, $type = 'DataReview');
+        return $this->createMenuDOSFromArray($this->dataReview, 'DataReview');
     }
 
     /**
@@ -215,7 +214,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      */
     public function RegularMaintenance()
     {
-        return $this->createMenuDOSFromArray($this->regularMaintenance, $type = 'RegularMaintenance');
+        return $this->createMenuDOSFromArray($this->regularMaintenance, 'RegularMaintenance');
     }
 
     /**
