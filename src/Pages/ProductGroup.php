@@ -15,6 +15,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
@@ -1608,15 +1609,20 @@ class ProductGroup extends Page
      * only show relevant products.
      *
      * @param bool   $asArray
-     * @param string $table
+     * @param string $classNameOrTableName
      */
-    protected function allowPurchaseWhereStatement($asArray = true, $table = Product::class)
+    protected function allowPurchaseWhereStatement($asArray = true, $classNameOrTableName = Product::class)
     {
+        if(class_exists($classNameOrTableName)) {
+            $tableName = DataObject::getSchema()->tableName($classNameOrTableName);
+        } else {
+            $tableName = $classNameOrTableName;
+        }
         if ($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
             if ($asArray) {
                 $allowPurchaseWhereStatement = ['AllowPurchase' => 1];
             } else {
-                $allowPurchaseWhereStatement = "\"${table}\".\"AllowPurchase\" = 1  ";
+                $allowPurchaseWhereStatement = "\"${$tableName}\".\"AllowPurchase\" = 1  ";
             }
 
             return $allowPurchaseWhereStatement;
@@ -1700,17 +1706,23 @@ class ProductGroup extends Page
      * creates a sort string from a list of ID arrays...
      *
      * @param array $IDarray - list of product IDs
+     * @param string $classNameOrTableName
      *
      * @return string
      */
-    protected function createSortStatementFromIDArray($IDarray, $table = Product::class)
+    protected function createSortStatementFromIDArray($IDarray, $classNameOrTableName = Product::class)
     {
+        if(class_exists($classNameOrTableName)) {
+            $tableName = DataObject::getSchema()->tableName($classNameOrTableName);
+        } else {
+            $tableName = $classNameOrTableName;
+        }
         $ifStatement = 'CASE ';
         // $sortStatement = '';
         $stage = $this->getStage();
         $count = 0;
         foreach ($IDarray as $productID) {
-            $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = ${productID} THEN ${count}";
+            $ifStatement .= ' WHEN "' . $tableName . $stage . "\".\"ID\" = ${productID} THEN ${count}";
             ++$count;
         }
         return $ifStatement . ' END';
