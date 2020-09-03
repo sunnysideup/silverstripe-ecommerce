@@ -28,6 +28,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -651,6 +652,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $className = ClassHelpers::unsanitise_class_name($className);
         $implementorsArray = class_implements($className);
+
         if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
             return true;
         }
@@ -659,15 +661,19 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * Returns the Current Member.
+     * Returns the current member.
+     *
+     * @return SilverStripe\Security\Member
      */
     public function Customer()
     {
-        return Member::currentUser();
+        return Security::getCurrentUser();
     }
 
     /**
-     * Returns the Current Member.
+     * Returns the member for the current order.
+     *
+     * @return SilverStripe\Security\Member
      */
     public function CustomerForOrder()
     {
@@ -695,6 +701,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function Currencies()
     {
         $list = EcommerceCurrency::get_list();
+
         if ($list && $list->count() > 1) {
             return $list;
         }

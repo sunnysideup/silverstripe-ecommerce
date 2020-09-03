@@ -45,6 +45,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
@@ -1650,7 +1651,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function ShopClosed()
     {
-        return $this->EcomConfig()->ShopClosed;
+        return EcommerceConfig::inst()->ShopClosed;
     }
 
     /*******************************************************
@@ -1677,18 +1678,22 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             return $this->Member();
         }
+
         if ($this->MemberID) {
             $member = $this->Member();
-        } elseif ($member = Member::currentUser()) {
+        } elseif ($member = Security::getCurrentUser()) {
             if (! $member->IsShopAdmin()) {
                 $this->MemberID = $member->ID;
                 $this->write();
             }
         }
+
         $member = $this->Member();
-        if (! $member) {
-            $member = new Member();
+
+        if (!$member) {
+            $member = Member::create();
         }
+
         if ($member && $forceCreation) {
             $member->write();
         }
@@ -3529,16 +3534,6 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * Collects the JSON data for an ajax return of the cart.
      *
      * @param array $js
@@ -3927,7 +3922,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
-        $config = $this->EcomConfig();
+        $config = EcommerceConfig::inst();
         $replacementArray = [];
         //set subject
         if (! $subject) {

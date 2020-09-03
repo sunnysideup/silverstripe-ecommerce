@@ -25,8 +25,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 /**
- * @description: Allows user to specifically search products
- **/
+ * Product search form
+ */
 class ProductSearchForm extends Form
 {
 
@@ -82,9 +82,14 @@ class ProductSearchForm extends Form
     /**
      * list of products that need to be searched.
      *
-     * @var array|Datalist|null
+     * @var ProductList
      */
     protected $productsToSearch = null;
+
+    /**
+     * @var int
+     */
+    protected $productsToSearchCount = 0;
 
     /**
      * class name of the buyables to search
@@ -122,17 +127,6 @@ class ProductSearchForm extends Form
         'Product' => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
         'ProductVariation' => ['FullTitle', 'Description'],
     ];
-
-    /**
-     * Maximum number of results to return
-     * we limit this because otherwise the system will choke
-     * the assumption is that no user is really interested in looking at
-     * tons of results.
-     * It defaults to: EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list").
-     *
-     * @var int
-     */
-    protected $maximumNumberOfResults = 0;
 
     /**
      * The method on the parent controller that can display the results of the
@@ -178,8 +172,9 @@ class ProductSearchForm extends Form
     protected $isShortForm = 0;
 
     /**
+     * List of words to be replaced.
+     *
      * @var array
-     *            List of words to be replaced.
      */
     protected $sqlWords = [
         "\r\n SELECT" => 'SELECT',
@@ -202,19 +197,13 @@ class ProductSearchForm extends Form
      */
     public function __construct($controller, $name, $nameOfProductsBeingSearched = '', $productsToSearch = null)
     {
-        //turn of security to allow caching of the form:
         $this->disableSecurityToken();
 
-        //set basics
-        $productsToSearchCount = 0;
         if ($productsToSearch) {
-            if (is_array($productsToSearch)) {
-                $productsToSearchCount = count($productsToSearch);
-            } elseif ($productsToSearch instanceof DataList) {
-                $productsToSearchCount = $productsToSearch->count();
-            }
+            $this->productsToSearch = $productsToSearch;
+            $this->productsToSearchCount = $productsToSearch->getRawCount();
         }
-        $this->productsToSearch = $productsToSearch;
+
         if ($this->isShortForm) {
             $fields = FieldList::create(
                 $shortKeywordField = TextField::create('ShortKeyword', '')
@@ -238,34 +227,40 @@ class ProductSearchForm extends Form
             $actions = FieldList::create(
                 FormAction::create('doProductSearchForm', 'Search')
             );
-            if ($productsToSearchCount) {
+
+            if ($this->productsToSearcht) {
                 $fields->push(
                     CheckboxField::create('SearchOnlyFieldsInThisSection', _t('ProductSearchForm.ONLY_SHOW', 'Only search in') . ' <i>' . $nameOfProductsBeingSearched . '</i> ', true)
                 );
             }
+
             if (Director::isDev() || Permission::check('ADMIN')) {
                 $fields->push(CheckboxField::create('DebugSearch', 'Debug Search'));
             }
+
             $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         }
+
         $requiredFields = [];
         $validator = ProductSearchFormValidator::create($requiredFields);
+
         parent::__construct($controller, $name, $fields, $actions, $validator);
-        //make it an easily accessible form  ...
+
         $this->setFormMethod('get');
         $this->disableSecurityToken();
-        //extensions need to be set after __construct
-        //extension point
         $this->extend('updateFields', $fields);
         $this->setFields($fields);
         $this->extend('updateActions', $actions);
         $this->setActions($actions);
         $this->extend('updateValidator', $validator);
         $this->setValidator($validator);
+
         $oldData = Controller::curr()->getRequest()->getSession()->get($this->Config()->get('form_data_session_variable'));
+
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateProductSearchForm', $this);
 
         return $this;
@@ -274,10 +269,11 @@ class ProductSearchForm extends Form
     /**
      * @return string
      */
-    public static function get_last_search_phrase()
+    public function getLastSearchPhase(): string
     {
         $string = '';
-        $oldData = Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+        $oldData = $this->getSessionData();
+
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             if (isset($oldData['ShortKeyword'])) {
                 $string = $oldData['ShortKeyword'];
@@ -291,9 +287,10 @@ class ProductSearchForm extends Form
     /**
      * @param string $phrase
      */
-    public static function set_last_search_phrase($phrase)
+    public function setLastSearchTerm($phrase)
     {
-        $oldData = Controller::curr()->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+        $oldData = $this->getOldData();
+
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $oldData['ShortKeyword'] = $phrase;
             $oldData['Keyword'] = $phrase;
@@ -305,31 +302,36 @@ class ProductSearchForm extends Form
     public function setControllerSearchResultDisplayMethod($s)
     {
         $this->controllerSearchResultDisplayMethod = $s;
+
+        return $this;
     }
 
     public function setExtraBuyableFieldsToSearchFullText($a)
     {
         $this->extraBuyableFieldsToSearchFullText = $a;
+
+        return $this;
     }
 
     public function setBaseClassNameForBuyables($s)
     {
         $this->baseClassNameForBuyables = $s;
+
+        return $this;
     }
 
     public function setUseBooleanSearch($b)
     {
         $this->useBooleanSearch = $b;
-    }
 
-    public function setMaximumNumberOfResults($i)
-    {
-        $this->maximumNumberOfResults = $i;
+        return $this;
     }
 
     public function setAdditionalGetParameters($s)
     {
         $this->additionalGetParameters = $s;
+
+        return $this;
     }
 
     public function addAdditionalField($formField, $dbField, $filterUsed)
@@ -346,37 +348,31 @@ class ProductSearchForm extends Form
     {
         $searchHistoryObject = null;
         $immediateRedirectLink = '';
-        if (! $this->maximumNumberOfResults) {
-            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
-        }
-        if (isset($data['DebugSearch'])) {
-            $this->debug = $data['DebugSearch'] ? true : false;
-        }
-        if ($this->debug) {
-            $this->debugOutput('<hr /><hr /><hr /><h2>Debugging Search Results</h2>');
-        }
-
-        //what is the baseclass?
         $baseClassName = $this->baseClassForBuyables;
+        $controller = $this->controller;
+
         if (! $baseClassName) {
             $baseClassName = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
+
         if (! $baseClassName) {
             user_error("Can not find ${baseClassName} (baseClassName)");
         }
-        //basic get
+
         $singleton = Injector::inst()->get($baseClassName);
-        // $searchableFields = $singleton->stat('searchable_fields');
         $baseList = $baseClassName::get()->filter(['ShowInSearch' => 1]);
         $ecomConfig = EcommerceDBConfig::current_ecommerce_db_config();
+
         if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
             $baseList->filter(['AllowPurchase' => 1]);
         }
+
         $limitToCurrentSection = false;
+
         if (isset($data['SearchOnlyFieldsInThisSection']) && $data['SearchOnlyFieldsInThisSection']) {
             $limitToCurrentSection = true;
             if (! $this->productsToSearch) {
-                $controller = Controller::curr();
+
                 if ($controller) {
                     $this->productsToSearch = $controller->Products();
                 }
@@ -397,16 +393,11 @@ class ProductSearchForm extends Form
         }
         //defining some variables
         $isKeywordSearch = false;
-        if ($this->debug) {
-            if ($this->productsToSearch) {
-                $this->debugOutput('<hr /><h3>PRODUCTS TO SEARCH</h3><pre>' . print_r($this->productsToSearch, 1) . '</pre>');
-            }
-            $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>' . str_replace($this->sqlWords, array_flip($this->sqlWords), $baseList->sql()) . '</pre>');
-        }
-        //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
+
         if (isset($data['ShortKeyword']) && ! isset($data['Keyword'])) {
             $data['Keyword'] = $data['ShortKeyword'];
         }
+
         if (isset($data['Keyword']) && $keywordPhrase = $data['Keyword']) {
             if ($baseList->count()) {
                 if (strlen($keywordPhrase) > 1) {
@@ -448,9 +439,7 @@ class ProductSearchForm extends Form
 
                     // 2) Search for the entire keyword phrase and its replacements
                     $count = 0;
-                    if ($this->debug) {
-                        $this->debugOutput('<hr /><h3>FULL KEYWORD SEARCH</h3>');
-                    }
+
                     if ($this->resultArrayPos < $this->maximumNumberOfResults) {
                         $fieldArray = [];
                         $keywordPhrase = $this->replaceSearchPhraseOrWord($keywordPhrase);
@@ -476,7 +465,6 @@ class ProductSearchForm extends Form
                         }
 
                         $searches = $this->getSearchArrays($keywordPhrase, $fieldArray);
-                        //if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
 
                         //we search exact matches first then other matches ...
                         foreach ($searches as $search) {
@@ -539,57 +527,35 @@ class ProductSearchForm extends Form
         if (! $isKeywordSearch) {
             $this->addToResults($baseList);
         }
+
         $redirectToPage = null;
-        //if no specific section is being searched then we redirect to search page:
-        if (! $limitToCurrentSection) {
-            $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
+
+        if (!$limitToCurrentSection) {
+            $redirectToPage = ProductGroupSearchPage::get()->first();
         }
-        if (! $redirectToPage) {
+
+        if (!$redirectToPage) {
             // for section specific search,
             // redirect to the specific section (basically where we came from)
             $redirectToPage = $this->controller->dataRecord;
         }
 
-        $sessionNameProducts = $redirectToPage->SearchResultsSessionVariable(false);
-        $sessionNameGroups = $redirectToPage->SearchResultsSessionVariable(true);
-
-        if ($this->debug) {
-            $this->debugOutput(
-                '<hr />' .
-                '<h3>Previous Search Products: ' . $sessionNameProducts . '</h3><p>' . print_r(Controller::curr()->getRequest()->getSession()->get($sessionNameProducts), 1) . '</p>' .
-                '<h3>Previous Search Groups: ' . $sessionNameGroups . '</h3><p>' . print_r(Controller::curr()->getRequest()->getSession()->get($sessionNameGroups), 1) . '</p>'
-            );
-        }
-
-        Controller::curr()->getRequest()->getSession()->set($sessionNameProducts, implode(',', $this->resultArray));
-
-        Controller::curr()->getRequest()->getSession()->set($sessionNameGroups, implode(',', $this->productGroupIDs));
-
-        Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         if ($searchHistoryObject) {
             $searchHistoryObject->ProductCount = count($this->resultArray);
             $searchHistoryObject->GroupCount = count($this->productGroupIDs);
             $searchHistoryObject->write();
         }
-        if ($this->debug) {
-            $this->debugOutput(
-                '<hr />' .
-                '<h3>SAVING Products to session: ' . $sessionNameProducts . '</h3><p>' . print_r(explode(',', Controller::curr()->getRequest()->getSession()->get($sessionNameProducts)), 1) . '</p>' .
-                '<h3>SAVING Groups to session: ' . $sessionNameGroups . '</h3><p>' . print_r(explode(',', Controller::curr()->getRequest()->getSession()->get($sessionNameGroups)), 1) . '</p>' .
-                '<h3>Internal Item IDs for Products</h3><p>' . print_r($this->resultArrayPerIternalItemID, 1) . '</p>'
-            );
-        }
+
         if ($immediateRedirectLink) {
             $link = $immediateRedirectLink;
         } else {
             $link = $redirectToPage->Link($this->controllerSearchResultDisplayMethod);
         }
+
         if ($this->additionalGetParameters) {
             $link .= '?' . $this->additionalGetParameters;
         }
-        if ($this->debug) {
-            die('<a href="' . $link . '">see results</a>');
-        }
+
         $this->controller->redirect($link);
     }
 
@@ -600,18 +566,22 @@ class ProductSearchForm extends Form
      */
     public function saveDataToSession($data = null)
     {
-        if (! is_array($data)) {
+        if (!is_array($data)) {
             $data = $this->getData();
         }
+
         if (isset($data['MinimumPrice']) && ! $data['MinimumPrice']) {
             unset($data['MinimumPrice']);
         }
+
         if (isset($data['MaximumPrice']) && ! $data['MaximumPrice']) {
             unset($data['MaximumPrice']);
         }
+
         if (isset($data['ShortKeyword']) && $data['ShortKeyword']) {
             $data['Keyword'] = $data['ShortKeyword'];
         }
+
         if (isset($data['Keyword']) && $data['Keyword']) {
             $data['ShortKeyword'] = $data['Keyword'];
         }
@@ -620,9 +590,8 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * creates three levels of searches that
-     * can be executed one after the other, each
-     * being less specific than the last...
+     * Creates three levels of searches that can be executed one after the
+     * other, each being less specific than the last.
      *
      * returns true when done and false when more are needed
      *
@@ -685,10 +654,7 @@ class ProductSearchForm extends Form
         // $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
         $count = -1;
-        //@todo: make this smarter!
         if (in_array('Title', $fields, true)) {
-            //$searches[++$count][] = "LOWER(\"Title\") = '${$wordsAsLikeString}'"; // a) Exact match
-            //$searches[++$count][] = "LOWER(\"Title\") LIKE '%${$wordsAsLikeString}%'"; // b) Full match within a bigger string
             if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'Title', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually
@@ -722,15 +688,7 @@ class ProductSearchForm extends Form
                     // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
                 }
             }
-            /*
-             * OR WORD SEARCH
-             * OFTEN leads to too many results, so we keep it simple...
-            foreach($wordArray as $word) {
-                $searches[6][] = "LOWER(\"$field\") LIKE '%$word%'"; // d) One word match within a bigger string
-            }
-            */
         }
-        //$searches[3][] = DB::getconn()->fullTextSearchSQL($fields, $wordsAsString, true);
         ksort($searches);
         $returnArray = [];
         foreach ($searches as $key => $search) {
@@ -776,8 +734,30 @@ class ProductSearchForm extends Form
         return $keywordPhrase;
     }
 
-    private function debugOutput($string)
+    /**
+     * Returns all the {@link ProductGroups} which are matched in this search
+     * form.
+     *
+     */
+    public function getProductGroups(): DataList
     {
-        echo "<br />${string}";
+        // @todo
+        return ProductGroup::get();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSessionData(): array
+    {
+        $data = Controller::curr()->getRequest()->getSession()->get(
+            Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable')
+        );
+
+        if (!$data) {
+            return [];
+        }
+
+        return $data;
     }
 }

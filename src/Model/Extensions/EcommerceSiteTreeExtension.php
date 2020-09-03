@@ -3,6 +3,9 @@
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
 use SilverStripe\CMS\Model\SiteTreeExtension;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -31,14 +34,6 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
     }
 
     /**
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * tells us if the current page is part of e-commerce.
      *
      * @return bool
@@ -58,10 +53,13 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         if ($this->owner->IsEcommercePage()) {
             $link = $this->owner->Link();
         } else {
-            $link = $this->EcomConfig()->AccountPageLink();
+            $link = EcommerceConfig::inst()->AccountPageLink();
         }
 
-        return '/Security/login?BackURL=' . urlencode($link);
+        return Controller::join_links(
+            Director::absoluteBaseURL(),
+            '/Security/login?BackURL=' . urlencode($link)
+        );
     }
 
     public function augmentValidURLSegment()

@@ -1502,16 +1502,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns the standard EcommerceDBConfig for use within OrderSteps.
-     *
-     * @return EcommerceDBConfig
-     */
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * Explains the current order step.
      *
      * @return string

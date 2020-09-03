@@ -374,13 +374,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         } else {
             $array = [];
             $objects = null;
-            if (class_exists('Geoip') && $showAllCountries && ! $useIDNotCode) {
+
+            if (class_exists(Geoip::class) && $showAllCountries && ! $useIDNotCode) {
                 $array = Geoip::getCountryDropDown();
             } elseif ($showAllCountries) {
                 $objects = EcommerceCountry::get();
             } else {
                 $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
+
             if ($objects && $objects->count()) {
                 if ($useIDNotCode) {
                     $idField = 'ID';

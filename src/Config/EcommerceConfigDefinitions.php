@@ -226,10 +226,9 @@ class EcommerceConfigDefinitions
     {
         $array = [
             ################### GENERAL AND CMS CONFIG #####################
-            'EcommerceDBConfig' => ['ecommerce_db_config_class_name' => 'Class Name for the DataObject that contains the settings for the e-commerce application',
-                'array_of_buyables' => "Array of classes (e.g. Product,
-            ProductVariation,
-            etc...) that are buyable.  You do not need to include a class that extends a buyable.  For example,
+            'EcommerceDBConfig' => [
+                'ecommerce_db_config_class_name' => 'Class Name for the DataObject that contains the settings for the e-commerce application',
+                'array_of_buyables' => "Array of classes (e.g. Product, ProductVariation, etc...) that are buyable.  You do not need to include a class that extends a buyable.  For example,
             if you create a class called 'MyProduct' extending Product then you do not need to list it here.", ],
 
             'EcommerceConfigAjax' => ['definitions_class_name' => 'Class Name (string) for the class used to define and name all the ajax IDs and Classes.',
@@ -246,7 +245,8 @@ class EcommerceConfigDefinitions
             'SalesAdmin' => ['managed_models' => "An array of data object classes that are managed as 'Store' configuration items.  This configuration is used a lot to add extra menu items. "],
 
             ################### PRODUCT DISPLAY #####################
-            'ProductGroup' => ['base_buyable_class' => 'The base class for the products being retrieved.  Usually this is Product,
+            'ProductGroup' => [
+                'base_buyable_class' => 'The base class for the products being retrieved.  Usually this is Product,
             but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.',
                 'actively_check_for_can_purchase' => 'Before listing a product,
             actively check if canPurcahse returns true.  This is useful,
@@ -268,14 +268,12 @@ class EcommerceConfigDefinitions
                 'sort_options' => "Additional associative sort options array with sub-keys of Title and SQL,
             e.g. 'default' = array('Title' => 'default',
             'SQL' => 'Title DESC') for searching. Include on with the best_match_key.",
-                'maximum_number_of_products_to_list_for_search' => 'Maximum number of products returned in search.', ],
 
             'Product' => ['folder_name_for_images' => 'Default folder for uploading product images.',
                 'add_data_to_meta_description_for_search' => 'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details', ],
 
             'ProductSearchForm' => ['include_price_filters' => 'For the product search form,
             make sure that there are no filter fields for minimum and maximum price',
-                'form_data_session_variable' => 'Name of the session variable used to store the form field values',
                 'product_session_variable' => 'Name of a session variable used to tell the website what products - based on a search - are to be shown',
                 'product_group_session_variable' => 'Name of the session variable used to tell the website what products GROUPS - based on a search - are to be shown', ],
 
@@ -442,15 +440,15 @@ class EcommerceConfigDefinitions
                     'one_to_one_classes' => 'An array of key / value pairs that are linked to orders as one-to-one relationships.  The key is the order field name (e.g. BillingAddressID) and the value is the class name (e.g. BillingAddress)',
                     'one_to_many_classes' => 'An array of key / value pairs that are linked to orders as one-to-many relationships.  The key is the class with the order ID and the value is the class name with the LastEdited field.',
                     'many_to_many_classes' => 'An array of key / value pairs that are linked to orders as many-to-many relationships.  Currently not in use.',
-                ],
-            ],
+                ]
+        ]]];
 
-        ];
-        //add more stuff through extensions
+        // add more stuff through extensions
         $extendedArray = $this->extend(
             'moreDefinitions',
             $array
         );
+
         if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedLabelsUpdate) {
                 $array = array_merge(
@@ -459,7 +457,8 @@ class EcommerceConfigDefinitions
                 );
             }
         }
-        //add more stuff through child classes
+
+        // add more stuff through child classes
         $childClasses = ClassInfo::subclassesFor(static::class);
         if (is_array($childClasses) && count($childClasses)) {
             foreach ($childClasses as $class) {
