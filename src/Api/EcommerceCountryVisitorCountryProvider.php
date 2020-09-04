@@ -9,7 +9,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-
+use SilverStripe\Core\Config\Configurable;
 /**
  * this is a very basic class with as its sole purpose providing
  * the country of the customer.
@@ -19,8 +19,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceCountryVisitorCountryProvider implements EcommerceGEOipProvider
 {
-
-    use SilverStripe\Core\Config\Configurable;
+    use Configurable;
 
     private static $country_provider = '\\Sunnysideup\\Geoip\\Geoip';
 

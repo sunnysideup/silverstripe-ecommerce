@@ -126,12 +126,6 @@ class EcommerceConfig
      */
     private static $folder_and_file_locations = ['ecommerce/_config/ecommerce.yml', 'ecommerce/_config/payment.yml'];
 
-    /**
-     * Array of fixture items.
-     *
-     * @var array
-     */
-    private $fixtureDictionary = [];
 
     /**
      * Fetches value for a class, or a property on that class
@@ -149,53 +143,4 @@ class EcommerceConfig
         return Config::inst()->get($className, $identifier, $excludeMiddleware);
     }
 
-    /**
-     * returns the complete Array of data.
-     *
-     * @return array
-     */
-    public function getCompleteDataSet($refresh = false)
-    {
-        if ($refresh || ! count($this->fixtureDictionary)) {
-            $this->loadData();
-        }
-        //remove reserved class-names
-        foreach (array_keys($this->fixtureDictionary) as $className) {
-            if (in_array(strtolower($className), ['only', 'except', 'name', 'before', 'after'], true)) {
-                unset($this->fixtureDictionary[$className]);
-            }
-        }
-        return $this->fixtureDictionary;
-    }
-
-    /**
-     * returns a list of file locations.
-     *
-     * @return array
-     */
-    public function fileLocations()
-    {
-        $array = $this->config()->get('folder_and_file_locations');
-        //we reverse it so the default comes last
-        return array_reverse($array);
-    }
-
-    /**
-     * loads data from file.
-     * We have this method to create a complete list of configs.
-     */
-    private function loadData()
-    {
-        require_once Director::baseFolder() . '/vendor/mustangostang/spyc/Spyc.php';
-        $filesArray = $this->fileLocations();
-        foreach ($filesArray as $folderAndFileLocation) {
-            $fixtureFolderAndFile = Director::baseFolder() . '/' . $folderAndFileLocation;
-            if (! file_exists($fixtureFolderAndFile)) {
-                user_error('No custom configuration has been setup for Ecommerce - I was looking for: "' . $fixtureFolderAndFile . '"', E_USER_NOTICE);
-            }
-            $parser = new Spyc();
-            $newArray = $parser->loadFile($fixtureFolderAndFile);
-            $this->fixtureDictionary = array_merge($newArray, $this->fixtureDictionary);
-        }
-    }
 }

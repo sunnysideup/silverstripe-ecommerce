@@ -1178,7 +1178,7 @@ class ProductGroup extends Page
     /**
      * Set the cache object to use when storing / retrieving partial cache blocks.
      *
-     * @param Zend_Cache_Core $silverstripeCoreCache
+     * @param $silverstripeCoreCache
      */
     public function setSilverstripeCoreCache($silverstripeCoreCache)
     {

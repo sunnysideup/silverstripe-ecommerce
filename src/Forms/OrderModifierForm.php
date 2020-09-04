@@ -117,15 +117,6 @@ class OrderModifierForm extends Form
 
     protected function myLcFirst($str)
     {
-        if (function_exists('lcfirst') === false) {
-            function lcfirst($str)
-            {
-                $str[0] = strtolower($str[0]);
-
-                return $str;
-            }
-        } else {
-            return lcfirst($str);
-        }
+        return lcfirst($str);
     }
 }

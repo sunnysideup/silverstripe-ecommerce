@@ -38,7 +38,7 @@ class CartResponse extends EcommerceResponse
      * @var array
      */
     private static $cart_responses_required = [
-        'SideBarCartID' => Sidebar_Cart_Inner::class,
+        'SideBarCartID' => 'Sidebar_Cart_Inner',
     ];
 
     /**

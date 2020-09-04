@@ -2,7 +2,6 @@
 
 use SilverStripe\Admin\CMSMenu;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
-use Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass;
 
 /**
  * @author: Nicolaas - modules [at] sunnysideup.co.nz
@@ -18,4 +17,3 @@ use Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass;
 
 // CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
 CMSMenu::remove_menu_class(CMSPageAddControllerProducts::class);
-CMSMenu::remove_menu_class(ModelAdminEcommerceBaseClass::class);

@@ -13,6 +13,7 @@ use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -672,7 +673,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param string $current - is this a current one, or an older VERSION ?
      *
-     * @return Sunnysideup\Ecommerce\Interfaces\BuyableModel
+     * @return DataObject  (\Sunnysideup\Ecommerce\Model\Sunnysideup\Ecommerce\Interfaces\BuyableModel)
      */
     public function getBuyable($current = '')
     {
