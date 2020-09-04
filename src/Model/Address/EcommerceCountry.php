@@ -17,7 +17,6 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
-use Sunnysideup\Geoip\Geoip;
 
 /**
  * @description: This class helps you to manage countries within the context of e-commerce.
@@ -374,8 +373,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         } else {
             $array = [];
             $objects = null;
-            if (class_exists('Geoip') && $showAllCountries && ! $useIDNotCode) {
-                $array = Geoip::getCountryDropDown();
+            $className = '\\Sunnysideup\\Geoip\\Geoip';
+            if (class_exists($className) && $showAllCountries && ! $useIDNotCode) {
+                $array = $className::getCountryDropDown();
             } elseif ($showAllCountries) {
                 $objects = EcommerceCountry::get();
             } else {
