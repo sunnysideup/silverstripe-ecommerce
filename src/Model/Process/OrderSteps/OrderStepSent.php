@@ -122,12 +122,12 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
                 return true; //do nothing
             }
             return $order->sendEmail(
-                    $this->getEmailClassName(),
-                    $subject = $this->CalculatedEmailSubject($order),
-                    $message = $this->CalculatedCustomerMessage($order),
-                    $resend = false,
-                    $this->SendDetailsToCustomer ? false : true
-                );
+                $this->getEmailClassName(),
+                $subject = $this->CalculatedEmailSubject($order),
+                $message = $this->CalculatedCustomerMessage($order),
+                $resend = false,
+                $this->SendDetailsToCustomer ? false : true
+            );
         }
     }
 

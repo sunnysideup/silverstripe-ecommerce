@@ -62,7 +62,6 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
         // default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
         $query->where("(DATEDIFF(\"EcommercePayment\".\"Created\", '${formattedDate}') > -" . $maxDays . " AND DATEDIFF(\"EcommercePayment\".\"Created\", '${formattedDate}') < " . $maxDays . ')');
 
-
         return $query;
     }
 }

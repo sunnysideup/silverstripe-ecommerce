@@ -97,7 +97,6 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             $surname
         )->CreateDefaultMember();
 
-
         DB::alteration_message('================================<br />creating shop assistant group ', 'created');
         $permissionProviderFactory->setCode(
             EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code')

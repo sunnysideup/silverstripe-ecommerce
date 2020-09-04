@@ -89,9 +89,9 @@ class OrderForm extends Form
                     'ReadTermsAndConditions',
                     DBField::create_field(
                         'HTMLText',
-                    _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'),
+                        _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'),
                         $alreadyTicked
-                        )
+                    )
                 )
             );
         }
