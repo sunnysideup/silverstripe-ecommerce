@@ -41,15 +41,6 @@ class ProductGroupSearchPageController extends ProductGroupController
         return $link;
     }
 
-    public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
-    {
-        $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
-
-        $this->allProducts = parent::ProductsShowable($extraFilter, $alternativeSort, $alternativeFilterKey);
-
-        return $this->allProducts;
-    }
-
     protected function init()
     {
         parent::init();

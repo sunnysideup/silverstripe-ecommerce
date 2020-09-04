@@ -355,7 +355,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * do not show in steps at all.
-     * @return boolean
+     * @return bool
      */
     public function HideFromEveryone()
     {
@@ -1045,7 +1045,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return OrderStatusLog | null
+     * @return OrderStatusLog|null
      */
     public function RelevantLogEntry(Order $order)
     {
@@ -1061,7 +1061,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return \SilverStripe\ORM\DataList | null
+     * @return \SilverStripe\ORM\DataList|null
      */
     public function RelevantLogEntries(Order $order)
     {
@@ -1288,7 +1288,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param bool | string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
      * @param string        $emailClassName
      *
-     * @return boolean;
+     * @return bool;
      */
     protected function sendEmailForStep(
         $order,

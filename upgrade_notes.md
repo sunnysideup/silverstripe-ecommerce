@@ -3371,7 +3371,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -426,24 +454,22 @@
       *
-      * @return false | DataObject (OrderItem) | null
+      * @return false | DataObject (OrderItem)|null
       */
 -    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
 +    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = array())
@@ -3399,7 +3399,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -455,13 +481,14 @@
       *
-      * @return false | OrderItem | null
+      * @return false | OrderItem|null
       */
 -    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = [])
 +    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = array())
@@ -3432,7 +3432,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -491,7 +515,7 @@
       *
-      * @return bool | item | null - successfully removed
+      * @return bool | item|null - successfully removed
       */
 -    public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
 +    public function deleteBuyable(BuyableModel $buyable, array $parameters = array())
@@ -4190,7 +4190,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -1285,22 +1225,15 @@
       *
-      * @return OrderItem | null
+      * @return OrderItem|null
       */
 -    protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
 +    protected function getExistingItem(BuyableModel $buyable, array $parameters = array())

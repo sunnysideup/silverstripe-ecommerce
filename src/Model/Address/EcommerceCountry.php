@@ -180,7 +180,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Memory for allow country to check.
      *
-     * @var array | null
+     * @var array|null
      */
     private static $_allow_sales_cache = [];
 
@@ -404,7 +404,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * If there is only ONE allowed country code
      * then a lot of checking of countries can be avoided.
      *
-     * @return string | null - countrycode
+     * @return string|null - countrycode
      **/
     public static function get_fixed_country_code()
     {

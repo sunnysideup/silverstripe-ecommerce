@@ -257,7 +257,7 @@ class CartPageController extends PageController
     /**
      * This returns a ArraList, each dataobject has two vars: Title and Link.
      *
-     * @return \SilverStripe\ORM\ArraList | null
+     * @return ArrayList|null
      **/
     public function ActionLinks()
     {

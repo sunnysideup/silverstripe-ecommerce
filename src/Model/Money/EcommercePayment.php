@@ -409,7 +409,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Returns the Payment type currently in use.
      *
-     * @return string | null
+     * @return string|null
      */
     public function PaymentMethod()
     {

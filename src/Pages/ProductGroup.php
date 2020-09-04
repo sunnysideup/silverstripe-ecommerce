@@ -1186,7 +1186,7 @@ class ProductGroup extends Page
     }
 
     /**
-     * @param boolean $isForGroups OPTIONAL
+     * @param bool $isForGroups OPTIONAL
      *
      * @return string
      */

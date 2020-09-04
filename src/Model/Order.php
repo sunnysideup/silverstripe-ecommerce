@@ -2595,7 +2595,7 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return string | null
+     * @return string|null
      */
     public function getFeedbackLink()
     {
@@ -3323,7 +3323,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @see Order::canSubmit
      *
-     * @return \SilverStripe\ORM\ArrayList | null
+     * @return \SilverStripe\ORM\ArrayList|null
      */
     public function SubmitErrors()
     {

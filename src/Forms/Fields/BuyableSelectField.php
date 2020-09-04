@@ -54,7 +54,7 @@ class BuyableSelectField extends FormField
     protected $fieldSelectedBuyable = null;
 
     /**
-     * @var SilverStripe\ORM\DataObject | null
+     * @var SilverStripe\ORM\DataObject|null
      */
     protected $buyable = null;
 

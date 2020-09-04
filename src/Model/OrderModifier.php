@@ -319,7 +319,7 @@ class OrderModifier extends OrderAttribute
 
     /*
      * all classes extending OrderModifier must have this method if it has more fields
-     * @param boolean $recalculate - run it, even if it has run already
+     * @param bool $recalculate - run it, even if it has run already
      **/
     public function runUpdate($recalculate = false)
     {

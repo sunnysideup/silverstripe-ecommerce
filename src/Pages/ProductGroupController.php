@@ -592,7 +592,7 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function HasFilterOrSort()
     {
@@ -600,7 +600,7 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function HasFilterOrSortFullList()
     {

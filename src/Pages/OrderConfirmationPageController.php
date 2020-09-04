@@ -210,7 +210,7 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * @return string | null
+     * @return string|null
      */
     public function PaymentMessage()
     {
@@ -227,7 +227,7 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * @return string | null
+     * @return string|null
      */
     public function PaymentMessageType()
     {

@@ -114,7 +114,7 @@ class ShoppingCart
     /**
      * stores a reference to the current order object.
      *
-     * @var object | null
+     * @var object|null
      **/
     protected $order = null;
 
@@ -456,7 +456,7 @@ class ShoppingCart
      * @param float      $quantity   - number of items add.
      * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return false | DataObject (OrderItem) | null
+     * @return false | DataObject (OrderItem)|null
      */
     public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
     {
@@ -484,7 +484,7 @@ class ShoppingCart
      * @param float      $quantity   - number of items add.
      * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return false | OrderItem | null
+     * @return false | OrderItem|null
      */
     public function decrementBuyable(BuyableModel $buyable, $quantity = 1.00, array $parameters = [])
     {
@@ -519,7 +519,7 @@ class ShoppingCart
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param array     $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return bool | OrderItem | null - successfully removed
+     * @return bool | OrderItem|null - successfully removed
      */
     public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
     {
@@ -664,7 +664,7 @@ class ShoppingCart
     /**
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @return bool | null
+     * @return bool|null
      */
     public function save()
     {
@@ -726,7 +726,7 @@ class ShoppingCart
      *
      * @param OrderModifier $modifier | int
      *
-     * @return bool | null
+     * @return bool|null
      */
     public function removeModifier($modifier)
     {
@@ -823,7 +823,7 @@ class ShoppingCart
      *
      * @param int | Order $oldOrder
      *
-     * @return Order | false | null
+     * @return Order | false|null
      **/
     public function copyOrder($oldOrder)
     {
@@ -1185,7 +1185,7 @@ class ShoppingCart
      * @param BuyableModel $buyable
      * @param array      $parameters
      *
-     * @return OrderItem | null
+     * @return OrderItem|null
      */
     protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
     {

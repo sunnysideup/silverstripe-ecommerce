@@ -99,7 +99,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * Generate export fields for CSV.
      *
      * @param GridField $gridField
-     * @return string | null
+     * @return string|null
      */
     public function generateExportFileData($gridField)
     {

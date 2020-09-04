@@ -104,7 +104,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | null - DataObject = next OrderStep
+     * @return OrderStep|null - DataObject = next OrderStep
      **/
     public function nextStep(Order $order)
     {

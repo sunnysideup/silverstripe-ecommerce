@@ -356,7 +356,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * NOTE: when there is only one currency we return an empty DataList
      * as one currency is meaningless.
      *
-     * @return \SilverStripe\ORM\DataList | null
+     * @return \SilverStripe\ORM\DataList|null
      */
     public static function ecommerce_currency_list()
     {

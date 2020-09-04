@@ -79,7 +79,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @param SilverStripe\ORM\DataObject | Order $order
      *
-     * @return OrderStep | null
+     * @return OrderStep|null
      **/
     public function nextStep(Order $order)
     {

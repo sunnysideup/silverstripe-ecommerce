@@ -204,7 +204,7 @@ class OrderProcessQueue extends DataObject
      * returns TRUE if SUCCESSFUL and a message if unsuccessful ...
      *
      * @param  Order $order optional
-     * @return boolean | string
+     * @return bool | string
      */
     public function process($order = null)
     {

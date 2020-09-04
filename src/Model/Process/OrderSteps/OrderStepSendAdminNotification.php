@@ -73,7 +73,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @param Order $order
      *
-     * @return OrderStep | null (next step OrderStep object)
+     * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {

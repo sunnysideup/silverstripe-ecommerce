@@ -334,7 +334,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * returns the order - for some unknown reason it seems we need this.
      *
-     * @return Order | DataObject | null
+     * @return Order | DataObject|null
      */
     public function Order()
     {
