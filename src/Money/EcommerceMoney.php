@@ -122,10 +122,10 @@ class EcommerceMoney extends Extension
 
         $formatter = $this->owner->getFormatter();
         if (! $currency) {
-            return $formatter->format($amount);
+            return $symbol . $formatter->format($amount);
         }
 
-        return $formatter->formatCurrency($amount, $currency);
+        return $symbol . $formatter->formatCurrency($amount, $currency);
     }
 
     /**
@@ -147,7 +147,7 @@ class EcommerceMoney extends Extension
         }
         $amount = $this->owner->getAmount();
 
-        //return is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
+        return is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
     }
 
     /**
