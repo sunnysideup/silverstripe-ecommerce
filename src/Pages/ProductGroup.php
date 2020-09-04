@@ -15,8 +15,8 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Member;
@@ -29,7 +29,6 @@ use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -1613,7 +1612,7 @@ class ProductGroup extends Page
      */
     protected function allowPurchaseWhereStatement($asArray = true, $classNameOrTableName = Product::class)
     {
-        if(class_exists($classNameOrTableName)) {
+        if (class_exists($classNameOrTableName)) {
             $tableName = DataObject::getSchema()->tableName($classNameOrTableName);
         } else {
             $tableName = $classNameOrTableName;
@@ -1712,7 +1711,7 @@ class ProductGroup extends Page
      */
     protected function createSortStatementFromIDArray($IDarray, $classNameOrTableName = Product::class)
     {
-        if(class_exists($classNameOrTableName)) {
+        if (class_exists($classNameOrTableName)) {
             $tableName = DataObject::getSchema()->tableName($classNameOrTableName);
         } else {
             $tableName = $classNameOrTableName;

@@ -2,9 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use PostgreSQLDatabase;
 use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 

@@ -118,7 +118,7 @@ class ExchangeRateProvider
         }
         if ($record) {
             $currencyData = json_decode($record);
-            if(property_exists($currencyData, $reference)){
+            if (property_exists($currencyData, $reference)) {
                 $rate = $currencyData->{$reference}->val;
                 if (! $rate) {
                     user_error('There was a problem retrieving the exchange rate.');

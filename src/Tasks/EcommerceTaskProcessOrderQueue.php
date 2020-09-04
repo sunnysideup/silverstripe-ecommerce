@@ -21,8 +21,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
  **/
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
-    private static $segment = 'EcommerceTaskProcessOrderQueue';
-
     protected $sendEmails = true;
 
     protected $limit = 1;
@@ -30,6 +28,8 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     protected $title = 'Process The Order Queue';
 
     protected $description = 'Go through order queue and try to finalise all the orders in it.';
+
+    private static $segment = 'EcommerceTaskProcessOrderQueue';
 
     public function run($request)
     {

@@ -8,10 +8,10 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)
@@ -24,6 +24,7 @@ use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 class StoreAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
+
     /**
      * standard SS variable.
      *

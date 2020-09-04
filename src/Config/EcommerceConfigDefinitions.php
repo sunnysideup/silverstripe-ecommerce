@@ -38,9 +38,9 @@ use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
+use Sunnysideup\Ecommerce\Money\EcommerceMoney;
 use Sunnysideup\Ecommerce\Pages\CartPageController;
 use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
 
 /**
  * This class sets out the static config variables for e-commerce.
@@ -51,7 +51,7 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
  * @sub-package: configuration
 
  **/
-use Sunnysideup\Ecommerce\Money\EcommerceMoney;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
 

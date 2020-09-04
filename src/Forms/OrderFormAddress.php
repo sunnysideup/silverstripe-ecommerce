@@ -40,11 +40,6 @@ class OrderFormAddress extends Form
     /**
      * @var bool
      */
-    private static $shipping_address_first = true;
-
-    /**
-     * @var bool
-     */
     protected $debug = false;
 
     /**
@@ -81,6 +76,11 @@ class OrderFormAddress extends Form
      * @var Order
      */
     protected $order = null;
+
+    /**
+     * @var bool
+     */
+    private static $shipping_address_first = true;
 
     /**
      * @param Controller $controller
@@ -350,7 +350,7 @@ class OrderFormAddress extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
@@ -372,7 +372,7 @@ class OrderFormAddress extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {

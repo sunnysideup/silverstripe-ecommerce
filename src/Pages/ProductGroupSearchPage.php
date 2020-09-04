@@ -38,7 +38,7 @@ class ProductGroupSearchPage extends ProductGroup
         'bestmatch' => [
             'Title' => 'Best Match',
             'SQL' => '"Price" DESC',
-        ]
+        ],
     ];
 
     private static $table_name = 'ProductGroupSearchPage';

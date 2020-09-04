@@ -15,6 +15,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Control\CartResponse;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
@@ -24,7 +25,6 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
-use Sunnysideup\Ecommerce\Control\CartResponse;
 
 
 /**
@@ -844,7 +844,7 @@ class ShoppingCart
                     $newOrder = $this->CopyOrderOnly($oldOrder, $newOrder);
 
                     $items = OrderItem::get()->filter([
-                        'OrderID' => $oldOrder->ID
+                        'OrderID' => $oldOrder->ID,
                     ]);
 
                     if (count($items)) {

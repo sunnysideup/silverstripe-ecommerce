@@ -58,12 +58,12 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin
      * @var string
      */
     private static $required_permission_codes = 'CMS_ACCESS_ProductsAndGroupsModelAdmin';
+
     /**
      * standard SS variable.
      *
      * @var string
      */
-
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/product-file.gif';
 
     public function getEditForm($id = null, $fields = null)

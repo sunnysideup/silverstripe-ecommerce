@@ -87,7 +87,6 @@ class EcomQuantityField extends NumericField
         if ($parameters) {
             $this->parameters = $parameters;
         }
-
     }
 
     /**

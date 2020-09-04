@@ -2,9 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use Sunnysideup\Geoip\Geoip;
-
 use SilverStripe\Core\Config\Config;
+
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
@@ -18,6 +17,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
+use Sunnysideup\Geoip\Geoip;
 
 /**
  * @description: This class helps you to manage countries within the context of e-commerce.

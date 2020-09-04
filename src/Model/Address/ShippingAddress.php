@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Model\Address;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;

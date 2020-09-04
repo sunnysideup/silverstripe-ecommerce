@@ -28,7 +28,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      */
     private static $list_of_things_to_check = [
         'check1' => 'Payment has arrived in Bank Account',
-        'check2' => 'Products are available'
+        'check2' => 'Products are available',
     ];
 
     private static $defaults = [

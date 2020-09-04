@@ -9,7 +9,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 class EcommerceMoney extends Extension
 {
-
     /**
      * @var string
      */

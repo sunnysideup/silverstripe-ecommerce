@@ -2,13 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use Sunnysideup\Geoip\Geoip;
-
-
 use SilverStripe\Control\Controller;
+
+
 use SilverStripe\Core\Config\Config;
 use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\Geoip\Geoip;
 
 /**
  * this is a very basic class with as its sole purpose providing

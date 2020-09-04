@@ -18,7 +18,6 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 
 /**
  * This class returns the Ajax Definitions class.

@@ -49,7 +49,7 @@ class ProductGroupSearchPageController extends ProductGroupController
 
         return $this->allProducts;
     }
-    
+
     protected function init()
     {
         parent::init();

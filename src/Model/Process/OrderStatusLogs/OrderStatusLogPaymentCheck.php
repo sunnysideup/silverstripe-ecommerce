@@ -4,9 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 

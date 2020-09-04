@@ -12,9 +12,9 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -27,6 +27,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 class SalesAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
+
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
      * This variable can be a boolean or an array.

@@ -29,27 +29,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
  **/
 class ProductSearchForm extends Form
 {
-
-    /**
-     * @var string
-     */
-    private static $form_data_session_variable = 'ProductGroupSearchResultsFormData';
-
-    /**
-     * @var bool
-     */
-    private static $include_price_filters = false;
-
-    /**
-     * @var string
-     */
-    private static $product_session_variable = 'ProductGroupSearchResultsProducts';
-
-    /**
-     * @var string
-     */
-    private static $product_group_session_variable = 'ProductGroupSearchResultsProductGroups';
-
     /**
      * set to TRUE to show the search logic.
      *
@@ -191,6 +170,26 @@ class ProductSearchForm extends Form
         "\r\n INNER JOIN" => 'INNER JOIN',
         "\r\n LEFT JOIN" => 'LEFT JOIN',
     ];
+
+    /**
+     * @var string
+     */
+    private static $form_data_session_variable = 'ProductGroupSearchResultsFormData';
+
+    /**
+     * @var bool
+     */
+    private static $include_price_filters = false;
+
+    /**
+     * @var string
+     */
+    private static $product_session_variable = 'ProductGroupSearchResultsProducts';
+
+    /**
+     * @var string
+     */
+    private static $product_group_session_variable = 'ProductGroupSearchResultsProductGroups';
 
     /**
      * ProductsToSearch can be left blank to search all products.

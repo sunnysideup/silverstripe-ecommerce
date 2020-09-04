@@ -59,7 +59,6 @@ use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Email\OrderEmail;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Forms\Fields\OrderStepField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForOrderItems;
@@ -422,7 +421,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
         'IsCancelledNice' => 'Cancelled',
-        'CancelledBy.Email' => 'Cancelled By'
+        'CancelledBy.Email' => 'Cancelled By',
     ];
 
     /**
@@ -466,6 +465,11 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * @var array
+     */
+    private static $_try_to_finalise_order_is_running = [];
+
+    /**
      * fields contains in CSV export for ModelAdmin GridField
      *
      * @return array
@@ -476,11 +480,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('updateOrderExportFields', $exportFields);
         return $exportFields;
     }
-
-    /**
-     * @var array
-     */
-    private static $_try_to_finalise_order_is_running = [];
 
     public function i18n_singular_name()
     {
@@ -1573,7 +1572,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function RelevantPayments()
     {
         if ($this->IsPaid()) {
-            return $this->Payments()->filter(["Status" => "Success"]);
+            return $this->Payments()->filter(['Status' => 'Success']);
         }
         return $this->Payments();
     }
@@ -1596,8 +1595,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @alias for getIsCancelledNice
      * @return string
-    */
-
+     */
     public function IsCancelledNice()
     {
         return $this->getIsCancelledNice();

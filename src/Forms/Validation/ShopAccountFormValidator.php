@@ -11,7 +11,6 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class ShopAccountFormValidator extends RequiredFields
 {
-
     /**
      * @var int
      */

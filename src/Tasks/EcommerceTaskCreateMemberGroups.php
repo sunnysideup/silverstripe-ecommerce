@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-
-
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -99,7 +97,7 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             $surname
         )->CreateDefaultMember();
 
-        
+
         DB::alteration_message('================================<br />creating shop assistant group ', 'created');
         $permissionProviderFactory->setCode(
             EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code')

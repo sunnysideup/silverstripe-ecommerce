@@ -106,7 +106,7 @@ class ProductGroupController extends PageController
      *
      * e.g. socks (current product group) for brand A or B (the secondary product group)
      *
-     * @return \SilverStripe\Control\HTTPRequest $request
+     * @return \SilverStripe\Control\HTTPRequest
      */
     public function filterforgroup($request)
     {
@@ -135,7 +135,7 @@ class ProductGroupController extends PageController
     /**
      * get the search results.
      *
-     * @return \SilverStripe\Control\HTTPRequest $request
+     * @return \SilverStripe\Control\HTTPRequest
      */
     public function searchresults($request)
     {
@@ -1084,7 +1084,7 @@ class ProductGroupController extends PageController
      * counts the total number in the combination....
      *
      * @param \SilverStripe\ORM\DataList $items     - list of
-     * @param Array    $baseArray - list of products on the current page
+     * @param array    $baseArray - list of products on the current page
      *
      * @return array
      */

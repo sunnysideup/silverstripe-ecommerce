@@ -27,10 +27,10 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
-use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 /**
  * @description: see OrderStep.md
@@ -534,7 +534,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         //replacing
         $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
-        if($queueField){
+        if ($queueField) {
             $config = $queueField->getConfig();
             $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
             $config->removeComponentsByType(GridFieldDeleteAction::class);
