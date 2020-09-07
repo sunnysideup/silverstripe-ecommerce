@@ -26,15 +26,11 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
     {
         $permissionProviderFactory = PermissionProviderFactory::inst();
         DB::alteration_message('========================== <br />creating customer group', 'created');
-        $permissionProviderFactory->setCode(
-            EcommerceConfig::get(EcommerceRole::class, 'customer_group_code')
-        )->setName(
-            EcommerceConfig::get(EcommerceRole::class, 'customer_group_name')
-        )->setPermissionCode(
-            EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code')
-        )->CreateGroup(
-            $member = null
-        );
+        $permissionProviderFactory
+            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'customer_group_code'))
+            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'customer_group_name'))
+            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code'))
+            ->CreateGroup($member = null);
 
         DB::alteration_message('========================== <br />creating sales manager', 'created');
         //work out email
@@ -50,29 +46,20 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
         if (! $surname) {
             $surname = 'Sales';
         }
-
-        $permissionProviderFactory->setEmail(
-            $email
-        )->setFirstName(
-            $firstName
-        )->setSurname(
-            $surname
-        )->CreateDefaultMember();
+        $permissionProviderFactory
+            ->setEmail($email)
+            ->setFirstName($firstName)
+            ->setSurname($surname)
+            ->CreateDefaultMember();
 
         DB::alteration_message('================================<br />creating shop admin group ', 'created');
-        $permissionProviderFactory->setCode(
-            EcommerceConfig::get(EcommerceRole::class, 'admin_group_code')
-        )->setName(
-            EcommerceConfig::get(EcommerceRole::class, 'admin_group_name')
-        )->setPermissionCode(
-            EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code')
-        )->setRoleTitle(
-            EcommerceConfig::get(EcommerceRole::class, 'admin_role_title')
-        )->setPermissionArray(
-            EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes')
-        )->CreateGroup(
-            $member = null
-        );
+        $permissionProviderFactory
+            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
+            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
+            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
+            ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
+            ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
+            ->CreateGroup($member = null);
 
         DB::alteration_message('========================== <br />creating default shop assistant member', 'created');
         //work out email
@@ -89,27 +76,19 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             $surname = 'Asssistant';
         }
 
-        $permissionProviderFactory->setEmail(
-            $email
-        )->setFirstName(
-            $firstName
-        )->setSurname(
-            $surname
-        )->CreateDefaultMember();
+        $permissionProviderFactory
+            ->setEmail($email)
+            ->setFirstName($firstName)
+            ->setSurname($surname)
+            ->CreateDefaultMember();
 
         DB::alteration_message('================================<br />creating shop assistant group ', 'created');
-        $permissionProviderFactory->setCode(
-            EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code')
-        )->setName(
-            EcommerceConfig::get(EcommerceRole::class, 'assistant_group_name')
-        )->setPermissionCode(
-            EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code')
-        )->setRoleTitle(
-            EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title')
-        )->setPermissionArray(
-            EcommerceConfig::get(EcommerceRole::class, 'assistant_role_permission_codes')
-        )->CreateGroup(
-            $member = null
-        );
+        $permissionProviderFactory
+            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code'))
+            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'assistant_group_name'))
+            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'))
+            ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'))
+            ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'assistant_role_permission_codes'))
+            ->CreateGroup($member = null);
     }
 }
