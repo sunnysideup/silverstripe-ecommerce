@@ -46,7 +46,7 @@ class OrderModifierForm extends Form
      *@param Validator $optionalValidator
      **/
     public function __construct(
-        Controller $optionalController,
+        ?Controller $optionalController,
         string $name,
         FieldList $fields,
         FieldList $actions,
