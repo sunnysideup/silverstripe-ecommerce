@@ -133,7 +133,7 @@ class ProductGroupSearchPage extends ProductGroup
 
     public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
     {
-        $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
+        // $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
 
         $this->allProducts = parent::ProductsShowable($extraFilter, $alternativeSort, $alternativeFilterKey);
 
