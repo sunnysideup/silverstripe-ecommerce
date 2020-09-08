@@ -15303,7 +15303,7 @@ modified:	src/Search/Filters/OrderFiltersAroundDateFilter.php
 -        $date = new Date();
 +        $date = new DBDate();
          $date->setValue($value);
-         $formattedDate = $date->format('Y-m-d');
+         $formattedDate = $date->format('Y-MM-d');
 
 
 modified:	src/Search/Filters/OrderFiltersMultiOptionsetStatusIDFilter.php

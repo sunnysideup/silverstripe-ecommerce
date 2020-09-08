@@ -33,7 +33,7 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
 
         $date = new DBDate();
         $date->setValue($value);
-        $formattedDate = $date->format('Y-m-d');
+        $formattedDate = $date->format('Y-MM-d');
 
         $distanceFromToday = time() - strtotime($value);
         $distanceFromTodayInDays = $distanceFromToday / 86400;

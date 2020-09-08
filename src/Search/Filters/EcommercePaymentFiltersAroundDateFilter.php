@@ -55,7 +55,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
          * EXP: If this is a PHP Date format call then this needs to be changed to new Date formatting system. (see http://userguide.icu-project.org/formatparse/datetime)
          * ### @@@@ STOP REPLACEMENT @@@@ ###
          */
-        $formattedDate = $date->format('Y-m-d');
+        $formattedDate = $date->format('Y-MM-d');
 
         // changed for PostgreSQL compatability
         // NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe

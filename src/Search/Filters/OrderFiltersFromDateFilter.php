@@ -22,7 +22,7 @@ class OrderFiltersFromDateFilter extends ExactMatchFilter
 
         $date = new DBDate();
         $date->setValue(strtotime($value));
-        $formattedDate = $date->format('y-MM-dd');
+        $formattedDate = $date->format('y-MM-d');
 
         $query->where("\"Order\".\"Created\" >= '${formattedDate}'");
         return $query;
