@@ -266,9 +266,10 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * see: http://userguide.icu-project.org/formatparse/datetime
      * @var string
      */
-    private static $date_format_for_title = 'D j M Y, G:i T';
+    private static $date_format_for_title = 'd MMM, HH:mm ';
 
     /**
      * @var bool

@@ -117,7 +117,7 @@ Order:
   ajax_total_format:
     - TotalAsMoney
     - NiceDefaultFormat
-  date_format_for_title: "D j M Y, G:i T"
+  date_format_for_title: "see http://userguide.icu-project.org/formatparse/datetime for examples ... "
   include_customer_name_in_title: true
 
 OrderItem:
