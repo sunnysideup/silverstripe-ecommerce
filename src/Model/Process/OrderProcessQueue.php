@@ -453,7 +453,7 @@ class OrderProcessQueue extends DataObject
                 'OrderID',
                 CMSEditLinkField::create(
                     'OrderID',
-                    Order::class,
+                    'Order',
                     $this->Order()
                 )
             );

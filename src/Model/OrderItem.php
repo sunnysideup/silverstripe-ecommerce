@@ -272,7 +272,7 @@ class OrderItem extends OrderAttribute
                 ]
             );
         } else {
-            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', Order::class)));
+            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
         $fields->removeByName('Sort');
         $fields->removeByName('CalculatedTotal');
@@ -687,7 +687,7 @@ class OrderItem extends OrderAttribute
         }
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
             if (! $this->BuyableID) {
-                user_error('There was an error retrieving the product', E_USER_NOTICE);
+                // user_error('There was an error retrieving the product', E_USER_NOTICE);
                 return Product::create();
             }
             //start hack
