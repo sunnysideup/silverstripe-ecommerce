@@ -166,7 +166,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('OrderID', new ReadonlyField('OrderID', 'Order ID'));
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
         $fields->replaceField('PaidByID', new ReadonlyField('PaidByID', 'Payment made by'));
         $fields->removeByName('AlternativeEndPoint');
 

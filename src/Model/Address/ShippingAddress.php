@@ -211,7 +211,15 @@ class ShippingAddress extends OrderAddress
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('OrderID', new ReadonlyField('OrderID'));
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
+
 
         return $fields;
     }

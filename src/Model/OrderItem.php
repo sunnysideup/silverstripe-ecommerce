@@ -240,7 +240,14 @@ class OrderItem extends OrderAttribute
         $fields->replaceField('BuyableClassName', HiddenField::create('BuyableClassName'));
         $fields->replaceField('Version', HiddenField::create('Version'));
         if ($this->OrderID && $this->exists()) {
-            $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
+            $fields->replaceField(
+                'OrderID',
+                CMSEditLinkField::create(
+                    'OrderID',
+                    'Order',
+                    $this->Order()
+                )
+            );
             $fields->addFieldsToTab(
                 'Root.Advanced',
                 [

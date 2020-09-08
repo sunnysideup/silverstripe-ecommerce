@@ -67,7 +67,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             'TableSubTitleNOHTML',
             'CartTitle',
             'CartSubTitle',
-            Order::class,
+            'Order',
         ],
     ];
 

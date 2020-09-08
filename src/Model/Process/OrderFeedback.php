@@ -196,7 +196,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         $fields->replaceField(
             'OrderID',
             CMSEditLinkField::create(
-                'OrderIDLink',
+                'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
                 $this->Order()
             )

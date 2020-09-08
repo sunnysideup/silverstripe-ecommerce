@@ -94,7 +94,8 @@ class EcommerceConfigDefinitions
             Use in the following context: Order.AjaxDefinitions.TableID OR OrderModifier.AjaxDefinitions.TableID OR OrderItem.AjaxDefinitions.TableID',
 
         'TableTotalID' =>
-            'The total cost. Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID',
+            'The total cost.
+            Use in the following context: Order.AjaxDefinitions.TableTotalID OR OrderModifier.AjaxDefinitions.TableTotalID OR OrderItem.AjaxDefinitions.TableTotalID',
 
         'HiddenPageTitleID' =>
             'The ID used to identify a (hidden) element that contains the title of the page.

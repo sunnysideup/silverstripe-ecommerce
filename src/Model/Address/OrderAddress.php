@@ -288,7 +288,15 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-        $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
+
         return $fields;
     }
 

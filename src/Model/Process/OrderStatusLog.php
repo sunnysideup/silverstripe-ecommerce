@@ -339,7 +339,11 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 $fields->removeByName('OrderID');
                 $fields->addFieldToTab(
                     'Root.Main',
-                    CMSEditLinkField::create('OrderID', $order->singular_name(), $order)
+                    CMSEditLinkField::create(
+                        'OrderID',
+                        $order->singular_name(),
+                        $order
+                    )
                 );
             }
         }

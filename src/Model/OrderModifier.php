@@ -251,7 +251,14 @@ class OrderModifier extends OrderAttribute
 
         //OrderID Field
         if ($this->OrderID && $this->exists()) {
-            $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
+            $fields->replaceField(
+                'OrderID',
+                CMSEditLinkField::create(
+                    'OrderID',
+                    'Order',
+                    $this->Order()
+                )
+            );
         } else {
             $fields->replaceField('OrderID', new NumericField('OrderID'));
         }
