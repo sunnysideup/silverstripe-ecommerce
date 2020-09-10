@@ -3,11 +3,11 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
-use SilverStripe\Core\ClassInfo;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\OrderStatusLogFormController;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator;

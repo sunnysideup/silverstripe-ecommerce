@@ -3,10 +3,9 @@
 namespace Sunnysideup\Ecommerce\Money;
 
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\ORM\FieldType\DBHTMLVarchar;
+use SilverStripe\ORM\FieldType\DBMoney;
 
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
@@ -101,10 +100,7 @@ class EcommerceMoney extends Extension
         $formatter = $this->owner->getFormatter();
         $data = $formatter->format($amount);
         /** @var DBHTMLText */
-        $string = DBField::create_field('HTMLText', $data);
-
-        return $string;
-
+        return DBField::create_field('HTMLText', $data);
     }
 
     /**
@@ -135,9 +131,7 @@ class EcommerceMoney extends Extension
             $data = $symbol . $formatter->formatCurrency($amount, $currency);
         }
         /** @var DBHTMLText */
-        $string = DBField::create_field('HTMLText', $data);
-
-        return $string;
+        return DBField::create_field('HTMLText', $data);
     }
 
     /**
@@ -159,13 +153,9 @@ class EcommerceMoney extends Extension
         }
         $amount = $this->owner->getAmount();
 
-        $data =  is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
+        $data = is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
         /** @var DBHTMLText */
-        $string = DBField::create_field('HTMLText', $data);
-
-        return $string;
-
-
+        return DBField::create_field('HTMLText', $data);
     }
 
     /**
