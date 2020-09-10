@@ -71,7 +71,7 @@ class OrderModifierForm extends Form
         $this->setValidator($optionalValidator);
 
         $this->setAttribute('autocomplete', 'off');
-        // TODO: find replacement for: Requirements::themedCSS($this->ClassName, 'ecommerce');
+        Requirements::themedCSS(ClassInfo::shortName($this->ClassName));
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
         Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier

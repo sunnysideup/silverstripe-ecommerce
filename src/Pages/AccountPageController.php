@@ -30,7 +30,7 @@ class AccountPageController extends PageController
 
             return false;
         }
-        // TODO: find replacement for: Requirements::themedCSS(AccountPage::class, 'ecommerce');
+        Requirements::themedCSS('AccountPage');
     }
 
     /**
