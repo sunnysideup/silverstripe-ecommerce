@@ -71,19 +71,22 @@ class SearchHistory extends DataObject
      *
      * @return int
      */
-    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0)
+    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0) : ?SearchHistory
     {
-        if ($member = Member::currentUser()) {
+        $member = Member::currentUser();
+        if ($member) {
             if ($member->IsShopAdmin()) {
-                return -1;
+                return null;
             }
         }
-        $obj = new self();
+        $obj = new SearchHistory();
         $obj->Title = $keywordString;
         $obj->ProductCount = $productCount;
         $obj->GroupCount = $groupCount;
+        $obj->write();
 
-        return $obj->write();
+        return $obj;
+
     }
 
     /**

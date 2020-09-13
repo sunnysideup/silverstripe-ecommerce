@@ -74,7 +74,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function fieldLabels($includerelations = true)
     {
         return [
-            'Search' => 'When someone searches for ... (separate searches by ' . $this->Config()->get('separator') . ') - aliases',
+            'Search' => 'When someone searches for ... ',
             'Replace' => 'It is replaced by - proper name ...',
         ];
     }
@@ -195,4 +195,21 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
+
+
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->dataFieldByName('Search')
+            ->setDescription(
+                'e.g. Sonny<br />' .
+                'You can enter more than one search phrase and separate by: ' . $this->Config()->get('separator') . ''
+            );
+        $fields->dataFieldByName('Replace')
+            ->setDescription(
+                'e.g. Sony'
+            );
+        return $fields;
+    }
+
 }
