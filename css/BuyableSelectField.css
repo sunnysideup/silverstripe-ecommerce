@@ -1,0 +1,6 @@
+.buyableselect .middleColumn{position: relative; width: auto!important;}
+.buyableselect .middleColumn span{display: block;}
+.buyableselect .middleColumn label{position: absolute;}
+.buyableselect .middleColumn label.hasText{display: none;}
+.buyableselect .middleColumn label.hasFocus{  opacity:0.3;  filter:alpha(opacity=30); /* For IE8 and earlier */}
+.findBuyable {position: relative; }

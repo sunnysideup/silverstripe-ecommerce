@@ -43,26 +43,26 @@ use Sunnysideup\Ecommerce\Pages\CartPageController;
 use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
 
 /**
-* This class sets out the static config variables for e-commerce.
-* It also adds the definitions of any classes that extend EcommerceConfigDefitions.
-*
-* @authors: Nicolaas [at] Sunny Side Up .co.nz
-* @package: ecommerce
-* @sub-package: configuration
+ * This class sets out the static config variables for e-commerce.
+ * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: configuration
 
-**/
+ **/
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
 
 /**
-* This class sets out the static config variables for e-commerce.
-* It also adds the definitions of any classes that extend EcommerceConfigDefitions.
-*
-* @authors: Nicolaas [at] Sunny Side Up .co.nz
-* @package: ecommerce
-* @sub-package: configuration
-**/
+ * This class sets out the static config variables for e-commerce.
+ * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
+ *
+ * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @package: ecommerce
+ * @sub-package: configuration
+ **/
 class EcommerceConfigDefinitions
 {
     use Extensible;
@@ -70,8 +70,8 @@ class EcommerceConfigDefinitions
     use Configurable;
 
     /**
-    * LIST of ajax methods.
-    */
+     * LIST of ajax methods.
+     */
     protected $ajaxMethods = [
         'SideBarCartID' =>
             'The sidebar cart. See CartResponse.cart_responses_required to see if it is being used and what template is being used.',
@@ -158,10 +158,10 @@ class EcommerceConfigDefinitions
     ];
 
     /**
-    * Tells us what version of e-commerce we are using.
-    *
-    * @var float
-    */
+     * Tells us what version of e-commerce we are using.
+     *
+     * @var float
+     */
     private $version = 1;
 
     private $definitionGrouping = [
@@ -229,57 +229,57 @@ class EcommerceConfigDefinitions
     ];
 
     /**
-    * Tells us the version of e-commerce in use.
-    *
-    * @return float
-    */
+     * Tells us the version of e-commerce in use.
+     *
+     * @return float
+     */
     public function Version()
     {
         return $this->version;
     }
 
     /**
-    * returns defition of Ajax Method.
-    *
-    * @param string $name
-    *
-    * @return string
-    */
+     * returns defition of Ajax Method.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
     public function getAjaxMethod($name)
     {
         return $this->ajaxMethods[$name];
     }
 
     /**
-    * returns the definition of an ajax definition.
-    *
-    * @return array
-    */
+     * returns the definition of an ajax definition.
+     *
+     * @return array
+     */
     public function getAjaxMethods($name = '')
     {
         return $this->ajaxMethods;
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function GroupDefinitions()
     {
         return $this->definitionGrouping + ['OTHER' => []];
     }
 
     /**
-    * Get a list of all definitions required for e-commerce.
-    * We have this here so that we can check that all static variables have been defined.
-    * We can also use this list for clean formatting.
-    *
-    * This list is for developers only
-    *
-    * @param string $className - only return for this class name
-    * @param string $variable #variable - only return this variable (must define class name as well)
-    *
-    * @return array | String
-    */
+     * Get a list of all definitions required for e-commerce.
+     * We have this here so that we can check that all static variables have been defined.
+     * We can also use this list for clean formatting.
+     *
+     * This list is for developers only
+     *
+     * @param string $className - only return for this class name
+     * @param string $variable #variable - only return this variable (must define class name as well)
+     *
+     * @return array | String
+     */
     public function Definitions($className = '', $variable = '')
     {
         $array = [
@@ -313,13 +313,13 @@ class EcommerceConfigDefinitions
 
                 'managed_models' =>
                     "An array of data object classes that are managed as 'Store' configuration items.
-                    This configuration is used a lot to add extra menu items. "
+                    This configuration is used a lot to add extra menu items. ",
             ],
 
             ProductsAndGroupsModelAdmin::class => [
 
                 'managed_models' =>
-                    'An array of data object classes that are managed as Products and Product Groups '
+                    'An array of data object classes that are managed as Products and Product Groups ',
             ],
 
             ProductConfigModelAdmin::class => [
@@ -327,12 +327,12 @@ class EcommerceConfigDefinitions
                 'managed_models' =>
                     "An array of data object classes that are managed as 'Product Config' configuration items.
                     These are all items that relate to Products and Product Groups that are not in the main group.
-                    This includes any searches carried out in the Product Group. "],
+                    This includes any searches carried out in the Product Group. ", ],
 
             SalesAdmin::class => [
                 'managed_models' =>
                     "An array of data object classes that are managed as 'Store' configuration items.
-                    This configuration is used a lot to add extra menu items. "],
+                    This configuration is used a lot to add extra menu items. ", ],
 
             ################### PRODUCT DISPLAY #####################
             ProductGroup::class => [
@@ -354,7 +354,6 @@ class EcommerceConfigDefinitions
 
                 'filter_options' =>
                     "Associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
-
 
                 'display_styles' =>
                     "Associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
@@ -426,21 +425,21 @@ class EcommerceConfigDefinitions
             ShoppingCartController::class => [
 
                 'url_segment' =>
-                    'URL Segment used for the shopping cart.'
+                    'URL Segment used for the shopping cart.',
             ],
 
             CartResponse::class => [
 
                 'cart_responses_required' =>
                     'An array of the cart responses required for AJAX.
-                    This array also identifies the unique IDs used in the html that will be updated by the ajax response.'
+                    This array also identifies the unique IDs used in the html that will be updated by the ajax response.',
             ],
 
             CartPage_Controller::class => [
 
                 'session_code' =>
                     'Code name for session variable used in Cart Page.
-                    This session variable is used to retain a message.'
+                    This session variable is used to retain a message.',
             ],
 
             CheckoutPage_Controller::class => [
@@ -457,7 +456,7 @@ class EcommerceConfigDefinitions
             ShopAccountFormValidator::class => [
 
                 'minimum_password_length' =>
-                    'The minimum length of the password for an account.'
+                    'The minimum length of the password for an account.',
             ],
 
             OrderModifierForm::class => [
@@ -470,14 +469,14 @@ class EcommerceConfigDefinitions
 
             EcommercePaymentController::class => [
 
-                'url_segment' => 'URL Segment used for the payment process.'
+                'url_segment' => 'URL Segment used for the payment process.',
             ],
 
             OrderFormAddress::class => [
 
                 'shipping_address_first' =>
                     'Show the shipping address before the billing address.
-                    This is a better option if it is likely that you have a billing address that is not the same as the shipping address.'
+                    This is a better option if it is likely that you have a billing address that is not the same as the shipping address.',
             ],
 
             ################### POST SALE PROCESSING #####################
@@ -505,7 +504,7 @@ class EcommerceConfigDefinitions
                     This is when the Shop Admin looks at all the detail in the order and confirms it is ready to be completed.
                     Here you can create an HTML list of items to check (e.g. has it been paid, do you have the products in stock,
                     is there a delivery address,
-                    etc....)'
+                    etc....)',
             ],
 
             OrderStatusLog::class => [
@@ -587,7 +586,7 @@ class EcommerceConfigDefinitions
                 'ajax_total_format' =>
                     'This is used when AJAX returns some values to update on the checkout page.
                     Specify which function returns the Total value.
-                    You can also specify if you want a format to be called on that function.'
+                    You can also specify if you want a format to be called on that function.',
             ],
 
             OrderModifier::class => [
@@ -595,10 +594,10 @@ class EcommerceConfigDefinitions
                 'ajax_total_format' =>
                     'This is used when AJAX returns some values to update on the checkout page.
                     Specify which function returns the Total value.
-                    You can also specify if you want a format to be called on that function.'
+                    You can also specify if you want a format to be called on that function.',
             ],
 
-                ################### CUSTOMERS #####################
+            ################### CUSTOMERS #####################
             OrderAddress::class => [
 
                 'use_separate_shipping_address' =>
@@ -733,7 +732,7 @@ class EcommerceConfigDefinitions
                     'To what countries are you selling?  You can leave this as an empty array,
                     in case you are selling to all countries or you can restrict it to just one country or a handful.  Once set,
                     you can adjust this list in EcommerceCountry using the CMS. ',
-                    'visitor_country_provider' => 'The class that is being used to provide the country of the customer. Usually this is GEOIP,
+                'visitor_country_provider' => 'The class that is being used to provide the country of the customer. Usually this is GEOIP,
                     but you can also setup your own one. This class just needs one public method: getCountry.',
 
                 'default_country_code' =>
@@ -750,7 +749,7 @@ class EcommerceConfigDefinitions
                     or 'Province', etc...",
             ],
 
-                ################### PAYMENT AND MONEY #####################
+            ################### PAYMENT AND MONEY #####################
             EcommerceCurrency::class => [
 
                 'default_currency' =>
@@ -765,23 +764,23 @@ class EcommerceConfigDefinitions
             EcommerceMoney::class => [
 
                 'default_format' =>
-                    'Here you specify which function you want to be called as the default format for a Money object on the all site.'
+                    'Here you specify which function you want to be called as the default format for a Money object on the all site.',
             ],
 
             EcommercePayment::class => [
 
-                    'supported_methods' =>
-                        'Associative array of payment methods,
+                'supported_methods' =>
+                    'Associative array of payment methods,
                         e.g. ChequePayment: pay by cheque,
                         CreditCardPayment: pay by credit card,
-                        etc....'
+                        etc....',
             ],
 
             ExpiryDateField::class => [
-                    'short_months' => 'Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?'
+                'short_months' => 'Should we use short codes for the Expiry Date Field (e.g. Jan rather than January)?',
             ],
 
-                ################### CLEANUP AND OTHER TASKS #####################
+            ################### CLEANUP AND OTHER TASKS #####################
             EcommerceTaskCartCleanup::class => [
 
                 'clear_minutes' =>
@@ -815,7 +814,6 @@ class EcommerceConfigDefinitions
 
             ],
         ];
-
 
         //add more stuff through extensions
         $extendedArray = $this->extend(

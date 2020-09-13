@@ -1,0 +1,26 @@
+/**
+ * IMPORTANT NOTE:
+ * The default e-commerce css only includes the basics and it is recommended that you theme these files.
+ * Also make sure you have the site's general layout and typography styled before you do this.
+ *
+ * This file is used to format the Product Page and the list of ProductGroups
+ *
+ **/
+
+#Product .productImage {float: right; width: auto; margin-right: 25px;}
+
+.priceDisplay { font-weight: bold; font-size: 1.2em; }
+#Product .noimage { padding: 20px; height: 100px; width: 200px; text-align: center; background: #eeeeee; color: #d3d3d3; display: block; text-decoration: none; font-size: 20px; }
+
+
+.category { overflow-x: hidden; }
+.sortOptions .current { text-decoration: none; font-weight: bold; }
+.productList { padding: 0; margin: 0; }
+	#Products .productItem { list-style: none; float: left; width: 200px; overflow: hidden; margin: 0 5px 5px 0; padding: 25px; }
+		.productItem .productActions { padding: 0; margin: 0; }
+		.productItem .productActions li { list-style: none; padding: 0; margin: 0; }
+		.resultsBar .resultsShowing,
+		.resultsBar .resultsShowing { float: right; width: 50%; text-align: right; }
+		.productItem a.noimage { padding: 20px; height: 60px; text-align: center; background: #eeeeee; color: #d3d3d3; display: block; text-decoration: none; font-size: 20px; }
+
+

@@ -92,7 +92,7 @@ class BuyableSelectField extends FormField
         //Requirements::css($this->jquery_UI_CSS_location);
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
         Requirements::customScript($this->getJavascript(), BuyableSelectField::class . $this->id());
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: BuyableSelectField', 'ecommerce');
+        Requirements::themedCSS('BuyableSelectField');
 
         $field =
         '<div class="fieldgroup">' .

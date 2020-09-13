@@ -7,7 +7,6 @@ use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;

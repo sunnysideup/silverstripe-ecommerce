@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 
@@ -126,7 +125,6 @@ class EcommerceConfig
      */
     private static $folder_and_file_locations = ['ecommerce/_config/ecommerce.yml', 'ecommerce/_config/payment.yml'];
 
-
     /**
      * Fetches value for a class, or a property on that class
      *
@@ -142,5 +140,4 @@ class EcommerceConfig
     {
         return Config::inst()->get($className, $identifier, $excludeMiddleware);
     }
-
 }
