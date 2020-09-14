@@ -3,13 +3,13 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Core\Config\Config;
 
 class ProductSearchFormSelected extends ProductSearchForm
 {
     protected $nameOfProductsBeingSearched = '';
 
     protected $productsToSearch = null;
+
     /**
      * ProductsToSearch can be left blank to search all products.
      *
@@ -67,7 +67,5 @@ class ProductSearchFormSelected extends ProductSearchForm
                 }
             }
         }
-
     }
-
 }

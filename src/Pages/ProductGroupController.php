@@ -19,14 +19,10 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use Sunnysideup\Ecommerce\Forms\ProductSearchFormSelected;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 class ProductGroupController extends PageController
 {
-
-    private static $product_search_session_variable = 'EcomProductSearch';
-
     /**
      * The original Title of this page before filters, etc...
      *
@@ -73,6 +69,16 @@ class ProductGroupController extends PageController
      * @var bool
      */
     protected $secondaryTitleHasBeenAdded = false;
+
+    /****************************************************
+     *  Search Form Related controllers
+    /****************************************************/
+
+    protected $searchForm = null;
+
+    protected $searchKeyword = '';
+
+    private static $product_search_session_variable = 'EcomProductSearch';
 
     /**
      * standard SS variable.
@@ -140,7 +146,7 @@ class ProductGroupController extends PageController
      * name for session variable where we store the last search results for this page.
      * @return string
      */
-    public function SearchResultsSessionVariable() : string
+    public function SearchResultsSessionVariable(): string
     {
         $idString = '_' . $this->ID;
 
@@ -150,7 +156,7 @@ class ProductGroupController extends PageController
     /**
      * @return array
      */
-    public function searchResultsArrayFromSession() : array
+    public function searchResultsArrayFromSession(): array
     {
         return $this->ProductSearchForm()->getProductIds();
     }
@@ -158,7 +164,7 @@ class ProductGroupController extends PageController
     /**
      * @return array
      */
-    public function searchResultsProductGroupsArrayFromSession() : array
+    public function searchResultsProductGroupsArrayFromSession(): array
     {
         return $this->ProductSearchForm()->getProductGroupIds();
     }
@@ -166,7 +172,7 @@ class ProductGroupController extends PageController
     /**
      * get the search results.
      *
-     * @param \SilverStripe\Control\HTTPRequest
+     * @param \SilverStripe\Control\HTTPRequest $request
      * @param array
      */
     public function searchresults($request)
@@ -175,7 +181,7 @@ class ProductGroupController extends PageController
         $this->searchHash = $this->request->param('ID');
         $this->ProductSearchForm(true);
         //set last search results
-        if($this->searchHash) {
+        if ($this->searchHash) {
             $this->getRequest()->getSession()->set(
                 $this->SearchResultsSessionVariable(),
                 $this->searchHash
@@ -454,14 +460,6 @@ class ProductGroupController extends PageController
         return;
     }
 
-    /****************************************************
-     *  Search Form Related controllers
-    /****************************************************/
-
-    protected $searchForm = null;
-
-    protected $searchKeyword = '';
-
     /**
      * returns a search form to search current products.
      * @param bool $forceInit optional - force to be reinitialised.
@@ -469,7 +467,7 @@ class ProductGroupController extends PageController
      */
     public function ProductSearchForm(?bool $forceInit = false)
     {
-        if($this->searchForm === null || $forceInit) {
+        if ($this->searchForm === null || $forceInit) {
             $onlySearchTitle = $this->originalTitle;
             if ($this->dataRecord instanceof ProductGroupSearchPage) {
                 if ($this->HasSearchResults()) {
@@ -496,7 +494,7 @@ class ProductGroupController extends PageController
      *
      * @return bool
      */
-    public function HasSearchResults() : bool
+    public function HasSearchResults(): bool
     {
         $resultArray = $this->searchResultsArrayFromSession();
         if (! empty($resultArray)) {
@@ -555,7 +553,7 @@ class ProductGroupController extends PageController
      *
      * @return bool
      */
-    public function ActiveSearchTerm() : bool
+    public function ActiveSearchTerm(): bool
     {
         return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
     }
@@ -952,18 +950,12 @@ class ProductGroupController extends PageController
             'reload=1';
     }
 
-
-    protected function lastSearchHash() : string
-    {
-        return (string) $this->getRequest()->getSession()->get($this->SearchResultsSessionVariable());
-    }
-
     /**
      * Link to the search results.
      *
      * @return string
      */
-    public function SearchResultLink() : string
+    public function SearchResultLink(): string
     {
         if ($this->HasSearchResults() && ! $this->isSearchResults) {
             return $this->Link('searchresults/' . $this->lastSearchHash());
@@ -1061,6 +1053,11 @@ class ProductGroupController extends PageController
         $html .= '</ul>';
 
         return $html;
+    }
+
+    protected function lastSearchHash(): string
+    {
+        return (string) $this->getRequest()->getSession()->get($this->SearchResultsSessionVariable());
     }
 
     /**

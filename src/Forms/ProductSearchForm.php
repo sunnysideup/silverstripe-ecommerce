@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -23,16 +24,29 @@ use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-
-use Psr\SimpleCache\CacheInterface;
-
 
 /**
  * @description: Allows user to specifically search products
  **/
 class ProductSearchForm extends Form
 {
+    /**
+     * @var array
+     *            List of words to be replaced.
+     */
+    private const DEBUG_SQL = [
+        "\r\n SELECT" => 'SELECT',
+        "\r\n FROM" => 'FROM',
+        "\r\n WHERE" => 'WHERE',
+        "\r\n HAVING" => 'HAVING',
+        "\r\n GROUP" => 'GROUP',
+        "\r\n ORDER BY" => 'ORDER BY',
+        "\r\n INNER JOIN" => 'INNER JOIN',
+        "\r\n LEFT JOIN" => 'LEFT JOIN',
+    ];
+
     /**
      * set to TRUE to show the search logic.
      *
@@ -78,31 +92,14 @@ class ProductSearchForm extends Form
     protected $resultArrayPos = 0;
 
     /**
-     *
      * @var SiteTree
      */
     protected $immediateRedirectPage = null;
 
     /**
-     *
      * @var DataList
      */
     protected $baseList = null;
-
-    /**
-     * @var array
-     *            List of words to be replaced.
-     */
-    private const DEBUG_SQL = [
-        "\r\n SELECT" => 'SELECT',
-        "\r\n FROM" => 'FROM',
-        "\r\n WHERE" => 'WHERE',
-        "\r\n HAVING" => 'HAVING',
-        "\r\n GROUP" => 'GROUP',
-        "\r\n ORDER BY" => 'ORDER BY',
-        "\r\n INNER JOIN" => 'INNER JOIN',
-        "\r\n LEFT JOIN" => 'LEFT JOIN',
-    ];
 
     /**
      * class name of the buyables to search
@@ -167,58 +164,6 @@ class ProductSearchForm extends Form
      */
     private static $include_price_filters = false;
 
-
-    public function getLastSearchPhrase()
-    {
-        return $this->rawData['Keyword'] ?? '';
-    }
-
-    public function getProductIds() : array
-    {
-        is_array($this->productIds) ? $this->productIds : [];
-    }
-
-    public function getProductGroupIds() : array
-    {
-        is_array($this->productGroupIds) ? $this->productGroupIds : [];
-    }
-
-    public function setSearchKeyword(string $hash)
-    {
-        $this->rawData['Keyword'] = urldecode($hash);
-        $oldData = $this->applyCacheFromHash($hash);
-        if (! empty($oldData['rawData'])) {
-            $this->loadDataFrom($oldData['rawData']);
-        }
-    }
-
-    public function setExtraBuyableFieldsToSearchFullText(array $a)
-    {
-        $this->extraBuyableFieldsToSearchFullText = $a;
-        return $this;
-    }
-
-    public function setBaseClassNameForBuyables(string $s)
-    {
-        $this->baseClassNameForBuyables = $s;
-
-        return $this;
-    }
-
-    public function setMaximumNumberOfResults(int $i)
-    {
-        $this->maximumNumberOfResults = $i;
-
-        return $this;
-    }
-
-    public function setAdditionalGetParameters(string $s)
-    {
-        $this->additionalGetParameters = $s;
-
-        return $this;
-    }
-
     /**
      * ProductsToSearch can be left blank to search all products.
      *
@@ -263,26 +208,55 @@ class ProductSearchForm extends Form
         return $this;
     }
 
-
-    protected function setVars($data)
+    public function getLastSearchPhrase()
     {
-        $this->rawData = $data;
-        if (! $this->maximumNumberOfResults) {
-            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list_for_search');
-        }
-        //what is the baseclass?
-        $this->baseClassNameForBuyables;
-        if (! $this->baseClassNameForBuyables) {
-            $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
-        }
-        if (isset($data['DebugSearch'])) {
-            $this->debug = $data['DebugSearch'] ? true : false;
-        }
-        if ($this->debug) {
-            $this->debugOutput('<hr /><hr /><hr /><h2>Debugging Search Results</h2>');
-            $this->debugOutput('<p>Base Class Name: '.$this->baseClassNameForBuyables.'</p>');
-        }
+        return $this->rawData['Keyword'] ?? '';
+    }
 
+    public function getProductIds(): array
+    {
+        is_array($this->productIds) ? $this->productIds : [];
+    }
+
+    public function getProductGroupIds(): array
+    {
+        is_array($this->productGroupIds) ? $this->productGroupIds : [];
+    }
+
+    public function setSearchKeyword(string $hash)
+    {
+        $this->rawData['Keyword'] = urldecode($hash);
+        $oldData = $this->applyCacheFromHash($hash);
+        if (! empty($oldData['rawData'])) {
+            $this->loadDataFrom($oldData['rawData']);
+        }
+    }
+
+    public function setExtraBuyableFieldsToSearchFullText(array $a)
+    {
+        $this->extraBuyableFieldsToSearchFullText = $a;
+        return $this;
+    }
+
+    public function setBaseClassNameForBuyables(string $s)
+    {
+        $this->baseClassNameForBuyables = $s;
+
+        return $this;
+    }
+
+    public function setMaximumNumberOfResults(int $i)
+    {
+        $this->maximumNumberOfResults = $i;
+
+        return $this;
+    }
+
+    public function setAdditionalGetParameters(string $s)
+    {
+        $this->additionalGetParameters = $s;
+
+        return $this;
     }
 
     public function doProductSearchForm($data, $form)
@@ -290,7 +264,6 @@ class ProductSearchForm extends Form
         $this->doProcessSetup($data);
 
         //basic get
-
 
         $this->createBaseList();
 
@@ -320,9 +293,9 @@ class ProductSearchForm extends Form
 
         if ($this->immediateRedirectPage) {
             $link = $this->immediateRedirectPage->Link();
-            if($this->debug) {
+            if ($this->debug) {
                 $this->debugOutput(
-                    '<p style="color: red">Found one answer for potential immediate redirect: ' . $link. '</p>'
+                    '<p style="color: red">Found one answer for potential immediate redirect: ' . $link . '</p>'
                 );
             }
         } else {
@@ -339,6 +312,26 @@ class ProductSearchForm extends Form
             die('<a href="' . $link . '">see results</a>');
         }
         $this->controller->redirect($link);
+    }
+
+    protected function setVars($data)
+    {
+        $this->rawData = $data;
+        if (! $this->maximumNumberOfResults) {
+            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list_for_search');
+        }
+        //what is the baseclass?
+        $this->baseClassNameForBuyables;
+        if (! $this->baseClassNameForBuyables) {
+            $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+        }
+        if (isset($data['DebugSearch'])) {
+            $this->debug = $data['DebugSearch'] ? true : false;
+        }
+        if ($this->debug) {
+            $this->debugOutput('<hr /><hr /><hr /><h2>Debugging Search Results</h2>');
+            $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
+        }
     }
 
     protected function doKeywordCleanup()
@@ -372,7 +365,7 @@ class ProductSearchForm extends Form
         if ($count === 1) {
             // $this->immediateRedirectPage = $list1->First()->getRequestHandler()->Link();
             $this->immediateRedirectPage = $list1->First();
-            if($this->debug) {
+            if ($this->debug) {
                 $this->debugOutput('<p style="color: red">Found one answer for potential immediate redirect: ' . $this->immediateRedirectPage->Link() . '</p>');
             }
         }
@@ -386,11 +379,9 @@ class ProductSearchForm extends Form
         }
     }
 
-
-
     protected function doKeywordReplacements()
     {
-        if($this->immediateRedirectPage === null) {
+        if ($this->immediateRedirectPage === null) {
             if ($this->resultArrayPos < $this->maximumNumberOfResults) {
                 $this->replaceSearchPhraseOrWord();
                 //now we are going to look for synonyms
@@ -411,7 +402,7 @@ class ProductSearchForm extends Form
         ###############################################################
         // 2) Search for the entire keyword phrase and its replacements
         ###############################################################
-        if($this->immediateRedirectPage  === null) {
+        if ($this->immediateRedirectPage === null) {
             $count = 0;
             if ($this->debug) {
                 $this->debugOutput('<hr /><h3>FULL KEYWORD SEARCH</h3>');
@@ -456,13 +447,12 @@ class ProductSearchForm extends Form
         }
     }
 
-
     protected function doGroupSearch()
     {
         ###############################################################
         // 3) Do the same search for Product Group names
         ###############################################################
-        if($this->immediateRedirectPage === null) {
+        if ($this->immediateRedirectPage === null) {
             if ($this->debug) {
                 $this->debugOutput('<hr /><h3>PRODUCT GROUP SEARCH</h3>');
             }
@@ -507,7 +497,6 @@ class ProductSearchForm extends Form
         $this->extend('updateProcessResults');
     }
 
-
     /**
      * creates three levels of searches that
      * can be executed one after the other, each
@@ -517,7 +506,7 @@ class ProductSearchForm extends Form
      *
      * @return bool
      */
-    protected function addToResults(DataList $listToAdd) : bool
+    protected function addToResults(DataList $listToAdd): bool
     {
         $internalItemID = 0;
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
@@ -550,7 +539,7 @@ class ProductSearchForm extends Form
      *
      * @return array
      */
-    protected function getSearchArrays($fields = ['Title', 'MenuTitle']) : array
+    protected function getSearchArrays($fields = ['Title', 'MenuTitle']): array
     {
         //make three levels of search
         $searches = [];
@@ -664,7 +653,6 @@ class ProductSearchForm extends Form
         return DataObject::get_one(ProductGroupSearchPage::class);
     }
 
-
     protected function createBaseList()
     {
         $tmpVar = $this->baseClassNameForBuyables;
@@ -673,15 +661,14 @@ class ProductSearchForm extends Form
         if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
             $this->baseList->filter(['AllowPurchase' => 1]);
         }
-
     }
 
     protected function getSerializedObject(?array $data = [])
     {
         $variables = get_object_vars($this);
-        foreach($variables as $key => $values) {
-            if(is_object($value)) {
-                if(empty($object->ClassName) || empty($object->ID)) {
+        foreach ($variables as $key => $values) {
+            if (is_object($value)) {
+                if (empty($object->ClassName) || empty($object->ID)) {
                     unset($variables[$key]);
                 } else {
                     $variables[$key] = $object->ClassName . '_' . $object->ID;
@@ -692,20 +679,18 @@ class ProductSearchForm extends Form
     }
 
     /**
-     *
      * @param  string $data optional
      * @return float
      */
     protected function getHash(?string $data = '')
     {
-        if(! $data) {
+        if (! $data) {
             $data = $this->getSerializedObject();
         }
         return crc32($data);
     }
 
-
-    protected function setCacheForHash() : float
+    protected function setCacheForHash(): float
     {
         $cache = $this->getCache();
         $data = $this->getSerializedObject();
@@ -715,13 +700,13 @@ class ProductSearchForm extends Form
         return $hash;
     }
 
-    protected function getCacheForHash(string $hash) : array
+    protected function getCacheForHash(string $hash): array
     {
         $array = [];
         $cache = $this->getCache();
         if ($cache->has($hash)) {
             $array = $cache->get($hash);
-            if(! is_array($array)) {
+            if (! is_array($array)) {
                 $array = [];
             }
         }
@@ -729,17 +714,17 @@ class ProductSearchForm extends Form
         return $array;
     }
 
-    protected function applyCacheFromHash(string $hash) : array
+    protected function applyCacheFromHash(string $hash): array
     {
         $string = $this->getCache($hash);
         $array = unserialize($hash);
-        foreach($array as $variable => $value) {
-            $this->$variable = $value;
+        foreach ($array as $variable => $value) {
+            $this->{$variable} = $value;
         }
         return $array;
     }
 
-    protected function getCache() : CacheInterface
+    protected function getCache(): CacheInterface
     {
         return Injector::inst()->get(CacheInterface::class . '.EcomSearchCache');
     }
@@ -748,7 +733,4 @@ class ProductSearchForm extends Form
     {
         echo "<br />${string}";
     }
-
-
-
 }

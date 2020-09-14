@@ -196,7 +196,6 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
-
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -211,5 +210,4 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
             );
         return $fields;
     }
-
 }

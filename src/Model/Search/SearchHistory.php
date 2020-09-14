@@ -71,7 +71,7 @@ class SearchHistory extends DataObject
      *
      * @return int
      */
-    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0) : ?SearchHistory
+    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0): ?SearchHistory
     {
         $member = Member::currentUser();
         if ($member) {
@@ -86,7 +86,6 @@ class SearchHistory extends DataObject
         $obj->write();
 
         return $obj;
-
     }
 
     /**
