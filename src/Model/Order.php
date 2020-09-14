@@ -1301,7 +1301,9 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->MyStep()->initStep($this)) {
             if ($this->MyStep()->doStep($this)) {
-                if ($nextOrderStepObject = $this->MyStep()->nextStep($this)) {
+                /** @var OrderStep|null */
+                $nextOrderStepObject = $this->MyStep()->nextStep($this);
+                if ($nextOrderStepObject instanceof OrderStep) {
                     $this->StatusID = $nextOrderStepObject->ID;
                     $this->write();
 

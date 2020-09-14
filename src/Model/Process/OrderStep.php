@@ -763,7 +763,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (next step OrderStep object)
+     * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {
