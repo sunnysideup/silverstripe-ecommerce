@@ -166,7 +166,8 @@ class ProductGroupController extends PageController
     /**
      * get the search results.
      *
-     * @return \SilverStripe\Control\HTTPRequest
+     * @param \SilverStripe\Control\HTTPRequest
+     * @param array
      */
     public function searchresults($request)
     {
@@ -175,7 +176,10 @@ class ProductGroupController extends PageController
         $this->ProductSearchForm(true);
         //set last search results
         if($this->searchHash) {
-            $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(), $this->searchHash);
+            $this->getRequest()->getSession()->set(
+                $this->SearchResultsSessionVariable(),
+                $this->searchHash
+            );
         }
         //get results array
         $keyword = $this->ProductSearchForm()->getSearchPhrase();
@@ -455,7 +459,8 @@ class ProductGroupController extends PageController
     /****************************************************/
 
     protected $searchForm = null;
-    protected $searchHash = '';
+
+    protected $searchKeyword = '';
 
     /**
      * returns a search form to search current products.
@@ -473,19 +478,12 @@ class ProductGroupController extends PageController
                 $form = ProductSearchForm::create(
                     $this,
                     'ProductSearchForm',
-                    $this->searchHash
-                );
-            } else {
-                $form = ProductSearchFormSelected::create(
-                    $this,
-                    'ProductSearchForm',
-                    $onlySearchTitle,
-                    $this->currentInitialProducts(null, $this->getMyUserPreferencesDefault('FILTER'))
                 );
             }
             // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
-            $this->searchForm = $form->setAdditionalGetParameters($additionalGetParameters);
+            $form->setAdditionalGetParameters($additionalGetParameters);
+            $form->setSearchHash($this->searchKeyword);
         }
 
         return $this->searchForm;

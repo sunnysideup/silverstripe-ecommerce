@@ -52,18 +52,6 @@ class ProductSearchForm extends Form
 
     /**
      * processed keyword
-     * @var int
-     */
-    protected $priceMax = 0;
-
-    /**
-     * raw keyword
-     * @var string
-     */
-    protected $rawKeyword = '';
-
-    /**
-     * processed keyword
      * @var string
      */
     protected $keywordPhrase = '';
@@ -81,13 +69,6 @@ class ProductSearchForm extends Form
      * @var array
      */
     protected $productGroupIds = [];
-
-    /**
-     * array of IDs of the results found so far.
-     *
-     * @var array
-     */
-    protected $resultArrayPerIternalItemID = [];
 
     /**
      * Number of results found so far.
@@ -202,6 +183,15 @@ class ProductSearchForm extends Form
         is_array($this->productGroupIds) ? $this->productGroupIds : [];
     }
 
+    public function setSearchKeyword(string $hash)
+    {
+        $this->rawData['Keyword'] = urldecode($hash);
+        $oldData = $this->applyCacheFromHash($hash);
+        if (! empty($oldData['rawData'])) {
+            $this->loadDataFrom($oldData['rawData']);
+        }
+    }
+
     public function setExtraBuyableFieldsToSearchFullText(array $a)
     {
         $this->extraBuyableFieldsToSearchFullText = $a;
@@ -235,7 +225,7 @@ class ProductSearchForm extends Form
      * @param Controller              $controller                  - associated controller
      * @param string                  $name                        - name of form
      */
-    public function __construct($controller, string $name, ?string $hash = '')
+    public function __construct($controller, string $name)
     {
         //turn of security to allow caching of the form:
         if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
@@ -266,12 +256,6 @@ class ProductSearchForm extends Form
         //make it an easily accessible form  ...
         $this->setFormMethod('get');
         $this->disableSecurityToken();
-        if($hash) {
-            $oldData = $this->applyCacheFromHash($hash);
-        }
-        if (! empty($oldData['rawData'])) {
-            $this->loadDataFrom($oldData['rawData']);
-        }
         //extensions need to be set after __construct
         //extension point
         $this->extend('updateProductSearchForm', $this);
@@ -331,6 +315,8 @@ class ProductSearchForm extends Form
                 $this->addToResults($this->baseList);
             }
         }
+
+        $this->doProcessResults();
 
         if ($this->immediateRedirectPage) {
             $link = $this->immediateRedirectPage->Link();
@@ -517,32 +503,8 @@ class ProductSearchForm extends Form
 
     protected function doProcessResults()
     {
-
-        $sessionNameProducts = $redirectToPage->SearchResultsSessionVariable(false);
-        $sessionNameGroups = $redirectToPage->SearchResultsSessionVariable(true);
-
-        if ($this->debug) {
-            $this->debugOutput(
-                '<hr />' .
-                '<h3>Previous Search Products: ' . $sessionNameProducts . '</h3><p>' . print_r(Controller::curr()->getRequest()->getSession()->get($sessionNameProducts), 1) . '</p>' .
-                '<h3>Previous Search Groups: ' . $sessionNameGroups . '</h3><p>' . print_r(Controller::curr()->getRequest()->getSession()->get($sessionNameGroups), 1) . '</p>'
-            );
-        }
-        $productIdList = implode(',', $this->productIds);
-        Controller::curr()->getRequest()->getSession()->set($sessionNameProducts, $productIdList);
-
-        $productGroupIdList = implode(',', $this->productGroupIds);
-        Controller::curr()->getRequest()->getSession()->set($sessionNameGroups, $productGroupIdList);
-
-        Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
-        if ($this->debug) {
-            $this->debugOutput(
-                '<hr />' .
-                '<h3>SAVING Products to session: ' . $sessionNameProducts . '</h3><p>' . print_r(explode(',', Controller::curr()->getRequest()->getSession()->get($sessionNameProducts)), 1) . '</p>' .
-                '<h3>SAVING Groups to session: ' . $sessionNameGroups . '</h3><p>' . print_r(explode(',', Controller::curr()->getRequest()->getSession()->get($sessionNameGroups)), 1) . '</p>' .
-                '<h3>Internal Item IDs for Products</h3><p>' . print_r($this->resultArrayPerIternalItemID, 1) . '</p>'
-            );
-        }
+        //you can add more details here in extensions of this form.
+        $this->extend('updateProcessResults');
     }
 
 
@@ -569,9 +531,6 @@ class ProductSearchForm extends Form
                 if (! in_array($id, $this->productIds, true)) {
                     ++$this->resultArrayPos;
                     $this->productIds[$this->resultArrayPos] = $id;
-                    if ($this->debug) {
-                        $this->resultArrayPerIternalItemID[$this->resultArrayPos] = $internalItemID;
-                    }
                     if ($this->resultArrayPos > $this->maximumNumberOfResults) {
                         return true;
                     }
@@ -715,12 +674,6 @@ class ProductSearchForm extends Form
             $this->baseList->filter(['AllowPurchase' => 1]);
         }
 
-        if (isset($data['MinimumPrice']) && $data['MinimumPrice']) {
-            $this->baseList = $this->baseList->filter(['Price:GreaterThanOrEqual' => floatval($data['MinimumPrice'])]);
-        }
-        if (isset($data['MaximumPrice']) && $data['MaximumPrice']) {
-            $this->baseList = $this->baseList->filter(['Price:LessThanOrEqual' => floatval($data['MaximumPrice'])]);
-        }
     }
 
     protected function getSerializedObject(?array $data = [])
