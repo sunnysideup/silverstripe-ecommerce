@@ -570,7 +570,7 @@ class ProductGroup extends Page
                 if ($parent = $this->ParentGroup()) {
                     $productsPagePage = $parent->MyNumberOfProductsPerPage();
                 } else {
-                    $productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+                    $productsPagePage = EcommerceConfig::inst()->NumberOfProductsPerPage;
                 }
             }
             $this->_numberOfProductsPerPage = $productsPagePage;
@@ -679,7 +679,7 @@ class ProductGroup extends Page
                 DropdownField::create('DisplayStyle', _t('ProductGroup.DEFAULTDISPLAYSTYLE', 'Default Display Style'), $displayStyleDropdownList)
             );
         }
-        if ($this->EcomConfig()->ProductsAlsoInOtherGroups) {
+        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
             if (! $this instanceof ProductGroupSearchPage) {
                 $fields->addFieldsToTab(
                     'Root.OtherProductsShown',
@@ -1456,7 +1456,7 @@ class ProductGroup extends Page
      */
     protected function getProductsAlsoInOtherGroups()
     {
-        return $this->EcomConfig()->ProductsAlsoInOtherGroups;
+        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
     /**
@@ -1587,7 +1587,7 @@ class ProductGroup extends Page
         } else {
             $tableName = $classNameOrTableName;
         }
-        if ($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+        if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
             if ($asArray) {
                 $allowPurchaseWhereStatement = ['AllowPurchase' => 1];
             } else {

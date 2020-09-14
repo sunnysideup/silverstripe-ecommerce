@@ -58,7 +58,7 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         if ($this->owner->IsEcommercePage()) {
             $link = $this->owner->Link();
         } else {
-            $link = $this->EcomConfig()->AccountPageLink();
+            $link = EcommerceConfig::inst()->AccountPageLink();
         }
 
         return '/Security/login?BackURL=' . urlencode($link);
