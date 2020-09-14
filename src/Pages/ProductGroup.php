@@ -1185,35 +1185,6 @@ class ProductGroup extends Page
         $this->silverstripeCoreCache = $silverstripeCoreCache;
     }
 
-    /**
-     * @param bool $isForGroups OPTIONAL
-     *
-     * @return string
-     */
-    public function SearchResultsSessionVariable($isForGroups = false)
-    {
-        $idString = '_' . $this->ID;
-        if ($isForGroups) {
-            return Config::inst()->get(ProductSearchForm::class, 'product_session_variable') . $idString;
-        }
-        return Config::inst()->get(ProductSearchForm::class, 'product_group_session_variable') . $idString;
-    }
-
-    /**
-     * @return array
-     */
-    public function searchResultsArrayFromSession()
-    {
-        if (! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
-            self::$_result_array[$this->ID] = explode(',', Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable(false)));
-        }
-        if (! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
-            self::$_result_array[$this->ID] = [0 => 0];
-        }
-
-        return self::$_result_array[$this->ID];
-    }
-
     public function getNumberOfProducts()
     {
         return Product::get()->filter(['ParentID' => $this->ID])->count();

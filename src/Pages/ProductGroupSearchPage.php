@@ -77,6 +77,12 @@ class ProductGroupSearchPage extends ProductGroup
         return _t('ProductGroupSearchPage.PLURALNAME', 'Product Search Pages');
     }
 
+    public function LinkForSearchResults(string $hash) : string
+    {
+        return $this->link('searchresults/' . $hash);
+    }
+
+
     /**
      * Standard SS function, we only allow for one Product Search Page to exist
      * but we do allow for extensions to exist at the same time.
