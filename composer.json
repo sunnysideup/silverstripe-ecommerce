@@ -29,9 +29,9 @@
   ],
   "require": {
     "pelago/emogrifier": "^3.1@stable",
-    "sunnysideup/google_address_field": "^2.0@stable",
-    "sunnysideup/cms_edit_link_field": "^8.0@stable",
-	   "sunnysideup/permission_provider": "^6.0@stable",
+    "sunnysideup/google_address_field": "^2.0",
+    "sunnysideup/cms_edit_link_field": "^8.0",
+    "sunnysideup/permission_provider": "^6.0",
     "silverstripe/recipe-cms": "^4.0@stable",
     "silverstripe/lumberjack": "*",
     "symbiote/silverstripe-grouped-cms-menu": "*"
