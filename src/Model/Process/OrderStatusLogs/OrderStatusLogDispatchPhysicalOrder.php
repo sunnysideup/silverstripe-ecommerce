@@ -8,7 +8,6 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 
 /**

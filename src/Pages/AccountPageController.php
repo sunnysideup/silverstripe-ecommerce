@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Pages;
 use PageController;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
 
