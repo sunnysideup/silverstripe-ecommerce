@@ -9,8 +9,8 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -266,7 +266,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -289,7 +289,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -312,7 +312,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -336,7 +336,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         if (! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
             if (! $member) {
-                $member = Member::currentUser();
+                $member = Security::currentUser();
             }
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if ($extended !== null) {

@@ -19,6 +19,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
@@ -1101,7 +1102,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1142,7 +1143,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1180,7 +1181,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             return false;
         }
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

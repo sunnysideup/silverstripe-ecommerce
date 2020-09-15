@@ -11,6 +11,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -198,7 +199,7 @@ class CartPageController extends PageController
      */
     public function saveorder(HTTPRequest $request)
     {
-        $member = Member::currentUser();
+        $member = Security::currentUser();
         if (! $member) {
             $this->showCreateAccountForm = true;
 
@@ -351,7 +352,7 @@ class CartPageController extends PageController
             $this->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
             return true;
         }
-        if (Member::currentUser() || $this->currentOrder->MemberID) {
+        if (Security::currentUser() || $this->currentOrder->MemberID) {
             return false;
         }
 
@@ -634,7 +635,7 @@ class CartPageController extends PageController
             //log out
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (Member::currentUser()) {
+            if (Security::currentUser()) {
                 if ($this->isOrderConfirmationPage()) {
                     $this->actionLinks->push(new ArrayData([
                         'Title' => _t('CartPage.LOGOUT', 'log out'),

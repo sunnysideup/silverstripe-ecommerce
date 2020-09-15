@@ -181,7 +181,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -208,7 +208,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -244,7 +244,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -276,7 +276,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canDelete($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -458,7 +458,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 //        }
 //        //END HACK TO PREVENT LOSS
         if (! $this->AuthorID) {
-            if ($member = Member::currentUser()) {
+            if ($member = Security::currentUser()) {
                 $this->AuthorID = $member->ID;
             }
         }

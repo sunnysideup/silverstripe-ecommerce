@@ -6,6 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
@@ -29,7 +30,7 @@ class ShopAccountFormValidator extends RequiredFields
         $this->form->saveDataToSession();
         $valid = parent::php($data);
         $uniqueFieldName = Member::config()->get('unique_identifier_field');
-        $loggedInMember = Member::currentUser();
+        $loggedInMember = Security::currentUser();
         $loggedInMemberID = 0;
         if (isset($data[$uniqueFieldName]) && $data[$uniqueFieldName]) {
             $isShopAdmin = false;

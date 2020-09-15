@@ -15,6 +15,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -559,7 +560,7 @@ class ShoppingCartController extends Controller
     public function clearandlogout(HTTPRequest $request)
     {
         $this->cart->clear();
-        if ($member = Member::currentUser()) {
+        if ($member = Security::currentUser()) {
             $member->logout();
         }
         $this->redirect(Director::baseURL());
@@ -653,7 +654,7 @@ class ShoppingCartController extends Controller
         if (class_exists($className)) {
             $address = $className::get()->byID($id);
             if ($address && $address->canView()) {
-                $member = Member::currentUser();
+                $member = Security::currentUser();
                 if ($member) {
                     $address->MakeObsolete($member);
                     if ($request->isAjax()) {

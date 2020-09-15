@@ -4,9 +4,9 @@ namespace Sunnysideup\Ecommerce\Model\Search;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -102,7 +102,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -125,7 +125,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -148,7 +148,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -171,7 +171,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canDelete($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

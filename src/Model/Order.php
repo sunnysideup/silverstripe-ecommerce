@@ -45,6 +45,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
@@ -740,7 +741,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //as we are no longer using the parent:;getCMSFields
         // we had to add the updateCMSFields hook.
         $this->extend('updateCMSFields', $fields);
-        $currentMember = Member::currentUser();
+        $currentMember = Security::currentUser();
         if (! $this->exists() || ! $this->StatusID) {
             $firstStep = DataObject::get_one(OrderStep::class);
             $this->StatusID = $firstStep->ID;
@@ -840,7 +841,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
         //is the member is a shop admin they can always view it
 
-        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+        if (EcommerceRole::current_member_can_process_orders(Security::currentUser())) {
             $lastStep = OrderStep::last_order_step();
             if ($this->StatusID !== $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
@@ -1153,7 +1154,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function OrderStepField()
     {
-        return OrderStepField::create($name = 'MyOrderStep', $this, Member::currentUser());
+        return OrderStepField::create($name = 'MyOrderStep', $this, Security::currentUser());
     }
 
     /*******************************************************
@@ -1680,7 +1681,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         if ($this->MemberID) {
             $member = $this->Member();
-        } elseif ($member = Member::currentUser()) {
+        } elseif ($member = Security::currentUser()) {
             if (! $member->IsShopAdmin()) {
                 $this->MemberID = $member->ID;
                 $this->write();
@@ -4053,7 +4054,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function getMemberForCanFunctions(Member $member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         if (! $member) {
             $member = new Member();

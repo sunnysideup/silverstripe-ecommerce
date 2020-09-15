@@ -11,7 +11,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
 use Sunnysideup\Ecommerce\Model\Order;
 
@@ -67,7 +67,7 @@ class OrderFormCancel extends Form
     public function docancel(array $data, Form $form, HTTPRequest $request)
     {
         $SQLData = Convert::raw2sql($data);
-        $member = Member::currentUser();
+        $member = Security::currentUser();
         if ($member) {
             if (isset($SQLData['OrderID'])) {
                 $order = Order::get()->byID(intval($SQLData['OrderID']));

@@ -11,7 +11,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
@@ -204,7 +204,7 @@ class ProductController extends PageController
 
     public function debug()
     {
-        $member = Member::currentUser();
+        $member = Security::currentUser();
         if (! $member || ! $member->IsShopAdmin()) {
             $messages = [
                 'default' => 'You must login as an admin to access debug functions.',

@@ -12,7 +12,6 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -969,7 +968,7 @@ class ProductGroupController extends PageController
 
     public function debug()
     {
-        $member = Member::currentUser();
+        $member = Security::currentUser();
         if (! $member || ! $member->IsShopAdmin()) {
             $messages = [
                 'default' => 'You must login as an admin to use debug functions.',

@@ -27,6 +27,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -248,7 +249,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -270,7 +271,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -290,7 +291,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -316,7 +317,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             return false;
         }
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::currentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -661,7 +662,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function Customer()
     {
-        return Member::currentUser();
+        return Security::currentUser();
     }
 
     /**

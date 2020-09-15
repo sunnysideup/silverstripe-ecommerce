@@ -15,6 +15,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -118,7 +119,7 @@ class OrderFormAddress extends Form
         //find member
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-        $this->loggedInMember = Member::currentUser();
+        $this->loggedInMember = Security::currentUser();
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember) {
