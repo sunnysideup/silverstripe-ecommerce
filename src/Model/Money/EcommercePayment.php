@@ -464,9 +464,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array An array suitable for passing to CustomRequiredFields
      */
-    public static function combined_form_requirements($order = null)
+    public static function combined_form_requirements($order = null): array
     {
-        return [];
+        $array = [];
+        $supportedMethods = self::get_supported_methods($order);
+        foreach ($supportedMethods as $methodClass => $methodName) {
+        }
     }
 
     /**
@@ -545,9 +548,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-    public function getPaymentFormRequirements()
+    public function getPaymentFormRequirements(): array
     {
         user_error("Please implement getPaymentFormRequirements() on {$this->ClassName}", E_USER_ERROR);
+        return [];
     }
 
     /**
