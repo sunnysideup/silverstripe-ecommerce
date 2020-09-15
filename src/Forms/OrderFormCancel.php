@@ -67,7 +67,7 @@ class OrderFormCancel extends Form
     public function docancel(array $data, Form $form, HTTPRequest $request)
     {
         $SQLData = Convert::raw2sql($data);
-        $member = Security::currentUser();
+        $member = Security::getCurrentUser();
         if ($member) {
             if (isset($SQLData['OrderID'])) {
                 $order = Order::get()->byID(intval($SQLData['OrderID']));

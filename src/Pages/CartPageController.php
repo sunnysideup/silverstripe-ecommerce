@@ -198,7 +198,7 @@ class CartPageController extends PageController
      */
     public function saveorder(HTTPRequest $request)
     {
-        $member = Security::currentUser();
+        $member = Security::getCurrentUser();
         if (! $member) {
             $this->showCreateAccountForm = true;
 
@@ -351,7 +351,7 @@ class CartPageController extends PageController
             $this->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
             return true;
         }
-        if (Security::currentUser() || $this->currentOrder->MemberID) {
+        if (Security::getCurrentUser() || $this->currentOrder->MemberID) {
             return false;
         }
 
@@ -634,7 +634,7 @@ class CartPageController extends PageController
             //log out
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (Security::currentUser()) {
+            if (Security::getCurrentUser()) {
                 if ($this->isOrderConfirmationPage()) {
                     $this->actionLinks->push(new ArrayData([
                         'Title' => _t('CartPage.LOGOUT', 'log out'),

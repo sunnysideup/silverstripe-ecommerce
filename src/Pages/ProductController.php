@@ -203,7 +203,7 @@ class ProductController extends PageController
 
     public function debug()
     {
-        $member = Security::currentUser();
+        $member = Security::getCurrentUser();
         if (! $member || ! $member->IsShopAdmin()) {
             $messages = [
                 'default' => 'You must login as an admin to access debug functions.',

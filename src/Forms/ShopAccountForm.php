@@ -35,7 +35,7 @@ class ShopAccountForm extends Form
      */
     public function __construct($controller, $name, $mustCreateAccount = false)
     {
-        $member = Security::currentUser();
+        $member = Security::getCurrentUser();
         $requiredFields = null;
         if ($member && $member->exists()) {
             $fields = $member->getEcommerceFields(false);
@@ -194,7 +194,7 @@ class ShopAccountForm extends Form
      **/
     protected function processForm($data, $form, $request, $link = '')
     {
-        $member = Security::currentUser();
+        $member = Security::getCurrentUser();
         if (! $member) {
             $form->sessionMessage(_t('Account.DETAILSNOTSAVED', 'Your details could not be saved.'), 'bad');
             $this->controller->redirectBack();

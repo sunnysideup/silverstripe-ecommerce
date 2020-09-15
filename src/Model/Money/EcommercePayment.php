@@ -203,7 +203,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -219,7 +219,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -246,7 +246,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($this->Status === 'Pending' || $this->Status === 'Incomplete') {
             $extended = $this->extendedCan(__FUNCTION__, $member);

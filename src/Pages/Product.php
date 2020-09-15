@@ -1035,7 +1035,7 @@ class Product extends Page implements BuyableModel
         }
         //check country
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
         if ($extended !== null) {
@@ -1062,7 +1062,7 @@ class Product extends Page implements BuyableModel
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1085,7 +1085,7 @@ class Product extends Page implements BuyableModel
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1111,7 +1111,7 @@ class Product extends Page implements BuyableModel
             return false;
         }
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

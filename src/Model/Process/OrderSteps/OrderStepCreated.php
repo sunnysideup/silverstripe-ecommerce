@@ -57,7 +57,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     public function doStep(Order $order)
     {
         if (! $order->MemberID) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
             if ($member) {
                 if (! $member->IsShopAdmin()) {
                     $order->MemberID = $member->ID();

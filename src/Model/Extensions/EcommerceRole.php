@@ -321,7 +321,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function current_member_is_shop_admin($member = null)
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($member) {
             return $member->IsShopAdmin();
@@ -340,7 +340,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function current_member_is_shop_assistant($member = null)
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($member) {
             return $member->IsShopAssistant();
@@ -359,7 +359,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function current_member_can_process_orders($member = null)
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($member) {
             return $member->CanProcessOrders();
@@ -595,7 +595,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $fields->push($headerField);
         $fields->push($linkField1);
 
-        if (EcommerceRole::current_member_can_process_orders(Security::currentUser())) {
+        if (EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
             $linkField2 = EcommerceCMSButtonField::create(
                 'MemberLinkFieldEditAllCustomers',
                 CMSEditLinkAPI::find_edit_link_for_object($group),

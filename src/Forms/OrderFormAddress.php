@@ -119,7 +119,7 @@ class OrderFormAddress extends Form
         //find member
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-        $this->loggedInMember = Security::currentUser();
+        $this->loggedInMember = Security::getCurrentUser();
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember) {

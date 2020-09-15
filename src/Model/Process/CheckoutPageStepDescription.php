@@ -141,7 +141,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -164,7 +164,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -191,7 +191,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
             return false;
         }
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

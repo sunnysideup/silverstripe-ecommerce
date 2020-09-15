@@ -73,7 +73,7 @@ class SearchHistory extends DataObject
      */
     public static function add_entry($keywordString, $productCount = 0, $groupCount = 0): ?SearchHistory
     {
-        $member = Security::currentUser();
+        $member = Security::getCurrentUser();
         if ($member) {
             if ($member->IsShopAdmin()) {
                 return null;
@@ -119,7 +119,7 @@ class SearchHistory extends DataObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

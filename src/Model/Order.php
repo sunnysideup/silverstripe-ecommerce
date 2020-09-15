@@ -741,7 +741,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //as we are no longer using the parent:;getCMSFields
         // we had to add the updateCMSFields hook.
         $this->extend('updateCMSFields', $fields);
-        $currentMember = Security::currentUser();
+        $currentMember = Security::getCurrentUser();
         if (! $this->exists() || ! $this->StatusID) {
             $firstStep = DataObject::get_one(OrderStep::class);
             $this->StatusID = $firstStep->ID;
@@ -841,7 +841,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
         //is the member is a shop admin they can always view it
 
-        if (EcommerceRole::current_member_can_process_orders(Security::currentUser())) {
+        if (EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
             $lastStep = OrderStep::last_order_step();
             if ($this->StatusID !== $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
@@ -1154,7 +1154,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function OrderStepField()
     {
-        return OrderStepField::create($name = 'MyOrderStep', $this, Security::currentUser());
+        return OrderStepField::create($name = 'MyOrderStep', $this, Security::getCurrentUser());
     }
 
     /*******************************************************
@@ -1681,7 +1681,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         if ($this->MemberID) {
             $member = $this->Member();
-        } elseif ($member = Security::currentUser()) {
+        } elseif ($member = Security::getCurrentUser()) {
             if (! $member->IsShopAdmin()) {
                 $this->MemberID = $member->ID;
                 $this->write();
@@ -4054,7 +4054,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function getMemberForCanFunctions(Member $member = null)
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         if (! $member) {
             $member = new Member();

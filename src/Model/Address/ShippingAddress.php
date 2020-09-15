@@ -254,7 +254,7 @@ class ShippingAddress extends OrderAddress
                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
             );
 
-            if ($member && Security::currentUser()) {
+            if ($member && Security::getCurrentUser()) {
                 if ($member->exists() && ! $member->IsShopAdmin()) {
                     $this->FillWithLastAddressFromMember($member, true);
                     if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {

@@ -203,7 +203,7 @@ class OrderForm extends Form
         $order->write();
         //saving into member, in case we add additional fields for the member
         //e.g. newslettersignup
-        if ($member = Security::currentUser()) {
+        if ($member = Security::getCurrentUser()) {
             $form->saveInto($member);
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {

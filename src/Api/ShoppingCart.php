@@ -270,7 +270,7 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (! $this->order) {
                 $this->order = self::session_order();
-                $loggedInMember = Security::currentUser();
+                $loggedInMember = Security::getCurrentUser();
                 if ($this->order) {
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {

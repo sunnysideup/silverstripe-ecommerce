@@ -267,7 +267,7 @@ class BillingAddress extends OrderAddress
         );
         $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
-        if ($member && Security::currentUser()) {
+        if ($member && Security::getCurrentUser()) {
             if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
                 if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {

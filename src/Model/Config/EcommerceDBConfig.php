@@ -249,7 +249,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -271,7 +271,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -291,7 +291,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -317,7 +317,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             return false;
         }
         if (! $member) {
-            $member = Security::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -662,7 +662,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function Customer()
     {
-        return Security::currentUser();
+        return Security::getCurrentUser();
     }
 
     /**
