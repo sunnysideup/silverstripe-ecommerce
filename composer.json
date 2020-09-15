@@ -28,7 +28,13 @@
         }
     ],
     "require": {
-
+      "pelago/emogrifier": "^4.0@stable",
+      "sunnysideup/google_address_field": "^2.0@stable",
+      "sunnysideup/cms_edit_link_field": "^9.0@stable",
+      "sunnysideup/permission_provider": "^6.0@stable",
+      "silverstripe/recipe-cms": "^4.0@stable",
+      "silverstripe/lumberjack": "^2.0@stable",
+      "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable"
     },
     "suggest": {
         "sunnysideup/flush": "Better output for tasks",
