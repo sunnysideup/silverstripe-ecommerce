@@ -16742,7 +16742,7 @@ modified:	src/Pages/ProductGroup.php
 -    protected function allowPurchaseWhereStatement($asArray = true, $table = 'Product')
 +    protected function allowPurchaseWhereStatement($asArray = true, $table = Product::class)
      {
-         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
+         if (EcommerceDBConfig::current_ecommerce_db_config()->OnlyShowProductsThatCanBePurchased) {
              if ($asArray) {
 @@ -1711,7 +1738,7 @@
       *

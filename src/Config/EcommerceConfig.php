@@ -122,6 +122,4 @@ class EcommerceConfig extends Config
     {
         return self::inst()->get($className, $identifier, $excludeMiddleware);
     }
-
-
 }

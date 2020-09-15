@@ -27,6 +27,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
@@ -570,7 +571,7 @@ class ProductGroup extends Page
                 if ($parent = $this->ParentGroup()) {
                     $productsPagePage = $parent->MyNumberOfProductsPerPage();
                 } else {
-                    $productsPagePage = EcommerceConfig::inst()->NumberOfProductsPerPage;
+                    $productsPagePage = EcommerceDBConfig::current_ecommerce_db_config()->NumberOfProductsPerPage;
                 }
             }
             $this->_numberOfProductsPerPage = $productsPagePage;
@@ -679,7 +680,7 @@ class ProductGroup extends Page
                 DropdownField::create('DisplayStyle', _t('ProductGroup.DEFAULTDISPLAYSTYLE', 'Default Display Style'), $displayStyleDropdownList)
             );
         }
-        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups) {
             if (! $this instanceof ProductGroupSearchPage) {
                 $fields->addFieldsToTab(
                     'Root.OtherProductsShown',
@@ -1456,7 +1457,7 @@ class ProductGroup extends Page
      */
     protected function getProductsAlsoInOtherGroups()
     {
-        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
+        return EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups;
     }
 
     /**
@@ -1587,7 +1588,7 @@ class ProductGroup extends Page
         } else {
             $tableName = $classNameOrTableName;
         }
-        if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->OnlyShowProductsThatCanBePurchased) {
             if ($asArray) {
                 $allowPurchaseWhereStatement = ['AllowPurchase' => 1];
             } else {

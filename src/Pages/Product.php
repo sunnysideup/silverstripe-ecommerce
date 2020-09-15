@@ -287,7 +287,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if ($price === 0) {
@@ -307,16 +307,16 @@ class Product extends Page implements BuyableModel
             NumericField::create('Price', _t('Product.PRICE', 'Price'), '', 12)->setScale(2)
         );
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
-        if (EcommerceConfig::inst()->ProductsHaveWeight) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
             $fields->addFieldToTab(
                 'Root.Details',
                 NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
             );
         }
-        if (EcommerceConfig::inst()->ProductsHaveModelNames) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
-        if (EcommerceConfig::inst()->ProductsHaveQuantifiers) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveQuantifiers) {
             $fields->addFieldToTab(
                 'Root.Details',
                 TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
@@ -340,7 +340,7 @@ class Product extends Page implements BuyableModel
                 )
             );
         }
-        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.AlsoShowHere',
                 [
@@ -372,7 +372,7 @@ class Product extends Page implements BuyableModel
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        // $config = EcommerceConfig::inst();
+        // $config = EcommerceDBConfig::current_ecommerce_db_config();
         //set allowpurchase to false IF
         //free products are not allowed to be purchased
 
@@ -613,7 +613,7 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImageLink()
     {
-        return EcommerceConfig::inst()->DefaultImageLink();
+        return EcommerceDBConfig::current_ecommerce_db_config()->DefaultImageLink();
     }
 
     /**
@@ -623,7 +623,7 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImage()
     {
-        return EcommerceConfig::inst()->DefaultImage();
+        return EcommerceDBConfig::current_ecommerce_db_config()->DefaultImage();
     }
 
     // VERSIONING
@@ -1024,7 +1024,7 @@ class Product extends Page implements BuyableModel
      */
     public function canPurchase(Member $member = null, $checkPrice = true)
     {
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config();
         //shop closed
         if ($config->ShopClosed) {
             return false;
@@ -1152,7 +1152,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><hr />Cart<hr /></li>';
         $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
-        $html .= '<li><b>Shop Open:</b> ' . (EcommerceConfig::inst() ? (EcommerceConfig::inst()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
+        $html .= '<li><b>Shop Open:</b> ' . (EcommerceDBConfig::current_ecommerce_db_config() ? (EcommerceDBConfig::current_ecommerce_db_config()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';

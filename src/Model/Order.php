@@ -1652,7 +1652,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function ShopClosed()
     {
-        return EcommerceConfig::inst()->ShopClosed;
+        return EcommerceDBConfig::current_ecommerce_db_config()->ShopClosed;
     }
 
     /*******************************************************
@@ -3929,7 +3929,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config();
         $replacementArray = [];
         //set subject
         if (! $subject) {
