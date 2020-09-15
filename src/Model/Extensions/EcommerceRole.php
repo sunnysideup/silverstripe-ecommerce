@@ -204,9 +204,21 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     ];
 
     private static $has_many = [
-        'Orders' => Order::class,
-        'CancelledOrders' => Order::class,
+        'Orders.Member' => Order::class,
+        'CancelledOrders.CancelledBy' => Order::class,
     ];
+
+    private static $casting = [
+        'CustomerDetails' => 'Varchar',
+    ];
+
+    public function getCustomerDetails()
+    {
+        return
+            $this->owner->FirstName .  ' ' .$this->owner->Surname .
+            ', ' . $this->owner->Email .
+            ' (' . $this->owner->Orders()->count().' Orders)';
+    }
 
     /**
      *@return Group | \SilverStripe\ORM\DataObject | NULL

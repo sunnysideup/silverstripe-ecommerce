@@ -403,13 +403,10 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     private static $summary_fields = [
         'Title' => 'Title',
-        'Created' => 'Created',
         'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
-        'Member.Surname' => 'Last Name',
-        'Member.Email' => 'Email',
+        'Member.CustomerDetails' => 'Customer',
         'TotalAsMoney.Nice' => 'Total',
-        'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
     ];
 
@@ -773,29 +770,33 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
-        $orderSummaryConfig = GridFieldConfig_Base::create();
-        $orderSummaryConfig->removeComponentsByType(GridFieldToolbarHeader::class);
-        // $orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
-        $orderSummaryConfig->removeComponentsByType(GridFieldFilterHeader::class);
-        $orderSummaryConfig->removeComponentsByType(GridFieldPageCount::class);
-        $orderSummaryConfig->removeComponentsByType(GridFieldPaginator::class);
-        $nextFieldArray = [
-            LiteralField::create(
-                'CssFix',
-                '<style>
-                    #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
-                </style>'
-            ),
-            HeaderField::create('OrderStepNextStepHeader', _t('Order.MAIN_DETAILS', 'Main Details'))->addExtraClass('section-heading-for-order'),
-            GridField::create(
-                'OrderSummary',
-                _t('Order.CURRENT_STATUS', 'Summary'),
-                ArrayList::create([$this]),
-                $orderSummaryConfig
-            ),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
-            $this->OrderStepField(),
-        ];
+        $summaryFields = [];
+        foreach($this->summaryFields() as $fieldName => $label) {
+            if($fieldName !== 'AssignedAdminNice') {
+                if ($this->hasMethod('relField')) {
+                    $value = $this->relField($fieldName);
+                } elseif ($this->hasMethod($fieldName)) {
+                    $value = $this->$fieldName();
+                } elseif ($this->hasMethod('get'.$fieldName)) {
+                    $fieldName = 'get' . $fieldName;
+                    $value = $this->$fieldName();
+                }
+                $summaryFields[] = ReadonlyField::create($fieldName.'_Summary', $label, $value);
+            }
+        }
+        $nextFieldArray = array_merge(
+            $summaryFields,
+            [
+                LiteralField::create(
+                    'CssFix',
+                    '<style>
+                        #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
+                    </style>'
+                ),
+                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
+                $this->OrderStepField(),
+            ]
+        );
         $keyNotes = OrderStatusLog::get()->filter(
             [
                 'OrderID' => $this->ID,
@@ -2738,7 +2739,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($this->owner->OrderItems() as $orderItem) {
                 $x++;
                 $buyable = $orderItem->Buyable();
-                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">- ' . $orderItem->Quantity . 'x ';
+                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">' . $orderItem->Quantity . 'x ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
                 } else {

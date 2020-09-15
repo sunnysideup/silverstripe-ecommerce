@@ -11,6 +11,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
@@ -20,6 +21,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
@@ -287,19 +289,20 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('OrderAttributeGroupID');
         if ($order = $this->Order()) {
             if ($order->IsSubmitted()) {
+                $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
                 if ($buyable = $this->Buyable()) {
                     if ($this->BuyableExists()) {
-                        $buyableLink = '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
+                        $buyableLink .= '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
                     } else {
-                        $buyableLink = $this->getBuyableFullName()
+                        $buyableLink .= $this->getBuyableFullName()
                         . _t('OrderItem.NO_LONGER_AVAILABLE', ' - NO LONGER AVAILABLE');
                     }
                 } else {
-                    $buyableLink = _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
+                    $buyableLink .= _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
                 }
                 $fields->addFieldToTab(
                     'Root.Main',
-                    HeaderField::create('buyableLink', $buyableLink),
+                    HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
                     'Quantity'
                 );
 

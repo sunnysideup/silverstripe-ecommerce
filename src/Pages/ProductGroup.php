@@ -1441,6 +1441,7 @@ class ProductGroup extends Page
     {
         unset($this->allProducts);
         $className = $this->getBuyableClassName();
+
         $this->allProducts = $className::get();
     }
 

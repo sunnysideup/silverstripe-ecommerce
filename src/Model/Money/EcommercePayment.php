@@ -23,6 +23,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -66,7 +67,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $db = [
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
-        'Message' => 'Text',
+        'Message' => 'HTMLText',
         'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
