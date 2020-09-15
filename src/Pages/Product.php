@@ -22,6 +22,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
@@ -286,7 +287,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
-        $config = $this->EcomConfig();
+        $config = EcommerceConfig::inst();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if ($price === 0) {
@@ -306,16 +307,16 @@ class Product extends Page implements BuyableModel
             NumericField::create('Price', _t('Product.PRICE', 'Price'), '', 12)->setScale(2)
         );
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
-        if ($this->EcomConfig()->ProductsHaveWeight) {
+        if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $fields->addFieldToTab(
                 'Root.Details',
                 NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
             );
         }
-        if ($this->EcomConfig()->ProductsHaveModelNames) {
+        if (EcommerceConfig::inst()->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
-        if ($this->EcomConfig()->ProductsHaveQuantifiers) {
+        if (EcommerceConfig::inst()->ProductsHaveQuantifiers) {
             $fields->addFieldToTab(
                 'Root.Details',
                 TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
@@ -339,7 +340,7 @@ class Product extends Page implements BuyableModel
                 )
             );
         }
-        if ($this->EcomConfig()->ProductsAlsoInOtherGroups) {
+        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.AlsoShowHere',
                 [
@@ -371,7 +372,7 @@ class Product extends Page implements BuyableModel
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        // $config = $this->EcomConfig();
+        // $config = EcommerceConfig::inst();
         //set allowpurchase to false IF
         //free products are not allowed to be purchased
 
@@ -612,7 +613,7 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImageLink()
     {
-        return $this->EcomConfig()->DefaultImageLink();
+        return EcommerceConfig::inst()->DefaultImageLink();
     }
 
     /**
@@ -622,7 +623,7 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImage()
     {
-        return $this->EcomConfig()->DefaultImage();
+        return EcommerceConfig::inst()->DefaultImage();
     }
 
     // VERSIONING
@@ -1023,7 +1024,7 @@ class Product extends Page implements BuyableModel
      */
     public function canPurchase(Member $member = null, $checkPrice = true)
     {
-        $config = $this->EcomConfig();
+        $config = EcommerceConfig::inst();
         //shop closed
         if ($config->ShopClosed) {
             return false;
@@ -1034,7 +1035,7 @@ class Product extends Page implements BuyableModel
         }
         //check country
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
         if ($extended !== null) {
@@ -1061,7 +1062,7 @@ class Product extends Page implements BuyableModel
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1084,7 +1085,7 @@ class Product extends Page implements BuyableModel
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1110,7 +1111,7 @@ class Product extends Page implements BuyableModel
             return false;
         }
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1151,7 +1152,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><hr />Cart<hr /></li>';
         $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
-        $html .= '<li><b>Shop Open:</b> ' . ($this->EcomConfig() ? ($this->EcomConfig()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
+        $html .= '<li><b>Shop Open:</b> ' . (EcommerceConfig::inst() ? (EcommerceConfig::inst()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';

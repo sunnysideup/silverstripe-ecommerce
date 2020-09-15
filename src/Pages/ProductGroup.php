@@ -19,15 +19,14 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
-use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
@@ -435,7 +434,7 @@ class ProductGroup extends Page
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -458,7 +457,7 @@ class ProductGroup extends Page
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -484,7 +483,7 @@ class ProductGroup extends Page
             return false;
         }
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -571,7 +570,7 @@ class ProductGroup extends Page
                 if ($parent = $this->ParentGroup()) {
                     $productsPagePage = $parent->MyNumberOfProductsPerPage();
                 } else {
-                    $productsPagePage = $this->EcomConfig()->NumberOfProductsPerPage;
+                    $productsPagePage = EcommerceConfig::inst()->NumberOfProductsPerPage;
                 }
             }
             $this->_numberOfProductsPerPage = $productsPagePage;
@@ -680,7 +679,7 @@ class ProductGroup extends Page
                 DropdownField::create('DisplayStyle', _t('ProductGroup.DEFAULTDISPLAYSTYLE', 'Default Display Style'), $displayStyleDropdownList)
             );
         }
-        if ($this->EcomConfig()->ProductsAlsoInOtherGroups) {
+        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
             if (! $this instanceof ProductGroupSearchPage) {
                 $fields->addFieldsToTab(
                     'Root.OtherProductsShown',
@@ -1185,35 +1184,6 @@ class ProductGroup extends Page
         $this->silverstripeCoreCache = $silverstripeCoreCache;
     }
 
-    /**
-     * @param bool $isForGroups OPTIONAL
-     *
-     * @return string
-     */
-    public function SearchResultsSessionVariable($isForGroups = false)
-    {
-        $idString = '_' . $this->ID;
-        if ($isForGroups) {
-            return Config::inst()->get(ProductSearchForm::class, 'product_session_variable') . $idString;
-        }
-        return Config::inst()->get(ProductSearchForm::class, 'product_group_session_variable') . $idString;
-    }
-
-    /**
-     * @return array
-     */
-    public function searchResultsArrayFromSession()
-    {
-        if (! isset(self::$_result_array[$this->ID]) || self::$_result_array[$this->ID] === null) {
-            self::$_result_array[$this->ID] = explode(',', Controller::curr()->getRequest()->getSession()->get($this->SearchResultsSessionVariable(false)));
-        }
-        if (! is_array(self::$_result_array[$this->ID]) || ! count(self::$_result_array[$this->ID])) {
-            self::$_result_array[$this->ID] = [0 => 0];
-        }
-
-        return self::$_result_array[$this->ID];
-    }
-
     public function getNumberOfProducts()
     {
         return Product::get()->filter(['ParentID' => $this->ID])->count();
@@ -1486,7 +1456,7 @@ class ProductGroup extends Page
      */
     protected function getProductsAlsoInOtherGroups()
     {
-        return $this->EcomConfig()->ProductsAlsoInOtherGroups;
+        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
     /**
@@ -1617,7 +1587,7 @@ class ProductGroup extends Page
         } else {
             $tableName = $classNameOrTableName;
         }
-        if ($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+        if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
             if ($asArray) {
                 $allowPurchaseWhereStatement = ['AllowPurchase' => 1];
             } else {

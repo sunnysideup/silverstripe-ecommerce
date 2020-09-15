@@ -17,6 +17,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -202,7 +203,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -218,7 +219,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -245,7 +246,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($this->Status === 'Pending' || $this->Status === 'Incomplete') {
             $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -463,9 +464,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array An array suitable for passing to CustomRequiredFields
      */
-    public static function combined_form_requirements($order = null)
+    public static function combined_form_requirements($order = null): array
     {
-        return [];
+        $array = [];
+        $supportedMethods = self::get_supported_methods($order);
+        foreach ($supportedMethods as $methodClass => $methodName) {
+        }
     }
 
     /**
@@ -544,9 +548,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-    public function getPaymentFormRequirements()
+    public function getPaymentFormRequirements(): array
     {
         user_error("Please implement getPaymentFormRequirements() on {$this->ClassName}", E_USER_ERROR);
+        return [];
     }
 
     /**

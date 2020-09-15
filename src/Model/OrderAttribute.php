@@ -5,8 +5,8 @@ namespace Sunnysideup\Ecommerce\Model;
 use SilverStripe\Core\Config\Config;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
@@ -189,7 +189,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -213,7 +213,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function canView($member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -249,7 +249,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

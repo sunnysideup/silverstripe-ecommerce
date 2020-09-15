@@ -9,6 +9,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -266,7 +267,7 @@ class BillingAddress extends OrderAddress
         );
         $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
-        if ($member && Member::currentUser()) {
+        if ($member && Security::getCurrentUser()) {
             if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
                 if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {

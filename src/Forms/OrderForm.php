@@ -17,6 +17,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
@@ -202,7 +203,7 @@ class OrderForm extends Form
         $order->write();
         //saving into member, in case we add additional fields for the member
         //e.g. newslettersignup
-        if ($member = Member::currentUser()) {
+        if ($member = Security::getCurrentUser()) {
             $form->saveInto($member);
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {

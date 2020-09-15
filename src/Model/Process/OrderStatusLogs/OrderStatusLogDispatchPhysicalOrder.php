@@ -7,7 +7,6 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 
@@ -79,8 +78,8 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         $this->Title = _t('OrderStatusLog.ORDERDISPATCHED', 'Order Dispatched');
         $this->DispatchedOn = date('Y-m-d');
         if (Security::database_is_ready()) {
-            if (Member::currentUser()) {
-                $this->DispatchedBy = Member::currentUser()->getTitle();
+            if (Security::getCurrentUser()) {
+                $this->DispatchedBy = Security::getCurrentUser()->getTitle();
             }
         }
     }

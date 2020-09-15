@@ -6,3 +6,8 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: "EcomPG"
+
+  Psr\SimpleCache\CacheInterface.EcomSearchCache:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "EcomSearchCache"

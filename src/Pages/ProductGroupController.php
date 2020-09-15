@@ -12,7 +12,6 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -69,6 +68,16 @@ class ProductGroupController extends PageController
      * @var bool
      */
     protected $secondaryTitleHasBeenAdded = false;
+
+    /****************************************************
+     *  Search Form Related controllers
+    /****************************************************/
+
+    protected $searchForm = null;
+
+    protected $searchKeyword = '';
+
+    private static $product_search_session_variable = 'EcomProductSearch';
 
     /**
      * standard SS variable.
@@ -133,31 +142,62 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * name for session variable where we store the last search results for this page.
+     * @return string
+     */
+    public function SearchResultsSessionVariable(): string
+    {
+        $idString = '_' . $this->ID;
+
+        return $this->Config()->get('product_search_session_variable') . $idString;
+    }
+
+    /**
+     * @return array
+     */
+    public function searchResultsArrayFromSession(): array
+    {
+        return $this->ProductSearchForm()->getProductIds();
+    }
+
+    /**
+     * @return array
+     */
+    public function searchResultsProductGroupsArrayFromSession(): array
+    {
+        return $this->ProductSearchForm()->getProductGroupIds();
+    }
+
+    /**
      * get the search results.
      *
-     * @return \SilverStripe\Control\HTTPRequest
+     * @param \SilverStripe\Control\HTTPRequest $request
+     * @param array
      */
     public function searchresults($request)
     {
         $this->isSearchResults = true;
+        $this->searchHash = $this->request->param('ID');
+        $this->ProductSearchForm(true);
+        //set last search results
+        if ($this->searchHash) {
+            $this->getRequest()->getSession()->set(
+                $this->SearchResultsSessionVariable(),
+                $this->searchHash
+            );
+        }
+        //get results array
+        $keyword = $this->ProductSearchForm()->getSearchPhrase();
+        if ($title) {
+            $title = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
+        }
         //filters are irrelevant right now
         $this->resetfilter();
-        //get results array
-        $resultArray = $this->searchResultsArrayFromSession();
-        if ((is_array($resultArray) && count($resultArray))) {
-            //all ok
-        } else {
-            $resultArray = [0 => 0];
-        }
-        $title = ProductSearchForm::get_last_search_phrase();
-        if ($title) {
-            $title = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($title, 0, 25);
-        }
         $this->addSecondaryTitle($title);
         $this->products = $this->paginateList(
             $this->ProductsShowable(
                 ['ID' => $resultArray],
-                $this->getSearchResultsDefaultSort($resultArray)
+                $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession())
             )
         );
 
@@ -407,47 +447,43 @@ class ProductGroupController extends PageController
      */
     public function SearchResultsChildGroups()
     {
-        $groupArray = explode(',', $this->getRequest()->getSession()->get($this->SearchResultsSessionVariable($isForGroup = true)));
-        if (is_array($groupArray) && count($groupArray)) {
+        $groupArray = $this->searchResultsProductGroupsArrayFromSession();
+        if (! empty($groupArray)) {
             $sortStatement = $this->createSortStatementFromIDArray($groupArray, ProductGroup::class);
 
-            return ProductGroup::get()->filter(['ID' => $groupArray, 'ShowInSearch' => 1])->sort($sortStatement);
+            return ProductGroup::get()
+                ->filter(['ID' => $groupArray, 'ShowInSearch' => 1])
+                ->sort($sortStatement);
         }
 
         return;
     }
 
-    /****************************************************
-     *  Search Form Related controllers
-    /****************************************************/
-
     /**
      * returns a search form to search current products.
-     *
+     * @param bool $forceInit optional - force to be reinitialised.
      * @return ProductSearchForm object
      */
-    public function ProductSearchForm()
+    public function ProductSearchForm(?bool $forceInit = false)
     {
-        $onlySearchTitle = $this->originalTitle;
-        if ($this->dataRecord instanceof ProductGroupSearchPage) {
-            if ($this->HasSearchResults()) {
-                $onlySearchTitle = 'Last Search Results';
+        if ($this->searchForm === null || $forceInit) {
+            $onlySearchTitle = $this->originalTitle;
+            if ($this->dataRecord instanceof ProductGroupSearchPage) {
+                if ($this->HasSearchResults()) {
+                    $onlySearchTitle = 'Last Search Results';
+                }
+                $form = ProductSearchForm::create(
+                    $this,
+                    'ProductSearchForm',
+                );
             }
+            // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+            // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
+            $form->setAdditionalGetParameters($additionalGetParameters);
+            $form->setSearchHash($this->searchKeyword);
         }
-        $form = ProductSearchForm::create(
-            $this,
-            'ProductSearchForm',
-            $onlySearchTitle,
-            $this->currentInitialProducts(null, $this->getMyUserPreferencesDefault('FILTER'))
-        );
-        $filterGetVariable = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
-        $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-        $additionalGetParameters =
-            $filterGetVariable . '=' . $this->getMyUserPreferencesDefault('FILTER') . '&' .
-            $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
-        $form->setAdditionalGetParameters($additionalGetParameters);
 
-        return $form;
+        return $this->searchForm;
     }
 
     /**
@@ -455,15 +491,15 @@ class ProductGroupController extends PageController
      * If search was carried out without returns
      * then it returns zero (false).
      *
-     * @return int | false
+     * @return bool
      */
-    public function HasSearchResults()
+    public function HasSearchResults(): bool
     {
         $resultArray = $this->searchResultsArrayFromSession();
-        if ($resultArray) {
+        if (! empty($resultArray)) {
             $count = count($resultArray) - 1;
 
-            return $count ?: false;
+            return $count ? true : false;
         }
 
         return false;
@@ -516,12 +552,9 @@ class ProductGroupController extends PageController
      *
      * @return bool
      */
-    public function ActiveSearchTerm()
+    public function ActiveSearchTerm(): bool
     {
-        $data = $this->getRequest()->getSession()->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
-        if (! empty($data['Keyword'])) {
-            return $this->IsSearchResults();
-        }
+        return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
     }
 
     /****************************************************
@@ -921,11 +954,12 @@ class ProductGroupController extends PageController
      *
      * @return string
      */
-    public function SearchResultLink()
+    public function SearchResultLink(): string
     {
         if ($this->HasSearchResults() && ! $this->isSearchResults) {
-            return $this->Link('searchresults');
+            return $this->Link('searchresults/' . $this->lastSearchHash());
         }
+        return '';
     }
 
     /****************************************************
@@ -934,7 +968,7 @@ class ProductGroupController extends PageController
 
     public function debug()
     {
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         if (! $member || ! $member->IsShopAdmin()) {
             $messages = [
                 'default' => 'You must login as an admin to use debug functions.',
@@ -977,10 +1011,10 @@ class ProductGroupController extends PageController
 
         $html .= '<li><hr /><h3>Search</h3><hr /></li>';
         $resultArray = $this->searchResultsArrayFromSession();
-        $productGroupArray = explode(',', $this->getRequest()->getSession()->get($this->SearchResultsSessionVariable(true)));
+        $productGroupArray = $this->searchResultsProductGroupsArrayFromSession();
         $html .= '<li><b>Is Search Results:</b> ' . ($this->IsSearchResults() ? 'YES' : 'NO') . ' </li>';
-        $html .= '<li><b>Products In Search (session variable : ' . $this->SearchResultsSessionVariable(false) . '):</b> ' . print_r($resultArray, 1) . ' </li>';
-        $html .= '<li><b>Product Groups In Search (session variable : ' . $this->SearchResultsSessionVariable(true) . '):</b> ' . print_r($productGroupArray, 1) . ' </li>';
+        $html .= '<li><b>Products In Search:</b> ' . print_r($resultArray, 1) . ' </li>';
+        $html .= '<li><b>Product Groups In Search:</b> ' . print_r($productGroupArray, 1) . ' </li>';
 
         $html .= '<li><hr /><h3>Other</h3><hr /></li>';
         if ($image = $this->BestAvailableImage()) {
@@ -1018,6 +1052,11 @@ class ProductGroupController extends PageController
         $html .= '</ul>';
 
         return $html;
+    }
+
+    protected function lastSearchHash(): string
+    {
+        return (string) $this->getRequest()->getSession()->get($this->SearchResultsSessionVariable());
     }
 
     /**
@@ -1221,9 +1260,7 @@ class ProductGroupController extends PageController
         if ($this->request->getVar('reload')) {
             //reset other session variables...
 
-            $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
-
-            $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
+            $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(), '');
 
             return $this->redirect($this->Link());
         }

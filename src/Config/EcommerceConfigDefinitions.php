@@ -393,9 +393,6 @@ class EcommerceConfigDefinitions
                     'For the product search form,
                     make sure that there are no filter fields for minimum and maximum price',
 
-                'form_data_session_variable' =>
-                    'Name of the session variable used to store the form field values',
-
                 'product_session_variable' =>
                     'Name of a session variable used to tell the website what products - based on a search - are to be shown',
 

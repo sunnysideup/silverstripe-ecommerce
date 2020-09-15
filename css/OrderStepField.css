@@ -1,0 +1,18 @@
+/**
+ * IMPORTANT NOTE:
+ * The default e-commerce css only includes the basics and it is recommended that you theme these files.
+ * Also make sure you have the site's general layout and typography styled before you do this.
+ *
+ * This file is used to format a Form Field: OrderStepField
+ *
+ **/
+
+.orderStepField { background-color: #EEE; border-radius: 7px 7px 7px 7px; border: 1px solid grey; margin: 1em 0px; padding: 1em;}
+    .orderStepField ol {line-height: 2em;}
+    .orderStepField ol li {list-style: none; width: auto; float: left; display: block; padding-right: 0.5em;}
+        .orderStepField ol li.current {color: #0071c4; font-weight: bold; text-decoration: underline;;}
+        .orderStepField ol li.todo a {color: #333;}
+        .orderStepField ol li.todo:after {content: ' »';}
+        .orderStepField ol li.done a {color: #777; text-decoration: line-through;}
+        .orderStepField ol li.done:before {content '✔ ';}
+    .orderStepField .clear {clear: left;}

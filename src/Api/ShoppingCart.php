@@ -13,6 +13,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\CartResponse;
@@ -25,7 +26,6 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
-
 
 /**
  * ShoppingCart - provides a global way to interface with the cart (current order).
@@ -270,7 +270,7 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (! $this->order) {
                 $this->order = self::session_order();
-                $loggedInMember = Member::currentUser();
+                $loggedInMember = Security::getCurrentUser();
                 if ($this->order) {
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {

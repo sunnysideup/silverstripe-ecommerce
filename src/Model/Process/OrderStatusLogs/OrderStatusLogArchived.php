@@ -4,7 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
@@ -55,7 +55,7 @@ class OrderStatusLogArchived extends OrderStatusLog
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

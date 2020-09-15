@@ -49,7 +49,7 @@ class AccountPageController extends PageController
      */
     public function AccountMember()
     {
-        return Member::currentUser();
+        return Security::getCurrentUser();
     }
 
     /**

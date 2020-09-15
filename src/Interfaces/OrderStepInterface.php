@@ -41,7 +41,7 @@ interface OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (nextStep DataObject)
+     * @return OrderStep|null (nextStep DataObject)
      **/
     public function nextStep(Order $order);
 

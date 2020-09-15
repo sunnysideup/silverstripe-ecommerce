@@ -4,8 +4,8 @@ namespace Sunnysideup\Ecommerce\Model\Search;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class SearchHistory extends DataObject
@@ -71,19 +71,21 @@ class SearchHistory extends DataObject
      *
      * @return int
      */
-    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0)
+    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0): ?SearchHistory
     {
-        if ($member = Member::currentUser()) {
+        $member = Security::getCurrentUser();
+        if ($member) {
             if ($member->IsShopAdmin()) {
-                return -1;
+                return null;
             }
         }
-        $obj = new self();
+        $obj = new SearchHistory();
         $obj->Title = $keywordString;
         $obj->ProductCount = $productCount;
         $obj->GroupCount = $groupCount;
+        $obj->write();
 
-        return $obj->write();
+        return $obj;
     }
 
     /**
@@ -117,7 +119,7 @@ class SearchHistory extends DataObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
