@@ -12,7 +12,6 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
