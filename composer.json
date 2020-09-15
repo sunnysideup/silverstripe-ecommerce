@@ -28,16 +28,10 @@
         }
     ],
     "require": {
-        "pelago/emogrifier": "^3.1@stable",
-        "sunnysideup/google_address_field": "^2.0@stable",
-        "sunnysideup/cms_edit_link_field": "^8.0@stable",
-	    "sunnysideup/permission_provider": "^6.0@stable",
-        "silverstripe/recipe-cms": "^4.0@stable",
-        "silverstripe/lumberjack": "*",
-        "symbiote/silverstripe-grouped-cms-menu": "*"
+
     },
     "suggest": {
-        "sunnysideup/flush": "dev-master",
+        "sunnysideup/flush": "Better output for tasks",
         "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this works on your server, before installing it - otherwise it is useless.",
         "sunnysideup/ecommerce_cloud_flare_geoip": "Extends Geoip if you are using cloudflare",
         "silverstripe/restfulserver": "Adds restful server functionality to your e-commerce site (creates an API for your e-commerce application, allowing third-parties to tap into your e-commerce data)",
