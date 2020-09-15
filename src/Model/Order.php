@@ -823,20 +823,15 @@ class Order extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
+        $newItem = OrderStatusLog::create();
         $nextFieldArray = array_merge(
             $nextFieldArray,
             [
                 EcommerceCMSButtonField::create(
                     'AddNoteButton',
-                    '/admin/sales/Order/EditForm/field/Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
+                    $newItem->CMSEditLink(),
                     _t('Order.ADD_NOTE', 'Add Note')
                 ),
-            ]
-        );
-        $nextFieldArray = array_merge(
-            $nextFieldArray,
-            [
-
             ]
         );
 

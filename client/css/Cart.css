@@ -55,7 +55,7 @@ even when theme-ing ecommerce, these should not be themed
 .loadingCartData #InformationTable, .loadingCartData #Amount {color: #e7e7e7!important;}
 
 .doNotShow { display: none; }
-.loading { background-image: url(/ecommerce/images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
+.loading { background-image: url(../images/loading.gif); background-repeat: no-repeat; background-position: 95% 0; }
 .loading * {visibility: hidden;}
 
 
@@ -63,7 +63,7 @@ even when theme-ing ecommerce, these should not be themed
   background-image: none;
 }
 .productActions.loading a {
-  background-image: url(/ecommerce/images/loading.gif)!important;
+  background-image: url(../images/loading.gif)!important;
   background-repeat: no-repeat;
   background-position: top left;
   -moz-transition: color 0.25s ease-in-out;
@@ -103,7 +103,7 @@ even when theme-ing ecommerce, these should not be themed
 #Checkout ol.steps li a:hover{border: none;}
 
 td.remove a img {
-  filter: url(/ecommerce/css/filters.svg#grayscale); /* Firefox 3.5+ */
+  filter: url(../css/filters.svg#grayscale); /* Firefox 3.5+ */
   filter: gray; /* IE6-9 */
   -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
   background: none;

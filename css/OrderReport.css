@@ -13,8 +13,8 @@
 
 
 #Icons a {display: block;  float: right; background-repeat: no-repeat; background-position: right top; width: auto; padding-right: 20px;}
-	#PrintPageIcon {background-image: url(ecommerce/images/print.png); }
-	#ClosePageIcon {background-image: url(ecommerce/images/close.png); }
+	#PrintPageIcon {background-image: url(../images/print.png); }
+	#ClosePageIcon {background-image: url(../images/close.png); }
 
 h1.title { display: block; text-align: left; border-bottom: 1px solid #CDDDDD; text-transform: uppercase; }
 	body td { }
