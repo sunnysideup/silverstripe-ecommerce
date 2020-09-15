@@ -472,15 +472,15 @@ class ProductGroupController extends PageController
                 if ($this->HasSearchResults()) {
                     $onlySearchTitle = 'Last Search Results';
                 }
-                $form = ProductSearchForm::create(
-                    $this,
-                    'ProductSearchForm',
-                );
             }
+            $this->searchForm = ProductSearchForm::create(
+                $this,
+                'ProductSearchForm',
+            );
             // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
-            $form->setAdditionalGetParameters($additionalGetParameters);
-            $form->setSearchHash($this->searchKeyword);
+            // $form->setAdditionalGetParameters($additionalGetParameters);
+            // $form->setSearchHash($this->searchKeyword);
         }
 
         return $this->searchForm;

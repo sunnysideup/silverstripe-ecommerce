@@ -215,12 +215,12 @@ class ProductSearchForm extends Form
 
     public function getProductIds(): array
     {
-        is_array($this->productIds) ? $this->productIds : [];
+        return is_array($this->productIds) ? $this->productIds : [];
     }
 
     public function getProductGroupIds(): array
     {
-        is_array($this->productGroupIds) ? $this->productGroupIds : [];
+        return is_array($this->productGroupIds) ? $this->productGroupIds : [];
     }
 
     public function setSearchKeyword(string $hash)
