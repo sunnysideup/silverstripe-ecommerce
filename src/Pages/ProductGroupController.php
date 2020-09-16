@@ -157,6 +157,7 @@ class ProductGroupController extends PageController
      */
     public function searchResultsArrayFromSession(): array
     {
+        return [];
         return $this->ProductSearchForm()->getProductIds();
     }
 

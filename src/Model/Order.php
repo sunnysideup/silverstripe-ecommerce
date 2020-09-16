@@ -270,7 +270,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * see: http://userguide.icu-project.org/formatparse/datetime
      * @var string
      */
-    private static $date_format_for_title = 'd MMM, HH:mm ';
+    private static $date_format_for_title = 'd MMM Y, HH:mm ';
 
     /**
      * @var bool
@@ -408,6 +408,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'Member.CustomerDetails' => 'Customer',
         'TotalAsMoney.Nice' => 'Total',
         'IsPaidNice' => 'Paid',
+        'CustomerOrderNote' => 'Note',
     ];
 
     private static $csv_export_fields = [
@@ -823,13 +824,12 @@ class Order extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
-        $newItem = OrderStatusLog::create();
         $nextFieldArray = array_merge(
             $nextFieldArray,
             [
                 EcommerceCMSButtonField::create(
                     'AddNoteButton',
-                    $newItem->CMSEditLink(),
+                    '/admin/sales-advanced/Sunnysideup-Ecommerce-Model-Order/EditForm/field/Sunnysideup-Ecommerce-Model-Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
                     _t('Order.ADD_NOTE', 'Add Note')
                 ),
             ]

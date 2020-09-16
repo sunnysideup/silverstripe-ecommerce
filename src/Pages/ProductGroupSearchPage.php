@@ -112,7 +112,7 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function getGroupFilter()
     {
-        $resultArray = $this->searchResultsArrayFromSession();
+        $resultArray = [0 => 0];
         $this->allProducts = $this->allProducts->filter(['ID' => $resultArray]);
 
         return $this->allProducts;
@@ -121,15 +121,6 @@ class ProductGroupSearchPage extends ProductGroup
     public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
     {
         return ArrayList::create();
-    }
-
-    public function ProductsShowable($extraFilter = null, $alternativeSort = null, $alternativeFilterKey = '')
-    {
-        // $alternativeSort = $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession(), $alternativeSort);
-
-        $this->allProducts = parent::ProductsShowable($extraFilter, $alternativeSort, $alternativeFilterKey);
-
-        return $this->allProducts;
     }
 
     /**

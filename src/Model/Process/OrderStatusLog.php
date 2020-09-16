@@ -385,6 +385,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
         }
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
         return $fields;
     }
 

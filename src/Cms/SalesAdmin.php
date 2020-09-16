@@ -85,7 +85,7 @@ class SalesAdmin extends ModelAdmin
     {
         parent::init();
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
-        Requirements::themedCSS('client/css/OrderStepField.css');
+        Requirements::themedCSS('client/css/OrderStepField');
         Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         Requirements::themedCSS('client/css/Order_Invoice', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         Requirements::themedCSS('client/css/Order_PackingSlip', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -120,6 +120,7 @@ class SalesAdmin extends ModelAdmin
      */
     public function getList()
     {
+        return parent::getList();
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
