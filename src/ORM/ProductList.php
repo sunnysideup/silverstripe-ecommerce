@@ -7,6 +7,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -26,7 +27,7 @@ class ProductList
     use Configurable;
 
     /**
-     * @var SS_List $products
+     * @var SS_List
      */
     protected $products;
 
@@ -36,7 +37,7 @@ class ProductList
     protected $productGroups;
 
     /**
-     * @var string $buyableClass
+     * @var string
      */
     protected $buyableClass = Product::class;
 
@@ -50,8 +51,8 @@ class ProductList
 
     /**
      * Root group to pull products from
-     *
      */
+
     /**
      * @param string $buyableClass
      */
@@ -139,9 +140,7 @@ class ProductList
      */
     public function getPaginatedList(): PaginatedList
     {
-        $list = PaginatedList::create($this->products);
-
-        return $list;
+        return PaginatedList::create($this->products);
     }
 
     /**
@@ -158,7 +157,7 @@ class ProductList
     /**
      * Filter the list of products
      *
-     * @param array|string
+     * @param array|string $filter
      *
      * @return self
      */
@@ -180,7 +179,7 @@ class ProductList
     {
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
             $this->products = $this->products->filter([
-                'AllowPurchase' => 1
+                'AllowPurchase' => 1,
             ]);
         }
 
@@ -192,7 +191,7 @@ class ProductList
     /**
      * Sort the list of products
      *
-     * @param array|string
+     * @param array|string $sort
      *
      * @return self
      */
@@ -219,14 +218,14 @@ class ProductList
     public function removeExcludedProducts(): ProductList
     {
         foreach ($this->products as $buyable) {
-            if (!$buyable->canPurchase()) {
+            if (! $buyable->canPurchase()) {
                 $this->blockedProductsIds[] = $buyable->ID;
             }
         }
 
         if ($this->blockedProductsIds) {
             $this->products->exclude([
-                'ID' => $this->blockedProductsIds
+                'ID' => $this->blockedProductsIds,
             ]);
         }
 
@@ -243,6 +242,24 @@ class ProductList
     public function CountGreaterThanOne($greaterThan = 1)
     {
         return $this->getRawCount() > $greaterThan;
+    }
+
+    /**
+     * With the current product list, return all the {@link ProductGroup}
+     * instances that the products are displayed under. This only returns the
+     * direct parents.
+     *
+     * @return PaginatedList|null
+     */
+    public function getParentGroups()
+    {
+        $ids = $this->products->columnUnique('ParentID');
+
+        if ($ids) {
+            return PaginatedList::create(ProductGroup::get()->filter([
+                'ID' => $ids,
+            ]));
+        }
     }
 
     /**
@@ -324,23 +341,5 @@ class ProductList
         }
 
         return '';
-    }
-
-    /**
-     * With the current product list, return all the {@link ProductGroup}
-     * instances that the products are displayed under. This only returns the
-     * direct parents.
-     *
-     * @return PaginatedList|null
-     */
-    public function getParentGroups()
-    {
-        $ids = $this->products->columnUnique('ParentID');
-
-        if ($ids) {
-            return PaginatedList::create(ProductGroup::get()->filter([
-                'ID' => $ids
-            ]));
-        }
     }
 }

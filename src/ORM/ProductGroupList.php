@@ -25,24 +25,24 @@ class ProductGroupList
     use Extensible;
 
     /**
-     * @var SS_List $products
+     * @var SS_List
      */
     protected $groups;
 
     /**
      * How deep to go
      *
-     * @var int $maxDepth
+     * @var int
      */
     protected $maxDepth = 99;
 
     /**
-     * @var ProductGroup $root
+     * @var ProductGroup
      */
     protected $rootGroup;
 
     /**
-     * @var bool $includeRoot
+     * @var bool
      */
     protected $includeRoot = true;
 
@@ -80,7 +80,7 @@ class ProductGroupList
     }
 
     /**
-     * @param ProductGroup $root
+     * @param ProductGroup $group
      */
     public function setRootGroup(ProductGroup $group): ProductGroupList
     {
@@ -108,16 +108,15 @@ class ProductGroupList
 
             if ($ids) {
                 $this->groups = ProductGroup::get()->filter([
-                    'ID' => $ids
+                    'ID' => $ids,
                 ]);
             }
 
             return $this->groups;
-        } else {
-            $this->groups = ProductGroup::get();
-
-            return $this->groups;
         }
+        $this->groups = ProductGroup::get();
+
+        return $this->groups;
     }
 
     /**
@@ -135,7 +134,7 @@ class ProductGroupList
             return $ids;
         }
 
-        $children = DB::query('SELECT ID FROM ProductGroup WHERE ParentID = '. $groupId)->column();
+        $children = DB::query('SELECT ID FROM ProductGroup WHERE ParentID = ' . $groupId)->column();
 
         if ($children) {
             $ids = array_merge($ids, $children);

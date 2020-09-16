@@ -8,7 +8,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
 
 class ProductTest extends SapphireTest
 {
-
     public function testGetCMSFields()
     {
         $product = Product::create();

@@ -14,7 +14,7 @@ class ProductGroupTest extends FunctionalTest
         $group = $this->objFromFixture(ProductGroup::class, 'mountainbiking');
         $response = $this->get($group->Link());
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testGetProductGroupsFromAlsoShowProducts()
@@ -23,9 +23,9 @@ class ProductGroupTest extends FunctionalTest
 
         $related = $group->getProductGroupsFromAlsoShowProducts();
 
-        $this->assertEquals(1, $related->count());
+        $this->assertSame(1, $related->count());
         $this->assertListEquals([
-            'Title' => 'Fox Sports'
+            'Title' => 'Fox Sports',
         ], $related, 'Fox sports is a related group to mountain biking');
     }
 }

@@ -19,11 +19,11 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
-use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -469,8 +469,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $array = [];
         $supportedMethods = self::get_supported_methods($order);
-        foreach ($supportedMethods as $methodClass => $methodName) {
+        foreach (array_keys($supportedMethods) as $methodClass) {
+            $array = array_merge(
+                $methodClass::create()->getPaymentFormRequirements(),
+                $array
+            );
         }
+        return $array;
     }
 
     /**

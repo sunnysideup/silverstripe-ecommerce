@@ -14,9 +14,6 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
@@ -24,10 +21,8 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
-use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ORM\ProductList;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -100,6 +95,11 @@ class ProductGroup extends Page
      * @var array
      */
     protected $myUserPreferencesDefaultCache = [];
+
+    /**
+     * @var ProductList
+     */
+    protected $productList;
 
     /**
      * @var string
@@ -208,11 +208,6 @@ class ProductGroup extends Page
     private static $plural_name = 'Product Categories';
 
     private static $description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
-
-    /**
-     * @var ProductList
-     */
-    protected $productList;
 
     private $_numberOfProductsPerPage = null;
 
@@ -328,7 +323,11 @@ class ProductGroup extends Page
         return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
     }
 
-    public function ProductsPerPage() {return $this->getProductsPerPage();}
+    public function ProductsPerPage()
+    {
+        return $this->getProductsPerPage();
+    }
+
     /**
      * @return int
      **/
@@ -343,7 +342,7 @@ class ProductGroup extends Page
                 if ($parent = $this->ParentGroup()) {
                     $productsPagePage = $parent->getProductsPerPage();
                 } else {
-                    $productsPagePage = EcommerceDBConfig::current_ecommerce_db_config()->NumberOfProductsPerPage;
+                    $productsPagePage = EcommerceConfig::inst()->NumberOfProductsPerPage;
                 }
             }
 
@@ -363,13 +362,13 @@ class ProductGroup extends Page
     {
         $result = $this->dbObject('LevelOfProductsToShow')->getValue();
 
-        if (!$result) {
+        if (! $result) {
             if ($parent = $this->ParentGroup()) {
                 $result = $parent->getLevelOfProductsToShow();
             }
         }
 
-        if (!$result) {
+        if (! $result) {
             $defaults = Config::inst()->get(ProductGroup::class, 'defaults');
 
             return isset($defaults['LevelOfProductsToShow']) ? $defaults['LevelOfProductsToShow'] : 99;
@@ -387,13 +386,13 @@ class ProductGroup extends Page
     {
         $result = $this->dbObject('NumberOfProductsPerPage')->getValue();
 
-        if (!$result) {
+        if (! $result) {
             if ($parent = $this->ParentGroup()) {
                 $result = $parent->getNumberOfProductsPerPage();
             }
         }
 
-        if (!$result) {
+        if (! $result) {
             $defaults = Config::inst()->get(ProductGroup::class, 'defaults');
 
             return isset($defaults['NumberOfProductsPerPage']) ? $defaults['NumberOfProductsPerPage'] : 99;
@@ -470,7 +469,7 @@ class ProductGroup extends Page
             );
         }
 
-        $config = EcommerceDBConfig::current_ecommerce_db_config();
+        $config = EcommerceConfig::inst();
 
         if ($config->ProductsAlsoInOtherGroups) {
             if (! $this instanceof ProductGroupSearchPage) {
@@ -565,7 +564,7 @@ class ProductGroup extends Page
                 $children = ProductGroup::get()->filter($filter);
             } else {
                 $children = ProductGroup::get()->filter([
-                    'ParentID' => $this->ID
+                    'ParentID' => $this->ID,
                 ]);
             }
 
@@ -650,9 +649,9 @@ class ProductGroup extends Page
         if ($productGroups) {
             return ProductGroup::get()->filter([
                 'ID' => $productGroups,
-                'ShowInSearch' => 1
+                'ShowInSearch' => 1,
             ])->exclude([
-                'ID' => $this->ID
+                'ID' => $this->ID,
             ]);
         }
     }
@@ -673,15 +672,15 @@ class ProductGroup extends Page
 
         if ($alsoShowProductsArray) {
             $parentIDs = Product::get()->filter([
-                'ID' => $alsoShowProductsArray
+                'ID' => $alsoShowProductsArray,
             ])->map('ParentID', 'ParentID')->toArray();
 
             if ($parentIDs) {
                 return ProductGroup::get()->filter([
                     'ID' => $parentIDs,
-                    'ShowInMenus' => 1
+                    'ShowInMenus' => 1,
                 ])->exclude([
-                    'ID' => $this->ID
+                    'ID' => $this->ID,
                 ]);
             }
         }
@@ -750,7 +749,7 @@ class ProductGroup extends Page
     public function getNumberOfProducts()
     {
         return Product::get()->filter([
-            'ParentID' => $this->ID
+            'ParentID' => $this->ID,
         ])->count();
     }
 
@@ -993,7 +992,7 @@ class ProductGroup extends Page
      */
     protected function getProductsAlsoInOtherGroups()
     {
-        return EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups;
+        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
     /**

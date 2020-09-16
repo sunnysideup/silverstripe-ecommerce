@@ -214,10 +214,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     public function getCustomerDetails()
     {
-        return
-            $this->owner->FirstName .  ' ' .$this->owner->Surname .
+        return $this->owner->FirstName . ' ' . $this->owner->Surname .
             ', ' . $this->owner->Email .
-            ' (' . $this->owner->Orders()->count().')';
+            ' (' . $this->owner->Orders()->count() . ')';
     }
 
     /**

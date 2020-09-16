@@ -23,7 +23,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      * @var array
      */
     protected $overallconfig = [
-        'Sunnysideup\Ecommerce\Tasks\EcommerceTaskCheckConfiguration'
+        'Sunnysideup\Ecommerce\Tasks\EcommerceTaskCheckConfiguration',
     ];
 
     //##############################

@@ -606,7 +606,7 @@ EcommerceConfig:
      */
     protected function addEcommerceDBConfigToConfigs()
     {
-        $ecommerceDBConfig = EcommerceDBConfig::current_ecommerce_db_config();
+        $ecommerceDBConfig = EcommerceConfig::inst();
         $fields = $ecommerceDBConfig->fieldLabels();
         if ($fields) {
             foreach ($fields as $field => $description) {

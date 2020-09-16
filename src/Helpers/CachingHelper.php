@@ -44,6 +44,17 @@ class CachingHelper extends Extension
     }
 
     /**
+     * @param string $cacheKey
+     * @param string $filterKey
+     *
+     * @return string
+     */
+    public function cacheKey($cacheKey)
+    {
+        return $cacheKey . '_' . $this->owner->ID . '_' . Versioned::get_reading_mode();
+    }
+
+    /**
      * Retrieve an object from the cache
      *
      * @param string $cacheKey
@@ -56,7 +67,7 @@ class CachingHelper extends Extension
             $cache = $this->getCacheBackend();
             $data = $cache->get($cacheKey);
 
-            if (!$cache->has($cacheKey)) {
+            if (! $cache->has($cacheKey)) {
                 return;
             }
 
@@ -85,18 +96,4 @@ class CachingHelper extends Extension
 
         return false;
     }
-
-    /**
-     * @param string $cacheKey
-     * @param string $filterKey
-     *
-     * @return string
-     */
-    public function cacheKey($cacheKey)
-    {
-        $cacheKey .= '_' . $this->owner->ID . '_' . Versioned::get_reading_mode();
-
-        return $cacheKey ;
-    }
-
 }

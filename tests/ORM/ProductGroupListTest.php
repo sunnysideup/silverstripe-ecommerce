@@ -13,22 +13,22 @@ class ProductGroupListTest extends SapphireTest
     public function testCreate()
     {
         $list = ProductGroupList::create();
-        $this->assertEquals(4, $list->getGroups()->TotalItems(), 'Get all product groups');
+        $this->assertSame(4, $list->getGroups()->TotalItems(), 'Get all product groups');
 
         $root = $this->objFromFixture(ProductGroup::class, 'rugby');
         $list = $list->setRootGroup($root);
 
-        $this->assertEquals(1, $list->getPaginatedList()->TotalItems(), '1 group (root)');
+        $this->assertSame(1, $list->getPaginatedList()->TotalItems(), '1 group (root)');
     }
 
     public function testFilter()
     {
         $list = ProductGroupList::create();
         $list = $list->filter([
-            'ProductGroupID' => $this->objFromFixture(ProductGroup::class, 'sports')->ID
+            'ProductGroupID' => $this->objFromFixture(ProductGroup::class, 'sports')->ID,
         ]);
 
-        $this->assertEquals(2, $list->getPaginatedList()->TotalItems(), '2 sub groups ');
+        $this->assertSame(2, $list->getPaginatedList()->TotalItems(), '2 sub groups ');
     }
 
     public function testGetGroups()
@@ -38,10 +38,10 @@ class ProductGroupListTest extends SapphireTest
 
         $list = $list->setRootGroup($root)->setIncludeRoot(false);
 
-        $this->assertEquals(3, $list->getGroups()->Count(), '3 subgroups under sport');
+        $this->assertSame(3, $list->getGroups()->Count(), '3 subgroups under sport');
 
         // with a max depth of 1 we should only get the direct children
         $list = $list->setMaxDepth(1);
-        $this->assertEquals(2, $list->getGroups()->Count(), '2 direct subgroups under sport');
+        $this->assertSame(2, $list->getGroups()->Count(), '2 direct subgroups under sport');
     }
 }

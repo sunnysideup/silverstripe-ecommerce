@@ -22,7 +22,6 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
@@ -64,7 +63,8 @@ class OrderForm extends Form
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }
-            if ($paymentRequiredFields = EcommercePayment::combined_form_requirements($order)) {
+            $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
+            if (! empty($paymentRequiredFields)) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }
         } else {

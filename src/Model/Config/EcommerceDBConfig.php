@@ -50,7 +50,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Database Settings for E-commerce
  * Similar to SiteConfig but then for E-commerce
- * To access a singleton here, use: EcommerceDBConfig::current_ecommerce_db_config().
+ * To access a singleton here, use: EcommerceConfig::inst().
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -661,7 +661,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Returns the current member.
      *
-     * @return SilverStripe\Security\Member
+     * @return Member
      */
     public function Customer()
     {
@@ -671,7 +671,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Returns the member for the current order.
      *
-     * @return SilverStripe\Security\Member
+     * @return Member
      */
     public function CustomerForOrder()
     {

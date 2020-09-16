@@ -10,9 +10,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -61,7 +58,7 @@ class ProductGroupController extends PageController
 
     //@todo: why not use trait?
     private static $extensions = [
-        CachingHelper::class
+        CachingHelper::class,
     ];
 
     public function index()
@@ -80,7 +77,7 @@ class ProductGroupController extends PageController
      *
      * e.g. socks (current product group) for brand A or B (the secondary product group)
      *
-     * @return \SilverStripe\Control\HTTPRequest $request
+     * @return \SilverStripe\Control\HTTPRequest
      */
     public function filterforgroup($request)
     {
@@ -157,18 +154,19 @@ class ProductGroupController extends PageController
         }
         //get results array
         $keyword = $this->ProductSearchForm()->getSearchPhrase();
-        if ($title) {
-            $title = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
+        if ($keyword) {
+            $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
         }
         //filters are irrelevant right now
         $this->resetfilter();
-        $this->addSecondaryTitle($title);
-        $this->products = $this->paginateList(
-            $this->ProductsShowable(
-                ['ID' => $resultArray],
-                $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession())
-            )
-        );
+        $this->addSecondaryTitle($keyword);
+        //@todo!
+        // $this->products = $this->paginateList(
+        //     $this->ProductsShowable(
+        //         ['ID' => $resultArray],
+        //         $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession())
+        //     )
+        // );
 
         return [];
     }
@@ -275,7 +273,7 @@ class ProductGroupController extends PageController
                         $filterKey,
                         $filterForGroupKey,
                         $sortKey,
-                        $pageStart
+                        $pageStart,
                     ]
                 )
             );
@@ -358,7 +356,7 @@ class ProductGroupController extends PageController
     public function MenuChildGroups()
     {
         return $this->ChildGroups(2, [
-            'ShowInMenus' => 1
+            'ShowInMenus' => 1,
         ]);
     }
 
@@ -927,7 +925,7 @@ class ProductGroupController extends PageController
      * counts the total number in the combination....
      *
      * @param ProductGroup[] $groups
-     * @param Array  $baseArray - list of products on the current page
+     * @param array  $baseArray - list of products on the current page
      *
      * @return array
      */
@@ -1029,9 +1027,9 @@ class ProductGroupController extends PageController
         }
 
         if ($this->request->getVar('reload')) {
-            $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
-
-            $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
+            // $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
+            //
+            // $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
 
             return $this->redirect($this->Link());
         }

@@ -14,18 +14,18 @@ class ProductListTest extends SapphireTest
     {
         $list = ProductList::create();
 
-        $this->assertEquals(3, $list->getPaginatedList()->TotalItems(), 'Get all products');
+        $this->assertSame(3, $list->getPaginatedList()->TotalItems(), 'Get all products');
 
         $list = $list->filter([
-            'ProductGroupID' => $this->objFromFixture(ProductGroup::class, 'rugby')
+            'ProductGroupID' => $this->objFromFixture(ProductGroup::class, 'rugby'),
         ]);
 
-        $this->assertEquals(1, $list->getPaginatedList()->TotalItems(), '1 product in rugby');
+        $this->assertSame(1, $list->getPaginatedList()->TotalItems(), '1 product in rugby');
 
         $list = $list->filter([
-            'ProductGroupID' => $this->objFromFixture(ProductGroup::class, 'sports')
+            'ProductGroupID' => $this->objFromFixture(ProductGroup::class, 'sports'),
         ]);
 
-        $this->assertEquals(2, $list->getPaginatedList()->TotalItems(), '2 products in sports');
+        $this->assertSame(2, $list->getPaginatedList()->TotalItems(), '2 products in sports');
     }
 }

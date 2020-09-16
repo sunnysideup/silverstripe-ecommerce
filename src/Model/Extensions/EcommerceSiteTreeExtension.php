@@ -7,7 +7,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -53,13 +52,13 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         if ($this->owner->IsEcommercePage()) {
             $link = $this->owner->Link();
         } else {
-            $link = EcommerceDBConfig::current_ecommerce_db_config()->AccountPageLink();
+            $link = EcommerceConfig::inst()->AccountPageLink();
         }
 
         return Controller::join_links(
             Director::absoluteBaseURL(),
             '/Security/login'
-        ).'?BackURL=' . urlencode($link);
+        ) . '?BackURL=' . urlencode($link);
     }
 
     public function augmentValidURLSegment()

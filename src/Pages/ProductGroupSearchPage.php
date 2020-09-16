@@ -37,7 +37,7 @@ class ProductGroupSearchPage extends ProductGroup
         'bestmatch' => [
             'Title' => 'Best Match',
             'SQL' => '"Price" DESC',
-        ]
+        ],
     ];
 
     private static $table_name = 'ProductGroupSearchPage';
@@ -71,7 +71,7 @@ class ProductGroupSearchPage extends ProductGroup
     public function canCreate($member = null, $context = [])
     {
         return ProductGroupSearchPage::get()->filter([
-            'ClassName' => ProductGroupSearchPage::class
+            'ClassName' => ProductGroupSearchPage::class,
         ])->count() ? false : $this->canEdit($member);
     }
 

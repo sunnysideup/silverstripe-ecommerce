@@ -17,7 +17,6 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
@@ -60,7 +59,6 @@ use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Email\OrderEmail;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
-use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Forms\Fields\OrderStepField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForOrderItems;
@@ -70,7 +68,6 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
@@ -773,17 +770,18 @@ class Order extends DataObject implements EditableEcommerceObject
             $fields->removeByName($field);
         }
         $summaryFields = [];
-        foreach($this->summaryFields() as $fieldName => $label) {
-            if($fieldName !== 'AssignedAdminNice') {
+        foreach ($this->summaryFields() as $fieldName => $label) {
+            if ($fieldName !== 'AssignedAdminNice') {
+                $value = '(error)';
                 if ($this->hasMethod('relField')) {
                     $value = $this->relField($fieldName);
                 } elseif ($this->hasMethod($fieldName)) {
-                    $value = $this->$fieldName();
-                } elseif ($this->hasMethod('get'.$fieldName)) {
+                    $value = $this->{$fieldName}();
+                } elseif ($this->hasMethod('get' . $fieldName)) {
                     $fieldName = 'get' . $fieldName;
-                    $value = $this->$fieldName();
+                    $value = $this->{$fieldName}();
                 }
-                $summaryFields[] = ReadonlyField::create($fieldName.'_Summary', $label, $value);
+                $summaryFields[] = ReadonlyField::create($fieldName . '_Summary', $label, $value);
             }
         }
         $nextFieldArray = array_merge(
@@ -1152,8 +1150,8 @@ class Order extends DataObject implements EditableEcommerceObject
     public function OrderStepField()
     {
         return OrderStepField::create(
-            'MyOrderStep', 
-            $this, 
+            'MyOrderStep',
+            $this,
             Security::getCurrentUser()
         );
     }
@@ -1653,7 +1651,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function ShopClosed()
     {
-        return EcommerceDBConfig::current_ecommerce_db_config()->ShopClosed;
+        return EcommerceConfig::inst()->ShopClosed;
     }
 
     /*******************************************************
@@ -3920,7 +3918,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
-        $config = EcommerceDBConfig::current_ecommerce_db_config();
+        $config = EcommerceConfig::inst();
         $replacementArray = [];
         //set subject
         if (! $subject) {

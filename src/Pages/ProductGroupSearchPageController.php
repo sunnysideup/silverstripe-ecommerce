@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-
 class ProductGroupSearchPageController extends ProductGroupController
 {
     private static $allowed_actions = [
@@ -17,8 +15,6 @@ class ProductGroupSearchPageController extends ProductGroupController
     /**
      * Returns child product groups for use in 'in this section'. For example
      * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
-     *
-     * @return null
      */
     public function MenuChildGroups()
     {
