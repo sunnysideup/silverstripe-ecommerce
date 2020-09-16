@@ -203,16 +203,6 @@ abstract class OrderEmail extends Email
     }
 
     /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * @param bool $result: how did the email go? 1 = sent, 0 = not sent
      *
      * @return OrderEmailRecord

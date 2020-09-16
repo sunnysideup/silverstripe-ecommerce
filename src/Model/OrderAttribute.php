@@ -381,16 +381,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return EcommerceConfigAjax::get_one($this);
     }
 
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig | Object
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
     /*
      * Should this item be shown on check out page table?
      * @return bool

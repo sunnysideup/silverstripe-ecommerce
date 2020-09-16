@@ -539,16 +539,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig | Object
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * standard SS Method
      * saves the region code.
      */

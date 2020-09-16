@@ -28,8 +28,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 /**
- * @description: Allows user to specifically search products
- **/
+ * Product search form
+ */
 class ProductSearchForm extends Form
 {
     /**

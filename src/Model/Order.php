@@ -60,6 +60,7 @@ use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Email\OrderEmail;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Forms\Fields\OrderStepField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForOrderItems;
@@ -1150,7 +1151,11 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function OrderStepField()
     {
-        return OrderStepField::create($name = 'MyOrderStep', $this, Security::getCurrentUser());
+        return OrderStepField::create(
+            'MyOrderStep', 
+            $this, 
+            Security::getCurrentUser()
+        );
     }
 
     /*******************************************************
@@ -3524,16 +3529,6 @@ class Order extends DataObject implements EditableEcommerceObject
     public function AJAXDefinitions()
     {
         return EcommerceConfigAjax::get_one($this);
-    }
-
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**

@@ -1258,14 +1258,6 @@ class ShoppingCart
     }
 
     /**
-     * @return EcommerceDBConfig
-     */
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * Return the name of the session variable that should be used.
      *
      * @param string $name

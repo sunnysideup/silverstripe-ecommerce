@@ -284,14 +284,4 @@ class OrderForm extends Form
 
         Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", null);
     }
-
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
 }
