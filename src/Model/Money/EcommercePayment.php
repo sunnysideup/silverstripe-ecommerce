@@ -17,11 +17,13 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -65,7 +67,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $db = [
         'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
         'Amount' => 'Money',
-        'Message' => 'Text',
+        'Message' => 'HTMLText',
         'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
@@ -166,7 +168,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('OrderID', new ReadonlyField('OrderID', 'Order ID'));
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
         $fields->replaceField('PaidByID', new ReadonlyField('PaidByID', 'Payment made by'));
         $fields->removeByName('AlternativeEndPoint');
 
@@ -195,7 +204,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -211,7 +220,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -238,7 +247,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($this->Status === 'Pending' || $this->Status === 'Incomplete') {
             $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -409,7 +418,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Returns the Payment type currently in use.
      *
-     * @return string | null
+     * @return string|null
      */
     public function PaymentMethod()
     {
@@ -456,9 +465,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array An array suitable for passing to CustomRequiredFields
      */
-    public static function combined_form_requirements($order = null)
+    public static function combined_form_requirements($order = null): array
     {
-        return [];
+        $array = [];
+        $supportedMethods = self::get_supported_methods($order);
+        foreach ($supportedMethods as $methodClass => $methodName) {
+        }
     }
 
     /**
@@ -537,9 +549,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-    public function getPaymentFormRequirements()
+    public function getPaymentFormRequirements(): array
     {
         user_error("Please implement getPaymentFormRequirements() on {$this->ClassName}", E_USER_ERROR);
+        return [];
     }
 
     /**

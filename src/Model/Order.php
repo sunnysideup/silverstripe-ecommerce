@@ -268,9 +268,10 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * see: http://userguide.icu-project.org/formatparse/datetime
      * @var string
      */
-    private static $date_format_for_title = 'D j M Y, G:i T';
+    private static $date_format_for_title = 'd MMM Y, HH:mm ';
 
     /**
      * @var bool
@@ -403,14 +404,12 @@ class Order extends DataObject implements EditableEcommerceObject
      **/
     private static $summary_fields = [
         'Title' => 'Title',
-        'Created' => 'Created',
         'OrderItemsSummaryNice' => 'Order Items',
         'Status.Title' => 'Next Step',
-        'Member.Surname' => 'Last Name',
-        'Member.Email' => 'Email',
+        'Member.CustomerDetails' => 'Customer',
         'TotalAsMoney.Nice' => 'Total',
-        'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
+        'CustomerOrderNote' => 'Note',
     ];
 
     private static $csv_export_fields = [
@@ -423,7 +422,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
         'IsCancelledNice' => 'Cancelled',
-        'CancelledBy.Email' => 'Cancelled By'
+        'CancelledBy.Email' => 'Cancelled By',
     ];
 
     /**
@@ -467,6 +466,11 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * @var array
+     */
+    private static $_try_to_finalise_order_is_running = [];
+
+    /**
      * fields contains in CSV export for ModelAdmin GridField
      *
      * @return array
@@ -477,11 +481,6 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('updateOrderExportFields', $exportFields);
         return $exportFields;
     }
-
-    /**
-     * @var array
-     */
-    private static $_try_to_finalise_order_is_running = [];
 
     public function i18n_singular_name()
     {
@@ -741,7 +740,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //as we are no longer using the parent:;getCMSFields
         // we had to add the updateCMSFields hook.
         $this->extend('updateCMSFields', $fields);
-        $currentMember = Member::currentUser();
+        $currentMember = Security::getCurrentUser();
         if (! $this->exists() || ! $this->StatusID) {
             $firstStep = DataObject::get_one(OrderStep::class);
             $this->StatusID = $firstStep->ID;
@@ -773,29 +772,33 @@ class Order extends DataObject implements EditableEcommerceObject
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
-        $orderSummaryConfig = GridFieldConfig_Base::create();
-        $orderSummaryConfig->removeComponentsByType(GridFieldToolbarHeader::class);
-        // $orderSummaryConfig->removeComponentsByType('GridFieldSortableHeader');
-        $orderSummaryConfig->removeComponentsByType(GridFieldFilterHeader::class);
-        $orderSummaryConfig->removeComponentsByType(GridFieldPageCount::class);
-        $orderSummaryConfig->removeComponentsByType(GridFieldPaginator::class);
-        $nextFieldArray = [
-            LiteralField::create(
-                'CssFix',
-                '<style>
-                    #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
-                </style>'
-            ),
-            HeaderField::create('OrderStepNextStepHeader', _t('Order.MAIN_DETAILS', 'Main Details'))->addExtraClass('section-heading-for-order'),
-            GridField::create(
-                'OrderSummary',
-                _t('Order.CURRENT_STATUS', 'Summary'),
-                ArrayList::create([$this]),
-                $orderSummaryConfig
-            ),
-            HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
-            $this->OrderStepField(),
-        ];
+        $summaryFields = [];
+        foreach($this->summaryFields() as $fieldName => $label) {
+            if($fieldName !== 'AssignedAdminNice') {
+                if ($this->hasMethod('relField')) {
+                    $value = $this->relField($fieldName);
+                } elseif ($this->hasMethod($fieldName)) {
+                    $value = $this->$fieldName();
+                } elseif ($this->hasMethod('get'.$fieldName)) {
+                    $fieldName = 'get' . $fieldName;
+                    $value = $this->$fieldName();
+                }
+                $summaryFields[] = ReadonlyField::create($fieldName.'_Summary', $label, $value);
+            }
+        }
+        $nextFieldArray = array_merge(
+            $summaryFields,
+            [
+                LiteralField::create(
+                    'CssFix',
+                    '<style>
+                        #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
+                    </style>'
+                ),
+                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
+                $this->OrderStepField(),
+            ]
+        );
         $keyNotes = OrderStatusLog::get()->filter(
             [
                 'OrderID' => $this->ID,
@@ -827,21 +830,15 @@ class Order extends DataObject implements EditableEcommerceObject
             [
                 EcommerceCMSButtonField::create(
                     'AddNoteButton',
-                    '/admin/sales/Order/EditForm/field/Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
+                    '/admin/sales-advanced/Sunnysideup-Ecommerce-Model-Order/EditForm/field/Sunnysideup-Ecommerce-Model-Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
                     _t('Order.ADD_NOTE', 'Add Note')
                 ),
-            ]
-        );
-        $nextFieldArray = array_merge(
-            $nextFieldArray,
-            [
-
             ]
         );
 
         //is the member is a shop admin they can always view it
 
-        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+        if (EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
             $lastStep = OrderStep::last_order_step();
             if ($this->StatusID !== $lastStep->ID) {
                 $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
@@ -1154,7 +1151,11 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function OrderStepField()
     {
-        return OrderStepField::create($name = 'MyOrderStep', $this, Member::currentUser());
+        return OrderStepField::create(
+            'MyOrderStep', 
+            $this, 
+            Security::getCurrentUser()
+        );
     }
 
     /*******************************************************
@@ -1302,7 +1303,9 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->MyStep()->initStep($this)) {
             if ($this->MyStep()->doStep($this)) {
-                if ($nextOrderStepObject = $this->MyStep()->nextStep($this)) {
+                /** @var OrderStep|null */
+                $nextOrderStepObject = $this->MyStep()->nextStep($this);
+                if ($nextOrderStepObject instanceof OrderStep) {
                     $this->StatusID = $nextOrderStepObject->ID;
                     $this->write();
 
@@ -1574,7 +1577,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function RelevantPayments()
     {
         if ($this->IsPaid()) {
-            return $this->Payments()->filter(["Status" => "Success"]);
+            return $this->Payments()->filter(['Status' => 'Success']);
         }
         return $this->Payments();
     }
@@ -1597,8 +1600,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @alias for getIsCancelledNice
      * @return string
-    */
-
+     */
     public function IsCancelledNice()
     {
         return $this->getIsCancelledNice();
@@ -1651,7 +1653,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function ShopClosed()
     {
-        return EcommerceConfig::inst()->ShopClosed;
+        return EcommerceDBConfig::current_ecommerce_db_config()->ShopClosed;
     }
 
     /*******************************************************
@@ -1678,7 +1680,6 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             return $this->Member();
         }
-
         if ($this->MemberID) {
             $member = $this->Member();
         } elseif ($member = Security::getCurrentUser()) {
@@ -1687,13 +1688,10 @@ class Order extends DataObject implements EditableEcommerceObject
                 $this->write();
             }
         }
-
         $member = $this->Member();
-
-        if (!$member) {
-            $member = Member::create();
+        if (! $member) {
+            $member = new Member();
         }
-
         if ($member && $forceCreation) {
             $member->write();
         }
@@ -2602,7 +2600,7 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return string | null
+     * @return string|null
      */
     public function getFeedbackLink()
     {
@@ -2741,7 +2739,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($this->owner->OrderItems() as $orderItem) {
                 $x++;
                 $buyable = $orderItem->Buyable();
-                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">- ' . $orderItem->Quantity . 'x ';
+                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">' . $orderItem->Quantity . 'x ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
                 } else {
@@ -3330,7 +3328,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @see Order::canSubmit
      *
-     * @return \SilverStripe\ORM\ArrayList | null
+     * @return \SilverStripe\ORM\ArrayList|null
      */
     public function SubmitErrors()
     {
@@ -3922,7 +3920,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config();
         $replacementArray = [];
         //set subject
         if (! $subject) {
@@ -4047,7 +4045,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function getMemberForCanFunctions(Member $member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if (! $member) {
             $member = new Member();

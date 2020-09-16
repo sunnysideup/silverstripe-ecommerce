@@ -328,6 +328,7 @@ class ProductGroup extends Page
         return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
     }
 
+    public function ProductsPerPage() {return $this->getProductsPerPage();}
     /**
      * @return int
      **/
@@ -342,7 +343,7 @@ class ProductGroup extends Page
                 if ($parent = $this->ParentGroup()) {
                     $productsPagePage = $parent->getProductsPerPage();
                 } else {
-                    $productsPagePage = EcommerceConfig::inst()->NumberOfProductsPerPage;
+                    $productsPagePage = EcommerceDBConfig::current_ecommerce_db_config()->NumberOfProductsPerPage;
                 }
             }
 
@@ -469,7 +470,7 @@ class ProductGroup extends Page
             );
         }
 
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config();
 
         if ($config->ProductsAlsoInOtherGroups) {
             if (! $this instanceof ProductGroupSearchPage) {
@@ -992,7 +993,7 @@ class ProductGroup extends Page
      */
     protected function getProductsAlsoInOtherGroups()
     {
-        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
+        return EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups;
     }
 
     /**

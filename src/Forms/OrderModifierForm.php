@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Forms;
-
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -46,8 +46,8 @@ class OrderModifierForm extends Form
      *@param Validator $optionalValidator
      **/
     public function __construct(
-        Controller $optionalController = null,
-        $name,
+        ?Controller $optionalController,
+        string $name,
         FieldList $fields,
         FieldList $actions,
         Validator $optionalValidator = null
@@ -71,7 +71,7 @@ class OrderModifierForm extends Form
         $this->setValidator($optionalValidator);
 
         $this->setAttribute('autocomplete', 'off');
-        // TODO: find replacement for: Requirements::themedCSS($this->ClassName, 'ecommerce');
+        Requirements::themedCSS(ClassInfo::shortName(self::class));
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
         Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier
@@ -117,15 +117,6 @@ class OrderModifierForm extends Form
 
     protected function myLcFirst($str)
     {
-        if (function_exists('lcfirst') === false) {
-            function lcfirst($str)
-            {
-                $str[0] = strtolower($str[0]);
-
-                return $str;
-            }
-        } else {
-            return lcfirst($str);
-        }
+        return lcfirst($str);
     }
 }

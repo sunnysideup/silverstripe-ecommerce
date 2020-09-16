@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;
@@ -76,7 +77,7 @@ class OrderStatusLogForm extends Form
 
         $this->setAttribute('autocomplete', 'off');
 
-        // TODO: find replacement for: Requirements::themedCSS($this->ClassName, 'ecommerce');
+        Requirements::themedCSS(ClassInfo::shortName($this->ClassName));
         Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log
         $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");

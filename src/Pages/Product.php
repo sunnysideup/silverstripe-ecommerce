@@ -271,8 +271,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
-        $config = EcommerceConfig::inst();
-
+        $config = EcommerceDBConfig::current_ecommerce_db_config();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if ($price === 0) {
@@ -293,18 +292,16 @@ class Product extends Page implements BuyableModel
         );
 
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
-        if ($config->ProductsHaveWeight) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
             $fields->addFieldToTab(
                 'Root.Details',
                 NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
             );
         }
-
-        if ($config->ProductsHaveModelNames) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
-
-        if ($config->ProductsHaveQuantifiers) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveQuantifiers) {
             $fields->addFieldToTab(
                 'Root.Details',
                 TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
@@ -328,8 +325,7 @@ class Product extends Page implements BuyableModel
                 )
             );
         }
-
-        if ($config->ProductsAlsoInOtherGroups) {
+        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.AlsoShowHere',
                 [
@@ -369,10 +365,10 @@ class Product extends Page implements BuyableModel
 
         //we are adding all the fields to the keyword fields here for searching purposes.
         //because the MetaKeywords Field is being searched.
-        if ($this->config()->get('add_data_to_meta_description_for_search')) {
+        if ($this->Config()->get('add_data_to_meta_description_for_search')) {
             $this->MetaDescription = '';
             $fieldsToExclude = Config::inst()->get(SiteTree::class, 'db');
-            foreach (array_keys($this->config()->get('db')) as $fieldName) {
+            foreach (array_keys($this->Config()->get('db')) as $fieldName) {
                 if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
                     if (! in_array($fieldName, $fieldsToExclude, true)) {
                         $this->MetaDescription .= strip_tags($this->{$fieldName});
@@ -444,7 +440,7 @@ class Product extends Page implements BuyableModel
      */
     public function AllParentGroups()
     {
-        $otherGroupsArray = $this->ProductGroups()->map('ID', 'ID')->toArray();
+        $otherGroupsArray = $this->ProductGroups()->column('ID');
         $ids = array_merge([$this->ParentID], $otherGroupsArray);
 
         if ($ids) {
@@ -493,7 +489,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns the direct parent group for the product.
      *
-     * @return ProductGroup
+     * @return ProductGroup|null
      **/
     public function MainParentGroup()
     {
@@ -593,7 +589,7 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImageLink()
     {
-        return EcommerceConfig::inst()->DefaultImageLink();
+        return EcommerceDBConfig::current_ecommerce_db_config()->DefaultImageLink();
     }
 
     /**
@@ -603,7 +599,7 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImage()
     {
-        return EcommerceConfig::inst()->DefaultImage();
+        return EcommerceDBConfig::current_ecommerce_db_config->DefaultImage();
     }
 
     /**
@@ -704,9 +700,9 @@ class Product extends Page implements BuyableModel
     /**
      * Number of items sold.
      *
-     * @return int
+     * @return bool
      */
-    public function HasBeenSold(): int
+    public function HasBeenSold(): bool
     {
         return $this->getHasBeenSold();
     }
@@ -714,7 +710,7 @@ class Product extends Page implements BuyableModel
     /**
      * @return int
      */
-    public function getHasBeenSold(): int
+    public function getHasBeenSold(): bool
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
@@ -726,7 +722,7 @@ class Product extends Page implements BuyableModel
             ]
         );
 
-        return $dataList->count();
+        return $dataList->count() ? true : false;
     }
 
     //LINKS
@@ -973,7 +969,7 @@ class Product extends Page implements BuyableModel
      */
     public function canPurchase(Member $member = null, $checkPrice = true)
     {
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config
 
         // shop closed
         if ($config->ShopClosed) {
@@ -1090,7 +1086,7 @@ class Product extends Page implements BuyableModel
 
     public function debug()
     {
-        $config = EcommerceConfig::inst();
+        $config = EcommerceDBConfig::current_ecommerce_db_config
 
         $html = EcommerceTaskDebugCart::debug_object($this);
         $html .= '<ul>';

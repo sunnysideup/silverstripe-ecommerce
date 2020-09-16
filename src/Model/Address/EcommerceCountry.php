@@ -2,13 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use Sunnysideup\Geoip\Geoip;
-
 use SilverStripe\Core\Config\Config;
+
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\EcommerceCountryVisitorCountryProvider;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -181,7 +181,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Memory for allow country to check.
      *
-     * @var array | null
+     * @var array|null
      */
     private static $_allow_sales_cache = [];
 
@@ -238,7 +238,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         $can = false;
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if (EcommerceCountry::get()->count() < 220) {
             $can = parent::canCreate($member);
@@ -261,7 +261,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -284,7 +284,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -307,7 +307,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function canDelete($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -374,15 +374,14 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         } else {
             $array = [];
             $objects = null;
-
-            if (class_exists(Geoip::class) && $showAllCountries && ! $useIDNotCode) {
-                $array = Geoip::getCountryDropDown();
+            $className = '\\Sunnysideup\\Geoip\\Geoip';
+            if (class_exists($className) && $showAllCountries && ! $useIDNotCode) {
+                $array = $className::getCountryDropDown();
             } elseif ($showAllCountries) {
                 $objects = EcommerceCountry::get();
             } else {
                 $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
-
             if ($objects && $objects->count()) {
                 if ($useIDNotCode) {
                     $idField = 'ID';
@@ -406,7 +405,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * If there is only ONE allowed country code
      * then a lot of checking of countries can be avoided.
      *
-     * @return string | null - countrycode
+     * @return string|null - countrycode
      **/
     public static function get_fixed_country_code()
     {

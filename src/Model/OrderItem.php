@@ -11,7 +11,9 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -19,6 +21,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
@@ -239,7 +242,14 @@ class OrderItem extends OrderAttribute
         $fields->replaceField('BuyableClassName', HiddenField::create('BuyableClassName'));
         $fields->replaceField('Version', HiddenField::create('Version'));
         if ($this->OrderID && $this->exists()) {
-            $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
+            $fields->replaceField(
+                'OrderID',
+                CMSEditLinkField::create(
+                    'OrderID',
+                    'Order',
+                    $this->Order()
+                )
+            );
             $fields->addFieldsToTab(
                 'Root.Advanced',
                 [
@@ -271,7 +281,7 @@ class OrderItem extends OrderAttribute
                 ]
             );
         } else {
-            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', Order::class)));
+            $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
         $fields->removeByName('Sort');
         $fields->removeByName('CalculatedTotal');
@@ -279,19 +289,20 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('OrderAttributeGroupID');
         if ($order = $this->Order()) {
             if ($order->IsSubmitted()) {
+                $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
                 if ($buyable = $this->Buyable()) {
                     if ($this->BuyableExists()) {
-                        $buyableLink = '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
+                        $buyableLink .= '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
                     } else {
-                        $buyableLink = $this->getBuyableFullName()
+                        $buyableLink .= $this->getBuyableFullName()
                         . _t('OrderItem.NO_LONGER_AVAILABLE', ' - NO LONGER AVAILABLE');
                     }
                 } else {
-                    $buyableLink = _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
+                    $buyableLink .= _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
                 }
                 $fields->addFieldToTab(
                     'Root.Main',
-                    HeaderField::create('buyableLink', $buyableLink),
+                    HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
                     'Quantity'
                 );
 
@@ -672,7 +683,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param string $current - is this a current one, or an older VERSION ?
      *
-     * @return Sunnysideup\Ecommerce\Interfaces\BuyableModel
+     * @return DataObject  (\Sunnysideup\Ecommerce\Model\Sunnysideup\Ecommerce\Interfaces\BuyableModel)
      */
     public function getBuyable($current = '')
     {
@@ -686,7 +697,7 @@ class OrderItem extends OrderAttribute
         }
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
             if (! $this->BuyableID) {
-                user_error('There was an error retrieving the product', E_USER_NOTICE);
+                // user_error('There was an error retrieving the product', E_USER_NOTICE);
                 return Product::create();
             }
             //start hack

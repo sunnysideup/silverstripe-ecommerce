@@ -30,13 +30,13 @@
 				#cboxCurrent{position:absolute; top:-20px; right:0px; color:#ccc;}
 				#cboxSlideshow{position:absolute; top:-20px; right:90px; color:#fff;}
 				#cboxPrevious{border: none; position:absolute; top:50%; left:10px; margin-top:-32px;
-					background:url(/ecommerce/images/controls.png) no-repeat -75px 0; width:25px; height:25px; text-indent:-9999px; padding: 0;}
+					background:url(../images/controls.png) no-repeat -75px 0; width:25px; height:25px; text-indent:-9999px; padding: 0;}
 				#cboxPrevious:hover{background-position:-75px -25px;}
 				#cboxNext{border: none; position:absolute; top:50%; right:10px; margin-top:-32px;
-					background:url(/ecommerce/images/controls.png) no-repeat -50px 0; width:25px; height:25px; text-indent:-9999px; padding: 0;}
+					background:url(../images/controls.png) no-repeat -50px 0; width:25px; height:25px; text-indent:-9999px; padding: 0;}
 				#cboxNext:hover{background-position:-50px -25px;}
 				#cboxLoadingOverlay{background:#000;}
-				#cboxLoadingGraphic{background:url(/ecommerce/images/loading.gif) no-repeat center center;}
+				#cboxLoadingGraphic{background:url(../images/loading.gif) no-repeat center center;}
 				#cboxClose{
 					position: absolute;
 					top: 7px;

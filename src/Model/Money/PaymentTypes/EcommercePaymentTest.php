@@ -33,7 +33,7 @@ class EcommercePaymentTest extends EcommercePayment
         return $this->Config()->get('plural_name');
     }
 
-    public function getPaymentFormRequirements()
+    public function getPaymentFormRequirements(): array
     {
         return [];
     }

@@ -4,12 +4,11 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
@@ -142,7 +141,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -165,7 +164,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -192,7 +191,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
             return false;
         }
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {

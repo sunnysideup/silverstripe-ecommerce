@@ -11,7 +11,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
@@ -204,7 +203,7 @@ class ProductController extends PageController
 
     public function debug()
     {
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         if (! $member || ! $member->IsShopAdmin()) {
             $messages = [
                 'default' => 'You must login as an admin to access debug functions.',
@@ -221,7 +220,7 @@ class ProductController extends PageController
     protected function init()
     {
         parent::init();
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Product', 'ecommerce');
+        Requirements::themedCSS('client/css/Product');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
     }
 

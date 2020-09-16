@@ -1,0 +1,66 @@
+/**
+	*	IMPORTANT	NOTE:
+	*	The	default	e-commerce	css	only	includes	the	basics	and	it	is	recommended	that	you	theme	these	files.
+	*	Also	make	sure	you	have	the	site's	general	layout	and	typography	styled	before	you	do	this.
+	*
+	*	This	file	is	used	to	format	the	pop-up
+	*
+	**/
+
+/**
+	*	jQuery	Simple	Dialog
+	*/
+
+#sd_container{
+	margin:0;
+	padding:	40px;
+	position:	absolute;
+	background-color:	#fff;
+	border:	solid	1px	#ccc;
+	text-align:center;
+	width:	600px!important;
+	height:	300px!important;
+	margin:	0;
+	overflow:	auto!important;
+}
+
+.sd_header{
+	font-size:	125%;
+	font-weight:bold;
+	margin-bottom:	10px;
+}
+
+.sd_content{}
+
+.sd_footer{
+	color:	#a0a0a0;
+	margin-top:	10px;
+}
+
+.sd_overlay{
+	position:	absolute;
+	margin:0;
+	padding:	0;
+	top:	0;
+	left:	0;
+	background-color:	#222;
+}
+
+.sd_closelabel{
+	position:absolute;
+	width:50px;
+	height:22px;
+	line-height:22px;
+	top:0;
+	left:0;
+	padding:5px;
+	text-align:center;
+	background-color:#ccc;
+}
+
+.sd_closelabel a {
+	text-decoration:none;
+	color:	#222;
+	font-size:	12px;
+	font-weight:bold;
+}

@@ -4,15 +4,15 @@ namespace Sunnysideup\Ecommerce\Model\Address;
 
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\GoogleAddressField\GoogleAddressField;
 
@@ -212,7 +212,14 @@ class ShippingAddress extends OrderAddress
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('OrderID', new ReadonlyField('OrderID'));
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
 
         return $fields;
     }
@@ -248,7 +255,7 @@ class ShippingAddress extends OrderAddress
                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
             );
 
-            if ($member && Member::currentUser()) {
+            if ($member && Security::getCurrentUser()) {
                 if ($member->exists() && ! $member->IsShopAdmin()) {
                     $this->FillWithLastAddressFromMember($member, true);
                     if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {

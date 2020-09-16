@@ -12,9 +12,9 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -27,6 +27,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 class SalesAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
+
     /**
      * Change this variable if you don't want the Import from CSV form to appear.
      * This variable can be a boolean or an array.
@@ -84,10 +85,10 @@ class SalesAdmin extends ModelAdmin
     {
         parent::init();
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
-        Requirements::css('sunnysideup/ecommerce: client/css/OrderStepField.css');
-        //// TODO: find replacement for: Requirements::themedCSS("OrderReport", 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //// TODO: find replacement for: Requirements::themedCSS("Order_Invoice", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        //// TODO: find replacement for: Requirements::themedCSS("Order_PackingSlip", 'ecommerce', "print"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('client/css/OrderStepField');
+        Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('client/css/Order_Invoice', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('client/css/Order_PackingSlip', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
 
         //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
     }
@@ -119,6 +120,7 @@ class SalesAdmin extends ModelAdmin
      */
     public function getList()
     {
+        return parent::getList();
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);

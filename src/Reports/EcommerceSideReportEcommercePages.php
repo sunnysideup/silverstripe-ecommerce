@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\ORM\DataList;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CartPage;

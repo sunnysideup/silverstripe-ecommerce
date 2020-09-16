@@ -3162,7 +3162,7 @@ modified:	src/Api/ShoppingCart.php
 -            if (! $this->order) {
 +            if (!$this->order) {
                  $this->order = self::session_order();
-                 $loggedInMember = Member::currentUser();
+                 $loggedInMember = Security::currentUser();
                  if ($this->order) {
                      //first reason to set to null: it is already submitted
                      if ($this->order->IsSubmitted()) {
@@ -3371,7 +3371,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -426,24 +454,22 @@
       *
-      * @return false | DataObject (OrderItem) | null
+      * @return false | DataObject (OrderItem)|null
       */
 -    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
 +    public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = array())
@@ -3399,7 +3399,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -455,13 +481,14 @@
       *
-      * @return false | OrderItem | null
+      * @return false | OrderItem|null
       */
 -    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = [])
 +    public function decrementBuyable(BuyableModel $buyable, $quantity = 1, array $parameters = array())
@@ -3432,7 +3432,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -491,7 +515,7 @@
       *
-      * @return bool | item | null - successfully removed
+      * @return bool | item|null - successfully removed
       */
 -    public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
 +    public function deleteBuyable(BuyableModel $buyable, array $parameters = array())
@@ -4190,7 +4190,7 @@ modified:	src/Api/ShoppingCart.php
       *
 @@ -1285,22 +1225,15 @@
       *
-      * @return OrderItem | null
+      * @return OrderItem|null
       */
 -    protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
 +    protected function getExistingItem(BuyableModel $buyable, array $parameters = array())
@@ -6192,7 +6192,7 @@ modified:	src/Control/ShoppingCartController.php
 +    public function clearandlogout(HTTPRequest $request)
      {
          $this->cart->clear();
-         if ($member = Member::currentUser()) {
+         if ($member = Security::currentUser()) {
 @@ -705,7 +728,7 @@
       *
       * @return REDIRECT
@@ -6837,7 +6837,7 @@ modified:	src/Model/Address/ShippingAddress.php
                  new HeaderField('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
                  new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
 @@ -263,7 +278,7 @@
-             if ($member && Member::currentUser()) {
+             if ($member && Security::currentUser()) {
                  if ($member->exists() && ! $member->IsShopAdmin()) {
                      $this->FillWithLastAddressFromMember($member, true);
 -                    if (EcommerceConfig::get('ShippingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
@@ -7294,7 +7294,7 @@ modified:	src/Model/Address/BillingAddress.php
          $fields->removeByName('RegionCode');
          $fields->removeByName('RegionID');
 @@ -273,7 +286,7 @@
-         if ($member && Member::currentUser()) {
+         if ($member && Security::currentUser()) {
              if ($member->exists() && ! $member->IsShopAdmin()) {
                  $this->FillWithLastAddressFromMember($member, true);
 -                if (EcommerceConfig::get('BillingAddress', 'allow_selection_of_previous_addresses_in_checkout')) {
@@ -9889,7 +9889,7 @@ modified:	src/Model/Order.php
              );
 @@ -657,7 +739,7 @@
          $this->extend('updateCMSFields', $fields);
-         $currentMember = Member::currentUser();
+         $currentMember = Security::currentUser();
          if (! $this->exists() || ! $this->StatusID) {
 -            $firstStep = DataObject::get_one('OrderStep');
 +            $firstStep = DataObject::get_one(OrderStep::class);
@@ -9935,7 +9935,7 @@ modified:	src/Model/Order.php
                  $nextFieldArray,
                  [
 @@ -767,7 +849,7 @@
-         if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+         if (EcommerceRole::current_member_can_process_orders(Security::currentUser())) {
              $lastStep = OrderStep::last_order_step();
              if ($this->StatusID !== $lastStep->ID) {
 -                $queueObjectSingleton = Injector::inst()->get('OrderProcessQueue');
@@ -11746,7 +11746,7 @@ modified:	src/Forms/OrderFormCancel.php
 +    public function docancel(array $data, Form $form, HTTPRequest $request)
      {
          $SQLData = Convert::raw2sql($data);
-         $member = Member::currentUser();
+         $member = Security::currentUser();
 
 modified:	src/Forms/ProductSearchFormShort.php
 @@ -2,7 +2,10 @@
@@ -15303,7 +15303,7 @@ modified:	src/Search/Filters/OrderFiltersAroundDateFilter.php
 -        $date = new Date();
 +        $date = new DBDate();
          $date->setValue($value);
-         $formattedDate = $date->format('Y-m-d');
+         $formattedDate = $date->format('Y-MM-d');
 
 
 modified:	src/Search/Filters/OrderFiltersMultiOptionsetStatusIDFilter.php
@@ -16040,7 +16040,7 @@ modified:	src/Pages/CartPageController.php
 -    public function saveorder(SS_HTTPRequest $request)
 +    public function saveorder(HTTPRequest $request)
      {
-         $member = Member::currentUser();
+         $member = Security::currentUser();
          if (! $member) {
 @@ -312,7 +327,7 @@
       *
@@ -16742,7 +16742,7 @@ modified:	src/Pages/ProductGroup.php
 -    protected function allowPurchaseWhereStatement($asArray = true, $table = 'Product')
 +    protected function allowPurchaseWhereStatement($asArray = true, $table = Product::class)
      {
-         if ($this->EcomConfig()->OnlyShowProductsThatCanBePurchased) {
+         if (EcommerceDBConfig::current_ecommerce_db_config()->OnlyShowProductsThatCanBePurchased) {
              if ($asArray) {
 @@ -1711,7 +1738,7 @@
       *

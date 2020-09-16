@@ -17,6 +17,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
@@ -89,10 +90,11 @@ class OrderForm extends Form
                     'ReadTermsAndConditions',
                     DBField::create_field(
                         'HTMLText',
-                        _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'), $alreadyTicked)
+                        _t('OrderForm.AGREEWITHTERMS1', 'I have read and agree with the ') . ' <a href="' . $termsAndConditionsPage->Link() . '">' . trim(Convert::raw2xml($termsAndConditionsPage->Title)) . '</a>' . _t('OrderForm.AGREEWITHTERMS2', '.'),
+                        $alreadyTicked
                     )
-                );
-
+                )
+            );
         }
         $textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE', 'Note / Question'));
         $finalFields->push($textAreaField);
@@ -147,7 +149,7 @@ class OrderForm extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function processOrder(array $data, Form $form, HTTPRequest $request)
     {
@@ -201,7 +203,7 @@ class OrderForm extends Form
         $order->write();
         //saving into member, in case we add additional fields for the member
         //e.g. newslettersignup
-        if ($member = Member::currentUser()) {
+        if ($member = Security::getCurrentUser()) {
             $form->saveInto($member);
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {

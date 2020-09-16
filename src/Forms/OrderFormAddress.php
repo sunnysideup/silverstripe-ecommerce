@@ -15,6 +15,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -37,11 +38,6 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  **/
 class OrderFormAddress extends Form
 {
-    /**
-     * @var bool
-     */
-    private static $shipping_address_first = true;
-
     /**
      * @var bool
      */
@@ -83,6 +79,11 @@ class OrderFormAddress extends Form
     protected $order = null;
 
     /**
+     * @var bool
+     */
+    private static $shipping_address_first = true;
+
+    /**
      * @param Controller $controller
      * @param string $name
      */
@@ -118,7 +119,7 @@ class OrderFormAddress extends Form
         //find member
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-        $this->loggedInMember = Member::currentUser();
+        $this->loggedInMember = Security::getCurrentUser();
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember) {
@@ -350,7 +351,7 @@ class OrderFormAddress extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
@@ -372,7 +373,7 @@ class OrderFormAddress extends Form
      *
      * @param array       $data    Form request data submitted from OrderForm
      * @param Form        $form    Form object for this action
-     * @return \SilverStripe\Control\HTTPRequest $request Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {

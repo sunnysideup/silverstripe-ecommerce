@@ -58,7 +58,7 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
         );
     }
 
-    public function getPaymentFormRequirements()
+    public function getPaymentFormRequirements(): array
     {
         return [];
     }

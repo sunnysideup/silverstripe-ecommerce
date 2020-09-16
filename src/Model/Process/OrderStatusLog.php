@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -21,8 +20,8 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * @description: see OrderStep.md
@@ -34,7 +33,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
  **/
 class OrderStatusLog extends DataObject implements EditableEcommerceObject
 {
-
     /**
      * @var array
      */
@@ -183,7 +181,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -210,7 +208,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -246,7 +244,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -278,7 +276,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function canDelete($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -341,7 +339,11 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 $fields->removeByName('OrderID');
                 $fields->addFieldToTab(
                     'Root.Main',
-                    CMSEditLinkField::create('OrderID', $order->singular_name(), $order)
+                    CMSEditLinkField::create(
+                        'OrderID',
+                        $order->singular_name(),
+                        $order
+                    )
                 );
             }
         }
@@ -383,6 +385,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
         }
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
         return $fields;
     }
 
@@ -456,7 +466,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 //        }
 //        //END HACK TO PREVENT LOSS
         if (! $this->AuthorID) {
-            if ($member = Member::currentUser()) {
+            if ($member = Security::getCurrentUser()) {
                 $this->AuthorID = $member->ID;
             }
         }

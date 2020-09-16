@@ -53,13 +53,13 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         if ($this->owner->IsEcommercePage()) {
             $link = $this->owner->Link();
         } else {
-            $link = EcommerceConfig::inst()->AccountPageLink();
+            $link = EcommerceDBConfig::current_ecommerce_db_config()->AccountPageLink();
         }
 
         return Controller::join_links(
             Director::absoluteBaseURL(),
-            '/Security/login?BackURL=' . urlencode($link)
-        );
+            '/Security/login'
+        ).'?BackURL=' . urlencode($link);
     }
 
     public function augmentValidURLSegment()

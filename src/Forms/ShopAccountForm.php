@@ -12,6 +12,7 @@ use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
@@ -34,7 +35,7 @@ class ShopAccountForm extends Form
      */
     public function __construct($controller, $name, $mustCreateAccount = false)
     {
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         $requiredFields = null;
         if ($member && $member->exists()) {
             $fields = $member->getEcommerceFields(false);
@@ -193,7 +194,7 @@ class ShopAccountForm extends Form
      **/
     protected function processForm($data, $form, $request, $link = '')
     {
-        $member = Member::currentUser();
+        $member = Security::getCurrentUser();
         if (! $member) {
             $form->sessionMessage(_t('Account.DETAILSNOTSAVED', 'Your details could not be saved.'), 'bad');
             $this->controller->redirectBack();

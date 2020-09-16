@@ -5,16 +5,18 @@ namespace Sunnysideup\Ecommerce\Model\Address;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\SelectOrderAddressField;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\GoogleAddressField\GoogleAddressField;
+
 /**
  * @description: each order has a billing address.
  *
@@ -229,7 +231,14 @@ class BillingAddress extends OrderAddress
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('OrderID', new ReadonlyField('OrderID', _t('BillingAddress.ORDERID', 'Order #')));
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
         $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));
         //We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
         $fields->removeByName('RegionCode');
@@ -260,7 +269,7 @@ class BillingAddress extends OrderAddress
         );
         $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
         $billingFields = new CompositeField();
-        if ($member && Member::currentUser()) {
+        if ($member && Security::getCurrentUser()) {
             if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
                 if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {

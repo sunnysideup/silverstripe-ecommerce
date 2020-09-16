@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
+
 class ProductGroupSearchPageController extends ProductGroupController
 {
     private static $allowed_actions = [

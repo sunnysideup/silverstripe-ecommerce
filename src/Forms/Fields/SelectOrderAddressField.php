@@ -18,7 +18,7 @@ use SilverStripe\View\Requirements;
 class SelectOrderAddressField extends OptionsetField
 {
     /**
-     * @var SilverStripe\ORM\DataList | null
+     * @var SilverStripe\ORM\DataList|null
      */
     protected $addresses = null;
 

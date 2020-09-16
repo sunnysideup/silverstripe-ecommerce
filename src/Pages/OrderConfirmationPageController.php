@@ -69,9 +69,9 @@ class OrderConfirmationPageController extends CartPageController
             }
         }
         parent::init();
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Order', 'ecommerce');
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: Order_Print', 'ecommerce', 'print');
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: CheckoutPage', 'ecommerce');
+        Requirements::themedCSS('Order');
+        Requirements::themedCSS('Order_Print', 'print');
+        Requirements::themedCSS('CheckoutPage');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
     }
@@ -89,21 +89,21 @@ class OrderConfirmationPageController extends CartPageController
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
         if (isset($_REQUEST['print'])) {
             Requirements::clear();
-            // TODO: find replacement for: Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            // TODO: find replacement for: Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            // TODO: find replacement for: Requirements::themedCSS('Order_Invoice', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            // TODO: find replacement for: Requirements::themedCSS('Order_Invoice_Print_Only', 'ecommerce', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('Order_Invoice'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('Order_Invoice_Print_Only', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
-            $html = $this->renderWith('Sunnysideup\Ecommerce\Invoice');
+            $html = $this->renderWith('Sunnysideup\\Ecommerce\\Invoice');
             Config::unnest();
 
             return $html;
         } elseif (isset($_REQUEST['packingslip'])) {
             Requirements::clear();
-            // TODO: find replacement for: Requirements::themedCSS('typography', $themeBaseFolder); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            // TODO: find replacement for: Requirements::themedCSS('OrderReport', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            // TODO: find replacement for: Requirements::themedCSS('Order_PackingSlip', 'ecommerce'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('Order_PackingSlip'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('Sunnysideup\Ecommerce\PackingSlip');
@@ -210,7 +210,7 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * @return string | null
+     * @return string|null
      */
     public function PaymentMessage()
     {
@@ -227,7 +227,7 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * @return string | null
+     * @return string|null
      */
     public function PaymentMessageType()
     {

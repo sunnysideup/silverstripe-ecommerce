@@ -7,6 +7,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -56,7 +57,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     public function doStep(Order $order)
     {
         if (! $order->MemberID) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
             if ($member) {
                 if (! $member->IsShopAdmin()) {
                     $order->MemberID = $member->ID();
@@ -75,7 +76,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @param Order $order
      *
-     * @return OrderStep | null (next step OrderStep object)
+     * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {

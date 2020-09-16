@@ -19,6 +19,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
@@ -27,10 +28,10 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
-use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 /**
  * @description: see OrderStep.md
@@ -355,7 +356,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * do not show in steps at all.
-     * @return boolean
+     * @return bool
      */
     public function HideFromEveryone()
     {
@@ -534,7 +535,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         //replacing
         $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
-        if($queueField){
+        if ($queueField) {
             $config = $queueField->getConfig();
             $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
             $config->removeComponentsByType(GridFieldDeleteAction::class);
@@ -763,7 +764,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return OrderStep | Null (next step OrderStep object)
+     * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
     {
@@ -1045,7 +1046,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return OrderStatusLog | null
+     * @return OrderStatusLog|null
      */
     public function RelevantLogEntry(Order $order)
     {
@@ -1061,7 +1062,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @param Order $order
      *
-     * @return \SilverStripe\ORM\DataList | null
+     * @return \SilverStripe\ORM\DataList|null
      */
     public function RelevantLogEntries(Order $order)
     {
@@ -1101,7 +1102,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1142,7 +1143,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1180,7 +1181,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             return false;
         }
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1288,7 +1289,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param bool | string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
      * @param string        $emailClassName
      *
-     * @return boolean;
+     * @return bool;
      */
     protected function sendEmailForStep(
         $order,

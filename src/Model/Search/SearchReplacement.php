@@ -4,9 +4,9 @@ namespace Sunnysideup\Ecommerce\Model\Search;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -74,7 +74,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function fieldLabels($includerelations = true)
     {
         return [
-            'Search' => 'When someone searches for ... (separate searches by ' . $this->Config()->get('separator') . ') - aliases',
+            'Search' => 'When someone searches for ... ',
             'Replace' => 'It is replaced by - proper name ...',
         ];
     }
@@ -102,7 +102,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -125,7 +125,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -148,7 +148,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -171,7 +171,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function canDelete($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -194,5 +194,20 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
+    }
+
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->dataFieldByName('Search')
+            ->setDescription(
+                'e.g. Sonny<br />' .
+                'You can enter more than one search phrase and separate by: ' . $this->Config()->get('separator') . ''
+            );
+        $fields->dataFieldByName('Replace')
+            ->setDescription(
+                'e.g. Sony'
+            );
+        return $fields;
     }
 }

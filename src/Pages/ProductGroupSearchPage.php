@@ -14,6 +14,18 @@ use SilverStripe\ORM\ArrayList;
 class ProductGroupSearchPage extends ProductGroup
 {
     /**
+     * Can product list (and related) be cached at all?
+     *
+     * @var bool
+     */
+    protected $allowCaching = false;
+
+    /**
+     * @var int
+     */
+    private static $maximum_number_of_products_to_list_for_search = 100;
+
+    /**
      * @var string
      */
     private static $best_match_key = 'bestmatch';

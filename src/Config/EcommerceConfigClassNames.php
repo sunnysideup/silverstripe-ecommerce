@@ -35,6 +35,11 @@ class EcommerceConfigClassNames
     use Injectable;
     use Configurable;
 
+    /**
+     * @todo: make this more sophisticated / customisable
+     * @param  string $class [description]
+     * @return [type]        [description]
+     */
     public static function getName(string $class)
     {
         return $class;

@@ -12,6 +12,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -113,7 +114,7 @@ class OrderProcessQueue extends DataObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -204,7 +205,7 @@ class OrderProcessQueue extends DataObject
      * returns TRUE if SUCCESSFUL and a message if unsuccessful ...
      *
      * @param  Order $order optional
-     * @return boolean | string
+     * @return bool | string
      */
     public function process($order = null)
     {
@@ -453,7 +454,7 @@ class OrderProcessQueue extends DataObject
                 'OrderID',
                 CMSEditLinkField::create(
                     'OrderID',
-                    Order::class,
+                    'Order',
                     $this->Order()
                 )
             );

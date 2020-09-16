@@ -9,8 +9,8 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -19,8 +19,8 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommerceMoney;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Money\ExchangeRateProvider;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
  * Object to manage currencies.
@@ -266,7 +266,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -289,7 +289,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function canView($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -312,7 +312,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -336,7 +336,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         if (! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
             if (! $member) {
-                $member = Member::currentUser();
+                $member = Security::getCurrentUser();
             }
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if ($extended !== null) {
@@ -356,7 +356,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * NOTE: when there is only one currency we return an empty DataList
      * as one currency is meaningless.
      *
-     * @return \SilverStripe\ORM\DataList | null
+     * @return \SilverStripe\ORM\DataList|null
      */
     public static function ecommerce_currency_list()
     {

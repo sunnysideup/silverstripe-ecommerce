@@ -8,7 +8,6 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Includes\Sidebar_Cart_Inner;
 
 /**
  * @description: returns the cart as JSON
@@ -38,7 +37,7 @@ class CartResponse extends EcommerceResponse
      * @var array
      */
     private static $cart_responses_required = [
-        'SideBarCartID' => Sidebar_Cart_Inner::class,
+        'SideBarCartID' => 'Sidebar_Cart_Inner',
     ];
 
     /**

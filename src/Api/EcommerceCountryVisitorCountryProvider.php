@@ -2,11 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use Sunnysideup\Geoip\Geoip;
-
-
 use SilverStripe\Control\Controller;
+
+
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 
@@ -19,13 +20,26 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceCountryVisitorCountryProvider implements EcommerceGEOipProvider
 {
+    use Configurable;
+
+    private static $country_provider = '\\Sunnysideup\\Geoip\\Geoip';
+
+    public static function ip2country(?string $ip = '')
+    {
+        return Injector::inst()->get(self::class)->getCountry($ip);
+    }
+
     /**
      * @return string (Country Code - e.g. NZ, AU, or AF)
      */
-    public function getCountry()
+    public function getCountry(string $ip = '')
     {
-        if (class_exists(Geoip::class)) {
-            return Geoip::visitor_country();
+        if (! $ip) {
+            $ip = $this->getIP();
+        }
+        $class = $this->Config()->get('country_provider');
+        if (class_exists($class)) {
+            return $class::visitor_country($ip);
         }
         return Config::inst()->get(EcommerceCountry::class, 'default_country_code');
     }

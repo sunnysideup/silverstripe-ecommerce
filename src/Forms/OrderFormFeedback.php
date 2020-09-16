@@ -61,7 +61,7 @@ class OrderFormFeedback extends Form
     /**
      * @param array        $data The form request data submitted
      * @param Form         $form The {@link Form} this was submitted on
-     * @return \SilverStripe\Control\HTTPRequest  $request The {@link Form} this was submitted on
+     * @return \SilverStripe\Control\HTTPRequest The {@link Form} this was submitted on
      */
     public function dofeedback(array $data, Form $form, HTTPRequest $request)
     {

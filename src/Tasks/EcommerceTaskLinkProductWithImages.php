@@ -8,7 +8,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -93,10 +92,6 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                                 $method = $this->productManyManyField;
                                 $collection = $product->{$method}();
                                 foreach ($images as $image) {
-                                    if (is_a($image, EcommerceConfigClassNames::getName(Image::class)) && $image->ClassName !== EcommerceConfigClassNames::getName(ProductImage::class)) {
-                                        $image = $image->newClassInstance(ProductImage::class);
-                                        $image->write();
-                                    }
                                     $collection->add($image);
                                     if ($this->verbose) {
                                         DB::alteration_message('Adding image ' . $image->Name . ' to ' . $product->Title, 'created');

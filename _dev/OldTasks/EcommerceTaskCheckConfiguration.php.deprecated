@@ -154,8 +154,8 @@ class EcommerceTaskCheckConfiguration extends BuildTask
         $definitionsObject = EcommerceConfigDefinitions::create();
         $this->definitions = $definitionsObject->Definitions();
         $this->definitionsHeaders = $definitionsObject->GroupDefinitions();
-        $configsObject = EcommerceConfig::create();
-        $this->configs = $configsObject->getCompleteDataSet();
+        // $configsObject = EcommerceConfig::create();
+        // $this->configs = $configsObject->getCompleteDataSet();
         $this->defaults = $this->getDefaultValues();
         if ($this->definitions) {
             if ($this->configs) {

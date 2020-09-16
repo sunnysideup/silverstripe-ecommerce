@@ -27,6 +27,7 @@ use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -203,9 +204,21 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     ];
 
     private static $has_many = [
-        'Orders' => Order::class,
-        'CancelledOrders' => Order::class,
+        'Orders.Member' => Order::class,
+        'CancelledOrders.CancelledBy' => Order::class,
     ];
+
+    private static $casting = [
+        'CustomerDetails' => 'Varchar',
+    ];
+
+    public function getCustomerDetails()
+    {
+        return
+            $this->owner->FirstName .  ' ' .$this->owner->Surname .
+            ', ' . $this->owner->Email .
+            ' (' . $this->owner->Orders()->count().')';
+    }
 
     /**
      *@return Group | \SilverStripe\ORM\DataObject | NULL
@@ -320,7 +333,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function current_member_is_shop_admin($member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($member) {
             return $member->IsShopAdmin();
@@ -339,7 +352,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function current_member_is_shop_assistant($member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($member) {
             return $member->IsShopAssistant();
@@ -358,7 +371,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public static function current_member_can_process_orders($member = null)
     {
         if (! $member) {
-            $member = Member::currentUser();
+            $member = Security::getCurrentUser();
         }
         if ($member) {
             return $member->CanProcessOrders();
@@ -594,7 +607,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $fields->push($headerField);
         $fields->push($linkField1);
 
-        if (EcommerceRole::current_member_can_process_orders(Member::currentUser())) {
+        if (EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
             $linkField2 = EcommerceCMSButtonField::create(
                 'MemberLinkFieldEditAllCustomers',
                 CMSEditLinkAPI::find_edit_link_for_object($group),

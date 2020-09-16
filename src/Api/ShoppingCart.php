@@ -13,8 +13,10 @@ use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Control\CartResponse;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
@@ -24,8 +26,6 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
-use Sunnysideup\Ecommerce\Control\CartResponse;
-
 
 /**
  * ShoppingCart - provides a global way to interface with the cart (current order).
@@ -114,7 +114,7 @@ class ShoppingCart
     /**
      * stores a reference to the current order object.
      *
-     * @var object | null
+     * @var object|null
      **/
     protected $order = null;
 
@@ -270,7 +270,7 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (! $this->order) {
                 $this->order = self::session_order();
-                $loggedInMember = Member::currentUser();
+                $loggedInMember = Security::getCurrentUser();
                 if ($this->order) {
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {
@@ -456,7 +456,7 @@ class ShoppingCart
      * @param float      $quantity   - number of items add.
      * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return false | DataObject (OrderItem) | null
+     * @return false | DataObject (OrderItem)|null
      */
     public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
     {
@@ -484,7 +484,7 @@ class ShoppingCart
      * @param float      $quantity   - number of items add.
      * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return false | OrderItem | null
+     * @return false | OrderItem|null
      */
     public function decrementBuyable(BuyableModel $buyable, $quantity = 1.00, array $parameters = [])
     {
@@ -519,7 +519,7 @@ class ShoppingCart
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param array     $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return bool | OrderItem | null - successfully removed
+     * @return bool | OrderItem|null - successfully removed
      */
     public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
     {
@@ -664,7 +664,7 @@ class ShoppingCart
     /**
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @return bool | null
+     * @return bool|null
      */
     public function save()
     {
@@ -726,7 +726,7 @@ class ShoppingCart
      *
      * @param OrderModifier $modifier | int
      *
-     * @return bool | null
+     * @return bool|null
      */
     public function removeModifier($modifier)
     {
@@ -823,7 +823,7 @@ class ShoppingCart
      *
      * @param int | Order $oldOrder
      *
-     * @return Order | false | null
+     * @return Order | false|null
      **/
     public function copyOrder($oldOrder)
     {
@@ -844,7 +844,7 @@ class ShoppingCart
                     $newOrder = $this->CopyOrderOnly($oldOrder, $newOrder);
 
                     $items = OrderItem::get()->filter([
-                        'OrderID' => $oldOrder->ID
+                        'OrderID' => $oldOrder->ID,
                     ]);
 
                     if (count($items)) {
@@ -1185,7 +1185,7 @@ class ShoppingCart
      * @param BuyableModel $buyable
      * @param array      $parameters
      *
-     * @return OrderItem | null
+     * @return OrderItem|null
      */
     protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
     {

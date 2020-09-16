@@ -10,7 +10,6 @@ use SilverStripe\Dev\TaskRunner;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCleanupProducts;
 
 class EcommerceDatabaseAdmin extends TaskRunner
 {

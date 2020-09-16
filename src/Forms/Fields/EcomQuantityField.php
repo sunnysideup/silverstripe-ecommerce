@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 class EcomQuantityField extends NumericField
 {
     /**
-     *@var OrderItem | DataObject | null
+     *@var OrderItem | DataObject|null
      **/
     protected $orderItem = null;
 
@@ -67,7 +67,7 @@ class EcomQuantityField extends NumericField
 
     /**
      * @param buyable      $parameters - the buyable / OrderItem
-     * @param array | null $parameters - parameters
+     * @param array|null $parameters - parameters
      **/
     public function __construct($object, $parameters = [])
     {
@@ -87,7 +87,9 @@ class EcomQuantityField extends NumericField
         if ($parameters) {
             $this->parameters = $parameters;
         }
+        $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 
+        parent::__construct($name, $title = '');
     }
 
     /**
@@ -138,7 +140,7 @@ class EcomQuantityField extends NumericField
      **/
     public function Field($properties = [])
     {
-        $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
+        $name = $this->getName();
         if (! isset(self::$tabindex[$name])) {
             self::$tabindex[$name] = count(self::$tabindex) + 1;
         }

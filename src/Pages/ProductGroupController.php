@@ -3,12 +3,16 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -55,6 +59,7 @@ class ProductGroupController extends PageController
         'resetfilter' => true,
     ];
 
+    //@todo: why not use trait?
     private static $extensions = [
         CachingHelper::class
     ];
@@ -83,10 +88,10 @@ class ProductGroupController extends PageController
         $otherGroupURLSegment = Convert::raw2sql($request->param('ID'));
         $arrayOfIDs = [0 => 0];
         if ($otherGroupURLSegment) {
-            $otherProductGroup = ProductGroup::get()->filter([
-                'URLSegment' => $otherGroupURLSegment
-            ]);
-
+            $otherProductGroup = DataObject::get_one(
+                ProductGroup::class,
+                ['URLSegment' => $otherGroupURLSegment]
+            );
             if ($otherProductGroup) {
                 $this->filterForGroupObject = $otherProductGroup;
 
@@ -105,21 +110,65 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * name for session variable where we store the last search results for this page.
+     * @return string
+     */
+    public function SearchResultsSessionVariable(): string
+    {
+        $idString = '_' . $this->ID;
+
+        return $this->Config()->get('product_search_session_variable') . $idString;
+    }
+
+    /**
+     * @return array
+     */
+    public function searchResultsArrayFromSession(): array
+    {
+        return [];
+        return $this->ProductSearchForm()->getProductIds();
+    }
+
+    /**
+     * @return array
+     */
+    public function searchResultsProductGroupsArrayFromSession(): array
+    {
+        return $this->ProductSearchForm()->getProductGroupIds();
+    }
+
+    /**
      * get the search results.
      *
-     * @return \SilverStripe\Control\HTTPRequest $request
+     * @param \SilverStripe\Control\HTTPRequest $request
+     * @param array
      */
-    public function searchresults()
+    public function searchresults($request)
     {
         $this->isSearchResults = true;
-
-        $title = $this->ProductSearchForm()->getLastSearchPhase();
-
-        if ($title) {
-            $title = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($title, 0, 25);
+        $this->searchHash = $this->request->param('ID');
+        $this->ProductSearchForm(true);
+        //set last search results
+        if ($this->searchHash) {
+            $this->getRequest()->getSession()->set(
+                $this->SearchResultsSessionVariable(),
+                $this->searchHash
+            );
         }
-
+        //get results array
+        $keyword = $this->ProductSearchForm()->getSearchPhrase();
+        if ($title) {
+            $title = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
+        }
+        //filters are irrelevant right now
+        $this->resetfilter();
         $this->addSecondaryTitle($title);
+        $this->products = $this->paginateList(
+            $this->ProductsShowable(
+                ['ID' => $resultArray],
+                $this->getSearchResultsDefaultSort($this->searchResultsArrayFromSession())
+            )
+        );
 
         return [];
     }
@@ -314,41 +363,69 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * After a search is conducted you may end up with a bunch of recommended
-     * product groups. They will be returned here.
-     *
+     * After a search is conducted you may end up with a bunch
+     * of recommended product groups. They will be returned here...
      * We sort the list in the order that it is provided.
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return \SilverStripe\ORM\DataList | Null (ProductGroups)
      */
-    public function SearchResultsChildGroups(): DataList
+    public function SearchResultsChildGroups()
     {
-        return $this->ProductSearchForm()->getProductGroups();
+        $groupArray = $this->searchResultsProductGroupsArrayFromSession();
+        if (! empty($groupArray)) {
+            $sortStatement = $this->createSortStatementFromIDArray($groupArray, ProductGroup::class);
+
+            return ProductGroup::get()
+                ->filter(['ID' => $groupArray, 'ShowInSearch' => 1])
+                ->sort($sortStatement);
+        }
+
+        return;
     }
 
     /**
-     * Returns a search form to search current products.
-     *
+     * returns a search form to search current products.
+     * @param bool $forceInit optional - force to be reinitialised.
      * @return ProductSearchForm object
      */
-    public function ProductSearchForm(): ProductSearchForm
+    public function ProductSearchForm(?bool $forceInit = false)
     {
-        if (!$this->productSearchForm) {
+        if ($this->searchForm === null || $forceInit) {
             $onlySearchTitle = $this->originalTitle;
-            $form = ProductSearchForm::create(
+            if ($this->dataRecord instanceof ProductGroupSearchPage) {
+                if ($this->HasSearchResults()) {
+                    $onlySearchTitle = 'Last Search Results';
+                }
+            }
+            $this->searchForm = ProductSearchForm::create(
                 $this,
                 'ProductSearchForm',
                 $onlySearchTitle,
                 $this->getProductList(null, $this->getMyUserPreferencesDefault('FILTER'))
             );
-            $filterGetVariable = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
-            $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-            $additionalGetParameters =
-                $filterGetVariable . '=' . $this->getMyUserPreferencesDefault('FILTER') . '&' .
-                $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
-            $form->setAdditionalGetParameters($additionalGetParameters);
+            // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+            // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
+            // $form->setAdditionalGetParameters($additionalGetParameters);
+            // $form->setSearchHash($this->searchKeyword);
+        }
 
-            $this->productSearchForm = $form;
+        return $this->searchForm;
+    }
+
+    /**
+     * Does this page have any search results?
+     * If search was carried out without returns
+     * then it returns zero (false).
+     *
+     * @return bool
+     */
+    public function HasSearchResults(): bool
+    {
+        $resultArray = $this->searchResultsArrayFromSession();
+        if (! empty($resultArray)) {
+            $count = count($resultArray) - 1;
+
+            return $count ? true : false;
         }
 
         return $this->productSearchForm;
@@ -402,14 +479,9 @@ class ProductGroupController extends PageController
      *
      * @return bool
      */
-    public function ActiveSearchTerm()
+    public function ActiveSearchTerm(): bool
     {
-        $var = Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable');
-        $data = $this->getRequest()->getSession()->get($var);
-
-        if (! empty($data['Keyword'])) {
-            return $this->IsSearchResults();
-        }
+        return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
     }
 
     /**
@@ -737,6 +809,31 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * Link that returns a list of all the products
+     * for this product group as a simple list.
+     *
+     * @return string
+     */
+    public function ListAllLink()
+    {
+        if ($this->filterForGroupObject) {
+            return $this->Link('filterforgroup/' . $this->filterForGroupObject->URLSegment) . '?showfulllist=1';
+        }
+        return $this->Link() . '?showfulllist=1';
+    }
+
+    /**
+     * Link that returns a list of all the products
+     * for this product group as a simple list.
+     *
+     * @return string
+     */
+    public function ListAFewLink()
+    {
+        return str_replace('?showfulllist=1', '', $this->ListAllLink());
+    }
+
+    /**
      * Link that returns a list of all the products for this product group as a
      * simple list. It resets everything; not just filter.
      *
@@ -773,13 +870,12 @@ class ProductGroupController extends PageController
     {
         parent::init();
         $this->originalTitle = $this->Title;
-
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: ProductGroup', 'ecommerce');
-        // TODO: find replacement for: Requirements::themedCSS('sunnysideup/ecommerce: ProductGroupPopUp', 'ecommerce');
+        Requirements::themedCSS('ProductGroup');
+        Requirements::themedCSS('ProductGroupPopUp');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
-
+        //makes sure best match only applies to search -i.e. reset otherwise.
         if ($this->request->param('Action') !== 'searchresults') {
             $sortKey = $this->getCurrentUserPreferences('SORT');
 

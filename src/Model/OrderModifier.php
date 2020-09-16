@@ -18,6 +18,7 @@ use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Forms\OrderModifierForm;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
@@ -251,7 +252,14 @@ class OrderModifier extends OrderAttribute
 
         //OrderID Field
         if ($this->OrderID && $this->exists()) {
-            $fields->replaceField('OrderID', $fields->dataFieldByName('OrderID')->performReadonlyTransformation());
+            $fields->replaceField(
+                'OrderID',
+                CMSEditLinkField::create(
+                    'OrderID',
+                    'Order',
+                    $this->Order()
+                )
+            );
         } else {
             $fields->replaceField('OrderID', new NumericField('OrderID'));
         }
@@ -319,7 +327,7 @@ class OrderModifier extends OrderAttribute
 
     /*
      * all classes extending OrderModifier must have this method if it has more fields
-     * @param boolean $recalculate - run it, even if it has run already
+     * @param bool $recalculate - run it, even if it has run already
      **/
     public function runUpdate($recalculate = false)
     {

@@ -33,7 +33,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      *     }
      * </code>.
      *
-     * @var DataObject | null
+     * @var DataObject|null
      */
     protected $requestor = null;
 
