@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Model\Extensions;
 use SilverStripe\CMS\Model\SiteTreeExtension;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**

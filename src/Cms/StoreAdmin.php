@@ -10,6 +10,7 @@ use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
