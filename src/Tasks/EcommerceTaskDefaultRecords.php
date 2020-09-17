@@ -6,8 +6,11 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+<<<<<<< HEAD
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+=======
+>>>>>>> 61381844eb2b5546e87a058dd4bc2b7a70a28e91
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
@@ -113,7 +116,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         }
 
         $update = [];
-        $ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
+        $ecommerceConfig = EcommerceConfig::inst();
         if ($ecommerceConfig) {
             if (! $ecommerceConfig->ReceiptEmail) {
                 $ecommerceConfig->ReceiptEmail = Email::config()->admin_email;

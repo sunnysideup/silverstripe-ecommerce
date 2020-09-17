@@ -13,7 +13,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
-
 class BuyableSelectFieldDataList extends Controller
 {
     protected $fieldsToSearch = [

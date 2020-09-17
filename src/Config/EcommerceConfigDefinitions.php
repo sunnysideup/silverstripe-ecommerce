@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
+use Page;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
@@ -29,7 +30,6 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
@@ -42,6 +42,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed;
 use Sunnysideup\Ecommerce\Money\EcommerceMoney;
 use Sunnysideup\Ecommerce\Pages\CartPageController;
 use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * This class sets out the static config variables for e-commerce.
@@ -52,8 +54,8 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
  * @sub-package: configuration
 
  **/
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
 
 /**
@@ -433,14 +435,14 @@ class EcommerceConfigDefinitions
                     This array also identifies the unique IDs used in the html that will be updated by the ajax response.',
             ],
 
-            CartPage_Controller::class => [
+            CartPageController::class => [
 
                 'session_code' =>
                     'Code name for session variable used in Cart Page.
                     This session variable is used to retain a message.',
             ],
 
-            CheckoutPage_Controller::class => [
+            CheckoutPageController::class => [
 
                 'checkout_steps' =>
                     'The Checkout Steps.  This can be defined as you like,
@@ -478,7 +480,7 @@ class EcommerceConfigDefinitions
             ],
 
             ################### POST SALE PROCESSING #####################
-            OrderConfirmationPage_Controller::class => [
+            OrderConfirmationPageController::class => [
 
                 'include_as_checkout_step' =>
                     'Include the order confirmation as one of the checkout steps, visually, in the list of steps shown.',

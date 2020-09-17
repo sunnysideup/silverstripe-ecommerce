@@ -10,7 +10,6 @@ use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
@@ -35,12 +34,14 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+<<<<<<< HEAD
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
+=======
+>>>>>>> 61381844eb2b5546e87a058dd4bc2b7a70a28e91
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\OrderAttribute;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
@@ -98,14 +99,8 @@ class Product extends Page implements BuyableModel
      */
     private static $add_data_to_meta_description_for_search = false;
 
-    /**
-     * Standard SS variable.
-     */
     private static $table_name = 'Product';
 
-    /**
-     * Standard SS variable.
-     */
     private static $db = [
         'Price' => 'Currency',
         'Weight' => 'Float',
@@ -120,16 +115,10 @@ class Product extends Page implements BuyableModel
         'ShortDescription' => 'Varchar(255)', //For use in lists.
     ];
 
-    /**
-     * Standard SS variable.
-     */
     private static $has_one = [
         'Image' => Image::class,
     ];
 
-    /**
-     * Standard SS variable.
-     */
     private static $many_many = [
         'ProductGroups' => ProductGroup::class,
         'AdditionalImages' => Image::class,
@@ -142,18 +131,12 @@ class Product extends Page implements BuyableModel
         'AdditionalFiles',
     ];
 
-    /**
-     * Standard SS variable.
-     */
     private static $casting = [
         'CalculatedPrice' => 'Currency',
         'CalculatedPriceAsMoney' => 'Money',
         'AllowPurchaseNice' => 'Varchar',
     ];
 
-    /**
-     * Standard SS variable.
-     */
     private static $indexes = [
         'FullSiteTreeSort' => true,
         'FullName' => true,
@@ -288,7 +271,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
-        $config = EcommerceDBConfig::current_ecommerce_db_config();
+        $config = EcommerceConfig::inst();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if ($price === 0) {
@@ -307,17 +290,18 @@ class Product extends Page implements BuyableModel
             'Root.Details',
             NumericField::create('Price', _t('Product.PRICE', 'Price'), '', 12)->setScale(2)
         );
+
         $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
-        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveWeight) {
+        if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $fields->addFieldToTab(
                 'Root.Details',
                 NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
             );
         }
-        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveModelNames) {
+        if (EcommerceConfig::inst()->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
-        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsHaveQuantifiers) {
+        if (EcommerceConfig::inst()->ProductsHaveQuantifiers) {
             $fields->addFieldToTab(
                 'Root.Details',
                 TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
@@ -341,7 +325,7 @@ class Product extends Page implements BuyableModel
                 )
             );
         }
-        if (EcommerceDBConfig::current_ecommerce_db_config()->ProductsAlsoInOtherGroups) {
+        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.AlsoShowHere',
                 [
@@ -373,13 +357,12 @@ class Product extends Page implements BuyableModel
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        // $config = EcommerceDBConfig::current_ecommerce_db_config();
-        //set allowpurchase to false IF
-        //free products are not allowed to be purchased
 
         $filter = EcommerceCodeFilter::create();
         $filter->checkCode($this, 'InternalItemID');
+
         $this->prepareFullFields();
+
         //we are adding all the fields to the keyword fields here for searching purposes.
         //because the MetaKeywords Field is being searched.
         if ($this->Config()->get('add_data_to_meta_description_for_search')) {
@@ -392,6 +375,7 @@ class Product extends Page implements BuyableModel
                     }
                 }
             }
+
             if ($this->hasExtension('ProductWithVariationDecorator')) {
                 $variations = $this->Variations();
                 if ($variations) {
@@ -404,15 +388,6 @@ class Product extends Page implements BuyableModel
                 }
             }
         }
-    }
-
-    /**
-     * standard SS Method
-     * Make sure that the image is a product image.
-     */
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
     }
 
     /**
@@ -458,22 +433,21 @@ class Product extends Page implements BuyableModel
         return false;
     }
 
-    //GROUPS AND SIBLINGS
-
     /**
      * Returns all the parent groups for the product.
      *
-     *@return \SilverStripe\ORM\DataList (ProductGroups)
-     **/
+     * @return \SilverStripe\ORM\DataList (ProductGroups)
+     */
     public function AllParentGroups()
     {
-        $otherGroupsArray = $this->ProductGroups()->map('ID', 'ID')->toArray();
+        $otherGroupsArray = $this->ProductGroups()->column('ID');
+        $ids = array_merge([$this->ParentID], $otherGroupsArray);
 
-        return ProductGroup::get()->filter(
-            [
-                'ID' => [$this->ParentID => $this->ParentID] + $otherGroupsArray,
-            ]
-        );
+        if ($ids) {
+            return ProductGroup::get()->filter([
+                'ID' => $ids,
+            ]);
+        }
     }
 
     /**
@@ -486,15 +460,14 @@ class Product extends Page implements BuyableModel
     {
         $directParents = $this->AllParentGroups();
         $allParentsArray = [];
+
         foreach ($directParents as $parent) {
             $obj = $parent;
             $allParentsArray[$obj->ID] = $obj->ID;
+
             while ($obj && $obj->ParentID) {
-                $obj = SiteTree::get()->byID(intval($obj->ParentID) - 0);
-                if ($obj) {
-                    if (is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))) {
-                        $allParentsArray[$obj->ID] = $obj->ID;
-                    }
+                if ($obj && $obj instanceof ProductGroup) {
+                    $allParentsArray[$obj->ID] = $obj->ID;
                 }
             }
         }
@@ -503,9 +476,10 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * @return Product ...
-     * we have this so that Variations can link to products
-     * and products link to themselves...
+     * We have this so that Variations can link to products and products link
+     * to themselves...
+     *
+     * @return self
      */
     public function getProduct()
     {
@@ -515,7 +489,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns the direct parent group for the product.
      *
-     * @return ProductGroup | NULL
+     * @return ProductGroup|null
      **/
     public function MainParentGroup()
     {
@@ -607,6 +581,7 @@ class Product extends Page implements BuyableModel
 
     /**
      * Returns a link to a default image.
+     *
      * If a default image is set in the site config then this link is returned
      * Otherwise, a standard link is returned.
      *
@@ -614,46 +589,17 @@ class Product extends Page implements BuyableModel
      */
     public function DefaultImageLink()
     {
-        return EcommerceDBConfig::current_ecommerce_db_config()->DefaultImageLink();
+        return EcommerceConfig::inst()->DefaultImageLink();
     }
 
     /**
      * returns the default image of the product.
      *
-     * @return Image | Null
+     * @return Image|null
      */
     public function DefaultImage()
     {
-        return EcommerceDBConfig::current_ecommerce_db_config()->DefaultImage();
-    }
-
-    // VERSIONING
-
-    /**
-     * Conditions for whether a product can be purchased.
-     *
-     * If it has the checkbox for 'Allow this product to be purchased',
-     * as well as having a price, it can be purchased. Otherwise a user
-     * can't buy it.
-     *
-     * Other conditions may be added by decorating with the canPurcahse function
-     *
-     * @return bool
-     */
-
-    /**
-     * @TODO: complete
-     *
-     * @param string $component - the has many relationship you are looking at, e.g. OrderAttribute
-     *
-     * @return \SilverStripe\ORM\DataList (CHECK!)
-     */
-    public function getVersionedComponents($component = 'ProductVariations')
-    {
-        return;
-        //$baseTable = ClassInfo::baseDataClass(self::$has_many[$component]);
-        //$query = singleton(self::$has_many[$component])->buildVersionSQL("\"{$baseTable}\".ProductID = {$this->ID} AND \"{$baseTable}\".Version = {$this->Version}");
-        //return singleton(self::$has_many[$component])->buildDataObjectSet($query->execute());
+        return EcommerceConfig::inst()->DefaultImage();
     }
 
     /**
@@ -686,25 +632,26 @@ class Product extends Page implements BuyableModel
         return $obj;
     }
 
-    //ORDER ITEM
-
     /**
-     * returns the order item associated with the buyable.
-     * ALWAYS returns one, even if there is none in the cart.
+     * Returns the order item associated with the buyable. ALWAYS returns one,
+     * even if there is none in the cart.
+     *
      * Does not write to database.
      *
      * @return OrderItem (no kidding)
-     **/
+     */
     public function OrderItem()
     {
-        //work out the filter
         $filterArray = [];
         $extendedFilter = $this->extend('updateItemFilter', $filter);
+
         if ($extendedFilter !== null && is_array($extendedFilter) && count($extendedFilter)) {
             $filterArray = $extendedFilter;
         }
+
         //make the item and extend
         $item = ShoppingCart::singleton()->findOrMakeItem($this, $filterArray);
+
         $this->extend('updateDummyItem', $item);
 
         return $item;
@@ -714,7 +661,7 @@ class Product extends Page implements BuyableModel
      * you can overwrite this function in your buyable items (such as Product).
      *
      * @return string
-     **/
+     */
     public function classNameForOrderItem()
     {
         $className = $this->defaultClassNameForOrderItem;
@@ -737,12 +684,14 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * This is used when you add a product to your cart
-     * if you set it to 1 then you can add 0.1 product to cart.
+     * This is used when you add a product to your cart.
+     *
+     * If you set it to 1 then you can add 0.1 product to cart.
+     *
      * If you set it to -1 then you can add 10, 20, 30, etc.. products to cart.
      *
      * @return int
-     **/
+     */
     public function QuantityDecimals()
     {
         return 0;
@@ -751,16 +700,19 @@ class Product extends Page implements BuyableModel
     /**
      * Number of items sold.
      *
-     * @return int
+     * @return bool
      */
-    public function HasBeenSold()
+    public function HasBeenSold(): bool
     {
         return $this->getHasBeenSold();
     }
 
-    public function getHasBeenSold()
+    /**
+     * @return int
+     */
+    public function getHasBeenSold(): bool
     {
-        $dataList = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false);
+        $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
         $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
         $dataList = $dataList->filter(
@@ -770,7 +722,7 @@ class Product extends Page implements BuyableModel
             ]
         );
 
-        return $dataList->count();
+        return $dataList->count() ? true : false;
     }
 
     //LINKS
@@ -925,14 +877,6 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * Is it a variation?
      *
      * @return bool
@@ -1025,23 +969,29 @@ class Product extends Page implements BuyableModel
      */
     public function canPurchase(Member $member = null, $checkPrice = true)
     {
-        $config = EcommerceDBConfig::current_ecommerce_db_config();
-        //shop closed
+        $config = EcommerceConfig::inst();
+
+        // shop closed
         if ($config->ShopClosed) {
             return false;
         }
-        //not sold at all
+
+        // not sold at all
         if (! $this->AllowPurchase) {
             return false;
         }
-        //check country
+
+        // check country
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
+
         if ($extended !== null) {
             return $extended;
         }
+
         if (! EcommerceCountry::allow_sales()) {
             return false;
         }
@@ -1136,6 +1086,8 @@ class Product extends Page implements BuyableModel
 
     public function debug()
     {
+        $config = EcommerceConfig::inst();
+
         $html = EcommerceTaskDebugCart::debug_object($this);
         $html .= '<ul>';
         $html .= '<li><hr />Links<hr /></li>';
@@ -1153,7 +1105,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><hr />Cart<hr /></li>';
         $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
-        $html .= '<li><b>Shop Open:</b> ' . (EcommerceDBConfig::current_ecommerce_db_config() ? (EcommerceDBConfig::current_ecommerce_db_config()->ShopClosed ? 'NO' : 'YES') : 'NO CONFIG') . ' </li>';
+        $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed ? 'NO' : 'YES' . ' </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';

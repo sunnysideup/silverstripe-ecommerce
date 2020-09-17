@@ -21,10 +21,9 @@ class OrderEmailRecordReview extends Controller
     {
         $id = intval($request->param('ID'));
         $email = OrderEmailRecord::get()->byID($id);
-        if($email) {
+        if ($email) {
             return $email->Content;
-        } else {
-            return _t('OrderEmailRecordReview.ERROR_EMAIL_COULD_NOT_BE_FOUND', 'Sorry, the content of this email is not available.');
         }
+        return _t('OrderEmailRecordReview.ERROR_EMAIL_COULD_NOT_BE_FOUND', 'Sorry, the content of this email is not available.');
     }
 }

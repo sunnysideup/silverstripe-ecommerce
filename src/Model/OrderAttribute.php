@@ -13,8 +13,11 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+<<<<<<< HEAD
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+=======
+>>>>>>> 61381844eb2b5546e87a058dd4bc2b7a70a28e91
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
@@ -380,16 +383,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function AJAXDefinitions()
     {
         return EcommerceConfigAjax::get_one($this);
-    }
-
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig | Object
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /*

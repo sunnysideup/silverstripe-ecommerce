@@ -4302,7 +4302,7 @@ modified:	src/Api/ShoppingCart.php
       */
 @@ -1373,7 +1303,6 @@
      {
-         return EcommerceDBConfig::current_ecommerce_db_config();
+         return EcommerceConfig::inst();
      }
 -
      /**
@@ -7157,8 +7157,8 @@ modified:	src/Model/Address/OrderAddress.php
  /**
    * ### @@@@ START REPLACEMENT @@@@ ###
 @@ -624,7 +646,7 @@
-         $postalCodeURL = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;
-         $postalCodeLabel = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;
+         $postalCodeURL = EcommerceConfig::inst()->PostalCodeURL;
+         $postalCodeLabel = EcommerceConfig::inst()->PostalCodeLabel;
          if ($postalCodeURL && $postalCodeLabel) {
 -            $prefix = EcommerceConfig::get('OrderAddress', 'field_class_and_id_prefix');
 +            $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
@@ -16742,7 +16742,7 @@ modified:	src/Pages/ProductGroup.php
 -    protected function allowPurchaseWhereStatement($asArray = true, $table = 'Product')
 +    protected function allowPurchaseWhereStatement($asArray = true, $table = Product::class)
      {
-         if (EcommerceDBConfig::current_ecommerce_db_config()->OnlyShowProductsThatCanBePurchased) {
+         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
              if ($asArray) {
 @@ -1711,7 +1738,7 @@
       *

@@ -50,7 +50,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Database Settings for E-commerce
  * Similar to SiteConfig but then for E-commerce
- * To access a singleton here, use: EcommerceDBConfig::current_ecommerce_db_config().
+ * To access a singleton here, use: EcommerceConfig::inst().
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -650,6 +650,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $className = ClassHelpers::unsanitise_class_name($className);
         $implementorsArray = class_implements($className);
+
         if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
             return true;
         }
@@ -658,7 +659,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * Returns the Current Member.
+     * Returns the current member.
+     *
+     * @return Member
      */
     public function Customer()
     {
@@ -666,7 +669,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * Returns the Current Member.
+     * Returns the member for the current order.
+     *
+     * @return Member
      */
     public function CustomerForOrder()
     {
@@ -694,6 +699,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function Currencies()
     {
         $list = EcommerceCurrency::get_list();
+
         if ($list && $list->count() > 1) {
             return $list;
         }
