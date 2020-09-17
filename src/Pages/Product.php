@@ -34,11 +34,8 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-<<<<<<< HEAD
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
-=======
->>>>>>> 61381844eb2b5546e87a058dd4bc2b7a70a28e91
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;

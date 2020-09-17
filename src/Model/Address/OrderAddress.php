@@ -21,11 +21,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-<<<<<<< HEAD
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-
-=======
->>>>>>> 61381844eb2b5546e87a058dd4bc2b7a70a28e91
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;

@@ -22,13 +22,10 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
-<<<<<<< HEAD
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-=======
->>>>>>> 61381844eb2b5546e87a058dd4bc2b7a70a28e91
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @Description: form to submit order.
