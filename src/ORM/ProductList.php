@@ -342,4 +342,12 @@ class ProductList
 
         return '';
     }
+
+    /**
+     *@todo: temporary method 
+     */
+    public function getProductIds()
+    {
+        return $this->products->column('ID');
+    }
 }

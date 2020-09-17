@@ -414,7 +414,7 @@ class ProductGroupController extends PageController
      * Does this page have any search results?
      * If search was carried out without returns
      * then it returns zero (false).
-     *
+     * @todo: to cleanup
      * @return bool
      */
     public function HasSearchResults(): bool
@@ -426,7 +426,7 @@ class ProductGroupController extends PageController
             return $count ? true : false;
         }
 
-        return $this->productSearchForm;
+        return false;
     }
 
     /**
@@ -694,7 +694,7 @@ class ProductGroupController extends PageController
     {
         $arrayOfItems = [];
 
-        $baseArray = $this->getProductList();
+        $baseArray = $this->getProductList()->getProductIds();
 
         $items = $this->getProductGroupsFromAlsoShowProducts();
 
