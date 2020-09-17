@@ -28,16 +28,16 @@ Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
 Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN
----
-Only:
-  moduleexists: 'grouped-cms-menu'
----
+
 SilverStripe\Admin\LeftAndMain:
   menu_groups:
     Shop:
-      - Sunnysideup\Ecommerce\Cms\StoreAdmin
-      - Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
-      - Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
-      - Sunnysideup\Ecommerce\Cms\SalesAdmin
-      - Sunnysideup\Ecommerce\Cms\SalesAdminExtras
-      - refresh
+      icon: 'cart'
+      priority: 5
+      children:
+        - Sunnysideup\Ecommerce\Cms\StoreAdmin
+        - Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
+        - Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
+        - Sunnysideup\Ecommerce\Cms\SalesAdmin
+        - Sunnysideup\Ecommerce\Cms\SalesAdminExtras
+        - refresh
