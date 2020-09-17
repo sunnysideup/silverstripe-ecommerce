@@ -35,9 +35,9 @@ SilverStripe\Admin\LeftAndMain:
       icon: 'cart'
       priority: 5
       children:
-        - Sunnysideup\Ecommerce\Cms\StoreAdmin
-        - Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
-        - Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
-        - Sunnysideup\Ecommerce\Cms\SalesAdmin
-        - Sunnysideup\Ecommerce\Cms\SalesAdminExtras
+        - Sunnysideup-Ecommerce-Cms-StoreAdmin
+        - Sunnysideup-Ecommerce-Cms-ProductsAndGroupsModelAdmin
+        - Sunnysideup-Ecommerce-Cms-ProductConfigModelAdmin
+        - Sunnysideup-Ecommerce-Cms-SalesAdmin
+        - Sunnysideup-Ecommerce-Cms-SalesAdminExtras
         - refresh
