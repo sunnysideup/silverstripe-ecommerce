@@ -432,7 +432,11 @@ class Order extends DataObject implements EditableEcommerceObject
         'CancelledByID' => array(
             'filter' => 'OrderFilters_HasBeenCancelled',
             'title' => 'Cancelled by ...',
-        )
+        ),
+        'StatusID' => array(
+            'filter' => 'OrderFilters_MultiOptionsetStatusIDFilter',
+            'title' => 'Status',
+        )        
     );
 
     /**
