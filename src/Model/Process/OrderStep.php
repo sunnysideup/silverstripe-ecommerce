@@ -556,7 +556,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'DeferTimeInSeconds',
                     _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
                 )
-                    ->setRightTitle(
+                    ->setDescription(
                         _t(
                             'OrderStep.TIME_EXPLANATION',
                             '86,400 seconds is one day ...
@@ -593,7 +593,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $fields->addFieldToTab(
                 'Root.CustomerMessage',
                 TextField::create('EmailSubject', _t('OrderStep.EMAILSUBJECT', 'Email Subject'))
-                    ->setRightTitle($rightTitle)
+                    ->setDescription($rightTitle)
             );
             if ($testEmailLink = $this->testEmailLink()) {
                 $fields->addFieldToTab(

@@ -500,9 +500,9 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         $fields = parent::getCMSFields();
         $fieldLabels = $this->fieldLabels();
         $codeField = $fields->dataFieldByName('Code');
-        $codeField->setRightTitle('e.g. NZD, use uppercase codes');
+        $codeField->setDescription('e.g. NZD, use uppercase codes');
         $titleField = $fields->dataFieldByName('Name');
-        $titleField->setRightTitle('e.g. New Zealand Dollar');
+        $titleField->setDescription('e.g. New Zealand Dollar');
         $fields->addFieldToTab('Root.Main', new ReadonlyField('IsDefaulNice', $fieldLabels['IsDefaultNice'], $this->getIsDefaultNice()));
         if (! $this->isDefault()) {
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRate', $fieldLabels['ExchangeRate'], $this->ExchangeRate()));

@@ -589,7 +589,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                         if ($field instanceof CheckboxField) {
                             $field->setDescription($fieldDescriptions[$field->Name]);
                         } else {
-                            $field->setRightTitle($fieldDescriptions[$field->Name]);
+                            $field->setDescription($fieldDescriptions[$field->Name]);
                         }
                     }
                 }

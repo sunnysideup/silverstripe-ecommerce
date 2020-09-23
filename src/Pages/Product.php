@@ -300,7 +300,7 @@ class Product extends Page implements BuyableModel
             $fields->addFieldToTab(
                 'Root.Details',
                 TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
-                    ->setRightTitle(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'))
+                    ->setDescription(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'))
             );
         }
         if ($this->canPurchase()) {

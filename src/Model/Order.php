@@ -1014,7 +1014,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         'SequentialOrderNumber',
                         _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number'),
                         $submissionLog->SequentialOrderNumber
-                    )->setRightTitle('e.g. 1,2,3,4,5...')
+                    )->setDescription('e.g. 1,2,3,4,5...')
                 );
             }
         } else {

@@ -418,7 +418,7 @@ class ProductGroup extends Page
                 $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
             )
         );
-        $numberOfProductsPerPageField->setRightTitle($numberOfProductsPerPageExplanation);
+        $numberOfProductsPerPageField->setDescription($numberOfProductsPerPageExplanation);
         if ($calculatedNumberOfProductsPerPage && ! $this->NumberOfProductsPerPage) {
             $this->NumberOfProductsPerPage = 0;
             $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
@@ -437,7 +437,7 @@ class ProductGroup extends Page
                 'Root.ProductDisplay',
                 $defaultSortOrderField = DropdownField::create('DefaultSortOrder', _t('ProductGroup.DEFAULTSORTORDER', 'Default Sort Order'), $sortDropdownList)
             );
-            $defaultSortOrderField->setRightTitle(_t('ProductGroup.INHERIT_RIGHT_TITLE', "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
+            $defaultSortOrderField->setDescription(_t('ProductGroup.INHERIT_RIGHT_TITLE', "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
         }
 
         // filter
@@ -452,7 +452,7 @@ class ProductGroup extends Page
                 'Root.ProductDisplay',
                 $defaultFilterField = DropdownField::create('DefaultFilter', _t('ProductGroup.DEFAULTFILTER', 'Default Filter'), $filterDropdownList)
             );
-            $defaultFilterField->setRightTitle(_t('ProductGroup.INHERIT_RIGHT_TITLE', "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
+            $defaultFilterField->setDescription(_t('ProductGroup.INHERIT_RIGHT_TITLE', "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
         }
 
         // display style

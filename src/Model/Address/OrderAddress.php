@@ -582,7 +582,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $postalCodeLabel = EcommerceConfig::inst()->PostalCodeLabel;
         if ($postalCodeURL && $postalCodeLabel) {
             $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
-            $field->setRightTitle(
+            $field->setDescription(
                 DBField::create_field(
                     'HTMLText',
                     '<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>'
@@ -654,7 +654,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
         }
         $countryField = new DropdownField($name, $title, $countriesForDropdown, $countryCode);
-        $countryField->setRightTitle(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ' '));
+        $countryField->setDescription(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ' '));
         if (count($countriesForDropdown) < 2) {
             $countryField = $countryField->performReadonlyTransformation();
             if (count($countriesForDropdown) < 1) {
