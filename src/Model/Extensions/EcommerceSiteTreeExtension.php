@@ -7,6 +7,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**

@@ -24,6 +24,8 @@ use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @Description: form to submit order.

@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Config;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\View\TemplateGlobalProvider;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 /**
  * Proxy for `Config::inst()->get()`
@@ -38,7 +39,7 @@ class EcommerceConfig implements TemplateGlobalProvider
      */
     public static function inst()
     {
-        return EcommerceConfig::inst();
+        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**
