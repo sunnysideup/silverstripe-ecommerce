@@ -72,6 +72,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
         'AlternativeEndPoint' => 'Varchar(255)',
+        'RiskLevel' => "Enum('1,2,3,4,5,6,7,9', '9')'",
     ];
 
     private static $has_one = [

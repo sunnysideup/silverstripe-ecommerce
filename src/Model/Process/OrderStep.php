@@ -676,7 +676,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function AlternativeDisplayPage()
     {
-        return;
+        return null;
+    }
+
+    /**
+     * A form that can be used by the Customer to progress step!
+     * @param Controller $controller
+     * @param string     $name
+     * @param Order      $order
+     * @return \SilverStripe\Forms\Form|null (CustomerOrderStepForm)
+     **/
+    public function CustomerOrderStepForm($controller, $name, $order)
+    {
+        return null;
     }
 
     /**
