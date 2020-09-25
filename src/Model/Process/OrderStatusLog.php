@@ -465,7 +465,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 //        }
 //        //END HACK TO PREVENT LOSS
         if (! $this->AuthorID) {
-            if ($member = Security::getCurrentUser()) {
+            $member = Security::getCurrentUser();
+            if ($member) {
                 $this->AuthorID = $member->ID;
             }
         }

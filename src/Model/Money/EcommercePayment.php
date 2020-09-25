@@ -40,6 +40,14 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
+
+    public const INCOMPLETE_STATUS = 'Incomplete';
+
+    public const SUCCESS_STATUS = 'Success';
+
+    public const FAILURE_STATUS = 'Failure';
+
+    public const PENDING_STATUS = 'Pending';
     /**
      * automatically populated by the dependency manager.
      *
@@ -65,14 +73,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $table_name = 'EcommercePayment';
 
     private static $db = [
-        'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
+        'Status' => "Enum('".self::INCOMPLETE_STATUS.",".self::SUCCESS_STATUS.",".FAILURE_STATUS.",".PENDING_STATUS."','".self::INCOMPLETE_STATUS."')",
         'Amount' => 'Money',
         'Message' => 'HTMLText',
         'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
         'AlternativeEndPoint' => 'Varchar(255)',
-        'RiskLevel' => "Enum('1,2,3,4,5,6,7,9', '9')'",
     ];
 
     private static $has_one = [
