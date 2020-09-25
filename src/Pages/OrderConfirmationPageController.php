@@ -343,7 +343,7 @@ class OrderConfirmationPageController extends CartPageController
             $order = $this->currentOrder;
             if ($order) {
                 $status = $order->Status();
-                if ($tatus) {
+                if ($status) {
                     $form = $status->CustomerOrderStepForm($this, 'CustomerOrderStepForm', $order);
                     if($form) {
                         Requirements::javascript('sunnysideup/ecommerce: client/javascript/CustomerOrderStepForm.js');

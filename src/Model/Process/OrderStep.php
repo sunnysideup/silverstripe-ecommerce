@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Process;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
@@ -686,7 +687,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param Order      $order
      * @return \SilverStripe\Forms\Form|null (CustomerOrderStepForm)
      **/
-    public function CustomerOrderStepForm($controller, $name, $order)
+    public function CustomerOrderStepForm(Controller $controller, string $name, Order $order)
     {
         return null;
     }
