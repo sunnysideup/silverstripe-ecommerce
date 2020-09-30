@@ -9,6 +9,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -20,12 +21,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class ProductList
+class ProductList extends ViewableData
 {
-    use Injectable;
-    use Extensible;
-    use Configurable;
-
     /**
      * @var SS_List
      */
@@ -344,7 +341,7 @@ class ProductList
     }
 
     /**
-     *@todo: temporary method 
+     *@todo: temporary method
      */
     public function getProductIds()
     {

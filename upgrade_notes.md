@@ -2867,7 +2867,9 @@ modified:	src/Api/OrderConverter.php
 -use Order;
 +
 +use Sunnysideup\Ecommerce\Model\Order;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
@@ -2895,7 +2897,9 @@ modified:	src/Api/EcommerceCountryVisitorCountryProvider.php
 +use SilverStripe\Core\Config\Config;
 +use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 +use SilverStripe\Control\Controller;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +use Sunnysideup\Ecommerce\Interfaces\EcommerceGEOipProvider;
 +
 
@@ -4370,7 +4374,9 @@ modified:	src/Dev/EcommerceCodeFilter.php
 +
 +
 +use SilverStripe\ORM\DataObject;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
@@ -5485,7 +5491,9 @@ modified:	src/Config/EcommerceConfigAjaxDefinitions.php
 +use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 +use SilverStripe\Core\Injector\Injector;
 +use Sunnysideup\Ecommerce\Config\EcommerceConfigDefinitions;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
@@ -6660,7 +6668,9 @@ modified:	src/Model/Address/EcommerceRegionVisitorRegionProvider.php
 +
 +use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 +use SilverStripe\ORM\DataObject;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
@@ -12341,7 +12351,9 @@ modified:	src/Forms/Validation/EcommercePaymentFormSetupAndValidation.php
 +use SilverStripe\Core\Config\Config;
 +use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 +use Sunnysideup\Ecommerce\Money\Payment\EcommercePaymentResult;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
@@ -12408,7 +12420,9 @@ modified:	src/Forms/Validation/ShopAccountFormPasswordValidator.php
 +
 +
 +use SilverStripe\Core\Convert;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
@@ -13340,7 +13354,9 @@ modified:	src/Money/EcommercePaymentSupportedMethodsProvider.php
 +use Sunnysideup\Ecommerce\Model\Money\PaymentTypes\EcommercePaymentTest;
 +use Sunnysideup\Ecommerce\Model\Order;
 +use Sunnysideup\Ecommerce\Api\ShoppingCart;
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
 +
 
@@ -13369,7 +13385,9 @@ modified:	src/Money/Payment/EcommercePaymentResult.php
 
 -use ViewableData;
 +
-+use SilverStripe\View\ViewableData;
++use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 +
 
 
