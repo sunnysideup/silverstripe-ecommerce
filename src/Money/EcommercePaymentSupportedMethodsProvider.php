@@ -73,6 +73,23 @@ class EcommercePaymentSupportedMethodsProvider extends ViewableData implements E
     }
 
     /**
+     * replace a payment with another one
+     * @param  array  $array
+     * @param  string $oldKey
+     * @param  string $newKey
+     * @return array
+     */
+    protected function arrayReplaceKey(array $array, string $oldKey, string $newKey) : array
+    {
+        $r = [];
+        foreach ($array as $k => $v) {
+            if ($k === $oldKey) $k = $newKey;
+            $r[$k] = $v;
+        }
+
+        return $r;
+    }
+    /**
      * returns the order to use....
      * You can provide one as a param,
      * which basically just checks that it is a real order.

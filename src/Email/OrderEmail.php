@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Email;
 
+use Pelago\Emogrifier\CssInliner;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTP;
@@ -9,7 +10,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -42,7 +42,7 @@ abstract class OrderEmail extends Email
     /**
      * @var string
      */
-    private static $css_file_location = 'client/css/OrderReport.css';
+    private static $css_file_location = 'vendor/sunnysideup/ecommerce/client/css/OrderReport.css';
 
     /**
      * @var bool
@@ -60,21 +60,15 @@ abstract class OrderEmail extends Email
     public static function emogrify_html($html)
     {
         //get required files
-        $baseFolder = Director::baseFolder();
-        if (! class_exists('\Pelago\Emogrifier')) {
-            require_once $baseFolder . '/ecommerce/thirdparty/Emogrifier.php';
-        }
         /* UPGRADE TODO: find better solution for the following (without hardcoded path) */
-        $cssFileLocation = Director::baseFolder() . '/vendor/sunnysideup/ecommerce/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
+        $cssFileLocation = $baseFolder . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
-        $emogrifier = new \Pelago\Emogrifier($html->getValue(), $css);
-        $html = $emogrifier->emogrify();
+        $html = CssInliner::fromHtml($html->getValue())->inlineCss($css)
+            ->render();
         //make links absolute!
-        $html = HTTP::absoluteURLs($html);
-
-        return $html;
+        return HTTP::absoluteURLs($html);
     }
 
     /**
@@ -84,7 +78,7 @@ abstract class OrderEmail extends Email
      */
     public static function get_from_email()
     {
-        $ecommerceConfig = EcommerceDBConfig::current_ecommerce_db_config();
+        $ecommerceConfig = EcommerceConfig::inst();
         if ($ecommerceConfig && $ecommerceConfig->ReceiptEmail) {
             $email = $ecommerceConfig->ReceiptEmail;
         } else {
@@ -200,16 +194,6 @@ abstract class OrderEmail extends Email
         }
 
         user_error('expects orderstep');
-    }
-
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**

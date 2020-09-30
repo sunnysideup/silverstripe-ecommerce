@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Process;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
@@ -557,7 +558,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'DeferTimeInSeconds',
                     _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
                 )
-                    ->setRightTitle(
+                    ->setDescription(
                         _t(
                             'OrderStep.TIME_EXPLANATION',
                             '86,400 seconds is one day ...
@@ -594,7 +595,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $fields->addFieldToTab(
                 'Root.CustomerMessage',
                 TextField::create('EmailSubject', _t('OrderStep.EMAILSUBJECT', 'Email Subject'))
-                    ->setRightTitle($rightTitle)
+                    ->setDescription($rightTitle)
             );
             if ($testEmailLink = $this->testEmailLink()) {
                 $fields->addFieldToTab(
@@ -676,7 +677,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function AlternativeDisplayPage()
     {
-        return;
+        return null;
+    }
+
+    /**
+     * A form that can be used by the Customer to progress step!
+     * @param Controller $controller
+     * @param string     $name
+     * @param Order      $order
+     * @return \SilverStripe\Forms\Form|null (CustomerOrderStepForm)
+     **/
+    public function CustomerOrderStepForm(Controller $controller, string $name, Order $order)
+    {
+        return null;
     }
 
     /**
@@ -1500,16 +1513,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $step->write();
             }
         }
-    }
-
-    /**
-     * returns the standard EcommerceDBConfig for use within OrderSteps.
-     *
-     * @return EcommerceDBConfig
-     */
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**

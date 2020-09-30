@@ -1,8 +1,9 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Forms;
-use SilverStripe\Core\ClassInfo;
+
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;

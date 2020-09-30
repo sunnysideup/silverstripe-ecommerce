@@ -30,7 +30,7 @@ abstract class ProductCollection
     {
         $array = [];
 
-        $products = DB::query(self::getSQL());
+        $products = DB::query($this->getSQL());
 
         foreach ($products as $product) {
             $array[$product['ProductID']] = $product['ClassName'];
@@ -42,6 +42,7 @@ abstract class ProductCollection
     public function getSQL(): string
     {
         $stage = '_Live';
+
         return '
             SELECT
                 "SiteTree' . $stage . '"."ID" ProductID,
