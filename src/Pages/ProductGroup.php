@@ -1763,7 +1763,7 @@ class ProductGroup extends Page
      *
      * @return string
      */
-    protected function getStage()
+    protected function getStage(): string
     {
         $stage = '';
         if (Versioned::get_stage() === 'Live') {

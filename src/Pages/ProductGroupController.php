@@ -476,7 +476,7 @@ class ProductGroupController extends PageController
             }
             $this->searchForm = ProductSearchForm::create(
                 $this,
-                'ProductSearchForm',
+                'ProductSearchForm'
             );
             // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
