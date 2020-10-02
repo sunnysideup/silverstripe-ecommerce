@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -22,12 +23,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @sub-package: configuration
 
  **/
-class EcommerceConfigAjaxDefinitions
+class EcommerceConfigAjaxDefinitions extends ViewableData
 {
-    use Configurable;
-    use Extensible;
-    use Injectable;
-
     /**
      * the class that is requesting the ajax definitions
      * we provide the requestor so that we can dynamically change
