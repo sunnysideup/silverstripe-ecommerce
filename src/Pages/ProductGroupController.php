@@ -868,8 +868,8 @@ class ProductGroupController extends PageController
     {
         parent::init();
         $this->originalTitle = $this->Title;
-        Requirements::themedCSS('ProductGroup');
-        Requirements::themedCSS('ProductGroupPopUp');
+        Requirements::themedCSS('client/css/ProductGroup');
+        Requirements::themedCSS('client/css/ProductGroupPopUp');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();

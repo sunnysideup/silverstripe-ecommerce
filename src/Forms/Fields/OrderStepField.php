@@ -78,7 +78,7 @@ class OrderStepField extends DatalessField
         }
         $html .= '</ol><div class="clear"></div></div>';
         $this->content = $html;
-        Requirements::themedCSS('OrderStepField');
+        Requirements::themedCSS('client/css/OrderStepField');
         parent::__construct($name);
     }
 

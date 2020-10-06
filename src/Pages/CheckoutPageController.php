@@ -69,7 +69,7 @@ class CheckoutPageController extends CartPageController
     {
         parent::init();
 
-        Requirements::themedCSS('CheckoutPage');
+        Requirements::themedCSS('client/css/CheckoutPage');
         $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
         if (is_array($ajaxifyArray) && count($ajaxifyArray)) {
             foreach ($ajaxifyArray as $js) {

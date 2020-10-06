@@ -48,10 +48,10 @@ var EcomQuantityField = {
     init: function (){
         if(typeof EcomCart === "undefined" && typeof require !== 'undefined') {
             // var EcomCart = require("./EcomCartWebPack");
-            this.EcomCart = EcomCart.EcomCart;
+            this.EcomCart = window.EcomCart;
         }
         else {
-            this.EcomCart = MyEcomCart;
+            this.EcomCart = EcomCart;
         }
         this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit);
         //make sure it only runs if needed...
@@ -117,7 +117,7 @@ var EcomQuantityField = {
                         else {
                             jQuery(this).siblings(EcomQuantityField.removeSelector).css("visibility", "visible");
                         }
-                        
+
                         if(EcomQuantityField.lastValue[jQuery(this).attr("name")] != jQuery(this).val()) {
                             EcomQuantityField.lastValue[jQuery(this).attr("name")] = jQuery(this).val();
                             if(URLSegment.indexOf("?") == -1) {

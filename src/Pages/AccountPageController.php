@@ -30,7 +30,7 @@ class AccountPageController extends PageController
 
             return false;
         }
-        Requirements::themedCSS('AccountPage');
+        Requirements::themedCSS('client/css/AccountPage');
     }
 
     /**
