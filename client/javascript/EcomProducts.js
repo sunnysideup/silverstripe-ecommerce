@@ -28,7 +28,7 @@ EcomProducts = {
         model: true,
         onComplete: function (event) {
             if(typeof EcomCart === "undefined" ) {
-                var EcomCart = require("./EcomCartWebPack");
+                // var EcomCart = require("./EcomCartWebPack");
                 EcomProducts.EcomCart = EcomCart.EcomCart;
             } else {
                 EcomProducts.EcomCart = EcomCart;

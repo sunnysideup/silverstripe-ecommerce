@@ -310,6 +310,8 @@ class EcommerceConfigDefinitions
                     The location for the dialogue (pop-up) javascript.
                     E-commerce comes with it a default <i>Simple Dialogue</i> pop-up dialogue,
                     but you can also use your own (e.g. prettyPhoto or Greybox).',
+                'quantity_field_js_location' => '
+                    Ecom Quantity Field javascript location.',
             ],
 
             StoreAdmin::class => [

@@ -47,7 +47,7 @@ var EcomQuantityField = {
 
     init: function (){
         if(typeof EcomCart === "undefined" && typeof require !== 'undefined') {
-            var EcomCart = require("./EcomCartWebPack");
+            // var EcomCart = require("./EcomCartWebPack");
             this.EcomCart = EcomCart.EcomCart;
         }
         else {
