@@ -317,7 +317,7 @@ class CheckoutPage extends CartPage
             _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
             SiteTree::class
         );
-        $termsPageIDField->setRightTitle(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+        $termsPageIDField->setDescription(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
         $fields->addFieldToTab('Root.Terms', $termsPageIDField);
         $fields->addFieldToTab(
             'Root.Terms',
@@ -326,7 +326,7 @@ class CheckoutPage extends CartPage
                 _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE', 'Reminder Message')
             )
         );
-        $termsPageIDFieldMessage->setRightTitle(
+        $termsPageIDFieldMessage->setDescription(
             _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE_RIGHT', "Shown if the user does not tick the 'I agree with the Terms and Conditions' box. Leave blank to allow customer to proceed without ticking this box")
         );
         //The Content field has a slightly different meaning for the Checkout Page.

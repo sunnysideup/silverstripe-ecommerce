@@ -40,6 +40,7 @@ class OrderConfirmationPageController extends CartPageController
         'CancelForm',
         'FeedbackForm',
         'PaymentForm',
+        'CustomerOrderStepForm',
     ];
 
     /**
@@ -69,9 +70,9 @@ class OrderConfirmationPageController extends CartPageController
             }
         }
         parent::init();
-        Requirements::themedCSS('Order');
-        Requirements::themedCSS('Order_Print', 'print');
-        Requirements::themedCSS('CheckoutPage');
+        Requirements::themedCSS('client/css/Order');
+        Requirements::themedCSS('client/css/Order_Print', 'print');
+        Requirements::themedCSS('client/css/CheckoutPage');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
     }
@@ -89,10 +90,10 @@ class OrderConfirmationPageController extends CartPageController
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
         if (isset($_REQUEST['print'])) {
             Requirements::clear();
-            Requirements::themedCSS('typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('Order_Invoice'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('Order_Invoice_Print_Only', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/Order_Invoice'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/Order_Invoice_Print_Only', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('Sunnysideup\\Ecommerce\\Invoice');
@@ -101,9 +102,9 @@ class OrderConfirmationPageController extends CartPageController
             return $html;
         } elseif (isset($_REQUEST['packingslip'])) {
             Requirements::clear();
-            Requirements::themedCSS('typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Requirements::themedCSS('Order_PackingSlip'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+            Requirements::themedCSS('client/css/Order_PackingSlip'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
             $html = $this->renderWith('Sunnysideup\Ecommerce\PackingSlip');
@@ -318,7 +319,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * show the payment form.
      *
-     * @return \SilverStripe\Forms\Form (OrderFormPayment) or Null
+     * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
      **/
     public function PaymentForm()
     {
@@ -327,6 +328,28 @@ class OrderConfirmationPageController extends CartPageController
                 Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
+            }
+        }
+
+        return [];
+    }
+
+    /**
+    * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
+     **/
+    public function CustomerOrderStepForm()
+    {
+        {
+            $order = $this->currentOrder;
+            if ($order) {
+                $status = $order->Status();
+                if ($status) {
+                    $form = $status->CustomerOrderStepForm($this, 'CustomerOrderStepForm', $order);
+                    if($form) {
+                        Requirements::javascript('sunnysideup/ecommerce: client/javascript/CustomerOrderStepForm.js');
+                        return $form;
+                    }
+                }
             }
         }
 

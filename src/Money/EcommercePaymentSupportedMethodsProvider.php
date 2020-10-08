@@ -5,7 +5,9 @@ namespace Sunnysideup\Ecommerce\Money;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
@@ -32,8 +34,12 @@ use Sunnysideup\Ecommerce\Model\Order;
  * </code>
  */
 
-class EcommercePaymentSupportedMethodsProvider extends ViewableData implements EcommercePaymentSupportedMethodsProviderInterface
+class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSupportedMethodsProviderInterface
 {
+    use Configurable;
+    use Extensible;
+    use Injectable;
+
     /**
      * this method returns an associative array of payment methods
      * available for the current order.
@@ -72,6 +78,23 @@ class EcommercePaymentSupportedMethodsProvider extends ViewableData implements E
             You can extend this class to allow for a supported method to be set.');
     }
 
+    /**
+     * replace a payment with another one
+     * @param  array  $array
+     * @param  string $oldKey
+     * @param  string $newKey
+     * @return array
+     */
+    protected function arrayReplaceKey(array $array, string $oldKey, string $newKey) : array
+    {
+        $r = [];
+        foreach ($array as $k => $v) {
+            if ($k === $oldKey) $k = $newKey;
+            $r[$k] = $v;
+        }
+
+        return $r;
+    }
     /**
      * returns the order to use....
      * You can provide one as a param,

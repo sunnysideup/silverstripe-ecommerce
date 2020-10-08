@@ -92,12 +92,12 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         $fields = parent::getCMSFields();
         $dispatchedOnLabel = _t('OrderStatusLog.DISPATCHEDON', 'Dispatched on');
         $fields->replaceField('DispatchedOn', $dispatchedOnField = new TextField('DispatchedOn', $dispatchedOnLabel));
-        $dispatchedOnField->setRightTitle(_t('OrderStatusLog.DISPATCHED_ON_NOTE', 'Please use year-month-date, e.g. 2015-11-23'));
+        $dispatchedOnField->setDescription(_t('OrderStatusLog.DISPATCHED_ON_NOTE', 'Please use year-month-date, e.g. 2015-11-23'));
         $dispatchLinkField = $fields->dataFieldByName('DispatchLink');
-        $dispatchLinkField->setRightTitle(_t('OrderStatusLog.LINK_EXAMPLE', 'e.g. http://www.ups.com/mytrackingnumber'));
+        $dispatchLinkField->setDescription(_t('OrderStatusLog.LINK_EXAMPLE', 'e.g. http://www.ups.com/mytrackingnumber'));
         $dispatchLinkField = $fields->dataFieldByName('Note');
         $dispatchLinkField->setTitle(_t('OrderStatusLog.NOTE_NEW_TITLE', 'Customer Message (*)'));
-        $dispatchLinkField->setRightTitle(_t('OrderStatusLog.NOTE_NOTE', 'This field is required'));
+        $dispatchLinkField->setDescription(_t('OrderStatusLog.NOTE_NOTE', 'This field is required'));
         return $fields;
     }
 

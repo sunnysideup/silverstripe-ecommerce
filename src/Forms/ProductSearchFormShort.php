@@ -7,7 +7,7 @@ use SilverStripe\Forms\TextField;
 
 class ProductSearchFormShort extends ProductSearchForm
 {
-    public function __construct($controller, $name, $nameOfProductsBeingSearched = '', $productsToSearch = null)
+    public function __construct($controller, $name)
     {
         parent::__construct($controller, $name);
         $fields = FieldList::create(

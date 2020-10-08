@@ -3,15 +3,14 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataList;
 
 /**
  * This page manages searching for products.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: Pages
- **/
+ * @author Nicolaas [at] Sunny Side Up .co.nz
+ * @package ecommerce
+ * @subpackage Pages
+ */
 class ProductGroupSearchPage extends ProductGroup
 {
     /**
@@ -43,28 +42,12 @@ class ProductGroupSearchPage extends ProductGroup
 
     private static $table_name = 'ProductGroupSearchPage';
 
-    /**
-     * standard SS variable.
-     *
-     * @static String | Array
-     */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/productgroupsearchpage-file.gif';
+    private static $icon = 'sunnysideup/ecommerce:client/images/icons/productgroupsearchpage-file.gif';
 
-    /**
-     * Standard SS variable.
-     *
-     * @var string
-     */
     private static $description = 'This page allowing the user to search for products.';
 
-    /**
-     * Standard SS variable.
-     */
     private static $singular_name = 'Product Search Page';
 
-    /**
-     * Standard SS variable.
-     */
     private static $plural_name = 'Product Search Pages';
 
     public function i18n_singular_name()
@@ -77,11 +60,6 @@ class ProductGroupSearchPage extends ProductGroup
         return _t('ProductGroupSearchPage.PLURALNAME', 'Product Search Pages');
     }
 
-    public function LinkForSearchResults(string $hash): string
-    {
-        return $this->link('searchresults/' . $hash);
-    }
-
     /**
      * Standard SS function, we only allow for one Product Search Page to exist
      * but we do allow for extensions to exist at the same time.
@@ -92,46 +70,13 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function canCreate($member = null, $context = [])
     {
-        return ProductGroupSearchPage::get()->filter(['ClassName' => ProductGroupSearchPage::class])->Count() ? false : $this->canEdit($member);
-    }
-
-    /**
-     * Setter for all products
-     * @param DataList $dataList List of products
-     */
-    public function setAllProducts(DataList $dataList)
-    {
-        $this->allProducts = $dataList;
-
-        return $this;
-    }
-
-    /**
-     * This is a KEY method that overrides the standard method!
-     * @return [type] [description]
-     */
-    public function getGroupFilter()
-    {
-        $resultArray = [0 => 0];
-        $this->allProducts = $this->allProducts->filter(['ID' => $resultArray]);
-
-        return $this->allProducts;
+        return ProductGroupSearchPage::get()->filter([
+            'ClassName' => ProductGroupSearchPage::class,
+        ])->count() ? false : $this->canEdit($member);
     }
 
     public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
     {
         return ArrayList::create();
-    }
-
-    /**
-     * returns the SORT part of the final selection of products.
-     *
-     * @return string | Array
-     */
-    protected function currentSortSQL()
-    {
-        $sortKey = $this->getCurrentUserPreferences('SORT');
-
-        return $this->getUserSettingsOptionSQL('SORT', $sortKey);
     }
 }

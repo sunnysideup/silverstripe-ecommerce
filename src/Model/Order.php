@@ -17,7 +17,6 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
@@ -69,7 +68,6 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
@@ -772,17 +770,18 @@ class Order extends DataObject implements EditableEcommerceObject
             $fields->removeByName($field);
         }
         $summaryFields = [];
-        foreach($this->summaryFields() as $fieldName => $label) {
-            if($fieldName !== 'AssignedAdminNice') {
+        foreach ($this->summaryFields() as $fieldName => $label) {
+            if ($fieldName !== 'AssignedAdminNice') {
+                $value = '(error)';
                 if ($this->hasMethod('relField')) {
                     $value = $this->relField($fieldName);
                 } elseif ($this->hasMethod($fieldName)) {
-                    $value = $this->$fieldName();
-                } elseif ($this->hasMethod('get'.$fieldName)) {
+                    $value = $this->{$fieldName}();
+                } elseif ($this->hasMethod('get' . $fieldName)) {
                     $fieldName = 'get' . $fieldName;
-                    $value = $this->$fieldName();
+                    $value = $this->{$fieldName}();
                 }
-                $summaryFields[] = ReadonlyField::create($fieldName.'_Summary', $label, $value);
+                $summaryFields[] = ReadonlyField::create($fieldName . '_Summary', $label, $value);
             }
         }
         $nextFieldArray = array_merge(
@@ -1015,7 +1014,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         'SequentialOrderNumber',
                         _t('Order.SEQUENTIALORDERNUMBER', 'Consecutive order number'),
                         $submissionLog->SequentialOrderNumber
-                    )->setRightTitle('e.g. 1,2,3,4,5...')
+                    )->setDescription('e.g. 1,2,3,4,5...')
                 );
             }
         } else {
@@ -1150,7 +1149,11 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function OrderStepField()
     {
-        return OrderStepField::create($name = 'MyOrderStep', $this, Security::getCurrentUser());
+        return OrderStepField::create(
+            'MyOrderStep',
+            $this,
+            Security::getCurrentUser()
+        );
     }
 
     /*******************************************************
@@ -1648,7 +1651,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function ShopClosed()
     {
-        return EcommerceDBConfig::current_ecommerce_db_config()->ShopClosed;
+        return EcommerceConfig::inst()->ShopClosed;
     }
 
     /*******************************************************
@@ -3527,16 +3530,6 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * Collects the JSON data for an ajax return of the cart.
      *
      * @param array $js
@@ -3925,7 +3918,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function createReplacementArrayForEmail($subject = '', $message = '')
     {
         $step = $this->MyStep();
-        $config = EcommerceDBConfig::current_ecommerce_db_config();
+        $config = EcommerceConfig::inst();
         $replacementArray = [];
         //set subject
         if (! $subject) {

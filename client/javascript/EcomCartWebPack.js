@@ -49,8 +49,7 @@
     );
 })(jQuery);
 
-
-export var EcomCart = {
+EcomCart = {
 
     /**
      * Set to TRUE to see debug info.
@@ -921,4 +920,6 @@ export var EcomCart = {
 
 
 
-};
+}
+
+window.EcomCart = EcomCart

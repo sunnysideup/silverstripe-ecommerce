@@ -1,8 +1,9 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Forms;
-use SilverStripe\Core\ClassInfo;
+
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;
@@ -71,7 +72,7 @@ class OrderModifierForm extends Form
         $this->setValidator($optionalValidator);
 
         $this->setAttribute('autocomplete', 'off');
-        Requirements::themedCSS(ClassInfo::shortName(self::class));
+        Requirements::themedCSS('client/css/' . ClassInfo::shortName(self::class));
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
         Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier

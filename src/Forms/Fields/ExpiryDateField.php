@@ -151,14 +151,14 @@ class ExpiryDateField extends TextField
      *
      * @return ExpiryDateField
      */
-    public function setRightTitle($title)
+    public function setDescription($title)
     {
         /*
         foreach($this->children as $field) {
-            $field->setRightTitle($title);
+            $field->setDescription($title);
         }
         */
-        parent::setRightTitle($title);
+        parent::setDescription($title);
 
         return $this;
     }

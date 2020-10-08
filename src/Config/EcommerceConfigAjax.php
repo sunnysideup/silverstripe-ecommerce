@@ -61,6 +61,11 @@ class EcommerceConfigAjax
     private static $dialogue_js_file_location = 'client/javascript/jquery.colorbox-min.js';
 
     /**
+     * @var string
+     */
+    private static $quantity_field_js_location = 'client/javascript/EcomQuantityField.js';
+
+    /**
      * Returns the singleton instance of the Ajax Config definitions class.
      * This class basically contains a bunch of methods that return
      * IDs and Classes for use with AJAX.

@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\ORM\DataList;
 
 class ProductSearchFormSelected extends ProductSearchForm
 {
