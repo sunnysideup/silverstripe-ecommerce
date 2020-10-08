@@ -1,0 +1,36 @@
+<?php
+
+namespace Sunnysideup\Ecommerce\Forms;
+
+<<<<<<< HEAD
+use SilverStripe\Core\Config\Config;
+=======
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+>>>>>>> master
+
+class ProductSearchFormShort extends ProductSearchForm
+{
+    public function __construct($controller, $name, $nameOfProductsBeingSearched = '', $productsToSearch = null)
+    {
+<<<<<<< HEAD
+        $this->isShortForm = true;
+
+        parent::__construct($controller, $name, $nameOfProductsBeingSearched, $productsToSearch);
+
+        $session = $controller->getRequest()->getSession();
+        $oldData = $session->get(Config::inst()->get(ProductSearchForm::class, 'form_data_session_variable'));
+
+        if ($oldData && (is_array($oldData) || is_object($oldData))) {
+            $this->loadDataFrom($oldData);
+        }
+=======
+        parent::__construct($controller, $name);
+        $fields = FieldList::create(
+            $shortKeywordField = TextField::create('Keyword', '')
+        );
+        $shortKeywordField->setAttribute('placeholder', _t('ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER', 'search products ...'));
+        $this->setFields($fields);
+>>>>>>> master
+    }
+}
