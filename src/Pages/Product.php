@@ -31,6 +31,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
@@ -170,19 +171,27 @@ class Product extends Page implements BuyableModel
         'FullName' => [
             'title' => 'Keyword',
             'field' => TextField::class,
+            'filter' => 'PartialMatchFilter',
         ],
         'Price' => [
             'title' => 'Price',
             'field' => NumericField::class,
+            'filter' => 'ExactMatchFilter',
         ],
         'InternalItemID' => [
             'title' => 'Internal Item ID',
             'filter' => 'PartialMatchFilter',
         ],
-        'AllowPurchase',
-        'ShowInSearch',
-        'ShowInMenus',
-        'FeaturedProduct',
+        'AllowPurchase' => [
+            'title' => 'For Sale',
+            'field' => YesNoDropDownField::class,
+            'filter' => 'ExactMatchFilter',
+        ],
+        'FeaturedProduct' => [
+            'title' => 'Featured',
+            'field' => YesNoDropDownField::class,
+            'filter' => 'ExactMatchFilter',
+        ],
     ];
 
     /**
