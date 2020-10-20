@@ -160,9 +160,14 @@ class Product extends Page implements BuyableModel
     private static $summary_fields = [
         'Image.CMSThumbnail' => 'Image',
         'FullName' => 'Description',
-        'Price' => 'Price',
+        'Price.Nice' => 'Price',
         'AllowPurchaseNice' => 'For Sale',
     ];
+
+    public function SummaryFields()
+    {
+        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
+    }
 
     /**
      * Standard SS variable.

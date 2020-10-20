@@ -14,6 +14,8 @@ use SilverStripe\Forms\DropdownField;
 class YesNoDropDownField extends DropdownField
 {
 
+    public const ANY_IE_NO_SELECTION = '-- any --';
+
     /**
      * @param string $name             - this is usually classname, as in MyTable.ClassName
      * @param string $title            - e.g. type of object
@@ -29,7 +31,7 @@ class YesNoDropDownField extends DropdownField
     ) {
         if(empty($source)) {
             $source = [
-                '' => '-- any --',
+                '' => self::ANY_IE_NO_SELECTION,
                 '0' => 'No',
                 '1' => 'Yes',
             ];

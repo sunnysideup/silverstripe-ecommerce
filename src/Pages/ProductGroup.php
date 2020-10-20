@@ -195,6 +195,11 @@ class ProductGroup extends Page
         'NumberOfProducts' => 'Direct Product Count',
     ];
 
+    public function SummaryFields()
+    {
+        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
+    }
+
     private static $casting = [
         'NumberOfProducts' => 'Int',
     ];
