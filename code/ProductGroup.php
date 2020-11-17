@@ -2926,11 +2926,7 @@ class ProductGroup_Controller extends Page_Controller
                 //$isCurrent = ($key == $selectedItem) ? true : false;
 
                 $link = '?'.$getVariableName."=$key";
-                if ($type == 'FILTER') {
-                    $link = $this->Link().$link;
-                } else {
-                    $link = $this->request->getVar('url').$link;
-                }
+                $link = $this->Link().$link;
                 $arrayList->push(ArrayData::create(array(
                     'Name' => _t('ProductGroup.'.$translationCode.strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
                     'Link' => $link,
