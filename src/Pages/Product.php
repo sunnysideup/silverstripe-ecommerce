@@ -95,9 +95,13 @@ class Product extends Page implements BuyableModel
     /**
      * @var bool
      */
-    private static $add_data_to_meta_description_for_search = false;
+    private static $use_search_data_field = false;
 
     private static $table_name = 'Product';
+
+    private static $create_table_options = [
+        MySQLSchemaManager::ID => 'ENGINE=MyISAM'
+    ];
 
     private static $db = [
         'Price' => 'Currency',
@@ -111,6 +115,7 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
+        'SearchData' => 'Text', //For use in lists.
     ];
 
     private static $has_one = [
@@ -139,6 +144,16 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
+        'SearchFields' => [
+            'type' => 'fulltext',
+            'columns' => [
+                'Title',
+                'MenuTitle',
+                'Content',
+                'MetaDescription',
+                'SearchData',
+            ],
+        ],
     ];
 
     /**
@@ -262,8 +277,8 @@ class Product extends Page implements BuyableModel
         //$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
         //$this->disableCMSFieldsExtensions();
         $fields = parent::getCMSFields();
-        if ($this->Config()->get('add_data_to_meta_description_for_search')) {
-            $fields->removeByName('MetaDescription');
+        if (! $this->Config()->get('use_search_data_field')) {
+            $fields->removeByName('SearchData');
         }
         //if($siteTreeFieldExtensions) {
         //$this->enableCMSFieldsExtensions();
@@ -376,13 +391,14 @@ class Product extends Page implements BuyableModel
 
         //we are adding all the fields to the keyword fields here for searching purposes.
         //because the MetaKeywords Field is being searched.
-        if ($this->Config()->get('add_data_to_meta_description_for_search')) {
-            $this->MetaDescription = '';
-            $fieldsToExclude = Config::inst()->get(SiteTree::class, 'db');
+        if ($this->Config()->get('use_search_data_field')) {
+            $this->SearchData = '';
+            $indexes = $this->Config()->get('indexes');
+            $fieldsToExclude = $indexes['SearchFields']['columns'];
             foreach (array_keys($this->Config()->get('db')) as $fieldName) {
                 if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
                     if (! in_array($fieldName, $fieldsToExclude, true)) {
-                        $this->MetaDescription .= strip_tags($this->{$fieldName});
+                        $this->SearchData .= strip_tags($this->{$fieldName});
                     }
                 }
             }
@@ -393,7 +409,7 @@ class Product extends Page implements BuyableModel
                     $variationCount = $variations->count();
                     if ($variationCount > 0 && $variationCount < 8) {
                         foreach ($variations as $variation) {
-                            $this->MetaDescription .= ' - ' . $variation->FullName;
+                            $this->SearchData .= ' - ' . $variation->FullName;
                         }
                     }
                 }

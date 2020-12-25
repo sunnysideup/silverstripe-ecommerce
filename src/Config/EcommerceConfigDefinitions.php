@@ -367,6 +367,7 @@ class EcommerceConfigDefinitions
                     'This is the name for variable stored in session.
                     The variable stores a list of IDs for products being shown on the product group.
                     We store this so that we can go previous and next for each product. ',
+
             ],
 
             ProductGroupSearchPage::class => [
@@ -387,9 +388,6 @@ class EcommerceConfigDefinitions
 
                 'folder_name_for_images' =>
                     'Default folder for uploading product images.',
-
-                'add_data_to_meta_description_for_search' =>
-                    'Add a bunch of text to the MetaDescription Field so that the FullText Search can find more details',
             ],
 
             ProductSearchForm::class => [

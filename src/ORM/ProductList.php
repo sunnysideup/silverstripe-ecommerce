@@ -23,6 +23,9 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class ProductList extends ViewableData
 {
+
+
+
     /**
      * @var SS_List
      */

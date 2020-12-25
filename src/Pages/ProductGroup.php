@@ -6,6 +6,8 @@ use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
+
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\HeaderField;
@@ -14,6 +16,8 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
+
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
@@ -23,6 +27,7 @@ use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ORM\ProductList;
+use Sunnysideup\Ecommerce\ORM\ProductListOptions;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -33,68 +38,7 @@ use Sunnysideup\Ecommerce\ORM\ProductList;
  */
 class ProductGroup extends Page
 {
-    /**
-     * list of sort / filter / display variables.
-     *
-     * @var array
-     */
-    protected $sortFilterDisplayNames = [
-        'SORT' => [
-            'value' => 'default',
-            'configName' => 'sort_options',
-            'sessionName' => 'session_name_for_sort_preference',
-            'getVariable' => 'sort',
-            'dbFieldName' => 'DefaultSortOrder',
-            'translationCode' => 'SORT_BY',
-        ],
-        'FILTER' => [
-            'value' => 'default',
-            'configName' => 'filter_options',
-            'sessionName' => 'session_name_for_filter_preference',
-            'getVariable' => 'filter',
-            'dbFieldName' => 'DefaultFilter',
-            'translationCode' => 'FILTER_FOR',
-        ],
-        'DISPLAY' => [
-            'value' => 'default',
-            'configName' => 'display_styles',
-            'sessionName' => 'session_name_for_display_style_preference',
-            'getVariable' => 'display',
-            'dbFieldName' => 'DisplayStyle',
-            'translationCode' => 'DISPLAY_STYLE',
-        ],
-    ];
 
-    /**
-     * @var array
-     *            List of options to show products.
-     *            With it, we provide a bunch of methods to access and edit the options.
-     *            NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
-     *            (as it is equal to not completed yet - not yet entered in the Database).
-     */
-    protected $showProductLevels = [
-        99 => 'All Child Products (default)',
-        -2 => 'None',
-        -1 => 'All products',
-        1 => 'Direct Child Products',
-        2 => 'Direct Child Products + Grand Child Products',
-        3 => 'Direct Child Products + Grand Child Products + Great Grand Child Products',
-        4 => 'Direct Child Products + Grand Child Products + Great Grand Child Products + Great Great Grand Child Products',
-    ];
-
-    /**
-     * variable to speed up methods in this class.
-     *
-     * @var array
-     */
-    protected $configOptionsCache = [];
-
-    /**
-     * cache variable for default preference key.
-     *
-     * @var array
-     */
-    protected $myUserPreferencesDefaultCache = [];
 
     /**
      * @var ProductList
@@ -107,46 +51,9 @@ class ProductGroup extends Page
     private static $base_buyable_class = Product::class;
 
     /**
-     * @var array
+     * @var string
      */
-    private static $sort_options = [
-        'default' => [
-            'Title' => 'Default Order',
-            'SQL' => '"Sort" ASC, "Title" ASC',
-        ],
-        'price' => [
-            'Title' => 'Lowest Price',
-            'SQL' => '"Price" ASC, "Sort" ASC, "Title" ASC',
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    private static $filter_options = [
-        'default' => [
-            'Title' => 'All Products (default)',
-            'SQL' => [
-                'ShowInSearch' => 1,
-            ],
-        ],
-        'featuredonly' => [
-            'Title' => 'Featured Only',
-            'SQL' => [
-                'ShowInSearch' => 1,
-                'FeaturedProduct' => 1,
-            ],
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    private static $display_styles = [
-        'default' => [
-            'Title' => 'default',
-        ],
-    ];
+    private static $product_list_options = ProductListOptions::class;
 
     /**
      * @var string
@@ -214,7 +121,7 @@ class ProductGroup extends Page
 
     private static $description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
 
-    private $_numberOfProductsPerPage = null;
+    private $recursiveValues = null;
 
     public function i18n_singular_name()
     {
@@ -328,33 +235,61 @@ class ProductGroup extends Page
         return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
     }
 
-    public function ProductsPerPage()
+
+    /**
+     * @return int
+     * @alias of ProductsPerPage
+     **/
+    public function ProductsPerPage() : int
     {
         return $this->getProductsPerPage();
     }
 
     /**
      * @return int
+     * @alias of ProductsPerPage
      **/
-    public function getProductsPerPage()
+    public function getProductsPerPage() : int
     {
-        if ($this->_numberOfProductsPerPage === null) {
-            $productsPagePage = 0;
+        return $this->recursiveValue('NumberOfProductsPerPage', 0);
+    }
 
-            if ($this->NumberOfProductsPerPage) {
-                $productsPagePage = $this->NumberOfProductsPerPage;
+    /**
+     * Returns the number of products to show per page
+     * @alias of ProductsPerPage
+     *
+     * @return int
+     */
+    public function getNumberOfProductsPerPage(): int
+    {
+        return $this->getProductsPerPage();
+    }
+
+    /**
+     * get recursive value for Product Group and check EcommerceConfig as last resort
+     * @param  string $fieldName
+     * @param  mixed  $default
+     * @return mixed
+     */
+    protected function recursiveValue(string $fieldName, $default = null)
+    {
+        if (! isset($this->recursiveValues[$fieldName])) {
+            $value = $default;
+
+            if ($this->{$fieldName}) {
+                $productsPagePage = $this->{$fieldName};
             } else {
                 if ($parent = $this->ParentGroup()) {
-                    $productsPagePage = $parent->getProductsPerPage();
+                    $value = $parent->recursiveValue($fieldName, $default);
                 } else {
-                    $productsPagePage = EcommerceConfig::inst()->NumberOfProductsPerPage;
+                    $value = EcommerceConfig::inst()->{$fieldName} ?? $default;
                 }
             }
 
-            $this->_numberOfProductsPerPage = $productsPagePage;
+            $this->recursiveValues[$fieldName] = $value;
         }
 
-        return $this->_numberOfProductsPerPage;
+        return $this->recursiveValues[$fieldName];
     }
 
     /**
@@ -382,29 +317,6 @@ class ProductGroup extends Page
         return $result;
     }
 
-    /**
-     * Returns the number of products to show per page
-     *
-     * @return int
-     */
-    public function getNumberOfProductsPerPage(): int
-    {
-        $result = $this->dbObject('NumberOfProductsPerPage')->getValue();
-
-        if (! $result) {
-            if ($parent = $this->ParentGroup()) {
-                $result = $parent->getNumberOfProductsPerPage();
-            }
-        }
-
-        if (! $result) {
-            $defaults = Config::inst()->get(ProductGroup::class, 'defaults');
-
-            return isset($defaults['NumberOfProductsPerPage']) ? $defaults['NumberOfProductsPerPage'] : 99;
-        }
-
-        return $result;
-    }
 
     public function getCMSFields()
     {
@@ -758,6 +670,13 @@ class ProductGroup extends Page
         ])->count();
     }
 
+    protected function getConfigOptionsCache(string $type) : array
+    {
+        $class = $this->Config()->get('product_list_options');
+
+        return Injector::inst()->get($class)->getConfigOptionsCache();
+    }
+
     /**
      * Return the options for one type.
      *
@@ -767,15 +686,9 @@ class ProductGroup extends Page
      *
      * @return array
      */
-    protected function getConfigOptions($type)
+    protected function getConfigOptions(string $type) : array
     {
-        if (! isset($this->configOptionsCache[$type])) {
-            $configName = $this->sortFilterDisplayNames[$type]['configName'];
-
-            $this->configOptionsCache[$type] = EcommerceConfig::get($this->ClassName, $configName);
-        }
-
-        return $this->configOptionsCache[$type];
+        return $this->getConfigOptionsCache($type);
     }
 
     /**
@@ -890,7 +803,7 @@ class ProductGroup extends Page
      *
      * @return array
      */
-    protected function getUserPreferencesOptionsForDropdown($type)
+    protected function getUserPreferencesOptionsForDropdown(string $type)
     {
         $options = $this->getConfigOptions($type);
         $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
@@ -921,7 +834,7 @@ class ProductGroup extends Page
 
      * @return string - empty if not found
      */
-    protected function getBestKeyAndValidateKey($type, $key = '', $variable = '')
+    protected function getBestKeyAndValidateKey(string $type, ?string $key = '', ?string $variable = '')
     {
         $options = $this->getConfigOptions($type);
         //check !!!
