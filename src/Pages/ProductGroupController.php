@@ -1084,11 +1084,7 @@ class ProductGroupController extends PageController
             foreach ($options as $key => $array) {
                 $link = '?' . $getVariableName . "=${key}";
 
-                if ($type === 'FILTER') {
-                    $link = $this->Link() . $link;
-                } else {
-                    $link = $this->request->getVar('url') . $link;
-                }
+                $link = $this->Link() . $link;
 
                 $arrayList->push(ArrayData::create([
                     'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
