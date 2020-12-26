@@ -1,9 +1,10 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Helpers;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
@@ -15,6 +16,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 class ProductListUserPreference
 {
     use Configurable;
+    use Injectable;
 
     protected $userPreferences = [];
 

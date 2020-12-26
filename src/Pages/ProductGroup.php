@@ -235,7 +235,7 @@ class ProductGroup extends Page
         $sortDropdownList = $this->getUserPreferencesOptionsForDropdown('SORT');
 
         if (count($sortDropdownList) > 1) {
-            $sortOrderKey = $this->getMyUserPreferencesDefault('SORT');
+            $sortOrderKey = $this->getProductListConfigDefaultValue('SORT');
             if ($this->DefaultSortOrder === 'inherit') {
                 $actualValue = ' (' . (isset($sortDropdownList[$sortOrderKey]) ? $sortDropdownList[$sortOrderKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $sortDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -250,7 +250,7 @@ class ProductGroup extends Page
         // filter
         $filterDropdownList = $this->getUserPreferencesOptionsForDropdown('FILTER');
         if (count($filterDropdownList) > 1) {
-            $filterKey = $this->getMyUserPreferencesDefault('FILTER');
+            $filterKey = $this->getProductListConfigDefaultValue('FILTER');
             if ($this->DefaultFilter === 'inherit') {
                 $actualValue = ' (' . (isset($filterDropdownList[$filterKey]) ? $filterDropdownList[$filterKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $filterDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -265,7 +265,7 @@ class ProductGroup extends Page
         // display style
         $displayStyleDropdownList = $this->getUserPreferencesOptionsForDropdown('DISPLAY');
         if (count($displayStyleDropdownList) > 2) {
-            $displayStyleKey = $this->getMyUserPreferencesDefault('DISPLAY');
+            $displayStyleKey = $this->getProductListConfigDefaultValue('DISPLAY');
             if ($this->DisplayStyle === 'inherit') {
                 $actualValue = ' (' . (isset($displayStyleDropdownList[$displayStyleKey]) ? $displayStyleDropdownList[$displayStyleKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $displayStyleDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -504,7 +504,6 @@ class ProductGroup extends Page
             $className = $this->Config()->get('product_list_class');
             $this->productList = $className::create($this, $this->getBuyableClassName());
         }
-        $list = clone $this->productList;
 
         if ($extraFilter) {
             $list = $list->applyFilter($extraFilter);
@@ -666,9 +665,9 @@ class ProductGroup extends Page
      *
      * @return string - returns the key
      */
-    protected function getMyUserPreferencesDefault($type): string
+    protected function getProductListConfigDefaultValue($type): string
     {
-        return $this->getConfigOptionsObject()->getMyUserPreferencesDefault($type);
+        return $this->getConfigOptionsObject()->getProductListConfigDefaultValue($type);
     }
 
 
@@ -687,7 +686,7 @@ class ProductGroup extends Page
      */
     protected function getBestKeyAndValidateKey(string $type, ?string $key = 'default', ?string $variable = '')
     {
-        return $this->getConfigOptionsObject()->getOption($type, $key, $variable);
+        return $this->getConfigOptionsObject()->getValueForProductListConfigType($type, $key, $variable);
     }
 
     /**

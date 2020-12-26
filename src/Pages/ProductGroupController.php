@@ -91,8 +91,8 @@ class ProductGroupController extends PageController
             );
             if ($otherProductGroup) {
                 $this->filterForGroupObject = $otherProductGroup;
-
-                $arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault('FILTER'));
+                $defaultKey = $this->getProductListConfigDefaultValue('FILTER');
+                $arrayOfIDs = $otherProductGroup->currentInitialProductsAsCachedArray($defaultKey);
             }
         }
 
@@ -176,12 +176,10 @@ class ProductGroupController extends PageController
      */
     public function resetfilter()
     {
-        $defaultKey = $this->getMyUserPreferencesDefault('FILTER');
+        $defaultKey = $this->getProductListConfigDefaultValue('FILTER');
         $filterGetVariable = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
 
-        $this->saveUserPreferences([
-            $filterGetVariable => $defaultKey,
-        ]);
+        $this->saveUserPreferences([$filterGetVariable => $defaultKey,]);
 
         return [];
     }
@@ -191,13 +189,9 @@ class ProductGroupController extends PageController
      */
     public function resetsort()
     {
-        $defaultKey = $this->getMyUserPreferencesDefault('SORT');
+        $defaultKey = $this->getProductListConfigDefaultValue('SORT');
         $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-        $this->saveUserPreferences(
-            [
-                $sortGetVariable => $defaultKey,
-            ]
-        );
+        $this->saveUserPreferences([$sortGetVariable => $defaultKey,]);
 
         return [];
     }
@@ -395,11 +389,12 @@ class ProductGroupController extends PageController
                     $onlySearchTitle = 'Last Search Results';
                 }
             }
+            $defaultKey = $this->getProductListConfigDefaultValue('FILTER');
             $this->searchForm = ProductSearchForm::create(
                 $this,
                 'ProductSearchForm',
                 $onlySearchTitle,
-                $this->getProductList(null, $this->getMyUserPreferencesDefault('FILTER'))
+                $this->getProductList(null, $defaultKey)
             );
             // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
@@ -527,7 +522,7 @@ class ProductGroupController extends PageController
      */
     public function HasFilter()
     {
-        return $this->getCurrentUserPreferences('FILTER') !== $this->getMyUserPreferencesDefault('FILTER')
+        return $this->getCurrentUserPreferences('FILTER') !== $this->getProductListConfigDefaultValue('FILTER')
             ||
             $this->filterForGroupObject;
     }
@@ -542,7 +537,7 @@ class ProductGroupController extends PageController
     {
         $sort = $this->getCurrentUserPreferences('SORT');
 
-        if ($sort !== $this->getMyUserPreferencesDefault('SORT')) {
+        if ($sort !== $this->getProductListConfigDefaultValue('SORT')) {
             return true;
         }
     }
@@ -587,7 +582,7 @@ class ProductGroupController extends PageController
     public function CurrentDisplayTitle()
     {
         $displayKey = $this->getCurrentUserPreferences('DISPLAY');
-        if ($displayKey !== $this->getMyUserPreferencesDefault('DISPLAY')) {
+        if ($displayKey !== $this->getProductListConfigDefaultValue('DISPLAY')) {
             return $this->getUserPreferencesTitle('DISPLAY', $displayKey);
         }
     }
@@ -602,7 +597,7 @@ class ProductGroupController extends PageController
     {
         $filterKey = $this->getCurrentUserPreferences('FILTER');
         $filters = [];
-        if ($filterKey !== $this->getMyUserPreferencesDefault('FILTER')) {
+        if ($filterKey !== $this->getProductListConfigDefaultValue('FILTER')) {
             $filters[] = $this->getUserPreferencesTitle('FILTER', $filterKey);
         }
         if ($this->filterForGroupObject) {
@@ -622,20 +617,20 @@ class ProductGroupController extends PageController
     public function CurrentSortTitle()
     {
         $sortKey = $this->getCurrentUserPreferences('SORT');
-        if ($sortKey !== $this->getMyUserPreferencesDefault('SORT')) {
+        if ($sortKey !== $this->getProductListConfigDefaultValue('SORT')) {
             return $this->getUserPreferencesTitle('SORT', $sortKey);
         }
     }
 
     /**
-     * short-cut for getMyUserPreferencesDefault("DISPLAY")
+     * short-cut for getProductListConfigDefaultValue("DISPLAY")
      * for use in templtes.
      *
      * @return string - key
      */
     public function MyDefaultDisplayStyle()
     {
-        return $this->getMyUserPreferencesDefault('DISPLAY');
+        return $this->getProductListConfigDefaultValue('DISPLAY');
     }
 
     /**
@@ -661,7 +656,7 @@ class ProductGroupController extends PageController
 
         foreach ($list as $obj) {
             $key = $obj->SelectKey;
-            if ($key !== $this->getMyUserPreferencesDefault('FILTER')) {
+            if ($key !== $this->getProductListConfigDefaultValue('FILTER')) {
                 // @todo
                 $count = 1;
 
@@ -851,8 +846,8 @@ class ProductGroupController extends PageController
         $getVariableNameSort = $this->getSortFilterDisplayNames('SORT', 'getVariable');
 
         return $this->Link() . '?' .
-            $getVariableNameFilter . '=' . $this->getMyUserPreferencesDefault('FILTER') . $ampersand .
-            $getVariableNameSort . '=' . $this->getMyUserPreferencesDefault('SORT') . $ampersand .
+            $getVariableNameFilter . '=' . $this->getProductListConfigDefaultValue('FILTER') . $ampersand .
+            $getVariableNameSort . '=' . $this->getProductListConfigDefaultValue('SORT') . $ampersand .
             'reload=1';
     }
 
@@ -937,7 +932,7 @@ class ProductGroupController extends PageController
 
         if ($groups) {
             foreach ($groups as $item) {
-                $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getMyUserPreferencesDefault('FILTER'));
+                $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getProductListConfigDefaultValue('FILTER'));
                 $newArray = array_intersect_key(
                     $arrayOfIDs,
                     $baseArray
@@ -1040,7 +1035,7 @@ class ProductGroupController extends PageController
     /**
      * Checks for the most applicable user preferences for this user:
      * 1. session value
-     * 2. getMyUserPreferencesDefault.
+     * 2. getProductListConfigDefaultValue.
      *
      * @param string $type - FILTER | SORT | DISPLAY
      *
@@ -1054,7 +1049,7 @@ class ProductGroupController extends PageController
         if ($sessionValue = $this->getRequest()->getSession()->get('ProductGroup_' . $sessionName)) {
             $key = Convert::raw2sql($sessionValue);
         } else {
-            $key = $this->getMyUserPreferencesDefault($type);
+            $key = $this->getProductListConfigDefaultValue($type);
         }
         return $this->getBestKeyAndValidateKey($type, $key);
     }
@@ -1131,7 +1126,7 @@ class ProductGroupController extends PageController
 
             $filter = $this->getCurrentUserPreferences('FILTER');
 
-            if ($filter !== $this->getMyUserPreferencesDefault('FILTER')) {
+            if ($filter !== $this->getProductListConfigDefaultValue('FILTER')) {
                 $toAdd = $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
                 $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
             }

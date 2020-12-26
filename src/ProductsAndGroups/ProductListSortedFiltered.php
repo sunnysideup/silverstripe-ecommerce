@@ -24,7 +24,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class ProductList extends ViewableData
+class ProductListSortedFiltered extends ViewableData
 {
 
 
@@ -92,16 +92,25 @@ class ProductList extends ViewableData
         return $this;
     }
 
+    protected function buildDefaultList()
+    {
+        $buyableClass = $this->buyableClass;
+        $this->products = $buyableClass::get();
+
+        $this->applyDefaultFilters();
+
+        return $this;
+    }
 
 
     /**
-     * @param int $levelOfProductsToShow
+     * @param int $depth
      *
      * @return self
      */
-    public function setLevelOfProductsToShow(int $levelOfProductsToShow): ProductList
+    public function setLevelOfProductsToShow(int $depth): ProductList
     {
-        $this->getProductGroupList()->setLevelOfProductsToShow($levelOfProductsToShow);
+        $this->getProductGroupList()->setLevelOfProductsToShow($depth);
 
         return $this;
     }
@@ -173,7 +182,9 @@ class ProductList extends ViewableData
     public function applyDefaultFilters(): ProductList
     {
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
-            $this->products = $this->products->filter(['AllowPurchase' => 1,]);
+            $this->products = $this->products->filter([
+                'AllowPurchase' => 1,
+            ]);
         }
 
         $this->extend('onAfterApplyDefaultFilters');
@@ -441,11 +452,4 @@ class ProductList extends ViewableData
         return $this->getConfigOptionsObject()->getProductListConfigDefaultValue($type);
     }
 
-    protected function buildDefaultList()
-    {
-        $buyableClass = $this->buyableClass;
-        $this->products = $buyableClass::get();
-
-        return $this;
-    }
 }

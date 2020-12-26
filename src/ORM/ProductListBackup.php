@@ -363,11 +363,5 @@ class ProductListBackup extends ViewableData
         return $arrayList;
     }
 
-    public function getConfigOptionsObject()
-    {
-        $class = Config::inst()->get($this->rootGroup->ClassName, 'product_list_options_class');
-
-        return Injector::inst()->get($class);
-    }
 
 }
