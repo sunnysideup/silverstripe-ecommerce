@@ -645,7 +645,9 @@ class ProductGroupController extends PageController
      */
     public function MaxNumberOfProductsPerPage(): int
     {
-        return $this->getProductsPerPage() > $this->TotalCount() ? $this->TotalCount() : $this->getProductsPerPage();
+        $perPage = $this->getNumberOfProductsPerPage();
+        $total = $this->TotalCount();
+        return $perPage > $total ? $total : $perPage;
     }
 
     /**

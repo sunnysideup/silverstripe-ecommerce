@@ -41,7 +41,7 @@ class ProductGroupListTest extends SapphireTest
         $this->assertSame(3, $list->getGroups()->Count(), '3 subgroups under sport');
 
         // with a max depth of 1 we should only get the direct children
-        $list = $list->setMaxDepth(1);
+        $list = $list->setLevelOfProductsToShow(1);
         $this->assertSame(2, $list->getGroups()->Count(), '2 direct subgroups under sport');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ORM;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
@@ -31,10 +31,13 @@ class ProductGroupList
 
     /**
      * How deep to go
+     * special cases:
+     *         -2 => 'None',
+     *         -1 => 'All products',
      *
      * @var int
      */
-    protected $maxDepth = 99;
+    protected $levelsToShow = 0;
 
     /**
      * @var ProductGroup
@@ -47,11 +50,34 @@ class ProductGroupList
     protected $includeRoot = true;
 
     /**
+     * @param ProductGroup $productGroup
+     */
+    public function __construct($productGroup, ?int $levels = 99)
+    {
+        $this->setRootGroup($productGroup);
+        $this->setLevelOfProductsToShow($productGroup);
+    }
+
+    /**
+     * what is the the product group we are working with?
+     *
+     * @param ProductGroup $group
+     */
+    public function setRootGroup(ProductGroup $group): ProductGroupList
+    {
+        $this->rootGroup = $group;
+        $this->groups = [];
+
+        return $this;
+    }
+
+    /**
+     * how many levels deep do we go?
      * @param int $levels
      *
      * @return self
      */
-    public function setMaxDepth(int $levels): ProductGroupList
+    public function setLevelOfProductsToShow(int $levels): ProductGroupList
     {
         $this->levelsToShow = $levels;
         $this->groups = [];
@@ -60,6 +86,8 @@ class ProductGroupList
     }
 
     /**
+     * do we include the root?
+     *
      * @param bool $includeRoot
      *
      * @return self
@@ -67,6 +95,7 @@ class ProductGroupList
     public function setIncludeRoot(bool $includeRoot): ProductGroupList
     {
         $this->includeRoot = $includeRoot;
+        $this->groups = [];
 
         return $this;
     }
@@ -80,41 +109,40 @@ class ProductGroupList
     }
 
     /**
-     * @param ProductGroup $group
-     */
-    public function setRootGroup(ProductGroup $group): ProductGroupList
-    {
-        $this->rootGroup = $group;
-        $this->groups = [];
-
-        return $this;
-    }
-
-    /**
      * @return \SilverStripe\ORM\DataList
      */
-    public function getGroups()
+    public function getGroups(?int $maxRecursiveLevel = 0, $filter = null)
     {
-        if ($this->groups) {
-            return $this->groups;
+        if(! $maxRecursiveLevel) {
+            $maxRecursiveLevel = $this->levelsToShow;
         }
+        if (empty($this->groups) || ! empty($filter)) {
+            if ($this->levelsToShow === -2) {
+                $this->groups = ProductGroup::get();
+            } elseif ($this->levelsToShow === -1) {
+                $this->groups = ProductGroup::get()->filter(['ID' => -1]);
+            } elseif ($this->rootGroup) {
+                $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID, []);
 
-        if ($this->rootGroup) {
-            $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID, []);
+                if ($this->includeRoot) {
+                    $ids[$this->rootGroup->ID] = $this->rootGroup->ID;
+                }
 
-            if ($this->includeRoot) {
-                $ids[] = $this->rootGroup->ID;
+                if (count($ids) === 0) {
+                    $ids = [-1 => -1,];
+                }
+                $this->groups = ProductGroup::get()->filter(['ID' => $ids,]);
+            } else {
+                $this->groups = ProductGroup::get();
             }
-
-            if ($ids) {
-                $this->groups = ProductGroup::get()->filter([
-                    'ID' => $ids,
-                ]);
+            if($filter) {
+                if(is_array($filter)) {
+                    $this->groups = $this->groups->filter($filter);
+                } else {
+                    $this->groups = $this->groups->where($filter);
+                }
             }
-
-            return $this->groups;
         }
-        $this->groups = ProductGroup::get();
 
         return $this->groups;
     }
@@ -130,7 +158,7 @@ class ProductGroupList
      */
     public function getGroupsRecursive(int $currentDepth, int $groupId, $ids = []): array
     {
-        if ($currentDepth > $this->maxDepth) {
+        if ($currentDepth > $this->levelsToShow) {
             return $ids;
         }
 
@@ -150,4 +178,7 @@ class ProductGroupList
 
         return $ids;
     }
+
+
+
 }

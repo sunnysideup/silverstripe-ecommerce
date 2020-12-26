@@ -292,10 +292,10 @@ class EcommerceConfigDefinitions
                 'ecommerce_db_config_class_name' =>
                     'Class Name for the DataObject that contains the settings for the e-commerce application',
 
-                'array_of_buyables' => "
+                'array_of_buyables' => '
                     Array of classes (e.g. Product,ProductVariation, ...) that are buyable.
                     You do not need to include a class that extends a buyable.
-                    For example, if you create a class called 'MyProduct' extending Product then you do not need to list it here.",
+                    For example, if you create a class called \'MyProduct\' extending Product then you do not need to list it here.',
             ],
 
             EcommerceConfigAjax::class => [
@@ -317,8 +317,8 @@ class EcommerceConfigDefinitions
             StoreAdmin::class => [
 
                 'managed_models' =>
-                    "An array of data object classes that are managed as 'Store' configuration items.
-                    This configuration is used a lot to add extra menu items. ",
+                    'An array of data object classes that are managed as \'Store\' configuration items.
+                    This configuration is used a lot to add extra menu items. ',
             ],
 
             ProductsAndGroupsModelAdmin::class => [
@@ -330,14 +330,14 @@ class EcommerceConfigDefinitions
             ProductConfigModelAdmin::class => [
 
                 'managed_models' =>
-                    "An array of data object classes that are managed as 'Product Config' configuration items.
+                    'An array of data object classes that are managed as \'Product Config\' configuration items.
                     These are all items that relate to Products and Product Groups that are not in the main group.
-                    This includes any searches carried out in the Product Group. ", ],
+                    This includes any searches carried out in the Product Group. ', ],
 
             SalesAdmin::class => [
                 'managed_models' =>
-                    "An array of data object classes that are managed as 'Store' configuration items.
-                    This configuration is used a lot to add extra menu items. ", ],
+                    'An array of data object classes that are managed as \'Store\' configuration items.
+                    This configuration is used a lot to add extra menu items. ', ],
 
             ################### PRODUCT DISPLAY #####################
             ProductGroup::class => [
@@ -355,13 +355,13 @@ class EcommerceConfigDefinitions
                     For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.',
 
                 'sort_options' =>
-                    "Associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
+                    'Associative sort options array with sub-keys of Title and SQL, e.g. \'default\' = array(\'Title\' => \'default\', \'SQL\' => \'Title DESC\')',
 
                 'filter_options' =>
-                    "Associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
+                    'Associative filters options array with sub-keys of Title and SQL, e.g. \'default\' = array(\'Title\' => \'Featured\', \'SQL\' => \'Featured = 1\')',
 
                 'display_styles' =>
-                    "Associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
+                    'Associative display styles array with its key as template name, e.g. \'MyTemplateName\' => \'Full Details\'',
 
                 'session_name_for_product_array' =>
                     'This is the name for variable stored in session.
@@ -376,9 +376,9 @@ class EcommerceConfigDefinitions
                     'Sort key used to sort by relevance.',
 
                 'sort_options' =>
-                    "Additional associative sort options array with sub-keys of Title and SQL,
-                    e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC') for searching.
-                    Include on with the best_match_key.",
+                    'Additional associative sort options array with sub-keys of Title and SQL,
+                    e.g. \'default\' = array(\'Title\' => \'default\', \'SQL\' => \'Title DESC\') for searching.
+                    Include on with the best_match_key.',
 
                 'maximum_number_of_products_to_list_for_search' =>
                     'Maximum number of products returned in search.',
@@ -533,7 +533,7 @@ class EcommerceConfigDefinitions
                     'Should all the emails be send as plain text?  Not recommended.',
 
                 'css_file_location' =>
-                    "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
+                    'This is a really useful setting where you can specify the location for a css file that is \'injected\' into the customer emails. ',
 
                 'copy_to_admin_for_all_emails' =>
                     'Send a copy to the shop administrator for every email sent?',
@@ -552,8 +552,8 @@ class EcommerceConfigDefinitions
                     'Orders can be viewed with the special retrieve link (without the need for the user to log in) for xxx number of minutes.',
 
                 'maximum_ignorable_sales_payments_difference' =>
-                    "The maximum allowable difference between the Order Total and the Payment Total.
-                    If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered 'paid'",
+                    'The maximum allowable difference between the Order Total and the Payment Total.
+                    If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered \'paid\'',
 
                 'order_id_start_number' =>
                     'The starting number for the order number.
@@ -745,8 +745,8 @@ class EcommerceConfigDefinitions
                     'The class that is being used to provide the region of the customer. It is sort of like a GEOIP for regions.',
 
                 'show_freetext_region_field' =>
-                    "Provide a free text region field if no regions are specified. Region can also be 'State',
-                    or 'Province', etc...",
+                    'Provide a free text region field if no regions are specified. Region can also be \'State\',
+                    or \'Province\', etc...',
             ],
 
             ################### PAYMENT AND MONEY #####################

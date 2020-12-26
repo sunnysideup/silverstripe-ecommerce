@@ -8,6 +8,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -15,84 +16,70 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
- * A wrapper for a paginated list of products which can be filtered and sorted.
- *
- * @author: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @subpackage: Pages
- */
-class ProductList extends ViewableData
+* A wrapper for a paginated list of products which can be filtered and sorted.
+*
+* @author: Nicolaas [at] Sunny Side Up .co.nz
+* @package: ecommerce
+* @subpackage: Pages
+*/
+class ProductListBackup extends ViewableData
 {
 
 
 
     /**
-     * @var SS_List
-     */
+    * @var SS_List
+    */
     protected $products;
 
     /**
-     * @var ProductGroupList
-     */
-    protected $productGroups;
+    * @var ProductGroupList
+    */
+    protected $productGroupList;
 
     /**
-     * @var string
-     */
-    protected $buyableClass = Product::class;
+    * @var ProductListOptions
+    */
+    protected $productListOptions;
 
     /**
-     * A list of relevant buyables that can not be purchased and therefore
-     * should be excluded.
-     *
-     * @var int[]
-     */
+    * A list of relevant buyables that can not be purchased and therefore
+    * should be excluded.
+    *
+    * @var int[]
+    */
     protected $blockedProductsIds = [];
 
     /**
-     * Root group to pull products from
-     */
+    * Root group to pull products from
+    */
+    protected $rootGroup = null;
 
     /**
-     * @param string $buyableClass
-     */
-    public function __construct($buyableClass = Product::class)
+    * @param string $buyableClass
+    */
+    public function __construct($productGroup, $buyableClass = Product::class)
     {
-        $this->setBuyableClass($buyableClass);
+        $this
+        ->setRootGroup($productGroup)
+        ->setBuyableClass($buyableClass)
+        ->buildDefaultList();
     }
 
     /**
-     * @return string
-     */
+    * @return string
+    */
     public function getBuyableClass(): string
     {
         return $this->buyableClass;
     }
 
-    /**
-     * Override the class of buyable to display. Usually this is limited to
-     * `Product` but can be tailored to display specific subclasses.
-     *
-     * @param string $buyableClass
-     *
-     * @return self
-     */
-    public function setBuyableClass(string $buyableClass): ProductList
-    {
-        $this->buyableClass = $buyableClass;
-        $this->products = $buyableClass::get();
-        $this->productGroups = ProductGroupList::create();
-
-        $this->applyDefaultFilters();
-
-        return $this;
-    }
 
     /**
-     * @param int $depth
-     *
-     * @return self
-     */
+    * @param int $depth
+    *
+    * @return self
+    */
     public function setLevelOfProductsToShow(int $depth): ProductList
     {
         $this->productGroups->setMaxDepth($depth);
@@ -100,67 +87,55 @@ class ProductList extends ViewableData
         return $this;
     }
 
-    /**
-     * Set the root {@link ProductGroup} to display the products from.
-     * @param ProductGroup $group
-     *
-     * @return self
-     */
-    public function setRootGroup(ProductGroup $group): ProductList
+    public function getProductGroupList()
     {
-        $this->productGroups->setRootGroup($group);
+        if(! $this->productGroupList) {
+            $class = Config::inst()->get($this->rootGroup->ClassName, 'product_group_list_class');
+            $this->productGroupList = Injector::inst()->get($class, $this->rootGroup);
+        }
 
-        return $this;
+        return $this->productGroupList;
     }
 
+
     /**
-     * Returns a raw list of all the matching products without any pagination.
-     *
-     * To retrieve a paginated list, use {@link getPaginatedList()}
-     *
-     * @return SS_List
-     */
+    * Returns a raw list of all the matching products without any pagination.
+    *
+    * To retrieve a paginated list, use {@link getPaginatedList()}
+    *
+    * @return SS_List
+    */
     public function getProducts()
     {
         return $this->products;
     }
 
     /**
-     * Returns a list of {@link ProductGroup}
-     *
-     * @return ProductGroupList
-     */
-    public function getProductGroups()
-    {
-        return $this->productGroups;
-    }
-
-    /**
-     * @return SilverStripe\ORM\PaginatedList
-     */
+    * @return SilverStripe\ORM\PaginatedList
+    */
     public function getPaginatedList(): PaginatedList
     {
         return PaginatedList::create($this->products);
     }
 
     /**
-     * Returns the total number of products available before pagination is
-     * applied.
-     *
-     * @return int
-     */
+    * Returns the total number of products available before pagination is
+    * applied.
+    *
+    * @return int
+    */
     public function getRawCount()
     {
         return count($this->products);
     }
 
     /**
-     * Filter the list of products
-     *
-     * @param array|string $filter
-     *
-     * @return self
-     */
+    * Filter the list of products
+    *
+    * @param array|string $filter
+    *
+    * @return self
+    */
     public function applyFilter($filter = null): ProductList
     {
         if (is_array($filter) && count($filter)) {
@@ -173,8 +148,8 @@ class ProductList extends ViewableData
     }
 
     /**
-     * @return self
-     */
+    * @return self
+    */
     public function applyDefaultFilters(): ProductList
     {
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
@@ -189,12 +164,12 @@ class ProductList extends ViewableData
     }
 
     /**
-     * Sort the list of products
-     *
-     * @param array|string $sort
-     *
-     * @return self
-     */
+    * Sort the list of products
+    *
+    * @param array|string $sort
+    *
+    * @return self
+    */
     public function applySort($sort = null): ProductList
     {
         if (is_array($sort) && count($sort)) {
@@ -208,18 +183,18 @@ class ProductList extends ViewableData
     }
 
     /**
-     * Generate Excluded products that can not be purchased.
-     *
-     * We all make a record of all the products that are in the current list
-     * For efficiency sake, we do both these things at the same time.
-     *
-     * @return self
-     */
+    * Generate Excluded products that can not be purchased.
+    *
+    * We all make a record of all the products that are in the current list
+    * For efficiency sake, we do both these things at the same time.
+    *
+    * @return self
+    */
     public function removeExcludedProducts(): ProductList
     {
         foreach ($this->products as $buyable) {
             if (! $buyable->canPurchase()) {
-                $this->blockedProductsIds[] = $buyable->ID;
+                $this->blockedProductsIds[$buyable->ID] = $buyable->ID;
             }
         }
 
@@ -233,42 +208,40 @@ class ProductList extends ViewableData
     }
 
     /**
-     * Is there more than x products.
-     *
-     * @param int $greaterThan
-     *
-     * @return bool
-     */
-    public function CountGreaterThanOne($greaterThan = 1)
+    * Is there more than x products.
+    *
+    * @param int $greaterThan
+    *
+    * @return bool
+    */
+    public function CountGreaterThanOne($greaterThan = 1) : bool
     {
         return $this->getRawCount() > $greaterThan;
     }
 
     /**
-     * With the current product list, return all the {@link ProductGroup}
-     * instances that the products are displayed under. This only returns the
-     * direct parents.
-     *
-     * @return PaginatedList|null
-     */
+    * With the current product list, return all the {@link ProductGroup}
+    * instances that the products are displayed under. This only returns the
+    * direct parents.
+    *
+    * @return \SilverStripe\ORM\DataList|null
+    */
     public function getParentGroups()
     {
         $ids = $this->products->columnUnique('ParentID');
 
         if ($ids) {
-            return PaginatedList::create(ProductGroup::get()->filter([
-                'ID' => $ids,
-            ]));
+            return ProductGroup::get()->filter(['ID' => $ids]);
         }
     }
 
     /**
-     * @SEE: important notes at the top of this file / class
-     *
-     * IMPORTANT: Adjusts allProducts and returns it...
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
+    * @SEE: important notes at the top of this file / class
+    *
+    * IMPORTANT: Adjusts allProducts and returns it...
+    *
+    * @return \SilverStripe\ORM\DataList
+    */
     protected function getGroupFilter()
     {
         $levelToShow = $this->MyLevelOfProductsToShow();
@@ -307,10 +280,10 @@ class ProductList extends ViewableData
     }
 
     /**
-     * Returns a versioned record stage table suffix (i.e "" or "_Live")
-     *
-     * @return string
-     */
+    * Returns a versioned record stage table suffix (i.e "" or "_Live")
+    *
+    * @return string
+    */
     protected function getStage()
     {
         $stage = '';
@@ -323,11 +296,11 @@ class ProductList extends ViewableData
     }
 
     /**
-     * If products are show in more than one group yhen this returns a where phrase for any products that are linked to this
-     * product group.
-     *
-     * @return string
-     */
+    * If products are show in more than one group yhen this returns a where phrase for any products that are linked to this
+    * product group.
+    *
+    * @return string
+    */
     protected function getProductsToBeIncludedFromOtherGroups()
     {
         //TO DO: this should actually return
@@ -344,10 +317,57 @@ class ProductList extends ViewableData
     }
 
     /**
-     *@todo: temporary method
-     */
+    *@todo: temporary method$this->getProductList()-
+    */
     public function getProductIds()
     {
         return $this->products->column('ID');
     }
+
+    /**
+    * Returns children ProductGroup pages of this group.
+    *
+    * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Groups are returned...
+    * @param string | Array $filter             - additional filter to be added
+    * @param int            $numberOfRecursions - current level of depth
+    *
+    * @return \SilverStripe\ORM\ArrayList (ProductGroups)
+    */
+    public function ChildGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
+    {
+        $arrayList = ArrayList::create();
+        ++$numberOfRecursions;
+
+        if ($numberOfRecursions < $maxRecursiveLevel) {
+            if ($filter && is_string($filter)) {
+                $filterWithAND = " AND ${filter}";
+                $where = "\"ParentID\" = '{$this->ID}' ${filterWithAND}";
+                $children = ProductGroup::get()->where($where);
+            } elseif (is_array($filter) && count($filter)) {
+                $filter += ['ParentID' => $this->ID];
+                $children = ProductGroup::get()->filter($filter);
+            } else {
+                $children = ProductGroup::get()->filter([
+                    'ParentID' => $this->ID,
+                ]);
+            }
+
+            if ($children->count()) {
+                foreach ($children as $child) {
+                    $arrayList->push($child);
+                    $arrayList->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
+                }
+            }
+        }
+
+        return $arrayList;
+    }
+
+    public function getConfigOptionsObject()
+    {
+        $class = Config::inst()->get($this->rootGroup->ClassName, 'product_list_options_class');
+
+        return Injector::inst()->get($class);
+    }
+
 }

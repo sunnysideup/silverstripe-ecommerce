@@ -197,6 +197,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     private static $db = [
         'Notes' => 'Text',
+        'DefaultSortOrder' => 'Varchar',
+        'DefaultFilter' => 'Varchar',
+        'DisplayStyle' => 'Varchar',
     ];
 
     private static $has_one = [

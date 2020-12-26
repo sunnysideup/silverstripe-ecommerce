@@ -1039,9 +1039,6 @@ class Product extends Page implements BuyableModel
 
     public function canCreate($member = null, $context = [])
     {
-        if (! $member) {
-            $member = Security::getCurrentUser();
-        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1062,9 +1059,6 @@ class Product extends Page implements BuyableModel
      */
     public function canEdit($member = null, $context = [])
     {
-        if (! $member) {
-            $member = Security::getCurrentUser();
-        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1073,7 +1067,7 @@ class Product extends Page implements BuyableModel
             return true;
         }
 
-        return parent::canEdit($member);
+        return parent::canEdit($member, $context);
     }
 
     /**
@@ -1087,9 +1081,6 @@ class Product extends Page implements BuyableModel
     {
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
-        }
-        if (! $member) {
-            $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
