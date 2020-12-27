@@ -14,8 +14,37 @@ class ProductListOptions
     use Configurable;
     use Injectable;
 
-
-
+    /**
+     * list of sort / filter / display variables.
+     *
+     * @var array
+     */
+    protected const SORT_DISPLAY_NAMES = [
+        'SORT' => [
+            'value' => 'default',
+            'configName' => 'sort_options',
+            'sessionName' => 'session_name_for_sort_preference',
+            'getVariable' => 'sort',
+            'dbFieldName' => 'DefaultSortOrder',
+            'translationCode' => 'SORT_BY',
+        ],
+        'FILTER' => [
+            'value' => 'default',
+            'configName' => 'filter_options',
+            'sessionName' => 'session_name_for_filter_preference',
+            'getVariable' => 'filter',
+            'dbFieldName' => 'DefaultFilter',
+            'translationCode' => 'FILTER_FOR',
+        ],
+        'DISPLAY' => [
+            'value' => 'default',
+            'configName' => 'display_styles',
+            'sessionName' => 'session_name_for_display_style_preference',
+            'getVariable' => 'display',
+            'dbFieldName' => 'DisplayStyle',
+            'translationCode' => 'DISPLAY_STYLE',
+        ],
+    ];
     /**
      * @var array
      */
@@ -107,7 +136,7 @@ class ProductListOptions
     public function getConfigOptionsCache(string $type) : array
     {
         if (! isset($this->configOptionsCache[$type])) {
-            $configName = $this->sortFilterDisplayNames[$type]['configName'];
+            $configName = self::SORT_DISPLAY_NAMES[$type]['configName'];
 
             $this->configOptionsCache[$type] = EcommerceConfig::get(self::class, $configName);
         }
@@ -167,7 +196,7 @@ class ProductListOptions
     {
         if (! isset($this->productListConfigDefaultValueCache[$type])) {
             $options = $this->getConfigOptionsCache($type);
-            $dbVariableName = $this->sortFilterDisplayNames[$type]['dbFieldName'];
+            $dbVariableName = self::SORT_DISPLAY_NAMES[$type]['dbFieldName'];
             $dbValue = $this->rootGroup->{$dbVariableName};
             if ($dbValue === 'inherit' && $parent = $this->rootGroup->ParentGroup()) {
                 $this->productListConfigDefaultValueCache[$type] = $parent->getProductListConfigDefaultValue($type);
@@ -194,55 +223,24 @@ class ProductListOptions
     protected function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
     {
         if ($variable) {
-            return $this->sortFilterDisplayNames[$typeOrVariable][$variable];
+            return self::SORT_DISPLAY_NAMES[$typeOrVariable][$variable];
         }
 
         $data = [];
 
         if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
-            $data = $this->sortFilterDisplayNames[$typeOrVariable];
+            $data = self::SORT_DISPLAY_NAMES[$typeOrVariable];
         } elseif ($typeOrVariable) {
             foreach ($this->sortFilterDisplayNames as $group) {
                 $data[] = $group[$typeOrVariable] ?? 'error';
             }
         } else {
-            $data = $this->sortFilterDisplayNames;
+            $data = self::SORT_DISPLAY_NAMES;
         }
 
         return $data;
     }
 
-    /**
-     * list of sort / filter / display variables.
-     *
-     * @var array
-     */
-    protected $sortFilterDisplayNames = [
-        'SORT' => [
-            'value' => 'default',
-            'configName' => 'sort_options',
-            'sessionName' => 'session_name_for_sort_preference',
-            'getVariable' => 'sort',
-            'dbFieldName' => 'DefaultSortOrder',
-            'translationCode' => 'SORT_BY',
-        ],
-        'FILTER' => [
-            'value' => 'default',
-            'configName' => 'filter_options',
-            'sessionName' => 'session_name_for_filter_preference',
-            'getVariable' => 'filter',
-            'dbFieldName' => 'DefaultFilter',
-            'translationCode' => 'FILTER_FOR',
-        ],
-        'DISPLAY' => [
-            'value' => 'default',
-            'configName' => 'display_styles',
-            'sessionName' => 'session_name_for_display_style_preference',
-            'getVariable' => 'display',
-            'dbFieldName' => 'DisplayStyle',
-            'translationCode' => 'DISPLAY_STYLE',
-        ],
-    ];
 
 
 }

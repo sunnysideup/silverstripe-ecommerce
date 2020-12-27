@@ -117,6 +117,11 @@ class ProductGroupList
         return $this;
     }
 
+    public function getLevelOfProductsToShow() : int
+    {
+        return $this->levelsToShow;
+    }
+
     /**
      * @return SilverStripe\ORM\PaginatedList
      */
@@ -173,7 +178,7 @@ class ProductGroupList
      *
      * @return array
      */
-    public function getGroupsRecursive(int $currentDepth, int $groupId, $ids = []): array
+    protected function getGroupsRecursive(int $currentDepth, int $groupId, $ids = []): array
     {
         if ($currentDepth > $this->levelsToShow) {
             return $ids;

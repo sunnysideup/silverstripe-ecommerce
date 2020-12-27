@@ -13,6 +13,48 @@ use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+/**
+ * @return SilverStripe\ORM\PaginatedList
+ */
+public function getPaginatedList(): PaginatedList
+{
+    return PaginatedList::create($this->products);
+}
+    /**
+     * Sort the list of products
+     *
+     * @param array|string $sort
+     *
+     * @return self
+     */
+    public function applySort($sort = null): ProductList
+    {
+        if (is_array($sort) && count($sort)) {
+            $this->products = $this->products->sort($sort);
+        } elseif ($sort) {
+            $this->products = $this->products->sort(Convert::raw2sql($sort));
+        }
+        // @todo
+
+        return $this;
+    }
+    /**
+     * Filter the list of products
+     *
+     * @param array|string $filter
+     *
+     * @return self
+     */
+    public function applyFilter($filter = null): ProductList
+    {
+        if (is_array($filter) && count($filter)) {
+            $this->products = $this->products->filter($filter);
+        } elseif ($filter) {
+            $this->products = $this->products->where(Convert::raw2sql($filter));
+        }
+
+        return $this;
+    }
 
 /**
  * A wrapper for a paginated list of products which can be filtered and sorted.
@@ -267,50 +309,6 @@ class ProductListSortedFiltered extends ViewableData
     }
 
     /**
-     * @SEE: important notes at the top of this file / class
-     *
-     * IMPORTANT: Adjusts allProducts and returns it...
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    protected function getGroupFilter()
-    {
-        $levelToShow = $this->MyLevelOfProductsToShow();
-        $cacheKey = 'GroupFilter_' . abs(intval($levelToShow + 999));
-        if ($groupFilter = $this->retrieveObjectStore($cacheKey)) {
-            $this->allProducts = $this->allProducts->where($groupFilter);
-        } else {
-            $groupFilter = '';
-            $productFilterArray = [];
-            //special cases
-            if ($levelToShow < 0) {
-                //no produts but if LevelOfProductsToShow = -1 then show all
-                $groupFilter = ' (' . $levelToShow . ' = -1) ';
-            } elseif ($levelToShow > 0) {
-                $groupIDs = [$this->ID => $this->ID];
-                $productFilterTemp = $this->getProductsToBeIncludedFromOtherGroups();
-                $productFilterArray[$productFilterTemp] = $productFilterTemp;
-                $childGroups = $this->ChildGroups($levelToShow);
-                if ($childGroups && $childGroups->count()) {
-                    foreach ($childGroups as $childGroup) {
-                        $groupIDs[$childGroup->ID] = $childGroup->ID;
-                        $productFilterTemp = $childGroup->getProductsToBeIncludedFromOtherGroups();
-                        $productFilterArray[$productFilterTemp] = $productFilterTemp;
-                    }
-                }
-                $groupFilter = ' ( "ParentID" IN (' . implode(',', $groupIDs) . ') ) ' . implode($productFilterArray) . ' ';
-            } else {
-                //fall-back
-                $groupFilter = '"ParentID" < 0';
-            }
-            $this->allProducts = $this->allProducts->where($groupFilter);
-            $this->saveObjectStore($groupFilter, $cacheKey);
-        }
-
-        return $this->allProducts;
-    }
-
-    /**
      * Returns a versioned record stage table suffix (i.e "" or "_Live")
      *
      * @return string
@@ -326,26 +324,6 @@ class ProductListSortedFiltered extends ViewableData
         return $stage;
     }
 
-    /**
-     * If products are show in more than one group yhen this returns a where phrase for any products that are linked to this
-     * product group.
-     *
-     * @return string
-     */
-    protected function getProductsToBeIncludedFromOtherGroups()
-    {
-        //TO DO: this should actually return
-        //Product.ID = IN ARRAY(bla bla)
-        $array = [];
-        if ($this->getProductsAlsoInOtherGroups()) {
-            $array = $this->AlsoShowProducts()->map('ID', 'ID')->toArray();
-        }
-        if (count($array)) {
-            return ' OR ("Product"."ID" IN (' . implode(',', $array) . ')) ';
-        }
-
-        return '';
-    }
 
     protected function getConfigOptionsObject()
     {
@@ -361,19 +339,6 @@ class ProductListSortedFiltered extends ViewableData
     public function getProductIds()
     {
         return $this->products->column('ID');
-    }
-
-    /**
-     * Returns children ProductGroup pages of this group.
-     *
-     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     * @param string | Array $filter             - additional filter to be added
-     *
-     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
-     */
-    public function getGroupsRecursive(int $maxRecursiveLevel, $filter = null) : ArrayList
-    {
-        return $this->getProductList()->getGroupsRecursive($maxRecursiveLevel, $filter);
     }
 
 

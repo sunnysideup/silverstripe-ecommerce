@@ -8,6 +8,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -27,7 +28,14 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 class ProductList extends ViewableData
 {
 
+    private static $default_product_filter =  ['AllowPurchase' => 1, 'ShowInSearch' => 1];
 
+    private static $default_product_group_filter =  ['ShowInSearch' => 1];
+
+    /**
+     * @var string
+     */
+    protected $buyableClass;
 
     /**
      * @var SS_List
@@ -53,6 +61,17 @@ class ProductList extends ViewableData
     protected $blockedProductsIds = [];
 
     /**
+     *
+     * @var int[]
+     */
+    protected $alsoShowProductsIds = [];
+    /**
+     *
+     * @var int[]
+     */
+    protected $childGroups = [];
+
+    /**
      * @param ProductGroup $rootGroup
      * @param string       $buyableClass
      */
@@ -61,7 +80,12 @@ class ProductList extends ViewableData
         $this
             ->setRootGroup($rootGroup)
             ->setBuyableClass($buyableClass)
-            ->buildDefaultList();
+            ->setLevelOfProductsToShow($rootGroup->getLevelOfProductsToShow())
+            ->buildDefaultList()
+            ->applyDefaultFilters()
+            ->applyGroupFilter()
+            ->removeExcludedProducts()
+            ->storeInCache();
     }
 
     /**
@@ -120,23 +144,8 @@ class ProductList extends ViewableData
         return $this->products;
     }
 
-    /**
-     * Returns a list of {@link ProductGroup}
-     *
-     * @return ProductGroupList
-     */
-    public function getProductGroupListProvider()
-    {
-        return $this->productGroupListProvider;
-    }
 
-    /**
-     * @return SilverStripe\ORM\PaginatedList
-     */
-    public function getPaginatedList(): PaginatedList
-    {
-        return PaginatedList::create($this->products);
-    }
+
 
     /**
      * Returns the total number of products available before pagination is
@@ -149,81 +158,6 @@ class ProductList extends ViewableData
         return count($this->products);
     }
 
-    /**
-     * Filter the list of products
-     *
-     * @param array|string $filter
-     *
-     * @return self
-     */
-    public function applyFilter($filter = null): ProductList
-    {
-        if (is_array($filter) && count($filter)) {
-            $this->products = $this->products->filter($filter);
-        } elseif ($filter) {
-            $this->products = $this->products->where(Convert::raw2sql($filter));
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return self
-     */
-    public function applyDefaultFilters(): ProductList
-    {
-        if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
-            $this->products = $this->products->filter(['AllowPurchase' => 1,]);
-        }
-
-        $this->extend('onAfterApplyDefaultFilters');
-
-        return $this;
-    }
-
-    /**
-     * Sort the list of products
-     *
-     * @param array|string $sort
-     *
-     * @return self
-     */
-    public function applySort($sort = null): ProductList
-    {
-        if (is_array($sort) && count($sort)) {
-            $this->products = $this->products->sort($sort);
-        } elseif ($sort) {
-            $this->products = $this->products->sort(Convert::raw2sql($sort));
-        }
-        // @todo
-
-        return $this;
-    }
-
-    /**
-     * Generate Excluded products that can not be purchased.
-     *
-     * We all make a record of all the products that are in the current list
-     * For efficiency sake, we do both these things at the same time.
-     *
-     * @return self
-     */
-    public function removeExcludedProducts(): ProductList
-    {
-        foreach ($this->products as $buyable) {
-            if (! $buyable->canPurchase()) {
-                $this->blockedProductsIds[] = $buyable->ID;
-            }
-        }
-
-        if ($this->blockedProductsIds) {
-            $this->products->exclude([
-                'ID' => $this->blockedProductsIds,
-            ]);
-        }
-
-        return $this;
-    }
 
     /**
      * Is there more than x products.
@@ -232,7 +166,7 @@ class ProductList extends ViewableData
      *
      * @return bool
      */
-    public function CountGreaterThanOne($greaterThan = 1)
+    public function CountGreaterThanOne($greaterThan = 1) : bool
     {
         return $this->getRawCount() > $greaterThan;
     }
@@ -242,17 +176,150 @@ class ProductList extends ViewableData
      * instances that the products are displayed under. This only returns the
      * direct parents.
      *
-     * @return PaginatedList|null
+     * @return DataList|null
      */
     public function getParentGroups()
     {
         $ids = $this->products->columnUnique('ParentID');
 
-        if ($ids) {
-            return PaginatedList::create(
-                ProductGroup::get()->filter(['ID' => $ids,])
-            );
+        if (empty($ids)) {
+            $ids = [-1 => -1,];
         }
+        return ProductGroup::get()->filter(['ID' => $ids,]);
+    }
+
+
+    public function getProductListOptionsProvider()
+    {
+        if(! $this->productListOptionsProvider) {
+            $class = Config::inst()->get($this->rootGroup->ClassName, 'product_list_options_class');
+
+            $this->productListOptionsProvider = Injector::inst()->get($class, $this->rootGroup);
+        }
+
+        return $this->productListOptionsProvider;
+    }
+
+    /**
+     * Returns a list of {@link ProductGroupList}
+     *
+     * @return ProductGroupList
+     */
+    public function getProductGroupListProvider()
+    {
+        if(! $this->productGroupListProvider) {
+            $class = Config::inst()->get($this->rootGroup->ClassName, 'product_group_list_class');
+
+            $this->productGroupListProvider = Injector::inst()->get($class, $this->rootGroup);
+        }
+
+        return $this->productGroupListProvider;
+    }
+
+
+    /**
+     *@todo: temporary method
+     */
+    public function getProductIds()
+    {
+        return $this->products->column('ID');
+    }
+
+    /**
+     * Returns children ProductGroup pages of this group.
+     *
+     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
+     * @param string|array   $filter             - additional filter to be added
+     *
+     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
+     */
+    public function getGroups(int $maxRecursiveLevel, $filter = null) : ArrayList
+    {
+        return $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
+    }
+
+
+    /**
+     * Returns a list of Product Groups that have the products for the CURRENT
+     * product group listed as part of their AlsoShowProducts list.
+     *
+     * With the method below you can work out a list of brands that apply to the
+     * current product group (e.g. socks come in three brands - namely A, B and C)
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    public function getProductGroupsFromAlsoShowProducts()
+    {
+        $productGroupIds = $this->products->filter(['ID' => $this->alsoShowProductsIds])
+            ->column('ParentID');
+
+        if (empty($productGroupIds)) {
+            $productGroupIds = [-1 => -1];
+        }
+        return ProductGroup::get()
+            ->filter(['ID' => $productGroupIds, 'ShowInSearch' => 1,])
+            ->exclude(['ID' => $this->childGroups,]);
+    }
+
+
+    /**
+     * This is the inverse of ProductGroupsFromAlsoShowProducts
+     *
+     * That is, it list the product groups that a product is primarily listed
+     * under (exact parents only) from a "AlsoShow" product List.
+     *
+     * @return \SilverStripe\ORM\DataList|null
+     */
+    public function getProductGroupsFromAlsoShowProductsInverse()
+    {
+        return ProductGroup::get()
+            ->filter(['ID' => $this->childGroups, 'ShowInSearch' => 1,]);
+
+    }
+
+    /**
+     * Given the products for this page, retrieve the parent groups excluding
+     * the current one.
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    public function getProductGroupsParentGroups(): DataList
+    {
+        $productGroupIds = $this->products->filter(['ID' => $this->alsoShowProductsIds])
+            ->column('ParentID');
+
+        if (empty($productGroupIds)) {
+            $productGroupIds = [-1 => -1];
+        }
+        return ProductGroup::get()
+            ->filter(['ID' => $productGroupIds, 'ShowInSearch' => 1,]);
+    }
+
+    public function getProductListConfigDefaultValue(string $type): string
+    {
+        return $this->getProductListOptionsProvider()->getProductListConfigDefaultValue($type);
+    }
+
+
+
+    protected function buildDefaultList()
+    {
+        $buyableClass = $this->buyableClass;
+        $this->products = $buyableClass::get();
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    protected function applyDefaultFilters(): ProductList
+    {
+        if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
+            $this->products = $this->products->filter($this->Config()->get('default_product_filter'));
+        }
+
+        return $this;
     }
 
     /**
@@ -260,44 +327,79 @@ class ProductList extends ViewableData
      *
      * IMPORTANT: Adjusts allProducts and returns it...
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return self
      */
-    protected function getGroupFilter()
+    protected function applyGroupFilter() : ProductList
     {
-        $levelToShow = $this->MyLevelOfProductsToShow();
-        $cacheKey = 'GroupFilter_' . abs(intval($levelToShow + 999));
-        if ($groupFilter = $this->retrieveObjectStore($cacheKey)) {
-            $this->allProducts = $this->allProducts->where($groupFilter);
+        $levelToShow = $this->getProductGroupListProvider()->getLevelOfProductsToShow();
+        $groupFilter = '';
+        $this->alsoShowProductsIds = [];
+        $this->childGroups = [];
+        //special cases
+        if ($levelToShow < 0) {
+            //no produts but if LevelOfProductsToShow = -1 then show all
+            //note the smartness here -1 == 1 || -1 == -2
+            $groupFilter = ' (' . $levelToShow . ' = -1) ';
+        } elseif ($levelToShow === 0) {
+            $groupFilter = '"ParentID" < 0';
         } else {
-            $groupFilter = '';
-            $productFilterArray = [];
-            //special cases
-            if ($levelToShow < 0) {
-                //no produts but if LevelOfProductsToShow = -1 then show all
-                $groupFilter = ' (' . $levelToShow . ' = -1) ';
-            } elseif ($levelToShow > 0) {
-                $groupIDs = [$this->ID => $this->ID];
-                $productFilterTemp = $this->getProductsToBeIncludedFromOtherGroups();
-                $productFilterArray[$productFilterTemp] = $productFilterTemp;
-                $childGroups = $this->ChildGroups($levelToShow);
-                if ($childGroups && $childGroups->count()) {
-                    foreach ($childGroups as $childGroup) {
-                        $groupIDs[$childGroup->ID] = $childGroup->ID;
-                        $productFilterTemp = $childGroup->getProductsToBeIncludedFromOtherGroups();
-                        $productFilterArray[$productFilterTemp] = $productFilterTemp;
-                    }
+            $this->childGroups[$this->rootGroup->ID] = $this->rootGroup->ID;
+            $this->alsoShowProductsIds = array_merge(
+                $this->alsoShowProductsIds,
+                $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
+            );
+            $childGroups = $this->rootGroup->ChildGroups();
+            if ($childGroups && $childGroups->count()) {
+                foreach ($childGroups as $childGroup) {
+                    $this->childGroups[$childGroup->ID] = $childGroup->ID;
+                    $this->alsoShowProductsIds = array_merge(
+                        $this->alsoShowProductsIds,
+                        $childGroup->getProductsToBeIncludedFromOtherGroupsArray()
+                    );
                 }
-                $groupFilter = ' ( "ParentID" IN (' . implode(',', $groupIDs) . ') ) ' . implode($productFilterArray) . ' ';
-            } else {
-                //fall-back
-                $groupFilter = '"ParentID" < 0';
             }
-            $this->allProducts = $this->allProducts->where($groupFilter);
-            $this->saveObjectStore($groupFilter, $cacheKey);
+            $obj = Injector::inst()->get($this->buyableClass);
+            $tablename = $obj->baseTable().$this->getStage();
+            $siteTreeTable = 'SiteTree'.$this->getStage();
+            $groupFilter = '
+                "'.$siteTreeTable.'"."ParentID" IN (' . implode(',', $groupIDs) . ')
+                OR
+                "'.$tableName.'"."ID" IN (' . implode($this->alsoShowProductsIds) . ')
+            ';
+        }
+        $this->products = $this->products->where($groupFilter);
+
+        return $this;
+
+    }
+
+
+
+
+    /**
+     * Generate Excluded products that can not be purchased.
+     *
+     * We all make a record of all the products that are in the current list
+     * For efficiency sake, we do both these things at the same time.
+     *
+     * @return self
+     */
+    protected function removeExcludedProducts(): ProductList
+    {
+        foreach ($this->products as $buyable) {
+            if (! $buyable->canPurchase()) {
+                $this->blockedProductsIds[$buyable->ID] = $buyable->ID;
+            }
         }
 
-        return $this->allProducts;
+        if (! empty($this->blockedProductsIds)) {
+            $this->products = $this->products
+                ->exclude(['ID' => $this->blockedProductsIds,]);
+        }
+
+        return $this;
     }
+
 
     /**
      * Returns a versioned record stage table suffix (i.e "" or "_Live")
@@ -315,137 +417,5 @@ class ProductList extends ViewableData
         return $stage;
     }
 
-    /**
-     * If products are show in more than one group yhen this returns a where phrase for any products that are linked to this
-     * product group.
-     *
-     * @return string
-     */
-    protected function getProductsToBeIncludedFromOtherGroups()
-    {
-        //TO DO: this should actually return
-        //Product.ID = IN ARRAY(bla bla)
-        $array = [];
-        if ($this->getProductsAlsoInOtherGroups()) {
-            $array = $this->AlsoShowProducts()->map('ID', 'ID')->toArray();
-        }
-        if (count($array)) {
-            return ' OR ("Product"."ID" IN (' . implode(',', $array) . ')) ';
-        }
 
-        return '';
-    }
-
-    protected function getConfigOptionsObject()
-    {
-        $class = Config::inst()->get($this->rootGroup->ClassName, 'product_list_options_class');
-
-        return Injector::inst()->get($class, $this->rootGroup);
-    }
-
-
-    /**
-     *@todo: temporary method
-     */
-    public function getProductIds()
-    {
-        return $this->products->column('ID');
-    }
-
-    /**
-     * Returns children ProductGroup pages of this group.
-     *
-     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     * @param string | Array $filter             - additional filter to be added
-     *
-     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
-     */
-    public function getGroupsRecursive(int $maxRecursiveLevel, $filter = null) : ArrayList
-    {
-        return $this->getProductList()->getGroupsRecursive($maxRecursiveLevel, $filter);
-    }
-
-
-    /**
-     * Returns a list of Product Groups that have the products for the CURRENT
-     * product group listed as part of their AlsoShowProducts list.
-     *
-     * With the method below you can work out a list of brands that apply to the
-     * current product group (e.g. socks come in three brands - namely A, B and C)
-     *
-     * @return \SilverStripe\ORM\DataList|null
-     */
-    public function getProductGroupsFromAlsoShowProducts()
-    {
-        $productGroups = $this->getProductList($this->getProductListConfigDefaultValue('FILTER'))
-            ->getProducts()
-            ->column('ParentID');
-
-        if ($productGroups) {
-            return ProductGroup::get()
-                ->filter(['ID' => $productGroups,'ShowInSearch' => 1,])
-                ->exclude(['ID' => $this->ID,]);
-        }
-    }
-
-
-    /**
-     * This is the inverse of ProductGroupsFromAlsoShowProducts
-     *
-     * That is, it list the product groups that a product is primarily listed
-     * under (exact parents only) from a "AlsoShow" product List.
-     *
-     * @return \SilverStripe\ORM\DataList|null
-     */
-    public function getProductGroupsFromAlsoShowProductsInverse()
-    {
-        $filter = $this->getValueForProductListConfigType(
-            'FILTER',
-            $this->getProductListConfigDefaultValue('FILTER'),
-            'SQL'
-        );
-        $alsoShowProductsArray = $this->AlsoShowProducts()
-            ->filter($filter)
-            ->map('ID', 'ID')
-            ->toArray();
-
-        if ($alsoShowProductsArray) {
-            $parentIDs = Product::get()
-                ->filter(['ID' => $alsoShowProductsArray,])
-                ->map('ParentID', 'ParentID')
-                ->toArray();
-
-            if ($parentIDs) {
-                return ProductGroup::get()
-                    ->filter(['ID' => $parentIDs,'ShowInMenus' => 1,])
-                    ->exclude(['ID' => $this->ID,]);
-            }
-        }
-    }
-
-    /**
-     * Given the products for this page, retrieve the parent groups excluding
-     * the current one.
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    public function getProductGroupsParentGroups(): DataList
-    {
-        $list = $this->getProductList($this->getProductListConfigDefaultValue('FILTER'));
-
-        return $list->getParentGroups()->exclude(['ID' => $this->ID]);
-    }
-
-    public function getProductListConfigDefaultValue(string $type): string
-    {
-        return $this->getConfigOptionsObject()->getProductListConfigDefaultValue($type);
-    }
-
-    protected function buildDefaultList()
-    {
-        $buyableClass = $this->buyableClass;
-        $this->products = $buyableClass::get();
-
-        return $this;
-    }
 }

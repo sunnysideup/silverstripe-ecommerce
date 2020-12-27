@@ -526,8 +526,30 @@ class ProductGroup extends Page
      */
     public function ChildGroups(int $maxRecursiveLevel, $filter = null) : ArrayList
     {
-        return $this->getProductList()->getGroupsRecursive($maxRecursiveLevel, $filter);
+        return $this->getProductList()->getGroups($maxRecursiveLevel, $filter);
     }
+
+    /**
+     * If products are show in more than one group yhen this returns an array for any products that are linked to this
+     * product group.
+     *
+     * @return array
+     */
+    public function getProductsToBeIncludedFromOtherGroupsArray() : array
+    {
+        //TO DO: this should actually return
+        //Product.ID = IN ARRAY(bla bla)
+        $array = [];
+        if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->count()) {
+            $array = $this->AlsoShowProducts()->map('ID', 'ID')->toArray();
+        }
+        if (empty($array)) {
+            return [-1 => -1];
+        }
+
+        return $array;
+    }
+
 
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
