@@ -13,48 +13,7 @@ use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-/**
- * @return SilverStripe\ORM\PaginatedList
- */
-public function getPaginatedList(): PaginatedList
-{
-    return PaginatedList::create($this->products);
-}
-    /**
-     * Sort the list of products
-     *
-     * @param array|string $sort
-     *
-     * @return self
-     */
-    public function applySort($sort = null): ProductList
-    {
-        if (is_array($sort) && count($sort)) {
-            $this->products = $this->products->sort($sort);
-        } elseif ($sort) {
-            $this->products = $this->products->sort(Convert::raw2sql($sort));
-        }
-        // @todo
 
-        return $this;
-    }
-    /**
-     * Filter the list of products
-     *
-     * @param array|string $filter
-     *
-     * @return self
-     */
-    public function applyFilter($filter = null): ProductList
-    {
-        if (is_array($filter) && count($filter)) {
-            $this->products = $this->products->filter($filter);
-        } elseif ($filter) {
-            $this->products = $this->products->where(Convert::raw2sql($filter));
-        }
-
-        return $this;
-    }
 
 /**
  * A wrapper for a paginated list of products which can be filtered and sorted.
@@ -69,6 +28,160 @@ public function getPaginatedList(): PaginatedList
 class ProductListSortedFiltered extends ViewableData
 {
 
+        /**
+         * Returns a list of Product Groups that have the products for the CURRENT
+         * product group listed as part of their AlsoShowProducts list.
+         *
+         * With the method below you can work out a list of brands that apply to the
+         * current product group (e.g. socks come in three brands - namely A, B and C)
+         *
+         * @return \SilverStripe\ORM\DataList
+         */
+        public function getProductGroupsFromAlsoShowProducts()
+        {
+            $productGroupIds = $this->products->filter(['ID' => $this->alsoShowProductsIds])
+                ->column('ParentID');
+
+            if (empty($productGroupIds)) {
+                $productGroupIds = [-1 => -1];
+            }
+            $filter = array_merge(
+                $this->Config()->get('default_product_group_filter'),
+                ['ID' => $productGroupIds,]
+            );
+            return ProductGroup::get()
+                ->filter($filter)
+                ->exclude(['ID' => $this->childGroupIds,]);
+        }
+
+
+        /**
+         * This is the inverse of ProductGroupsFromAlsoShowProducts
+         *
+         * That is, it list the product groups that a product is primarily listed
+         * under (exact parents only) from a "AlsoShow" product List.
+         *
+         * @return \SilverStripe\ORM\DataList|null
+         */
+        public function getProductGroupsFromAlsoShowProductsInverse()
+        {
+            $filter = array_merge(
+                $this->Config()->get('default_product_group_filter'),
+                ['ID' => $this->childGroupIds,]
+            );
+            return ProductGroup::get()
+                ->filter($filter);
+
+        }
+
+        /**
+         * Given the products for this page, retrieve the parent groups excluding
+         * the current one.
+         *
+         * @return \SilverStripe\ORM\DataList
+         */
+        public function getProductGroupsParentGroups(): DataList
+        {
+            $productGroupIds = $this->products->filter(['ID' => $this->alsoShowProductsIds])
+                ->column('ParentID');
+
+            if (empty($productGroupIds)) {
+                $productGroupIds = [-1 => -1];
+            }
+            $filter = array_merge(
+                $this->Config()->get('default_product_group_filter'),
+                ['ID' => $productGroupIds,]
+            );
+
+            return ProductGroup::get()
+                ->filter($filter);
+        }
+
+
+
+        /**
+         * Returns the total number of products available before pagination is
+         * applied.
+         *
+         * @return int
+         */
+        public function getRawCount()
+        {
+            return count($this->products);
+        }
+
+
+        /**
+         * Is there more than x products.
+         *
+         * @param int $greaterThan
+         *
+         * @return bool
+         */
+        public function CountGreaterThanOne($greaterThan = 1) : bool
+        {
+            return $this->getRawCount() > $greaterThan;
+        }
+
+        /**
+         * With the current product list, return all the {@link ProductGroup}
+         * instances that the products are displayed under. This only returns the
+         * direct parents.
+         *
+         * @return DataList|null
+         */
+        public function getParentGroups()
+        {
+            $ids = $this->products->columnUnique('ParentID');
+
+            if (empty($ids)) {
+                $ids = [-1 => -1,];
+            }
+            return ProductGroup::get()->filter(['ID' => $ids,]);
+        }
+
+    /**
+     * @return SilverStripe\ORM\PaginatedList
+     */
+    public function getPaginatedList(): PaginatedList
+    {
+        return PaginatedList::create($this->products);
+    }
+        /**
+         * Sort the list of products
+         *
+         * @param array|string $sort
+         *
+         * @return self
+         */
+        public function applySort($sort = null): ProductList
+        {
+            if (is_array($sort) && count($sort)) {
+                $this->products = $this->products->sort($sort);
+            } elseif ($sort) {
+                $this->products = $this->products->sort(Convert::raw2sql($sort));
+            }
+            // @todo
+
+            return $this;
+        }
+        /**
+         * Filter the list of products
+         *
+         * @param array|string $filter
+         *
+         * @return self
+         */
+        public function applyFilter($filter = null): ProductList
+        {
+            if (is_array($filter) && count($filter)) {
+                $this->products = $this->products->filter($filter);
+            } elseif ($filter) {
+                $this->products = $this->products->where(Convert::raw2sql($filter));
+            }
+
+            return $this;
+        }
 
 
     /**

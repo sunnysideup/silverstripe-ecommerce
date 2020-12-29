@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -17,6 +16,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
@@ -691,10 +691,10 @@ class ProductSearchForm extends Form
 
     protected function setCacheForHash(): float
     {
-        $cache = $this->getCache();
         $data = $this->getSerializedObject();
         $hash = $this->getHash($data);
-        $cache->set($hash, $data);
+
+        EcommerceCache::inst()->save($hash, $data, true);
 
         return $hash;
     }
@@ -702,9 +702,9 @@ class ProductSearchForm extends Form
     protected function getCacheForHash(string $hash): array
     {
         $array = [];
-        $cache = $this->getCache();
-        if ($cache->has($hash)) {
-            $array = $cache->get($hash);
+        $cache = EcommerceCache::inst();
+        if ($cache->hasCache($hash)) {
+            $array = $cache->retrieve($hash);
             if (! is_array($array)) {
                 $array = [];
             }
@@ -715,18 +715,13 @@ class ProductSearchForm extends Form
 
     protected function applyCacheFromHash(string $hash): array
     {
-        $string = $this->getCache($hash);
-        $array = unserialize($hash);
+        $array = $this->getCacheForHash($hash);
         foreach ($array as $variable => $value) {
             $this->{$variable} = $value;
         }
         return $array;
     }
 
-    protected function getCache(): CacheInterface
-    {
-        return Injector::inst()->get(CacheInterface::class . '.EcomSearchCache');
-    }
 
     protected function debugOutput(string $string)
     {

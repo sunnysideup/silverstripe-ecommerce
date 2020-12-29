@@ -6,6 +6,7 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Provides a standard interface for caching product and group information
@@ -13,23 +14,31 @@ use SilverStripe\Versioned\Versioned;
  * Can be used in conjuction with the standard Silverstripe Partial caching
  * functionality.
  */
-class CachingHelper extends Extension
+class EcommerceCache
 {
+    use Injectable;
+
     /**
      * @var CacheInterface
      */
     protected $cacheBackend = null;
+
+
+    public static function inst() : EcommerceCache
+    {
+        return Injector::inst()->get(self::class);
+    }
 
     /**
      * Set the cache object to use when storing / retrieving partial cache blocks.
      *
      * @param CacheInterface $cacheBackend
      */
-    public function setCacheBackend(CacheInterface $cacheBackend)
+    public function setCacheBackend(CacheInterface $cacheBackend) : EcommerceCache
     {
         $this->cacheBackend = $cacheBackend;
 
-        return $this->owner;
+        return $this;
     }
 
     /**
@@ -40,7 +49,7 @@ class CachingHelper extends Extension
      */
     public function getCacheBackend()
     {
-        return $this->cacheBackend ?: Injector::inst()->get(CacheInterface::class . '.EcomPG');
+        return $this->cacheBackend ?: Injector::inst()->get(CacheInterface::class . '.Ecommerce');
     }
 
     /**
@@ -49,9 +58,20 @@ class CachingHelper extends Extension
      *
      * @return string
      */
-    public function cacheKey($cacheKey)
+    protected function cacheKeyRefiner($cacheKey) : string
     {
-        return $cacheKey . '_' . $this->owner->ID . '_' . Versioned::get_reading_mode();
+        return $cacheKey . '_' . Versioned::get_reading_mode();
+    }
+
+    public function hasCache(string $cacheKey) : bool
+    {
+        if ($this->AllowCaching()) {
+            $cache = $this->getCacheBackend();
+            $cacheKey = $this->cacheKeyRefiner($cacheKey);
+            return $cache->has($cacheKey);
+        }
+        return false;
+
     }
 
     /**
@@ -59,41 +79,50 @@ class CachingHelper extends Extension
      *
      * @param string $cacheKey
      *
-     * @return mixed
+     * @return mixed|null
      */
-    protected function retrieveFromCache(string $cacheKey)
+    public function retrieve(string $cacheKey, ?bool $alreadyUnserialized = false)
     {
-        if ($this->owner->AllowCaching()) {
+        if ($this->hasCache($cacheKey)) {
             $cache = $this->getCacheBackend();
+            $cacheKey = $this->cacheKeyRefiner($cacheKey);
             $data = $cache->get($cacheKey);
-
-            if (! $cache->has($cacheKey)) {
-                return;
+            if ($alreadyUnserialized === false) {
+                $data = unserialize($data);
             }
 
             return $data;
         }
 
-        return;
+        return null;
     }
 
     /**
      * returns true when the data is saved...
      *
-     * @param mixed  $data
      * @param string $cacheKey - key under which the data is saved...
+     * @param mixed  $data
      *
      * @return bool
      */
-    protected function saveIntoCache($data, $cacheKey)
+    public function save($cacheKey, $data, ?bool $alreadySerialized = false) : bool
     {
-        if ($this->owner->AllowCaching()) {
+        if ($this->AllowCaching()) {
             $cache = $this->getCacheBackend();
+            $cacheKey = $this->cacheKeyRefiner($cacheKey);
+            if ($alreadySerialized === false) {
+                $data = serialize($data);
+            }
             $cache->set($cacheKey, $data);
 
             return true;
         }
 
         return false;
+    }
+
+    public function AllowCaching() : bool
+    {
+        return true;
     }
 }
