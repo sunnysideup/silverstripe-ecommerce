@@ -28,8 +28,16 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 class ProductList extends ViewableData
 {
 
+    /**
+     * default filter for products: show in search and allow purchase are recommended.
+     * @var array
+     */
     private static $default_product_filter =  ['AllowPurchase' => 1, 'ShowInSearch' => 1];
 
+    /**
+     * default filter
+     * @var array
+     */
     private static $default_product_group_filter =  ['ShowInSearch' => 1];
 
     /**
@@ -256,8 +264,12 @@ class ProductList extends ViewableData
         if (empty($productGroupIds)) {
             $productGroupIds = [-1 => -1];
         }
+        $filter = array_merge(
+            ['ID' => $productGroupIds,],
+            $this->Config()->get('default_product_group_filter'),
+        );
         return ProductGroup::get()
-            ->filter(['ID' => $productGroupIds, 'ShowInSearch' => 1,])
+            ->filter($filter)
             ->exclude(['ID' => $this->childGroups,]);
     }
 
