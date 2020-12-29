@@ -167,6 +167,7 @@ class ProductList extends ViewableData
     }
 
 
+
     public function getProductListOptionsProvider()
     {
         if(! $this->productListOptionsProvider) {
@@ -245,7 +246,7 @@ class ProductList extends ViewableData
         $levelToShow = $this->getProductGroupListProvider()->getLevelOfProductsToShow();
         $groupFilter = '';
         $this->alsoShowProductsIds = [];
-        $this->childGroupIds = [];
+        $this->childGroupsIds = [];
         //special cases
         if ($levelToShow < 0) {
             //no produts but if LevelOfProductsToShow = -1 then show all
@@ -254,15 +255,15 @@ class ProductList extends ViewableData
         } elseif ($levelToShow === 0) {
             $groupFilter = '"ParentID" < 0';
         } else {
-            $this->childGroupIds[$this->rootGroup->ID] = $this->rootGroup->ID;
+            $this->childGroupsIds[$this->rootGroup->ID] = $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
             );
-            $childGroups = $this->rootGroup->childGroupIds();
+            $childGroups = $this->rootGroup->childGroupsIds();
             if ($childGroups && $childGroups->count()) {
                 foreach ($childGroups as $childGroup) {
-                    $this->childGroupIds[$childGroup->ID] = $childGroup->ID;
+                    $this->childGroupsIds[$childGroup->ID] = $childGroup->ID;
                     $this->alsoShowProductsIds = array_merge(
                         $this->alsoShowProductsIds,
                         $childGroup->getProductsToBeIncludedFromOtherGroupsArray()

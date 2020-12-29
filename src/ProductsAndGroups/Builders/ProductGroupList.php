@@ -21,7 +21,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class ProductGroupList
 {
-    use Configurable;
     use Injectable;
 
     /**
@@ -120,14 +119,6 @@ class ProductGroupList
     public function getLevelOfProductsToShow() : int
     {
         return $this->levelsToShow;
-    }
-
-    /**
-     * @return SilverStripe\ORM\PaginatedList
-     */
-    public function getPaginatedList(): PaginatedList
-    {
-        return PaginatedList::create($this->getGroups());
     }
 
     /**
