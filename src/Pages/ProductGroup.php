@@ -56,6 +56,7 @@ class ProductGroup extends Page
             'getVariable' => 'sort',
             'dbFieldName' => 'DefaultSortOrder',
             'translationCode' => 'SORT_BY',
+            'optionsMethod' => 'getSorterOptions',
         ],
         'FILTER' => [
             'value' => 'default',
@@ -64,6 +65,7 @@ class ProductGroup extends Page
             'getVariable' => 'filter',
             'dbFieldName' => 'DefaultFilter',
             'translationCode' => 'FILTER_FOR',
+            'optionsMethod' => 'getFilterOptions',
         ],
         'DISPLAY' => [
             'value' => 'default',
@@ -72,9 +74,40 @@ class ProductGroup extends Page
             'getVariable' => 'display',
             'dbFieldName' => 'DisplayStyle',
             'translationCode' => 'DISPLAY_STYLE',
+            'optionsMethod' => 'getDisplayOptions',
         ],
     ];
 
+    /**
+     * Returns the full sortFilterDisplayNames set, a subset, or one value
+     * by either type (e.g. FILER) or variable (e.g dbFieldName)
+     * or both.
+     *
+     * @param string $typeOrVariable FILTER | SORT | DISPLAY or sessionName, getVariable, etc...
+     * @param string $variable:          sessionName, getVariable, etc...
+     *
+     * @return array | String
+     */
+    public function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
+    {
+        if ($variable) {
+            return self::SORT_DISPLAY_NAMES[$typeOrVariable][$variable];
+        }
+
+        $data = [];
+
+        if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
+            $data = self::SORT_DISPLAY_NAMES[$typeOrVariable];
+        } elseif ($typeOrVariable) {
+            foreach ($this->sortFilterDisplayNames as $group) {
+                $data[] = $group[$typeOrVariable] ?? 'error';
+            }
+        } else {
+            $data = self::SORT_DISPLAY_NAMES;
+        }
+
+        return $data;
+    }
 
     /**
     * @var string
@@ -273,7 +306,7 @@ class ProductGroup extends Page
         $sortDropdownList = $this->getOptionsForDropdown('SORT');
 
         if (count($sortDropdownList) > 1) {
-            $sortOrderKey = $this->getFilterForProducts();
+            $sortOrderKey = $this->getDefaultFilterCalculated();
             if ($this->DefaultSortOrder === 'inherit') {
                 $actualValue = ' (' . (isset($sortDropdownList[$sortOrderKey]) ? $sortDropdownList[$sortOrderKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $sortDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -293,7 +326,7 @@ class ProductGroup extends Page
         // filter
         $filterDropdownList = $this->getOptionsForDropdown('FILTER');
         if (count($filterDropdownList) > 1) {
-            $filterKey = $this->getSortForProducts();
+            $filterKey = $this->getDefaultSortOrderCalculated();
             if ($this->DefaultFilter === 'inherit') {
                 $actualValue = ' (' . (isset($filterDropdownList[$filterKey]) ? $filterDropdownList[$filterKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $filterDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -313,7 +346,7 @@ class ProductGroup extends Page
         // display style
         $displayStyleDropdownList = $this->getOptionsForDropdown('DISPLAY');
         if (count($displayStyleDropdownList) > 2) {
-            $displayStyleKey = $this->getDisplayStyleForProducts('DISPLAY');
+            $displayStyleKey = $this->getDisplayStyleCalculated('DISPLAY');
             if ($this->DisplayStyle === 'inherit') {
                 $actualValue = ' (' . (isset($displayStyleDropdownList[$displayStyleKey]) ? $displayStyleDropdownList[$displayStyleKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $displayStyleDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -397,22 +430,7 @@ class ProductGroup extends Page
             $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
             $array = ['inherit' => $inheritTitle];
         }
-        switch($type) {
-
-            case 'FILTER':
-                $method = 'getFilterOptions';
-                break;
-
-            case 'SORT':
-                $method = 'getSorterOptions';
-                break;
-
-            case 'DISPLAY':
-                $method = 'getDisplayOptions';
-                break;
-            default:
-                user_error($type. ' is not a valid type');
-        }
+        $method = $this->getSortFilterDisplayNames($type, 'optionsMethod');
         $options = $this->getFinalProductList()->{$method}();
 
         return array_merge($array, $options);
@@ -470,23 +488,7 @@ class ProductGroup extends Page
 
     public function getProductListConfigDefaultValue(string $type)
     {
-        switch($type) {
-
-            case 'FILTER':
-                $method = 'getFilterForProducts';
-                break;
-
-            case 'SORT':
-                $method = 'getSortForProducts';
-                break;
-
-            case 'DISPLAY':
-                $method = 'getDisplayStyleForProducts';
-                break;
-            default:
-                user_error($type. ' is not a valid type');
-        }
-
+        $method = 'get' . $this->getSortFilterDisplayNames($type, 'dbFieldName').'Calculated';
         if($method) {
             return $this->{$method}();
         }
@@ -516,7 +518,7 @@ class ProductGroup extends Page
     /**
      * @return string
      **/
-    public function getFilterForProducts() : string
+    public function getDefaultFilterCalculated() : string
     {
         return $this->recursiveValue('DefaultFilter', 'default');
     }
@@ -524,7 +526,7 @@ class ProductGroup extends Page
     /**
      * @return string
      **/
-    public function getSortForProducts() : string
+    public function getDefaultSortOrderCalculated() : string
     {
         return $this->recursiveValue('DefaultSortOrder', 'default');
     }
@@ -532,7 +534,7 @@ class ProductGroup extends Page
      * @return int
      * @alias of ProductsPerPage
      **/
-    public function getDisplayStyleForProducts() : string
+    public function getDisplayStyleCalculated() : string
     {
         return $this->recursiveValue('DisplayStyle', 'default');
     }

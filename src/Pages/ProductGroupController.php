@@ -56,11 +56,7 @@ class ProductGroupController extends PageController
     {
         $this->addSecondaryTitle();
 
-        if ($this->returnAjaxifiedProductList()) {
-            return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
-        }
-
-        return [];
+        return $this->defaultReturn();
     }
 
     /**
@@ -139,7 +135,7 @@ class ProductGroupController extends PageController
     {
         $this->saveUserPreferences(['FILTER' => '',]);
 
-        return [];
+        return $this->defaultReturn();
     }
 
     /**
@@ -149,16 +145,16 @@ class ProductGroupController extends PageController
     {
         $this->saveUserPreferences(['SORT' => '',]);
 
-        return [];
+        return $this->defaultReturn();
     }
     /**
-     * resets the sort only.
+     * resets the displayer only.
      */
     public function resetdisplayer()
     {
         $this->saveUserPreferences(['DISPLAY' => '',]);
 
-        return [];
+        return $this->defaultReturn();
     }
 
     /**
@@ -773,11 +769,7 @@ class ProductGroupController extends PageController
             if (! $this->request->getVar($sortGetVariable)) {
                 $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
                 if ($suggestion) {
-                    $this->saveUserPreferences(
-                        [
-                            $sortGetVariable => $suggestion,
-                        ]
-                    );
+                    $this->saveUserPreferences(['SORT' => $suggestion,]);
                 }
             }
         }
@@ -1111,6 +1103,16 @@ class ProductGroupController extends PageController
         }
 
         return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
+    }
+
+    protected function defaultReturn()
+    {
+        if ($this->returnAjaxifiedProductList()) {
+            return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
+        }
+
+        return [];
+
     }
 
 }
