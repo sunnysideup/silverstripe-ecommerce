@@ -270,18 +270,6 @@ class CartPageController extends PageController
     }
 
     /**
-     * The link that Google et al. need to index.
-     * @return string
-     */
-    public function CanonicalLink()
-    {
-        $link = $checkoutPageLink = CheckoutPage::find_link();
-        $this->extend('UpdateCanonicalLink', $link);
-
-        return $link;
-    }
-
-    /**
      * @return string
      **/
     public function Message()

@@ -1,6 +1,8 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Api;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\ClassInfo;
 
 class ArrayMethods
 {
@@ -21,5 +23,46 @@ class ArrayMethods
         }
 
         return $array;
+    }
+
+    /**
+     * creates a sort string from a list of ID arrays...
+     *
+     * @param array $IDarray - list of product IDs
+     *
+     * @return string
+     */
+    public static function create_where_from_id_array(array $ids, ?string $className) :string
+    {
+        $ids = ArrayMethods::filter_array($ids);
+        $ifStatement = 'CASE ';
+        $sortStatement = '';
+        $count = 0;
+        $stage = self::get_stage();
+        $tableClasses = ClassInfo::dataClassesFor($className);
+		$table = array_shift($tableClasses);
+        foreach ($ids as $id) {
+            $ifStatement .= ' WHEN "'.$table.$stage."\".\"ID\" = $id THEN $count";
+            ++$count;
+        }
+        $sortStatement = $ifStatement.' END';
+
+        return $sortStatement;
+    }
+
+    /**
+     * Returns a versioned record stage table suffix (i.e "" or "_Live")
+     *
+     * @return string
+     */
+    protected static function get_stage()
+    {
+        $stage = '';
+
+        if (Versioned::get_stage() === 'Live') {
+            $stage = '_Live';
+        }
+
+        return $stage;
     }
 }

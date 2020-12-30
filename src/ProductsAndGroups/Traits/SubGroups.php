@@ -30,6 +30,11 @@ trait SubGroups
     }
 
 
+    public function getProductsPaginated()
+    {
+
+    }
+
     public function getProductIds()
     {
         $this->products->columnUnique('ID');

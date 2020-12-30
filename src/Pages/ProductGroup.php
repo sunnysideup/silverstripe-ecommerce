@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
@@ -29,6 +30,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConf
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
 
 /**
@@ -42,72 +44,15 @@ class ProductGroup extends Page
 {
 
 
+    /**
+     * @var string
+     */
+    private static $base_product_list_class_name = BaseProductList::class;
 
     /**
-     * list of sort / filter / display variables.
-     *
-     * @var array
+     * @var string
      */
-    protected const SORT_DISPLAY_NAMES = [
-        'SORT' => [
-            'value' => 'default',
-            'configName' => 'sort_options',
-            'sessionName' => 'session_name_for_sort_preference',
-            'getVariable' => 'sort',
-            'dbFieldName' => 'DefaultSortOrder',
-            'translationCode' => 'SORT_BY',
-            'optionsMethod' => 'getSorterOptions',
-        ],
-        'FILTER' => [
-            'value' => 'default',
-            'configName' => 'filter_options',
-            'sessionName' => 'session_name_for_filter_preference',
-            'getVariable' => 'filter',
-            'dbFieldName' => 'DefaultFilter',
-            'translationCode' => 'FILTER_FOR',
-            'optionsMethod' => 'getFilterOptions',
-        ],
-        'DISPLAY' => [
-            'value' => 'default',
-            'configName' => 'display_styles',
-            'sessionName' => 'session_name_for_display_style_preference',
-            'getVariable' => 'display',
-            'dbFieldName' => 'DisplayStyle',
-            'translationCode' => 'DISPLAY_STYLE',
-            'optionsMethod' => 'getDisplayOptions',
-        ],
-    ];
-
-    /**
-     * Returns the full sortFilterDisplayNames set, a subset, or one value
-     * by either type (e.g. FILER) or variable (e.g dbFieldName)
-     * or both.
-     *
-     * @param string $typeOrVariable FILTER | SORT | DISPLAY or sessionName, getVariable, etc...
-     * @param string $variable:          sessionName, getVariable, etc...
-     *
-     * @return array | String
-     */
-    public function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
-    {
-        if ($variable) {
-            return self::SORT_DISPLAY_NAMES[$typeOrVariable][$variable];
-        }
-
-        $data = [];
-
-        if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
-            $data = self::SORT_DISPLAY_NAMES[$typeOrVariable];
-        } elseif ($typeOrVariable) {
-            foreach ($this->sortFilterDisplayNames as $group) {
-                $data[] = $group[$typeOrVariable] ?? 'error';
-            }
-        } else {
-            $data = self::SORT_DISPLAY_NAMES;
-        }
-
-        return $data;
-    }
+    private static $final_product_list_class_name = FinalProductList::class;
 
     /**
     * @var string
@@ -302,60 +247,12 @@ class ProductGroup extends Page
             $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
         }
 
-        // sort
-        $sortDropdownList = $this->getOptionsForDropdown('SORT');
 
-        if (count($sortDropdownList) > 1) {
-            $sortOrderKey = $this->getDefaultFilterCalculated();
-            if ($this->DefaultSortOrder === 'inherit') {
-                $actualValue = ' (' . (isset($sortDropdownList[$sortOrderKey]) ? $sortDropdownList[$sortOrderKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
-                $sortDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
-            }
-            $fields->addFieldToTab(
-                'Root.ProductDisplay',
-                $defaultSortOrderField = DropdownField::create('DefaultSortOrder', _t('ProductGroup.DEFAULTSORTORDER', 'Default Sort Order'), $sortDropdownList)
-            );
-            $defaultSortOrderField->setDescription(
-                _t(
-                    'ProductGroup.INHERIT_RIGHT_TITLE',
-                    "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."
-                )
-            );
-        }
+        $this->addDropDownForListConfig($fields, 'FILTER',  _t('ProductGroup.DEFAULTFILTER', 'Default Filter'));
 
-        // filter
-        $filterDropdownList = $this->getOptionsForDropdown('FILTER');
-        if (count($filterDropdownList) > 1) {
-            $filterKey = $this->getDefaultSortOrderCalculated();
-            if ($this->DefaultFilter === 'inherit') {
-                $actualValue = ' (' . (isset($filterDropdownList[$filterKey]) ? $filterDropdownList[$filterKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
-                $filterDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
-            }
-            $fields->addFieldToTab(
-                'Root.ProductDisplay',
-                $defaultFilterField = DropdownField::create('DefaultFilter', _t('ProductGroup.DEFAULTFILTER', 'Default Filter'), $filterDropdownList)
-            );
-            $defaultFilterField->setDescription(
-                _t(
-                    'ProductGroup.INHERIT_RIGHT_TITLE',
-                    "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."
-                )
-            );
-        }
+        $this->addDropDownForListConfig($fields, 'SORT',  _t('ProductGroup.DEFAULTSORTORDER', 'Default Sort Order'));
 
-        // display style
-        $displayStyleDropdownList = $this->getOptionsForDropdown('DISPLAY');
-        if (count($displayStyleDropdownList) > 2) {
-            $displayStyleKey = $this->getDisplayStyleCalculated('DISPLAY');
-            if ($this->DisplayStyle === 'inherit') {
-                $actualValue = ' (' . (isset($displayStyleDropdownList[$displayStyleKey]) ? $displayStyleDropdownList[$displayStyleKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
-                $displayStyleDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
-            }
-            $fields->addFieldToTab(
-                'Root.ProductDisplay',
-                DropdownField::create('DisplayStyle', _t('ProductGroup.DEFAULTDISPLAYSTYLE', 'Default Display Style'), $displayStyleDropdownList)
-            );
-        }
+        $this->addDropDownForListConfig($fields, 'DISPLAY', _t('ProductGroup.DEFAULTDISPLAYSTYLE', 'Default Display Style'));
 
         $config = EcommerceConfig::inst();
 
@@ -374,15 +271,30 @@ class ProductGroup extends Page
         return $fields;
     }
 
-    /**
-     * @var string
-     */
-    private static $base_product_list_class_name = ProductList::class;
+    protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
+    {
+        // display style
+        $options = $this->getOptionsForDropdown($type);
+        if (count($options) > 2) {
+            $field = $this->getSortFilterDisplayNames($type, 'dbFieldName');
+            if ($this->{$field} === 'inherit') {
+                $key = $this->getListConfigCalculated($type);
+                $actualValue = ' (' . ($options[$key] ?? _t('ProductGroup.ERROR', 'ERROR')) . ')';
+                $options['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
+            }
+            $fields->addFieldToTab(
+                'Root.ProductDisplay',
+                $field = DropdownField::create($field, $title, $options)
+            );
+            $field->setDescription(
+                _t(
+                    'ProductGroup.INHERIT_RIGHT_TITLE',
+                    "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."
+                )
+            );
+        }
+    }
 
-    /**
-     * @var string
-     */
-    private static $final_product_list_class_name = FinalProductList::class;
 
     /**
      * @var string
@@ -430,7 +342,7 @@ class ProductGroup extends Page
             $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
             $array = ['inherit' => $inheritTitle];
         }
-        $method = $this->getSortFilterDisplayNames($type, 'optionsMethod');
+        $method = 'get' . $this->getSortFilterDisplayNames($type, 'dbFieldName') . 'Options';
         $options = $this->getFinalProductList()->{$method}();
 
         return array_merge($array, $options);
@@ -516,6 +428,17 @@ class ProductGroup extends Page
     }
 
     /**
+     * @return int
+     * @alias of ProductsPerPage
+     **/
+    public function getListConfigCalculated(string $type) : string
+    {
+        $field = $this->getSortFilterDisplayNames($type, 'dbFieldName');
+
+        return $this->recursiveValue($field, 'default');
+    }
+
+    /**
      * @return string
      **/
     public function getDefaultFilterCalculated() : string
@@ -530,6 +453,7 @@ class ProductGroup extends Page
     {
         return $this->recursiveValue('DefaultSortOrder', 'default');
     }
+
     /**
      * @return int
      * @alias of ProductsPerPage
@@ -601,6 +525,7 @@ class ProductGroup extends Page
     }
 
     /**
+     * KEEP FOR LEGACY
      * add this segment to the end of a Product Group
      * link to create a cross-filter between the two categories.
      *
@@ -747,7 +672,7 @@ class ProductGroup extends Page
      *
      * @return bool
      */
-    public function IsEcommercePage()
+    public function IsEcommercePage() : bool
     {
         return true;
     }
@@ -782,4 +707,95 @@ class ProductGroup extends Page
     {
         return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
     }
+
+
+
+    /**
+     * list of sort / filter / display variables.
+     *
+     * @var array
+     */
+    protected const SORT_DISPLAY_NAMES = [
+        'FILTER' => [
+            'value' => 'default',
+            'configName' => 'filter_options',
+            'getVariable' => 'filter',
+            'dbFieldName' => 'DefaultFilter',
+            'defaultApplyer' => ProductSorter::class,
+        ],
+        'SORT' => [
+            'value' => 'default',
+            'configName' => 'sort_options',
+            'getVariable' => 'sort',
+            'dbFieldName' => 'DefaultSortOrder',
+            'translationCode' => 'SORT_BY',
+            'defaultApplyer' => ProductFilter::class,
+        ],
+        'DISPLAY' => [
+            'value' => 'default',
+            'configName' => 'display_styles',
+            'getVariable' => 'display',
+            'dbFieldName' => 'DisplayStyle',
+            'translationCode' => 'DISPLAY_STYLE',
+            'defaultApplyer' =>  ProductDisplayer::class,
+        ],
+    ];
+
+    protected function getSortFilterDisplayNamesData() : array
+    {
+        $data = self::SORT_DISPLAY_NAMES;
+        $outcome = $this->extend('updateSorterDisplayNamesData', $data);
+        if($outcome !== null) {
+            $data = $outcome;
+        }
+
+        return $data;
+    }
+
+    public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true) : bool
+    {
+        $data = $this->getSortFilterDisplayNamesData();
+        if(isset($data[$type])) {
+            return true;
+        } elseif($showError) {
+            user_error('Invalid type supplied: '.$type. 'Please use: SORT / FILTER / DISPLAY');
+            return false;
+        } else {
+            false;
+        }
+    }
+
+
+    /**
+     * Returns the full sortFilterDisplayNames set, a subset, or one value
+     * by either type (e.g. FILER) or variable (e.g dbFieldName)
+     * or both.
+     *
+     * @param string $typeOrVariable    FILTER | SORT | DISPLAY OR variable
+     * @param string $variable:         getVariable, etc...
+     *
+     * @return array | String
+     */
+    public function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
+    {
+        $data = $this->getSortFilterDisplayNamesData();
+        if ($variable) {
+            return $data[$typeOrVariable][$variable];
+        }
+
+        $newData = [];
+
+        if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
+            $newData = $data[$typeOrVariable];
+        } elseif ($typeOrVariable) {
+            foreach ($this->sortFilterDisplayNames as $group) {
+                $newData[] = $group[$typeOrVariable] ?? 'error';
+            }
+        } else {
+            $newData = $data;
+        }
+
+        return $newData;
+    }
+
 }

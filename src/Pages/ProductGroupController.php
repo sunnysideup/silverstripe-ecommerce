@@ -8,6 +8,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
@@ -16,9 +17,15 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Helpers\CachingHelper;
+use Sunnysideup\Ecommerce\Helpers\EcommerceCache;
+use SilverStripe\ORM\PaginatedList;
 
 class ProductGroupController extends PageController
 {
+
+    protected const GET_VAR_VALUE_PLACE_HOLDER = '[[INSERT_VALUE_HERE]]';
+
+    protected $searchForm = null;
 
     /**
      * The original Title of this page before filters, etc...
@@ -33,6 +40,13 @@ class ProductGroupController extends PageController
      * @var bool
      */
     protected $isSearchResults = false;
+
+    /**
+     * Is this a product search?
+     *
+     * @var string
+     */
+    protected $searchResultHash = '';
 
     /**
      * variable to make sure secondary title only gets
@@ -51,6 +65,10 @@ class ProductGroupController extends PageController
         'resetsort' => true,
         'resetdisplayer' => true,
     ];
+
+    ########################################
+    # actions
+    ########################################
 
     public function index()
     {
@@ -157,84 +175,10 @@ class ProductGroupController extends PageController
         return $this->defaultReturn();
     }
 
-    /**
-     * Return the products for this group.
-     *
-     * This is the call that is made from the template and has the actual final
-     * products being shown.
-     *
-     * @return \SilverStripe\ORM\PaginatedList
-     */
-    public function Products()
-    {
-        $this->addSecondaryTitle();
-        $this->cachingRelatedJavascript();
 
-        return $this->getFinalProductList()->getPaginatedList();
-    }
-
-    /**
-     * Is the product list cache-able?
-     *
-     * @return bool
-     */
-    public function ProductGroupListAreCacheable(): bool
-    {
-        if ($this->productListsHTMLCanBeCached()) {
-            if ($this->IsSearchResults()) {
-                return false;
-            }
-
-            $currentOrder = ShoppingCart::current_order();
-
-            if ($currentOrder->getHasAlternativeCurrency()) {
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * is the product list ajaxified.
-     *
-     * @return bool
-     */
-    public function ProductGroupListAreAjaxified() : bool
-    {
-        return $this->IsSearchResults() ? false : true;
-    }
-
-    /**
-     * Unique caching key for the product list...
-     *
-     * @return string | Null
-     */
-    public function ProductGroupListCachingKey() : string
-    {
-        if ($this->ProductGroupListAreCacheable()) {
-            $displayKey = $this->getCurrentUserPreferences('DISPLAY');
-            $filterKey = $this->getCurrentUserPreferences('FILTER');
-            $sortKey = $this->getCurrentUserPreferences('SORT');
-            $pageStart = $this->request->getVar('start') ? intval($this->request->getVar('start')) : 0;
-            return $this->cacheKey(
-                implode(
-                    '_',
-                    [
-                        $displayKey,
-                        $filterKey,
-                        $filterForGroupKey,
-                        $sortKey,
-                        $pageStart,
-                    ]
-                )
-            );
-        }
-
-        return '';
-    }
+    ###################################
+    # template methods
+    ###################################
 
     /**
      * adds Javascript to the page to make it work when products are cached.
@@ -282,6 +226,109 @@ class ProductGroupController extends PageController
             );
         }
     }
+    /**
+     * Return the products for this group.
+     *
+     * This is the call that is made from the template and has the actual final
+     * products being shown.
+     *
+     * @return \SilverStripe\ORM\PaginatedList
+     */
+    public function Products()
+    {
+        $this->addSecondaryTitle();
+        $this->cachingRelatedJavascript();
+        $list = $this->$this->getCachedProductList();
+        if(! $list ) {
+            $list = $this->getFinalProductList()->getProducts();
+            EcommerceCache::inst()->save($key, $list->column('ID'));
+        }
+        $this->getFinalProductList()
+            ->applyFilter($this->getCurrentUserPreferences('FILTER'))
+            ->applySorter($this->getCurrentUserPreferences('SORT'))
+            ->applyDisplayer($this->getCurrentUserPreferences('DISPLAY'));
+
+        return $this->paginateList($list);
+    }
+
+    protected function getCachedProductList() : ? DataList
+    {
+        $key = $this->ProductGroupListCachingKey(false);
+        if(EcommerceCache::inst()->hasCache($key)) {
+            $ids = EcommerceCache::inst()->retrieve($key);
+            return Product::get()
+                ->filter(['ID' => $ids])
+                ->sort(ArrayMethods::create_where_from_id_array($ids, Product::class));
+        }
+
+        return null;
+    }
+
+    /**
+     * Unique caching key for the product list...
+     *
+     * @return string | Null
+     */
+    public function ProductGroupListCachingKey(?bool $withPageNumber = true) : string
+    {
+        if ($this->ProductGroupListAreCacheable()) {
+            $filterKey = $this->getCurrentUserPreferences('FILTER');
+            $displayKey = $this->getCurrentUserPreferences('DISPLAY');
+            $sortKey = $this->getCurrentUserPreferences('SORT');
+            $pageStart = '';
+            if($withPageNumber) {
+                $pageStart = $this->getCurrentPageNumber();
+            }
+            return $this->cacheKey(
+                implode(
+                    '_',
+                    array_filter([
+                        $displayKey,
+                        $filterKey,
+                        $sortKey,
+                        $pageStart,
+                    ])
+                )
+            );
+        }
+
+        return '';
+    }
+
+
+    /**
+     * Is the product list cache-able?
+     *
+     * @return bool
+     */
+    public function ProductGroupListAreCacheable(): bool
+    {
+        if ($this->productListsHTMLCanBeCached()) {
+            if ($this->IsSearchResults()) {
+                return false;
+            }
+
+            $currentOrder = ShoppingCart::current_order();
+
+            if ($currentOrder->getHasAlternativeCurrency()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * is the product list ajaxified.
+     *
+     * @return bool
+     */
+    public function ProductGroupListAreAjaxified() : bool
+    {
+        return $this->IsSearchResults() ? false : true;
+    }
 
     /**
      * title without additions.
@@ -307,7 +354,7 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function MenuChildGroups()
+    public function MenuChildGroups() :DataList
     {
         return $this->ChildGroups(
             2,
@@ -321,15 +368,16 @@ class ProductGroupController extends PageController
         return $this->getProductList()->CountGreaterThanOne(3) && $this->HasFilters() ? true : false;
     }
 
+    public function ShowSortLinks() : bool
+    {
+        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasSorts() ? true : false;
+    }
+
     public function ShowDisplayLinks() : bool
     {
         return $this->getProductList()->CountGreaterThanOne(3) && $this->HasDisplays() ? true : false;
     }
 
-    public function ShowSortLinks() : bool
-    {
-        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasDisplays() ? true : false;
-    }
 
 
     public function HasFilter() : bool
@@ -385,17 +433,14 @@ class ProductGroupController extends PageController
         return $this->DisplayLinks()->count() > 1;
     }
 
-    /**
-     * Returns the current filter applied to the list in a human readable
-     *  string.
-     *
-     * @return string
-     */
-    public function CurrentDisplayTitle()
+
+    public function getCurrentPageNumber()
     {
-        if ($this->HasDisplay()) {
-            return $this->getUserPreferencesTitle('DISPLAY', $this->getCurrentUserPreferences('DISPLAY'));
+        if ($pageStart = intval($this->request->getVar('start'))) {
+            return ($pageStart / $this->getProductsPerPage()) + 1;
         }
+
+        return 1;
     }
 
     /**
@@ -404,11 +449,12 @@ class ProductGroupController extends PageController
      *
      * @return string
      */
-    public function CurrentFilterTitle()
+    public function getCurrentFilterTitle() : string
     {
         if ($this->hasFilter()) {
             return $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
         }
+        return '';
     }
 
     /**
@@ -417,11 +463,25 @@ class ProductGroupController extends PageController
      *
      * @return string
      */
-    public function CurrentSortTitle()
+    public function getCurrentSortTitle() : string
     {
         if ($this->HasSort()) {
             return $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
         }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentDisplayTitle() : string
+    {
+        if ($this->HasDisplay()) {
+            return $this->getUserPreferencesTitle('DISPLAY', $this->getCurrentUserPreferences('DISPLAY'));
+        }
+
+        return '';
     }
 
     /**
@@ -430,7 +490,7 @@ class ProductGroupController extends PageController
      *
      * @return string - key
      */
-    public function MyDefaultDisplayStyle()
+    public function MyDefaultDisplayStyle() : string
     {
         return $this->getProductListConfigDefaultValue('DISPLAY');
     }
@@ -448,170 +508,113 @@ class ProductGroupController extends PageController
         return $perPage > $total ? $total : $perPage;
     }
 
+    //
+
     /**
      * Provides a ArrayList of links for filters products.
      *
      * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
      */
-    public function FilterLinks()
+    public function FilterLinks() : ArrayList
     {
-        $list = $this->userPreferencesLinks('FILTER');
-
-        $selectedItem = $this->getCurrentUserPreferences('FILTER');
-        foreach ($list as $obj) {
-            $canHaveCurrent = true;
-            if ($this->filterForGroupObject) {
-                $canHaveCurrent = false;
-            }
-            $obj->Current = $selectedItem === $obj->SelectKey && $canHaveCurrent ? true : false;
-            $obj->LinkingMode = $obj->Current ? 'current' : 'link';
-            $obj->Ajaxify = true;
-        }
-
-        return $list;
+        return $this->getFinalProductList()
+            ->getDefaultFilterList(
+                $this->getCurrentUserPreferences('FILTER'),
+                $this->getLinkTemplate('FILTER'),
+                true
+            );
     }
-    //
-    // /**
-    //  * returns a list of items (with links).
-    //  *
-    //  * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, FilterLink,  SelectKey, Current (boolean), LinkingMode))
-    //  */
-    // public function ProductGroupFilterLinks()
-    // {
-    //     $arrayOfItems = [];
-    //
-    //     $baseArray = $this->getProductList()->getProductIds();
-    //
-    //     $items = $this->getProductGroupsFromAlsoShowProducts();
-    //
-    //     if ($items) {
-    //         $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
-    //     }
-    //
-    //     $items = $this->getProductGroupsFromAlsoShowProductsInverse();
-    //
-    //     if ($items) {
-    //         $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
-    //     }
-    //
-    //     $items = $this->getProductGroupsParentGroups();
-    //
-    //     if ($items) {
-    //         $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
-    //     }
-    //
-    //     $items = $this->MenuChildGroups();
-    //
-    //     if ($items) {
-    //         $arrayOfItems = array_merge($arrayOfItems, $this->productGroupFilterLinksCount($items, $baseArray, true));
-    //     }
-    //
-    //     ksort($arrayOfItems);
-    //     $array = [];
-    //
-    //     foreach ($arrayOfItems as $arrayOfItem) {
-    //         $array[] = $this->makeArrayItem($arrayOfItem);
-    //     }
-    //
-    //     $arrayList = ArrayList::create();
-    //     foreach ($array as $item) {
-    //         $arrayList->push(ArrayData::create($item));
-    //     }
-    //
-    //     return $arrayList;
-    // }
-
-
     /**
      * Provides a ArrayList of links for sorting products.
      */
-    public function SortLinks()
+    public function SortLinks() : ArrayList
     {
-        $list = $this->userPreferencesLinks('SORT');
-        $selectedItem = $this->getCurrentUserPreferences('SORT');
-        if ($list) {
-            foreach ($list as $obj) {
-                $obj->Current = $selectedItem === $obj->SelectKey ? true : false;
-                $obj->LinkingMode = $obj->Current ? 'current' : 'link';
-                $obj->Ajaxify = true;
-            }
+        return $this->getFinalProductList()
+            ->getDefaultFilterList(
+                $this->getCurrentUserPreferences('SORT'),
+                $this->getLinkTemplate('SORT'),
+                true
+            );
 
-            return $list;
-        }
+
     }
 
     /**
      * Provides a ArrayList for displaying display links.
      */
-    public function DisplayLinks()
+    public function DisplayLinks() : ArrayList
     {
+        return $this->getFinalProductList()
+            ->getDefaultFilterList(
+                $this->getCurrentUserPreferences('DISPLAY'),
+                $this->getLinkTemplate('DISPLAY'),
+                false
+            );
+
 
     }
 
-    /**
-     * The link that Google et al. need to index.
-     *
-     * @return string
-     */
-    public function CanonicalLink()
+    public function getLink($action = null) : string
     {
-        $link = $this->AbsoluteLink();
-        $this->extend('updateCanonicalLink', $link);
+        return $this->Link($action);
+    }
 
-        return $link;
+    public function Link($action = null) : string
+    {
+        return $this->getLinkTemplate('', $action);
     }
 
     /**
-     * Link that returns a list of all the products
-     * for this product group as a simple list.
-     *
-     * @return string
+     * returns the current page with get variables. If a type is specified then
+     * instead of the value for that type, we add: '[[INSERT_HERE]]'
+     * @param  string $type [description]
+     * @return string       [description]
      */
-    public function ListAllLink()
+    protected function getLinkTemplate(?string $type = '', ?string $action = null) : string
     {
-        return $this->Link() . '?showfulllist=1';
-    }
-
-    /**
-     * Link that returns a list of all the products
-     * for this product group as a simple list.
-     *
-     * @return string
-     */
-    public function ListAFewLink()
-    {
-        return str_replace('?showfulllist=1', '', $this->ListAllLink());
-    }
-
-    /**
-     * Link that returns a list of all the products for this product group as a
-     * simple list. It resets everything; not just filter.
-     *
-     * @param bool $escapedAmpersands
-     *
-     * @return string
-     */
-    public function ResetPreferencesLink($escapedAmpersands = true)
-    {
-        $ampersand = '&';
-        if ($escapedAmpersands) {
-            $ampersand = '&amp;';
+        $base = $this->dataRecord->Link($action);
+        $getVars = [];
+        foreach($this->getSortFilterDisplayNames as $key => $values) {
+            if($type && $type === $key) {
+                $value = self::GET_VAR_VALUE_PLACE_HOLDER;
+            } else {
+                $value = $this->$this->getCurrentUserPreferences($type);
+            }
+            $getVars[$values['getVariable']] = $value;
         }
-        $getVariableNameFilter = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
-        $getVariableNameSort = $this->getSortFilterDisplayNames('SORT', 'getVariable');
 
-        return $this->Link() . '?' .
-            $getVariableNameFilter . '=' . $this->getProductListConfigDefaultValue('FILTER') . $ampersand .
-            $getVariableNameSort . '=' . $this->getProductListConfigDefaultValue('SORT') . $ampersand .
-            'reload=1';
+        return $link . '?' . http_build_query($getVars);
     }
+
+    /**
+     * Link that returns a list of all the products
+     * for this product group as a simple list.
+     *
+     * @return string
+     */
+    public function ListAllLink() : string
+    {
+        return $this->Link() . '&showfulllist=1';
+    }
+
+    /**
+     * Link that returns a list of all the products
+     * for this product group as a simple list.
+     *
+     * @return string
+     */
+    public function ListAFewLink() : string
+    {
+        return str_replace('&showfulllist=1', '', $this->ListAllLink());
+    }
+
 
     /**
      * Link to the search results.
      *
      * @return string
      */
-    public function SearchResultLink()
+    public function SearchResultLink() : string
     {
         return $this->Link('searchresults');
     }
@@ -620,6 +623,7 @@ class ProductGroupController extends PageController
     {
         return $this->ProductSearchForm()->getProductGroupIds();
     }
+
     /**
      * After a search is conducted you may end up with a bunch
      * of recommended product groups. They will be returned here...
@@ -627,18 +631,18 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\DataList | Null (ProductGroups)
      */
-    public function SearchResultsChildGroups()
+    public function SearchResultsChildGroups() :?DataList
     {
         $groupArray = $this->searchResultsProductGroupsArrayFromSession();
         if (! empty($groupArray)) {
-            $sortStatement = $this->createSortStatementFromIDArray($groupArray, ProductGroup::class);
+            $sortStatement = ArrayMethods::create_where_from_id_array($groupArray, ProductGroup::class);
 
             return ProductGroup::get()
                 ->filter(['ID' => $groupArray, 'ShowInSearch' => 1])
                 ->sort($sortStatement);
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -746,6 +750,13 @@ class ProductGroupController extends PageController
     protected function init()
     {
         parent::init();
+        if ($this->request->getVar('reload')) {
+            // $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
+            //
+            // $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
+
+            return $this->redirect($this->Link());
+        }
         $this->originalTitle = $this->Title;
         Requirements::themedCSS('client/css/ProductGroup');
         Requirements::themedCSS('client/css/ProductGroupPopUp');
@@ -781,7 +792,7 @@ class ProductGroupController extends PageController
      *
      * @return bool
      */
-    protected function returnAjaxifiedProductList()
+    protected function returnAjaxifiedProductList() : bool
     {
         return Director::is_ajax() ? true : false;
     }
@@ -791,45 +802,45 @@ class ProductGroupController extends PageController
      *
      * @return bool
      */
-    protected function productListsHTMLCanBeCached()
+    protected function productListsHTMLCanBeCached() : bool
     {
         return EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased ? false : true;
     }
 
-    /**
-     * counts the total number in the combination....
-     *
-     * @param ProductGroup[] $groups
-     * @param array  $baseArray - list of products on the current page
-     *
-     * @return array
-     */
-    protected function productGroupFilterLinksCount($groups, $baseArray, $ajaxify = true)
-    {
-        $array = [];
-
-        if ($groups) {
-            foreach ($groups as $item) {
-                $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getProductListConfigDefaultValue('FILTER'));
-                $newArray = array_intersect_key(
-                    $arrayOfIDs,
-                    $baseArray
-                );
-
-                $count = count($newArray);
-
-                if ($count) {
-                    $array[$item->Title] = [
-                        'Item' => $item,
-                        'Count' => $count,
-                        'Ajaxify' => $ajaxify,
-                    ];
-                }
-            }
-        }
-
-        return $array;
-    }
+    // /**
+    //  * counts the total number in the combination....
+    //  *
+    //  * @param ProductGroup[] $groups
+    //  * @param array  $baseArray - list of products on the current page
+    //  *
+    //  * @return array
+    //  */
+    // protected function productGroupFilterLinksCount($groups, $baseArray, $ajaxify = true) : array
+    // {
+    //     $array = [];
+    //
+    //     if ($groups) {
+    //         foreach ($groups as $item) {
+    //             $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getProductListConfigDefaultValue('FILTER'));
+    //             $newArray = array_intersect_key(
+    //                 $arrayOfIDs,
+    //                 $baseArray
+    //             );
+    //
+    //             $count = count($newArray);
+    //
+    //             if ($count) {
+    //                 $array[$item->Title] = [
+    //                     'Item' => $item,
+    //                     'Count' => $count,
+    //                     'Ajaxify' => $ajaxify,
+    //                 ];
+    //             }
+    //         }
+    //     }
+    //
+    //     return $array;
+    // }
     //
     // /**
     //  * @param array $itemInArray (Item, Count, UserFilterAction)
@@ -863,120 +874,7 @@ class ProductGroupController extends PageController
     //     ];
     // }
 
-    /**
-     * Checks out a bunch of $_GET variables that are used to work out user
-     * preferences.
-     *
-     * Some of these are saved to session.
-     *
-     * @param array $overrideArray - override $_GET variable settings
-     */
-    protected function saveUserPreferences($overrideArray = [])
-    {
 
-
-        $sortFilterDisplayNames = $this->getSortFilterDisplayNames();
-
-        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
-            $getVariableName = $oneTypeArray['getVariable'];
-            $sessionName = $oneTypeArray['sessionName'];
-
-            if (isset($overrideArray[$getVariableName])) {
-                $newPreference = $overrideArray[$getVariableName];
-            } else {
-                $newPreference = $this->request->getVar($getVariableName);
-            }
-
-            if ($newPreference) {
-                $optionsVariableName = $oneTypeArray['configName'];
-                $options = EcommerceConfig::get($this->ClassName, $optionsVariableName);
-                if (isset($options[$newPreference])) {
-                    $this->getRequest()->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
-                    //save in model as well...
-                }
-            } else {
-                $newPreference = $this->getRequest()->getSession()->get('ProductGroup_' . $sessionName);
-            }
-
-            if ($newPreference) {
-                $this->setCurrentUserPreference($type, $newPreference);
-            }
-        }
-
-        if ($this->request->getVar('reload')) {
-            // $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(false), '');
-            //
-            // $this->getRequest()->getSession()->set($this->SearchResultsSessionVariable(true), '');
-
-            return $this->redirect($this->Link());
-        }
-        $this->getFinalProductList()
-            ->applyFilter($filter)
-            ->applySorter($sorter)
-            ->applyDisplayer($displayer);
-    }
-
-    /**
-     * Checks for the most applicable user preferences for this user:
-     * 1. session value
-     * 2. getProductListConfigDefaultValue.
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     *
-     * @todo: move to controller?
-     */
-    protected function getCurrentUserPreferences($type)
-    {
-        $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-        if ($sessionValue = $this->getRequest()->getSession()->get('ProductGroup_' . $sessionName)) {
-            $key = Convert::raw2sql($sessionValue);
-        } else {
-            $key = $this->getProductListConfigDefaultValue($type);
-        }
-        return $this->getBestKeyAndValidateKey($type, $key);
-    }
-
-    /**
-     * Provides a dataset of links for a particular user preference.
-     *
-     * @param string $type SORT | FILTER | DISPLAY - e.g. sort_options
-     *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
-     */
-    protected function userPreferencesLinks($type)
-    {
-        // get basics
-        $sortFilterDisplayNames = $this->getSortFilterDisplayNames();
-        $options = $this->getConfigOptions($type);
-
-        // if there is only one option then do not bother
-        if (count($options) < 2) {
-            return;
-        }
-
-        // get more config names
-        $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
-        $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
-        $arrayList = ArrayList::create();
-
-        if (count($options)) {
-            foreach ($options as $key => $array) {
-                $link = '?' . $getVariableName . "=${key}";
-
-                $link = $this->Link() . $link;
-
-                $arrayList->push(ArrayData::create([
-                    'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
-                    'Link' => $link,
-                    'SelectKey' => $key,
-                ]));
-            }
-        }
-
-        return $arrayList;
-    }
 
     /**
      * Add a secondary title to the main title in case there is, for example, a
@@ -986,10 +884,11 @@ class ProductGroupController extends PageController
      */
     protected function addSecondaryTitle($secondaryTitle = '')
     {
-        $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
+        //todo: add to config
+
         if (! $this->secondaryTitleHasBeenAdded) {
             if (trim($secondaryTitle)) {
-                $secondaryTitle = $pipe . $secondaryTitle;
+                $secondaryTitle = $this->prepareForSecondaryTitleAddition($secondaryTitle);
             }
 
             if ($this->IsSearchResults()) {
@@ -997,35 +896,27 @@ class ProductGroupController extends PageController
 
                 if ($count) {
                     $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
-                    $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                    $secondaryTitle .= $this->prepareForSecondaryTitleAddition($toAdd);
                 } else {
                     $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
-                    $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                    $secondaryTitle .= $this->prepareForSecondaryTitleAddition($toAdd);
                 }
             }
-            if (is_object($this->filterForGroupObject)) {
-                $toAdd = $this->filterForGroupObject->Title;
-                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
-            }
 
-            $filter = $this->getCurrentUserPreferences('FILTER');
-
-            if ($filter !== $this->getProductListConfigDefaultValue('FILTER')) {
-                $toAdd = $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
-                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+            if ($this->hasFilter()) {
+                $secondaryTitle .= $this->prepareForSecondaryTitleAddition($this->getCurrentFilterTitle());
             }
 
             if ($this->HasSort()) {
-                $toAdd = $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
-                $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
+                $secondaryTitle .= $this->prepareForSecondaryTitleAddition($this->getCurrentSortTitle());
             }
 
-            if ($pageStart = intval($this->request->getVar('start'))) {
-                if ($pageStart > 0) {
-                    $page = ($pageStart / $this->getProductsPerPage()) + 1;
-                    $toAdd = _t('ProductGroup.PAGE', 'Page') . ' ' . $page;
-                    $secondaryTitle .= $this->cleanSecondaryTitleForAddition($pipe, $toAdd);
-                }
+            $currentPageNumber = $this->getCurrentPageNumber();
+            if ($currentPageNumber > 1) {
+                $secondaryTitle .= $this->prepareForSecondaryTitleAddition(
+                    $pipe,
+                    _t('ProductGroup.PAGE', 'Page') . ' ' . $page
+                );
             }
 
             if ($secondaryTitle) {
@@ -1048,63 +939,52 @@ class ProductGroupController extends PageController
         }
     }
 
+
     /**
      * removes any spaces from the 'toAdd' bit and adds the pipe if there is
      * anything to add at all.  Through the lang files, you can change the pipe
      * symbol to anything you like.
      *
-     * @param  string $pipe
      * @param  string $toAdd
      * @return string
      */
-    protected function cleanSecondaryTitleForAddition($pipe, $toAdd)
+    protected function prepareForSecondaryTitleAddition(string $toAdd) : string
     {
         $toAdd = trim($toAdd);
         $length = strlen($toAdd);
 
         if ($length > 0) {
+            $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
             $toAdd = $pipe . $toAdd;
         }
 
         return $toAdd;
     }
 
+
     /**
-     * Returns the Title for a type key.
+     * turns full list into paginated list.
      *
-     * If no key is provided then the default key is used.
+     * @param SS_List
      *
-     * @param string $type - FILTER | SORT | DISPLAY
-     * @param string $key
-     *
-     * @return string
+     * @return PaginatedList
      */
-    protected function getUserPreferencesTitle($type, $key = '')
+    protected function paginateList(SS_List $list)
     {
-        switch($type) {
+        if ($list && $list->count()) {
+            if ($this->IsShowFullList()) {
+                $obj = PaginatedList::create($list, $this->request);
+                $obj->setPageLength(EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') + 1);
 
-            case 'FILTER':
-                $method = 'getFilterTitle';
-                break;
+                return $obj;
+            } else {
+                $obj = PaginatedList::create($list, $this->request);
+                $obj->setPageLength($this->MyNumberOfProductsPerPage());
 
-            case 'SORT':
-                $method = 'getSorterTitle';
-                break;
-
-            case 'DISPLAY':
-                $method = 'getDisplayTitle';
-                break;
-            default:
-                user_error($type. ' is not a valid type');
+                return $obj;
+            }
         }
-        $value = $this->getFinalProductList()->{$method}();
-        if ($value) {
-            return $value;
-        }
-
-        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
     }
-
     protected function defaultReturn()
     {
         if ($this->returnAjaxifiedProductList()) {

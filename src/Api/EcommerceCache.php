@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Helpers;
 
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Extension;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Injector\Injectable;
@@ -14,7 +15,7 @@ use SilverStripe\Core\Injector\Injectable;
  * Can be used in conjuction with the standard Silverstripe Partial caching
  * functionality.
  */
-class EcommerceCache
+class EcommerceCache implements Flushable
 {
     use Injectable;
 
@@ -49,7 +50,10 @@ class EcommerceCache
      */
     public function getCacheBackend()
     {
-        return $this->cacheBackend ?: Injector::inst()->get(CacheInterface::class . '.Ecommerce');
+        if(! $this->cacheBackend) {
+            $this->cacheBackend = Injector::inst()->get(CacheInterface::class . '.Ecommerce');
+        }
+        return $this->cacheBackend;
     }
 
     /**
@@ -60,15 +64,15 @@ class EcommerceCache
      */
     protected function cacheKeyRefiner($cacheKey) : string
     {
-        return $cacheKey . '_' . Versioned::get_reading_mode();
+        return $cacheKey . '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
     }
 
     public function hasCache(string $cacheKey) : bool
     {
         if ($this->AllowCaching()) {
-            $cache = $this->getCacheBackend();
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
-            return $cache->has($cacheKey);
+
+            return $this->getCacheBackend()->has($cacheKey);
         }
         return false;
 
@@ -84,9 +88,8 @@ class EcommerceCache
     public function retrieve(string $cacheKey, ?bool $alreadyUnserialized = false)
     {
         if ($this->hasCache($cacheKey)) {
-            $cache = $this->getCacheBackend();
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
-            $data = $cache->get($cacheKey);
+            $data = $this->getCacheBackend()->get($cacheKey);
             if ($alreadyUnserialized === false) {
                 $data = unserialize($data);
             }
@@ -108,12 +111,11 @@ class EcommerceCache
     public function save($cacheKey, $data, ?bool $alreadySerialized = false) : bool
     {
         if ($this->AllowCaching()) {
-            $cache = $this->getCacheBackend();
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
             if ($alreadySerialized === false) {
                 $data = serialize($data);
             }
-            $cache->set($cacheKey, $data);
+            $this->getCacheBackend()->set($cacheKey, $data);
 
             return true;
         }
@@ -125,4 +127,15 @@ class EcommerceCache
     {
         return true;
     }
+
+    public function clear()
+    {
+        $this->getCacheBackend()->clear();
+    }
+
+    public static function flush()
+    {
+        EcommerceCache::inst()->clear();
+    }
+
 }

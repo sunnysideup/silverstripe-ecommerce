@@ -52,15 +52,5 @@ class AccountPageController extends PageController
         return Security::getCurrentUser();
     }
 
-    /**
-     * The link that Google et al. need to index.
-     * @return string
-     */
-    public function CanonicalLink()
-    {
-        $link = $this->Link();
-        $this->extend('UpdateCanonicalLink', $link);
 
-        return $link;
-    }
 }

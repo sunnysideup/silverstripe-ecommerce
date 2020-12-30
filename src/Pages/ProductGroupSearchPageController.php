@@ -10,6 +10,7 @@ class ProductGroupSearchPageController extends ProductGroupController
         'ProductSearchForm' => true,
         'searchresults' => true,
         'resetfilter' => true,
+        'resetsort' => true,
     ];
 
     /**
@@ -21,19 +22,6 @@ class ProductGroupSearchPageController extends ProductGroupController
         return;
     }
 
-    /**
-     * The link that Google et al. need to index.
-     *
-     * @return string
-     */
-    public function CanonicalLink()
-    {
-        $link = $this->Link();
-
-        $this->extend('updateCanonicalLink', $link);
-
-        return $link;
-    }
 
     protected function init()
     {

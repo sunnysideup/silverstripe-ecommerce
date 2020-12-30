@@ -32,14 +32,6 @@ class FinalProductList extends ViewableData
 {
     use SubGroups;
 
-    private static $default_filter_class_name = ProductFilter::class;
-
-    private static $default_sorter_class_name = ProductSorter::class;
-
-    private static $default_displayer_class_name = ProductDisplayer::class;
-
-    private static $default_user_preference_class_name = ProductListUserPreference::class;
-
     protected $baseProductList = null;
 
     protected $rootGroup = null;
@@ -82,49 +74,45 @@ class FinalProductList extends ViewableData
 
     public function applyFilter($filter = null)
     {
-        $this->apply($this->Config()->get('default_filter_class_name'), $filter);
+        $this->apply($this->getApplyerClassName('FILTER'), $filter);
     }
 
 
     public function applySorter($sort = null)
     {
-        $this->apply($this->Config()->get('default_sorter_class_name'), $sort);
+        $this->apply($this->getApplyerClassName('SORT'), $sort);
     }
 
 
     public function applyDisplayer($param = null)
     {
-        $this->apply($this->Config()->get('default_displayer_class_name'), $param);
+        $this->apply($this->getApplyerClassName('DISPLAY'), $param);
     }
 
-
-    public function applyUserPreference($param = null)
-    {
-        $this->apply($this->Config()->get('default_user_preference_class_name'), $param);
-    }
 
     public function apply(string $className, $param = null)
     {
         $obj = $this->getApplyer($className);
+
         $this->products = $obj->apply($param);
     }
 
 
 
 
-    public function getFilterOptions() : array
+    public function getDefaultFilterOptions() : array
     {
-        return $this->getOptionsMap($this->Config()->get('default_filter_class_name'));
+        return $this->getOptionsMap($this->getApplyerClassName('FILTER'));
     }
 
-    public function getSorterOptions(): array
+    public function getDefaultSortOrderOptions(): array
     {
-        return $this->getOptionsMap($this->Config()->get('default_sorter_class_name'));
+        return $this->getOptionsMap($this->getApplyerClassName('SORT'));
     }
 
-    public function getDisplayerOptions(): array
+    public function getDisplayStyleOptions(): array
     {
-        return $this->getOptionsMap($this->Config()->get('default_displayer_class_name'));
+        return $this->getOptionsMap($this->getApplyerClassName('DISPLAY'));
     }
 
     public function getOptionsMap(string $className): array
@@ -135,43 +123,43 @@ class FinalProductList extends ViewableData
     }
 
 
-    public function getFilterList(?string $currentKey ='', ?bool $ajaxify = true) : ArrayList
+    public function getDefaultFilterList(?string $currentKey ='', ?bool $ajaxify = true) : ArrayList
     {
-        return $this->getOptionsList($this->Config()->get('default_filter_class_name'), $currentKey, $ajaxify);
+        return $this->getOptionsList($this->getApplyerClassName('FILTER'), $currentKey, $ajaxify);
     }
 
-    public function getSorteList(?string $currentKey ='', ?bool $ajaxify = true): ArrayList
+    public function getDefaultSortOrderList(?string $currentKey ='', ?bool $ajaxify = true): ArrayList
     {
-        return $this->getOptionsList($this->Config()->get('default_sorter_class_name'), $currentKey, $ajaxify);
+        return $this->getOptionsList($this->getApplyerClassName('SORT'), $currentKey, $ajaxify);
     }
 
-    public function getDisplayerList(?string $currentKey ='', ?bool $ajaxify = true): ArrayList
+    public function getDisplayStyleList(?string $currentKey ='', ?bool $ajaxify = true): ArrayList
     {
-        return $this->getOptionsList($this->Config()->get('default_displayer_class_name'), $currentKey, $ajaxify);
+        return $this->getOptionsList($this->getApplyerClassName('DISPLAY'), $currentKey, $ajaxify);
     }
 
     public function getOptionsList(string $className, ?string $currentKey ='', ?bool $ajaxify = true): ArrayList
     {
-        $obj = $this->getOptionsList($className, $currentKey, $ajaxify);
+        $obj = $this->getApplyer($className);
 
-        return $obj->getOptionsMap();
+        return $this->getOptionsList($className, $currentKey, $ajaxify);
     }
 
 
 
-    public function getFilterTitle() : array
+    public function getDefaultFilterTitle() : array
     {
-        return $this->getTitle($this->Config()->get('default_filter_class_name'));
+        return $this->getTitle($this->getApplyerClassName('FILTER'));
     }
 
-    public function getSorterTitle(): array
+    public function getDefaultSortOrderTitle(): array
     {
-        return $this->getTitle($this->Config()->get('default_sorter_class_name'));
+        return $this->getTitle($this->getApplyerClassName('SORT'));
     }
 
-    public function getDisplayerTitle(): array
+    public function getDisplayStyleTitle(): array
     {
-        return $this->getTitle($this->Config()->get('default_displayer_class_name'));
+        return $this->getTitle($this->getApplyerClassName('DISPLAY'));
     }
 
     public function getTitle(string $className): string
@@ -181,7 +169,16 @@ class FinalProductList extends ViewableData
         return $obj->getTitle();
     }
 
-    protected function getApplyer()
+    protected function getApplyerClassName(string $type) : string
+    {
+        if($this->rootGroup->IsSortFilterDisplayNamesType($type)) {
+            return $this->rootGroup->getSortFilterDisplayNames($type, 'defaultApplyer');
+        }
+
+        return $obj;
+    }
+
+    protected function getApplyer(string $className)
     {
         $obj = new $className($this);
         if(! $obj instanceof BaseClass) {
