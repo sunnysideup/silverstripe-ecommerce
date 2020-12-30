@@ -2,20 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 /**
  * provides data on the user
  */
 class ProductSorter extends BaseClass
 {
-
     /**
      * @var array
      */
@@ -57,5 +48,4 @@ class ProductSorter extends BaseClass
 
         return $this->products;
     }
-
 }

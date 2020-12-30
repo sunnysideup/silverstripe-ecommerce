@@ -2,21 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ViewableData;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Pages\Product;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\BaseClass;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;;
-
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
 
 /**
  * A wrapper for a paginated list of products which can be filtered and sorted.
@@ -38,15 +28,10 @@ class FinalProductList extends ViewableData
 
     protected static $cache = [];
 
-    public static function inst($rootGroup, ?string $baseProductListClassName = '', ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
-    {
-        $cacheKey = implode('_', array_filter([$rootGroup->ID, $baseProductListClassName, $buyableClassName, $levelOfProductsToShow]));
-        if(! isset(self::$cache[$cacheKey])) {
-            self::$cache[$cacheKey] = new FinalProductList($rootGroup, $baseProductListClassName, $buyableClassName, $levelOfProductsToShow);
-        }
-        return self::$cache[$cacheKey];
-    }
-
+    /**
+     * @var SS_List
+     */
+    protected $products;
 
     /**
      * @param ProductGroup $rootGroup
@@ -55,11 +40,20 @@ class FinalProductList extends ViewableData
     public function __construct($rootGroup, ?string $baseProductListClassName = '', ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
         $this->rootGroup = $rootGroup;
-        if(! $baseProductListClassName) {
+        if (! $baseProductListClassName) {
             $baseProductListClassName = $rootGroup->getBaseProductListClassName();
         }
         $this->baseProductList = $baseProductListClassName::inst($rootGroup, $buyableClassName, $levelOfProductsToShow);
         $this->products = $this->baseProductList->getProducts();
+    }
+
+    public static function inst($rootGroup, ?string $baseProductListClassName = '', ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    {
+        $cacheKey = implode('_', array_filter([$rootGroup->ID, $baseProductListClassName, $buyableClassName, $levelOfProductsToShow]));
+        if (! isset(self::$cache[$cacheKey])) {
+            self::$cache[$cacheKey] = new FinalProductList($rootGroup, $baseProductListClassName, $buyableClassName, $levelOfProductsToShow);
+        }
+        return self::$cache[$cacheKey];
     }
 
     public function getBaseProductList()
@@ -67,28 +61,20 @@ class FinalProductList extends ViewableData
         return $this->baseProductList;
     }
 
-    /**
-     * @var SS_List
-     */
-    protected $products;
-
     public function applyFilter($filter = null)
     {
         $this->apply($this->getApplyerClassName('FILTER'), $filter);
     }
-
 
     public function applySorter($sort = null)
     {
         $this->apply($this->getApplyerClassName('SORT'), $sort);
     }
 
-
     public function applyDisplayer($param = null)
     {
         $this->apply($this->getApplyerClassName('DISPLAY'), $param);
     }
-
 
     public function apply(string $className, $param = null)
     {
@@ -97,10 +83,7 @@ class FinalProductList extends ViewableData
         $this->products = $obj->apply($param);
     }
 
-
-
-
-    public function getDefaultFilterOptions() : array
+    public function getDefaultFilterOptions(): array
     {
         return $this->getOptionsMap($this->getApplyerClassName('FILTER'));
     }
@@ -122,32 +105,29 @@ class FinalProductList extends ViewableData
         return $obj->getOptionsMap();
     }
 
-
-    public function getDefaultFilterList(?string $currentKey ='', ?bool $ajaxify = true) : ArrayList
+    public function getDefaultFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
-        return $this->getOptionsList($this->getApplyerClassName('FILTER'), $currentKey, $ajaxify);
+        return $this->getOptionsList($this->getApplyerClassName('FILTER'), $linkTemplate, $currentKey, $ajaxify);
     }
 
-    public function getDefaultSortOrderList(?string $currentKey ='', ?bool $ajaxify = true): ArrayList
+    public function getDefaultSortOrderList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
-        return $this->getOptionsList($this->getApplyerClassName('SORT'), $currentKey, $ajaxify);
+        return $this->getOptionsList($this->getApplyerClassName('SORT'), $linkTemplate, $currentKey, $ajaxify);
     }
 
-    public function getDisplayStyleList(?string $currentKey ='', ?bool $ajaxify = true): ArrayList
+    public function getDisplayStyleList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
-        return $this->getOptionsList($this->getApplyerClassName('DISPLAY'), $currentKey, $ajaxify);
+        return $this->getOptionsList($this->getApplyerClassName('DISPLAY'), $linkTemplate, $currentKey, $ajaxify);
     }
 
-    public function getOptionsList(string $className, ?string $currentKey ='', ?bool $ajaxify = true): ArrayList
+    public function getOptionsList(string $className, string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
         $obj = $this->getApplyer($className);
 
-        return $this->getOptionsList($className, $currentKey, $ajaxify);
+        return $obj->getOptionsList($linkTemplate, $currentKey, $ajaxify);
     }
 
-
-
-    public function getDefaultFilterTitle() : array
+    public function getDefaultFilterTitle(): array
     {
         return $this->getTitle($this->getApplyerClassName('FILTER'));
     }
@@ -169,31 +149,11 @@ class FinalProductList extends ViewableData
         return $obj->getTitle();
     }
 
-    protected function getApplyerClassName(string $type) : string
-    {
-        if($this->rootGroup->IsSortFilterDisplayNamesType($type)) {
-            return $this->rootGroup->getSortFilterDisplayNames($type, 'defaultApplyer');
-        }
-
-        return $obj;
-    }
-
-    protected function getApplyer(string $className)
-    {
-        $obj = new $className($this);
-        if(! $obj instanceof BaseClass) {
-            user_error($className . ' needs to be an instance of ' . BaseClass::class);
-        }
-
-        return $obj;
-    }
-
-
     /**
      * required for SubGroups
      * @return array
      */
-    public function getParentGroupIds() : array
+    public function getParentGroupIds(): array
     {
         return $this->baseProductList->getParentGroupIds();
     }
@@ -202,7 +162,7 @@ class FinalProductList extends ViewableData
      * required for SubGroups
      * @return array
      */
-    public function getAlsoShowProductsIds() : array
+    public function getAlsoShowProductsIds(): array
     {
         return $this->baseProductList->getAlsoShowProductsIds();
     }
@@ -215,10 +175,27 @@ class FinalProductList extends ViewableData
      *
      * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
-    public function getGroups(int $maxRecursiveLevel, $filter = null) : ArrayList
+    public function getGroups(int $maxRecursiveLevel, $filter = null): ArrayList
     {
         return $this->baseProductList->getGroups($maxRecursiveLevel, $filter);
     }
 
+    protected function getApplyerClassName(string $type): string
+    {
+        if ($this->rootGroup->IsSortFilterDisplayNamesType($type)) {
+            return $this->rootGroup->getSortFilterDisplayNames($type, 'defaultApplyer');
+        }
 
+        return $obj;
+    }
+
+    protected function getApplyer(string $className)
+    {
+        $obj = new $className($this);
+        if (! $obj instanceof BaseClass) {
+            user_error($className . ' needs to be an instance of ' . BaseClass::class);
+        }
+
+        return $obj;
+    }
 }

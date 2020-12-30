@@ -1,16 +1,12 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
+
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\DataList;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ViewableData;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -34,23 +30,6 @@ class BaseProductList
     use SubGroups;
 
     protected static $cache = [];
-
-    public static function apply_default_filter_to_products(SS_List $list) : SS_List
-    {
-        $filter = Config::inst()->get(self::class, 'default_product_filter');
-
-        $list = $list->filter($filter);
-
-        return $list;
-    }
-
-
-    /**
-     * default filter for products: show in search and allow purchase are recommended.
-     * @var array
-     */
-    private static $default_product_filter =  ['AllowPurchase' => 1, 'ShowInSearch' => 1];
-
 
     /**
      * @var string
@@ -76,25 +55,24 @@ class BaseProductList
     protected $blockedProductsIds = [];
 
     /**
-     *
      * @var int[]
      */
     protected $alsoShowProductsIds = [];
+
     /**
-     *
      * @var int[]
      */
     protected $parentGroupIds = [];
 
-    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
-    {
-        $cacheKey = implode('_', array_filter([$rootGroup->ID, $buyableClassName, $levelOfProductsToShow]));
-        if(! isset(self::$cache[$cacheKey])) {
-            self::$cache[$cacheKey] = new BaseProductList($rootGroup, $buyableClassName, $levelOfProductsToShow);
-        }
+    protected static $excluded_products = [];
 
-        return self::$cache[$cacheKey];
-    }
+    protected static $checked_products = [];
+
+    /**
+     * default filter for products: show in search and allow purchase are recommended.
+     * @var array
+     */
+    private static $default_product_filter = ['AllowPurchase' => 1, 'ShowInSearch' => 1];
 
     /**
      * @param ProductGroup $rootGroup
@@ -102,10 +80,10 @@ class BaseProductList
      */
     public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
-        if(! $levelOfProductsToShow) {
+        if (! $levelOfProductsToShow) {
             $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
         }
-        if(! $buyableClassName) {
+        if (! $buyableClassName) {
             $buyableClassName = $rootGroup->getBuyableClassName();
         }
         $this
@@ -113,7 +91,7 @@ class BaseProductList
             ->setRootGroup($rootGroup)
             ->setBuyableClass($buyableClassName)
             ->setLevelOfProductsToShow($levelOfProductsToShow);
-        if($this->hasCache()) {
+        if ($this->hasCache()) {
             $this->loadCache();
         } else {
             $this
@@ -126,13 +104,29 @@ class BaseProductList
         }
     }
 
+    public static function apply_default_filter_to_products(SS_List $list): SS_List
+    {
+        $filter = Config::inst()->get(self::class, 'default_product_filter');
+
+        return $list->filter($filter);
+    }
+
+    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    {
+        $cacheKey = implode('_', array_filter([$rootGroup->ID, $buyableClassName, $levelOfProductsToShow]));
+        if (! isset(self::$cache[$cacheKey])) {
+            self::$cache[$cacheKey] = new BaseProductList($rootGroup, $buyableClassName, $levelOfProductsToShow);
+        }
+
+        return self::$cache[$cacheKey];
+    }
 
     /**
-    * Set the root {@link ProductGroup} to display the products from.
-    * @param ProductGroup $group
-    *
-    * @return self
-    */
+     * Set the root {@link ProductGroup} to display the products from.
+     * @param ProductGroup $rootGroup
+     *
+     * @return self
+     */
     public function setRootGroup(ProductGroup $rootGroup): ProductList
     {
         $this->rootGroup = $rootGroup;
@@ -141,21 +135,19 @@ class BaseProductList
     }
 
     /**
-    * Override the class of buyable to display. Usually this is limited to
-    * `Product` but can be tailored to display specific subclasses.
-    *
-    * @param string $buyableClassName
-    *
-    * @return self
-    */
+     * Override the class of buyable to display. Usually this is limited to
+     * `Product` but can be tailored to display specific subclasses.
+     *
+     * @param string $buyableClassName
+     *
+     * @return self
+     */
     public function setBuyableClass(string $buyableClassName): ProductList
     {
         $this->buyableClassName = $buyableClassName;
 
         return $this;
     }
-
-
 
     /**
      * @param int $levelOfProductsToShow
@@ -170,24 +162,20 @@ class BaseProductList
     }
 
     /**
-     *
      * @return array
      */
-    public function getParentGroupIds() : array
+    public function getParentGroupIds(): array
     {
         return ArrayMethods::filter_array($this->parentGroupIds);
     }
 
     /**
-     *
      * @return array
      */
-    public function getAlsoShowProductsIds() : array
+    public function getAlsoShowProductsIds(): array
     {
         return ArrayMethods::filter_array($this->alsoShowProductsIds);
     }
-
-
 
     /**
      * Returns children ProductGroup pages of this group.
@@ -197,12 +185,10 @@ class BaseProductList
      *
      * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
-    public function getGroups(int $maxRecursiveLevel, $filter = null) : ArrayList
+    public function getGroups(int $maxRecursiveLevel, $filter = null): ArrayList
     {
         return $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
     }
-
-
 
     /**
      * Returns a list of {@link ProductGroupList}
@@ -211,8 +197,7 @@ class BaseProductList
      */
     public function getProductGroupListProvider()
     {
-        if(! $this->productGroupListProvider) {
-
+        if (! $this->productGroupListProvider) {
             $className = $this->rootGroup->getProductGroupListClassName();
 
             $this->productGroupListProvider = Injector::inst()->get($className, $this->rootGroup);
@@ -220,7 +205,6 @@ class BaseProductList
 
         return $this->productGroupListProvider;
     }
-
 
     protected function buildDefaultList()
     {
@@ -247,7 +231,7 @@ class BaseProductList
      *
      * @return self
      */
-    protected function applyGroupFilter() : ProductList
+    protected function applyGroupFilter(): ProductList
     {
         $levelToShow = $this->getProductGroupListProvider()->getLevelOfProductsToShow();
         $groupFilter = '';
@@ -277,23 +261,18 @@ class BaseProductList
                 }
             }
             $obj = Injector::inst()->get($this->buyableClassName);
-            $tablename = $obj->baseTable().$this->getStage();
-            $siteTreeTable = 'SiteTree'.$this->getStage();
+            $tableName = $obj->baseTable() . $this->getStage();
+            $siteTreeTable = 'SiteTree' . $this->getStage();
             $groupFilter = '
-                "'.$siteTreeTable.'"."ParentID" IN (' . implode(',', $groupIDs) . ')
+                "' . $siteTreeTable . '"."ParentID" IN (' . implode(',', $groupIDs) . ')
                 OR
-                "'.$tableName.'"."ID" IN (' . implode($this->alsoShowProductsIds) . ')
+                "' . $tableName . '"."ID" IN (' . implode($this->alsoShowProductsIds) . ')
             ';
         }
         $this->products = $this->products->where($groupFilter);
 
         return $this;
-
     }
-
-    protected static $excluded_products = [];
-
-    protected static $checked_products = [];
 
     /**
      * Generate Excluded products that can not be purchased.
@@ -321,12 +300,11 @@ class BaseProductList
                 $this->blockedProductsIds
             );
             $this->products = $this->products
-                ->exclude(['ID' => self::$excluded_products,]);
+                ->exclude(['ID' => self::$excluded_products]);
         }
 
         return $this;
     }
-
 
     /**
      * Returns a versioned record stage table suffix (i.e "" or "_Live")
@@ -344,17 +322,15 @@ class BaseProductList
         return $stage;
     }
 
-
-    protected function hasCache() : bool
+    protected function hasCache(): bool
     {
         return EcommerceCache::inst()->get($this->getCachekey());
     }
 
-
     protected function loadCache()
     {
         $productIds = EcommerceCache::inst()->retrieve($this->getCachekey());
-        if(empty($productIds) || ! is_array($productIds)) {
+        if (empty($productIds) || ! is_array($productIds)) {
             $productIds = ArrayMethods::filter_array([]);
         }
         $this->buildDefaultList();
@@ -367,12 +343,12 @@ class BaseProductList
     protected function storeInCache()
     {
         EcommerceCache::inst()->save($this->getCachekey(), $this->products->column('ID'));
-        EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds')  , $this->blockedProductsIds);
-        EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds') , $this->getAlsoShowProductsIds());
+        EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds'), $this->blockedProductsIds);
+        EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
     }
 
-    protected function getCachekey($add = '') : string
+    protected function getCachekey($add = ''): string
     {
         return implode(
             '_',
@@ -380,10 +356,8 @@ class BaseProductList
                 $this->rootGroup->ID,
                 $this->buyableClassName,
                 $this->getProductGroupListProvider()->getLevelOfProductsToShow(),
-                $add
+                $add,
             ]
         );
     }
-
-
 }

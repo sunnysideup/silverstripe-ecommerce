@@ -3,11 +3,10 @@
 namespace Sunnysideup\Ecommerce\Helpers;
 
 use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Extension;
 use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Provides a standard interface for caching product and group information
@@ -24,8 +23,7 @@ class EcommerceCache implements Flushable
      */
     protected $cacheBackend = null;
 
-
-    public static function inst() : EcommerceCache
+    public static function inst(): EcommerceCache
     {
         return Injector::inst()->get(self::class);
     }
@@ -35,7 +33,7 @@ class EcommerceCache implements Flushable
      *
      * @param CacheInterface $cacheBackend
      */
-    public function setCacheBackend(CacheInterface $cacheBackend) : EcommerceCache
+    public function setCacheBackend(CacheInterface $cacheBackend): EcommerceCache
     {
         $this->cacheBackend = $cacheBackend;
 
@@ -50,24 +48,13 @@ class EcommerceCache implements Flushable
      */
     public function getCacheBackend()
     {
-        if(! $this->cacheBackend) {
+        if (! $this->cacheBackend) {
             $this->cacheBackend = Injector::inst()->get(CacheInterface::class . '.Ecommerce');
         }
         return $this->cacheBackend;
     }
 
-    /**
-     * @param string $cacheKey
-     * @param string $filterKey
-     *
-     * @return string
-     */
-    protected function cacheKeyRefiner($cacheKey) : string
-    {
-        return $cacheKey . '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
-    }
-
-    public function hasCache(string $cacheKey) : bool
+    public function hasCache(string $cacheKey): bool
     {
         if ($this->AllowCaching()) {
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
@@ -75,7 +62,6 @@ class EcommerceCache implements Flushable
             return $this->getCacheBackend()->has($cacheKey);
         }
         return false;
-
     }
 
     /**
@@ -108,7 +94,7 @@ class EcommerceCache implements Flushable
      *
      * @return bool
      */
-    public function save($cacheKey, $data, ?bool $alreadySerialized = false) : bool
+    public function save($cacheKey, $data, ?bool $alreadySerialized = false): bool
     {
         if ($this->AllowCaching()) {
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
@@ -123,7 +109,7 @@ class EcommerceCache implements Flushable
         return false;
     }
 
-    public function AllowCaching() : bool
+    public function AllowCaching(): bool
     {
         return true;
     }
@@ -138,4 +124,14 @@ class EcommerceCache implements Flushable
         EcommerceCache::inst()->clear();
     }
 
+    /**
+     * @param string $cacheKey
+     * @param string $filterKey
+     *
+     * @return string
+     */
+    protected function cacheKeyRefiner($cacheKey): string
+    {
+        return $cacheKey . '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
+    }
 }

@@ -53,9 +53,9 @@ class EcommerceSiteTreeExtensionController extends Extension
             'dialogue_js_file_location',
             'quantity_field_js_location',
         ];
-        foreach($jsFiles as $fileConfigString) {
+        foreach ($jsFiles as $fileConfigString) {
             $location = EcommerceConfig::get(EcommerceConfigAjax::class, $fileConfigString);
-            if($location) {
+            if ($location) {
                 Requirements::javascript('sunnysideup/ecommerce: ' . $location);
             }
         }

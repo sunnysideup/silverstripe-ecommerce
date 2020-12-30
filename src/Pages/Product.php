@@ -35,7 +35,6 @@ use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -100,7 +99,7 @@ class Product extends Page implements BuyableModel
     private static $table_name = 'Product';
 
     private static $create_table_options = [
-        MySQLSchemaManager::ID => 'ENGINE=MyISAM'
+        MySQLSchemaManager::ID => 'ENGINE=MyISAM',
     ];
 
     private static $db = [
@@ -179,11 +178,6 @@ class Product extends Page implements BuyableModel
         'AllowPurchaseNice' => 'For Sale',
     ];
 
-    public function SummaryFields()
-    {
-        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
-    }
-
     /**
      * Standard SS variable.
      */
@@ -242,6 +236,11 @@ class Product extends Page implements BuyableModel
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
     private static $_calculated_price_cache = [];
+
+    public function SummaryFields()
+    {
+        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
+    }
 
     /**
      * By default we search for products that are allowed to be purchased only

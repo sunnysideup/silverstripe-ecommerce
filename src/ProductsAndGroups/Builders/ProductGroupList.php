@@ -2,12 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\PaginatedList;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -25,21 +24,6 @@ class ProductGroupList
 {
     use Injectable;
     use Configurable;
-
-    /**
-     * default filter
-     * @var array
-     */
-    private static $default_product_group_filter =  ['ShowInSearch' => 1];
-
-    public static function apply_default_filter_to_groups(SS_List $list) : SS_List
-    {
-        $filter = Config::inst()->get(self::class, 'default_product_group_filter');
-
-        $list = $list->filter($filter);
-
-        return $list;
-    }
 
     /**
      * @var SS_List
@@ -67,12 +51,25 @@ class ProductGroupList
     protected $includeRoot = true;
 
     /**
+     * default filter
+     * @var array
+     */
+    private static $default_product_group_filter = ['ShowInSearch' => 1];
+
+    /**
      * @param ProductGroup $productGroup
      */
     public function __construct($productGroup, ?int $levels = 99)
     {
         $this->setRootGroup($productGroup);
         $this->setLevelOfProductsToShow($productGroup);
+    }
+
+    public static function apply_default_filter_to_groups(SS_List $list): SS_List
+    {
+        $filter = Config::inst()->get(self::class, 'default_product_group_filter');
+
+        return $list->filter($filter);
     }
 
     /**
@@ -117,7 +114,7 @@ class ProductGroupList
         return $this;
     }
 
-    public function getLevelOfProductsToShow() : int
+    public function getLevelOfProductsToShow(): int
     {
         return $this->levelsToShow;
     }
@@ -127,13 +124,13 @@ class ProductGroupList
      */
     public function getGroups(?int $maxRecursiveLevel = 0, $filter = null)
     {
-        if(! $maxRecursiveLevel) {
+        if (! $maxRecursiveLevel) {
             $maxRecursiveLevel = $this->levelsToShow;
         }
         if (empty($this->groups) || ! empty($filter)) {
-            if ($this->levelsToShow === -2) {
+            if ($maxRecursiveLevel === -2) {
                 $this->groups = ProductGroup::get();
-            } elseif ($this->levelsToShow === -1) {
+            } elseif ($maxRecursiveLevel === -1) {
                 $this->groups = ProductGroup::get()->filter(['ID' => -1]);
             } elseif ($this->rootGroup) {
                 $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID, []);
@@ -143,12 +140,12 @@ class ProductGroupList
                 }
                 $ids = ArrayMethods::filter_array($ids);
 
-                $this->groups = ProductGroup::get()->filter(['ID' => $ids,]);
+                $this->groups = ProductGroup::get()->filter(['ID' => $ids]);
             } else {
                 $this->groups = ProductGroup::get();
             }
-            if($filter) {
-                if(is_array($filter)) {
+            if ($filter) {
+                if (is_array($filter)) {
                     $this->groups = $this->groups->filter($filter);
                 } else {
                     $this->groups = $this->groups->where($filter);
@@ -191,7 +188,4 @@ class ProductGroupList
 
         return $ids;
     }
-
-
-
 }

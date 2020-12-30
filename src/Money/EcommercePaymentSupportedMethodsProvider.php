@@ -3,11 +3,11 @@
 namespace Sunnysideup\Ecommerce\Money;
 
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\ORM\ArrayLib;
+use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EcommercePaymentSupportedMethodsProviderInterface;
@@ -85,16 +85,19 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      * @param  string $newKey
      * @return array
      */
-    protected function arrayReplaceKey(array $array, string $oldKey, string $newKey) : array
+    protected function arrayReplaceKey(array $array, string $oldKey, string $newKey): array
     {
         $r = [];
         foreach ($array as $k => $v) {
-            if ($k === $oldKey) $k = $newKey;
+            if ($k === $oldKey) {
+                $k = $newKey;
+            }
             $r[$k] = $v;
         }
 
         return $r;
     }
+
     /**
      * returns the order to use....
      * You can provide one as a param,

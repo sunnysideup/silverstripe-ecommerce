@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Api;
-use SilverStripe\Core\Injector\Injector;
+
 use SilverStripe\Core\ClassInfo;
 
 class ArrayMethods
@@ -13,12 +13,12 @@ class ArrayMethods
      *
      * @return array
      */
-    public static function filter_array($array) : array
+    public static function filter_array($array): array
     {
-        if(! is_array($array)) {
+        if (! is_array($array)) {
             $array = [];
         }
-        if(count($array) === 0) {
+        if (count($array) === 0) {
             $array = [0 => 0];
         }
 
@@ -28,26 +28,23 @@ class ArrayMethods
     /**
      * creates a sort string from a list of ID arrays...
      *
-     * @param array $IDarray - list of product IDs
+     * @param array $ids - list of product IDs
      *
      * @return string
      */
-    public static function create_where_from_id_array(array $ids, ?string $className) :string
+    public static function create_where_from_id_array(array $ids, ?string $className): string
     {
         $ids = ArrayMethods::filter_array($ids);
         $ifStatement = 'CASE ';
-        $sortStatement = '';
         $count = 0;
         $stage = self::get_stage();
         $tableClasses = ClassInfo::dataClassesFor($className);
-		$table = array_shift($tableClasses);
+        $table = array_shift($tableClasses);
         foreach ($ids as $id) {
-            $ifStatement .= ' WHEN "'.$table.$stage."\".\"ID\" = $id THEN $count";
+            $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = ${id} THEN ${count}";
             ++$count;
         }
-        $sortStatement = $ifStatement.' END';
-
-        return $sortStatement;
+        return $ifStatement . ' END';
     }
 
     /**

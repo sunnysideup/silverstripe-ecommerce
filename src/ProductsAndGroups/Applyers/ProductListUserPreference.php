@@ -2,20 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 /**
  * provides data on the user
  */
 class ProductListUserPreference extends BaseClass
 {
-
     protected $userPreferences = [];
 
     /**
@@ -39,10 +30,11 @@ class ProductListUserPreference extends BaseClass
      *
      * @return string
      */
-    public function getCurrentUserPreferences(string $type) : string
+    public function getCurrentUserPreferences(string $type): string
     {
         return $this->userPreferences[$type];
     }
+
     /**
      * Sort the list of products
      *
@@ -55,5 +47,4 @@ class ProductListUserPreference extends BaseClass
         $param = $this->checkOption($param);
         return $this->products;
     }
-
 }

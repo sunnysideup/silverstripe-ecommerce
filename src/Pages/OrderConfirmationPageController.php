@@ -335,20 +335,18 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-    * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
+     * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
      **/
     public function CustomerOrderStepForm()
     {
-        {
-            $order = $this->currentOrder;
-            if ($order) {
-                $status = $order->Status();
-                if ($status) {
-                    $form = $status->CustomerOrderStepForm($this, 'CustomerOrderStepForm', $order);
-                    if($form) {
-                        Requirements::javascript('sunnysideup/ecommerce: client/javascript/CustomerOrderStepForm.js');
-                        return $form;
-                    }
+        $order = $this->currentOrder;
+        if ($order) {
+            $status = $order->Status();
+            if ($status) {
+                $form = $status->CustomerOrderStepForm($this, 'CustomerOrderStepForm', $order);
+                if ($form) {
+                    Requirements::javascript('sunnysideup/ecommerce: client/javascript/CustomerOrderStepForm.js');
+                    return $form;
                 }
             }
         }

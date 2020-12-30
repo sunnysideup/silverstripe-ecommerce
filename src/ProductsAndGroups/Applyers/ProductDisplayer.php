@@ -2,20 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 /**
  * provides data on the user
  */
 class ProductDisplayer extends BaseClass
 {
-
     /**
      * @var array
      */
@@ -25,7 +16,6 @@ class ProductDisplayer extends BaseClass
             'SQL' => '',
         ],
     ];
-
 
     /**
      * set display for products
@@ -38,5 +28,4 @@ class ProductDisplayer extends BaseClass
     {
         return $this->products;
     }
-
 }

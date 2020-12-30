@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\DropdownField;
 
 /**
@@ -13,15 +12,13 @@ use SilverStripe\Forms\DropdownField;
  **/
 class YesNoDropDownField extends DropdownField
 {
-
     public const ANY_IE_NO_SELECTION = '-- any --';
 
     /**
      * @param string $name             - this is usually classname, as in MyTable.ClassName
      * @param string $title            - e.g. type of object
-     * @param array $sourceClass      - e.g. MyDataObject
-     * @param value $sourceClass      - e.g. MyDataObject
-     *
+     * @param array $value      - e.g. MyDataObject
+     * @param value $value      - e.g. MyDataObject
      */
     public function __construct(
         $name = '',
@@ -29,7 +26,7 @@ class YesNoDropDownField extends DropdownField
         $source = [],
         $value = null
     ) {
-        if(empty($source)) {
+        if (empty($source)) {
             $source = [
                 '' => self::ANY_IE_NO_SELECTION,
                 '0' => 'No',

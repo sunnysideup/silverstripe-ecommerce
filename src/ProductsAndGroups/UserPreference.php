@@ -9,6 +9,28 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 class UserPreference
 {
+    /**
+     * Link that returns a list of all the products for this product group as a
+     * simple list. It resets everything; not just filter.
+     *
+     * @param bool $escapedAmpersands
+     *
+     * @return string
+     */
+    public function ResetPreferencesLink($escapedAmpersands = true)
+    {
+        $ampersand = '&';
+        if ($escapedAmpersands) {
+            $ampersand = '&amp;';
+        }
+        $getVariableNameFilter = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
+        $getVariableNameSort = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+
+        return $this->Link() . '?' .
+            $getVariableNameFilter . '=' . $this->getProductListConfigDefaultValue('FILTER') . $ampersand .
+            $getVariableNameSort . '=' . $this->getProductListConfigDefaultValue('SORT') . $ampersand .
+            'reload=1';
+    }
 
     /**
      * Checks out a bunch of $_GET variables that are used to work out user
@@ -20,7 +42,6 @@ class UserPreference
      */
     protected function saveUserPreferences($request, $overrideArray = [])
     {
-
         $sortFilterDisplayNames = $this->getSortFilterDisplayNames();
 
         foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
@@ -47,33 +68,6 @@ class UserPreference
                 $this->setCurrentUserPreference($type, $newPreference);
             }
         }
-
-
-
-    }
-
-
-    /**
-     * Link that returns a list of all the products for this product group as a
-     * simple list. It resets everything; not just filter.
-     *
-     * @param bool $escapedAmpersands
-     *
-     * @return string
-     */
-    public function ResetPreferencesLink($escapedAmpersands = true)
-    {
-        $ampersand = '&';
-        if ($escapedAmpersands) {
-            $ampersand = '&amp;';
-        }
-        $getVariableNameFilter = $this->getSortFilterDisplayNames('FILTER', 'getVariable');
-        $getVariableNameSort = $this->getSortFilterDisplayNames('SORT', 'getVariable');
-
-        return $this->Link() . '?' .
-            $getVariableNameFilter . '=' . $this->getProductListConfigDefaultValue('FILTER') . $ampersand .
-            $getVariableNameSort . '=' . $this->getProductListConfigDefaultValue('SORT') . $ampersand .
-            'reload=1';
     }
 
     /**
@@ -95,6 +89,7 @@ class UserPreference
 
         return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
     }
+
     /**
      * Checks for the most applicable user preferences for this user:
      * 1. session value
@@ -156,5 +151,4 @@ class UserPreference
 
         return $arrayList;
     }
-
 }

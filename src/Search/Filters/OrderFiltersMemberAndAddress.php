@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 

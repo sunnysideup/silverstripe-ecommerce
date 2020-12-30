@@ -5,10 +5,7 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 
 /**
  * provides data on the user
@@ -18,19 +15,17 @@ abstract class BaseClass
     use Injectable;
     use Configurable;
 
-    private static $options = [];
-
     /**
-     *
      * @var SS_List
      */
     protected $finalProductList = null;
 
     /**
-     *
      * @var SS_List
      */
     protected $products = null;
+
+    private static $options = [];
 
     public function __construct($finalProductList)
     {
@@ -38,35 +33,36 @@ abstract class BaseClass
         $this->products = $this->finalProductList->getProducts();
     }
 
-    abstract public function apply($param = null) :SS_List;
+    abstract public function apply($param = null): SS_List;
 
-    public function getOptions() : array
+    public function getOptions(): array
     {
-        return Config::inst()->get(get_called_class(), 'options');
+        return Config::inst()->get(static::class, 'options');
     }
 
-    public function getOptionsMap() : array
+    public function getOptionsMap(): array
     {
         $options = $this->getOptions();
         $map = [];
-        foreach($options as $key => $values) {
+        foreach ($options as $key => $values) {
             $map[$key] = $values['Title'];
         }
 
         return $map;
     }
 
-    public function getOptionsList(string $currentKey, ?bool $ajaxify = true) : array
+    public function getOptionsList(string $linkTempalte, ?string $currentKey = '', ?bool $ajaxify = true): array
     {
         $list = new ArrayList();
         $options = $this->getOptionsMap();
         if ($options) {
-            foreach ($options as $key=> $obj) {
-                $title = $obj['Title'];
+            foreach ($options as $key => $arrayData) {
                 $isCurrent = $currentKey === $key;
                 $obj = new ArrayData(
                     [
+                        'Title' => $arrayData['Title'],
                         'Current' => $isCurrent ? true : false,
+                        'Link' => str_replace(ProductGroupController::GET_VAR_VALUE_PLACE_HOLDER, $key, $linkTemplate),
                         'LinkingMode' => $isCurrent ? 'current' : 'link',
                         'Ajaxify' => $ajaxify,
                     ]
@@ -78,34 +74,30 @@ abstract class BaseClass
         return $list;
     }
 
+    public function getTitle($param = null): string
+    {
+        return $this->checkOption($param, 'Title');
+    }
+
     protected function checkOption($option, ?string $returnValue = 'SQL', ?string $defaultOption = 'default')
     {
         // an array we leave alone...
-        if(is_array($option)) {
+        if (is_array($option)) {
             return $option;
         }
-        if(! $option) {
+        if (! $option) {
             $option = $defaultOption;
         }
-        if(is_string($option)) {
+        if (is_string($option)) {
             $options = $this->getOptions();
             if (isset($options[$option][$returnvalue])) {
                 return $options[$option][$returnvalue];
-            } else {
-                if($option !== $defaultOption) {
-                    return $this->checkOption($defaultOption, $returnValue, $defaultOption);
-                }
+            }
+            if ($option !== $defaultOption) {
+                return $this->checkOption($defaultOption, $returnValue, $defaultOption);
             }
         }
 
         return $option;
     }
-
-
-    public function getTitle($param = null) : string
-    {
-        return $this->checkOption($param, 'Title');
-    }
-
-
 }

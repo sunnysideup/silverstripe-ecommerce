@@ -267,7 +267,6 @@ class ProductSearchForm extends Form
         $this->createBaseList();
 
         //defining some variables
-        $isKeywordSearch = false;
         if ($this->debug) {
             $this->debugOutput('<hr /><h3>BASE LIST</h3><pre>' . str_replace(self::DEBUG_SQL, array_flip(self::DEBUG_SQL), $this->baseList->sql()) . '</pre>');
             $this->debugOutput('<hr /><h3>PRODUCTS IN BASELIST</h3><pre>' . $this->baseList->count() . '</pre>');
@@ -276,7 +275,6 @@ class ProductSearchForm extends Form
         if ($this->baseList->count()) {
             if (! empty($data['Keyword']) && strlen($this->keywordPhrase) > 1) {
                 $this->keywordPhrase = $data['Keyword'];
-                $isKeywordSearch = true;
                 $this->doKeywordCleanup();
                 $this->doAddToSearchHistory();
                 $this->doInternalItemSearch();
@@ -335,8 +333,6 @@ class ProductSearchForm extends Form
 
     protected function doKeywordCleanup()
     {
-        $isKeywordSearch = true;
-
         if ($this->debug) {
             $this->debugOutput('<hr /><h3>Raw Keyword ' . $this->keywordPhrase . '</h3><pre>');
         }
@@ -507,14 +503,13 @@ class ProductSearchForm extends Form
      */
     protected function addToResults(DataList $listToAdd): bool
     {
-        $internalItemID = 0;
         $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
         $listToAdd = $listToAdd->sort('Price', 'DESC');
         foreach ($listToAdd as $page) {
             $id = $page->IDForSearchResults();
-            if ($this->debug) {
-                $internalItemID = $page->InternalItemIDForSearchResults();
-            }
+            // if ($this->debug) {
+            //     $internalItemID = $page->InternalItemIDForSearchResults();
+            // }
             if ($id) {
                 if (! in_array($id, $this->productIds, true)) {
                     ++$this->resultArrayPos;
@@ -665,7 +660,7 @@ class ProductSearchForm extends Form
     protected function getSerializedObject(?array $data = [])
     {
         $variables = get_object_vars($this);
-        foreach ($variables as $key => $values) {
+        foreach (array_keys($variables) as $key) {
             if (is_object($value)) {
                 if (empty($object->ClassName) || empty($object->ID)) {
                     unset($variables[$key]);
@@ -721,7 +716,6 @@ class ProductSearchForm extends Form
         }
         return $array;
     }
-
 
     protected function debugOutput(string $string)
     {

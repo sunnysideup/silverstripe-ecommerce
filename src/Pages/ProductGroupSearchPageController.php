@@ -22,7 +22,6 @@ class ProductGroupSearchPageController extends ProductGroupController
         return;
     }
 
-
     protected function init()
     {
         parent::init();

@@ -51,6 +51,4 @@ class AccountPageController extends PageController
     {
         return Security::getCurrentUser();
     }
-
-
 }

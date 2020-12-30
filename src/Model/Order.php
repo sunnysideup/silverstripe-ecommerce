@@ -462,7 +462,7 @@ class Order extends DataObject implements EditableEcommerceObject
         ],
         'CustomerOrderNote' => [
             'filter' => 'PartialMatchFilter',
-        ]
+        ],
     ];
 
     /**
