@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
-
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
@@ -15,6 +15,7 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
 
 /**
  * A wrapper for a paginated list of products which can be filtered and sorted.
@@ -26,8 +27,23 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class ProductList extends ViewableData
+class BaseProductList
 {
+    use Configurable;
+    use Injectable;
+    use SubGroups;
+
+    protected static $cache = [];
+
+    public static function apply_default_filter_to_products(SS_List $list) : SS_List
+    {
+        $filter = Config::inst()->get(self::class, 'default_product_filter');
+
+        $list = $list->filter($filter);
+
+        return $list;
+    }
+
 
     /**
      * default filter for products: show in search and allow purchase are recommended.
@@ -35,16 +51,11 @@ class ProductList extends ViewableData
      */
     private static $default_product_filter =  ['AllowPurchase' => 1, 'ShowInSearch' => 1];
 
-    /**
-     * default filter
-     * @var array
-     */
-    private static $default_product_group_filter =  ['ShowInSearch' => 1];
 
     /**
      * @var string
      */
-    protected $buyableClass = '';
+    protected $buyableClassName = '';
 
     /**
      * @var SS_List
@@ -55,11 +66,6 @@ class ProductList extends ViewableData
      * @var ProductGroupList
      */
     protected $productGroupListProvider = null;
-
-    /**
-     * @var ProductListOptions
-     */
-    protected $productListOptionsProvider = null;
 
     /**
      * A list of relevant buyables that can not be purchased and therefore
@@ -78,24 +84,34 @@ class ProductList extends ViewableData
      *
      * @var int[]
      */
-    protected $childGroupsIds = [];
+    protected $parentGroupIds = [];
+
+    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    {
+        $cacheKey = implode('_', array_filter([$rootGroup->ID, $buyableClassName, $levelOfProductsToShow]));
+        if(! isset(self::$cache[$cacheKey])) {
+            self::$cache[$cacheKey] = new BaseProductList($rootGroup, $buyableClassName, $levelOfProductsToShow);
+        }
+
+        return self::$cache[$cacheKey];
+    }
 
     /**
      * @param ProductGroup $rootGroup
-     * @param string       $buyableClass
+     * @param string       $buyableClassName
      */
-    public function __construct($rootGroup, ?string $buyableClass = '', ?int $levelOfProductsToShow = 0)
+    public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
         if(! $levelOfProductsToShow) {
             $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
         }
-        if(! $buyableClass) {
-            $buyableClass = $rootGroup->getBuyableClassName();
+        if(! $buyableClassName) {
+            $buyableClassName = $rootGroup->getBuyableClassName();
         }
         $this
             //set defaults
             ->setRootGroup($rootGroup)
-            ->setBuyableClass($buyableClass)
+            ->setBuyableClass($buyableClassName)
             ->setLevelOfProductsToShow($levelOfProductsToShow);
         if($this->hasCache()) {
             $this->loadCache();
@@ -128,13 +144,13 @@ class ProductList extends ViewableData
     * Override the class of buyable to display. Usually this is limited to
     * `Product` but can be tailored to display specific subclasses.
     *
-    * @param string $buyableClass
+    * @param string $buyableClassName
     *
     * @return self
     */
-    public function setBuyableClass(string $buyableClass): ProductList
+    public function setBuyableClass(string $buyableClassName): ProductList
     {
-        $this->buyableClass = $buyableClass;
+        $this->buyableClassName = $buyableClassName;
 
         return $this;
     }
@@ -153,55 +169,25 @@ class ProductList extends ViewableData
         return $this;
     }
 
+    /**
+     *
+     * @return array
+     */
+    public function getParentGroupIds() : array
+    {
+        return ArrayMethods::filter_array($this->parentGroupIds);
+    }
 
     /**
-     * Returns a raw list of all the matching products without any pagination.
      *
-     * To retrieve a paginated list, use {@link getPaginatedList()}
-     *
-     * @return SS_List
+     * @return array
      */
-    public function getProducts()
+    public function getAlsoShowProductsIds() : array
     {
-        return $this->products;
+        return ArrayMethods::filter_array($this->alsoShowProductsIds);
     }
 
 
-
-    public function getProductListOptionsProvider()
-    {
-        if(! $this->productListOptionsProvider) {
-            $class = Config::inst()->get($this->rootGroup->ClassName, 'product_list_options_class');
-
-            $this->productListOptionsProvider = Injector::inst()->get($class, $this->rootGroup);
-        }
-
-        return $this->productListOptionsProvider;
-    }
-
-
-    public function getProductListConfigDefaultValue(string $type): string
-    {
-        return $this->getProductListOptionsProvider()->getProductListConfigDefaultValue($type);
-    }
-
-
-
-    /**
-     * Returns a list of {@link ProductGroupList}
-     *
-     * @return ProductGroupList
-     */
-    public function getProductGroupListProvider()
-    {
-        if(! $this->productGroupListProvider) {
-            $class = Config::inst()->get($this->rootGroup->ClassName, 'product_group_list_class');
-
-            $this->productGroupListProvider = Injector::inst()->get($class, $this->rootGroup);
-        }
-
-        return $this->productGroupListProvider;
-    }
 
     /**
      * Returns children ProductGroup pages of this group.
@@ -216,10 +202,30 @@ class ProductList extends ViewableData
         return $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
     }
 
+
+
+    /**
+     * Returns a list of {@link ProductGroupList}
+     *
+     * @return ProductGroupList
+     */
+    public function getProductGroupListProvider()
+    {
+        if(! $this->productGroupListProvider) {
+
+            $className = $this->rootGroup->getProductGroupListClassName();
+
+            $this->productGroupListProvider = Injector::inst()->get($className, $this->rootGroup);
+        }
+
+        return $this->productGroupListProvider;
+    }
+
+
     protected function buildDefaultList()
     {
-        $buyableClass = $this->buyableClass;
-        $this->products = $buyableClass::get();
+        $buyableClassName = $this->buyableClassName;
+        $this->products = $buyableClassName::get();
 
         return $this;
     }
@@ -229,7 +235,7 @@ class ProductList extends ViewableData
      */
     protected function applyDefaultFilters(): ProductList
     {
-        $this->products = $this->products->filter($this->Config()->get('default_product_filter'));
+        $this->products = self::apply_default_filter_to_products($this->products);
 
         return $this;
     }
@@ -246,7 +252,7 @@ class ProductList extends ViewableData
         $levelToShow = $this->getProductGroupListProvider()->getLevelOfProductsToShow();
         $groupFilter = '';
         $this->alsoShowProductsIds = [];
-        $this->childGroupsIds = [];
+        $this->parentGroupIds = [];
         //special cases
         if ($levelToShow < 0) {
             //no produts but if LevelOfProductsToShow = -1 then show all
@@ -255,22 +261,22 @@ class ProductList extends ViewableData
         } elseif ($levelToShow === 0) {
             $groupFilter = '"ParentID" < 0';
         } else {
-            $this->childGroupsIds[$this->rootGroup->ID] = $this->rootGroup->ID;
+            $this->parentGroupIds[$this->rootGroup->ID] = $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
             );
-            $childGroups = $this->rootGroup->childGroupsIds();
+            $childGroups = $this->rootGroup->ParentGroupIds();
             if ($childGroups && $childGroups->count()) {
                 foreach ($childGroups as $childGroup) {
-                    $this->childGroupsIds[$childGroup->ID] = $childGroup->ID;
+                    $this->parentGroupIds[$childGroup->ID] = $childGroup->ID;
                     $this->alsoShowProductsIds = array_merge(
                         $this->alsoShowProductsIds,
                         $childGroup->getProductsToBeIncludedFromOtherGroupsArray()
                     );
                 }
             }
-            $obj = Injector::inst()->get($this->buyableClass);
+            $obj = Injector::inst()->get($this->buyableClassName);
             $tablename = $obj->baseTable().$this->getStage();
             $siteTreeTable = 'SiteTree'.$this->getStage();
             $groupFilter = '
@@ -285,6 +291,10 @@ class ProductList extends ViewableData
 
     }
 
+    protected static $excluded_products = [];
+
+    protected static $checked_products = [];
+
     /**
      * Generate Excluded products that can not be purchased.
      *
@@ -296,7 +306,9 @@ class ProductList extends ViewableData
     protected function removeExcludedProducts(): ProductList
     {
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
-            foreach ($this->products as $buyable) {
+            $productsThatNeedChecking = $this->products->exclude(['ID' => self::$checked_products]);
+            foreach ($productsThatNeedChecking as $buyable) {
+                self::$checked_products[$buyable->ID] = $buyable->ID;
                 if (! $buyable->canPurchase()) {
                     $this->blockedProductsIds[$buyable->ID] = $buyable->ID;
                 }
@@ -304,8 +316,12 @@ class ProductList extends ViewableData
         }
 
         if (! empty($this->blockedProductsIds)) {
+            self::$excluded_products = array_merge(
+                self::$excluded_products,
+                $this->blockedProductsIds
+            );
             $this->products = $this->products
-                ->exclude(['ID' => $this->blockedProductsIds,]);
+                ->exclude(['ID' => self::$excluded_products,]);
         }
 
         return $this;
@@ -339,25 +355,32 @@ class ProductList extends ViewableData
     {
         $productIds = EcommerceCache::inst()->retrieve($this->getCachekey());
         if(empty($productIds) || ! is_array($productIds)) {
-            $productIds = [-1 => -1,];
+            $productIds = ArrayMethods::filter_array([]);
         }
         $this->buildDefaultList();
         $this->products = $this->products->filter(['ID' => $productIds]);
+        $this->blockedProductsIds = EcommerceCache::inst()->retrieve($this->getCachekey('blockedProductsIds'));
+        $this->alsoShowProductsIds = EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowProductsIds'));
+        $this->parentGroupIds = EcommerceCache::inst()->retrieve($this->getCachekey('parentGroupIds'));
     }
 
     protected function storeInCache()
     {
-        EcommerceCache::inst()->retrieve($this->getCachekey(), $this->products->column('ID'));
+        EcommerceCache::inst()->save($this->getCachekey(), $this->products->column('ID'));
+        EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds')  , $this->blockedProductsIds);
+        EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds') , $this->getAlsoShowProductsIds());
+        EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
     }
 
-    protected function getCachekey() : string
+    protected function getCachekey($add = '') : string
     {
         return implode(
             '_',
             [
                 $this->rootGroup->ID,
-                $this->buyableClass,
+                $this->buyableClassName,
                 $this->getProductGroupListProvider()->getLevelOfProductsToShow(),
+                $add
             ]
         );
     }

@@ -346,10 +346,6 @@ class EcommerceConfigDefinitions
                     'The base class for the products being retrieved.
                     Usually this is Product, but it can also be MyProduct or MyProductAsDataObject or anything else that implements the Buyable Interface.',
 
-                'actively_check_for_can_purchase' =>
-                    'Before listing a product, actively check if canPurcahse returns true.
-                    This is useful, when, for example, you are deciding whether or not products can be sold based on the country of the customer.',
-
                 'maximum_number_of_products_to_list' =>
                     'The maximum number of products to be shown in a list.
                     For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.',

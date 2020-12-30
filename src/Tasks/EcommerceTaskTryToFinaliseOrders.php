@@ -3,7 +3,7 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use Exception;
-
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -89,7 +89,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
                         //do nothing...
                     } else {
-                        $ordersInQueueArray = [-1 => -1];
+                        $ordersInQueueArray = ArrayMethods::filter_array([]);
                     }
                     $orders = Order::get()
                         ->sort($sort)

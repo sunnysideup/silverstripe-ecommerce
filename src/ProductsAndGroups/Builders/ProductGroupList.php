@@ -1,9 +1,11 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups\Helpers;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\PaginatedList;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -22,23 +24,22 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 class ProductGroupList
 {
     use Injectable;
+    use Configurable;
 
     /**
+     * default filter
      * @var array
-     *            List of options to show products.
-     *            With it, we provide a bunch of methods to access and edit the options.
-     *            NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
-     *            (as it is equal to not completed yet - not yet entered in the Database).
      */
-    protected $showProductLevels = [
-        99 => 'All Child Products (default)',
-        -2 => 'None',
-        -1 => 'All products',
-        1 => 'Direct Child Products',
-        2 => 'Two Levels Down Products',
-        3 => 'Three Levels Down Products',
-        4 => 'Four Levels Down Product',
-    ];
+    private static $default_product_group_filter =  ['ShowInSearch' => 1];
+
+    public static function apply_default_filter_to_groups(SS_List $list) : SS_List
+    {
+        $filter = Config::inst()->get(self::class, 'default_product_group_filter');
+
+        $list = $list->filter($filter);
+
+        return $list;
+    }
 
     /**
      * @var SS_List
@@ -140,10 +141,8 @@ class ProductGroupList
                 if ($this->includeRoot) {
                     $ids[$this->rootGroup->ID] = $this->rootGroup->ID;
                 }
+                $ids = ArrayMethods::filter_array($ids);
 
-                if (count($ids) === 0) {
-                    $ids = [-1 => -1,];
-                }
                 $this->groups = ProductGroup::get()->filter(['ID' => $ids,]);
             } else {
                 $this->groups = ProductGroup::get();
@@ -155,6 +154,7 @@ class ProductGroupList
                     $this->groups = $this->groups->where($filter);
                 }
             }
+            $this->groups === self::apply_default_filter_to_groups($this->groups);
         }
 
         return $this->groups;

@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Process;
-
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
@@ -357,11 +357,11 @@ class OrderProcessQueue extends DataObject
             LIMIT ' . $limit . ';
         ';
         $rows = DB::query($sql);
-        $orderIDs = [0 => 0];
+        $orderIDs = [];
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
-
+        $orderIDs = ArrayMethods::filter_array($orderIDs);
         return Order::get()
             ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs));

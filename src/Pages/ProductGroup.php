@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
@@ -26,8 +27,9 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\ORM\ProductList;
-use Sunnysideup\Ecommerce\ORM\ProductListOptions;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -40,25 +42,44 @@ class ProductGroup extends Page
 {
 
 
+
+    /**
+     * list of sort / filter / display variables.
+     *
+     * @var array
+     */
+    protected const SORT_DISPLAY_NAMES = [
+        'SORT' => [
+            'value' => 'default',
+            'configName' => 'sort_options',
+            'sessionName' => 'session_name_for_sort_preference',
+            'getVariable' => 'sort',
+            'dbFieldName' => 'DefaultSortOrder',
+            'translationCode' => 'SORT_BY',
+        ],
+        'FILTER' => [
+            'value' => 'default',
+            'configName' => 'filter_options',
+            'sessionName' => 'session_name_for_filter_preference',
+            'getVariable' => 'filter',
+            'dbFieldName' => 'DefaultFilter',
+            'translationCode' => 'FILTER_FOR',
+        ],
+        'DISPLAY' => [
+            'value' => 'default',
+            'configName' => 'display_styles',
+            'sessionName' => 'session_name_for_display_style_preference',
+            'getVariable' => 'display',
+            'dbFieldName' => 'DisplayStyle',
+            'translationCode' => 'DISPLAY_STYLE',
+        ],
+    ];
+
+
     /**
     * @var string
     */
     private static $base_buyable_class = Product::class;
-
-    /**
-     * @var string
-     */
-    private static $product_list_class = ProductList::class;
-
-    /**
-     * @var string
-     */
-    private static $product_group_list_class = ProductGroupList::class;
-
-    /**
-     * @var string
-     */
-    private static $product_list_options_class = ProductListOptions::class;
 
     private static $table_name = 'ProductGroup';
 
@@ -120,6 +141,23 @@ class ProductGroup extends Page
     private static $plural_name = 'Product Categories';
 
     private static $description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
+
+    /**
+     * @var array
+     *            List of options to show products.
+     *            With it, we provide a bunch of methods to access and edit the options.
+     *            NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
+     *            (as it is equal to not completed yet - not yet entered in the Database).
+     */
+    protected $showProductLevels = [
+        99 => 'All Child Products (default)',
+        -2 => 'None',
+        -1 => 'All products',
+        1 => 'Direct Child Products',
+        2 => 'Two Levels Down Products',
+        3 => 'Three Levels Down Products',
+        4 => 'Four Levels Down Product',
+    ];
 
     /**
      * @var array
@@ -232,10 +270,10 @@ class ProductGroup extends Page
         }
 
         // sort
-        $sortDropdownList = $this->getUserPreferencesOptionsForDropdown('SORT');
+        $sortDropdownList = $this->getOptionsForDropdown('SORT');
 
         if (count($sortDropdownList) > 1) {
-            $sortOrderKey = $this->getProductListConfigDefaultValue('SORT');
+            $sortOrderKey = $this->getFilterForProducts();
             if ($this->DefaultSortOrder === 'inherit') {
                 $actualValue = ' (' . (isset($sortDropdownList[$sortOrderKey]) ? $sortDropdownList[$sortOrderKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $sortDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -244,13 +282,18 @@ class ProductGroup extends Page
                 'Root.ProductDisplay',
                 $defaultSortOrderField = DropdownField::create('DefaultSortOrder', _t('ProductGroup.DEFAULTSORTORDER', 'Default Sort Order'), $sortDropdownList)
             );
-            $defaultSortOrderField->setDescription(_t('ProductGroup.INHERIT_RIGHT_TITLE', "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
+            $defaultSortOrderField->setDescription(
+                _t(
+                    'ProductGroup.INHERIT_RIGHT_TITLE',
+                    "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."
+                )
+            );
         }
 
         // filter
-        $filterDropdownList = $this->getUserPreferencesOptionsForDropdown('FILTER');
+        $filterDropdownList = $this->getOptionsForDropdown('FILTER');
         if (count($filterDropdownList) > 1) {
-            $filterKey = $this->getProductListConfigDefaultValue('FILTER');
+            $filterKey = $this->getSortForProducts();
             if ($this->DefaultFilter === 'inherit') {
                 $actualValue = ' (' . (isset($filterDropdownList[$filterKey]) ? $filterDropdownList[$filterKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $filterDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -259,13 +302,18 @@ class ProductGroup extends Page
                 'Root.ProductDisplay',
                 $defaultFilterField = DropdownField::create('DefaultFilter', _t('ProductGroup.DEFAULTFILTER', 'Default Filter'), $filterDropdownList)
             );
-            $defaultFilterField->setDescription(_t('ProductGroup.INHERIT_RIGHT_TITLE', "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."));
+            $defaultFilterField->setDescription(
+                _t(
+                    'ProductGroup.INHERIT_RIGHT_TITLE',
+                    "Inherit means that the parent page value is used - and if there is no relevant parent page then the site's default value is used."
+                )
+            );
         }
 
         // display style
-        $displayStyleDropdownList = $this->getUserPreferencesOptionsForDropdown('DISPLAY');
+        $displayStyleDropdownList = $this->getOptionsForDropdown('DISPLAY');
         if (count($displayStyleDropdownList) > 2) {
-            $displayStyleKey = $this->getProductListConfigDefaultValue('DISPLAY');
+            $displayStyleKey = $this->getDisplayStyleForProducts('DISPLAY');
             if ($this->DisplayStyle === 'inherit') {
                 $actualValue = ' (' . (isset($displayStyleDropdownList[$displayStyleKey]) ? $displayStyleDropdownList[$displayStyleKey] : _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $displayStyleDropdownList['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -294,6 +342,36 @@ class ProductGroup extends Page
     }
 
     /**
+     * @var string
+     */
+    private static $base_product_list_class_name = ProductList::class;
+
+    /**
+     * @var string
+     */
+    private static $final_product_list_class_name = FinalProductList::class;
+
+    /**
+     * @var string
+     */
+    private static $product_group_list_class_name = ProductGroupList::class;
+
+    public function getBaseProductListClassName() : string
+    {
+        return $this->Config()->get('base_product_list_class_name');
+    }
+
+    public function getFinalProductListClassName() : string
+    {
+        return $this->Config()->get('final_product_list_class_name');
+    }
+
+    public function getProductGroupListClassName() : string
+    {
+        return $this->Config()->get('product_group_list_class_name');
+    }
+
+    /**
      * SORT:
      * returns an array of Key => Title for sort options.
      *
@@ -312,22 +390,32 @@ class ProductGroup extends Page
      *
      * @return array
      */
-    protected function getUserPreferencesOptionsForDropdown(string $type)
+    protected function getOptionsForDropdown(string $type, ?bool $withInherit = true)
     {
-        $options = $this->getConfigOptionsObject()->getConfigOptionsCache($type);
-        $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
-        $array = ['inherit' => $inheritTitle];
-        if (is_array($options) && count($options)) {
-            foreach ($options as $key => $option) {
-                if (is_array($option)) {
-                    $array[$key] = $option['Title'];
-                } else {
-                    $array[$key] = $option;
-                }
-            }
+        $array = [];
+        if($withInherit) {
+            $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
+            $array = ['inherit' => $inheritTitle];
         }
+        switch($type) {
 
-        return $array;
+            case 'FILTER':
+                $method = 'getFilterOptions';
+                break;
+
+            case 'SORT':
+                $method = 'getSorterOptions';
+                break;
+
+            case 'DISPLAY':
+                $method = 'getDisplayOptions';
+                break;
+            default:
+                user_error($type. ' is not a valid type');
+        }
+        $options = $this->getFinalProductList()->{$method}();
+
+        return array_merge($array, $options);
     }
 
     /**
@@ -379,39 +467,44 @@ class ProductGroup extends Page
         }
     }
 
-    /**
-     * Returns the Title for a type key.
-     *
-     * If no key is provided then the default key is used.
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     * @param string $key
-     *
-     * @return string
-     */
-    public function getUserPreferencesTitle($type, $key = '')
+
+    public function getProductListConfigDefaultValue(string $type)
     {
-        $value = $this->getBestKeyAndValidateKey($type, $key, 'Title');
-        if ($value) {
-            return $value;
+        switch($type) {
+
+            case 'FILTER':
+                $method = 'getFilterForProducts';
+                break;
+
+            case 'SORT':
+                $method = 'getSortForProducts';
+                break;
+
+            case 'DISPLAY':
+                $method = 'getDisplayStyleForProducts';
+                break;
+            default:
+                user_error($type. ' is not a valid type');
         }
 
-        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
-    }
+        if($method) {
+            return $this->{$method}();
+        }
 
+        return 'default';
+    }
 
     /**
      * @return int
-     * @alias of ProductsPerPage
      **/
     public function getProductsPerPage() : int
     {
-        return $this->recursiveValue('NumberOfProductsPerPage', 0);
+        return $this->recursiveValue('NumberOfProductsPerPage', 10);
     }
 
     /**
      * Returns the number of products to show per page
-     * @alias of ProductsPerPage
+     * @alias of getProductsPerPage
      *
      * @return int
      */
@@ -421,34 +514,27 @@ class ProductGroup extends Page
     }
 
     /**
-     * get recursive value for Product Group and check EcommerceConfig as last resort
-     * @param  string $fieldName
-     * @param  mixed  $default
-     * @return mixed
-     */
-    protected function recursiveValue(string $fieldNameOrMethod, $default = null)
+     * @return string
+     **/
+    public function getFilterForProducts() : string
     {
-        if (! isset($this->recursiveValues[$fieldName])) {
-            $value = $default;
-            if ($this->hasMethod($fieldNameOrMethod)) {
-                $value = $this->{$fieldNameOrMethod}();
-                if(! $value->existes()) {
-                    $value = null;
-                }
-            } elseif ($this->{$fieldName}) {
-                $value = $this->{$fieldName};
-            if (! $value || $value = 'inherit')
-                if ($parent = $this->ParentGroup()) {
-                    $value = $parent->recursiveValue($fieldName, $default);
-                } else {
-                    $value = EcommerceConfig::inst()->{$fieldName} ?? $default;
-                }
-            }
+        return $this->recursiveValue('DefaultFilter', 'default');
+    }
 
-            $this->recursiveValues[$fieldName] = $value;
-        }
-
-        return $this->recursiveValues[$fieldName];
+    /**
+     * @return string
+     **/
+    public function getSortForProducts() : string
+    {
+        return $this->recursiveValue('DefaultSortOrder', 'default');
+    }
+    /**
+     * @return int
+     * @alias of ProductsPerPage
+     **/
+    public function getDisplayStyleForProducts() : string
+    {
+        return $this->recursiveValue('DisplayStyle', 'default');
     }
 
     /**
@@ -460,6 +546,47 @@ class ProductGroup extends Page
     public function getLevelOfProductsToShow(): int
     {
         return $this->recursiveValue('LevelOfProductsToShow', 99);
+    }
+
+
+    /**
+     * get recursive value for Product Group and check EcommerceConfig as last resort
+     * @param  string $fieldName
+     * @param  mixed  $default
+     * @return mixed
+     */
+    protected function recursiveValue(string $fieldNameOrMethod, $default = null)
+    {
+        if (! isset($this->recursiveValues[$fieldName])) {
+            $value = null;
+            $fieldNameOrMethodWithGet = 'get'.$fieldNameOrMethod;
+            if ($this->hasMethod($fieldNameOrMethod)) {
+                $outcome = $this->{$fieldNameOrMethod}();
+                if(is_object($value) && $value->exists()) {
+                    $value = $outcome;
+                }
+            } elseif ($this->hasMethod($fieldNameOrMethodWithGet)) {
+                $outcome = $this->{$fieldNameOrMethodWithGet}();
+                if(is_object($value) && $value->exists()) {
+                    $value = $outcome;
+                }
+            } else {
+                $value = $this->{$fieldNameOrMethod} ?? null;
+            }
+            if (! $value || $value = 'inherit') {
+                if ($parent = $this->ParentGroup()) {
+                    $value = $parent->recursiveValue($fieldNameOrMethod, $default);
+                } else {
+                    $value = EcommerceConfig::inst()->{$fieldNameOrMethod};
+                }
+            }
+            if(! $value) {
+                $value = $default;
+            }
+            $this->recursiveValues[$fieldNameOrMethod] = $value;
+        }
+
+        return $this->recursiveValues[$fieldNameOrMethod];
     }
 
     /**
@@ -484,6 +611,28 @@ class ProductGroup extends Page
 
 
     /**
+     * Retrieve the base list of products for this group
+     *
+     * @return BaseProductList
+     */
+    public function getBaseProductList()
+    {
+        return $this->getFinalProductList()->getBaseProductList();
+    }
+
+    public function ProductsShowable($filter = null)
+    {
+        return $this->getFinalProductList()
+            ->applyFilter($filter);
+    }
+
+    public function currentInitialProductsAsCachedArray(?string $filter = 'default') : array
+    {
+        return $this->ProductsShowable()
+            ->getProductIds();
+    }
+
+    /**
      * Retrieve a list of products, based on the given parameters.
      *
      * This method is usually called by the various controller methods.
@@ -496,13 +645,13 @@ class ProductGroup extends Page
      * @param array|string $extraFilter          Additional SQL filters to apply to the Product retrieval
      * @param array|string $alternativeSort      Additional SQL for sorting
      *
-     * @return ProductList
+     * @return FinalProductList
      */
-    public function getProductList($extraFilter = null, $alternativeSort = null)
+    public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
         if (! $this->productList) {
-            $className = $this->Config()->get('product_list_class');
-            $this->productList = $className::create($this, $this->getBuyableClassName());
+            $className = $this->getFinalProductListClassName();
+            $list = $className::inst($this);
         }
 
         if ($extraFilter) {
@@ -510,7 +659,7 @@ class ProductGroup extends Page
         }
 
         if ($alternativeSort) {
-            $list = $list->applySort($alternativeSort);
+            $list = $list->applySorter($alternativeSort);
         }
 
         return $list;
@@ -526,28 +675,22 @@ class ProductGroup extends Page
      */
     public function ChildGroups(int $maxRecursiveLevel, $filter = null) : ArrayList
     {
-        return $this->getProductList()->getGroups($maxRecursiveLevel, $filter);
+        return $this->getBaseProductList()->getGroups($maxRecursiveLevel, $filter);
     }
 
     /**
-     * If products are show in more than one group yhen this returns an array for any products that are linked to this
+     * If products are show in more than one group then this returns an array for any products that are linked to this
      * product group.
      *
      * @return array
      */
     public function getProductsToBeIncludedFromOtherGroupsArray() : array
     {
-        //TO DO: this should actually return
-        //Product.ID = IN ARRAY(bla bla)
         $array = [];
         if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->count()) {
-            $array = $this->AlsoShowProducts()->map('ID', 'ID')->toArray();
+            $array = $this->AlsoShowProducts()->columnUnique('ID');
         }
-        if (empty($array)) {
-            return [-1 => -1];
-        }
-
-        return $array;
+        return ArrayMethods::filter_array($array);
     }
 
 
@@ -595,43 +738,7 @@ class ProductGroup extends Page
         return $this->recursiveValue('Image', null);
     }
 
-    /**
-     * Returns a list of Product Groups that have the products for the CURRENT
-     * product group listed as part of their AlsoShowProducts list.
-     *
-     * With the method below you can work out a list of brands that apply to the
-     * current product group (e.g. socks come in three brands - namely A, B and C)
-     *
-     * @return \SilverStripe\ORM\DataList|null
-     */
-    public function getProductGroupsFromAlsoShowProducts()
-    {
-        return $this->getProductList()->getProductGroups()->getProductGroupsFromAlsoShowProducts();
-    }
 
-    /**
-     * This is the inverse of ProductGroupsFromAlsoShowProducts
-     *
-     * That is, it list the product groups that a product is primarily listed
-     * under (exact parents only) from a "AlsoShow" product List.
-     *
-     * @return \SilverStripe\ORM\DataList|null
-     */
-    public function getProductGroupsFromAlsoShowProductsInverse()
-    {
-        return $this->getProductList()->getProductGroups()->getProductGroupsFromAlsoShowProducts();
-    }
-
-    /**
-     * Given the products for this page, retrieve the parent groups excluding
-     * the current one.
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    public function getProductGroupsParentGroups(): DataList
-    {
-        return $this->getProductList()->getProductGroups()->getProductGroupsParentGroups();
-    }
 
     /**
      * tells us if the current page is part of e-commerce.
@@ -653,63 +760,6 @@ class ProductGroup extends Page
         return Product::get()->filter(['ParentID' => $this->ID,])->count();
     }
 
-    protected function getConfigOptionsObject()
-    {
-        $this->getProductList()->getConfigOptionsObject();
-    }
-
-
-    /**
-     * Returns the full sortFilterDisplayNames set, a subset, or one value
-     * by either type (e.g. FILER) or variable (e.g dbFieldName)
-     * or both.
-     *
-     * @param string $typeOrVariable FILTER | SORT | DISPLAY or sessionName, getVariable, etc...
-     * @param string $variable:          sessionName, getVariable, etc...
-     *
-     * @return array | String
-     */
-    protected function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
-    {
-        return $this->getConfigOptionsObject()->getSortFilterDisplayNames($typeOrVariable, $variable);
-    }
-
-
-
-    /**
-     * Checks for the most applicable user preferences for this page:
-     *
-     * 1. what is saved in Database for this page.
-     * 2. what the parent product group has saved in the database
-     * 3. what the standard default is.
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string - returns the key
-     */
-    protected function getProductListConfigDefaultValue($type): string
-    {
-        return $this->getConfigOptionsObject()->getProductListConfigDefaultValue($type);
-    }
-
-
-    /*********************
-     * SETTINGS
-     *********************/
-
-    /**
-     * check if the key is valid.
-     *
-     * @param  string $type     e.g. SORT | FILTER
-     * @param  string $key      e.g. best_match | price | lastest
-     * @param  string $variable e.g. SQL | Title
-
-     * @return string - empty if not found
-     */
-    protected function getBestKeyAndValidateKey(string $type, ?string $key = 'default', ?string $variable = '')
-    {
-        return $this->getConfigOptionsObject()->getValueForProductListConfigType($type, $key, $variable);
-    }
 
     /**
      * Do products occur in more than one group.

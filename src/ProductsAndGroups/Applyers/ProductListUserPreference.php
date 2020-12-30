@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups\Helpers;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
@@ -13,10 +13,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 /**
  * provides data on the user
  */
-class ProductListUserPreference
+class ProductListUserPreference extends BaseClass
 {
-    use Configurable;
-    use Injectable;
 
     protected $userPreferences = [];
 
@@ -45,4 +43,17 @@ class ProductListUserPreference
     {
         return $this->userPreferences[$type];
     }
+    /**
+     * Sort the list of products
+     *
+     * @param array|string $param
+     *
+     * @return SS_List
+     */
+    public function apply($param = null): SS_List
+    {
+        $param = $this->checkOption($param);
+        return $this->products;
+    }
+
 }

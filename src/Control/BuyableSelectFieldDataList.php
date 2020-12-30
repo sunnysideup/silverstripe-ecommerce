@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -92,7 +93,7 @@ class BuyableSelectFieldDataList extends Controller
                     $className = $buyableArray['ClassName'];
                     $tableName = $buyableArray['TableName'];
                     if (! isset($arrayOfAddedItemIDsByClassName[$className])) {
-                        $arrayOfAddedItemIDsByClassName[$className] = [-1 => -1];
+                        $arrayOfAddedItemIDsByClassName[$className] = ArrayMethods::filter_array([]);
                     }
                     if ($singleton->hasDatabaseField($fieldName)) {
                         // $where = "\"${fieldName}\" LIKE '%${term}%'

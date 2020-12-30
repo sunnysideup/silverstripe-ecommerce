@@ -27,6 +27,132 @@ class ProductListBackup extends ViewableData
 
 
 
+
+        /**
+         * variable to speed up methods in this class.
+         *
+         * @var array
+         */
+        protected $configOptionsCache = [];
+
+        /**
+         * cache variable for default preference key.
+         *
+         * @var array
+         */
+        protected $productListConfigDefaultValueCache = [];
+
+        /**
+         * cache of all the data associated with a type
+         * @param  string $type
+         * @return array
+         */
+        public function getConfigOptionsCache(string $type) : array
+        {
+            if (! isset($this->configOptionsCache[self::class])) {
+                $this->configOptionsCache[$type] = EcommerceConfig::get(self::class, 'options');
+            }
+            return $this->configOptionsCache[$type];
+
+        }
+
+        /**
+         * return value for type x key x variable
+         *
+         * @param  string $type     e.g. SORT | FILTER
+         * @param  string $key      e.g. best_match | price | lastest
+         * @param  string $variable e.g. SQL | Title
+
+         * @return mixed - empty if not found
+         */
+        public function getValueForProductListConfigType(string $type, string $key, string $variable)
+        {
+            $options = $this->getConfigOptionsCache($type);
+            //check !!!
+            if (isset($options[$key][$variable])) {
+                return $options[$key][$variable];
+                //all good
+            } else {
+                $userPreference = $this->getProductListConfigDefaultValue($type);
+                if($key !== $userPreference) {
+                    return $this->getValueForProductListConfigType($type, $userPreference, $variable);
+                }
+                if($userPreference !== 'default') {
+                    return $this->getValueForProductListConfigType($type, 'default', $variable);
+                }
+                // //reset
+                // // TODO: what is this for?
+                // $this->getSortFilterDisplayNames($type, 'getVariable');
+                // //clear bogus value from session ...
+                // $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
+                // Controller::curr()->getRequest()->getSession()->set('ProductGroup_' . $sessionName, '');
+            }
+
+            return 'error';
+
+        }
+
+
+        /**
+         * Checks for the most applicable user preferences for this page:
+         *
+         * 1. what is saved in Database for this page.
+         * 2. what the parent product group has saved in the database
+         * 3. what the standard default is.
+         *
+         * @param string $type - FILTER | SORT | DISPLAY
+         *
+         * @return string - returns the key
+         */
+        public function getProductListConfigDefaultValue(string $type): string
+        {
+            if (! isset($this->productListConfigDefaultValueCache[$type])) {
+                $options = $this->getConfigOptionsCache($type);
+                $dbVariableName = self::SORT_DISPLAY_NAMES[$type]['dbFieldName'];
+                $dbValue = $this->rootGroup->{$dbVariableName};
+                if ($dbValue === 'inherit' && $parent = $this->rootGroup->ParentGroup()) {
+                    $this->productListConfigDefaultValueCache[$type] = $parent->getProductListConfigDefaultValue($type);
+                } elseif ($dbValue && array_key_exists($dbValue, $options)) {
+                    $this->productListConfigDefaultValueCache[$type] = $dbValue;
+                } else {
+                    $this->productListConfigDefaultValueCache[$type] = 'default';
+                }
+            }
+
+            return $this->productListConfigDefaultValueCache[$type] ?? '';
+        }
+
+        /**
+         * Returns the full sortFilterDisplayNames set, a subset, or one value
+         * by either type (e.g. FILER) or variable (e.g dbFieldName)
+         * or both.
+         *
+         * @param string $typeOrVariable FILTER | SORT | DISPLAY or sessionName, getVariable, etc...
+         * @param string $variable:          sessionName, getVariable, etc...
+         *
+         * @return array | String
+         */
+        protected function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
+        {
+            if ($variable) {
+                return self::SORT_DISPLAY_NAMES[$typeOrVariable][$variable];
+            }
+
+            $data = [];
+
+            if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
+                $data = self::SORT_DISPLAY_NAMES[$typeOrVariable];
+            } elseif ($typeOrVariable) {
+                foreach ($this->sortFilterDisplayNames as $group) {
+                    $data[] = $group[$typeOrVariable] ?? 'error';
+                }
+            } else {
+                $data = self::SORT_DISPLAY_NAMES;
+            }
+
+            return $data;
+        }
+
     /**
     * @var SS_List
     */
