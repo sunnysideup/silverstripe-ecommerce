@@ -292,7 +292,7 @@ class ProductGroupController extends PageController
      *
      * @return string
      */
-    public function OriginalTitle()
+    public function OriginalTitle() : string
     {
         return $this->originalTitle;
     }
@@ -320,68 +320,37 @@ class ProductGroupController extends PageController
     }
 
 
-    /**
-     * Do we show all products on one page?
-     *
-     * @return bool
-     */
-    public function ShowFiltersAndDisplayLinks() : bool
+    public function ShowFiltersLinks() : bool
     {
-        if ($this->getProductList()->CountGreaterThanOne()) {
-            if ($this->HasFilters()) {
-                return true;
-            }
-            if ($this->DisplayLinks()) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasFilters() ? true : false;
     }
 
-    /**
-     * Do we show the sort links.
-     *
-     * A bit arbitrary to say three,
-     * but there is not much point to sort three or less products
-     *
-     * @return bool
-     */
-    public function ShowSortLinks($minimumCount = 3) :bool
+    public function ShowDisplayLinks() : bool
     {
-        if ($this->getProductList()->CountGreaterThanOne($minimumCount)) {
-            return true;
-        }
-
-        return false;
+        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasDisplays() ? true : false;
     }
 
-    /**
-     * Is there a special filter operating at the moment?
-     *
-     * Is the current filter the default one (return inverse!)?
-     *
-     * @return bool
-     */
-    public function HasFilter()
+    public function ShowSortLinks() : bool
+    {
+        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasDisplays() ? true : false;
+    }
+
+
+    public function HasFilter() : bool
     {
         return $this->getCurrentUserPreferences('FILTER') !== $this->getProductListConfigDefaultValue('FILTER');
     }
 
-    /**
-     * Is there a special sort operating at the moment?
-     * Is the current sort the default one (return inverse!)?
-     *
-     * @return bool
-     */
-    public function HasSort()
+    public function HasSort() : bool
     {
         return $this->getCurrentUserPreferences('SORT') !== $this->getProductListConfigDefaultValue('SORT');
     }
 
-    /**
-     * @return boolean
-     */
+    public function HasDisplay() : bool
+    {
+        return $this->getCurrentUserPreferences('DISPLAY') !== $this->getProductListConfigDefaultValue('DISPLAY');
+    }
+
     public function HasFilterOrSort() : bool
     {
         return $this->HasFilter() || $this->HasSort();
@@ -399,6 +368,28 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * Are filters available? we check one at the time so that we do the least
+     * amount of DB queries.
+     *
+     * @return bool
+     */
+    public function HasSorts() : bool
+    {
+        return $this->SorterLinks()->count() > 1;
+    }
+
+    /**
+     * Are filters available? we check one at the time so that we do the least
+     * amount of DB queries.
+     *
+     * @return bool
+     */
+    public function HasDisplays() : bool
+    {
+        return $this->DisplayLinks()->count() > 1;
+    }
+
+    /**
      * Returns the current filter applied to the list in a human readable
      *  string.
      *
@@ -406,9 +397,8 @@ class ProductGroupController extends PageController
      */
     public function CurrentDisplayTitle()
     {
-        $displayKey = $this->getCurrentUserPreferences('DISPLAY');
-        if ($displayKey !== $this->getProductListConfigDefaultValue('DISPLAY')) {
-            return $this->getUserPreferencesTitle('DISPLAY', $displayKey);
+        if ($this->HasDisplay()) {
+            return $this->getUserPreferencesTitle('DISPLAY', $this->getCurrentUserPreferences('DISPLAY'));
         }
     }
 
@@ -457,7 +447,8 @@ class ProductGroupController extends PageController
     public function MaxNumberOfProductsPerPage(): int
     {
         $perPage = $this->getNumberOfProductsPerPage();
-        $total = $this->TotalCount();
+        $total = $this->getFinalProductList()->getRawCount();
+
         return $perPage > $total ? $total : $perPage;
     }
 
