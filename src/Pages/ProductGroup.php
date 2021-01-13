@@ -712,7 +712,7 @@ class ProductGroup extends Page
      */
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
-        if (! isset($this->recursiveValues[$fieldName])) {
+        if (! isset($this->recursiveValues[$fieldNameOrMethod])) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
             if ($this->hasMethod($fieldNameOrMethod)) {
