@@ -146,10 +146,11 @@ class Product extends Page implements BuyableModel
         'SearchFields' => [
             'type' => 'fulltext',
             'columns' => [
-                'Title',
-                'MenuTitle',
-                'Content',
-                'MetaDescription',
+                //TODO : columns don't exist on product, migrate to yml?
+                //     'Title',
+                //     'MenuTitle',
+                //     'Content',
+                //     'MetaDescription',
                 'SearchData',
             ],
         ],
