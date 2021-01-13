@@ -362,7 +362,8 @@ class ProductGroup extends Page
      **/
     public function getProductsPerPage(): int
     {
-        return $this->recursiveValue('NumberOfProductsPerPage', 10);
+        $val = $this->recursiveValue('NumberOfProductsPerPage', 10);
+        return intval($val);
     }
 
     /**
@@ -420,7 +421,9 @@ class ProductGroup extends Page
      */
     public function getLevelOfProductsToShow(): int
     {
-        return $this->recursiveValue('LevelOfProductsToShow', 99);
+        $value = $this->recursiveValue('LevelOfProductsToShow', 99);
+
+        return intval($value);
     }
 
     /**
@@ -615,7 +618,7 @@ class ProductGroup extends Page
     {
         $data = $this->getSortFilterDisplayNamesData();
         if ($variable) {
-            return $data[$typeOrVariable][$variable];
+            return $data[$typeOrVariable][$variable] ?? 'error';
         }
 
         $newData = [];
@@ -704,6 +707,7 @@ class ProductGroup extends Page
         );
     }
 
+    private static $count = 0;
     /**
      * get recursive value for Product Group and check EcommerceConfig as last resort
      * @param  string $fieldNameOrMethod
@@ -712,6 +716,7 @@ class ProductGroup extends Page
      */
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
+        return 'xxx';
         if (! isset($this->recursiveValues[$fieldNameOrMethod])) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
@@ -729,7 +734,8 @@ class ProductGroup extends Page
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
             if (! $value || $value = 'inherit') {
-                if ($parent = $this->ParentGroup()) {
+                $parent = $this->ParentGroup();
+                if ($parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);
                 } else {
                     $value = EcommerceConfig::inst()->{$fieldNameOrMethod};
@@ -759,7 +765,7 @@ class ProductGroup extends Page
      *
      * @return string
      */
-    protected function getBuyableClassName(): string
+    public function getBuyableClassName(): string
     {
         return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
     }
