@@ -29,7 +29,6 @@ abstract class OrderConverter
 
     public function __construct($order = null)
     {
-        parent::__construct();
         if ($order === null) {
             $order = ShoppingCart::current_order();
         }

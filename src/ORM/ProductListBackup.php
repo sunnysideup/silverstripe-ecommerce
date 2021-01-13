@@ -333,7 +333,7 @@ class ProductListBackup extends ViewableData
      *
      * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
-    public function ChildGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
+    public function ChildGroups(?int $maxRecursiveLevel = 99, $filter = null, $numberOfRecursions = 0)
     {
         $arrayList = ArrayList::create();
         ++$numberOfRecursions;

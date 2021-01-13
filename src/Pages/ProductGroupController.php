@@ -338,7 +338,7 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function MenuChildGroups(): DataList
+    public function MenuChildGroups(): ?DataList
     {
         return $this->ChildGroups(
             2,

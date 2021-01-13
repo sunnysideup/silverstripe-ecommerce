@@ -75,7 +75,7 @@ class ProductGroupSearchPage extends ProductGroup
         ])->count() ? false : $this->canEdit($member);
     }
 
-    public function childGroups($maxRecursiveLevel, $filter = null, $numberOfRecursions = 0)
+    public function childGroups(?int $maxRecursiveLevel = 99, ?string $filter = null): ArrayList
     {
         return ArrayList::create();
     }

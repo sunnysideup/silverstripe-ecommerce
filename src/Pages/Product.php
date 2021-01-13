@@ -3,7 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;

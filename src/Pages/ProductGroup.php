@@ -507,7 +507,7 @@ class ProductGroup extends Page
      *
      * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
-    public function ChildGroups(int $maxRecursiveLevel, $filter = null): ArrayList
+    public function ChildGroups(?int $maxRecursiveLevel = 99, ?string $filter = null): ArrayList
     {
         return $this->getBaseProductList()->getGroups($maxRecursiveLevel, $filter);
     }
