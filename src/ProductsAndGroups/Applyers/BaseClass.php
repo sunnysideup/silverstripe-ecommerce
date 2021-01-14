@@ -33,7 +33,7 @@ abstract class BaseClass
         $this->products = $this->finalProductList->getProducts();
     }
 
-    abstract public function apply($param = null) : self;
+    abstract public function apply($param = null): self;
 
     public function getOptions(): array
     {

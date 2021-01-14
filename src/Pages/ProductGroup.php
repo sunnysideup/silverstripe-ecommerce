@@ -24,13 +24,13 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -174,6 +174,8 @@ class ProductGroup extends Page
      * @var string
      */
     private static $product_group_list_class_name = ProductGroupList::class;
+
+    private static $count = 0;
 
     public function SummaryFields()
     {
@@ -639,6 +641,16 @@ class ProductGroup extends Page
         return $newData;
     }
 
+    /**
+     * Returns the class we are working with.
+     *
+     * @return string
+     */
+    public function getBuyableClassName(): string
+    {
+        return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+    }
+
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
     {
         // display style
@@ -710,7 +722,6 @@ class ProductGroup extends Page
         );
     }
 
-    private static $count = 0;
     /**
      * get recursive value for Product Group and check EcommerceConfig as last resort
      * @param  string $fieldNameOrMethod
@@ -763,22 +774,12 @@ class ProductGroup extends Page
         return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
-    /**
-     * Returns the class we are working with.
-     *
-     * @return string
-     */
-    public function getBuyableClassName(): string
-    {
-        return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
-    }
-
     protected function getSortFilterDisplayNamesData(): array
     {
         $data = self::SORT_DISPLAY_NAMES;
         $outcomes = $this->extend('updateSorterDisplayNamesData', $data);
-        if(! empty($outcomes)) {
-            if(is_array($outcomes)) {
+        if (! empty($outcomes)) {
+            if (is_array($outcomes)) {
                 $data = array_pop($outcomes);
             }
         }

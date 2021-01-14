@@ -4,8 +4,8 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -287,7 +287,7 @@ class BaseProductList
     {
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
             $productsThatNeedChecking = $this->products;
-            if(is_array(self::$checked_products) && count(self::$checked_products)) {
+            if (is_array(self::$checked_products) && count(self::$checked_products)) {
                 $productsThatNeedChecking = $productsThatNeedChecking->exclude(['ID' => self::$checked_products]);
             }
             foreach ($productsThatNeedChecking as $buyable) {

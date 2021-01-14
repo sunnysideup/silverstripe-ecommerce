@@ -8,6 +8,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * @description: returns the cart as JSON
@@ -120,9 +121,7 @@ class CartResponse extends EcommerceResponse
                     //products in cart
                     $inCartArray[] = $buyable->AJAXDefinitions()->UniqueIdentifier();
                     //HACK TO INCLUDE PRODUCT IN PRODUCT VARIATION
-                    if (is_a($buyable, 'ProductVariation')) {
-                        $inCartArray[] = $buyable->Product()->AJAXDefinitions()->UniqueIdentifier();
-                    }
+                    $inCartArray[] = $buyable->Product()->AJAXDefinitions()->UniqueIdentifier();
                 }
             }
         }

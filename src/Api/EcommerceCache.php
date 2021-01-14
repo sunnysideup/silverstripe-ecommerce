@@ -3,11 +3,11 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\Control\Director;
 
 /**
  * Provides a standard interface for caching product and group information
@@ -133,7 +133,7 @@ class EcommerceCache implements Flushable
      */
     protected function cacheKeyRefiner($cacheKey): string
     {
-        $str = $cacheKey . '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
+        $cacheKey .= '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
         $arrayOfReservedChars = [
             '{',
             '}',

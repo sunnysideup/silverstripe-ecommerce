@@ -14,10 +14,10 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
 
 class ProductGroupController extends PageController
 {
@@ -437,7 +437,6 @@ class ProductGroupController extends PageController
         return 'To be completed';
     }
 
-
     /**
      * returns the current filter applied to the list
      * in a human readable string.
@@ -714,6 +713,14 @@ class ProductGroupController extends PageController
         return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
     }
 
+    public function saveUserPreferences($filter = [], $sort = [], $display = '')
+    {
+    }
+
+    public function getCurrentUserPreferences()
+    {
+    }
+
     protected function getCachedProductList(): ? DataList
     {
         $key = $this->ProductGroupListCachingKey(false);
@@ -773,16 +780,6 @@ class ProductGroupController extends PageController
                 $this->resetsort();
             }
         }
-    }
-
-    public function saveUserPreferences($filter = [], $sort = [], $display = '')
-    {
-
-    }
-
-    public function getCurrentUserPreferences()
-    {
-
     }
 
     protected function getSearchResultsDefaultSort($idArray, $alternativeSort = null)

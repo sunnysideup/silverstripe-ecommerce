@@ -26,12 +26,11 @@ class UpdateProductImages extends BuildTask
     {
         DB::query('
             UPDATE "File"
-            SET "ClassName" = \''.Image::class.'\'
+            SET "ClassName" = \'' . Image::class . '\'
             WHERE
                 "ClassName" =  \'ProductImage\';
         ');
 
         echo '<h1>DONE!</h1>';
-
     }
 }

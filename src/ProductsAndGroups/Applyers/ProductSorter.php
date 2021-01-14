@@ -1,6 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
+
 use SilverStripe\Core\Convert;
 
 /**

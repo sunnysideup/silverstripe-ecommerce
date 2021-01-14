@@ -689,7 +689,8 @@ class ShoppingCartController extends Controller
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $bestBuyable = $buyableClassName::get()->byID($buyableID);
-                if (is_a($bestBuyable, 'ProductVariation')) {
+                if (Product::is_product_variation($bestBuyable)) {
+                    //todo: make this part of ProductVariation.
                     $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
                     $this->redirect($link);
 
