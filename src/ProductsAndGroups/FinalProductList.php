@@ -4,9 +4,11 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
-use Sunnysideup\Ecommerce\Pages\BaseClass;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseClass;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
 
 /**
  * A wrapper for a paginated list of products which can be filtered and sorted.
@@ -61,26 +63,30 @@ class FinalProductList extends ViewableData
         return $this->baseProductList;
     }
 
-    public function applyFilter($filter = null)
+    public function applyFilter($filter = null) : self
     {
-        $this->apply($this->getApplyerClassName('FILTER'), $filter);
+        return $this->apply($this->getApplyerClassName('FILTER'), $filter);
     }
 
-    public function applySorter($sort = null)
+    public function applySorter($sort = null) : self
     {
-        $this->apply($this->getApplyerClassName('SORT'), $sort);
+        return $this->apply($this->getApplyerClassName('SORT'), $sort);
     }
 
-    public function applyDisplayer($param = null)
+    public function applyDisplayer($param = null) : self
     {
-        $this->apply($this->getApplyerClassName('DISPLAY'), $param);
+        return $this->apply($this->getApplyerClassName('DISPLAY'), $param);
     }
 
     public function apply(string $className, $param = null)
     {
         $obj = $this->getApplyer($className);
 
-        $this->products = $obj->apply($param);
+        $obj
+            ->apply($param)
+            ->getProducts();
+
+        return $this;
     }
 
     public function getDefaultFilterOptions(): array

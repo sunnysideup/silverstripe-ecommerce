@@ -24,8 +24,8 @@ class ProductDisplayer extends BaseClass
      *
      * @return SS_List
      */
-    public function apply($display = null): SS_List
+    public function apply($display = null) : self
     {
-        return $this->products;
+        return $this;
     }
 }

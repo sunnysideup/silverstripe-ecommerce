@@ -42,9 +42,10 @@ class ProductListUserPreference extends BaseClass
      *
      * @return SS_List
      */
-    public function apply($param = null): SS_List
+    public function apply($param = null): self
     {
         $param = $this->checkOption($param);
-        return $this->products;
+
+        return $this;
     }
 }

@@ -28,6 +28,9 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -618,7 +621,7 @@ class ProductGroup extends Page
     {
         $data = $this->getSortFilterDisplayNamesData();
         if ($variable) {
-            return $data[$typeOrVariable][$variable] ?? 'error';
+            return $data[$typeOrVariable][$variable];
         }
 
         $newData = [];
@@ -773,9 +776,11 @@ class ProductGroup extends Page
     protected function getSortFilterDisplayNamesData(): array
     {
         $data = self::SORT_DISPLAY_NAMES;
-        $outcome = $this->extend('updateSorterDisplayNamesData', $data);
-        if ($outcome !== null) {
-            $data = $outcome;
+        $outcomes = $this->extend('updateSorterDisplayNamesData', $data);
+        if(! empty($outcomes)) {
+            if(is_array($outcomes)) {
+                $data = array_pop($outcomes);
+            }
         }
 
         return $data;
