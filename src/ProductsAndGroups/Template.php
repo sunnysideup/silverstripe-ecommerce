@@ -30,10 +30,15 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Templats\UserPreference;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 
 class Template
 {
+    use Configurable;
+    use Injectable;
 
     /**
      * @var string
@@ -49,6 +54,10 @@ class Template
      * @var string
      */
     private static $final_product_list_class_name = FinalProductList::class;
+    /**
+     * @var string
+     */
+    private static $user_preferences_class_name = UserPreference::class;
 
     /**
      * list of sort / filter / display variables.
@@ -80,5 +89,64 @@ class Template
             'defaultApplyer' => ProductDisplayer::class,
         ],
     ];
+
+    public function getData()
+    {
+        return self::SORT_DISPLAY_NAMES;
+    }
+
+    public function getBaseProductListClassName(): string
+    {
+        return $this->Config()->get('base_product_list_class_name');
+    }
+
+    public function getFinalProductListClassName(): string
+    {
+        return $this->Config()->get('final_product_list_class_name');
+    }
+
+    public function getProductGroupListClassName(): string
+    {
+        return $this->Config()->get('product_group_list_class_name');
+    }
+
+    public function getUserPreferencesClassName(): string
+    {
+        return $this->Config()->get('user_preferences_class_name');
+    }
+
+
+    /**
+     * Returns the full sortFilterDisplayNames set, a subset, or one value
+     * by either type (e.g. FILER) or variable (e.g dbFieldName)
+     * or both.
+     *
+     * @param string $typeOrVariable    FILTER | SORT | DISPLAY OR variable
+     * @param string $variable:         getVariable, etc...
+     *
+     * @return array | String
+     */
+    public function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
+    {
+        $data = $this->getSortFilterDisplayNamesData();
+        if ($variable) {
+            return $data[$typeOrVariable][$variable];
+        }
+
+        $newData = [];
+
+        if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
+            $newData = $data[$typeOrVariable];
+        } elseif ($typeOrVariable) {
+            foreach ($this->sortFilterDisplayNames as $group) {
+                $newData[] = $group[$typeOrVariable] ?? 'error';
+            }
+        } else {
+            $newData = $data;
+        }
+
+        return $newData;
+    }
+
 
 }

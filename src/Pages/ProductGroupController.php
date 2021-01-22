@@ -372,17 +372,17 @@ class ProductGroupController extends PageController
 
     public function HasFilter(): bool
     {
-        return $this->getCurrentUserPreferences('FILTER') !== $this->getProductListConfigDefaultValue('FILTER');
+        return $this->getCurrentUserPreferences('FILTER') !== $this->getListConfigCalculated('FILTER');
     }
 
     public function HasSort(): bool
     {
-        return $this->getCurrentUserPreferences('SORT') !== $this->getProductListConfigDefaultValue('SORT');
+        return $this->getCurrentUserPreferences('SORT') !== $this->getListConfigCalculated('SORT');
     }
 
     public function HasDisplay(): bool
     {
-        return $this->getCurrentUserPreferences('DISPLAY') !== $this->getProductListConfigDefaultValue('DISPLAY');
+        return $this->getCurrentUserPreferences('DISPLAY') !== $this->getListConfigCalculated('DISPLAY');
     }
 
     public function HasFilterOrSort(): bool
@@ -479,14 +479,14 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * short-cut for getProductListConfigDefaultValue("DISPLAY")
+     * short-cut for getListConfigCalculated("DISPLAY")
      * for use in templtes.
      *
      * @return string - key
      */
     public function MyDefaultDisplayStyle(): string
     {
-        return $this->getProductListConfigDefaultValue('DISPLAY');
+        return $this->getListConfigCalculated('DISPLAY');
     }
 
     /**
@@ -625,7 +625,7 @@ class ProductGroupController extends PageController
                     $onlySearchTitle = 'Last Search Results';
                 }
             }
-            $defaultKey = $this->getProductListConfigDefaultValue('FILTER');
+            $defaultKey = $this->getListConfigCalculated('FILTER');
             $this->searchForm = ProductSearchForm::create(
                 $this,
                 'ProductSearchForm',
@@ -830,7 +830,7 @@ class ProductGroupController extends PageController
     //
     //     if ($groups) {
     //         foreach ($groups as $item) {
-    //             $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getProductListConfigDefaultValue('FILTER'));
+    //             $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getListConfigCalculated('FILTER'));
     //             $newArray = array_intersect_key(
     //                 $arrayOfIDs,
     //                 $baseArray

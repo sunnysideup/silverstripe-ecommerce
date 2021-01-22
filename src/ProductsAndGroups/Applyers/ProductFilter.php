@@ -40,7 +40,7 @@ class ProductFilter extends BaseClass
     {
         $group = $this->findGroupId($filter);
         if ($group) {
-            $filter = ['ID' => $group->ProductsShowable()];
+            $filter = ['ID' => $group->getFinalProductList()->column('ID')];
         } else {
             $filter = $this->checkOption($filter);
         }

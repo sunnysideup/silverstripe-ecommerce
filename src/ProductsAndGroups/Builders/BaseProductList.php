@@ -200,7 +200,7 @@ class BaseProductList
     public function getProductGroupListProvider()
     {
         if (! $this->productGroupListProvider) {
-            $className = $this->rootGroup->getProductGroupListClassName();
+            $className = $this->rootGroup->getTemplateForProductsAndGroups()->getProductGroupListClassName();
             $this->productGroupListProvider = Injector::inst()->get($className, true, [$this->rootGroup]);
         }
 

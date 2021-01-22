@@ -30,7 +30,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -42,7 +42,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
 class ProductGroup extends Page
 {
 
-
+    private static $template_for_selection_of_products = Template::class;
 
     /**
      * @var array
@@ -255,20 +255,15 @@ class ProductGroup extends Page
         return $fields;
     }
 
-    public function getBaseProductListClassName(): string
+    /**
+     * used if you install lumberjack
+     * @return string
+     */
+    public function getLumberjackTitle(): string
     {
-        return $this->Config()->get('base_product_list_class_name');
+        return _t('ProductGroup.BUYABLES', 'Products');
     }
 
-    public function getFinalProductListClassName(): string
-    {
-        return $this->Config()->get('final_product_list_class_name');
-    }
-
-    public function getProductGroupListClassName(): string
-    {
-        return $this->Config()->get('product_group_list_class_name');
-    }
 
     public function requireDefaultRecords()
     {
@@ -304,39 +299,45 @@ class ProductGroup extends Page
         }
     }
 
-    public function getProductListConfigDefaultValue(string $type)
-    {
-        $method = 'get' . $this->getSortFilterDisplayNames($type, 'dbFieldName') . 'Calculated';
-        if ($method) {
-            return $this->{$method}();
-        }
-
-        return 'default';
-    }
 
     /**
+     * returns the template for providing related groups and products
+     * @return Template
+     */
+    public function getTemplateForProductsAndGroups()
+    {
+        $className = $this->Config()->get('template_for_selection_of_products');
+
+        return Injector::inst()->get($className);
+    }
+
+
+
+    /**
+     * @param int $default, optional 10
      * @return int
      **/
-    public function getProductsPerPage(): int
+    public function getProductsPerPage(?int $default = 10): int
     {
-        $val = $this->recursiveValue('NumberOfProductsPerPage', 10);
+        $val = $this->recursiveValue('NumberOfProductsPerPage', $default);
         return intval($val);
     }
 
     /**
      * Returns the number of products to show per page
      * @alias of getProductsPerPage
-     *
+     * @param int $default - optional, 10
      * @return int
      */
-    public function getNumberOfProductsPerPage(): int
+    public function getNumberOfProductsPerPage(?int $default = 10): int
     {
-        return $this->getProductsPerPage();
+        return $this->getProductsPerPage($default);
     }
 
     /**
-     * @return int
-     * @alias of ProductsPerPage
+     * work out the recursive value in the Database for SORT / FILTER / DISPLAY
+     * @param string $type SORT|FILTER|DISPLAY
+     * @return string
      **/
     public function getListConfigCalculated(string $type): string
     {
@@ -346,50 +347,16 @@ class ProductGroup extends Page
     }
 
     /**
-     * @return string
-     **/
-    public function getDefaultFilterCalculated(): string
-    {
-        return $this->recursiveValue('DefaultFilter', 'default');
-    }
-
-    /**
-     * @return string
-     **/
-    public function getDefaultSortOrderCalculated(): string
-    {
-        return $this->recursiveValue('DefaultSortOrder', 'default');
-    }
-
-    /**
-     * @return int
-     * @alias of ProductsPerPage
-     **/
-    public function getDisplayStyleCalculated(): string
-    {
-        return $this->recursiveValue('DisplayStyle', 'default');
-    }
-
-    /**
      * Returns the number of product groups (children) to show in the current
      * product list based on the user setting for this page.
      *
      * @return int
      */
-    public function getLevelOfProductsToShow(): int
+    public function getLevelOfProductsToShow(?int $defauult = 99): int
     {
         $value = $this->recursiveValue('LevelOfProductsToShow', 99);
 
         return intval($value);
-    }
-
-    /**
-     * used if you install lumberjack
-     * @return string
-     */
-    public function getLumberjackTitle(): string
-    {
-        return _t('ProductGroup.BUYABLES', 'Products');
     }
 
     /**
@@ -414,18 +381,6 @@ class ProductGroup extends Page
         return $this->getFinalProductList()->getBaseProductList();
     }
 
-    public function ProductsShowable($filter = null)
-    {
-        return $this->getFinalProductList()
-            ->applyFilter($filter);
-    }
-
-    public function currentInitialProductsAsCachedArray(?string $filter = 'default'): array
-    {
-        return $this->ProductsShowable()
-            ->getProductIds();
-    }
-
     /**
      * Retrieve a list of products, based on the given parameters.
      *
@@ -444,9 +399,10 @@ class ProductGroup extends Page
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
         if (! $this->productList) {
-            $className = $this->getFinalProductListClassName();
-            $list = $className::inst($this);
+            $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
+            $this->productList = $className::inst($this);
         }
+        $list = $this->productList;
 
         if ($extraFilter) {
             $list = $list->applyFilter($extraFilter);
@@ -550,6 +506,12 @@ class ProductGroup extends Page
         return Product::get()->filter(['ParentID' => $this->ID])->count();
     }
 
+    /**
+     *
+     * @param  string  $type      FILTER|SORT|DISPLAY
+     * @param  boolean $showError optional
+     * @return bool
+     */
     public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
     {
         $data = $this->getSortFilterDisplayNamesData();
@@ -557,8 +519,8 @@ class ProductGroup extends Page
             return true;
         } elseif ($showError) {
             user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY');
-            return false;
         }
+        return false;
     }
 
     /**
@@ -566,31 +528,14 @@ class ProductGroup extends Page
      * by either type (e.g. FILER) or variable (e.g dbFieldName)
      * or both.
      *
-     * @param string $typeOrVariable    FILTER | SORT | DISPLAY OR variable
-     * @param string $variable:         getVariable, etc...
+     * @param string $typeOrVariable    optional FILTER | SORT | DISPLAY OR variable
+     * @param string $variable:         optional getVariable, etc...
      *
      * @return array | String
      */
     public function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
     {
-        $data = $this->getSortFilterDisplayNamesData();
-        if ($variable) {
-            return $data[$typeOrVariable][$variable];
-        }
-
-        $newData = [];
-
-        if (isset($this->sortFilterDisplayNames[$typeOrVariable])) {
-            $newData = $data[$typeOrVariable];
-        } elseif ($typeOrVariable) {
-            foreach ($this->sortFilterDisplayNames as $group) {
-                $newData[] = $group[$typeOrVariable] ?? 'error';
-            }
-        } else {
-            $newData = $data;
-        }
-
-        return $newData;
+        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayNames($typeOrVariable, $variable);
     }
 
     /**
@@ -643,6 +588,7 @@ class ProductGroup extends Page
      * Then you must make sure MyTemplate.ss exists.
      *
      * @param string $type - FILTER | SORT | DISPLAY
+     * @param bool   $WithInherit - optional
      *
      * @return array
      */
@@ -682,18 +628,21 @@ class ProductGroup extends Page
      */
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
-        return 'xxx';
         if (! isset($this->recursiveValues[$fieldNameOrMethod])) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
             if ($this->hasMethod($fieldNameOrMethod)) {
                 $outcome = $this->{$fieldNameOrMethod}();
-                if (is_object($value) && $value->exists()) {
+                if (is_object($outcome) && $outcome->exists()) {
+                    $value = $outcome;
+                } elseif($outcome && ! is_object($outcome)) {
                     $value = $outcome;
                 }
             } elseif ($this->hasMethod($fieldNameOrMethodWithGet)) {
                 $outcome = $this->{$fieldNameOrMethodWithGet}();
-                if (is_object($value) && $value->exists()) {
+                if (is_object($outcome) && $outcome->exists()) {
+                    $value = $outcome;
+                } elseif($outcome && ! is_object($outcome)) {
                     $value = $outcome;
                 }
             } else {
@@ -721,21 +670,13 @@ class ProductGroup extends Page
      *
      * @return bool
      */
-    protected function getProductsAlsoInOtherGroups(): bool
+    public function getProductsAlsoInOtherGroups(): bool
     {
         return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
     protected function getSortFilterDisplayNamesData(): array
     {
-        $data = self::SORT_DISPLAY_NAMES;
-        $outcomes = $this->extend('updateSorterDisplayNamesData', $data);
-        if (! empty($outcomes)) {
-            if (is_array($outcomes)) {
-                $data = array_pop($outcomes);
-            }
-        }
-
-        return $data;
+        return $this->getTemplateForProductsAndGroups()->getData();
     }
 }

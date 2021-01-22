@@ -41,7 +41,7 @@ class FinalProductList extends ViewableData
     {
         $this->rootGroup = $rootGroup;
         if (! $baseProductListClassName) {
-            $baseProductListClassName = $rootGroup->getBaseProductListClassName();
+            $baseProductListClassName = $rootGroup->getTemplateForProductsAndGroups()->getBaseProductListClassName();
         }
         $this->baseProductList = $baseProductListClassName::inst($rootGroup, $buyableClassName, $levelOfProductsToShow);
         $this->products = $this->baseProductList->getProducts();
@@ -60,6 +60,12 @@ class FinalProductList extends ViewableData
     {
         return $this->baseProductList;
     }
+
+    /**
+     *
+     * @param  array|string $filter optional additional filter
+     * @return self           [description]
+     */
 
     public function applyFilter($filter = null): self
     {
