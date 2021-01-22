@@ -248,11 +248,6 @@ class Product extends Page implements BuyableModel
 
     private static $_calculated_price_cache = [];
 
-    public function SummaryFields()
-    {
-        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
-    }
-
     /**
      * By default we search for products that are allowed to be purchased only
      * standard SS method.

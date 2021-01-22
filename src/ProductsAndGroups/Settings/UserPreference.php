@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
 /**
  * keeps track of the current settings for FILTER / SORT / DISPLAY for user

@@ -41,36 +41,8 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\FinalProductList;
  */
 class ProductGroup extends Page
 {
-    /**
-     * list of sort / filter / display variables.
-     *
-     * @var array
-     */
-    protected const SORT_DISPLAY_NAMES = [
-        'FILTER' => [
-            'value' => 'default',
-            'configName' => 'filter_options',
-            'getVariable' => 'filter',
-            'dbFieldName' => 'DefaultFilter',
-            'defaultApplyer' => ProductSorter::class,
-        ],
-        'SORT' => [
-            'value' => 'default',
-            'configName' => 'sort_options',
-            'getVariable' => 'sort',
-            'dbFieldName' => 'DefaultSortOrder',
-            'translationCode' => 'SORT_BY',
-            'defaultApplyer' => ProductFilter::class,
-        ],
-        'DISPLAY' => [
-            'value' => 'default',
-            'configName' => 'display_styles',
-            'getVariable' => 'display',
-            'dbFieldName' => 'DisplayStyle',
-            'translationCode' => 'DISPLAY_STYLE',
-            'defaultApplyer' => ProductDisplayer::class,
-        ],
-    ];
+
+
 
     /**
      * @var array
@@ -98,16 +70,6 @@ class ProductGroup extends Page
      * @var ProductList
      */
     protected $productList;
-
-    /**
-     * @var string
-     */
-    private static $base_product_list_class_name = BaseProductList::class;
-
-    /**
-     * @var string
-     */
-    private static $final_product_list_class_name = FinalProductList::class;
 
     /**
      * @var string
@@ -170,17 +132,7 @@ class ProductGroup extends Page
 
     private static $description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
 
-    /**
-     * @var string
-     */
-    private static $product_group_list_class_name = ProductGroupList::class;
-
     private static $count = 0;
-
-    public function SummaryFields()
-    {
-        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
-    }
 
     public function i18n_singular_name()
     {
