@@ -9,6 +9,15 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
 class UserPreference
 {
+
+    protected $request = null;
+
+    public function setRequest($request)
+    {
+        $this->request = $request;
+
+        return $this;
+    }
     /**
      * Link that returns a list of all the products for this product group as a
      * simple list. It resets everything; not just filter.
@@ -150,5 +159,158 @@ class UserPreference
         }
 
         return $arrayList;
+    }
+
+    /**
+     * Add a secondary title to the main title in case there is, for example, a
+     * filter applied (e.g. Socks | MyBrand).
+     *
+     * @param string $secondaryTitle
+     */
+    protected function addSecondaryTitle($secondaryTitle = '')
+    {
+        //todo: add to config
+
+        if (! $this->secondaryTitleHasBeenAdded) {
+            if (trim($secondaryTitle)) {
+                $secondaryTitle = $this->prepareForSecondaryTitleAddition($secondaryTitle);
+            }
+
+            if ($this->IsSearchResults()) {
+                $count = $this->getProductList()->getRawCount();
+
+                if ($count) {
+                    $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                    $secondaryTitle .= $this->prepareForSecondaryTitleAddition($toAdd);
+                } else {
+                    $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
+                    $secondaryTitle .= $this->prepareForSecondaryTitleAddition($toAdd);
+                }
+            }
+
+            if ($this->hasFilter()) {
+                $secondaryTitle .= $this->prepareForSecondaryTitleAddition($this->getCurrentFilterTitle());
+            }
+
+            if ($this->HasSort()) {
+                $secondaryTitle .= $this->prepareForSecondaryTitleAddition($this->getCurrentSortTitle());
+            }
+
+            $currentPageNumber = $this->getCurrentPageNumber();
+            if ($currentPageNumber > 1) {
+                $secondaryTitle .= $this->prepareForSecondaryTitleAddition(
+                    $pipe,
+                    _t('ProductGroup.PAGE', 'Page') . ' ' . $page
+                );
+            }
+
+            if ($secondaryTitle) {
+                $this->Title .= $secondaryTitle;
+
+                if (isset($this->MetaTitle)) {
+                    $this->MetaTitle .= $secondaryTitle;
+                }
+
+                if (isset($this->MetaDescription)) {
+                    $this->MetaDescription .= $secondaryTitle;
+                }
+            }
+
+            // dont update menu title, because the entry in the menu
+            // should stay the same as it links back to the unfiltered
+            // page (in some cases).
+
+            $this->secondaryTitleHasBeenAdded = true;
+        }
+    }
+
+    /**
+     * removes any spaces from the 'toAdd' bit and adds the pipe if there is
+     * anything to add at all.  Through the lang files, you can change the pipe
+     * symbol to anything you like.
+     *
+     * @param  string $toAdd
+     * @return string
+     */
+    protected function prepareForSecondaryTitleAddition(string $toAdd): string
+    {
+        $toAdd = trim($toAdd);
+        $length = strlen($toAdd);
+
+        if ($length > 0) {
+            $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
+            $toAdd = $pipe . $toAdd;
+        }
+
+        return $toAdd;
+    }
+
+    /**
+     * returns the current page with get variables. If a type is specified then
+     * instead of the value for that type, we add: '[[INSERT_HERE]]'
+     * @param  string $type [description]
+     * @return string       [description]
+     */
+    protected function getLinkTemplate(?string $type = '', ?string $action = null): string
+    {
+        $base = $this->dataRecord->Link($action);
+        $getVars = [];
+        foreach ($this->getSortFilterDisplayNames() as $key => $values) {
+            if ($type && $type === $key) {
+                $value = self::GET_VAR_VALUE_PLACE_HOLDER;
+            } else {
+                $value = $this->getCurrentUserPreferences($type);
+            }
+            $getVars[$values['getVariable']] = $value;
+        }
+
+        return $base . '?' . http_build_query($getVars);
+    }
+
+    protected function getSearchResultsDefaultSort($idArray, $alternativeSort = null)
+    {
+        if (! $alternativeSort) {
+            $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+            if (! $this->request->getVar($sortGetVariable)) {
+                $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
+                if ($suggestion) {
+                    $this->saveUserPreferences(['SORT' => $suggestion]);
+                }
+            }
+        }
+        return $alternativeSort;
+    }
+
+    protected function IsShowFullList(): bool
+    {
+        //to be completed
+    }
+
+    /**
+     * Unique caching key for the product list...
+     *
+     * @return string | Null
+     */
+    public function ProductGroupListCachingKey(?bool $withPageNumber = false, ?string $additionalKey = ''): string
+    {
+        $filterKey = $this->getCurrentUserPreferences('FILTER');
+        $displayKey = $this->getCurrentUserPreferences('DISPLAY');
+        $sortKey = $this->getCurrentUserPreferences('SORT');
+        $pageStart = '';
+        if ($withPageNumber) {
+            $pageStart = $this->getCurrentPageNumber();
+        }
+        return $this->cacheKey(
+            implode(
+                '_',
+                array_filter([
+                    $displayKey,
+                    $filterKey,
+                    $sortKey,
+                    $pageStart,
+                    $additionalKey,
+                ])
+            )
+        );
     }
 }

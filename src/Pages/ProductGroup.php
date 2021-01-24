@@ -24,11 +24,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
@@ -42,24 +38,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 class ProductGroup extends Page
 {
 
-    private static $template_for_selection_of_products = Template::class;
-
-    /**
-     * @var array
-     *            List of options to show products.
-     *            With it, we provide a bunch of methods to access and edit the options.
-     *            NOTE: we can not have an option that has a zero key ( 0 => "none"), as this does not work
-     *            (as it is equal to not completed yet - not yet entered in the Database).
-     */
-    protected $showProductLevels = [
-        99 => 'All Child Products (default)',
-        -2 => 'None',
-        -1 => 'All products',
-        1 => 'Direct Child Products',
-        2 => 'Two Levels Down Products',
-        3 => 'Three Levels Down Products',
-        4 => 'Four Levels Down Product',
-    ];
 
     /**
      * @var array
@@ -70,6 +48,8 @@ class ProductGroup extends Page
      * @var ProductList
      */
     protected $productList;
+
+    private static $template_for_selection_of_products = Template::class;
 
     /**
      * @var string
@@ -221,7 +201,7 @@ class ProductGroup extends Page
             Tab::create(
                 'ProductDisplay',
                 _t('ProductGroup.DISPLAY', 'Display'),
-                $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->showProductLevels),
+                $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->getShowProductLevels()),
                 HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
                 $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
             )
@@ -264,7 +244,6 @@ class ProductGroup extends Page
         return _t('ProductGroup.BUYABLES', 'Products');
     }
 
-
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -299,7 +278,6 @@ class ProductGroup extends Page
         }
     }
 
-
     /**
      * returns the template for providing related groups and products
      * @return Template
@@ -311,7 +289,14 @@ class ProductGroup extends Page
         return Injector::inst()->get($className);
     }
 
-
+    /**
+     *
+     * @return array
+     */
+    protected function getShowProductLevels(): array
+    {
+        return $this->getTemplateForProductsAndGroups()->getShowProductLevels();
+    }
 
     /**
      * @param int $default, optional 10
@@ -391,8 +376,8 @@ class ProductGroup extends Page
      *
      * To paginate this
      *
-     * @param array|string $extraFilter          Additional SQL filters to apply to the Product retrieval
-     * @param array|string $alternativeSort      Additional SQL for sorting
+     * @param array|string $extraFilter          OPTIONAL Additional SQL filters to apply to the Product retrieval
+     * @param array|string $alternativeSort      OPTIONAL Additional SQL for sorting
      *
      * @return FinalProductList
      */
@@ -507,20 +492,13 @@ class ProductGroup extends Page
     }
 
     /**
-     *
      * @param  string  $type      FILTER|SORT|DISPLAY
      * @param  boolean $showError optional
      * @return bool
      */
     public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
     {
-        $data = $this->getSortFilterDisplayNamesData();
-        if (isset($data[$type])) {
-            return true;
-        } elseif ($showError) {
-            user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY');
-        }
-        return false;
+        return $this->getTemplateForProductsAndGroups()->IsSortFilterDisplayNamesType($type, $showError);
     }
 
     /**
@@ -546,6 +524,16 @@ class ProductGroup extends Page
     public function getBuyableClassName(): string
     {
         return EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+    }
+
+    /**
+     * Do products occur in more than one group.
+     *
+     * @return bool
+     */
+    public function getProductsAlsoInOtherGroups(): bool
+    {
+        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
@@ -588,7 +576,7 @@ class ProductGroup extends Page
      * Then you must make sure MyTemplate.ss exists.
      *
      * @param string $type - FILTER | SORT | DISPLAY
-     * @param bool   $WithInherit - optional
+     * @param bool   $withInherit - optional
      *
      * @return array
      */
@@ -635,14 +623,14 @@ class ProductGroup extends Page
                 $outcome = $this->{$fieldNameOrMethod}();
                 if (is_object($outcome) && $outcome->exists()) {
                     $value = $outcome;
-                } elseif($outcome && ! is_object($outcome)) {
+                } elseif ($outcome && ! is_object($outcome)) {
                     $value = $outcome;
                 }
             } elseif ($this->hasMethod($fieldNameOrMethodWithGet)) {
                 $outcome = $this->{$fieldNameOrMethodWithGet}();
                 if (is_object($outcome) && $outcome->exists()) {
                     $value = $outcome;
-                } elseif($outcome && ! is_object($outcome)) {
+                } elseif ($outcome && ! is_object($outcome)) {
                     $value = $outcome;
                 }
             } else {
@@ -665,17 +653,7 @@ class ProductGroup extends Page
         return $this->recursiveValues[$fieldNameOrMethod];
     }
 
-    /**
-     * Do products occur in more than one group.
-     *
-     * @return bool
-     */
-    public function getProductsAlsoInOtherGroups(): bool
-    {
-        return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
-    }
-
-    protected function getSortFilterDisplayNamesData(): array
+    public function getSortFilterDisplayNamesData(): array
     {
         return $this->getTemplateForProductsAndGroups()->getData();
     }

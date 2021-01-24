@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
@@ -8,8 +8,10 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseClass;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
 
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
+
 /**
- * A wrapper for a paginated list of products which can be filtered and sorted.
+ * A wrapper for a paginated of products which can be filtered and sorted.
  *
  * What configuation can be provided
  * 1. levels to show
@@ -18,7 +20,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class FinalProductList extends ViewableData
+class FinalProductList extends ProductsAndGroupsList
 {
     use SubGroups;
 
@@ -62,11 +64,9 @@ class FinalProductList extends ViewableData
     }
 
     /**
-     *
      * @param  array|string $filter optional additional filter
      * @return self           [description]
      */
-
     public function applyFilter($filter = null): self
     {
         return $this->apply($this->getApplyerClassName('FILTER'), $filter);

@@ -63,20 +63,12 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
  **/
 class Product extends Page implements BuyableModel
 {
-
-    private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
-
-    public static function is_product_variation($buyable) : bool
-    {
-        $name = Config::inst()->get(Product::class, 'buyable_product_variation_class_name');
-
-        return class_exists($name) && is_a($buyable, $name);
-    }
-
     /**
      * @var string
      */
     protected $defaultClassNameForOrderItem = ProductOrderItem::class;
+
+    private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
 
     /**
      * Standard SS variable.
@@ -247,6 +239,13 @@ class Product extends Page implements BuyableModel
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
     private static $_calculated_price_cache = [];
+
+    public static function is_product_variation($buyable): bool
+    {
+        $name = Config::inst()->get(Product::class, 'buyable_product_variation_class_name');
+
+        return class_exists($name) && is_a($buyable, $name);
+    }
 
     /**
      * By default we search for products that are allowed to be purchased only

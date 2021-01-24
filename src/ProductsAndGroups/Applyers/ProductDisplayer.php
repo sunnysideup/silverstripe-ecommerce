@@ -8,12 +8,19 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 class ProductDisplayer extends BaseClass
 {
     /**
+     * make sure that these do not exist as a URLSegment
      * @var array
      */
     private static $options = [
         'default' => [
-            'Title' => 'Default',
+            'Title' => 'Paginated',
             'SQL' => '',
+            'IsShowFullList' => false,
+        ],
+        'all' => [
+            'Title' => 'Full List',
+            'SQL' => '',
+            'IsShowFullList' => true,
         ],
     ];
 

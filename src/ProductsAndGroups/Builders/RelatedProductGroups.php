@@ -20,10 +20,20 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class ProductGroupList
+class RelatedProductGroups
 {
     use Injectable;
     use Configurable;
+
+    protected const SHOW_PRODUCT_LEVELS = [
+        99 => 'All Child Products (default)',
+        -2 => 'None',
+        -1 => 'All products',
+        1 => 'Direct Child Products',
+        2 => 'Two Levels Down Products',
+        3 => 'Three Levels Down Products',
+        4 => 'Four Levels Down Product',
+    ];
 
     /**
      * @var SS_List
@@ -72,12 +82,18 @@ class ProductGroupList
         return $list->filter($filter);
     }
 
+    public function getShowProductLevels() : array
+    {
+        return self::SHOW_PRODUCT_LEVELS;
+    }
+
+
     /**
      * what is the the product group we are working with?
      *
      * @param ProductGroup $group
      */
-    public function setRootGroup(ProductGroup $group): ProductGroupList
+    public function setRootGroup(ProductGroup $group): RelatedProductGroups
     {
         $this->rootGroup = $group;
         $this->groups = [];
@@ -91,7 +107,7 @@ class ProductGroupList
      *
      * @return self
      */
-    public function setLevelOfProductsToShow(int $levels): ProductGroupList
+    public function setLevelOfProductsToShow(int $levels): RelatedProductGroups
     {
         $this->levelsToShow = $levels;
         $this->groups = [];
@@ -106,7 +122,7 @@ class ProductGroupList
      *
      * @return self
      */
-    public function setIncludeRoot(bool $includeRoot): ProductGroupList
+    public function setIncludeRoot(bool $includeRoot): RelatedProductGroups
     {
         $this->includeRoot = $includeRoot;
         $this->groups = [];
@@ -129,9 +145,11 @@ class ProductGroupList
         }
         if (empty($this->groups) || ! empty($filter)) {
             if ($maxRecursiveLevel === -2) {
-                $this->groups = ProductGroup::get();
-            } elseif ($maxRecursiveLevel === -1) {
+                // NONE !
                 $this->groups = ProductGroup::get()->filter(['ID' => -1]);
+                // ALL !
+            } elseif ($maxRecursiveLevel === -1) {
+                $this->groups = ProductGroup::get();
             } elseif ($this->rootGroup) {
                 $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID, []);
 

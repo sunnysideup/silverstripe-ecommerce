@@ -1,20 +1,37 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups\Traits;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 
-trait SubGroups
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
+use SilverStripe\Core\Extensible;
+
+class ProductsAndGroupsList
 {
+
+    use Configurable;
+    use Injectable;
+    use Extensible;
+
     ##########################################
     # PRODUCTS: basics
     ##########################################
 
     /**
+     * Key Method!
      * Returns a raw list of all the matching products without any pagination.
      *
      * @return SS_List
@@ -131,7 +148,7 @@ trait SubGroups
 
         $groups = ProductGroup::get()->filter(['ID' => $ids]);
 
-        return ProductGroupList::apply_default_filter_to_groups($groups);
+        return RelatedProductGroups::apply_default_filter_to_groups($groups);
     }
 
     /**

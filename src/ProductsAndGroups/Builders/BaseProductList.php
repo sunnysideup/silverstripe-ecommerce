@@ -15,14 +15,27 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
 
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
+
 /**
  * The starting base of the Products
+ *
+ * This is basically a list of products for a product group where we take into consider:
+ *
+ * a. sub-groups
+ * b. default filters (e.g. only show if AllowPurchase is true)
+ *
+ * Most of the time, you do not need to use this class at all, because the FinalProductList class
+ * creates it for you and a FinalProductList is basically like this list but then ready to apply filters and sorts.
+ *
+ * That is, a BaseProduct List CAN NOT BE CHANGE
+ * A final Product list is ALWAYS filtered and sorted.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @subpackage: Pages
  */
-class BaseProductList
+class BaseProductList extends ProductsAndGroupsList
 {
     use Configurable;
     use Injectable;
@@ -41,7 +54,7 @@ class BaseProductList
     protected $products = null;
 
     /**
-     * @var ProductGroupList
+     * @var RelatedProductGroups
      */
     protected $productGroupListProvider = null;
 
@@ -73,7 +86,7 @@ class BaseProductList
      */
     private static $default_product_filter = [
         'AllowPurchase' => 1,
-        'ShowInSearch' => 1
+        'ShowInSearch' => 1,
     ];
 
     /**
@@ -82,11 +95,11 @@ class BaseProductList
      */
     public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
-        if (! $levelOfProductsToShow) {
-            $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
-        }
         if (! $buyableClassName) {
             $buyableClassName = $rootGroup->getBuyableClassName();
+        }
+        if (! $levelOfProductsToShow) {
+            $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
         }
         $this
             //set defaults
@@ -193,9 +206,9 @@ class BaseProductList
     }
 
     /**
-     * Returns a list of {@link ProductGroupList}
+     * Returns a list of {@link RelatedProductGroups}
      *
-     * @return ProductGroupList
+     * @return RelatedProductGroups
      */
     public function getProductGroupListProvider()
     {

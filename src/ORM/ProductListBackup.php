@@ -40,7 +40,7 @@ class ProductListBackup extends ViewableData
     protected $products;
 
     /**
-     * @var ProductGroupList
+     * @var RelatedProductGroups
      */
     protected $productGroupList;
 
