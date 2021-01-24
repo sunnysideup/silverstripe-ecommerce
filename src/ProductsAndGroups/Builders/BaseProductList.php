@@ -14,10 +14,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
 
 /**
- * A wrapper for a paginated list of products which can be filtered and sorted.
- *
- * What configuation can be provided
- * 1. levels to show
+ * The starting base of the Products
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -34,7 +31,7 @@ class BaseProductList
     /**
      * @var string
      */
-    protected $buyableClassName = '';
+    protected $buyableClassName = Product::class;
 
     /**
      * @var SS_List
@@ -70,9 +67,12 @@ class BaseProductList
 
     /**
      * default filter for products: show in search and allow purchase are recommended.
-     * @var array
+     * @var array''
      */
-    private static $default_product_filter = ['AllowPurchase' => 1, 'ShowInSearch' => 1];
+    private static $default_product_filter = [
+        'AllowPurchase' => 1,
+        'ShowInSearch' => 1
+    ];
 
     /**
      * @param ProductGroup $rootGroup
