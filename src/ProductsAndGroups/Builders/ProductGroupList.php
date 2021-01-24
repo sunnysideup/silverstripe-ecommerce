@@ -62,7 +62,7 @@ class ProductGroupList
     public function __construct($productGroup, ?int $levels = 99)
     {
         $this->setRootGroup($productGroup);
-        $this->setLevelOfProductsToShow($productGroup);
+        $this->setLevelOfProductsToShow($levels);
     }
 
     public static function apply_default_filter_to_groups(SS_List $list): SS_List

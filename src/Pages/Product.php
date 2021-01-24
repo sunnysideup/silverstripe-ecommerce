@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -19,6 +18,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -63,6 +63,16 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
  **/
 class Product extends Page implements BuyableModel
 {
+
+    private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
+
+    public static function is_product_variation($buyable) : bool
+    {
+        $name = Config::inst()->get(Product::class, 'buyable_product_variation_class_name');
+
+        return class_exists($name) && is_a($buyable, $name);
+    }
+
     /**
      * @var string
      */
@@ -146,10 +156,11 @@ class Product extends Page implements BuyableModel
         'SearchFields' => [
             'type' => 'fulltext',
             'columns' => [
-                'Title',
-                'MenuTitle',
-                'Content',
-                'MetaDescription',
+                //TODO : columns don't exist on product, migrate to yml?
+                //     'Title',
+                //     'MenuTitle',
+                //     'Content',
+                //     'MetaDescription',
                 'SearchData',
             ],
         ],
@@ -236,11 +247,6 @@ class Product extends Page implements BuyableModel
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
     private static $_calculated_price_cache = [];
-
-    public function SummaryFields()
-    {
-        return Config::inst()->get(ProductGroup::class, 'summary_fields', Config::UNINHERITED);
-    }
 
     /**
      * By default we search for products that are allowed to be purchased only
@@ -767,6 +773,14 @@ class Product extends Page implements BuyableModel
     public function AddVariationsLink()
     {
         return $this->Link('selectvariation');
+    }
+
+    /**
+     * useful for Product Variations as they return the parent Product.
+     */
+    public function Product()
+    {
+        return $this;
     }
 
     /**

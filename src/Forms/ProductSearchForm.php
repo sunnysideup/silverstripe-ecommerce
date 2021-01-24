@@ -141,10 +141,9 @@ class ProductSearchForm extends Form
      *
      * @var array
      */
-    protected $extraBuyableFieldsToSearchFullText = [
+    private static $extra_buyable_fields_to_search_full_text_default = [
         Product::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
         ProductGroup::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
-        ProductVariation::class => ['FullTitle', 'Description'],
     ];
 
     /**
@@ -171,6 +170,7 @@ class ProductSearchForm extends Form
      */
     public function __construct($controller, string $name)
     {
+        $this->extraBuyableFieldsToSearchFullText = Config::inst()->get(self::class, 'extra_buyable_fields_to_search_full_text_default');
         //turn of security to allow caching of the form:
         if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
             $fields = FieldList::create(
@@ -660,12 +660,12 @@ class ProductSearchForm extends Form
     protected function getSerializedObject(?array $data = [])
     {
         $variables = get_object_vars($this);
-        foreach (array_keys($variables) as $key) {
-            if (is_object($value)) {
-                if (empty($object->ClassName) || empty($object->ID)) {
+        foreach ($variables as $key => $value) {
+            if (is_object($value) && is_a($value, DataObject::class)) {
+                if (empty($value->ClassName) || empty($value->ID)) {
                     unset($variables[$key]);
                 } else {
-                    $variables[$key] = $object->ClassName . '_' . $object->ID;
+                    $variables[$key] = $value->ClassName . '_' . $value->ID;
                 }
             }
         }

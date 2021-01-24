@@ -33,11 +33,16 @@ abstract class BaseClass
         $this->products = $this->finalProductList->getProducts();
     }
 
-    abstract public function apply($param = null): SS_List;
+    abstract public function apply($param = null): self;
 
     public function getOptions(): array
     {
         return Config::inst()->get(static::class, 'options');
+    }
+
+    public function getProducts()
+    {
+        return $this->products;
     }
 
     public function getOptionsMap(): array
@@ -90,8 +95,8 @@ abstract class BaseClass
         }
         if (is_string($option)) {
             $options = $this->getOptions();
-            if (isset($options[$option][$returnvalue])) {
-                return $options[$option][$returnvalue];
+            if (isset($options[$option][$returnValue])) {
+                return $options[$option][$returnValue];
             }
             if ($option !== $defaultOption) {
                 return $this->checkOption($defaultOption, $returnValue, $defaultOption);

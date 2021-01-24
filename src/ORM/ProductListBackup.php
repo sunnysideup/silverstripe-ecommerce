@@ -103,7 +103,7 @@ class ProductListBackup extends ViewableData
             return $options[$key][$variable];
             //all good
         }
-        $userPreference = $this->getProductListConfigDefaultValue($type);
+        $userPreference = $this->getListConfigCalculated($type);
         if ($key !== $userPreference) {
             return $this->getValueForProductListConfigType($type, $userPreference, $variable);
         }
@@ -131,14 +131,14 @@ class ProductListBackup extends ViewableData
      *
      * @return string - returns the key
      */
-    public function getProductListConfigDefaultValue(string $type): string
+    public function getListConfigCalculated(string $type): string
     {
         if (! isset($this->productListConfigDefaultValueCache[$type])) {
             $options = $this->getConfigOptionsCache($type);
             $dbVariableName = self::SORT_DISPLAY_NAMES[$type]['dbFieldName'];
             $dbValue = $this->rootGroup->{$dbVariableName};
             if ($dbValue === 'inherit' && $parent = $this->rootGroup->ParentGroup()) {
-                $this->productListConfigDefaultValueCache[$type] = $parent->getProductListConfigDefaultValue($type);
+                $this->productListConfigDefaultValueCache[$type] = $parent->getListConfigCalculated($type);
             } elseif ($dbValue && array_key_exists($dbValue, $options)) {
                 $this->productListConfigDefaultValueCache[$type] = $dbValue;
             } else {

@@ -36,11 +36,11 @@ class ProductFilter extends BaseClass
      *
      * @return SS_List
      */
-    public function apply($filter = null): SS_List
+    public function apply($filter = null): self
     {
         $group = $this->findGroupId($filter);
         if ($group) {
-            $filter = ['ID' => $group->ProductsShowable()];
+            $filter = ['ID' => $group->getFinalProductList()->column('ID')];
         } else {
             $filter = $this->checkOption($filter);
         }
@@ -50,7 +50,7 @@ class ProductFilter extends BaseClass
             $this->products = $this->products->where(Convert::raw2sql($filter));
         }
 
-        return $this->products;
+        return $this;
     }
 
     public function getTitle($param = null): string
@@ -60,6 +60,11 @@ class ProductFilter extends BaseClass
             return $group->MenuTitle;
         }
         return $this->checkOption($param, 'Title');
+    }
+
+    protected function findGroupId($filter): int
+    {
+        return $this->findGroup($filter) ?? 0;
     }
 
     protected function findGroup($filter): ?ProductGroup

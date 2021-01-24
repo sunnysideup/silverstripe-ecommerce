@@ -1,8 +1,9 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\Helpers;
+namespace Sunnysideup\Ecommerce\Api;
 
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -132,6 +133,18 @@ class EcommerceCache implements Flushable
      */
     protected function cacheKeyRefiner($cacheKey): string
     {
-        return $cacheKey . '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
+        $cacheKey .= '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
+        $arrayOfReservedChars = [
+            '{',
+            '}',
+            '(',
+            ')',
+            '/',
+            '\\',
+            '@',
+            ':',
+            '.',
+        ];
+        return str_replace($arrayOfReservedChars, '_', $cacheKey);
     }
 }

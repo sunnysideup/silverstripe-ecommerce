@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use SilverStripe\Core\Convert;
+
 /**
  * provides data on the user
  */
@@ -36,7 +38,7 @@ class ProductSorter extends BaseClass
      *
      * @return SS_List
      */
-    public function apply($sort = null): SS_List
+    public function apply($sort = null): self
     {
         $sort = $this->checkOption($sort);
         if (is_array($sort) && count($sort)) {
@@ -46,6 +48,6 @@ class ProductSorter extends BaseClass
         }
         // @todo
 
-        return $this->products;
+        return $this;
     }
 }

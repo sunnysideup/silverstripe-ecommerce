@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
 /**
  * keeps track of the current settings for FILTER / SORT / DISPLAY for user
@@ -27,8 +27,8 @@ class UserPreference
         $getVariableNameSort = $this->getSortFilterDisplayNames('SORT', 'getVariable');
 
         return $this->Link() . '?' .
-            $getVariableNameFilter . '=' . $this->getProductListConfigDefaultValue('FILTER') . $ampersand .
-            $getVariableNameSort . '=' . $this->getProductListConfigDefaultValue('SORT') . $ampersand .
+            $getVariableNameFilter . '=' . $this->getListConfigCalculated('FILTER') . $ampersand .
+            $getVariableNameSort . '=' . $this->getListConfigCalculated('SORT') . $ampersand .
             'reload=1';
     }
 
@@ -93,7 +93,7 @@ class UserPreference
     /**
      * Checks for the most applicable user preferences for this user:
      * 1. session value
-     * 2. getProductListConfigDefaultValue.
+     * 2. getListConfigCalculated.
      *
      * @param string $type - FILTER | SORT | DISPLAY
      *
@@ -107,7 +107,7 @@ class UserPreference
         if ($sessionValue = $this->getRequest()->getSession()->get('ProductGroup_' . $sessionName)) {
             $key = Convert::raw2sql($sessionValue);
         } else {
-            $key = $this->getProductListConfigDefaultValue($type);
+            $key = $this->getListConfigCalculated($type);
         }
         return $this->getBestKeyAndValidateKey($type, $key);
     }

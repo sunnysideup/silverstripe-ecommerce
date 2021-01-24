@@ -61,7 +61,7 @@ abstract class OrderEmail extends Email
     {
         //get required files
         /* UPGRADE TODO: find better solution for the following (without hardcoded path) */
-        $cssFileLocation = $baseFolder . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
+        $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
@@ -192,6 +192,7 @@ abstract class OrderEmail extends Email
         if (is_a($orderStep, EcommerceConfigClassNames::getName(OrderStep::class))) {
             return $orderStep->hasBeenSent($this->order);
         }
+        return false;
 
         user_error('expects orderstep');
     }

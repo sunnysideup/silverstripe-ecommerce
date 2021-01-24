@@ -14,10 +14,10 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use Sunnysideup\Ecommerce\Helpers\EcommerceCache;
 
 class ProductGroupController extends PageController
 {
@@ -225,6 +225,15 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * alias
+     * @return
+     */
+    public function getProductList()
+    {
+        return $this->getFinalProductList();
+    }
+
+    /**
      * Return the products for this group.
      *
      * This is the call that is made from the template and has the actual final
@@ -236,10 +245,10 @@ class ProductGroupController extends PageController
     {
         $this->addSecondaryTitle();
         $this->cachingRelatedJavascript();
-        $list = $this->{$this}->getCachedProductList();
+        $list = $this->getCachedProductList();
         if (! $list) {
             $list = $this->getFinalProductList()->getProducts();
-            EcommerceCache::inst()->save($key, $list->column('ID'));
+            EcommerceCache::inst()->save($this->ProductGroupListCachingKey(), $list->column('ID'));
         }
         $this->getFinalProductList()
             ->applyFilter($this->getCurrentUserPreferences('FILTER'))
@@ -254,7 +263,7 @@ class ProductGroupController extends PageController
      *
      * @return string | Null
      */
-    public function ProductGroupListCachingKey(?bool $withPageNumber = true): string
+    public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         if ($this->ProductGroupListAreCacheable()) {
             $filterKey = $this->getCurrentUserPreferences('FILTER');
@@ -363,17 +372,17 @@ class ProductGroupController extends PageController
 
     public function HasFilter(): bool
     {
-        return $this->getCurrentUserPreferences('FILTER') !== $this->getProductListConfigDefaultValue('FILTER');
+        return $this->getCurrentUserPreferences('FILTER') !== $this->getListConfigCalculated('FILTER');
     }
 
     public function HasSort(): bool
     {
-        return $this->getCurrentUserPreferences('SORT') !== $this->getProductListConfigDefaultValue('SORT');
+        return $this->getCurrentUserPreferences('SORT') !== $this->getListConfigCalculated('SORT');
     }
 
     public function HasDisplay(): bool
     {
-        return $this->getCurrentUserPreferences('DISPLAY') !== $this->getProductListConfigDefaultValue('DISPLAY');
+        return $this->getCurrentUserPreferences('DISPLAY') !== $this->getListConfigCalculated('DISPLAY');
     }
 
     public function HasFilterOrSort(): bool
@@ -423,6 +432,11 @@ class ProductGroupController extends PageController
         return 1;
     }
 
+    public function getUserPreferencesTitle(string $type, $value)
+    {
+        return 'To be completed';
+    }
+
     /**
      * returns the current filter applied to the list
      * in a human readable string.
@@ -465,14 +479,14 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * short-cut for getProductListConfigDefaultValue("DISPLAY")
+     * short-cut for getListConfigCalculated("DISPLAY")
      * for use in templtes.
      *
      * @return string - key
      */
     public function MyDefaultDisplayStyle(): string
     {
-        return $this->getProductListConfigDefaultValue('DISPLAY');
+        return $this->getListConfigCalculated('DISPLAY');
     }
 
     /**
@@ -587,7 +601,7 @@ class ProductGroupController extends PageController
     {
         $groupArray = $this->searchResultsProductGroupsArrayFromSession();
         if (! empty($groupArray)) {
-            $sortStatement = ArrayMethods::create_where_from_id_array($groupArray, ProductGroup::class);
+            $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
 
             return ProductGroup::get()
                 ->filter(['ID' => $groupArray, 'ShowInSearch' => 1])
@@ -611,7 +625,7 @@ class ProductGroupController extends PageController
                     $onlySearchTitle = 'Last Search Results';
                 }
             }
-            $defaultKey = $this->getProductListConfigDefaultValue('FILTER');
+            $defaultKey = $this->getListConfigCalculated('FILTER');
             $this->searchForm = ProductSearchForm::create(
                 $this,
                 'ProductSearchForm',
@@ -699,6 +713,14 @@ class ProductGroupController extends PageController
         return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
     }
 
+    public function saveUserPreferences($filter = [], $sort = [], $display = '')
+    {
+    }
+
+    public function getCurrentUserPreferences()
+    {
+    }
+
     protected function getCachedProductList(): ? DataList
     {
         $key = $this->ProductGroupListCachingKey(false);
@@ -706,7 +728,7 @@ class ProductGroupController extends PageController
             $ids = EcommerceCache::inst()->retrieve($key);
             return Product::get()
                 ->filter(['ID' => $ids])
-                ->sort(ArrayMethods::create_where_from_id_array($ids, Product::class));
+                ->sort(ArrayMethods::create_sort_statement_from_id_array($ids, Product::class));
         }
 
         return null;
@@ -722,11 +744,11 @@ class ProductGroupController extends PageController
     {
         $base = $this->dataRecord->Link($action);
         $getVars = [];
-        foreach ($this->getSortFilterDisplayNames as $key => $values) {
+        foreach ($this->getSortFilterDisplayNames() as $key => $values) {
             if ($type && $type === $key) {
                 $value = self::GET_VAR_VALUE_PLACE_HOLDER;
             } else {
-                $value = $this->{$this}->getCurrentUserPreferences($type);
+                $value = $this->getCurrentUserPreferences($type);
             }
             $getVars[$values['getVariable']] = $value;
         }
@@ -808,7 +830,7 @@ class ProductGroupController extends PageController
     //
     //     if ($groups) {
     //         foreach ($groups as $item) {
-    //             $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getProductListConfigDefaultValue('FILTER'));
+    //             $arrayOfIDs = $item->currentInitialProductsAsCachedArray($this->getListConfigCalculated('FILTER'));
     //             $newArray = array_intersect_key(
     //                 $arrayOfIDs,
     //                 $baseArray
@@ -952,7 +974,7 @@ class ProductGroupController extends PageController
      *
      * @return PaginatedList
      */
-    protected function paginateList(SS_List $list)
+    protected function paginateList($list)
     {
         if ($list && $list->count()) {
             if ($this->IsShowFullList()) {

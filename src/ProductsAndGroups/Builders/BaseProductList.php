@@ -2,8 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -127,7 +129,7 @@ class BaseProductList
      *
      * @return self
      */
-    public function setRootGroup(ProductGroup $rootGroup): ProductList
+    public function setRootGroup(ProductGroup $rootGroup): self
     {
         $this->rootGroup = $rootGroup;
 
@@ -142,7 +144,7 @@ class BaseProductList
      *
      * @return self
      */
-    public function setBuyableClass(string $buyableClassName): ProductList
+    public function setBuyableClass(string $buyableClassName): self
     {
         $this->buyableClassName = $buyableClassName;
 
@@ -154,9 +156,9 @@ class BaseProductList
      *
      * @return self
      */
-    public function setLevelOfProductsToShow(int $levelOfProductsToShow): ProductList
+    public function setLevelOfProductsToShow(int $levelOfProductsToShow): self
     {
-        $this->getProductGroupList()->setLevelOfProductsToShow($levelOfProductsToShow);
+        $this->getProductGroupListProvider()->setLevelOfProductsToShow($levelOfProductsToShow);
 
         return $this;
     }
@@ -198,9 +200,8 @@ class BaseProductList
     public function getProductGroupListProvider()
     {
         if (! $this->productGroupListProvider) {
-            $className = $this->rootGroup->getProductGroupListClassName();
-
-            $this->productGroupListProvider = Injector::inst()->get($className, $this->rootGroup);
+            $className = $this->rootGroup->getTemplateForProductsAndGroups()->getProductGroupListClassName();
+            $this->productGroupListProvider = Injector::inst()->get($className, true, [$this->rootGroup]);
         }
 
         return $this->productGroupListProvider;
@@ -217,7 +218,7 @@ class BaseProductList
     /**
      * @return self
      */
-    protected function applyDefaultFilters(): ProductList
+    protected function applyDefaultFilters(): self
     {
         $this->products = self::apply_default_filter_to_products($this->products);
 
@@ -231,7 +232,7 @@ class BaseProductList
      *
      * @return self
      */
-    protected function applyGroupFilter(): ProductList
+    protected function applyGroupFilter(): self
     {
         $levelToShow = $this->getProductGroupListProvider()->getLevelOfProductsToShow();
         $groupFilter = '';
@@ -282,10 +283,13 @@ class BaseProductList
      *
      * @return self
      */
-    protected function removeExcludedProducts(): ProductList
+    protected function removeExcludedProducts(): self
     {
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
-            $productsThatNeedChecking = $this->products->exclude(['ID' => self::$checked_products]);
+            $productsThatNeedChecking = $this->products;
+            if (is_array(self::$checked_products) && count(self::$checked_products)) {
+                $productsThatNeedChecking = $productsThatNeedChecking->exclude(['ID' => self::$checked_products]);
+            }
             foreach ($productsThatNeedChecking as $buyable) {
                 self::$checked_products[$buyable->ID] = $buyable->ID;
                 if (! $buyable->canPurchase()) {
@@ -324,7 +328,7 @@ class BaseProductList
 
     protected function hasCache(): bool
     {
-        return EcommerceCache::inst()->get($this->getCachekey());
+        return EcommerceCache::inst()->hasCache($this->getCachekey());
     }
 
     protected function loadCache()

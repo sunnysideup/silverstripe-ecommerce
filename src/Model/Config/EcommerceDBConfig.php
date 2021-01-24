@@ -842,4 +842,39 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         return $this->UseThisOne ? 'YES' : 'NO';
     }
+
+
+    /**
+     * get final value for recursive lookups
+     * @param  string $fieldNameOrMethod
+     * @param  mixed  $default
+     * @return mixed
+     */
+    protected function recursiveValue(string $fieldNameOrMethod, $default = null)
+    {
+        $value = null;
+        $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
+        if ($this->hasMethod($fieldNameOrMethod)) {
+            $outcome = $this->{$fieldNameOrMethod}();
+            if (is_object($outcome) && $outcome->exists()) {
+                $value = $outcome;
+            } elseif($outcome && ! is_object($outcome)) {
+                $value = $outcome;
+            }
+        } elseif ($this->hasMethod($fieldNameOrMethodWithGet)) {
+            $outcome = $this->{$fieldNameOrMethodWithGet}();
+            if (is_object($outcome) && $outcome->exists()) {
+                $value = $outcome;
+            } elseif($outcome && ! is_object($outcome)) {
+                $value = $outcome;
+            }
+        } else {
+            $value = $this->{$fieldNameOrMethod} ?? null;
+        }
+        if (! $value) {
+            $value = $default;
+        }
+
+        return $value;
+    }
 }
