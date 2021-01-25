@@ -850,7 +850,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @param  mixed  $default
      * @return mixed
      */
-    protected function recursiveValue(string $fieldNameOrMethod, $default = null)
+    public function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
         $value = null;
         $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;

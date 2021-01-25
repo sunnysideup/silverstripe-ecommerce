@@ -648,12 +648,12 @@ class ProductGroup extends Page
             } else {
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
-            if (! $value || $value = 'inherit') {
+            if (! $value || $value === 'inherit') {
                 $parent = $this->ParentGroup();
                 if ($parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);
                 } else {
-                    $value = EcommerceConfig::inst()->{$fieldNameOrMethod};
+                    $value = EcommerceConfig::inst()->recursiveValue($fieldNameOrMethod, $default);
                 }
             }
             if (! $value) {
