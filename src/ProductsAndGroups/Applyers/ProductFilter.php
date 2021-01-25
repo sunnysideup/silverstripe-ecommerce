@@ -7,7 +7,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 /**
  * provides data on the user
  */
-class ProductFilter extends BaseClass
+class ProductFilter extends BaseApplyer
 {
     /**
      * make sure that these do not exist as a URLSegment
@@ -28,6 +28,28 @@ class ProductFilter extends BaseClass
             ],
         ],
     ];
+
+    /**
+     * @param  string             $segment expected format: my-product-category,123 (URLSegment, ID)
+     * @return ProductGroup|null
+     */
+    public static function get_group_from_url_segment(string $segment): ?ProductGroup
+    {
+        $segment = trim($segment, '/');
+        if (is_string($filter) && strpos($filter, ',') !== false) {
+            $parts = explode(',', $filter);
+            if (count($parts) === 3) {
+                $parts = [$part[1], $part[2]];
+            }
+            if (count($parts) === 2) {
+                $groupId = intval($parts[1]);
+                if ($groupId) {
+                    return ProductGroup::get()->byId($groupId);
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * Filter the list of products
@@ -55,7 +77,11 @@ class ProductFilter extends BaseClass
 
     public function getTitle($param = null): string
     {
-        $group = $this->findGroupId($filter);
+        $groupId = $this->findGroupId($param);
+        $group = DataObject::get_one(
+            ProductGroup::class,
+            ['ID' => $groupId - 0]
+        );
         if ($group) {
             return $group->MenuTitle;
         }
@@ -69,15 +95,6 @@ class ProductFilter extends BaseClass
 
     protected function findGroup($filter): ?ProductGroup
     {
-        if (is_string($filter) && strpos($filter, ',') !== false) {
-            $parts = explode(',', $filter);
-            if (count($parts) === 2) {
-                $groupId = intval($parts[1]);
-                if ($groupId) {
-                    return ProductGroup::get()->byId($groupId);
-                }
-            }
-        }
-        return null;
+        return self::get_group_from_url_segment($filter);
     }
 }

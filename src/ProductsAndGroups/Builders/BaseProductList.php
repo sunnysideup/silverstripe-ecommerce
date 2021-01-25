@@ -1,10 +1,8 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
@@ -13,30 +11,35 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
+
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
 
 /**
- * A wrapper for a paginated list of products which can be filtered and sorted.
+ * The starting base of the Products
  *
- * What configuation can be provided
- * 1. levels to show
+ * This is basically a list of products for a product group where we take into consider:
+ *
+ * a. sub-groups
+ * b. default filters (e.g. only show if AllowPurchase is true)
+ *
+ * Most of the time, you do not need to use this class at all, because the FinalProductList class
+ * creates it for you and a FinalProductList is basically like this list but then ready to apply filters and sorts.
+ *
+ * That is, a BaseProduct List CAN NOT BE CHANGE
+ * A final Product list is ALWAYS filtered and sorted.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @subpackage: Pages
  */
-class BaseProductList
+class BaseProductList extends ProductsAndGroupsList
 {
-    use Configurable;
-    use Injectable;
-    use SubGroups;
-
     protected static $cache = [];
 
     /**
      * @var string
      */
-    protected $buyableClassName = '';
+    protected $buyableClassName = Product::class;
 
     /**
      * @var SS_List
@@ -44,7 +47,7 @@ class BaseProductList
     protected $products = null;
 
     /**
-     * @var ProductGroupList
+     * @var RelatedProductGroups
      */
     protected $productGroupListProvider = null;
 
@@ -72,9 +75,12 @@ class BaseProductList
 
     /**
      * default filter for products: show in search and allow purchase are recommended.
-     * @var array
+     * @var array''
      */
-    private static $default_product_filter = ['AllowPurchase' => 1, 'ShowInSearch' => 1];
+    private static $default_product_filter = [
+        'AllowPurchase' => 1,
+        'ShowInSearch' => 1,
+    ];
 
     /**
      * @param ProductGroup $rootGroup
@@ -82,11 +88,11 @@ class BaseProductList
      */
     public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
-        if (! $levelOfProductsToShow) {
-            $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
-        }
         if (! $buyableClassName) {
             $buyableClassName = $rootGroup->getBuyableClassName();
+        }
+        if (! $levelOfProductsToShow) {
+            $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
         }
         $this
             //set defaults
@@ -193,15 +199,16 @@ class BaseProductList
     }
 
     /**
-     * Returns a list of {@link ProductGroupList}
+     * Returns a list of {@link RelatedProductGroups}
      *
-     * @return ProductGroupList
+     * @return RelatedProductGroups
      */
     public function getProductGroupListProvider()
     {
         if (! $this->productGroupListProvider) {
             $className = $this->rootGroup->getTemplateForProductsAndGroups()->getProductGroupListClassName();
-            $this->productGroupListProvider = Injector::inst()->get($className, true, [$this->rootGroup]);
+            //note, CAN NOT BE A SINGLETON if we want to pass it variables!
+            $this->productGroupListProvider = Injector::inst()->get($className, false, [$this->rootGroup]);
         }
 
         return $this->productGroupListProvider;

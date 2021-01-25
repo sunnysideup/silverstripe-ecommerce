@@ -2,62 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
-use Page;
-use SilverStripe\Assets\Image;
-use SilverStripe\Control\Controller;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\DropdownField;
-
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\Tab;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DB;
-use SilverStripe\Security\Permission;
-
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
-use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
-use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductGroupList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Templats\UserPreference;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
 
 class Template
 {
     use Configurable;
     use Injectable;
-
-    /**
-     * @var string
-     */
-    private static $product_group_list_class_name = ProductGroupList::class;
-
-    /**
-     * @var string
-     */
-    private static $base_product_list_class_name = BaseProductList::class;
-
-    /**
-     * @var string
-     */
-    private static $final_product_list_class_name = FinalProductList::class;
-    /**
-     * @var string
-     */
-    private static $user_preferences_class_name = UserPreference::class;
 
     /**
      * list of sort / filter / display variables.
@@ -70,6 +28,7 @@ class Template
             'configName' => 'filter_options',
             'getVariable' => 'filter',
             'dbFieldName' => 'DefaultFilter',
+            'isFullListVariable' => null,
             'defaultApplyer' => ProductSorter::class,
         ],
         'SORT' => [
@@ -78,6 +37,7 @@ class Template
             'getVariable' => 'sort',
             'dbFieldName' => 'DefaultSortOrder',
             'translationCode' => 'SORT_BY',
+            'isFullListVariable' => null,
             'defaultApplyer' => ProductFilter::class,
         ],
         'DISPLAY' => [
@@ -86,9 +46,30 @@ class Template
             'getVariable' => 'display',
             'dbFieldName' => 'DisplayStyle',
             'translationCode' => 'DISPLAY_STYLE',
+            'isFullListVariable' => 'IsShowFullList',
             'defaultApplyer' => ProductDisplayer::class,
         ],
     ];
+
+    /**
+     * @var string
+     */
+    private static $product_group_list_class_name = RelatedProductGroups::class;
+
+    /**
+     * @var string
+     */
+    private static $base_product_list_class_name = BaseProductList::class;
+
+    /**
+     * @var string
+     */
+    private static $final_product_list_class_name = FinalProductList::class;
+
+    /**
+     * @var string
+     */
+    private static $user_preferences_class_name = UserPreference::class;
 
     public function getData()
     {
@@ -114,7 +95,6 @@ class Template
     {
         return $this->Config()->get('user_preferences_class_name');
     }
-
 
     /**
      * Returns the full sortFilterDisplayNames set, a subset, or one value
@@ -148,5 +128,39 @@ class Template
         return $newData;
     }
 
+    public function getShowProductLevels(): array
+    {
+        $className = $this->getProductGroupListClassName();
 
+        return Injector::inst()->get($className)->getShowProductLevels();
+    }
+
+    /**
+     * @param  string  $type      FILTER|SORT|DISPLAY
+     * @param  boolean $showError optional
+     * @return bool
+     */
+    public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
+    {
+        $data = $this->getSortFilterDisplayNamesData();
+        if (isset($data[$type])) {
+            return true;
+        } elseif ($showError) {
+            user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY');
+        }
+        return false;
+    }
+
+    /**
+     * cache of all the data associated with a type
+     * @param  string $type
+     * @return array
+     */
+    public function getConfigOptionsCache(string $type): array
+    {
+        if (! isset($this->configOptionsCache[self::class])) {
+            $this->configOptionsCache[$type] = EcommerceConfig::get(self::class, 'options');
+        }
+        return $this->configOptionsCache[$type];
+    }
 }

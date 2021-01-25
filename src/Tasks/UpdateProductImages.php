@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use SilverStripe\Assets\Image;
 use SilverStripe\Dev\BuildTask;
+
 use SilverStripe\ORM\DB;
 
 /**

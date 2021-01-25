@@ -7,7 +7,7 @@ use SilverStripe\Core\Convert;
 /**
  * provides data on the user
  */
-class ProductSorter extends BaseClass
+class ProductSorter extends BaseApplyer
 {
     /**
      * @var array

@@ -1,15 +1,14 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\ORM\SS_List;
-use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseClass;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
 
 /**
- * A wrapper for a paginated list of products which can be filtered and sorted.
+ * A wrapper for a paginated of products which can be filtered and sorted.
  *
  * What configuation can be provided
  * 1. levels to show
@@ -18,10 +17,8 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class FinalProductList extends ViewableData
+class FinalProductList extends ProductsAndGroupsList
 {
-    use SubGroups;
-
     protected $baseProductList = null;
 
     protected $rootGroup = null;
@@ -62,11 +59,9 @@ class FinalProductList extends ViewableData
     }
 
     /**
-     *
      * @param  array|string $filter optional additional filter
      * @return self           [description]
      */
-
     public function applyFilter($filter = null): self
     {
         return $this->apply($this->getApplyerClassName('FILTER'), $filter);
@@ -137,26 +132,26 @@ class FinalProductList extends ViewableData
         return $obj->getOptionsList($linkTemplate, $currentKey, $ajaxify);
     }
 
-    public function getDefaultFilterTitle(): array
+    public function getDefaultFilterTitle(?string $value = ''): array
     {
-        return $this->getTitle($this->getApplyerClassName('FILTER'));
+        return $this->getTitle($this->getApplyerClassName('FILTER'), $value);
     }
 
-    public function getDefaultSortOrderTitle(): array
+    public function getDefaultSortOrderTitle(?string $value = ''): array
     {
-        return $this->getTitle($this->getApplyerClassName('SORT'));
+        return $this->getTitle($this->getApplyerClassName('SORT'), $value);
     }
 
-    public function getDisplayStyleTitle(): array
+    public function getDisplayStyleTitle(?string $value = ''): array
     {
-        return $this->getTitle($this->getApplyerClassName('DISPLAY'));
+        return $this->getTitle($this->getApplyerClassName('DISPLAY'), $value);
     }
 
-    public function getTitle(string $className): string
+    public function getTitle(string $className, ?string $value = ''): string
     {
         $obj = $this->getApplyer($className);
 
-        return $obj->getTitle();
+        return $obj->getTitle($value);
     }
 
     /**
@@ -190,20 +185,48 @@ class FinalProductList extends ViewableData
         return $this->baseProductList->getGroups($maxRecursiveLevel, $filter);
     }
 
+    /**
+     * Returns the Title for a type key.
+     *
+     * If no key is provided then the default key is used.
+     *
+     * runs a method: getDefaultFilterTitle, getDefaultSortOrderTitle, or getDisplayStyleTitle
+     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
+     *
+     * @param string $type - FILTER | SORT | DISPLAY
+     *
+     * @return string
+     */
+    public function getUserPreferencesTitle($type, $value)
+    {
+        $method = 'get' . $this->controller->getSortFilterDisplayNames($type, 'dbFieldName') . 'Title';
+        $value = $this->{$method}($value);
+        if ($value) {
+            return $value;
+        }
+
+        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
+    }
+
+    /**
+     * todo: CHECK!
+     * @param  string $type
+     * @return string
+     */
     protected function getApplyerClassName(string $type): string
     {
         if ($this->rootGroup->IsSortFilterDisplayNamesType($type)) {
             return $this->rootGroup->getSortFilterDisplayNames($type, 'defaultApplyer');
         }
 
-        return $obj;
+        return user_error();
     }
 
     protected function getApplyer(string $className)
     {
         $obj = new $className($this);
-        if (! $obj instanceof BaseClass) {
-            user_error($className . ' needs to be an instance of ' . BaseClass::class);
+        if (! $obj instanceof BaseApplyer) {
+            user_error($className . ' needs to be an instance of ' . BaseApplyer::class);
         }
 
         return $obj;

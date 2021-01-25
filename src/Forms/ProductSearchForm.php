@@ -136,17 +136,6 @@ class ProductSearchForm extends Form
     protected $additionalGetParameters = '';
 
     /**
-     * List of additional fields that should be searched full text.
-     * We are matching this against the buyable class name.
-     *
-     * @var array
-     */
-    private static $extra_buyable_fields_to_search_full_text_default = [
-        Product::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
-        ProductGroup::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
-    ];
-
-    /**
      * Maximum number of results to return
      * we limit this because otherwise the system will choke
      * the assumption is that no user is really interested in looking at
@@ -156,6 +145,17 @@ class ProductSearchForm extends Form
      * @var int
      */
     protected $maximumNumberOfResults = 1000;
+
+    /**
+     * List of additional fields that should be searched full text.
+     * We are matching this against the buyable class name.
+     *
+     * @var array
+     */
+    private static $extra_buyable_fields_to_search_full_text_default = [
+        Product::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
+        ProductGroup::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
+    ];
 
     /**
      * @var bool

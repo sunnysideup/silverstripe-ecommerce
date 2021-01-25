@@ -5,7 +5,7 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 /**
  * provides data on the user
  */
-class ProductListUserPreference extends BaseClass
+class ProductListUserPreference extends BaseApplyer
 {
     protected $userPreferences = [];
 
