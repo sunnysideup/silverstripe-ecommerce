@@ -5,10 +5,8 @@ namespace Sunnysideup\Ecommerce\Pages;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
@@ -80,8 +78,8 @@ class ProductGroupController extends PageController
                 [
                     'FILTER' => [
                         'type' => 'filterforgroup',
-                        'value' =>  $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID
-                    ]
+                        'value' => $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID,
+                    ],
                 ]
             );
         }

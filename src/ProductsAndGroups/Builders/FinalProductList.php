@@ -7,7 +7,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
 
-
 /**
  * A wrapper for a paginated of products which can be filtered and sorted.
  *
@@ -20,7 +19,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
  */
 class FinalProductList extends ProductsAndGroupsList
 {
-
     protected $baseProductList = null;
 
     protected $rootGroup = null;
@@ -188,6 +186,29 @@ class FinalProductList extends ProductsAndGroupsList
     }
 
     /**
+     * Returns the Title for a type key.
+     *
+     * If no key is provided then the default key is used.
+     *
+     * runs a method: getDefaultFilterTitle, getDefaultSortOrderTitle, or getDisplayStyleTitle
+     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
+     *
+     * @param string $type - FILTER | SORT | DISPLAY
+     *
+     * @return string
+     */
+    public function getUserPreferencesTitle($type, $value)
+    {
+        $method = 'get' . $this->controller->getSortFilterDisplayNames($type, 'dbFieldName') . 'Title';
+        $value = $this->{$method}($value);
+        if ($value) {
+            return $value;
+        }
+
+        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
+    }
+
+    /**
      * todo: CHECK!
      * @param  string $type
      * @return string
@@ -209,28 +230,5 @@ class FinalProductList extends ProductsAndGroupsList
         }
 
         return $obj;
-    }
-
-    /**
-     * Returns the Title for a type key.
-     *
-     * If no key is provided then the default key is used.
-     *
-     * runs a method: getDefaultFilterTitle, getDefaultSortOrderTitle, or getDisplayStyleTitle
-     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     */
-    public function getUserPreferencesTitle($type, $value)
-    {
-        $method = 'get' . $this->controller->getSortFilterDisplayNames($type, 'dbFieldName') . 'Title';
-        $value = $this->{$method}($value);
-        if ($value) {
-            return $value;
-        }
-
-        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
     }
 }

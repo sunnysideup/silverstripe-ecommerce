@@ -3,8 +3,6 @@
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
@@ -36,7 +34,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
  */
 class BaseProductList extends ProductsAndGroupsList
 {
-
     protected static $cache = [];
 
     /**

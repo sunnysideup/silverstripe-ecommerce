@@ -4,11 +4,12 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\Core\Extensible;
+
 /**
  * A wrapper for a list of {@link Sunnysideup\Ecommerce\Pages\ProductGroup}
  * instances.

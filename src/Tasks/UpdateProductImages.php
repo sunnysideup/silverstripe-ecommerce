@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
-
 use SilverStripe\Assets\Image;
+use SilverStripe\Dev\BuildTask;
+
+use SilverStripe\ORM\DB;
 
 /**
  * works out how many products have been sold, per product.

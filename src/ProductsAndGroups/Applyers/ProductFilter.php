@@ -9,29 +9,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class ProductFilter extends BaseApplyer
 {
-
-    /**
-     *
-     * @param  string             $segment expected format: my-product-category,123 (URLSegment, ID)
-     * @return ProductGroup|null
-     */
-    public static function get_group_from_url_segment(string $segment) : ?ProductGroup
-    {
-        $segment = trim($segment, '/');
-        if (is_string($filter) && strpos($filter, ',') !== false) {
-            $parts = explode(',', $filter);
-            if (count($parts) === 3) {
-                $parts = [$part[1], $part[2]];
-            }
-            if (count($parts) === 2) {
-                $groupId = intval($parts[1]);
-                if ($groupId) {
-                    return ProductGroup::get()->byId($groupId);
-                }
-            }
-        }
-        return null;
-    }
     /**
      * make sure that these do not exist as a URLSegment
      * @var array
@@ -51,6 +28,28 @@ class ProductFilter extends BaseApplyer
             ],
         ],
     ];
+
+    /**
+     * @param  string             $segment expected format: my-product-category,123 (URLSegment, ID)
+     * @return ProductGroup|null
+     */
+    public static function get_group_from_url_segment(string $segment): ?ProductGroup
+    {
+        $segment = trim($segment, '/');
+        if (is_string($filter) && strpos($filter, ',') !== false) {
+            $parts = explode(',', $filter);
+            if (count($parts) === 3) {
+                $parts = [$part[1], $part[2]];
+            }
+            if (count($parts) === 2) {
+                $groupId = intval($parts[1]);
+                if ($groupId) {
+                    return ProductGroup::get()->byId($groupId);
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * Filter the list of products

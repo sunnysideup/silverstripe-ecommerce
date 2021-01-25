@@ -2,13 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
-
-use SilverStripe\Control\HTTPRequest;
-
 use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Configurable;
+
+use SilverStripe\Core\Convert;
+
+use SilverStripe\Core\Injector\Injectable;
 
 use SilverStripe\ORM\ArrayList;
 
@@ -21,7 +21,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 class UserPreference
 {
-
     use Configurable;
     use Injectable;
 
@@ -47,11 +46,34 @@ class UserPreference
     protected $useSessionPerPage = false;
 
     /**
-     *
+     * keep a store for every FILTER|SORT|DISPLAY setting?
+     * @var bool
+     */
+    protected $useSession = false;
+
+    /**
+     * @var HTTPRequest|null
+     */
+    protected $request = null;
+
+    /**
+     * @var ContentController|null
+     */
+    protected $controller = null;
+
+    protected $dataRecord = null;
+
+    /**
+     * here is where we save the GET variables and any other settings for FILTER|SORT|DISPLAY
+     * @var array
+     */
+    protected $userPreferences = [];
+
+    /**
      * @param  bool $useSessionPerPage
      * @return self
      */
-    public function setUseSessionPerPage(?bool $useSessionPerPage) : self
+    public function setUseSessionPerPage(?bool $useSessionPerPage): self
     {
         $this->useSessionPerPage = $useSessionPerPage;
 
@@ -59,17 +81,10 @@ class UserPreference
     }
 
     /**
-     * keep a store for every FILTER|SORT|DISPLAY setting?
-     * @var bool
-     */
-    protected $useSession = false;
-
-    /**
-     *
      * @param  bool $useSession  [description]
      * @return self              [description]
      */
-    public function setUseSession(?bool $useSession) : self
+    public function setUseSession(?bool $useSession): self
     {
         $this->useSession = $useSession;
 
@@ -77,20 +92,13 @@ class UserPreference
     }
 
     /**
-     *
-     * @var HTTPRequest|null
-     */
-    protected $request = null;
-
-    /**
-     *
-     * @param  HTTPRequest  $useSession  [description]
+     * @param  HTTPRequest  $request  [description]
      * @return self                      [description]
      */
-    public function setRequest($request) : self
+    public function setRequest($request): self
     {
         if (! $request instanceof HTTPRequest) {
-            user_error('Please make sure that you provide an instance of a HTTPRequest '. print_r($request,1));
+            user_error('Please make sure that you provide an instance of a HTTPRequest ' . print_r($request, 1));
         }
         $this->request = $request;
 
@@ -98,36 +106,27 @@ class UserPreference
     }
 
     /**
-     *
-     * @var ContentController|null
-     */
-    protected $controller = null;
-
-    /**
-     *
      * @param  ContentController  $controller
      * @return self
      */
-    public function setController($controller) : self
+    public function setController($controller): self
     {
         if (! $controller instanceof ContentController) {
-            user_error('Please make sure that you provide an instance of a content controller '. print_r($controller,1));
+            user_error('Please make sure that you provide an instance of a content controller ' . print_r($controller, 1));
         }
         $this->controller = $controller;
 
         return $this;
     }
-    protected $dataRecord = null;
 
     /**
-     *
      * @param  ProductGroup       $dataRecord [description]
      * @return self               [description]
      */
-    public function setDataRecord($dataRecord) : self
+    public function setDataRecord($dataRecord): self
     {
         if (! $dataRecord instanceof ContentController) {
-            user_error('Please make sure that you provide an instance of a ProductGroup '. print_r($dataRecord,1));
+            user_error('Please make sure that you provide an instance of a ProductGroup ' . print_r($dataRecord, 1));
         }
         $this->dataRecord = $dataRecord;
 
@@ -146,7 +145,7 @@ class UserPreference
             $pageStart = $this->controller->getCurrentPageNumber();
         }
         $pageId = 0;
-        if($this->useSessionPerPage) {
+        if ($this->useSessionPerPage) {
             $pageId = $this->dataRecord->ID;
         }
         return $this->cacheKey(
@@ -162,128 +161,6 @@ class UserPreference
                 ]
             )
         );
-    }
-
-    /**
-     * here is where we save the GET variables and any other settings for FILTER|SORT|DISPLAY
-     * @var array
-     */
-    protected $userPreferences = [];
-
-    /**
-     * Checks out a bunch of $_GET variables that are used to work out user
-     * preferences.
-     *
-     * Some of these are saved to session.
-     *
-     * @param array $overrideArray - optional - override $_GET variable settings
-     * an array can be like this:
-     * ```php
-     *     FILTER => 'abc'
-     * ```
-     * OR
-     * ```php
-     *     FILTER => ['type' => 'foo', 'value' => 'bar']
-     * ```
-     * @return self
-     */
-    protected function saveUserPreferences(?array $overrideArray = []) : self
-    {
-        $sortFilterDisplayNames = $this->controller->getSortFilterDisplayNames();
-
-        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
-            $getVariableName = $oneTypeArray['getVariable'];
-            if (isset($overrideArray[$getVariableName])) {
-                $newPreference = $overrideArray[$getVariableName];
-            } elseif(! isset($this->userPreferences[$type])) {
-                $newPreference = $this->request->getVar($getVariableName);
-            }
-            if($newPreference) {
-                $this->userPreferences[$type] = $newPreference;
-            }
-            if($this->useSession) {
-                $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-                if($this->useSessionPerPage) {
-                    $sessionName .= '_' . $this->dataRecord->ID;
-                }
-                $sessionValue = $this->controller->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
-            }
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Checks for the most applicable user preferences for this user:
-     * 1. session value
-     * 2. getListConfigCalculated.
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     *
-     * @todo: move to controller?
-     */
-    protected function getCurrentUserPreferences($type)
-    {
-        $key = '';
-        if($this->useSession) {
-            $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-            if($this->useSessionPerPage) {
-                $sessionName .= '_' . $this->dataRecord->ID;
-            }
-            $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
-            $key = Convert::raw2sql($sessionValue);
-        }
-        if(! $key) {
-            $key = $this->userPreferences[$type];
-        }
-        if(! $key) {
-            $key = $this->dataRecord->getListConfigCalculated($type);
-        }
-        return $this->getBestKeyAndValidateKey($type, $key);
-
-    }
-
-    /**
-     * Provides a dataset of links for a particular user preference.
-     *
-     * @param string $type        SORT | FILTER | DISPLAY - e.g. sort_options
-     *
-     * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
-     */
-    protected function userPreferencesLinks($type)
-    {
-        // get basics
-        $sortFilterDisplayNames = $this->controller->getSortFilterDisplayNames();
-        $options = $this->getConfigOptions($type);
-
-        // if there is only one option then do not bother
-        if (count($options) < 2) {
-            return;
-        }
-
-        // get more config names
-        $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
-        $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
-        $arrayList = ArrayList::create();
-
-        if (count($options)) {
-            foreach ($options as $key => $array) {
-                $link = '?' . $getVariableName . "=${key}";
-                user_error('redo with link template');
-                $link = $this->Link() . $link;
-
-                $arrayList->push(ArrayData::create([
-                    'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
-                    'Link' => $link,
-                    'SelectKey' => $key,
-                ]));
-            }
-        }
-
-        return $arrayList;
     }
 
     /**
@@ -341,39 +218,6 @@ class UserPreference
     }
 
     /**
-     * removes any spaces from the 'toAdd' bit and adds the pipe if there is
-     * anything to add at all.  Through the lang files, you can change the pipe
-     * symbol to anything you like.
-     *
-     * @param  string $toAdd the string to add
-     * @return string the string to add, cleaned up and with prefix and so on added.
-     */
-    protected function addToTitle(string $toAdd): string
-    {
-        $toAdd = trim($toAdd);
-        $length = strlen($toAdd);
-
-        if ($length > 0) {
-            $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
-            $toAdd = $pipe . $toAdd;
-        }
-
-        return $toAdd;
-    }
-
-    /**
-     *
-     * @param string $field
-     * @param string $title
-     */
-    protected function addTitleToField(string $field, string $title)
-    {
-        if (isset($this->controller->{$field})) {
-            $this->controller->{$field} .= $secondaryTitle;
-        }
-    }
-
-    /**
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'
      * @param  string $type [description]
@@ -399,8 +243,158 @@ class UserPreference
         return $base . '?' . http_build_query($getVars);
     }
 
+    public function getBestKeyAndValidateKey($type, $key)
+    {
+        return $key;
+    }
+
     /**
+     * Checks out a bunch of $_GET variables that are used to work out user
+     * preferences.
      *
+     * Some of these are saved to session.
+     *
+     * @param array $overrideArray - optional - override $_GET variable settings
+     * an array can be like this:
+     * ```php
+     *     FILTER => 'abc'
+     * ```
+     * OR
+     * ```php
+     *     FILTER => ['type' => 'foo', 'value' => 'bar']
+     * ```
+     * @return self
+     */
+    protected function saveUserPreferences(?array $overrideArray = []): self
+    {
+        $sortFilterDisplayNames = $this->controller->getSortFilterDisplayNames();
+
+        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
+            $getVariableName = $oneTypeArray['getVariable'];
+            if (isset($overrideArray[$getVariableName])) {
+                $newPreference = $overrideArray[$getVariableName];
+            } elseif (! isset($this->userPreferences[$type])) {
+                $newPreference = $this->request->getVar($getVariableName);
+            }
+            if ($newPreference) {
+                $this->userPreferences[$type] = $newPreference;
+            }
+            if ($this->useSession) {
+                $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
+                if ($this->useSessionPerPage) {
+                    $sessionName .= '_' . $this->dataRecord->ID;
+                }
+                $sessionValue = $this->controller->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Checks for the most applicable user preferences for this user:
+     * 1. session value
+     * 2. getListConfigCalculated.
+     *
+     * @param string $type - FILTER | SORT | DISPLAY
+     *
+     * @return string
+     *
+     * @todo: move to controller?
+     */
+    protected function getCurrentUserPreferences($type)
+    {
+        $key = '';
+        if ($this->useSession) {
+            $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
+            if ($this->useSessionPerPage) {
+                $sessionName .= '_' . $this->dataRecord->ID;
+            }
+            $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
+            $key = Convert::raw2sql($sessionValue);
+        }
+        if (! $key) {
+            $key = $this->userPreferences[$type];
+        }
+        if (! $key) {
+            $key = $this->dataRecord->getListConfigCalculated($type);
+        }
+        return $this->getBestKeyAndValidateKey($type, $key);
+    }
+
+    /**
+     * Provides a dataset of links for a particular user preference.
+     *
+     * @param string $type        SORT | FILTER | DISPLAY - e.g. sort_options
+     *
+     * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+     */
+    protected function userPreferencesLinks($type)
+    {
+        // get basics
+        $sortFilterDisplayNames = $this->controller->getSortFilterDisplayNames();
+        $options = $this->getConfigOptions($type);
+
+        // if there is only one option then do not bother
+        if (count($options) < 2) {
+            return;
+        }
+
+        // get more config names
+        $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
+        $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
+        $arrayList = ArrayList::create();
+
+        if (count($options)) {
+            foreach ($options as $key => $array) {
+                $link = '?' . $getVariableName . "=${key}";
+                user_error('redo with link template');
+                $link = $this->Link() . $link;
+
+                $arrayList->push(ArrayData::create([
+                    'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
+                    'Link' => $link,
+                    'SelectKey' => $key,
+                ]));
+            }
+        }
+
+        return $arrayList;
+    }
+
+    /**
+     * removes any spaces from the 'toAdd' bit and adds the pipe if there is
+     * anything to add at all.  Through the lang files, you can change the pipe
+     * symbol to anything you like.
+     *
+     * @param  string $toAdd the string to add
+     * @return string the string to add, cleaned up and with prefix and so on added.
+     */
+    protected function addToTitle(string $toAdd): string
+    {
+        $toAdd = trim($toAdd);
+        $length = strlen($toAdd);
+
+        if ($length > 0) {
+            $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
+            $toAdd = $pipe . $toAdd;
+        }
+
+        return $toAdd;
+    }
+
+    /**
+     * @param string $field
+     * @param string $title
+     */
+    protected function addTitleToField(string $field, string $title)
+    {
+        if (isset($this->controller->{$field})) {
+            $this->controller->{$field} .= $secondaryTitle;
+        }
+    }
+
+    /**
      * @param  array $idArray         optional array of IDs to sort by
      * @param  mixed $alternativeSort optional alternative sort
      * @return mixed
@@ -423,11 +417,4 @@ class UserPreference
     {
         return $this->controller->getSortFilterDisplayNames('SORT', 'isFullListVariable') ? true : false;
     }
-
-    public function getBestKeyAndValidateKey($type, $key)
-    {
-        return $key;
-    }
-
-
 }
