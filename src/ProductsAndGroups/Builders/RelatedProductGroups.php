@@ -8,7 +8,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
+use SilverStripe\Core\Extensible;
 /**
  * A wrapper for a list of {@link Sunnysideup\Ecommerce\Pages\ProductGroup}
  * instances.
@@ -24,6 +24,7 @@ class RelatedProductGroups
 {
     use Injectable;
     use Configurable;
+    use Extensible;
 
     protected const SHOW_PRODUCT_LEVELS = [
         99 => 'All Child Products (default)',
@@ -82,11 +83,10 @@ class RelatedProductGroups
         return $list->filter($filter);
     }
 
-    public function getShowProductLevels() : array
+    public function getShowProductLevels(): array
     {
         return self::SHOW_PRODUCT_LEVELS;
     }
-
 
     /**
      * what is the the product group we are working with?
@@ -147,7 +147,7 @@ class RelatedProductGroups
             if ($maxRecursiveLevel === -2) {
                 // NONE !
                 $this->groups = ProductGroup::get()->filter(['ID' => -1]);
-                // ALL !
+            // ALL !
             } elseif ($maxRecursiveLevel === -1) {
                 $this->groups = ProductGroup::get();
             } elseif ($this->rootGroup) {

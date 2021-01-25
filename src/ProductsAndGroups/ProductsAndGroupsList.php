@@ -2,26 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\SS_List;
+
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\Versioned\Versioned;
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
-use SilverStripe\Core\Extensible;
-
-class ProductsAndGroupsList
+abstract class ProductsAndGroupsList
 {
-
     use Configurable;
     use Injectable;
     use Extensible;

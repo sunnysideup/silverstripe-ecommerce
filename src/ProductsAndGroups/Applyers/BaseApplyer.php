@@ -10,7 +10,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 /**
  * provides data on the user
  */
-abstract class BaseClass
+abstract class BaseApplyer
 {
     use Injectable;
     use Configurable;

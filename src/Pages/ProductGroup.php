@@ -37,8 +37,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
  */
 class ProductGroup extends Page
 {
-
-
     /**
      * @var array
      */
@@ -290,15 +288,6 @@ class ProductGroup extends Page
     }
 
     /**
-     *
-     * @return array
-     */
-    protected function getShowProductLevels(): array
-    {
-        return $this->getTemplateForProductsAndGroups()->getShowProductLevels();
-    }
-
-    /**
      * @param int $default, optional 10
      * @return int
      **/
@@ -536,6 +525,19 @@ class ProductGroup extends Page
         return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
+    public function getSortFilterDisplayNamesData(): array
+    {
+        return $this->getTemplateForProductsAndGroups()->getData();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getShowProductLevels(): array
+    {
+        return $this->getTemplateForProductsAndGroups()->getShowProductLevels();
+    }
+
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
     {
         // display style
@@ -651,10 +653,5 @@ class ProductGroup extends Page
         }
 
         return $this->recursiveValues[$fieldNameOrMethod];
-    }
-
-    public function getSortFilterDisplayNamesData(): array
-    {
-        return $this->getTemplateForProductsAndGroups()->getData();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
@@ -13,7 +13,6 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Traits\SubGroups;
 
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
 
@@ -37,9 +36,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
  */
 class BaseProductList extends ProductsAndGroupsList
 {
-    use Configurable;
-    use Injectable;
-    use SubGroups;
 
     protected static $cache = [];
 
@@ -214,7 +210,8 @@ class BaseProductList extends ProductsAndGroupsList
     {
         if (! $this->productGroupListProvider) {
             $className = $this->rootGroup->getTemplateForProductsAndGroups()->getProductGroupListClassName();
-            $this->productGroupListProvider = Injector::inst()->get($className, true, [$this->rootGroup]);
+            //note, CAN NOT BE A SINGLETON if we want to pass it variables!
+            $this->productGroupListProvider = Injector::inst()->get($className, false, [$this->rootGroup]);
         }
 
         return $this->productGroupListProvider;

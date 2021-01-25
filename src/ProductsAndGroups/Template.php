@@ -3,14 +3,14 @@
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Templats\UserPreference;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
 
 class Template
 {
@@ -28,6 +28,7 @@ class Template
             'configName' => 'filter_options',
             'getVariable' => 'filter',
             'dbFieldName' => 'DefaultFilter',
+            'isFullListVariable' => null,
             'defaultApplyer' => ProductSorter::class,
         ],
         'SORT' => [
@@ -36,6 +37,7 @@ class Template
             'getVariable' => 'sort',
             'dbFieldName' => 'DefaultSortOrder',
             'translationCode' => 'SORT_BY',
+            'isFullListVariable' => null,
             'defaultApplyer' => ProductFilter::class,
         ],
         'DISPLAY' => [
@@ -44,6 +46,7 @@ class Template
             'getVariable' => 'display',
             'dbFieldName' => 'DisplayStyle',
             'translationCode' => 'DISPLAY_STYLE',
+            'isFullListVariable' => 'IsShowFullList',
             'defaultApplyer' => ProductDisplayer::class,
         ],
     ];
@@ -125,7 +128,7 @@ class Template
         return $newData;
     }
 
-    public function getShowProductLevels() : array
+    public function getShowProductLevels(): array
     {
         $className = $this->getProductGroupListClassName();
 
@@ -146,5 +149,18 @@ class Template
             user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY');
         }
         return false;
+    }
+
+    /**
+     * cache of all the data associated with a type
+     * @param  string $type
+     * @return array
+     */
+    public function getConfigOptionsCache(string $type): array
+    {
+        if (! isset($this->configOptionsCache[self::class])) {
+            $this->configOptionsCache[$type] = EcommerceConfig::get(self::class, 'options');
+        }
+        return $this->configOptionsCache[$type];
     }
 }

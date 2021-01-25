@@ -60,7 +60,7 @@
   "autoload": {
     "psr-4": {
       "Sunnysideup\\Ecommerce\\": "src/",
-       "Sunnysideup\\Ecommerce\\Tests": "tests/"
+      "Sunnysideup\\Ecommerce\\Tests": "tests/"
     }
   }
 }

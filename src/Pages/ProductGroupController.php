@@ -4,14 +4,13 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -20,10 +19,10 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+
 class ProductGroupController extends PageController
 {
-    public const GET_VAR_VALUE_PLACE_HOLDER = '[[INSERT_VALUE_HERE]]';
-
     protected $searchForm = null;
 
     /**
@@ -47,13 +46,9 @@ class ProductGroupController extends PageController
      */
     protected $searchResultHash = '';
 
-    /**
-     * variable to make sure secondary title only gets
-     * added once.
-     *
-     * @var bool
-     */
     protected $secondaryTitleHasBeenAdded = false;
+
+    protected $userPreferencesObject = null;
 
     private static $allowed_actions = [
         'debug' => 'ADMIN',
@@ -79,16 +74,16 @@ class ProductGroupController extends PageController
      */
     public function filterforgroup($request)
     {
-        list($urlSegment, $id) = explode(',', Convert::raw2sql($request->param('ID')));
-        $id = intval($id);
-        if ($urlSegment && $id) {
-            $otherProductGroup = DataObject::get_one(
-                ProductGroup::class,
-                ['ID' => $id]
+        $otherProductGroup = ProductFilter::get_group_from_url_segment($request->param('ID'));
+        if ($otherProductGroup) {
+            $this->saveUserPreferences(
+                [
+                    'FILTER' => [
+                        'type' => 'filterforgroup',
+                        'value' =>  $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID
+                    ]
+                ]
             );
-            if ($otherProductGroup) {
-                $this->saveUserPreferences(['FILTER' => 'filterforgroup,' .$otherProductGroup->URLSegment . ',' . $otherProductGroup->ID]);
-            }
         }
         return $this->defaultReturn();
     }
@@ -115,7 +110,6 @@ class ProductGroupController extends PageController
 
         return [];
     }
-
 
     ###################################
     # template methods
@@ -176,7 +170,7 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\PaginatedList
      */
-    public function Products() : PaginatedList
+    public function Products(): PaginatedList
     {
         $this->addSecondaryTitle();
         $list = $this->getCachedProductList();
@@ -344,7 +338,7 @@ class ProductGroupController extends PageController
         return $this->DisplayLinks()->count() > 1;
     }
 
-    public function getCurrentPageNumber() : int
+    public function getCurrentPageNumber(): int
     {
         if ($pageStart = intval($this->request->getVar('start'))) {
             return ($pageStart / $this->getProductsPerPage()) + 1;
@@ -353,9 +347,9 @@ class ProductGroupController extends PageController
         return 1;
     }
 
-    public function getUserPreferencesTitle(string $type, $value) : string
+    public function getUserPreferencesTitle(string $type, $value): string
     {
-        return 'To be completed';
+        return $this->getFinalProductList()->getUserPreferencesTitle($type, $value);
     }
 
     /**
@@ -474,6 +468,11 @@ class ProductGroupController extends PageController
         return $this->getLinkTemplate('', $action);
     }
 
+    public function ResetPreferencesLink($action = null): string
+    {
+        return parent::link() . '?reload=1';
+    }
+
     /**
      * Link to the search results.
      *
@@ -566,7 +565,7 @@ class ProductGroupController extends PageController
      */
     public function ShowSearchFormImmediately(): bool
     {
-        if($this->ShowSearchFormAtAll()) {
+        if ($this->ShowSearchFormAtAll()) {
             if ($this->IsSearchResults()) {
                 return true;
             }
@@ -642,7 +641,7 @@ class ProductGroupController extends PageController
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'
      * @param  string $type    OPTIONAL: FILTER|SORT|DISPLAY
-     * @return string $action  OPTIONAL: action - e.g. searchresults
+     * @return string  OPTIONAL: action - e.g. searchresults
      */
     protected function getLinkTemplate(?string $type = '', ?string $action = null): string
     {
@@ -696,7 +695,7 @@ class ProductGroupController extends PageController
      *
      * @return PaginatedList
      */
-    protected function paginateList($list) : ?PaginatedList
+    protected function paginateList($list): ?PaginatedList
     {
         if ($list && $list->count()) {
             $obj = PaginatedList::create($list, $this->request);
@@ -723,14 +722,14 @@ class ProductGroupController extends PageController
         return [];
     }
 
-    protected $userPreferencesObject = null;
-
     protected function getUserPreferencesClass()
     {
         if ($this->userPreferencesObject === null) {
             $className = $this->getTemplateForProductsAndGroups()->getUserPreferencesClassName();
-            $this->userPreferencesObject = Injector::inst()->get($className);
-            $this->userPreferencesObject->setRequest($this->request);
+            $this->userPreferencesObject = Injector::inst()->get($className)
+                ->setController($this)
+                ->setDataErecord($this->dataRecord)
+                ->setRequest($this->getRequest());
         }
 
         return $this->userPreferencesObject;
