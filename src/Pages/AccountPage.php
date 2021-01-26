@@ -109,7 +109,7 @@ class AccountPage extends Page
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
