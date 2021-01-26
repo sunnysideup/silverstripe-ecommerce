@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\ProductsAndGroups;
+namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
@@ -9,11 +9,12 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\SS_List;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
-abstract class ProductsAndGroupsList
+abstract class AbstractProductsAndGroupsList
 {
     use Configurable;
     use Injectable;
@@ -22,6 +23,30 @@ abstract class ProductsAndGroupsList
     ##########################################
     # PRODUCTS: basics
     ##########################################
+
+    /**
+     * @var SS_List
+     */
+    protected $products = null;
+
+    /**
+     * @var ProductGroup|null
+     */
+    protected $rootGroup = null;
+
+    /**
+     * Set the root {@link ProductGroup} to display the products from.
+     * @param ProductGroup $rootGroup
+     *
+     * @return self
+     */
+    public function setRootGroup(ProductGroup $rootGroup): self
+    {
+        $this->rootGroup = $rootGroup;
+        ClassHelpers::check_for_instance_of($rootGroup, ProductGroup::class, true);
+
+        return $this;
+    }
 
     /**
      * Key Method!
@@ -34,8 +59,17 @@ abstract class ProductsAndGroupsList
         return $this->products;
     }
 
-    public function getProductsPaginated()
+    /**
+     * Key Method!
+     * Returns a raw list of all the matching products without any pagination.
+     *
+     * @return SS_List
+     */
+    public function setProducts($products): self
     {
+        $this->products = $products;
+
+        return $this;
     }
 
     public function getProductIds()
@@ -219,5 +253,15 @@ abstract class ProductsAndGroupsList
     public function getDirectParentGroupsExclusive(): DataList
     {
         return $this->getDirectParentGroupsInclusive()->exclude(['ID' => $this->getAlsoShowProductsProductGroupsExclusive()]);
+    }
+
+    /**
+     * @return Template
+     */
+    protected function getTemplateForProductsAndGroups()
+    {
+        $obj = $this->rootGroup->getTemplateForProductsAndGroups();
+        ClassHelpers::check_for_instance_of($obj, Template::class, true);
+        return $obj;
     }
 }

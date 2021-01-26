@@ -12,8 +12,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
-use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
-
 /**
  * The starting base of the Products
  *
@@ -32,19 +30,18 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
  * @package: ecommerce
  * @subpackage: Pages
  */
-class BaseProductList extends ProductsAndGroupsList
+class BaseProductList extends AbstractProductsAndGroupsList
 {
-    protected static $cache = [];
+    /**
+     * keep the lists in memory
+     * @var array
+     */
+    protected static $singleton_caches = [];
 
     /**
      * @var string
      */
     protected $buyableClassName = Product::class;
-
-    /**
-     * @var SS_List
-     */
-    protected $products = null;
 
     /**
      * @var RelatedProductGroups
@@ -69,17 +66,22 @@ class BaseProductList extends ProductsAndGroupsList
      */
     protected $parentGroupIds = [];
 
+    /**
+     * @var int[]
+     */
     protected static $excluded_products = [];
 
+    /**
+     * @var int[]
+     */
     protected static $checked_products = [];
 
     /**
      * default filter for products: show in search and allow purchase are recommended.
-     * @var array''
+     * @var array'
      */
     private static $default_product_filter = [
         'AllowPurchase' => 1,
-        'ShowInSearch' => 1,
     ];
 
     /**
@@ -102,9 +104,7 @@ class BaseProductList extends ProductsAndGroupsList
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
-            $this
-                //create list
-                ->buildDefaultList()
+            $this->buildDefaultList()
                 ->applyDefaultFilters()
                 ->applyGroupFilter()
                 ->removeExcludedProducts()
@@ -112,7 +112,7 @@ class BaseProductList extends ProductsAndGroupsList
         }
     }
 
-    public static function apply_default_filter_to_products(SS_List $list): SS_List
+    public static function apply_default_filter_to_products($list): SS_List
     {
         $filter = Config::inst()->get(self::class, 'default_product_filter');
 
@@ -121,25 +121,12 @@ class BaseProductList extends ProductsAndGroupsList
 
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
-        $cacheKey = implode('_', array_filter([$rootGroup->ID, $buyableClassName, $levelOfProductsToShow]));
-        if (! isset(self::$cache[$cacheKey])) {
-            self::$cache[$cacheKey] = new BaseProductList($rootGroup, $buyableClassName, $levelOfProductsToShow);
+        $cacheKey = implode('_', array_filter([$rootGroup->ID, $rootGroup->ClassName, $buyableClassName, $levelOfProductsToShow]));
+        if (! isset(self::$singleton_caches[$cacheKey])) {
+            self::$singleton_caches[$cacheKey] = new BaseProductList($rootGroup, $buyableClassName, $levelOfProductsToShow);
         }
 
-        return self::$cache[$cacheKey];
-    }
-
-    /**
-     * Set the root {@link ProductGroup} to display the products from.
-     * @param ProductGroup $rootGroup
-     *
-     * @return self
-     */
-    public function setRootGroup(ProductGroup $rootGroup): self
-    {
-        $this->rootGroup = $rootGroup;
-
-        return $this;
+        return self::$singleton_caches[$cacheKey];
     }
 
     /**
@@ -170,6 +157,17 @@ class BaseProductList extends ProductsAndGroupsList
     }
 
     /**
+     * how many children, grand-children, etc.. levels do we provide?
+     * @return int
+     */
+    public function getLevelOfProductsToShow(int $levelOfProductsToShow): self
+    {
+        $this->getProductGroupListProvider()->getLevelOfProductsToShow();
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getParentGroupIds(): array
@@ -191,11 +189,14 @@ class BaseProductList extends ProductsAndGroupsList
      * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
      * @param string|array   $filter             - additional filter to be added
      *
-     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
+     * @return SS_List (ProductGroups)
      */
-    public function getGroups(int $maxRecursiveLevel, $filter = null): ArrayList
+    public function getGroups(int $maxRecursiveLevel, $filter = null)
     {
-        return $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
+        $list = $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
+        ClassHelpers::check_for_instance_of($list, SS_List::class);
+
+        return $list;
     }
 
     /**
@@ -214,7 +215,10 @@ class BaseProductList extends ProductsAndGroupsList
         return $this->productGroupListProvider;
     }
 
-    protected function buildDefaultList()
+    /**
+     * create a starting point
+     */
+    protected function buildDefaultList(): self
     {
         $buyableClassName = $this->buyableClassName;
         $this->products = $buyableClassName::get();
@@ -223,7 +227,7 @@ class BaseProductList extends ProductsAndGroupsList
     }
 
     /**
-     * @return self
+     * add default filters.
      */
     protected function applyDefaultFilters(): self
     {
@@ -233,11 +237,7 @@ class BaseProductList extends ProductsAndGroupsList
     }
 
     /**
-     * @SEE: important notes at the top of this file / class
-     *
-     * IMPORTANT: Adjusts allProducts and returns it...
-     *
-     * @return self
+     * apply group filters to products
      */
     protected function applyGroupFilter(): self
     {
@@ -251,7 +251,8 @@ class BaseProductList extends ProductsAndGroupsList
             //note the smartness here -1 == 1 || -1 == -2
             $groupFilter = ' (' . $levelToShow . ' = -1) ';
         } elseif ($levelToShow === 0) {
-            $groupFilter = '"ParentID" < 0';
+            //backup - same as 1, but without also show!
+            $groupFilter = '"ParentID" = ' . $this->rootGroup->ID;
         } else {
             $this->parentGroupIds[$this->rootGroup->ID] = $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
@@ -269,13 +270,14 @@ class BaseProductList extends ProductsAndGroupsList
                 }
             }
             $obj = Injector::inst()->get($this->buyableClassName);
-            $tableName = $obj->baseTable() . $this->getStage();
-            $siteTreeTable = 'SiteTree' . $this->getStage();
-            $groupFilter = '
-                "' . $siteTreeTable . '"."ParentID" IN (' . implode(',', $groupIDs) . ')
+            $stage = $this->getStage();
+            $tableName = $obj->baseTable() . $stage;
+            $siteTreeTable = 'SiteTree' . $stage;
+            $groupFilter = '(
+                "' . $siteTreeTable . '"."ParentID" IN (' . implode(',', $this->parentGroupIds) . ')
                 OR
                 "' . $tableName . '"."ID" IN (' . implode($this->alsoShowProductsIds) . ')
-            ';
+            )';
         }
         $this->products = $this->products->where($groupFilter);
 
@@ -287,8 +289,6 @@ class BaseProductList extends ProductsAndGroupsList
      *
      * We all make a record of all the products that are in the current list
      * For efficiency sake, we do both these things at the same time.
-     *
-     * @return self
      */
     protected function removeExcludedProducts(): self
     {
@@ -306,10 +306,10 @@ class BaseProductList extends ProductsAndGroupsList
         }
 
         if (! empty($this->blockedProductsIds)) {
-            self::$excluded_products = array_merge(
+            self::$excluded_products = array_unique(array_merge(
                 self::$excluded_products,
                 $this->blockedProductsIds
-            );
+            ));
             $this->products = $this->products
                 ->exclude(['ID' => self::$excluded_products]);
         }
@@ -333,12 +333,24 @@ class BaseProductList extends ProductsAndGroupsList
         return $stage;
     }
 
+    /**
+     * is there a cache available?
+     * @return bool
+     */
     protected function hasCache(): bool
     {
         return EcommerceCache::inst()->hasCache($this->getCachekey());
     }
 
-    protected function loadCache()
+    /**
+     * loads the following variables:
+     * - products
+     * - blockedProductsIds
+     * - blockedProductsIds
+     * - alsoShowProductsIds
+     * - parentGroupIds
+     */
+    protected function loadCache(): self
     {
         $productIds = EcommerceCache::inst()->retrieve($this->getCachekey());
         if (empty($productIds) || ! is_array($productIds)) {
@@ -349,22 +361,40 @@ class BaseProductList extends ProductsAndGroupsList
         $this->blockedProductsIds = EcommerceCache::inst()->retrieve($this->getCachekey('blockedProductsIds'));
         $this->alsoShowProductsIds = EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowProductsIds'));
         $this->parentGroupIds = EcommerceCache::inst()->retrieve($this->getCachekey('parentGroupIds'));
+
+        return $this;
     }
 
-    protected function storeInCache()
+    /**
+     * sets the following variables:
+     * - products
+     * - blockedProductsIds
+     * - blockedProductsIds
+     * - alsoShowProductsIds
+     * - parentGroupIds
+     */
+    protected function storeInCache(): self
     {
         EcommerceCache::inst()->save($this->getCachekey(), $this->products->column('ID'));
         EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds'), $this->blockedProductsIds);
         EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
+
+        return $this;
     }
 
-    protected function getCachekey($add = ''): string
+    /**
+     * @param  string $add key to add
+     *
+     * @return string
+     */
+    protected function getCachekey(?string $add = ''): string
     {
         return implode(
             '_',
             [
                 $this->rootGroup->ID,
+                $this->rootGroup->ClassName,
                 $this->buyableClassName,
                 $this->getProductGroupListProvider()->getLevelOfProductsToShow(),
                 $add,

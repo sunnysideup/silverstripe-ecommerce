@@ -19,6 +19,8 @@ class ProductFilter extends BaseApplyer
             'SQL' => [
                 'ShowInSearch' => 1,
             ],
+            'RequiresData' => false,
+            'IsShowFullList' => false,
         ],
         'featuredonly' => [
             'Title' => 'Featured Only',
@@ -26,6 +28,8 @@ class ProductFilter extends BaseApplyer
                 'ShowInSearch' => 1,
                 'FeaturedProduct' => 1,
             ],
+            'RequiresData' => false,
+            'IsShowFullList' => false,
         ],
     ];
 
@@ -36,10 +40,10 @@ class ProductFilter extends BaseApplyer
     public static function get_group_from_url_segment(string $segment): ?ProductGroup
     {
         $segment = trim($segment, '/');
-        if (is_string($filter) && strpos($filter, ',') !== false) {
-            $parts = explode(',', $filter);
+        if (is_string($segment) && strpos($segment, ',') !== false) {
+            $parts = explode(',', $segment);
             if (count($parts) === 3) {
-                $parts = [$part[1], $part[2]];
+                $parts = [$parts[1], $parts[2]];
             }
             if (count($parts) === 2) {
                 $groupId = intval($parts[1]);
@@ -52,24 +56,26 @@ class ProductFilter extends BaseApplyer
     }
 
     /**
-     * Filter the list of products
+     * @param string         $key     optional key
+     * @param string|array   $params  optional params to go with key
      *
-     * @param array|string $filter
-     *
-     * @return SS_List
+     * @return self
      */
-    public function apply($filter = null): self
+    public function apply($key = null, $params = null): self
     {
-        $group = $this->findGroupId($filter);
+        $this->selectedOption = $key;
+        $this->selectedOptionParams = $params;
+
+        $group = $this->findGroupId(${$key});
         if ($group) {
             $filter = ['ID' => $group->getFinalProductList()->column('ID')];
         } else {
-            $filter = $this->checkOption($filter);
+            $filter = $this->getSql($key, $params);
         }
         if (is_array($filter) && count($filter)) {
             $this->products = $this->products->filter($filter);
         } elseif ($filter) {
-            $this->products = $this->products->where(Convert::raw2sql($filter));
+            $this->products = $this->products->where($filter);
         }
 
         return $this;
@@ -88,12 +94,12 @@ class ProductFilter extends BaseApplyer
         return $this->checkOption($param, 'Title');
     }
 
-    protected function findGroupId($filter): int
+    protected function findGroupId(string $filter): int
     {
         return $this->findGroup($filter) ?? 0;
     }
 
-    protected function findGroup($filter): ?ProductGroup
+    protected function findGroup(string $filter): ?ProductGroup
     {
         return self::get_group_from_url_segment($filter);
     }

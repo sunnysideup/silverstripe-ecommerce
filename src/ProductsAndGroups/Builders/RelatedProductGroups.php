@@ -4,10 +4,11 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\SS_List;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -25,16 +26,21 @@ class RelatedProductGroups
 {
     use Injectable;
     use Configurable;
-    use Extensible;
 
+    /**
+     * list that a Product Page can choose from ...
+     * @var array
+     */
     protected const SHOW_PRODUCT_LEVELS = [
         99 => 'All Child Products (default)',
         -2 => 'None',
         -1 => 'All products',
+        0 => 'Direct Child Products (exclude otherwise linked)',
         1 => 'Direct Child Products',
-        2 => 'Two Levels Down Products',
-        3 => 'Three Levels Down Products',
-        4 => 'Four Levels Down Product',
+        2 => 'Upto Two Levels Down Products',
+        3 => 'Upto Three Levels Down Products',
+        4 => 'Upto Four Levels Down Products',
+        5 => 'Upto Five Levels Down Products',
     ];
 
     /**
@@ -77,10 +83,14 @@ class RelatedProductGroups
         $this->setLevelOfProductsToShow($levels);
     }
 
-    public static function apply_default_filter_to_groups(SS_List $list): SS_List
+    /**
+     * @param  SS_List $list [description]
+     * @return SS_List
+     */
+    public static function apply_default_filter_to_groups($list)
     {
+        ClassHelpers::check_for_instance_of($list, SS_List::class, true);
         $filter = Config::inst()->get(self::class, 'default_product_group_filter');
-
         return $list->filter($filter);
     }
 
@@ -94,7 +104,7 @@ class RelatedProductGroups
      *
      * @param ProductGroup $group
      */
-    public function setRootGroup(ProductGroup $group): RelatedProductGroups
+    public function setRootGroup(ProductGroup $group): self
     {
         $this->rootGroup = $group;
         $this->groups = [];
@@ -108,7 +118,7 @@ class RelatedProductGroups
      *
      * @return self
      */
-    public function setLevelOfProductsToShow(int $levels): RelatedProductGroups
+    public function setLevelOfProductsToShow(int $levels): self
     {
         $this->levelsToShow = $levels;
         $this->groups = [];
@@ -123,7 +133,7 @@ class RelatedProductGroups
      *
      * @return self
      */
-    public function setIncludeRoot(bool $includeRoot): RelatedProductGroups
+    public function setIncludeRoot(bool $includeRoot): self
     {
         $this->includeRoot = $includeRoot;
         $this->groups = [];

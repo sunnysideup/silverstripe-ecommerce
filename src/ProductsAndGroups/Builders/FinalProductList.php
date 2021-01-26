@@ -2,82 +2,78 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
-use SilverStripe\ORM\SS_List;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
-use Sunnysideup\Ecommerce\ProductsAndGroups\ProductsAndGroupsList;
 
 /**
  * A wrapper for a paginated of products which can be filtered and sorted.
  *
- * What configuation can be provided
- * 1. levels to show
+ * This list is linked to a controller and can be changed (the base group list is usually the same)
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @subpackage: Pages
  */
-class FinalProductList extends ProductsAndGroupsList
+class FinalProductList extends AbstractProductsAndGroupsList
 {
+    /**
+     * @var BaseProductList|null
+     */
     protected $baseProductList = null;
 
-    protected $rootGroup = null;
-
-    protected static $cache = [];
+    /**
+     * @var ProductGroupController|null
+     */
+    protected $rootGroupController = null;
 
     /**
-     * @var SS_List
+     * singleton_cache
+     * @var self|null
      */
-    protected $products;
+    protected static $singleton_cache = null;
 
     /**
-     * @param ProductGroup $rootGroup
-     * @param string       $buyableClassName
+     * @param ProductGroupController $rootGroupController
+     * @param ProductGroup           $rootGroup
      */
-    public function __construct($rootGroup, ?string $baseProductListClassName = '', ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    public function __construct($rootGroupController, $rootGroup)
     {
-        $this->rootGroup = $rootGroup;
-        if (! $baseProductListClassName) {
-            $baseProductListClassName = $rootGroup->getTemplateForProductsAndGroups()->getBaseProductListClassName();
-        }
-        $this->baseProductList = $baseProductListClassName::inst($rootGroup, $buyableClassName, $levelOfProductsToShow);
+        $this->setRootGroup($rootGroup);
+
+        $this->rootGroupController = $rootGroupController;
+        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
+        $this->baseProductList = $rootGroup->getBaseProductList();
+        ClassHelpers::check_for_instance_of($this->baseProductList, BaseProductList::class, true);
         $this->products = $this->baseProductList->getProducts();
     }
 
-    public static function inst($rootGroup, ?string $baseProductListClassName = '', ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    /**
+     * create instances
+     * @param  ProductGroupController    $rootGroupController
+     * @param  ProductGroup              $rootGroup
+     *
+     * @return FinalProductList
+     */
+    public static function inst($rootGroupController, $rootGroup)
     {
-        $cacheKey = implode('_', array_filter([$rootGroup->ID, $baseProductListClassName, $buyableClassName, $levelOfProductsToShow]));
-        if (! isset(self::$cache[$cacheKey])) {
-            self::$cache[$cacheKey] = new FinalProductList($rootGroup, $baseProductListClassName, $buyableClassName, $levelOfProductsToShow);
+        if (! isset(self::$singleton_cache)) {
+            self::$singleton_cache = new FinalProductList($rootGroupController, $rootGroup);
         }
-        return self::$cache[$cacheKey];
+        return self::$singleton_cache;
     }
 
+    /**
+     * returns the associated BaseProductList
+     * @return BaseProductList
+     */
     public function getBaseProductList()
     {
         return $this->baseProductList;
     }
 
-    /**
-     * @param  array|string $filter optional additional filter
-     * @return self           [description]
-     */
-    public function applyFilter($filter = null): self
-    {
-        return $this->apply($this->getApplyerClassName('FILTER'), $filter);
-    }
-
-    public function applySorter($sort = null): self
-    {
-        return $this->apply($this->getApplyerClassName('SORT'), $sort);
-    }
-
-    public function applyDisplayer($param = null): self
-    {
-        return $this->apply($this->getApplyerClassName('DISPLAY'), $param);
-    }
-
-    public function apply(string $className, $param = null)
+    public function apply(string $className, $param = null): self
     {
         $obj = $this->getApplyer($className);
 
@@ -88,70 +84,23 @@ class FinalProductList extends ProductsAndGroupsList
         return $this;
     }
 
-    public function getDefaultFilterOptions(): array
+    /**
+     * @param  array|string $param optional additional filter
+     * @return self
+     */
+    public function applyFilter($param = null): self
     {
-        return $this->getOptionsMap($this->getApplyerClassName('FILTER'));
+        return $this->apply($this->getApplyerClassName('FILTER'), $param);
     }
 
-    public function getDefaultSortOrderOptions(): array
+    public function applySorter($param = null): self
     {
-        return $this->getOptionsMap($this->getApplyerClassName('SORT'));
+        return $this->apply($this->getApplyerClassName('SORT'), $param);
     }
 
-    public function getDisplayStyleOptions(): array
+    public function applyDisplayer($param = null): self
     {
-        return $this->getOptionsMap($this->getApplyerClassName('DISPLAY'));
-    }
-
-    public function getOptionsMap(string $className): array
-    {
-        $obj = $this->getApplyer($className);
-
-        return $obj->getOptionsMap();
-    }
-
-    public function getDefaultFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        return $this->getOptionsList($this->getApplyerClassName('FILTER'), $linkTemplate, $currentKey, $ajaxify);
-    }
-
-    public function getDefaultSortOrderList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        return $this->getOptionsList($this->getApplyerClassName('SORT'), $linkTemplate, $currentKey, $ajaxify);
-    }
-
-    public function getDisplayStyleList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        return $this->getOptionsList($this->getApplyerClassName('DISPLAY'), $linkTemplate, $currentKey, $ajaxify);
-    }
-
-    public function getOptionsList(string $className, string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        $obj = $this->getApplyer($className);
-
-        return $obj->getOptionsList($linkTemplate, $currentKey, $ajaxify);
-    }
-
-    public function getDefaultFilterTitle(?string $value = ''): array
-    {
-        return $this->getTitle($this->getApplyerClassName('FILTER'), $value);
-    }
-
-    public function getDefaultSortOrderTitle(?string $value = ''): array
-    {
-        return $this->getTitle($this->getApplyerClassName('SORT'), $value);
-    }
-
-    public function getDisplayStyleTitle(?string $value = ''): array
-    {
-        return $this->getTitle($this->getApplyerClassName('DISPLAY'), $value);
-    }
-
-    public function getTitle(string $className, ?string $value = ''): string
-    {
-        $obj = $this->getApplyer($className);
-
-        return $obj->getTitle($value);
+        return $this->apply($this->getApplyerClassName('DISPLAY'), $param);
     }
 
     /**
@@ -173,62 +122,20 @@ class FinalProductList extends ProductsAndGroupsList
     }
 
     /**
-     * Returns children ProductGroup pages of this group.
-     *
-     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     * @param string|array   $filter             - additional filter to be added
-     *
-     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
-     */
-    public function getGroups(int $maxRecursiveLevel, $filter = null): ArrayList
-    {
-        return $this->baseProductList->getGroups($maxRecursiveLevel, $filter);
-    }
-
-    /**
-     * Returns the Title for a type key.
-     *
-     * If no key is provided then the default key is used.
-     *
-     * runs a method: getDefaultFilterTitle, getDefaultSortOrderTitle, or getDisplayStyleTitle
-     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     */
-    public function getUserPreferencesTitle($type, $value)
-    {
-        $method = 'get' . $this->controller->getSortFilterDisplayNames($type, 'dbFieldName') . 'Title';
-        $value = $this->{$method}($value);
-        if ($value) {
-            return $value;
-        }
-
-        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
-    }
-
-    /**
-     * todo: CHECK!
      * @param  string $type
      * @return string
      */
     protected function getApplyerClassName(string $type): string
     {
-        if ($this->rootGroup->IsSortFilterDisplayNamesType($type)) {
-            return $this->rootGroup->getSortFilterDisplayNames($type, 'defaultApplyer');
-        }
-
-        return user_error();
+        return $this->getTemplateForProductsAndGroups()->getApplyerClassName($type);
     }
 
+    /**
+     * @param  string $className
+     * @return BaseApplyer
+     */
     protected function getApplyer(string $className)
     {
-        $obj = new $className($this);
-        if (! $obj instanceof BaseApplyer) {
-            user_error($className . ' needs to be an instance of ' . BaseApplyer::class);
-        }
-
-        return $obj;
+        return $this->getTemplateForProductsAndGroups()->getApplyer($className);
     }
 }

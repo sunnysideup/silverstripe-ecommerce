@@ -18,6 +18,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -25,7 +26,6 @@ use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\ProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
 /**
@@ -42,10 +42,7 @@ class ProductGroup extends Page
      */
     protected $recursiveValues = null;
 
-    /**
-     * @var ProductList
-     */
-    protected $productList;
+    protected $baseProductList = null;
 
     private static $template_for_selection_of_products = Template::class;
 
@@ -142,7 +139,7 @@ class ProductGroup extends Page
      *
      * @return bool
      */
-    public function canEdit($member = null, $context = [])
+    public function canEdit($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -152,7 +149,7 @@ class ProductGroup extends Page
             return true;
         }
 
-        return parent::canEdit($member, $context, $context);
+        return parent::canEdit($member);
     }
 
     /**
@@ -219,7 +216,7 @@ class ProductGroup extends Page
         $config = EcommerceConfig::inst();
 
         if ($config->ProductsAlsoInOtherGroups) {
-            if (! $this instanceof ProductGroupSearchPage) {
+            if (! ClassHelpers::check_for_instance_of($this, ProductGroupSearchPage::class, false)) {
                 $fields->addFieldsToTab(
                     'Root.OtherProductsShown',
                     [
@@ -315,7 +312,7 @@ class ProductGroup extends Page
      **/
     public function getListConfigCalculated(string $type): string
     {
-        $field = $this->getSortFilterDisplayNames($type, 'dbFieldName');
+        $field = $this->getSortFilterDisplayValues($type, 'dbFieldName');
 
         return $this->recursiveValue($field, 'default');
     }
@@ -352,41 +349,15 @@ class ProductGroup extends Page
      */
     public function getBaseProductList()
     {
-        return $this->getFinalProductList()->getBaseProductList();
-    }
-
-    /**
-     * Retrieve a list of products, based on the given parameters.
-     *
-     * This method is usually called by the various controller methods.
-     *
-     * The extraFilter helps you to select different products depending on the
-     * method used in the controller.
-     *
-     * To paginate this
-     *
-     * @param array|string $extraFilter          OPTIONAL Additional SQL filters to apply to the Product retrieval
-     * @param array|string $alternativeSort      OPTIONAL Additional SQL for sorting
-     *
-     * @return FinalProductList
-     */
-    public function getFinalProductList($extraFilter = null, $alternativeSort = null)
-    {
-        if (! $this->productList) {
-            $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
-            $this->productList = $className::inst($this);
+        if (! $this->baseProductList) {
+            $className = $this->getTemplateForProductsAndGroups()->getBaseProductListClassName();
+            $this->baseProductList = $className::inst(
+                $this,
+                $this->getBuyableClassName(),
+                $this->recursiveValue('LevelOfProductsToShow', 99)
+            );
         }
-        $list = $this->productList;
-
-        if ($extraFilter) {
-            $list = $list->applyFilter($extraFilter);
-        }
-
-        if ($alternativeSort) {
-            $list = $list->applySorter($alternativeSort);
-        }
-
-        return $list;
+        return $this->baseProductList;
     }
 
     /**
@@ -500,9 +471,9 @@ class ProductGroup extends Page
      *
      * @return array | String
      */
-    public function getSortFilterDisplayNames(?string $typeOrVariable = '', ?string $variable = '')
+    public function getSortFilterDisplayValues(?string $typeOrVariable = '', ?string $variable = '')
     {
-        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayNames($typeOrVariable, $variable);
+        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayValues($typeOrVariable, $variable);
     }
 
     /**
@@ -543,7 +514,7 @@ class ProductGroup extends Page
         // display style
         $options = $this->getOptionsForDropdown($type);
         if (count($options) > 2) {
-            $field = $this->getSortFilterDisplayNames($type, 'dbFieldName');
+            $field = $this->getSortFilterDisplayValues($type, 'dbFieldName');
             if ($this->{$field} === 'inherit') {
                 $key = $this->getListConfigCalculated($type);
                 $actualValue = ' (' . ($options[$key] ?? _t('ProductGroup.ERROR', 'ERROR')) . ')';
@@ -577,6 +548,8 @@ class ProductGroup extends Page
      * MyTemplate => "All Details"
      * Then you must make sure MyTemplate.ss exists.
      *
+     * most likely values called: getDefaultFilterOptions,getDefaultSortOrderOptions, getDisplayStyleOptions
+     *
      * @param string $type - FILTER | SORT | DISPLAY
      * @param bool   $withInherit - optional
      *
@@ -589,8 +562,8 @@ class ProductGroup extends Page
             $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
             $array = ['inherit' => $inheritTitle];
         }
-        $method = 'get' . $this->getSortFilterDisplayNames($type, 'dbFieldName') . 'Options';
-        $options = $this->getFinalProductList()->{$method}();
+        $method = 'get' . $this->getSortFilterDisplayValues($type, 'dbFieldName') . 'Options';
+        $options = $this->getTemplateForProductsAndGroups()->{$method}();
 
         return array_merge($array, $options);
     }

@@ -15,24 +15,28 @@ class ProductDisplayer extends BaseApplyer
         'default' => [
             'Title' => 'Paginated',
             'SQL' => '',
+            'RequiresData' => false,
             'IsShowFullList' => false,
         ],
         'all' => [
             'Title' => 'Full List',
             'SQL' => '',
+            'RequiresData' => false,
             'IsShowFullList' => true,
         ],
     ];
 
     /**
-     * set display for products
+     * @param string         $key     optional key
+     * @param string|array   $params  optional params to go with key
      *
-     * @param array|string $display
-     *
-     * @return SS_List
+     * @return self
      */
-    public function apply($display = null): self
+    public function apply($key = null, $params = null): self
     {
+        $this->selectedOption = $key;
+        $this->selectedOptionParams = $params;
+
         return $this;
     }
 }

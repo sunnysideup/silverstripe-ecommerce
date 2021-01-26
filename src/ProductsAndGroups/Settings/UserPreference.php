@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 
 use SilverStripe\Core\Convert;
@@ -11,20 +12,24 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
 /**
  * keeps track of the current settings for FILTER / SORT / DISPLAY for user
+ * the associated links and all that sort of stuff.
  */
-
-
 class UserPreference
 {
     use Configurable;
     use Injectable;
 
-    public const GET_VAR_VALUE_PLACE_HOLDER = '[[INSERT_VALUE_HERE]]';
+    protected const GET_VAR_VALUE_PLACE_HOLDER = '[[INSERT_VALUE_HERE]]';
 
     /**
      * variable to make sure secondary title only gets
@@ -59,9 +64,9 @@ class UserPreference
     /**
      * @var ContentController|null
      */
-    protected $controller = null;
+    protected $rootGroupController = null;
 
-    protected $dataRecord = null;
+    protected $rootGroup = null;
 
     /**
      * here is where we save the GET variables and any other settings for FILTER|SORT|DISPLAY
@@ -81,8 +86,8 @@ class UserPreference
     }
 
     /**
-     * @param  bool $useSession  [description]
-     * @return self              [description]
+     * @param  bool $useSession
+     * @return self
      */
     public function setUseSession(?bool $useSession): self
     {
@@ -92,43 +97,38 @@ class UserPreference
     }
 
     /**
-     * @param  HTTPRequest  $request  [description]
-     * @return self                      [description]
+     * @param  HTTPRequest  $request
+     * @return self
      */
     public function setRequest($request): self
     {
-        if (! $request instanceof HTTPRequest) {
-            user_error('Please make sure that you provide an instance of a HTTPRequest ' . print_r($request, 1));
-        }
+        ClassHelpers::check_for_instance_of($request, HTTPRequest::class, true);
         $this->request = $request;
 
         return $this;
     }
 
     /**
-     * @param  ContentController  $controller
+     * @param  ProductGroupController  $rootGroupController
      * @return self
      */
-    public function setController($controller): self
+    public function setController($rootGroupController): self
     {
-        if (! $controller instanceof ContentController) {
-            user_error('Please make sure that you provide an instance of a content controller ' . print_r($controller, 1));
-        }
-        $this->controller = $controller;
+        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
+        $this->rootGroupController = $rootGroupController;
 
         return $this;
     }
 
     /**
-     * @param  ProductGroup       $dataRecord [description]
-     * @return self               [description]
+     * @param  ProductGroup       $rootGroup
+     * @return self
      */
-    public function setDataRecord($dataRecord): self
+    public function setDataRecord($rootGroup): self
     {
-        if (! $dataRecord instanceof ContentController) {
-            user_error('Please make sure that you provide an instance of a ProductGroup ' . print_r($dataRecord, 1));
-        }
-        $this->dataRecord = $dataRecord;
+        ClassHelpers::check_for_instance_of($rootGroup, ProductGroup::class, true);
+
+        $this->rootGroup = $rootGroup;
 
         return $this;
     }
@@ -142,11 +142,11 @@ class UserPreference
     {
         $pageStart = '';
         if ($withPageNumber) {
-            $pageStart = $this->controller->getCurrentPageNumber();
+            $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
         $pageId = 0;
         if ($this->useSessionPerPage) {
-            $pageId = $this->dataRecord->ID;
+            $pageId = $this->rootGroup->ID;
         }
         return $this->cacheKey(
             implode(
@@ -178,8 +178,8 @@ class UserPreference
                 $secondaryTitle = $this->addToTitle($secondaryTitle);
             }
 
-            if ($this->controller->IsSearchResults()) {
-                $count = $this->controller->getProductList()->getRawCount();
+            if ($this->rootGroupController->IsSearchResults()) {
+                $count = $this->rootGroupController->getProductList()->getRawCount();
 
                 if ($count) {
                     $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
@@ -190,17 +190,17 @@ class UserPreference
                 }
             }
 
-            if ($this->controller->HasFilter()) {
-                $secondaryTitle .= $this->addToTitle($this->controller->getCurrentFilterTitle());
+            if ($this->rootGroupController->HasFilter()) {
+                $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentFilterTitle());
             }
 
-            if ($this->controller->HasSort()) {
-                $secondaryTitle .= $this->addToTitle($this->controller->getCurrentSortTitle());
+            if ($this->rootGroupController->HasSort()) {
+                $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentSortTitle());
             }
 
-            $currentPageNumber = $this->controller->getCurrentPageNumber();
+            $currentPageNumber = $this->rootGroupController->getCurrentPageNumber();
             if ($currentPageNumber > 1) {
-                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', 'Page') . ' ' . $page);
+                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', 'Page') . ' ' . $currentPageNumber);
             }
 
             if ($secondaryTitle) {
@@ -217,109 +217,9 @@ class UserPreference
         }
     }
 
-    /**
-     * returns the current page with get variables. If a type is specified then
-     * instead of the value for that type, we add: '[[INSERT_HERE]]'
-     * @param  string $type [description]
-     * @return string       [description]
-     */
-    public function getLinkTemplate(?string $type = '', ?string $action = null, ?string $replacementForType = ''): string
-    {
-        $base = $this->dataRecord->Link($action);
-        $getVars = [];
-        foreach ($this->controller->getSortFilterDisplayNames() as $key => $values) {
-            if ($type && $type === $key) {
-                if ($replacementForType) {
-                    $value = $replacementForType;
-                } else {
-                    $value = self::GET_VAR_VALUE_PLACE_HOLDER;
-                }
-            } else {
-                $value = $this->getCurrentUserPreferences($type);
-            }
-            $getVars[$values['getVariable']] = $value;
-        }
-
-        return $base . '?' . http_build_query($getVars);
-    }
-
     public function getBestKeyAndValidateKey($type, $key)
     {
         return $key;
-    }
-
-    /**
-     * Checks out a bunch of $_GET variables that are used to work out user
-     * preferences.
-     *
-     * Some of these are saved to session.
-     *
-     * @param array $overrideArray - optional - override $_GET variable settings
-     * an array can be like this:
-     * ```php
-     *     FILTER => 'abc'
-     * ```
-     * OR
-     * ```php
-     *     FILTER => ['type' => 'foo', 'value' => 'bar']
-     * ```
-     * @return self
-     */
-    protected function saveUserPreferences(?array $overrideArray = []): self
-    {
-        $sortFilterDisplayNames = $this->controller->getSortFilterDisplayNames();
-
-        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
-            $getVariableName = $oneTypeArray['getVariable'];
-            if (isset($overrideArray[$getVariableName])) {
-                $newPreference = $overrideArray[$getVariableName];
-            } elseif (! isset($this->userPreferences[$type])) {
-                $newPreference = $this->request->getVar($getVariableName);
-            }
-            if ($newPreference) {
-                $this->userPreferences[$type] = $newPreference;
-            }
-            if ($this->useSession) {
-                $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-                if ($this->useSessionPerPage) {
-                    $sessionName .= '_' . $this->dataRecord->ID;
-                }
-                $sessionValue = $this->controller->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Checks for the most applicable user preferences for this user:
-     * 1. session value
-     * 2. getListConfigCalculated.
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     *
-     * @todo: move to controller?
-     */
-    protected function getCurrentUserPreferences($type)
-    {
-        $key = '';
-        if ($this->useSession) {
-            $sessionName = $this->getSortFilterDisplayNames($type, 'sessionName');
-            if ($this->useSessionPerPage) {
-                $sessionName .= '_' . $this->dataRecord->ID;
-            }
-            $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
-            $key = Convert::raw2sql($sessionValue);
-        }
-        if (! $key) {
-            $key = $this->userPreferences[$type];
-        }
-        if (! $key) {
-            $key = $this->dataRecord->getListConfigCalculated($type);
-        }
-        return $this->getBestKeyAndValidateKey($type, $key);
     }
 
     /**
@@ -329,10 +229,10 @@ class UserPreference
      *
      * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
      */
-    protected function userPreferencesLinks($type)
+    public function getUserPreferencesLinks($type)
     {
         // get basics
-        $sortFilterDisplayNames = $this->controller->getSortFilterDisplayNames();
+        $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
         $options = $this->getConfigOptions($type);
 
         // if there is only one option then do not bother
@@ -363,6 +263,186 @@ class UserPreference
     }
 
     /**
+     * full list of options with Links that know about "current"
+     * @param  string    $type (FILTER|SORT|DISPLAY)
+     * @param  string    $currentKey
+     * @param  boolean   $ajaxify
+     *
+     * @return ArrayList
+     */
+    public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
+    {
+        $list = new ArrayList();
+        if (! $currentKey) {
+            $currentKey = $this->getCurrentUserPreferences($type);
+        }
+        $options = $this->getTemplateForProductsAndGroups()->getOptions($type);
+        if (! empty($options)) {
+            foreach ($options as $key => $arrayData) {
+                $isCurrent = $currentKey === $key;
+                $obj = new ArrayData(
+                    [
+                        'Title' => $arrayData['Title'],
+                        'Current' => $isCurrent ? true : false,
+                        //todo: fix this!!!!
+                        'Link' => $this->getLinkTemplate(null, $type, $key),
+                        'LinkingMode' => $isCurrent ? 'current' : 'link',
+                        'Ajaxify' => $ajaxify,
+                    ]
+                );
+                $list->push($obj);
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * returns the current page with get variables. If a type is specified then
+     * instead of the value for that type, we add: '[[INSERT_HERE]]'
+     * @param  string $action                optional
+     * @param  string $type                  optional
+     * @param  string $replacementForType    optional - what you would like the type be instead! - e.g. for FILTER I'd like it to be "somethingelse"
+     *
+     * @return string
+     */
+    public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
+    {
+        $base = $this->rootGroup->Link($action);
+        $getVars = [];
+        foreach ($this->rootGroupController->getSortFilterDisplayValues() as $key => $values) {
+            if ($type && $type === $key) {
+                if ($replacementForType) {
+                    $value = $replacementForType;
+                } else {
+                    $value = self::GET_VAR_VALUE_PLACE_HOLDER;
+                }
+            } else {
+                $value = $this->getCurrentUserPreferences($type);
+            }
+            $getVars[$values['getVariable']] = $value;
+        }
+
+        return $base . '?' . http_build_query($getVars);
+    }
+
+    /**
+     * TODO: move this to a better place!
+     * @param  array $idArray         optional array of IDs to sort by
+     * @param  mixed $alternativeSort optional alternative sort
+     * @return mixed                  returns null|array|string
+     */
+    public function getSearchResultsDefaultSort(?array $idArray = [], $alternativeSort = null)
+    {
+        $array = null;
+        if ($alternativeSort) {
+            $array = $alternativeSort;
+        }
+        $sortGetVariable = $this->rootGroupController->getSortFilterDisplayValues('SORT', 'getVariable');
+        if (! $this->request->getVar($sortGetVariable)) {
+            $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
+            if ($suggestion) {
+                $array = ['SORT' => ['type' => $suggestion, 'value' => $idArray]];
+            }
+        }
+
+        if ($array) {
+            $this->saveUserPreferences($array);
+        }
+        return $array;
+    }
+
+    /**
+     * special case of full list.
+     * @return bool
+     */
+    public function IsShowFullList(): bool
+    {
+        return $this->getTemplateForProductsAndGroups()
+            ->getApplyer('DISPLAY')
+            ->IsShowFullList($this->getCurrentUserPreferences('DISPLAY')) ? true : false;
+    }
+
+    /**
+     * Checks out a bunch of $_GET variables that are used to work out user
+     * preferences.
+     *
+     * Some of these are saved to session.
+     *
+     * @param array $overrideArray - optional - override $_GET variable settings
+     * an array can be like this:
+     * ```php
+     *     FILTER => 'abc'
+     * ```
+     * OR
+     * ```php
+     *     FILTER => ['type' => 'foo', 'value' => 'bar']
+     * ```
+     * @return self
+     */
+    protected function saveUserPreferences(?array $overrideArray = []): self
+    {
+        $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
+
+        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
+            $getVariableName = $oneTypeArray['getVariable'];
+            if (isset($overrideArray[$getVariableName])) {
+                $newPreference = $overrideArray[$getVariableName];
+            } elseif (! isset($this->userPreferences[$type])) {
+                $newPreference = $this->request->getVar($getVariableName);
+            } else {
+                $newPreference = $this->userPreferences[$type];
+            }
+            $this->userPreferences[$type] = $newPreference;
+            if ($this->useSession) {
+                $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+                if ($this->useSessionPerPage) {
+                    $sessionName .= '_' . $this->rootGroup->ID;
+                }
+                $this->rootGroupController->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Checks for the most applicable user preferences for this user:
+     * 1. session value
+     * 2. getListConfigCalculated.
+     *
+     * @param string $type - FILTER | SORT | DISPLAY
+     *
+     * @return string
+     */
+    protected function getCurrentUserPreferences(?string $type = '')
+    {
+        if (! $type) {
+            return [
+                'FILTER' => $this->getCurrentUserPreferences('FILTER'),
+                'SORT' => $this->getCurrentUserPreferences('SORT'),
+                'DISPLAY' => $this->getCurrentUserPreferences('DISPLAY'),
+            ];
+        }
+        $key = '';
+        if ($this->useSession) {
+            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+            if ($this->useSessionPerPage) {
+                $sessionName .= '_' . $this->rootGroup->ID;
+            }
+            $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
+            $key = Convert::raw2sql($sessionValue);
+        }
+        if (! $key) {
+            $key = $this->userPreferences[$type];
+        }
+        if (! $key) {
+            $key = $this->rootGroup->getListConfigCalculated($type);
+        }
+        return $this->getBestKeyAndValidateKey($type, $key);
+    }
+
+    /**
      * removes any spaces from the 'toAdd' bit and adds the pipe if there is
      * anything to add at all.  Through the lang files, you can change the pipe
      * symbol to anything you like.
@@ -385,36 +465,27 @@ class UserPreference
 
     /**
      * @param string $field
-     * @param string $title
+     * @param string $secondaryTitle
+     *
+     * @return self
      */
-    protected function addTitleToField(string $field, string $title)
+    protected function addTitleToField(string $field, string $secondaryTitle): self
     {
-        if (isset($this->controller->{$field})) {
-            $this->controller->{$field} .= $secondaryTitle;
+        if (! empty($this->rootGroupController->{$field})) {
+            $this->rootGroupController->{$field} .= $secondaryTitle;
         }
+
+        return $this;
     }
 
     /**
-     * @param  array $idArray         optional array of IDs to sort by
-     * @param  mixed $alternativeSort optional alternative sort
-     * @return mixed
+     * @return Template
      */
-    protected function getSearchResultsDefaultSort(?array $idArray = [], $alternativeSort = null)
+    protected function getTemplateForProductsAndGroups()
     {
-        if ($alternativeSort) {
-            return $alternativeSort;
-        }
-        $sortGetVariable = $this->controller->getSortFilterDisplayNames('SORT', 'getVariable');
-        if (! $this->request->getVar($sortGetVariable)) {
-            $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
-            if ($suggestion) {
-                $this->saveUserPreferences(['SORT' => ['type' => $suggestion, 'value' => $idArray]]);
-            }
-        }
-    }
+        $obj = $this->rootGroup->getTemplateForProductsAndGroups();
+        ClassHelpers::check_for_instance_of($obj, Template::class, true);
 
-    protected function IsShowFullList(): bool
-    {
-        return $this->controller->getSortFilterDisplayNames('SORT', 'isFullListVariable') ? true : false;
+        return $obj;
     }
 }

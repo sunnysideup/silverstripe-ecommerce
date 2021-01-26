@@ -214,7 +214,7 @@ class ShoppingCart
                 $orderID = $order->ID;
             }
         }
-        if ($orderOrOrderID instanceof Order) {
+        if (ClassHelpers::check_for_instance_of($orderOrOrderID, Order::class, false)) {
             $orderID = $orderOrOrderID->ID;
         } elseif (intval($orderOrOrderID)) {
             $orderID = intval($orderOrOrderID);
@@ -551,7 +551,7 @@ class ShoppingCart
     {
         $parametersArray = $parameters;
         $form = null;
-        if ($parameters instanceof Form) {
+        if (ClassHelpers::check_for_instance_of($parameters, Form::class, false)) {
             $parametersArray = [];
             $form = $parameters;
         }

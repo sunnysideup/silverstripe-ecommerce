@@ -143,7 +143,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return bool
      */
-    public function canEdit($member = null, $context = [])
+    public function canEdit($member = null)
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;

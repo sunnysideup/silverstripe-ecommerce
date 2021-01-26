@@ -5,7 +5,8 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use Sunnysideup\Ecommerce\Pages\ProductGroupController;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
 /**
  * provides data on the user
@@ -15,8 +16,11 @@ abstract class BaseApplyer
     use Injectable;
     use Configurable;
 
+    private const SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
+
     /**
-     * @var SS_List
+     * final product list object, always present.
+     * @var FinalProductList
      */
     protected $finalProductList = null;
 
@@ -25,15 +29,30 @@ abstract class BaseApplyer
      */
     protected $products = null;
 
+    protected static $selectedOption = '';
+
+    /**
+     * @var string|array
+     */
+    protected static $selectedOptionParams = '';
+
     private static $options = [];
 
     public function __construct($finalProductList)
     {
+        ClassHelpers::check_for_instance_of($finalProductList, FinalProductList::class, true);
         $this->finalProductList = $finalProductList;
         $this->products = $this->finalProductList->getProducts();
     }
 
-    abstract public function apply($param = null): self;
+    /**
+     * manipulates the product lists.
+     * @param string         $key     optional key
+     * @param string|array   $params  optional params to go with key
+     *
+     * @return self
+     */
+    abstract public function apply(?string $key = null, $params = null): self;
 
     public function getOptions(): array
     {
@@ -45,6 +64,20 @@ abstract class BaseApplyer
         return $this->products;
     }
 
+    public function getSelectedOption(): string
+    {
+        return $this->selectedOption;
+    }
+
+    public function getSelectedOptionParams()
+    {
+        return $this->selectedOptionParams;
+    }
+
+    /**
+     * dropdown list of options.
+     * @return array
+     */
     public function getOptionsMap(): array
     {
         $options = $this->getOptions();
@@ -56,53 +89,74 @@ abstract class BaseApplyer
         return $map;
     }
 
-    public function getOptionsList(string $linkTempalte, ?string $currentKey = '', ?bool $ajaxify = true): array
+    /**
+     * get the title for an option
+     * @param  string        $key string, e.g. default.
+     * @return string
+     */
+    public function getTitle($key = null): string
     {
-        $list = new ArrayList();
-        $options = $this->getOptionsMap();
-        if ($options) {
-            foreach ($options as $key => $arrayData) {
-                $isCurrent = $currentKey === $key;
-                $obj = new ArrayData(
-                    [
-                        'Title' => $arrayData['Title'],
-                        'Current' => $isCurrent ? true : false,
-                        'Link' => str_replace(ProductGroupController::GET_VAR_VALUE_PLACE_HOLDER, $key, $linkTemplate),
-                        'LinkingMode' => $isCurrent ? 'current' : 'link',
-                        'Ajaxify' => $ajaxify,
-                    ]
-                );
-                $list->push($obj);
-            }
-        }
-
-        return $list;
+        return $this->checkOption($key, 'Title');
     }
 
-    public function getTitle($param = null): string
+    /**
+     * get the sql for an option
+     * @param  string        $key string, e.g. default.
+     * @param  string|array  $params additional param for sql.
+     *
+     * @return string|array
+     */
+    public function getSql(?string $key = null, $params = null)
     {
-        return $this->checkOption($param, 'Title');
+        $sql = $this->checkOption($key, 'SQL');
+        return str_replace($sql, self::SQL_PARAM_PLACEHOLDER, $params);
     }
 
-    protected function checkOption($option, ?string $returnValue = 'SQL', ?string $defaultOption = 'default')
+    /**
+     * get the RequiresData for an option
+     * @param  string        $key string, e.g. default.
+     * @return bool
+     */
+    public function getRequiresData(?string $key = null): bool
+    {
+        return $this->checkOption($key, 'RequiresData');
+    }
+
+    /**
+     * get the sql for an option
+     * @param  string        $key string, e.g. default.
+     * @return bool
+     */
+    public function IsShowFullList(?string $key = null): bool
+    {
+        return $this->checkOption($key, 'IsShowFullList');
+    }
+
+    /**
+     * check for one option. If no return value is specified then all of the options are returned.
+     * @param  string $key        e.g. default
+     * @param  string $returnValue   mixed
+     * @param  string $defaultKey
+     *
+     * @return mixed
+     */
+    public function checkOption(?string $key = '', ?string $returnValue = 'SQL', ?string $defaultKey = 'default')
     {
         // an array we leave alone...
-        if (is_array($option)) {
-            return $option;
+        if (! $key) {
+            $key = $defaultKey;
         }
-        if (! $option) {
-            $option = $defaultOption;
-        }
-        if (is_string($option)) {
+        if (is_string($key)) {
             $options = $this->getOptions();
-            if (isset($options[$option][$returnValue])) {
-                return $options[$option][$returnValue];
+            if (isset($options[$key])) {
+                return $options[$key][$returnValue];
             }
-            if ($option !== $defaultOption) {
-                return $this->checkOption($defaultOption, $returnValue, $defaultOption);
+            //backup!
+            if ($key !== $defaultKey) {
+                return $this->checkOption($defaultKey, $returnValue);
             }
         }
 
-        return $option;
+        return $key;
     }
 }

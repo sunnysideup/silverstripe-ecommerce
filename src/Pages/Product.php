@@ -497,7 +497,7 @@ class Product extends Page implements BuyableModel
             $allParentsArray[$obj->ID] = $obj->ID;
 
             while ($obj && $obj->ParentID) {
-                if ($obj && $obj instanceof ProductGroup) {
+                if ($obj && ClassHelpers::check_for_instance_of($obj, ProductGroup::class, false)) {
                     $allParentsArray[$obj->ID] = $obj->ID;
                 }
             }
@@ -1069,7 +1069,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
-    public function canEdit($member = null, $context = [])
+    public function canEdit($member = null)
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -1079,7 +1079,7 @@ class Product extends Page implements BuyableModel
             return true;
         }
 
-        return parent::canEdit($member, $context);
+        return parent::canEdit($member);
     }
 
     /**

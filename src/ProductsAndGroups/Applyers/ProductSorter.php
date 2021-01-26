@@ -16,31 +16,38 @@ class ProductSorter extends BaseApplyer
         'default' => [
             'Title' => 'Default Order',
             'SQL' => '"Sort" ASC, "Title" ASC',
+            'RequiresData' => false,
+            'IsShowFullList' => false,
         ],
         'price_low' => [
             'Title' => 'Lowest Price',
             'SQL' => '"Price" ASC, "Sort" ASC, "Title" ASC',
+            'RequiresData' => false,
+            'IsShowFullList' => false,
         ],
         'price_high' => [
             'Title' => 'Highest Price',
             'SQL' => '"Price" DESC, "Sort" ASC, "Title" ASC',
+            'RequiresData' => false,
+            'IsShowFullList' => false,
         ],
         'name' => [
             'Title' => 'Name',
             'SQL' => '"Title" ASC, "Sort" ASC',
+            'RequiresData' => false,
+            'IsShowFullList' => false,
         ],
     ];
 
     /**
-     * Sort the list of products
+     * @param string         $key     optional key
+     * @param string|array   $params  optional params to go with key
      *
-     * @param array|string $sort
-     *
-     * @return SS_List
+     * @return self
      */
-    public function apply($sort = null): self
+    public function apply($key = null, $params = null): self
     {
-        $sort = $this->checkOption($sort);
+        $sort = $this->getSql($key, $params);
         if (is_array($sort) && count($sort)) {
             $this->products = $this->products->sort($sort);
         } elseif ($sort) {

@@ -12,15 +12,22 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
 class ProductGroupController extends PageController
 {
+    /**
+     * @var ProductList
+     */
+    protected $productList;
+
     protected $searchForm = null;
 
     /**
@@ -345,9 +352,9 @@ class ProductGroupController extends PageController
         return 1;
     }
 
-    public function getUserPreferencesTitle(string $type, $value): string
+    public function getUserPreferencesTitle(string $type, ?string $value): string
     {
-        return $this->getFinalProductList()->getUserPreferencesTitle($type, $value);
+        return $this->getTemplateForProductsAndGroups()->getUserPreferencesTitle($type, $value);
     }
 
     /**
@@ -422,12 +429,7 @@ class ProductGroupController extends PageController
      */
     public function FilterLinks(): ArrayList
     {
-        return $this->getFinalProductList()
-            ->getDefaultFilterList(
-                $this->getLinkTemplate('FILTER'),
-                $this->getCurrentUserPreferences('FILTER'),
-                true
-            );
+        return $this->getUserPreferencesClass()->getLinksPerType('FILTER');
     }
 
     /**
@@ -435,12 +437,7 @@ class ProductGroupController extends PageController
      */
     public function SortLinks(): ArrayList
     {
-        return $this->getFinalProductList()
-            ->getDefaultFilterList(
-                $this->getLinkTemplate('SORT'),
-                $this->getCurrentUserPreferences('SORT'),
-                true
-            );
+        return $this->getUserPreferencesClass()->getLinksPerType('SORT');
     }
 
     /**
@@ -448,12 +445,7 @@ class ProductGroupController extends PageController
      */
     public function DisplayLinks(): ArrayList
     {
-        return $this->getFinalProductList()
-            ->getDefaultFilterList(
-                $this->getLinkTemplate('DISPLAY'),
-                $this->getCurrentUserPreferences('DISPLAY'),
-                false
-            );
+        return $this->getUserPreferencesClass()->getLinksPerType('DISPLAY');
     }
 
     public function getLink($action = null): string
@@ -463,7 +455,7 @@ class ProductGroupController extends PageController
 
     public function Link($action = null): string
     {
-        return $this->getLinkTemplate('', $action);
+        return $this->getLinkTemplate($action);
     }
 
     public function ResetPreferencesLink($action = null): string
@@ -516,7 +508,7 @@ class ProductGroupController extends PageController
     {
         if ($this->searchForm === null || $forceInit) {
             $onlySearchTitle = $this->originalTitle;
-            if ($this->dataRecord instanceof ProductGroupSearchPage) {
+            if (ClassHelpers::check_for_instance_of($this->dataRecord, ProductGroupSearchPage::class, false)) {
                 if ($this->HasSearchResults()) {
                     $onlySearchTitle = 'Last Search Results';
                 }
@@ -528,7 +520,7 @@ class ProductGroupController extends PageController
                 $onlySearchTitle,
                 $this->getProductList(null, $defaultKey)
             );
-            // $sortGetVariable = $this->getSortFilterDisplayNames('SORT', 'getVariable');
+            // $sortGetVariable = $this->getSortFilterDisplayValues('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
             // $form->setAdditionalGetParameters($additionalGetParameters);
             // $form->setSearchHash($this->searchKeyword);
@@ -612,14 +604,39 @@ class ProductGroupController extends PageController
         return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
     }
 
-    public function saveUserPreferences($data)
+    public function saveUserPreferences(?array $data = [])
     {
         return $this->getUserPreferencesClass()->saveUserPreferences($data);
     }
 
-    public function getCurrentUserPreferences()
+    public function getCurrentUserPreferences(?string $type = '')
     {
-        return $this->getUserPreferencesClass()->getCurrentUserPreferences();
+        return $this->getUserPreferencesClass()->getCurrentUserPreferences($type);
+    }
+
+    /**
+     * Retrieve a list of products, based on the given parameters.
+     *
+     * This method is usually called by the various controller methods.
+     *
+     * The extraFilter helps you to select different products depending on the
+     * method used in the controller.
+     *
+     * To paginate this
+     *
+     * @param array|string $extraFilter          OPTIONAL Additional SQL filters to apply to the Product retrieval
+     * @param array|string $alternativeSort      OPTIONAL Additional SQL for sorting
+     *
+     * @return FinalProductList
+     */
+    public function getFinalProductList($extraFilter = null, $alternativeSort = null)
+    {
+        if (! $this->productList) {
+            $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
+            $this->productList = $className::inst($this, $this->dataRecord);
+            ClassHelpers::check_for_instance_of($this->productList, FinalProductList::class, true);
+        }
+        return $this->productList;
     }
 
     protected function getCachedProductList(): ? DataList
@@ -638,12 +655,12 @@ class ProductGroupController extends PageController
     /**
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'
-     * @param  string $type    OPTIONAL: FILTER|SORT|DISPLAY
-     * @return string  OPTIONAL: action - e.g. searchresults
+     * @return string   OPTIONAL: action - e.g. searchresults
+     * @param  string $type     OPTIONAL: FILTER|SORT|DISPLAY
      */
-    protected function getLinkTemplate(?string $type = '', ?string $action = null): string
+    protected function getLinkTemplate(?string $action = null, ?string $type = ''): string
     {
-        return $this->getUserPreferencesClass()->getLinkTemplate($type, $action);
+        return $this->getUserPreferencesClass()->getLinkTemplate($action, $type);
     }
 
     protected function init()
@@ -691,10 +708,11 @@ class ProductGroupController extends PageController
      *
      * @param SS_List $list
      *
-     * @return PaginatedList
+     * @return PaginatedList|null
      */
     protected function paginateList($list): ?PaginatedList
     {
+        $obj = null;
         if ($list && $list->count()) {
             $obj = PaginatedList::create($list, $this->request);
             if ($this->IsShowFullList()) {
@@ -702,8 +720,8 @@ class ProductGroupController extends PageController
             } else {
                 $obj->setPageLength($this->MyNumberOfProductsPerPage());
             }
-            return $obj;
         }
+        return $obj;
     }
 
     protected function IsShowFullList(): bool
