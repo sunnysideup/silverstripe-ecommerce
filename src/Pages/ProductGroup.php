@@ -6,6 +6,7 @@ use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 
 use SilverStripe\Forms\FieldList;

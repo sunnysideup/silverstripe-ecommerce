@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\PaginatedList;
@@ -744,7 +745,7 @@ class ProductGroupController extends PageController
             $className = $this->getTemplateForProductsAndGroups()->getUserPreferencesClassName();
             $this->userPreferencesObject = Injector::inst()->get($className)
                 ->setController($this)
-                ->setDataErecord($this->dataRecord)
+                ->setDataRecord($this->dataRecord)
                 ->setRequest($this->getRequest());
         }
 
