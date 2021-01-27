@@ -35,15 +35,27 @@ class FinalProductList extends AbstractProductsAndGroupsList
     protected static $singleton_cache = null;
 
     /**
+     * Set the root {@link ProductGroup} to display the products from.
+     * @param ProductGroup $rootGroup
+     *
+     * @return self
+     */
+    public function setRootGroupController($rootGroupController): self
+    {
+        $this->rootGroupController = $rootGroupController;
+        ClassHelpers::check_for_instance_of($rootGroup, ProductGroupController::class, true);
+
+        return $this;
+    }
+    /**
      * @param ProductGroupController $rootGroupController
      * @param ProductGroup           $rootGroup
      */
     public function __construct($rootGroupController, $rootGroup)
     {
+        $this->setRootGroupController($rootGroupController);
         $this->setRootGroup($rootGroup);
 
-        $this->rootGroupController = $rootGroupController;
-        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
         $this->baseProductList = $rootGroup->getBaseProductList();
         ClassHelpers::check_for_instance_of($this->baseProductList, BaseProductList::class, true);
         $this->products = $this->baseProductList->getProducts();

@@ -112,7 +112,7 @@ class UserPreference
      * @param  ProductGroupController  $rootGroupController
      * @return self
      */
-    public function setController($rootGroupController): self
+    public function setRootGroupController($rootGroupController): self
     {
         ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
         $this->rootGroupController = $rootGroupController;
