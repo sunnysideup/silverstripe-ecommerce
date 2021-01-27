@@ -124,7 +124,7 @@ class UserPreference
      * @param  ProductGroup       $rootGroup
      * @return self
      */
-    public function setDataRecord($rootGroup): self
+    public function setRootGroup($rootGroup): self
     {
         ClassHelpers::check_for_instance_of($rootGroup, ProductGroup::class, true);
 

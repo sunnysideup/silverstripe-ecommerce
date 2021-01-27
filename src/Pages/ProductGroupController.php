@@ -745,7 +745,7 @@ class ProductGroupController extends PageController
             $className = $this->getTemplateForProductsAndGroups()->getUserPreferencesClassName();
             $this->userPreferencesObject = Injector::inst()->get($className)
                 ->setController($this)
-                ->setDataRecord($this->dataRecord)
+                ->setRootGroup($this->dataRecord)
                 ->setRequest($this->getRequest());
         }
 
