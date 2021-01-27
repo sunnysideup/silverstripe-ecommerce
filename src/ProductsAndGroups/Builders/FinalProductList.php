@@ -43,7 +43,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public function setRootGroupController($rootGroupController): self
     {
         $this->rootGroupController = $rootGroupController;
-        ClassHelpers::check_for_instance_of($rootGroup, ProductGroupController::class, true);
+        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
 
         return $this;
     }
@@ -85,34 +85,49 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList;
     }
 
-    public function apply(string $className, $param = null): self
+    public function apply(string $classNameOrType, string $key, $param = null): self
     {
-        $obj = $this->getApplyer($className);
+        $obj = $this->getApplyer($classNameOrType);
 
         $obj
-            ->apply($param)
+            ->apply($key, $param)
             ->getProducts();
 
         return $this;
     }
 
     /**
-     * @param  array|string $param optional additional filter
+     * @param string         $key
+     * @param array|string   $param optional additional filter
+     *
      * @return self
      */
-    public function applyFilter($param = null): self
+    public function applyFilter(string $key, $param = null): self
     {
-        return $this->apply($this->getApplyerClassName('FILTER'), $param);
+        return $this->apply('FILTER', $key, $param);
     }
 
-    public function applySorter($param = null): self
+    /**
+     * @param string         $key
+     * @param array|string   $param optional additional filter
+     *
+     * @return self
+     */
+    public function applySorter(string $key, $param = null): self
     {
-        return $this->apply($this->getApplyerClassName('SORT'), $param);
+        return $this->apply('SORT', $key, $param);
     }
 
-    public function applyDisplayer($param = null): self
+
+    /**
+     * @param string         $key
+     * @param array|string   $param optional additional filter
+     *
+     * @return self
+     */
+    public function applyDisplayer(string $key, $param = null): self
     {
-        return $this->apply($this->getApplyerClassName('DISPLAY'), $param);
+        return $this->apply('DISPLAY', $key, $param);
     }
 
     /**
@@ -146,8 +161,8 @@ class FinalProductList extends AbstractProductsAndGroupsList
      * @param  string $className
      * @return BaseApplyer
      */
-    protected function getApplyer(string $className)
+    protected function getApplyer(string $classNameOrType)
     {
-        return $this->getTemplateForProductsAndGroups()->getApplyer($className);
+        return $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType, $this);
     }
 }

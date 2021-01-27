@@ -63,8 +63,7 @@ class ProductFilter extends BaseApplyer
      */
     public function apply($key = null, $params = null): self
     {
-        $this->selectedOption = $key;
-        $this->selectedOptionParams = $params;
+        $this->applyStart($key, $params);
 
         $group = $this->findGroupId(${$key});
         if ($group) {
@@ -77,7 +76,7 @@ class ProductFilter extends BaseApplyer
         } elseif ($filter) {
             $this->products = $this->products->where($filter);
         }
-
+        $this->applyEnd($key, $params);
         return $this;
     }
 

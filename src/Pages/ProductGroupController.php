@@ -645,6 +645,7 @@ class ProductGroupController extends PageController
         $key = $this->ProductGroupListCachingKey(false);
         if (EcommerceCache::inst()->hasCache($key)) {
             $ids = EcommerceCache::inst()->retrieve($key);
+            $ids = ArrayMethods::filter_array($ids);
             return Product::get()
                 ->filter(['ID' => $ids])
                 ->sort(ArrayMethods::create_sort_statement_from_id_array($ids, Product::class));
@@ -751,4 +752,10 @@ class ProductGroupController extends PageController
 
         return $this->userPreferencesObject;
     }
+
+    protected function addSecondaryTitle(?string $secondaryTitle = '')
+    {
+        $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
+    }
+
 }

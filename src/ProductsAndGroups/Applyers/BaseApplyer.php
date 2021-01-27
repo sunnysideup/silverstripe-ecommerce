@@ -29,7 +29,7 @@ abstract class BaseApplyer
      */
     protected $products = null;
 
-    protected static $selectedOption = '';
+    protected $selectedOption = '';
 
     /**
      * @var string|array
@@ -38,11 +38,13 @@ abstract class BaseApplyer
 
     private static $options = [];
 
-    public function __construct($finalProductList)
+    public function __construct($finalProductList = null)
     {
-        ClassHelpers::check_for_instance_of($finalProductList, FinalProductList::class, true);
-        $this->finalProductList = $finalProductList;
-        $this->products = $this->finalProductList->getProducts();
+        if($finalProductList) {
+            ClassHelpers::check_for_instance_of($finalProductList, FinalProductList::class, true);
+            $this->finalProductList = $finalProductList;
+            $this->products = $this->finalProductList->getProducts();
+        }
     }
 
     /**
@@ -53,6 +55,17 @@ abstract class BaseApplyer
      * @return self
      */
     abstract public function apply(?string $key = null, $params = null): self;
+
+    protected function applyStart(?string $key = null, $params = null)
+    {
+        $this->selectedOption = $key;
+        $this->selectedOptionParams = $params;
+    }
+
+    protected function applyEnd(?string $key = null, $params = null)
+    {
+
+    }
 
     public function getOptions(): array
     {

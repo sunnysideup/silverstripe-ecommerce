@@ -324,7 +324,7 @@ class ProductGroup extends Page
      *
      * @return int
      */
-    public function getLevelOfProductsToShow(?int $defauult = 99): int
+    public function getMyLevelOfProductsToShow(?int $defauult = 99): int
     {
         $value = $this->recursiveValue('LevelOfProductsToShow', 99);
 
