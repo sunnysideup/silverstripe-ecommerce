@@ -759,6 +759,7 @@ class ShoppingCartController extends Controller
             $newMember = Member::get()->byID(intval($request->param('ID')));
 
             if ($newMember) {
+                Security::setCurrentUser($member);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
                 $accountPage = AccountPage::get()->first();
