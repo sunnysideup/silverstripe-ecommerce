@@ -112,7 +112,7 @@ class UserPreference
      * @param  ProductGroupController  $rootGroupController
      * @return self
      */
-    public function setController($rootGroupController): self
+    public function setRootGroupController($rootGroupController): self
     {
         ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
         $this->rootGroupController = $rootGroupController;
@@ -124,7 +124,7 @@ class UserPreference
      * @param  ProductGroup       $rootGroup
      * @return self
      */
-    public function setDataRecord($rootGroup): self
+    public function setRootGroup($rootGroup): self
     {
         ClassHelpers::check_for_instance_of($rootGroup, ProductGroup::class, true);
 
@@ -380,7 +380,7 @@ class UserPreference
      * ```
      * @return self
      */
-    protected function saveUserPreferences(?array $overrideArray = []): self
+    public function saveUserPreferences(?array $overrideArray = []): self
     {
         $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
 
@@ -415,7 +415,7 @@ class UserPreference
      *
      * @return string
      */
-    protected function getCurrentUserPreferences(?string $type = '')
+    public function getCurrentUserPreferences(?string $type = '')
     {
         if (! $type) {
             return [
@@ -434,7 +434,7 @@ class UserPreference
             $key = Convert::raw2sql($sessionValue);
         }
         if (! $key) {
-            $key = $this->userPreferences[$type];
+            $key = $this->userPreferences[$type] ?? '';
         }
         if (! $key) {
             $key = $this->rootGroup->getListConfigCalculated($type);

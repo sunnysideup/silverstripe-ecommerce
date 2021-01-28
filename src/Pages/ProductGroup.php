@@ -6,6 +6,7 @@ use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 
 use SilverStripe\Forms\FieldList;
@@ -139,7 +140,7 @@ class ProductGroup extends Page
      *
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
@@ -323,7 +324,7 @@ class ProductGroup extends Page
      *
      * @return int
      */
-    public function getLevelOfProductsToShow(?int $defauult = 99): int
+    public function getMyLevelOfProductsToShow(?int $defauult = 99): int
     {
         $value = $this->recursiveValue('LevelOfProductsToShow', 99);
 

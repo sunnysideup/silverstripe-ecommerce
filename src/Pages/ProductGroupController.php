@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\PaginatedList;
@@ -644,6 +645,7 @@ class ProductGroupController extends PageController
         $key = $this->ProductGroupListCachingKey(false);
         if (EcommerceCache::inst()->hasCache($key)) {
             $ids = EcommerceCache::inst()->retrieve($key);
+            $ids = ArrayMethods::filter_array($ids);
             return Product::get()
                 ->filter(['ID' => $ids])
                 ->sort(ArrayMethods::create_sort_statement_from_id_array($ids, Product::class));
@@ -743,11 +745,17 @@ class ProductGroupController extends PageController
         if ($this->userPreferencesObject === null) {
             $className = $this->getTemplateForProductsAndGroups()->getUserPreferencesClassName();
             $this->userPreferencesObject = Injector::inst()->get($className)
-                ->setController($this)
-                ->setDataErecord($this->dataRecord)
+                ->setRootGroup($this->dataRecord)
+                ->setRootGroupController($this)
                 ->setRequest($this->getRequest());
         }
 
         return $this->userPreferencesObject;
     }
+
+    protected function addSecondaryTitle(?string $secondaryTitle = '')
+    {
+        $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
+    }
+
 }

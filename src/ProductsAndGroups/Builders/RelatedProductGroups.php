@@ -146,6 +146,11 @@ class RelatedProductGroups
         return $this->levelsToShow;
     }
 
+    public function getParentGroupIds() : array
+    {
+        return $this->getGroups()->column('ID');
+    }
+
     /**
      * @return \SilverStripe\ORM\DataList
      */
@@ -201,7 +206,7 @@ class RelatedProductGroups
             return $ids;
         }
 
-        $children = DB::query('SELECT ID FROM ProductGroup WHERE ParentID = ' . $groupId)->column();
+        $children = ProductGroup::get()->filter(['ParentID' => $groupId])->column('ID');
 
         if ($children) {
             $ids = array_merge($ids, $children);

@@ -34,9 +34,8 @@ class ProductDisplayer extends BaseApplyer
      */
     public function apply($key = null, $params = null): self
     {
-        $this->selectedOption = $key;
-        $this->selectedOptionParams = $params;
-
+        $this->applyStart($key, $params);
+        $this->applyEnd($key, $params);
         return $this;
     }
 }

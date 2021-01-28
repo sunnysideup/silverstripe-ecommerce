@@ -115,7 +115,7 @@ class Template
      */
     public function getSortFilterDisplayValues(?string $typeOrVariable = '', ?string $variable = '')
     {
-        $data = $this->getSortFilterDisplayNamesData();
+        $data = $this->getData();
         if ($variable) {
             return $data[$typeOrVariable][$variable];
         }
@@ -149,7 +149,7 @@ class Template
      */
     public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
     {
-        $data = $this->getSortFilterDisplayNamesData();
+        $data = $this->getData();
         if (isset($data[$type])) {
             return true;
         } elseif ($showError) {
@@ -281,7 +281,7 @@ class Template
      * @param  string $type
      * @return string
      */
-    protected function getApplyerClassName(string $type): string
+    public function getApplyerClassName(string $type): string
     {
         if ($this->IsSortFilterDisplayNamesType($type)) {
             return $this->getSortFilterDisplayValues($type, 'defaultApplyer');
@@ -294,13 +294,13 @@ class Template
      * @param  string $classNameOrType
      * @return BaseApplyer
      */
-    protected function getApplyer(string $classNameOrType)
+    public function getApplyer(string $classNameOrType, $finalProductList = null)
     {
         $className = $classNameOrType;
         if ($this->IsSortFilterDisplayNamesType($classNameOrType, false)) {
             $className = $this->getApplyerClassName($classNameOrType);
         }
-        $obj = new $className($this);
+        $obj = new $className($finalProductList);
         ClassHelpers::check_for_instance_of($obj, BaseApplyer::class);
 
         return $obj;
