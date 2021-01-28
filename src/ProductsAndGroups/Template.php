@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
+use SilverStripe\Security\Permission;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -16,6 +17,11 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
+
+use Sunnysideup\Ecommerce\ProductsAndGroups\Debug;
+
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 
 /**
  * In terms of ProductAndGroupsLists, this class knows all about
@@ -84,6 +90,11 @@ class Template
      */
     private static $user_preferences_class_name = UserPreference::class;
 
+    /**
+     * @var string
+     */
+    private static $debug_provider_class_name = Debug::class;
+
     public function getData()
     {
         return self::SORT_DISPLAY_NAMES;
@@ -107,6 +118,24 @@ class Template
     public function getUserPreferencesClassName(): string
     {
         return $this->Config()->get('user_preferences_class_name');
+    }
+
+    public function getDebugProvider(): string
+    {
+        return $this->Config()->get('debug_provider_class_name');
+    }
+
+    /**
+     *
+     * @param  ProductGroupController $rootGroupController
+     * @param  ProductGroup           $rootGroup
+     * @return Debug
+     */
+    public function getDebugProviderAsObject($rootGroupController, $rootGroup): Debug
+    {
+        $className = $this->getDebugProvider();
+
+        return new $className($rootGroupController, $rootGroup);
     }
 
     /**
@@ -141,13 +170,6 @@ class Template
         return $newData;
     }
 
-    public function getShowProductLevels(): array
-    {
-        $className = $this->getProductGroupListClassName();
-
-        return Injector::inst()->get($className)->getShowProductLevels();
-    }
-
     /**
      * @param  string  $type      FILTER|SORT|DISPLAY
      * @param  boolean $showError optional
@@ -165,7 +187,6 @@ class Template
     }
 
     /**
-     * cache of all the data associated with a type
      * @param  string $classNameOrType
      * @return array
      */
@@ -188,10 +209,10 @@ class Template
      *
      * @return string
      */
-    public function getUserPreferencesTitle(string $type, ?string $value): string
+    public function getUserPreferencesTitle(string $type, ?string $key): string
     {
         $method = 'get' . ucwords(strtolower($type)) . 'Title';
-        $value = $this->{$method}($value);
+        $value = $this->{$method}($key);
         if ($value) {
             return $value;
         }
@@ -312,4 +333,24 @@ class Template
 
         return $obj;
     }
+
+    public function ClassName()
+    {
+        return get_class($this);
+    }
+
+    /**
+     * for debug purposes!
+     * @param string
+     */
+    public function XML_val(?string $method, $arguments = [])
+    {
+        if(! is_array($arguments)) {
+            $arguments = [$arguments];
+        }
+        if(Permission::check('ADMIN')) {
+            return '<pre>'.print_r($this->$method(...$arguments), 1).'</pre>';
+        }
+    }
+
 }

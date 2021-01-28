@@ -12,6 +12,8 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
+
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -39,6 +41,19 @@ class ProductGroupController extends PageController
     protected $finalProductList;
 
     /**
+     * The original Title of this page before filters, etc...
+     *
+     * @var string
+     */
+    protected $originalTitle = '';
+
+
+    protected $hasGroupFilter = false;
+
+    protected $secondaryTitleHasBeenAdded = false;
+
+    protected $userPreferencesObject = null;
+    /**
      * form for searching
      * @var ProductSearchForm
      */
@@ -58,19 +73,6 @@ class ProductGroupController extends PageController
      */
     protected $searchResultHash = '';
 
-    /**
-     * The original Title of this page before filters, etc...
-     *
-     * @var string
-     */
-    protected $originalTitle = '';
-
-
-    protected $hasGroupFilter = false;
-
-    protected $secondaryTitleHasBeenAdded = false;
-
-    protected $userPreferencesObject = null;
 
     private static $allowed_actions = [
         'debug' => 'ADMIN',
@@ -195,10 +197,10 @@ class ProductGroupController extends PageController
             $this->productList = $this->getCachedProductList();
             if (! $this->productList) {
                 $this->productList = $this->getFinalProductList()
-                    ->applyGroupFilter(...$this->getCurrentUserPreferences('GROUPFILTER'))
-                    ->applyFilter(...$this->getCurrentUserPreferences('FILTER'))
-                    ->applySorter(...$this->getCurrentUserPreferences('SORT'))
-                    ->applyDisplayer(...$this->getCurrentUserPreferences('DISPLAY'))
+                    ->applyGroupFilter($this->getCurrentUserPreferencesKey('GROUPFILTER'), $this->getCurrentUserPreferencesParams('GROUPFILTER'))
+                    ->applyFilter($this->getCurrentUserPreferencesKey('FILTER'), $this->getCurrentUserPreferencesParams('FILTER'))
+                    ->applySorter($this->getCurrentUserPreferencesKey('SORT'), $this->getCurrentUserPreferencesParams('SORT'))
+                    ->applyDisplayer($this->getCurrentUserPreferencesKey('DISPLAY'), $this->getCurrentUserPreferencesParams('DISPLAY'))
                     ->getProducts();
                 $this->setCachedProductList($this->productList);
             }
@@ -333,17 +335,17 @@ class ProductGroupController extends PageController
 
     public function HasFilter(): bool
     {
-        return $this->getCurrentUserPreferences('FILTER') !== $this->getListConfigCalculated('FILTER');
+        return $this->getCurrentUserPreferencesKey('FILTER') !== $this->getListConfigCalculated('FILTER');
     }
 
     public function HasSort(): bool
     {
-        return $this->getCurrentUserPreferences('SORT') !== $this->getListConfigCalculated('SORT');
+        return $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT');
     }
 
     public function HasDisplay(): bool
     {
-        return $this->getCurrentUserPreferences('DISPLAY') !== $this->getListConfigCalculated('DISPLAY');
+        return $this->getCurrentUserPreferencesKey('DISPLAY') !== $this->getListConfigCalculated('DISPLAY');
     }
 
     public function HasFilterOrSort(): bool
@@ -393,9 +395,9 @@ class ProductGroupController extends PageController
         return 1;
     }
 
-    public function getUserPreferencesTitle(string $type, ?string $value): string
+    public function getUserPreferencesTitle(string $type, ?string $key): string
     {
-        return $this->getTemplateForProductsAndGroups()->getUserPreferencesTitle($type, $value);
+        return $this->getTemplateForProductsAndGroups()->getUserPreferencesTitle($type, $key);
     }
 
     /**
@@ -407,7 +409,7 @@ class ProductGroupController extends PageController
     public function getCurrentFilterTitle(): string
     {
         if ($this->hasFilter()) {
-            return $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferences('FILTER'));
+            return $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferencesKey('FILTER'));
         }
         return '';
     }
@@ -421,7 +423,7 @@ class ProductGroupController extends PageController
     public function getCurrentSortTitle(): string
     {
         if ($this->HasSort()) {
-            return $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferences('SORT'));
+            return $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferencesKey('SORT'));
         }
 
         return '';
@@ -433,7 +435,7 @@ class ProductGroupController extends PageController
     public function getCurrentDisplayTitle(): string
     {
         if ($this->HasDisplay()) {
-            return $this->getUserPreferencesTitle('DISPLAY', $this->getCurrentUserPreferences('DISPLAY'));
+            return $this->getUserPreferencesTitle('DISPLAY', $this->getCurrentUserPreferencesKey('DISPLAY'));
         }
 
         return '';
@@ -650,9 +652,14 @@ class ProductGroupController extends PageController
         return $this->getUserPreferencesClass()->saveUserPreferences($data);
     }
 
-    public function getCurrentUserPreferences(?string $type = '')
+    public function getCurrentUserPreferencesKey(?string $type = '')
     {
-        return $this->getUserPreferencesClass()->getCurrentUserPreferences($type);
+        return $this->getUserPreferencesClass()->getCurrentUserPreferencesKey($type);
+    }
+
+    public function getCurrentUserPreferencesParams(?string $type = '')
+    {
+        return $this->getUserPreferencesClass()->getCurrentUserPreferencesParams($type);
     }
 
     /**
@@ -722,6 +729,10 @@ class ProductGroupController extends PageController
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
+        if ($this->request->getVar('showdebug') && Permission::check('ADMIN') || Director::isDev()) {
+            $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
+            die();
+        }
         //makes sure best match only applies to search -i.e. reset otherwise.
     }
 

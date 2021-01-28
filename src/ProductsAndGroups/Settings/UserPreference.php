@@ -68,13 +68,13 @@ class UserPreference
      *
      * @var bool
      */
-    private static $user_session_per_page = [];
+    private static $use_session_per_page = [];
 
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      * @var bool
      */
-    private static $user_session = [];
+    private static $use_session = [];
 
     /**
      * @var HTTPRequest|null
@@ -108,7 +108,7 @@ class UserPreference
     {
         $config = $this->Config()->get('use_session');
 
-        return $this->useSession[$type] ?? $config[$type];
+        return $this->useSession[$type] ?? $config[$type] ?? false;
     }
 
     /**
@@ -126,7 +126,7 @@ class UserPreference
     {
         $config = $this->Config()->get('use_session_per_page');
 
-        return $this->useSessionPerPage[$type] ?? $config[$type];
+        return $this->useSessionPerPage[$type] ?? $config[$type] ?? false;
     }
 
 
@@ -179,16 +179,16 @@ class UserPreference
             $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
         $pageId = 0;
-        if ($this->getUseSessionPerPage('FILTER') || $this->getCurrentUserPreferences('SORT') || $this->getCurrentUserPreferences('DISPLAY')) {
+        if ($this->getUseSessionPerPageKey('FILTER') || $this->getCurrentUserPreferencesKey('SORT') || $this->getCurrentUserPreferencesKey('DISPLAY')) {
             $pageId = $this->rootGroup->ID;
         }
         return $this->cacheKey(
             implode(
                 '_',
                 [
-                    $this->getCurrentUserPreferences('SORT'),
-                    $this->getCurrentUserPreferences('FILTER'),
-                    $this->getCurrentUserPreferences('DISPLAY'),
+                    $this->getCurrentUserPreferencesKey('SORT'),
+                    $this->getCurrentUserPreferencesKey('FILTER'),
+                    $this->getCurrentUserPreferencesKey('DISPLAY'),
                     $pageStart,
                     $additionalKey,
                     $pageId,
@@ -255,7 +255,7 @@ class UserPreference
         }
     }
 
-    public function getBestKeyAndValidateKey($type, $key)
+    public function standardiseCurrentUserPreferences($type, $key)
     {
         if(is_array($key)) {
             if(isset($key['key']) && isset($key['params'])) {
@@ -408,7 +408,7 @@ class UserPreference
     {
         return $this->getTemplateForProductsAndGroups()
             ->getApplyer('DISPLAY')
-            ->IsShowFullList($this->getCurrentUserPreferences('DISPLAY')) ? true : false;
+            ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY')) ? true : false;
     }
 
     /**
@@ -467,6 +467,7 @@ class UserPreference
     {
         if (! $type) {
             return [
+                'GROUPFILTER' => $this->getCurrentUserPreferences('GROUPFILTER'),
                 'FILTER' => $this->getCurrentUserPreferences('FILTER'),
                 'SORT' => $this->getCurrentUserPreferences('SORT'),
                 'DISPLAY' => $this->getCurrentUserPreferences('DISPLAY'),
@@ -487,7 +488,20 @@ class UserPreference
         if (! $key) {
             $key = $this->rootGroup->getListConfigCalculated($type);
         }
-        return $this->getBestKeyAndValidateKey($type, $key);
+        return $this->standardiseCurrentUserPreferences($type, $key);
+    }
+
+    public function getCurrentUserPreferencesKey($type)
+    {
+        $val = $this->getCurrentUserPreferences($type);
+
+        return $val['key'];
+    }
+    public function getCurrentUserPreferencesParams($type)
+    {
+        $val = $this->getCurrentUserPreferences($type);
+
+        return $val['params'];
     }
 
     /**

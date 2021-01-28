@@ -454,10 +454,10 @@ class ProductGroup extends Page
 
     /**
      * Returns the full sortFilterDisplayNames set, a subset, or one value
-     * by either type (e.g. FILER) or variable (e.g dbFieldName)
+     * by either type (e.g. FILTER) or variable (e.g dbFieldName)
      * or both.
      *
-     * @param string $typeOrVariable    optional FILTER | SORT | DISPLAY OR variable
+     * @param string $typeOrVariable    optional GROUPFILTER | FILTER | SORT | DISPLAY OR variable
      * @param string $variable:         optional getVariable, etc...
      *
      * @return array | String
@@ -497,7 +497,7 @@ class ProductGroup extends Page
      */
     protected function getShowProductLevels(): array
     {
-        return $this->getTemplateForProductsAndGroups()->getShowProductLevels();
+        return $this->getBaseProductList()->getShowProductLevels();
     }
 
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
@@ -525,6 +525,9 @@ class ProductGroup extends Page
     }
 
     /**
+     * GROUPFILTER:
+     * not available
+     *
      * SORT:
      * returns an array of Key => Title for sort options.
      *
