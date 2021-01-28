@@ -10,6 +10,7 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
@@ -33,16 +34,22 @@ class Template
      * @var array
      */
     protected const SORT_DISPLAY_NAMES = [
+        'GROUPFILTER' => [
+            'value' => 'default',
+            'getVariable' => '',
+            'dbFieldName' => '',
+            'translationCode' => 'GROUPFILTER_BY',
+            'defaultApplyer' => ProductGroupFilter::class,
+        ],
         'FILTER' => [
             'value' => 'default',
-            'configName' => 'filter_options',
             'getVariable' => 'filter',
             'dbFieldName' => 'DefaultFilter',
+            'translationCode' => 'FILTER_BY',
             'defaultApplyer' => ProductSorter::class,
         ],
         'SORT' => [
             'value' => 'default',
-            'configName' => 'sort_options',
             'getVariable' => 'sort',
             'dbFieldName' => 'DefaultSortOrder',
             'translationCode' => 'SORT_BY',
@@ -50,7 +57,6 @@ class Template
         ],
         'DISPLAY' => [
             'value' => 'default',
-            'configName' => 'display_styles',
             'getVariable' => 'display',
             'dbFieldName' => 'DisplayStyle',
             'translationCode' => 'DISPLAY_STYLE',
@@ -175,7 +181,7 @@ class Template
      *
      * If no key is provided then the default key is used.
      *
-     * runs a method: getDefaultFilterTitle, getDefaultSortOrderTitle, or getDisplayStyleTitle
+     * runs a method: getFilterTitle, getSortTitle, or getDisplayTitle
      * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
      *
      * @param string $type - FILTER | SORT | DISPLAY
@@ -184,7 +190,7 @@ class Template
      */
     public function getUserPreferencesTitle(string $type, ?string $value): string
     {
-        $method = 'get' . $this->getSortFilterDisplayValues($type, 'dbFieldName') . 'Title';
+        $method = 'get' . ucwords(strtolower($type)) . 'Title';
         $value = $this->{$method}($value);
         if ($value) {
             return $value;
@@ -212,7 +218,7 @@ class Template
      *
      * @return array
      */
-    public function getDefaultFilterOptions(): array
+    public function getFilterOptions(): array
     {
         return $this->getOptionsMap('FILTER');
     }
@@ -223,7 +229,7 @@ class Template
      *
      * @return array
      */
-    public function getDefaultSortOrderOptions(): array
+    public function getSortOptions(): array
     {
         return $this->getOptionsMap('SORT');
     }
@@ -234,7 +240,7 @@ class Template
      *
      * @return array
      */
-    public function getDisplayStyleOptions(): array
+    public function getDisplayOptions(): array
     {
         return $this->getOptionsMap('DISPLAY');
     }
@@ -254,17 +260,17 @@ class Template
         return $this->getOptionsList('DISPLAY', $linkTemplate, $currentKey, $ajaxify);
     }
 
-    public function getDefaultFilterTitle(?string $value = ''): array
+    public function getFilterTitle(?string $value = ''): array
     {
         return $this->getTitle('FILTER', $value);
     }
 
-    public function getDefaultSortOrderTitle(?string $value = ''): array
+    public function getSortTitle(?string $value = ''): array
     {
         return $this->getTitle('SORT', $value);
     }
 
-    public function getDisplayStyleTitle(?string $value = ''): array
+    public function getDisplayTitle(?string $value = ''): array
     {
         return $this->getTitle('DISPLAY', $value);
     }
@@ -297,8 +303,9 @@ class Template
     public function getApplyer(string $classNameOrType, $finalProductList = null)
     {
         $className = $classNameOrType;
-        if ($this->IsSortFilterDisplayNamesType($classNameOrType, false)) {
-            $className = $this->getApplyerClassName($classNameOrType);
+        $betterClassName = $this->getApplyerClassName($classNameOrType);
+        if ($betterClassName) {
+            $className = $betterClassName;
         }
         $obj = new $className($finalProductList);
         ClassHelpers::check_for_instance_of($obj, BaseApplyer::class);

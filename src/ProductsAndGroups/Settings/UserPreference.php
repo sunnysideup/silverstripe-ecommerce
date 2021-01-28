@@ -43,18 +43,38 @@ class UserPreference
     protected $secondaryTitleHasBeenAdded = false;
 
     /**
+     *
+     * @var bool
+     */
+    protected $useSession = [
+        'FILTER' => false,
+        'SORT' => false,
+        'DISPLAY' => false,
+    ];
+
+    /**
+    *
+    * @var bool
+    */
+    protected $useSessionPerPage = [
+        'FILTER' => false,
+        'SORT' => false,
+        'DISPLAY' => false,
+    ];
+
+    /**
      * keep a store for every page setting?
      * For example, do we store in session how a particular page is filtered / sorted
      *
      * @var bool
      */
-    protected $useSessionPerPage = false;
+    private static $user_session_per_page = [];
 
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      * @var bool
      */
-    protected $useSession = false;
+    private static $user_session = [];
 
     /**
      * @var HTTPRequest|null
@@ -73,28 +93,42 @@ class UserPreference
      * @var array
      */
     protected $userPreferences = [];
+    /**
+     * @param  bool $useSession
+     * @return self
+     */
+    public function setUseSession(string $type, ?bool $useSession): self
+    {
+        $this->useSession[$type] = $useSession;
+
+        return $this;
+    }
+
+    public function getUseSession(string $type) : bool
+    {
+        $config = $this->Config()->get('use_session');
+
+        return $this->useSession[$type] ?? $config[$type];
+    }
 
     /**
      * @param  bool $useSessionPerPage
      * @return self
      */
-    public function setUseSessionPerPage(?bool $useSessionPerPage): self
+    public function setUseSessionPerPage(string $type, ?bool $useSessionPerPage): self
     {
-        $this->useSessionPerPage = $useSessionPerPage;
+        $this->useSessionPerPage[$type] = $useSessionPerPage;
 
         return $this;
     }
 
-    /**
-     * @param  bool $useSession
-     * @return self
-     */
-    public function setUseSession(?bool $useSession): self
+    public function getUseSessionPerPage(string $type) : bool
     {
-        $this->useSession = $useSession;
+        $config = $this->Config()->get('use_session_per_page');
 
-        return $this;
+        return $this->useSessionPerPage[$type] ?? $config[$type];
     }
+
 
     /**
      * @param  HTTPRequest  $request
@@ -145,7 +179,7 @@ class UserPreference
             $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
         $pageId = 0;
-        if ($this->useSessionPerPage) {
+        if ($this->getUseSessionPerPage('FILTER') || $this->getCurrentUserPreferences('SORT') || $this->getCurrentUserPreferences('DISPLAY')) {
             $pageId = $this->rootGroup->ID;
         }
         return $this->cacheKey(
@@ -190,6 +224,10 @@ class UserPreference
                 }
             }
 
+            if ($this->rootGroupController->HasGroupFilter()) {
+                $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentFilterTitle());
+            }
+
             if ($this->rootGroupController->HasFilter()) {
                 $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentFilterTitle());
             }
@@ -204,9 +242,9 @@ class UserPreference
             }
 
             if ($secondaryTitle) {
-                $this->addTitleToField('Title', $secondaryTitle);
-                $this->addTitleToField('MetaTitle', $secondaryTitle);
-                $this->addTitleToField('MetaDescription', $secondaryTitle);
+                foreach(['Title', 'MetaTitle', 'MetaDescription'] as $field) {
+                    $this->addTitleToField($field, $secondaryTitle);
+                }
             }
 
             // dont update menu title, because the entry in the menu
@@ -219,7 +257,17 @@ class UserPreference
 
     public function getBestKeyAndValidateKey($type, $key)
     {
-        return $key;
+        if(is_array($key)) {
+            if(isset($key['key']) && isset($key['params'])) {
+                return $key;
+            }
+            user_error('Badly set key and params');
+        } else {
+            return [
+                'key' => $key,
+                'params' => null,
+            ];
+        }
     }
 
     /**
@@ -342,7 +390,7 @@ class UserPreference
         if (! $this->request->getVar($sortGetVariable)) {
             $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
             if ($suggestion) {
-                $array = ['SORT' => ['type' => $suggestion, 'value' => $idArray]];
+                $array = ['SORT' => ['key' => $suggestion, 'params' => $idArray]];
             }
         }
 
@@ -376,7 +424,7 @@ class UserPreference
      * ```
      * OR
      * ```php
-     *     FILTER => ['type' => 'foo', 'value' => 'bar']
+     *     FILTER => ['key' => 'foo', 'params' => 'bar']
      * ```
      * @return self
      */
@@ -394,9 +442,9 @@ class UserPreference
                 $newPreference = $this->userPreferences[$type];
             }
             $this->userPreferences[$type] = $newPreference;
-            if ($this->useSession) {
+            if ($this->getUseSession($type)) {
                 $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
-                if ($this->useSessionPerPage) {
+                if ($this->getUseSessionPerPage($type)) {
                     $sessionName .= '_' . $this->rootGroup->ID;
                 }
                 $this->rootGroupController->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
@@ -425,9 +473,9 @@ class UserPreference
             ];
         }
         $key = '';
-        if ($this->useSession) {
+        if ($this->getUseSession($type)) {
             $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
-            if ($this->useSessionPerPage) {
+            if ($this->getUseSessionPerPage($type)) {
                 $sessionName .= '_' . $this->rootGroup->ID;
             }
             $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);

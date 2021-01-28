@@ -471,7 +471,7 @@ class Product extends Page implements BuyableModel
      */
     public function AllParentGroups()
     {
-        $otherGroupsArray = $this->ProductGroups()->column('ID');
+        $otherGroupsArray = $this->ProductGroups()->columnUnique();
         $ids = array_merge([$this->ParentID], $otherGroupsArray);
 
         if ($ids) {

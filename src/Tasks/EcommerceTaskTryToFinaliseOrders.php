@@ -85,7 +85,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     } else {
                         $sort = ['ID' => 'ASC'];
                     }
-                    $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->column('ID') : [];
+                    $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->columnUnique() : [];
                     if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
                         //do nothing...
                     } else {

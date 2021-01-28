@@ -56,7 +56,7 @@ class ProductSorter extends BaseApplyer
             $this->products = $this->products->sort(Convert::raw2sql($sort));
         }
         // @todo
-
+        $this->applyEnd($key, $params);
         return $this;
     }
 }

@@ -34,7 +34,7 @@ abstract class BaseApplyer
     /**
      * @var string|array
      */
-    protected static $selectedOptionParams = '';
+    protected $selectedOptionParams = '';
 
     private static $options = [];
 
@@ -104,10 +104,11 @@ abstract class BaseApplyer
 
     /**
      * get the title for an option
-     * @param  string        $key string, e.g. default.
+     * @param  string        $key - e.g. default
+     * @param  mixed         $params - optional
      * @return string
      */
-    public function getTitle($key = null): string
+    public function getTitle(?string $key = '', $params = null): string
     {
         return $this->checkOption($key, 'Title');
     }

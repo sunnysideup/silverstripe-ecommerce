@@ -91,6 +91,7 @@ class RelatedProductGroups
     {
         ClassHelpers::check_for_instance_of($list, SS_List::class, true);
         $filter = Config::inst()->get(self::class, 'default_product_group_filter');
+
         return $list->filter($filter);
     }
 
@@ -148,7 +149,7 @@ class RelatedProductGroups
 
     public function getParentGroupIds() : array
     {
-        return $this->getGroups()->column('ID');
+        return $this->getGroups()->columnUnique();
     }
 
     /**
@@ -206,7 +207,7 @@ class RelatedProductGroups
             return $ids;
         }
 
-        $children = ProductGroup::get()->filter(['ParentID' => $groupId])->column('ID');
+        $children = ProductGroup::get()->filter(['ParentID' => $groupId])->columnUnique();
 
         if ($children) {
             $ids = array_merge($ids, $children);

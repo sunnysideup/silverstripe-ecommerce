@@ -384,7 +384,7 @@ class ProductGroup extends Page
     {
         $array = [];
         if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->count()) {
-            $array = $this->AlsoShowProducts()->columnUnique('ID');
+            $array = $this->AlsoShowProducts()->columnUnique();
         }
         return ArrayMethods::filter_array($array);
     }
@@ -450,16 +450,6 @@ class ProductGroup extends Page
     public function getNumberOfProducts(): int
     {
         return Product::get()->filter(['ParentID' => $this->ID])->count();
-    }
-
-    /**
-     * @param  string  $type      FILTER|SORT|DISPLAY
-     * @param  boolean $showError optional
-     * @return bool
-     */
-    public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
-    {
-        return $this->getTemplateForProductsAndGroups()->IsSortFilterDisplayNamesType($type, $showError);
     }
 
     /**
@@ -563,7 +553,7 @@ class ProductGroup extends Page
             $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
             $array = ['inherit' => $inheritTitle];
         }
-        $method = 'get' . $this->getSortFilterDisplayValues($type, 'dbFieldName') . 'Options';
+        $method = 'get' . ucwords(strtolower($type)) . 'Options';
         $options = $this->getTemplateForProductsAndGroups()->{$method}();
 
         return array_merge($array, $options);
@@ -614,7 +604,7 @@ class ProductGroup extends Page
             }
             if (! $value || $value === 'inherit') {
                 $parent = $this->ParentGroup();
-                if ($parent->exists() && $parent->ID !== $this->ID) {
+                if ($parent && $parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);
                 } else {
                     $value = EcommerceConfig::inst()->recursiveValue($fieldNameOrMethod, $default);

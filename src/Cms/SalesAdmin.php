@@ -132,10 +132,10 @@ class SalesAdmin extends ModelAdmin
                         'StatusID:GreaterThan' => 0,
                     ]
                 );
-            if (! empty($ordersinQueue->column('ID'))) {
+            if (! empty($ordersinQueue->columnUnique())) {
                 $list = $list->exclude(
                     [
-                        'ID' => $ordersinQueue->column('ID'),
+                        'ID' => $ordersinQueue->columnUnique(),
                     ]
                 );
             }
@@ -143,7 +143,7 @@ class SalesAdmin extends ModelAdmin
             $list = $list
                 ->exclude(
                     [
-                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
+                        'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique(),
                     ]
                 );
         }

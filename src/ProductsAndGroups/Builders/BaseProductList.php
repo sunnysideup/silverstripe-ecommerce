@@ -375,7 +375,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     protected function storeInCache(): self
     {
-        EcommerceCache::inst()->save($this->getCachekey(), $this->products->column('ID'));
+        EcommerceCache::inst()->save($this->getCachekey(), $this->products->columnUnique());
         EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds'), $this->blockedProductsIds);
         EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());

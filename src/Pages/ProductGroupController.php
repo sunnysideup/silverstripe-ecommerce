@@ -24,19 +24,25 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
 class ProductGroupController extends PageController
 {
-    /**
-     * @var ProductList
-     */
-    protected $productList;
 
+    /**
+     * the exact list of products that is going to be shown (excluding pagination)
+     * @var SS_List
+     */
+    protected $productList = null;
+
+
+    /**
+     * the final product list that we use to collect products
+     * @var FinalProductList
+     */
+    protected $finalProductList;
+
+    /**
+     * form for searching
+     * @var ProductSearchForm
+     */
     protected $searchForm = null;
-
-    /**
-     * The original Title of this page before filters, etc...
-     *
-     * @var string
-     */
-    protected $originalTitle = '';
 
     /**
      * Is this a product search?
@@ -51,6 +57,16 @@ class ProductGroupController extends PageController
      * @var string
      */
     protected $searchResultHash = '';
+
+    /**
+     * The original Title of this page before filters, etc...
+     *
+     * @var string
+     */
+    protected $originalTitle = '';
+
+
+    protected $hasGroupFilter = false;
 
     protected $secondaryTitleHasBeenAdded = false;
 
@@ -82,11 +98,12 @@ class ProductGroupController extends PageController
     {
         $otherProductGroup = ProductFilter::get_group_from_url_segment($request->param('ID'));
         if ($otherProductGroup) {
+            $this->hasGroupFilter = true;
             $this->saveUserPreferences(
                 [
-                    'FILTER' => [
-                        'type' => 'filterforgroup',
-                        'value' => $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID,
+                    'GROUPFILTER' => [
+                        'type' => 'default',
+                        'params' => $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID,
                     ],
                 ]
             );
@@ -169,6 +186,28 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * get the unpaginated list. Only set once.
+     * @return SS_List
+     */
+    public function getProductList()
+    {
+        if ($this->productList === null) {
+            $this->productList = $this->getCachedProductList();
+            if (! $this->productList) {
+                $this->productList = $this->getFinalProductList()
+                    ->applyGroupFilter(...$this->getCurrentUserPreferences('GROUPFILTER'))
+                    ->applyFilter(...$this->getCurrentUserPreferences('FILTER'))
+                    ->applySorter(...$this->getCurrentUserPreferences('SORT'))
+                    ->applyDisplayer(...$this->getCurrentUserPreferences('DISPLAY'))
+                    ->getProducts();
+                $this->setCachedProductList($this->productList);
+            }
+        }
+
+        return $this->productList;
+    }
+
+    /**
      * Return the products for this group.
      *
      * This is the call that is made from the template and has the actual final
@@ -176,22 +215,13 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\PaginatedList
      */
-    public function Products(): PaginatedList
+    public function Products(): ?PaginatedList
     {
         $this->addSecondaryTitle();
-        $list = $this->getCachedProductList();
-        if (! $list) {
-            $list = $this->getFinalProductList()->getProducts();
-            EcommerceCache::inst()->save($this->ProductGroupListCachingKey(), $list->column('ID'));
-        }
-        $this->getFinalProductList()
-            ->applyFilter($this->getCurrentUserPreferences('FILTER'))
-            ->applySorter($this->getCurrentUserPreferences('SORT'))
-            ->applyDisplayer($this->getCurrentUserPreferences('DISPLAY'));
 
         $this->cachingRelatedJavascript();
 
-        return $this->paginateList($list);
+        return $this->paginateList($this->getProductList());
     }
 
     /**
@@ -276,6 +306,11 @@ class ProductGroupController extends PageController
         );
     }
 
+    public function ShowGroupFilterLinks(): bool
+    {
+        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasGroupFilters() ? true : false;
+    }
+
     public function ShowFiltersLinks(): bool
     {
         return $this->getProductList()->CountGreaterThanOne(3) && $this->HasFilters() ? true : false;
@@ -289,6 +324,11 @@ class ProductGroupController extends PageController
     public function ShowDisplayLinks(): bool
     {
         return $this->getProductList()->CountGreaterThanOne(3) && $this->HasDisplays() ? true : false;
+    }
+
+    public function HasGroupFilter(): bool
+    {
+        return $this->hasGroupFilter;
     }
 
     public function HasFilter(): bool
@@ -632,12 +672,12 @@ class ProductGroupController extends PageController
      */
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
-        if (! $this->productList) {
+        if ($this->finalProductList === null) {
             $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
-            $this->productList = $className::inst($this, $this->dataRecord);
-            ClassHelpers::check_for_instance_of($this->productList, FinalProductList::class, true);
+            $this->finalProductList = $className::inst($this, $this->dataRecord);
+            ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
         }
-        return $this->productList;
+        return $this->finalProductList;
     }
 
     protected function getCachedProductList(): ? DataList
@@ -652,6 +692,11 @@ class ProductGroupController extends PageController
         }
 
         return null;
+    }
+    protected function setCachedProductList($productList)
+    {
+        $key = $this->ProductGroupListCachingKey(false);
+        EcommerceCache::inst()->save($this->ProductGroupListCachingKey(), $productList->columnUnique());
     }
 
     /**

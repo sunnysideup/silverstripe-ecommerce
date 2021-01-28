@@ -321,7 +321,7 @@ class ProductListBackup extends ViewableData
     //  */
     // public function getProductIds()
     // {
-    //     return $this->products->column('ID');
+    //     return $this->products->columnUnique();
     // }
     //
     // /**

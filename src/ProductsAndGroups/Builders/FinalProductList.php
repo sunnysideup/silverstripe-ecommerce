@@ -85,12 +85,12 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList;
     }
 
-    public function apply(string $classNameOrType, string $key, $param = null): self
+    public function apply(string $classNameOrType, string $key, $params = null): self
     {
         $obj = $this->getApplyer($classNameOrType);
 
         $obj
-            ->apply($key, $param)
+            ->apply($key, $params)
             ->getProducts();
 
         return $this;
@@ -98,36 +98,47 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
     /**
      * @param string         $key
-     * @param array|string   $param optional additional filter
+     * @param array|string   $params optional additional filter
      *
      * @return self
      */
-    public function applyFilter(string $key, $param = null): self
+    public function applyFilter(string $key, $params = null): self
     {
-        return $this->apply('FILTER', $key, $param);
+        return $this->apply('FILTER', $key, $params);
     }
 
     /**
      * @param string         $key
-     * @param array|string   $param optional additional filter
+     * @param array|string   $params optional additional filter
      *
      * @return self
      */
-    public function applySorter(string $key, $param = null): self
+    public function applyGroupFilter(string $key, $params = null): self
     {
-        return $this->apply('SORT', $key, $param);
+        return $this->apply('GROUPFILTER', $key, $params);
+    }
+
+    /**
+     * @param string         $key
+     * @param array|string   $params optional additional filter
+     *
+     * @return self
+     */
+    public function applySorter(string $key, $params = null): self
+    {
+        return $this->apply('SORT', $key, $params);
     }
 
 
     /**
      * @param string         $key
-     * @param array|string   $param optional additional filter
+     * @param array|string   $params optional additional filter
      *
      * @return self
      */
-    public function applyDisplayer(string $key, $param = null): self
+    public function applyDisplayer(string $key, $params = null): self
     {
-        return $this->apply('DISPLAY', $key, $param);
+        return $this->apply('DISPLAY', $key, $params);
     }
 
     /**
