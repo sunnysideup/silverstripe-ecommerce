@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
@@ -16,6 +17,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -417,7 +419,7 @@ class OrderFormAddress extends Form
                 $this->orderMember->write();
             }
             if ($this->memberShouldBeLoggedIn($data)) {
-                $this->orderMember->LogIn();
+                Injector::inst()->get(IdentityStore::class)->logIn($this->orderMember);
             }
             //this causes ERRORS ....
             $this->order->MemberID = $this->orderMember->ID;
