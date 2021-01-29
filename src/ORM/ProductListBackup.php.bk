@@ -474,4 +474,45 @@ class ProductListBackup extends ViewableData
     //
     //     return '';
     // }
+
+
+        // /**
+        //  * Provides a dataset of links for a particular user preference.
+        //  *
+        //  * @param string $classNameOrType        SORT | FILTER | DISPLAY - e.g. sort_options
+        //  *
+        //  * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+        //  */
+        // public function getUserPreferencesLinks($type)
+        // {
+        //     // get basics
+        //     $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
+        //     $options = $this->getConfigOptions($type);
+        //
+        //     // if there is only one option then do not bother
+        //     if (count($options) < 2) {
+        //         return;
+        //     }
+        //
+        //     // get more config names
+        //     $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
+        //     $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
+        //     $arrayList = ArrayList::create();
+        //
+        //     if (count($options)) {
+        //         foreach ($options as $key => $array) {
+        //             $link = '?' . $getVariableName . "=${key}";
+        //             user_error('redo with link template');
+        //             $link = $this->Link() . $link;
+        //
+        //             $arrayList->push(ArrayData::create([
+        //                 'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
+        //                 'Link' => $link,
+        //                 'SelectKey' => $key,
+        //             ]));
+        //         }
+        //     }
+        //
+        //     return $arrayList;
+        // }
 }

@@ -22,6 +22,7 @@ use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
@@ -472,7 +473,7 @@ class Product extends Page implements BuyableModel
     public function AllParentGroups()
     {
         $otherGroupsArray = $this->ProductGroups()->columnUnique();
-        $ids = array_merge([$this->ParentID], $otherGroupsArray);
+        $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
 
         if ($ids) {
             return ProductGroup::get()->filter([

@@ -174,8 +174,9 @@ abstract class AbstractProductsAndGroupsList
      */
     public function getAlsoShowProductsFromRootGroupOnly(): DataList
     {
+        $ids = ArrayMethods::filter_array($this->getProducts()->columnUnique());
         return $this->rootGroup->AlsoShowProducts()
-            ->filter(['ID' => $this->getProducts()->columnUnique()]);
+            ->filter(['ID' => $ids]);
     }
 
     /**
@@ -265,6 +266,10 @@ abstract class AbstractProductsAndGroupsList
         return $this->getAlsoShowProductsProductGroupInclusive()
             ->exclude(['ID' => $excludeFilter]);
     }
+
+    abstract public function getAlsoShowParentIds(): array;
+
+    abstract public function getAlsoShowParents(): DataList;
 
     ##################################################
     # GROUPS: Parents

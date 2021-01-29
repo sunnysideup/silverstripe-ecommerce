@@ -19,6 +19,8 @@ use Sunnysideup\Ecommerce\Dev\DebugTrait;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
+
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
 /**
@@ -335,7 +337,7 @@ class UserPreference
             }
 
             if ($this->rootGroupController->IsSearchResults()) {
-                $count = $this->rootGroupController->getFinalProductList()->getRawCount();
+                $count = $this->getFinalProductList()->getRawCount();
 
                 if ($count) {
                     $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
@@ -393,54 +395,32 @@ class UserPreference
         }
     }
 
-    // /**
-    //  * Provides a dataset of links for a particular user preference.
-    //  *
-    //  * @param string $classNameOrType        SORT | FILTER | DISPLAY - e.g. sort_options
-    //  *
-    //  * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
-    //  */
-    // public function getUserPreferencesLinks($type)
-    // {
-    //     // get basics
-    //     $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
-    //     $options = $this->getConfigOptions($type);
-    //
-    //     // if there is only one option then do not bother
-    //     if (count($options) < 2) {
-    //         return;
-    //     }
-    //
-    //     // get more config names
-    //     $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
-    //     $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
-    //     $arrayList = ArrayList::create();
-    //
-    //     if (count($options)) {
-    //         foreach ($options as $key => $array) {
-    //             $link = '?' . $getVariableName . "=${key}";
-    //             user_error('redo with link template');
-    //             $link = $this->Link() . $link;
-    //
-    //             $arrayList->push(ArrayData::create([
-    //                 'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
-    //                 'Link' => $link,
-    //                 'SelectKey' => $key,
-    //             ]));
-    //         }
-    //     }
-    //
-    //     return $arrayList;
-    // }
-
     public function getOptions(string $classNameOrType): array
     {
         return $this->getTemplateForProductsAndGroups()->getOptions($classNameOrType);
     }
 
+    public function getActions(string $classNameOrType): array
+    {
+        $answer = [];
+        if ($classNameOrType === 'GROUPFILTER' || $classNameOrType instanceof ProductGroupFilter) {
+            $map = $this->getBaseProductList()->getAlsoShowParents()->map('ID', 'URLSegment');
+            if ($map->Count()) {
+                $array = $map->toArray();
+                foreach ($array as $id => $URLSegment) {
+                    $answer[] = 'filterforgroup/' . $URLSegment . ',' . $id . '/';
+                }
+            }
+        }
+        if (! count($answer)) {
+            $answer = [null];
+        }
+        return $answer;
+    }
+
     /**
      * full list of options with Links that know about "current"
-     * @param  string    $type (FILTER|SORT|DISPLAY)
+     * @param  string    $type (GROUPFILTER|FILTER|SORT|DISPLAY)
      * @param  string    $currentKey
      * @param  boolean   $ajaxify
      *
@@ -453,21 +433,23 @@ class UserPreference
             $currentKey = $this->getCurrentUserPreferencesKey($type);
         }
         $options = $this->getOptions($type);
-        if (count($options) > 1) {
-            foreach ($options as $key => $data) {
-                $isCurrent = $currentKey === $key;
-                $type . ';;dddd;;';
-                $obj = new ArrayData(
-                    [
-                        'Title' => $data['Title'],
-                        'Current' => $isCurrent ? true : false,
-                        //todo: fix this!!!!
-                        'Link' => $this->getLinkTemplate(null, $type, $key),
-                        'LinkingMode' => $isCurrent ? 'current' : 'link',
-                        'Ajaxify' => $ajaxify,
-                    ]
-                );
-                $list->push($obj);
+        $actions = $this->getActions($type);
+        if (count($options) > 1 || count($actions) > 1) {
+            foreach ($actions as $action) {
+                foreach ($options as $key => $data) {
+                    $isCurrent = $currentKey === $key;
+                    $obj = new ArrayData(
+                        [
+                            'Title' => $data['Title'],
+                            'Current' => $isCurrent ? true : false,
+                            //todo: fix this!!!!
+                            'Link' => $this->getLinkTemplate($action, $type, $key),
+                            'LinkingMode' => $isCurrent ? 'current' : 'link',
+                            'Ajaxify' => $ajaxify,
+                        ]
+                    );
+                    $list->push($obj);
+                }
             }
         }
 
@@ -564,6 +546,16 @@ class UserPreference
         $val = $this->getCurrentUserPreferences($type);
 
         return $val['title'];
+    }
+
+    protected function getFinalProductList()
+    {
+        return $this->rootGroupController->getFinalProductList();
+    }
+
+    protected function getBaseProductList()
+    {
+        return $this->getFinalProductList()->getBaseProductList();
     }
 
     protected function getTitle(string $type, ?string $value = ''): string

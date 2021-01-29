@@ -26,7 +26,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\ProductsAndGroups\BaseProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
 /**
@@ -339,7 +339,7 @@ class ProductGroup extends Page
      */
     public function FilterForGroupLinkSegment(): string
     {
-        return 'filterforgroup/' . $this->URLSegment . '/';
+        return 'filterforgroup/' . $this->URLSegment . ',' . $this->ID . '/';
     }
 
     /**

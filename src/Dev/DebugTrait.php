@@ -69,21 +69,23 @@ trait DebugTrait
             return print_r($mixed, 1);
         } elseif (is_array($mixed)) {
             $html = '';
-            $html .= '<ul>';
             $isAssoc = $this->isAssoc($mixed);
             $isLarge = count($mixed) > 20;
             $after = '';
             $style = '';
             $keyString = '';
+            $countStr = '';
             if ($isLarge) {
                 $style = 'display: inline;';
                 $after = ', ';
+                $html .= '' . count($mixed) . ' entries ... ';
             }
+            $html .= '<ul>';
             foreach ($mixed as $key => $item) {
                 if ($isAssoc) {
                     $keyString = '<strong>' . $key . '</strong>: ';
                 }
-                $html .= '<li style="' . $style . '">' . $keyString . $this->arrayToUl($item) . $after . '</li>';
+                $html .= '<li style="' . $style . '">' . $keyString . $countStr . $this->arrayToUl($item) . $after . '</li>';
             }
             return $html . '</ul>';
         }

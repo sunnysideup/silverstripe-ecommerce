@@ -22,7 +22,6 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
@@ -574,12 +573,11 @@ class ProductGroupController extends PageController
                     $onlySearchTitle = 'Last Search Results';
                 }
             }
-            $defaultKey = $this->getListConfigCalculated('FILTER');
             $this->searchForm = ProductSearchForm::create(
                 $this,
                 'ProductSearchForm',
                 $onlySearchTitle,
-                $this->getProductList(null, $defaultKey)
+                $this->getProductList()
             );
             // $sortGetVariable = $this->getSortFilterDisplayValues('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
@@ -722,7 +720,8 @@ class ProductGroupController extends PageController
     protected function setCachedProductList($productList)
     {
         $key = $this->ProductGroupListCachingKey(false);
-        EcommerceCache::inst()->save($this->ProductGroupListCachingKey(), $productList->columnUnique());
+        $ids = ArrayMethods::filter_array($productList->columnUnique());
+        EcommerceCache::inst()->save($key, $ids);
     }
 
     /**

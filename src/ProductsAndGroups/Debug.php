@@ -12,6 +12,7 @@ class Debug extends ViewableData
 
     public function __construct($rootGroupController, $rootGroup)
     {
+        parent::__construct();
         $this->rootGroupController = $rootGroupController;
         $this->rootGroup = $rootGroup;
     }

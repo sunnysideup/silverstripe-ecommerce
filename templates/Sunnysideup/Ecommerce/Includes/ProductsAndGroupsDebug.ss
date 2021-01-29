@@ -49,27 +49,29 @@
     <li><strong>Product Ids:</strong> $getProductIds</li>
     <li><strong>Excluded Products 1:</strong> $getExcludedProducts</li>
     <li><strong>Excluded Products 2:</strong> $getBlockedProductIds</li>
-    <li><strong>Also show IDs:</strong> $getAlsoShowProductsIds</li>
+    <li><strong>AlsoShow IDs:</strong> $getAlsoShowProductsIds</li>
     <li><strong>Raw Count:</strong> $getRawCount</li>
     <li><strong>More than one:</strong> $hasMoreThanOne</li>
     <li><strong>More than ten:</strong> $hasMoreThanOne(10)</li>
     <li><strong>More than a million:</strong> $hasMoreThanOne(99999999)</li>
     <li><strong>Direct Products:</strong> $getDirectProducts</li>
-    <li><strong>Direct Products (also show products removed):</strong> $getDirectProductsWithAlsoShow</li>
+    <li><strong>Direct Products (AlsoShow products removed):</strong> $getDirectProductsWithAlsoShow</li>
     <li><strong>Child Products:</strong> $getChildProductsInclusive</li>
-    <li><strong>Child Products (also show products removed):</strong> $getChildProductsExclusive</li>
-    <li><strong>Also Show:</strong> $getAlsoShowProductsInclusive</li>
-    <li><strong>Also Show (child products removed):</strong> $getAlsoShowProductsExclusive</li>
-    <li><strong>Also Show (root group only):</strong> $getAlsoShowProductsFromRootGroupOnly</li>
+    <li><strong>Child Products (AlsoShow products removed):</strong> $getChildProductsExclusive</li>
+    <li><strong>AlsoShow:</strong> $getAlsoShowProductsInclusive</li>
+    <li><strong>AlsoShow (child products removed):</strong> $getAlsoShowProductsExclusive</li>
+    <li><strong>AlsoShow (root group only):</strong> $getAlsoShowProductsFromRootGroupOnly</li>
 </ul>
 
 <h3>Parents</h3>
 <ul>
-    <li><strong>Parent Group IDs:</strong> $getParentGroupIds</li>
+    <li><strong>Parent Group IDs (based on actual products):</strong> $getParentGroupIds</li>
     <li><strong>Parent Groups (based on actual products):</strong> $getParentGroups</li>
-    <li><strong>Parent Groups (excluded also show parents):</strong> $getDirectParentGroupsExclusive</li>
-    <li><strong>Alsow show parents (inc. normal parents):</strong> $getAlsoShowProductsProductGroupInclusive</li>
-    <li><strong>Alsow show parents (exc. normal parents):</strong> $getAlsoShowProductsProductGroupsExclusive</li>
+    <li><strong>Parent Groups (based on included groups - excluded AlsoShow parents):</strong> $getDirectParentGroupsExclusive</li>
+    <li><strong>AlsoShow parents (inc. hierarchy parents):</strong> $getAlsoShowProductsProductGroupInclusive</li>
+    <li><strong>AlsoShow parents (exc. hierarchy parents):</strong> $getAlsoShowProductsProductGroupsExclusive</li>
+    <li><strong>Related AlsoShow Parents (IDs):</strong> $getAlsoShowParentIds</li>
+    <li><strong>Related AlsoShow Parents:</strong> $getAlsoShowParents</li>
 </ul>
     <%-- <li><strong>Direct Products ($getDirectProducts.Count):</strong> <ul><% loop $getDirectProducts %><li>$Title</li><% end_loop %></ul></li> --%>
     <%-- <li>Groups:<% with $getGroups %><ul><% loop $getGroups %><li>$MenuTitle</li><% end_loop %></ul><% end_with %></li> --%>
@@ -86,27 +88,29 @@
 <h3>Products</h3>
 <ul>
     <li><strong>Product Ids:</strong> $getProductIds</li>
-    <li><strong>Also show IDs:</strong> $getAlsoShowProductsIds</li>
+    <li><strong>AlsoShow IDs:</strong> $getAlsoShowProductsIds</li>
     <li><strong>Raw Count:</strong> $getRawCount</li>
     <li><strong>More than one:</strong> $hasMoreThanOne</li>
     <li><strong>More than ten:</strong> $hasMoreThanOne(10)</li>
     <li><strong>More than a million:</strong> $hasMoreThanOne(99999999)</li>
     <li><strong>Direct Products:</strong> $getDirectProducts</li>
-    <li><strong>Direct Products (also show products removed):</strong> $getDirectProductsWithAlsoShow</li>
+    <li><strong>Direct Products (AlsoShow products removed):</strong> $getDirectProductsWithAlsoShow</li>
     <li><strong>Child Products:</strong> $getChildProductsInclusive</li>
-    <li><strong>Child Products (also show products removed):</strong> $getChildProductsExclusive</li>
-    <li><strong>Also Show:</strong> $getAlsoShowProductsInclusive</li>
-    <li><strong>Also Show (child products removed):</strong> $getAlsoShowProductsExclusive</li>
-    <li><strong>Also Show (root group only):</strong> $getAlsoShowProductsFromRootGroupOnly</li>
+    <li><strong>Child Products (AlsoShow products removed):</strong> $getChildProductsExclusive</li>
+    <li><strong>AlsoShow:</strong> $getAlsoShowProductsInclusive</li>
+    <li><strong>AlsoShow (child products removed):</strong> $getAlsoShowProductsExclusive</li>
+    <li><strong>AlsoShow (root group only):</strong> $getAlsoShowProductsFromRootGroupOnly</li>
 </ul>
 
 <h3>Parents</h3>
 <ul>
     <li><strong>Parent Group IDs:</strong> $getParentGroupIds</li>
     <li><strong>Parent Groups (based on actual products):</strong> $getParentGroups</li>
-    <li><strong>Parent Groups (excluded also show parents):</strong> $getDirectParentGroupsExclusive</li>
-    <li><strong>Alsow show parents (inc. normal parents):</strong> $getAlsoShowProductsProductGroupInclusive</li>
-    <li><strong>Alsow show parents (exc. normal parents):</strong> $getAlsoShowProductsProductGroupsExclusive</li>
+    <li><strong>Parent Groups (excluded AlsoShow parents):</strong> $getDirectParentGroupsExclusive</li>
+    <li><strong>AlsoShow parents (inc. normal parents):</strong> $getAlsoShowProductsProductGroupInclusive</li>
+    <li><strong>AlsoShow parents (exc. normal parents):</strong> $getAlsoShowProductsProductGroupsExclusive</li>
+    <li><strong>Related AlsoShow Parents (IDs):</strong> $getAlsoShowParentIds</li>
+    <li><strong>Related AlsoShow Parents:</strong> $getAlsoShowParents</li>
 </ul>
 <% end_with %>
 

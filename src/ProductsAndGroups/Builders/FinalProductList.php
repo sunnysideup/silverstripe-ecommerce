@@ -160,6 +160,16 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getAlsoShowProductsIds();
     }
 
+    public function getAlsoShowParentIds(): array
+    {
+        return $this->baseProductList->getAlsoShowParentIds();
+    }
+
+    public function getAlsoShowParents(): DataList
+    {
+        return $this->baseProductList->getAlsoShowParents();
+    }
+
     /**
      * required for SubGroups
      * @return array

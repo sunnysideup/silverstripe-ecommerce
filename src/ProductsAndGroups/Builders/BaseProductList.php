@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -67,6 +68,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * @var int[]
      */
     protected $parentGroupIds = [];
+
+    /**
+     * @var int[]
+     */
+    protected $alsoShowParentIds = [];
 
     /**
      * @var int[]
@@ -205,6 +211,26 @@ class BaseProductList extends AbstractProductsAndGroupsList
     public function getAlsoShowProducts(): DataList
     {
         return $this->products->filter(['ID' => $this->getAlsoShowProductsIds()]);
+    }
+
+    public function getAlsoShowParentIds(): array
+    {
+        if (! count($this->alsoShowParentIds)) {
+            $rows = DB::query('
+                SELECT "ProductGroupID"
+                FROM "Product_ProductGroups"
+                WHERE "ProductID" IN (' . implode(', ', $this->getProductIds()) . ');')->column();
+
+            $this->alsoShowParentIds = ArrayMethods::filter_array($rows);
+        }
+        return $this->alsoShowParentIds;
+    }
+
+    public function getAlsoShowParents(): DataList
+    {
+        $list = ProductGroup::get()->filter(['ID' => $this->getAlsoShowParentIds()]);
+
+        return RelatedProductGroups::apply_default_filter_to_groups($list);
     }
 
     /**
@@ -390,15 +416,13 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     protected function loadCache(): self
     {
-        $productIds = EcommerceCache::inst()->retrieve($this->getCachekey());
-        if (empty($productIds) || ! is_array($productIds)) {
-            $productIds = ArrayMethods::filter_array([]);
-        }
         $this->buildDefaultList();
-        $this->products = $this->products->filter(['ID' => $productIds]);
-        $this->blockedProductsIds = EcommerceCache::inst()->retrieve($this->getCachekey('blockedProductsIds'));
-        $this->alsoShowProductsIds = EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowProductsIds'));
-        $this->parentGroupIds = EcommerceCache::inst()->retrieve($this->getCachekey('parentGroupIds'));
+        $productIds = EcommerceCache::inst()->retrieve($this->getCachekey());
+        $this->products = $this->products->filter(['ID' => ArrayMethods::filter_array($productIds)]);
+        $this->blockedProductsIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('blockedProductsIds')));
+        $this->alsoShowProductsIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowProductsIds')));
+        $this->parentGroupIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('parentGroupIds')));
+        $this->getAlsoShowParentIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowParentIds')));
 
         return $this;
     }
@@ -413,10 +437,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     protected function storeInCache(): self
     {
-        EcommerceCache::inst()->save($this->getCachekey(), $this->products->columnUnique());
-        EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds'), $this->blockedProductsIds);
+        EcommerceCache::inst()->save($this->getCachekey(), ArrayMethods::filter_array($this->products->columnUnique()));
+        EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds'), ArrayMethods::filter_array($this->blockedProductsIds));
         EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
+        EcommerceCache::inst()->save($this->getCachekey('alsoShowParentIds'), $this->getAlsoShowParentIds());
 
         return $this;
     }

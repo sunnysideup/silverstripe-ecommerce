@@ -7,6 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
@@ -14,6 +15,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
@@ -132,10 +134,11 @@ class SalesAdmin extends ModelAdmin
                         'StatusID:GreaterThan' => 0,
                     ]
                 );
-            if (! empty($ordersinQueue->columnUnique())) {
+            $ids = $ordersinQueue->columnUnique();
+            if (! empty($ids)) {
                 $list = $list->exclude(
                     [
-                        'ID' => $ordersinQueue->columnUnique(),
+                        'ID' => $ids,
                     ]
                 );
             }
@@ -143,7 +146,7 @@ class SalesAdmin extends ModelAdmin
             $list = $list
                 ->exclude(
                     [
-                        'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique(),
+                        'StatusID' => ArrayMethods::filter_array(OrderStep::non_admin_manageable_steps()->columnUnique()),
                     ]
                 );
         }

@@ -559,7 +559,8 @@ class ShoppingCartController extends Controller
     public function clearandlogout(HTTPRequest $request)
     {
         $this->cart->clear();
-        if ($member = Security::getCurrentUser()) {
+        $member = Security::getCurrentUser();
+        if ($member) {
             $member->logout();
         }
         $this->redirect(Director::baseURL());
@@ -759,7 +760,7 @@ class ShoppingCartController extends Controller
             $newMember = Member::get()->byID(intval($request->param('ID')));
 
             if ($newMember) {
-                Security::setCurrentUser($member);
+                Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
                 $accountPage = AccountPage::get()->first();
