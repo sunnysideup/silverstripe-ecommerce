@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
+
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -10,10 +11,10 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 
-use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -22,19 +23,16 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
 class ProductGroupController extends PageController
 {
-
-    private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
-
     /**
      * the exact list of products that is going to be shown (excluding pagination)
      * @var SS_List
      */
     protected $productList = null;
-
 
     /**
      * the final product list that we use to collect products
@@ -49,12 +47,12 @@ class ProductGroupController extends PageController
      */
     protected $originalTitle = '';
 
-
     protected $hasGroupFilter = false;
 
     protected $secondaryTitleHasBeenAdded = false;
 
     protected $userPreferencesObject = null;
+
     /**
      * form for searching
      * @var ProductSearchForm
@@ -75,6 +73,7 @@ class ProductGroupController extends PageController
      */
     protected $searchResultHash = '';
 
+    private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
 
     private static $allowed_actions = [
         'debug' => 'ADMIN',
@@ -100,7 +99,7 @@ class ProductGroupController extends PageController
      */
     public function filterforgroup($request)
     {
-        $otherProductGroup = ProductFilter::get_group_from_url_segment($request->param('ID'));
+        $otherProductGroup = ProductGroupFilter::get_group_from_url_segment($request->param('ID'));
         if ($otherProductGroup) {
             $this->hasGroupFilter = true;
             $this->saveUserPreferences(
@@ -108,6 +107,7 @@ class ProductGroupController extends PageController
                     'GROUPFILTER' => [
                         'type' => 'default',
                         'params' => $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID,
+                        'title' => $otherProductGroup->MenuTitle,
                     ],
                 ]
             );
@@ -330,7 +330,7 @@ class ProductGroupController extends PageController
         return $this->HasManyProducts() && $this->HasDisplays() ? true : false;
     }
 
-    public function HasManyProducts() : bool
+    public function HasManyProducts(): bool
     {
         return $this->getFinalProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
     }
@@ -718,6 +718,7 @@ class ProductGroupController extends PageController
 
         return null;
     }
+
     protected function setCachedProductList($productList)
     {
         $key = $this->ProductGroupListCachingKey(false);
@@ -728,11 +729,11 @@ class ProductGroupController extends PageController
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'
      * @return string   OPTIONAL: action - e.g. searchresults
-     * @param  string $type     OPTIONAL: FILTER|SORT|DISPLAY
+     * @param  string $action     OPTIONAL: FILTER|SORT|DISPLAY
      */
-    protected function getLinkTemplate(?string $action = null, ?string $type = ''): string
+    protected function getLinkTemplate(?string $action = null): string
     {
-        return $this->getUserPreferencesClass()->getLinkTemplate($action, $type);
+        return $this->getUserPreferencesClass()->getLinkTemplate($action);
     }
 
     protected function init()
@@ -831,5 +832,4 @@ class ProductGroupController extends PageController
     {
         $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
     }
-
 }

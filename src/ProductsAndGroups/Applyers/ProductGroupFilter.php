@@ -9,6 +9,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class ProductGroupFilter extends BaseApplyer
 {
+    protected static $get_group_from_url_segment_store = [];
+
     /**
      * make sure that these do not exist as a URLSegment
      * @var array
@@ -24,18 +26,16 @@ class ProductGroupFilter extends BaseApplyer
         ],
     ];
 
-    protected static $get_group_from_url_segment_store = [];
-
     /**
      * @param  string             $segment expected format: my-product-category,123 (URLSegment, ID)
      * @return ProductGroup|null
      */
     public static function get_group_from_url_segment(?string $segment): ?ProductGroup
     {
-        if(! $segment) {
+        if (! $segment) {
             return null;
         }
-        if(! isset(self::$get_group_from_url_segment_store[$segment])) {
+        if (! isset(self::$get_group_from_url_segment_store[$segment])) {
             self::$get_group_from_url_segment_store[$segment] = null;
             $segment = trim($segment, '/');
             if (is_string($segment) && strpos($segment, ',') !== false) {
@@ -63,7 +63,7 @@ class ProductGroupFilter extends BaseApplyer
     public function apply(string $key = null, $params = null): self
     {
         $this->applyStart($key, $params);
-        if($params instanceof ProductGroup) {
+        if ($params instanceof ProductGroup) {
             $group = $params;
         } else {
             $group = $this->findGroup($params);
@@ -74,7 +74,7 @@ class ProductGroupFilter extends BaseApplyer
             $filter = ['ID' => $group->getBaseProductList()->getProductIds()];
         }
 
-        if($filter) {
+        if ($filter) {
             if (is_array($filter) && count($filter)) {
                 $this->products = $this->products->filter($filter);
             } elseif ($filter) {
@@ -89,10 +89,7 @@ class ProductGroupFilter extends BaseApplyer
     public function getTitle(?string $key = '', $params = null): string
     {
         $groupId = $this->findGroupId($params);
-        $group = DataObject::get_one(
-            ProductGroup::class,
-            ['ID' => $groupId - 0]
-        );
+        $group = ProductGroup::get()->byID(intval($groupId) - 0);
         if ($group) {
             return $group->MenuTitle;
         }
@@ -105,7 +102,6 @@ class ProductGroupFilter extends BaseApplyer
     }
 
     /**
-     *
      * @param  string            $filter
      * @return ProductGroup
      */

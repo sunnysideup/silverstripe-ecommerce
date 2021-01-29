@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
@@ -35,19 +36,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     protected static $singleton_cache = null;
 
     /**
-     * Set the root {@link ProductGroup} to display the products from.
-     * @param ProductGroup $rootGroup
-     *
-     * @return self
-     */
-    public function setRootGroupController($rootGroupController): self
-    {
-        $this->rootGroupController = $rootGroupController;
-        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
-
-        return $this;
-    }
-    /**
      * @param ProductGroupController $rootGroupController
      * @param ProductGroup           $rootGroup
      */
@@ -59,6 +47,20 @@ class FinalProductList extends AbstractProductsAndGroupsList
         $this->baseProductList = $rootGroup->getBaseProductList();
         ClassHelpers::check_for_instance_of($this->baseProductList, BaseProductList::class, true);
         $this->products = $this->baseProductList->getProducts();
+    }
+
+    /**
+     * Set the root {@link ProductGroup} to display the products from.
+     * @param ProductGroup $rootGroupController
+     *
+     * @return self
+     */
+    public function setRootGroupController($rootGroupController): self
+    {
+        $this->rootGroupController = $rootGroupController;
+        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
+
+        return $this;
     }
 
     /**
@@ -102,9 +104,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
      *
      * @return self
      */
-    public function applyFilter(string $key, $params = null): self
+    public function applyGroupFilter(string $key, $params = null): self
     {
-        return $this->apply('FILTER', $key, $params);
+        return $this->apply('GROUPFILTER', $key, $params);
     }
 
     /**
@@ -113,9 +115,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
      *
      * @return self
      */
-    public function applyGroupFilter(string $key, $params = null): self
+    public function applyFilter(string $key, $params = null): self
     {
-        return $this->apply('GROUPFILTER', $key, $params);
+        return $this->apply('FILTER', $key, $params);
     }
 
     /**
@@ -128,7 +130,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     {
         return $this->apply('SORT', $key, $params);
     }
-
 
     /**
      * @param string         $key
@@ -160,6 +161,15 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
+     * required for SubGroups
+     * @return array
+     */
+    public function getAlsoShowProducts(): DataList
+    {
+        return $this->baseProductList->getAlsoShowProducts();
+    }
+
+    /**
      * @param  string $type
      * @return string
      */
@@ -169,7 +179,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param  string $className
+     * @param  string $classNameOrType
      * @return BaseApplyer
      */
     protected function getApplyer(string $classNameOrType)

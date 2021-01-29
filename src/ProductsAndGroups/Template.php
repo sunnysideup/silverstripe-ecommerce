@@ -2,27 +2,25 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
-use SilverStripe\Security\Permission;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Dev\DebugTrait;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
+
+
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
 
-use Sunnysideup\Ecommerce\ProductsAndGroups\Debug;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-use Sunnysideup\Ecommerce\Dev\DebugTrait;
 /**
  * In terms of ProductAndGroupsLists, this class knows all about
  * the classes being used and the settings associated with it.
@@ -43,7 +41,7 @@ class Template
     protected const SORT_DISPLAY_NAMES = [
         'GROUPFILTER' => [
             'value' => 'default',
-            'getVariable' => '',
+            'getVariable' => 'groupfilter',
             'dbFieldName' => '',
             'translationCode' => 'GROUPFILTER_BY',
             'defaultApplyer' => ProductGroupFilter::class,
@@ -127,7 +125,6 @@ class Template
     }
 
     /**
-     *
      * @param  ProductGroupController $rootGroupController
      * @param  ProductGroup           $rootGroup
      * @return Debug
@@ -198,20 +195,6 @@ class Template
         return $obj->getOptions();
     }
 
-
-    /**
-     * returns a dropdown like list of options for a BaseClass class name
-     * @param  string $classNameOrType
-     *
-     * @return array
-     */
-    protected function getOptionsMap(string $classNameOrType): array
-    {
-        $obj = $this->getApplyer($classNameOrType);
-
-        return $obj->getOptionsMap();
-    }
-
     /**
      * returns a dropdown like list of options for a filters
      * @param  string $className
@@ -222,6 +205,7 @@ class Template
     {
         return $this->getOptionsMap('GROUPFILTER');
     }
+
     /**
      * returns a dropdown like list of options for a filters
      * @param  string $className
@@ -274,7 +258,6 @@ class Template
     //     return $this->getOptionsList('DISPLAY', $linkTemplate, $currentKey, $ajaxify);
     // }
 
-
     /**
      * todo: CHECK!
      * @param  string $type
@@ -306,7 +289,16 @@ class Template
         return $obj;
     }
 
+    /**
+     * returns a dropdown like list of options for a BaseClass class name
+     * @param  string $classNameOrType
+     *
+     * @return array
+     */
+    protected function getOptionsMap(string $classNameOrType): array
+    {
+        $obj = $this->getApplyer($classNameOrType);
 
-
-
+        return $obj->getOptionsMap();
+    }
 }

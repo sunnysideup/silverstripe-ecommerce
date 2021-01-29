@@ -10,10 +10,10 @@ use SilverStripe\ORM\SS_List;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Dev\DebugTrait;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
-use Sunnysideup\Ecommerce\Dev\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList
 {
@@ -78,12 +78,14 @@ abstract class AbstractProductsAndGroupsList
      * IDs of all the products.
      * @return array
      */
-    public function getProductIds() : array
+    public function getProductIds(): array
     {
         return ArrayMethods::filter_array($this->products->columnUnique());
     }
 
     abstract public function getAlsoShowProductsIds(): array;
+
+    abstract public function getAlsoShowProducts(): DataList;
 
     ##########################################
     # PRODUCTS: Counts
@@ -157,16 +159,6 @@ abstract class AbstractProductsAndGroupsList
     ##########################################
 
     /**
-     * all Also Show products
-     * @return DataList
-     */
-    public function getAlsoShowProductsFromRootGroupOnly(): DataList
-    {
-        return $this->rootGroup->AlsoShowProducts()
-            ->filter(['ID' => $this->getProducts()->columnUnique()]);
-    }
-
-    /**
      * products from Also Show from all product groups
      * @return DataList
      */
@@ -174,6 +166,16 @@ abstract class AbstractProductsAndGroupsList
     {
         return $this->products
             ->filter(['ID' => $this->getAlsoShowProductsIds()]);
+    }
+
+    /**
+     * all Also Show products
+     * @return DataList
+     */
+    public function getAlsoShowProductsFromRootGroupOnly(): DataList
+    {
+        return $this->rootGroup->AlsoShowProducts()
+            ->filter(['ID' => $this->getProducts()->columnUnique()]);
     }
 
     /**
@@ -212,7 +214,7 @@ abstract class AbstractProductsAndGroupsList
         return RelatedProductGroups::apply_default_filter_to_groups($groups);
     }
 
-    public function getParentGroupIds() : array
+    public function getParentGroupIds(): array
     {
         return ArrayMethods::filter_array($this->getParentGroups()->columnUnique());
     }
@@ -239,7 +241,7 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getAlsoShowProductsProductGroupInclusive() : DataList
+    public function getAlsoShowProductsProductGroupInclusive(): DataList
     {
         $parentIDs = $this->getAlsoShowProducts()->columnUnique('ParentID');
         $parentIDs = ArrayMethods::filter_array($parentIDs);
@@ -255,9 +257,9 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getAlsoShowProductsProductGroupsExclusive() : DataList
+    public function getAlsoShowProductsProductGroupsExclusive(): DataList
     {
-        $excludeFilter = array_unique(array_merge($this->getParentGroupsIds(), [$this->rootGroup->ID]));
+        $excludeFilter = array_unique(array_merge($this->getParentGroupIds(), [$this->rootGroup->ID]));
         $excludeFilter = ArrayMethods::filter_array($excludeFilter);
 
         return $this->getAlsoShowProductsProductGroupInclusive()
@@ -276,10 +278,9 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getDirectParentGroupsInclusive() : DataList
+    public function getDirectParentGroupsInclusive(): DataList
     {
-        return $this->getParentGroups()::get()
-            ->filter(['ID' => $this->getParentGroupsIds()]);
+        return $this->getParentGroups();
     }
 
     /**

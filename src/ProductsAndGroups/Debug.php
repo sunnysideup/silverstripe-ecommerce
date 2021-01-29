@@ -5,13 +5,12 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 use SilverStripe\View\ViewableData;
 
 class Debug extends ViewableData
-
 {
-
     protected $rootGroup = null;
+
     protected $rootGroupController = null;
 
-    function __construct($rootGroupController, $rootGroup)
+    public function __construct($rootGroupController, $rootGroup)
     {
         $this->rootGroupController = $rootGroupController;
         $this->rootGroup = $rootGroup;
@@ -31,5 +30,4 @@ class Debug extends ViewableData
     {
         return $this->rootGroupController;
     }
-
 }

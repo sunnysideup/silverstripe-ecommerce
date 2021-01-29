@@ -4,8 +4,8 @@ namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\ClassInfo;
 
-use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Versioned\Versioned;
 
 class ArrayMethods
 {

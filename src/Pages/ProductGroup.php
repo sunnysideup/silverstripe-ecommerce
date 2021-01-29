@@ -293,6 +293,7 @@ class ProductGroup extends Page
     {
         return $this->getProductsPerPage($default);
     }
+
     /**
      * @param int $default, optional 10
      * @return int
@@ -310,8 +311,10 @@ class ProductGroup extends Page
     public function getListConfigCalculated(string $type): string
     {
         $field = $this->getSortFilterDisplayValues($type, 'dbFieldName');
-
-        return $this->recursiveValue($field, 'default');
+        if ($field) {
+            return $this->recursiveValue($field, 'default');
+        }
+        return 'default';
     }
 
     /**

@@ -2,44 +2,72 @@
 
 namespace Sunnysideup\Ecommerce\Dev;
 
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Permission;
+use SilverStripe\View\ArrayData;
 
 trait DebugTrait
 {
-
-/**
-     * for debug purposes!
-     * @param string
+    /**
+     * Get the value of a field on this object, automatically inserting the value into any available casting objects
+     * that have been specified.
+     *
+     * @param string $fieldName
+     * @param array $arguments
+     * @param bool $cache Cache this object
+     * @param string $cacheName a custom cache name
+     * @return object|DBField
      */
-    public function XML_val(?string $method, $arguments = [])
+    public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
-        if(! is_array($arguments)) {
-            $arguments = [$arguments];
-        }
-        if(Permission::check('ADMIN')) {
-            return $this->arrayToUl($this->$method(...$arguments), 1);
+        if (Permission::check('ADMIN')) {
+            $list = call_user_func_array([$this, $fieldName], $arguments ?: []);
+            return $this->arrayToUl($list);
         }
     }
 
-    protected function arrayToUl( $mixed ) : string
+    /**
+     * for debug purposes!
+     * @param string $method
+     */
+    public function XML_val(?string $method, $arguments = [])
     {
-        if($mixed === false) {
+        if (Permission::check('ADMIN')) {
+            if (! is_array($arguments)) {
+                $arguments = [$arguments];
+            }
+            return $this->arrayToUl($this->{$method}(...$arguments));
+        }
+    }
+
+    public function ClassName(): string
+    {
+        return static::class;
+    }
+
+    protected function arrayToUl($mixed): string
+    {
+        if ($mixed === false) {
             return '<span style="color: grey">[NO]</span>';
-        } elseif($mixed === true) {
+        } elseif ($mixed === true) {
             return '<span style="color: grey">[YES]</span>';
-        } elseif($mixed === null) {
+        } elseif ($mixed === null) {
             return '<span style="color: grey">[NULL]</span>';
-        } elseif($mixed === '') {
+        } elseif ($mixed === '') {
             return '<span style="color: grey">[EMPTY STRING]</span>';
-        }elseif(is_array($mixed) && count($mixed) === 0) {
+        } elseif (is_array($mixed) && count($mixed) === 0) {
             return '<span style="color: grey">[EMPTY ARRAY]</span>';
-        }elseif(is_object($mixed)) {
-            return var_dump($mixed, 1);
-        } elseif(is_array($mixed) ) {
+        } elseif (is_object($mixed)) {
+            if ($mixed instanceof ArrayData) {
+                return $this->arrayToUl($mixed->toMap());
+            } elseif ($mixed instanceof ArrayList) {
+                return $this->arrayToUl($mixed->toArray());
+            } elseif ($mixed instanceof DataList) {
+                return $this->arrayToUl($mixed->map('ID', 'Title')->toArray());
+            }
+            return print_r($mixed, 1);
+        } elseif (is_array($mixed)) {
             $html = '';
             $html .= '<ul>';
             $isAssoc = $this->isAssoc($mixed);
@@ -47,31 +75,26 @@ trait DebugTrait
             $after = '';
             $style = '';
             $keyString = '';
-            if($isLarge) {
+            if ($isLarge) {
                 $style = 'display: inline;';
                 $after = ', ';
             }
-            foreach ( $mixed as $key => $item ) {
-                if($isAssoc) {
-                    $keyString .= '<strong>'.$key.'</strong>: ';
+            foreach ($mixed as $key => $item) {
+                if ($isAssoc) {
+                    $keyString = '<strong>' . $key . '</strong>: ';
                 }
-                $html .= '<li style="'.$style.'">'. $keyString . $this->arrayToUl($item). $after . '</li>';
+                $html .= '<li style="' . $style . '">' . $keyString . $this->arrayToUl($item) . $after . '</li>';
             }
             return $html . '</ul>';
-        } else {
-            return '<span style="color: green">' . $mixed  . '</span>';
         }
-    }
-
-    public function ClassName() : string
-    {
-        return get_class($this);
+        return '<span style="color: green">' . $mixed . '</span>';
     }
 
     protected function isAssoc(array $arr)
     {
-        if (array() === $arr) return false;
+        if ($arr === []) {
+            return false;
+        }
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
-
 }

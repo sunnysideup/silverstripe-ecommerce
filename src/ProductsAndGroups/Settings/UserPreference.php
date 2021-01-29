@@ -15,6 +15,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Dev\DebugTrait;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
@@ -28,6 +29,7 @@ class UserPreference
 {
     use Configurable;
     use Injectable;
+    use DebugTrait;
 
     protected const GET_VAR_VALUE_PLACE_HOLDER = '[[INSERT_VALUE_HERE]]';
 
@@ -43,7 +45,6 @@ class UserPreference
     protected $secondaryTitleHasBeenAdded = false;
 
     /**
-     *
      * @var bool
      */
     protected $useSession = [
@@ -53,28 +54,13 @@ class UserPreference
     ];
 
     /**
-    *
-    * @var bool
-    */
+     * @var bool
+     */
     protected $useSessionPerPage = [
         'FILTER' => false,
         'SORT' => false,
         'DISPLAY' => false,
     ];
-
-    /**
-     * keep a store for every page setting?
-     * For example, do we store in session how a particular page is filtered / sorted
-     *
-     * @var bool
-     */
-    private static $use_session_per_page = [];
-
-    /**
-     * keep a store for every FILTER|SORT|DISPLAY setting?
-     * @var bool
-     */
-    private static $use_session = [];
 
     /**
      * @var HTTPRequest|null
@@ -93,6 +79,21 @@ class UserPreference
      * @var array
      */
     protected $userPreferences = [];
+
+    /**
+     * keep a store for every page setting?
+     * For example, do we store in session how a particular page is filtered / sorted
+     *
+     * @var bool
+     */
+    private static $use_session_per_page = [];
+
+    /**
+     * keep a store for every FILTER|SORT|DISPLAY setting?
+     * @var bool
+     */
+    private static $use_session = [];
+
     /**
      * @param  bool $useSession
      * @return self
@@ -104,11 +105,21 @@ class UserPreference
         return $this;
     }
 
-    public function getUseSession(string $type) : bool
+    public function getUseSession(string $type): bool
     {
         $config = $this->Config()->get('use_session');
 
         return $this->useSession[$type] ?? $config[$type] ?? false;
+    }
+
+    public function getUseSessionAll(): array
+    {
+        $array = [];
+        $types = array_keys($this->getTemplateForProductsAndGroups()->getData());
+        foreach ($types as $type) {
+            $array[$type] = $this->getUseSession($type);
+        }
+        return $array;
     }
 
     /**
@@ -122,13 +133,22 @@ class UserPreference
         return $this;
     }
 
-    public function getUseSessionPerPage(string $type) : bool
+    public function getUseSessionPerPage(string $type): bool
     {
         $config = $this->Config()->get('use_session_per_page');
 
         return $this->useSessionPerPage[$type] ?? $config[$type] ?? false;
     }
 
+    public function getUseSessionPerPageAll(): array
+    {
+        $array = [];
+        $types = array_keys($this->getTemplateForProductsAndGroups()->getData());
+        foreach ($types as $type) {
+            $array[$type] = $this->getUseSessionPerPage($type);
+        }
+        return $array;
+    }
 
     /**
      * @param  HTTPRequest  $request
@@ -168,55 +188,106 @@ class UserPreference
     }
 
     /**
-     * Returns the Title for a type key.
+     * Checks out a bunch of $_GET variables that are used to work out user
+     * preferences.
      *
-     * If no key is provided then the default key is used.
+     * Some of these are saved to session.
      *
-     * runs a method: getFilterTitle, getSortTitle, or getDisplayTitle
-     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
+     * @param array $overrideArray - optional - override $_GET variable settings
+     * an array can be like this:
+     * ```php
+     *     FILTER => 'abc'
+     * ```
+     * OR
+     * ```php
+     *     FILTER => ['key' => 'foo', 'params' => 'bar', 'title' => 'foo bar']
+     * ```
+     * @return self
+     */
+    public function saveUserPreferences(?array $overrideArray = []): self
+    {
+        $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
+
+        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
+            $getVariableName = $oneTypeArray['getVariable'];
+            if (isset($overrideArray[$getVariableName])) {
+                $newPreference = $overrideArray[$getVariableName];
+            } elseif (! isset($this->userPreferences[$type])) {
+                $newPreference = $this->request->getVar($getVariableName);
+            } else {
+                $newPreference = $this->userPreferences[$type];
+            }
+            $this->userPreferences[$type] = $newPreference;
+            if ($this->getUseSession($type)) {
+                $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+                if ($this->getUseSessionPerPage($type)) {
+                    $sessionName .= '_' . $this->rootGroup->ID;
+                }
+                $this->rootGroupController->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Checks for the most applicable user preferences for this user:
+     * 1. session value
+     * 2. getListConfigCalculated.
      *
      * @param string $type - FILTER | SORT | DISPLAY
      *
      * @return string
      */
-    public function getUserPreferencesTitle(string $type, ?string $key): string
+    public function getCurrentUserPreferences(?string $type = '')
     {
-        $method = 'get' . ucwords(strtolower($type)) . 'Title';
-        $value = $this->getTemplateForProductsAndGroups()->{$method}($key);
-        if ($value) {
-            return $value;
-        }
+        if (! $type) {
+            $types = array_keys($this->getTemplateForProductsAndGroups()->getData());
+            $arrayValues = [];
+            foreach ($types as $type) {
+                $arrayValues[$type] = $this->getCurrentUserPreferences($type);
+            }
 
-        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
+            return $arrayValues;
+        }
+        $key = '';
+        if ($this->getUseSession($type)) {
+            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+            if ($this->getUseSessionPerPage($type)) {
+                $sessionName .= '_' . $this->rootGroup->ID;
+            }
+            $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
+            $key = Convert::raw2sql($sessionValue);
+        }
+        if (! $key) {
+            $key = $this->userPreferences[$type] ?? '';
+        }
+        if (! $key) {
+            $key = $this->rootGroup->getListConfigCalculated($type);
+        }
+        return $this->standardiseCurrentUserPreferences($type, $key);
     }
 
-    public function getGroupFilterTitle(?string $value = ''): array
+    public function getGroupFilterTitle(?string $value = ''): string
     {
-        user_error('fix');
         return $this->getTitle('GROUPFILTER', $value);
     }
 
-    public function getFilterTitle(?string $value = ''): array
+    public function getFilterTitle(?string $value = ''): string
     {
         return $this->getTitle('FILTER', $value);
     }
 
-    public function getSortTitle(?string $value = ''): array
+    public function getSortTitle(?string $value = ''): string
     {
         return $this->getTitle('SORT', $value);
     }
 
-    public function getDisplayTitle(?string $value = ''): array
+    public function getDisplayTitle(?string $value = ''): string
     {
         return $this->getTitle('DISPLAY', $value);
     }
 
-    protected function getTitle(string $classNameOrType, ?string $value = ''): string
-    {
-        $obj = $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType);
-
-        return $obj->getTitle($value);
-    }
     /**
      * Unique caching key for the product list...
      *
@@ -236,9 +307,10 @@ class UserPreference
             implode(
                 '_',
                 [
-                    $this->getCurrentUserPreferencesKey('SORT'),
-                    $this->getCurrentUserPreferencesKey('FILTER'),
-                    $this->getCurrentUserPreferencesKey('DISPLAY'),
+                    serialize($this->getCurrentUserPreferences('GROUPFILTER')),
+                    serialize($this->getCurrentUserPreferencesKey('SORT')),
+                    serialize($this->getCurrentUserPreferencesKey('FILTER')),
+                    serialize($this->getCurrentUserPreferencesKey('DISPLAY')),
                     $pageStart,
                     $additionalKey,
                     $pageId,
@@ -263,7 +335,7 @@ class UserPreference
             }
 
             if ($this->rootGroupController->IsSearchResults()) {
-                $count = $this->rootGroupController->getProductList()->getRawCount();
+                $count = $this->rootGroupController->getFinalProductList()->getRawCount();
 
                 if ($count) {
                     $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
@@ -292,7 +364,7 @@ class UserPreference
             }
 
             if ($secondaryTitle) {
-                foreach(['Title', 'MetaTitle', 'MetaDescription'] as $field) {
+                foreach (['Title', 'MetaTitle', 'MetaDescription'] as $field) {
                     $this->addTitleToField($field, $secondaryTitle);
                 }
             }
@@ -307,8 +379,8 @@ class UserPreference
 
     public function standardiseCurrentUserPreferences($type, $key)
     {
-        if(is_array($key)) {
-            if(isset($key['key']) && isset($key['params'])) {
+        if (is_array($key)) {
+            if (isset($key['key']) && isset($key['params']) && isset($key['title'])) {
                 return $key;
             }
             user_error('Badly set key and params');
@@ -316,14 +388,15 @@ class UserPreference
             return [
                 'key' => $key,
                 'params' => null,
+                'title' => '',
             ];
         }
     }
-    //
+
     // /**
     //  * Provides a dataset of links for a particular user preference.
     //  *
-    //  * @param string $type        SORT | FILTER | DISPLAY - e.g. sort_options
+    //  * @param string $classNameOrType        SORT | FILTER | DISPLAY - e.g. sort_options
     //  *
     //  * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
     //  */
@@ -377,12 +450,13 @@ class UserPreference
     {
         $list = new ArrayList();
         if (! $currentKey) {
-            $currentKey = $this->getCurrentUserPreferences($type);
+            $currentKey = $this->getCurrentUserPreferencesKey($type);
         }
         $options = $this->getOptions($type);
         if (count($options) > 1) {
             foreach ($options as $key => $data) {
                 $isCurrent = $currentKey === $key;
+                $type . ';;dddd;;';
                 $obj = new ArrayData(
                     [
                         'Title' => $data['Title'],
@@ -413,15 +487,15 @@ class UserPreference
     {
         $base = $this->rootGroup->Link($action);
         $getVars = [];
-        foreach ($this->rootGroupController->getSortFilterDisplayValues() as $key => $values) {
-            if ($type && $type === $key) {
+        foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
+            if ($type && $myType === $type) {
                 if ($replacementForType) {
                     $value = $replacementForType;
                 } else {
                     $value = self::GET_VAR_VALUE_PLACE_HOLDER;
                 }
             } else {
-                $value = $this->getCurrentUserPreferences($type);
+                $value = $this->getCurrentUserPreferencesKey($myType);
             }
             $getVars[$values['getVariable']] = $value;
         }
@@ -445,7 +519,13 @@ class UserPreference
         if (! $this->request->getVar($sortGetVariable)) {
             $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
             if ($suggestion) {
-                $array = ['SORT' => ['key' => $suggestion, 'params' => $idArray]];
+                $array = [
+                    'SORT' => [
+                        'key' => $suggestion,
+                        'params' => $idArray,
+                        'title' => 'Relevance',
+                    ],
+                ];
             }
         }
 
@@ -466,97 +546,31 @@ class UserPreference
             ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY')) ? true : false;
     }
 
-    /**
-     * Checks out a bunch of $_GET variables that are used to work out user
-     * preferences.
-     *
-     * Some of these are saved to session.
-     *
-     * @param array $overrideArray - optional - override $_GET variable settings
-     * an array can be like this:
-     * ```php
-     *     FILTER => 'abc'
-     * ```
-     * OR
-     * ```php
-     *     FILTER => ['key' => 'foo', 'params' => 'bar']
-     * ```
-     * @return self
-     */
-    public function saveUserPreferences(?array $overrideArray = []): self
-    {
-        $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
-
-        foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
-            $getVariableName = $oneTypeArray['getVariable'];
-            if (isset($overrideArray[$getVariableName])) {
-                $newPreference = $overrideArray[$getVariableName];
-            } elseif (! isset($this->userPreferences[$type])) {
-                $newPreference = $this->request->getVar($getVariableName);
-            } else {
-                $newPreference = $this->userPreferences[$type];
-            }
-            $this->userPreferences[$type] = $newPreference;
-            if ($this->getUseSession($type)) {
-                $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
-                if ($this->getUseSessionPerPage($type)) {
-                    $sessionName .= '_' . $this->rootGroup->ID;
-                }
-                $this->rootGroupController->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Checks for the most applicable user preferences for this user:
-     * 1. session value
-     * 2. getListConfigCalculated.
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     */
-    public function getCurrentUserPreferences(?string $type = '')
-    {
-        if (! $type) {
-            return [
-                'GROUPFILTER' => $this->getCurrentUserPreferences('GROUPFILTER'),
-                'FILTER' => $this->getCurrentUserPreferences('FILTER'),
-                'SORT' => $this->getCurrentUserPreferences('SORT'),
-                'DISPLAY' => $this->getCurrentUserPreferences('DISPLAY'),
-            ];
-        }
-        $key = '';
-        if ($this->getUseSession($type)) {
-            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
-            if ($this->getUseSessionPerPage($type)) {
-                $sessionName .= '_' . $this->rootGroup->ID;
-            }
-            $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
-            $key = Convert::raw2sql($sessionValue);
-        }
-        if (! $key) {
-            $key = $this->userPreferences[$type] ?? '';
-        }
-        if (! $key) {
-            $key = $this->rootGroup->getListConfigCalculated($type);
-        }
-        return $this->standardiseCurrentUserPreferences($type, $key);
-    }
-
     public function getCurrentUserPreferencesKey($type)
     {
         $val = $this->getCurrentUserPreferences($type);
-
         return $val['key'];
     }
+
     public function getCurrentUserPreferencesParams($type)
     {
         $val = $this->getCurrentUserPreferences($type);
 
         return $val['params'];
+    }
+
+    public function getCurrentUserPreferencesTitle($type)
+    {
+        $val = $this->getCurrentUserPreferences($type);
+
+        return $val['title'];
+    }
+
+    protected function getTitle(string $type, ?string $value = ''): string
+    {
+        $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
+
+        return $obj->getTitle($value) . (string) $this->getCurrentUserPreferencesTitle($type);
     }
 
     /**

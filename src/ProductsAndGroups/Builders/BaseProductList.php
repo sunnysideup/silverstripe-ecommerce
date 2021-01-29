@@ -4,9 +4,11 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -198,6 +200,14 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
+     * @return SS_List
+     */
+    public function getAlsoShowProducts(): DataList
+    {
+        return $this->products->filter(['ID' => $this->getAlsoShowProductsIds()]);
+    }
+
+    /**
      * Returns children ProductGroup pages of this group.
      *
      * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
@@ -205,8 +215,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
      *
      * @return SS_List (ProductGroups)
      */
-    public function getGroups(int $maxRecursiveLevel, $filter = null)
+    public function getGroups(?int $maxRecursiveLevel = null, $filter = null)
     {
+        if ($maxRecursiveLevel === null) {
+            $maxRecursiveLevel = $this->getLevelOfProductsToShow();
+        }
         $list = $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
         ClassHelpers::check_for_instance_of($list, SS_List::class);
 
@@ -227,6 +240,16 @@ class BaseProductList extends AbstractProductsAndGroupsList
         }
 
         return $this->productGroupListProvider;
+    }
+
+    public function getExcludedProducts(): array
+    {
+        return self::$excluded_products;
+    }
+
+    public function getBlockedProductIds(): array
+    {
+        return $this->blockedProductsIds;
     }
 
     /**

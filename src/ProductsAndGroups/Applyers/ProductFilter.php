@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 /**
  * provides data on the user
  */
@@ -51,6 +49,4 @@ class ProductFilter extends BaseApplyer
         $this->applyEnd($key, $params);
         return $this;
     }
-
-
 }

@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -147,7 +146,7 @@ class RelatedProductGroups
         return $this->levelsToShow;
     }
 
-    public function getParentGroupIds() : array
+    public function getParentGroupIds(): array
     {
         return $this->getGroups()->columnUnique();
     }
