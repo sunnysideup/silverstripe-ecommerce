@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Debug;
 
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-
+use Sunnysideup\Ecommerce\Dev\DebugTrait;
 /**
  * In terms of ProductAndGroupsLists, this class knows all about
  * the classes being used and the settings associated with it.
@@ -33,6 +33,7 @@ class Template
 {
     use Configurable;
     use Injectable;
+    use DebugTrait;
 
     /**
      * list of sort / filter / display variables.
@@ -52,14 +53,14 @@ class Template
             'getVariable' => 'filter',
             'dbFieldName' => 'DefaultFilter',
             'translationCode' => 'FILTER_BY',
-            'defaultApplyer' => ProductSorter::class,
+            'defaultApplyer' => ProductFilter::class,
         ],
         'SORT' => [
             'value' => 'default',
             'getVariable' => 'sort',
             'dbFieldName' => 'DefaultSortOrder',
             'translationCode' => 'SORT_BY',
-            'defaultApplyer' => ProductFilter::class,
+            'defaultApplyer' => ProductSorter::class,
         ],
         'DISPLAY' => [
             'value' => 'default',
@@ -146,7 +147,7 @@ class Template
      * @param string $typeOrVariable    FILTER | SORT | DISPLAY OR variable
      * @param string $variable:         getVariable, etc...
      *
-     * @return array | String
+     * @return array|string
      */
     public function getSortFilterDisplayValues(?string $typeOrVariable = '', ?string $variable = '')
     {
@@ -197,28 +198,6 @@ class Template
         return $obj->getOptions();
     }
 
-    /**
-     * Returns the Title for a type key.
-     *
-     * If no key is provided then the default key is used.
-     *
-     * runs a method: getFilterTitle, getSortTitle, or getDisplayTitle
-     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
-     *
-     * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return string
-     */
-    public function getUserPreferencesTitle(string $type, ?string $key): string
-    {
-        $method = 'get' . ucwords(strtolower($type)) . 'Title';
-        $value = $this->{$method}($key);
-        if ($value) {
-            return $value;
-        }
-
-        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
-    }
 
     /**
      * returns a dropdown like list of options for a BaseClass class name
@@ -226,7 +205,7 @@ class Template
      *
      * @return array
      */
-    public function getOptionsMap(string $classNameOrType): array
+    protected function getOptionsMap(string $classNameOrType): array
     {
         $obj = $this->getApplyer($classNameOrType);
 
@@ -239,7 +218,17 @@ class Template
      *
      * @return array
      */
-    public function getFilterOptions(): array
+    public function getGroupFilterOptionsMap(): array
+    {
+        return $this->getOptionsMap('GROUPFILTER');
+    }
+    /**
+     * returns a dropdown like list of options for a filters
+     * @param  string $className
+     *
+     * @return array
+     */
+    public function getFilterOptionsMap(): array
     {
         return $this->getOptionsMap('FILTER');
     }
@@ -250,7 +239,7 @@ class Template
      *
      * @return array
      */
-    public function getSortOptions(): array
+    public function getSortOptionsMap(): array
     {
         return $this->getOptionsMap('SORT');
     }
@@ -261,47 +250,30 @@ class Template
      *
      * @return array
      */
-    public function getDisplayOptions(): array
+    public function getDisplayOptionsMap(): array
     {
         return $this->getOptionsMap('DISPLAY');
     }
 
-    public function getDefaultFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        return $this->getOptionsList('FILTER', $linkTemplate, $currentKey, $ajaxify);
-    }
+    // public function getDefaultGroupFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
+    // {
+    //     return $this->getOptionsList('GROUPFILTER', $linkTemplate, $currentKey, $ajaxify);
+    // }
+    // public function getDefaultFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
+    // {
+    //     return $this->getOptionsList('FILTER', $linkTemplate, $currentKey, $ajaxify);
+    // }
+    //
+    // public function getDefaultSortOrderList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
+    // {
+    //     return $this->getOptionsList('SORT', $linkTemplate, $currentKey, $ajaxify);
+    // }
+    //
+    // public function getDisplayStyleList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
+    // {
+    //     return $this->getOptionsList('DISPLAY', $linkTemplate, $currentKey, $ajaxify);
+    // }
 
-    public function getDefaultSortOrderList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        return $this->getOptionsList('SORT', $linkTemplate, $currentKey, $ajaxify);
-    }
-
-    public function getDisplayStyleList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    {
-        return $this->getOptionsList('DISPLAY', $linkTemplate, $currentKey, $ajaxify);
-    }
-
-    public function getFilterTitle(?string $value = ''): array
-    {
-        return $this->getTitle('FILTER', $value);
-    }
-
-    public function getSortTitle(?string $value = ''): array
-    {
-        return $this->getTitle('SORT', $value);
-    }
-
-    public function getDisplayTitle(?string $value = ''): array
-    {
-        return $this->getTitle('DISPLAY', $value);
-    }
-
-    public function getTitle(string $className, ?string $value = ''): string
-    {
-        $obj = $this->getApplyer($className);
-
-        return $obj->getTitle($value);
-    }
 
     /**
      * todo: CHECK!
@@ -334,23 +306,7 @@ class Template
         return $obj;
     }
 
-    public function ClassName()
-    {
-        return get_class($this);
-    }
 
-    /**
-     * for debug purposes!
-     * @param string
-     */
-    public function XML_val(?string $method, $arguments = [])
-    {
-        if(! is_array($arguments)) {
-            $arguments = [$arguments];
-        }
-        if(Permission::check('ADMIN')) {
-            return '<pre>'.print_r($this->$method(...$arguments), 1).'</pre>';
-        }
-    }
+
 
 }

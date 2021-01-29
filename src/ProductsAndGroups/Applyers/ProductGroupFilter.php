@@ -63,12 +63,13 @@ class ProductGroupFilter extends BaseApplyer
     public function apply(string $key = null, $params = null): self
     {
         $this->applyStart($key, $params);
-
         if($params instanceof ProductGroup) {
             $group = $params;
         } else {
             $group = $this->findGroup($params);
         }
+
+        $filter = null;
         if ($group && $group->exists()) {
             $filter = ['ID' => $group->getBaseProductList()->getProductIds()];
         }

@@ -99,7 +99,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $this
             //set defaults
             ->setRootGroup($rootGroup)
-            ->setBuyableClass($buyableClassName)
+            ->setBuyableClassName($buyableClassName)
             ->setLevelOfProductsToShow($levelOfProductsToShow);
         if ($this->hasCache()) {
             $this->loadCache();
@@ -137,11 +137,27 @@ class BaseProductList extends AbstractProductsAndGroupsList
      *
      * @return self
      */
-    public function setBuyableClass(string $buyableClassName): self
+    public function setBuyableClassName(string $buyableClassName): self
     {
         $this->buyableClassName = $buyableClassName;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBuyableClassName(): string
+    {
+        return $this->buyableClassName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShowProductLevelsArray(): array
+    {
+        return $this->getProductGroupListProvider()->getShowProductLevelsArray();
     }
 
     /**
@@ -160,11 +176,9 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * how many children, grand-children, etc.. levels do we provide?
      * @return int
      */
-    public function getLevelOfProductsToShow(int $levelOfProductsToShow): self
+    public function getLevelOfProductsToShow(): int
     {
-        $this->getProductGroupListProvider()->getLevelOfProductsToShow();
-
-        return $this;
+        return $this->getProductGroupListProvider()->getLevelOfProductsToShow();
     }
 
     /**
@@ -241,7 +255,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     protected function applyGroupFilter(): self
     {
-        $levelToShow = $this->getProductGroupListProvider()->getLevelOfProductsToShow();
+        $levelToShow = $this->getLevelOfProductsToShow();
         $groupFilter = '';
         $this->alsoShowProductsIds = [];
         $this->parentGroupIds = [];
@@ -279,6 +293,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 "' . $tableName . '"."ID" IN (' . implode($this->alsoShowProductsIds) . ')
             )';
         }
+        $this->alsoShowProductsIds = ArrayMethods::filter_array($this->alsoShowProductsIds);
         $this->products = $this->products->where($groupFilter);
 
         return $this;
@@ -396,7 +411,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->rootGroup->ID,
                 $this->rootGroup->ClassName,
                 $this->buyableClassName,
-                $this->getProductGroupListProvider()->getLevelOfProductsToShow(),
+                $this->getLevelOfProductsToShow(),
                 $add,
             ]
         );

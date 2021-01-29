@@ -13,12 +13,14 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+use Sunnysideup\Ecommerce\Dev\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList
 {
     use Configurable;
     use Injectable;
     use Extensible;
+    use DebugTrait;
 
     ##########################################
     # PRODUCTS: basics

@@ -190,14 +190,14 @@ class ProductGroup extends Page
         $fields = parent::getCMSFields();
         $fields->addFieldToTab('Root.Images', ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')));
 
-        $calculatedNumberOfProductsPerPage = $this->getNumberOfProductsPerPage();
+        $calculatedNumberOfProductsPerPage = $this->getProductsPerPage();
         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
         $fields->addFieldToTab(
             'Root',
             Tab::create(
                 'ProductDisplay',
                 _t('ProductGroup.DISPLAY', 'Display'),
-                $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->getShowProductLevels()),
+                $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->getShowProductLevelsArray()),
                 HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
                 $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
             )
@@ -289,21 +289,17 @@ class ProductGroup extends Page
      * @param int $default, optional 10
      * @return int
      **/
-    public function getProductsPerPage(?int $default = 10): int
-    {
-        $val = $this->recursiveValue('NumberOfProductsPerPage', $default);
-        return intval($val);
-    }
-
-    /**
-     * Returns the number of products to show per page
-     * @alias of getProductsPerPage
-     * @param int $default - optional, 10
-     * @return int
-     */
-    public function getNumberOfProductsPerPage(?int $default = 10): int
+    public function MyNumberOfProductsPerPage(?int $default = 10): int
     {
         return $this->getProductsPerPage($default);
+    }
+    /**
+     * @param int $default, optional 10
+     * @return int
+     **/
+    public function getProductsPerPage(?int $default = 10): int
+    {
+        return intval($this->recursiveValue('NumberOfProductsPerPage', $default));
     }
 
     /**
@@ -495,9 +491,9 @@ class ProductGroup extends Page
     /**
      * @return array
      */
-    protected function getShowProductLevels(): array
+    public function getShowProductLevelsArray(): array
     {
-        return $this->getBaseProductList()->getShowProductLevels();
+        return $this->getBaseProductList()->getShowProductLevelsArray();
     }
 
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
@@ -556,7 +552,7 @@ class ProductGroup extends Page
             $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
             $array = ['inherit' => $inheritTitle];
         }
-        $method = 'get' . ucwords(strtolower($type)) . 'Options';
+        $method = 'get' . ucwords(strtolower($type)) . 'OptionsMap';
         $options = $this->getTemplateForProductsAndGroups()->{$method}();
 
         return array_merge($array, $options);

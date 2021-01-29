@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Api;
 use SilverStripe\Core\ClassInfo;
 
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\ORM\DataObject;
 
 class ArrayMethods
 {
@@ -24,7 +25,7 @@ class ArrayMethods
             $array = [0 => 0];
         }
 
-        return $array;
+        return array_values(array_unique($array));
     }
 
     /**
@@ -40,8 +41,8 @@ class ArrayMethods
         $ifStatement = 'CASE ';
         $count = 0;
         $stage = self::get_stage();
-        $tableClasses = ClassInfo::dataClassesFor($className);
-        $table = array_shift($tableClasses);
+        $dataClasses = ClassInfo::dataClassesFor($className);
+        $table = DataObject::getSchema()->tableName(array_shift($dataClasses));
         foreach ($ids as $id) {
             $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = ${id} THEN ${count}";
             ++$count;

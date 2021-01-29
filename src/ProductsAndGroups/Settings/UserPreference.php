@@ -168,6 +168,56 @@ class UserPreference
     }
 
     /**
+     * Returns the Title for a type key.
+     *
+     * If no key is provided then the default key is used.
+     *
+     * runs a method: getFilterTitle, getSortTitle, or getDisplayTitle
+     * where DefaultFilter, DefaultSortOrder and DisplayStyle are the DB Fields...
+     *
+     * @param string $type - FILTER | SORT | DISPLAY
+     *
+     * @return string
+     */
+    public function getUserPreferencesTitle(string $type, ?string $key): string
+    {
+        $method = 'get' . ucwords(strtolower($type)) . 'Title';
+        $value = $this->getTemplateForProductsAndGroups()->{$method}($key);
+        if ($value) {
+            return $value;
+        }
+
+        return _t('ProductGroup.UNKNOWN', 'UNKNOWN USER SETTING');
+    }
+
+    public function getGroupFilterTitle(?string $value = ''): array
+    {
+        user_error('fix');
+        return $this->getTitle('GROUPFILTER', $value);
+    }
+
+    public function getFilterTitle(?string $value = ''): array
+    {
+        return $this->getTitle('FILTER', $value);
+    }
+
+    public function getSortTitle(?string $value = ''): array
+    {
+        return $this->getTitle('SORT', $value);
+    }
+
+    public function getDisplayTitle(?string $value = ''): array
+    {
+        return $this->getTitle('DISPLAY', $value);
+    }
+
+    protected function getTitle(string $classNameOrType, ?string $value = ''): string
+    {
+        $obj = $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType);
+
+        return $obj->getTitle($value);
+    }
+    /**
      * Unique caching key for the product list...
      *
      * @return string | Null
@@ -269,45 +319,50 @@ class UserPreference
             ];
         }
     }
+    //
+    // /**
+    //  * Provides a dataset of links for a particular user preference.
+    //  *
+    //  * @param string $type        SORT | FILTER | DISPLAY - e.g. sort_options
+    //  *
+    //  * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
+    //  */
+    // public function getUserPreferencesLinks($type)
+    // {
+    //     // get basics
+    //     $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
+    //     $options = $this->getConfigOptions($type);
+    //
+    //     // if there is only one option then do not bother
+    //     if (count($options) < 2) {
+    //         return;
+    //     }
+    //
+    //     // get more config names
+    //     $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
+    //     $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
+    //     $arrayList = ArrayList::create();
+    //
+    //     if (count($options)) {
+    //         foreach ($options as $key => $array) {
+    //             $link = '?' . $getVariableName . "=${key}";
+    //             user_error('redo with link template');
+    //             $link = $this->Link() . $link;
+    //
+    //             $arrayList->push(ArrayData::create([
+    //                 'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
+    //                 'Link' => $link,
+    //                 'SelectKey' => $key,
+    //             ]));
+    //         }
+    //     }
+    //
+    //     return $arrayList;
+    // }
 
-    /**
-     * Provides a dataset of links for a particular user preference.
-     *
-     * @param string $type        SORT | FILTER | DISPLAY - e.g. sort_options
-     *
-     * @return ArrayList( ArrayData(Name, Link,  SelectKey, Current (boolean), LinkingMode))
-     */
-    public function getUserPreferencesLinks($type)
+    public function getOptions(string $classNameOrType): array
     {
-        // get basics
-        $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
-        $options = $this->getConfigOptions($type);
-
-        // if there is only one option then do not bother
-        if (count($options) < 2) {
-            return;
-        }
-
-        // get more config names
-        $translationCode = $sortFilterDisplayNames[$type]['translationCode'];
-        $getVariableName = $sortFilterDisplayNames[$type]['getVariable'];
-        $arrayList = ArrayList::create();
-
-        if (count($options)) {
-            foreach ($options as $key => $array) {
-                $link = '?' . $getVariableName . "=${key}";
-                user_error('redo with link template');
-                $link = $this->Link() . $link;
-
-                $arrayList->push(ArrayData::create([
-                    'Name' => _t('ProductGroup.' . $translationCode . strtoupper(str_replace(' ', '', $array['Title'])), $array['Title']),
-                    'Link' => $link,
-                    'SelectKey' => $key,
-                ]));
-            }
-        }
-
-        return $arrayList;
+        return $this->getTemplateForProductsAndGroups()->getOptions($classNameOrType);
     }
 
     /**
@@ -324,13 +379,13 @@ class UserPreference
         if (! $currentKey) {
             $currentKey = $this->getCurrentUserPreferences($type);
         }
-        $options = $this->getTemplateForProductsAndGroups()->getOptions($type);
-        if (! empty($options)) {
-            foreach ($options as $key => $arrayData) {
+        $options = $this->getOptions($type);
+        if (count($options) > 1) {
+            foreach ($options as $key => $data) {
                 $isCurrent = $currentKey === $key;
                 $obj = new ArrayData(
                     [
-                        'Title' => $arrayData['Title'],
+                        'Title' => $data['Title'],
                         'Current' => $isCurrent ? true : false,
                         //todo: fix this!!!!
                         'Link' => $this->getLinkTemplate(null, $type, $key),

@@ -19,13 +19,13 @@ class ProductSorter extends BaseApplyer
             'RequiresData' => false,
             'IsShowFullList' => false,
         ],
-        'price_low' => [
+        'lowprice' => [
             'Title' => 'Lowest Price',
             'SQL' => '"Price" ASC, "Sort" ASC, "Title" ASC',
             'RequiresData' => false,
             'IsShowFullList' => false,
         ],
-        'price_high' => [
+        'highprice' => [
             'Title' => 'Highest Price',
             'SQL' => '"Price" DESC, "Sort" ASC, "Title" ASC',
             'RequiresData' => false,

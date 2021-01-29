@@ -27,6 +27,8 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 class ProductGroupController extends PageController
 {
 
+    private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
+
     /**
      * the exact list of products that is going to be shown (excluding pagination)
      * @var SS_List
@@ -310,22 +312,27 @@ class ProductGroupController extends PageController
 
     public function ShowGroupFilterLinks(): bool
     {
-        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasGroupFilters() ? true : false;
+        return $this->HasManyProducts() && $this->HasGroupFilters() ? true : false;
     }
 
     public function ShowFiltersLinks(): bool
     {
-        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasFilters() ? true : false;
+        return $this->HasManyProducts() && $this->HasFilters() ? true : false;
     }
 
     public function ShowSortLinks(): bool
     {
-        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasSorts() ? true : false;
+        return $this->HasManyProducts() && $this->HasSorts() ? true : false;
     }
 
     public function ShowDisplayLinks(): bool
     {
-        return $this->getProductList()->CountGreaterThanOne(3) && $this->HasDisplays() ? true : false;
+        return $this->HasManyProducts() && $this->HasDisplays() ? true : false;
+    }
+
+    public function HasManyProducts() : bool
+    {
+        return $this->getFinalProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
     }
 
     public function HasGroupFilter(): bool
@@ -372,7 +379,7 @@ class ProductGroupController extends PageController
      */
     public function HasSorts(): bool
     {
-        return $this->SorterLinks()->count() > 1;
+        return $this->SortLinks()->count() > 1;
     }
 
     /**
@@ -459,10 +466,21 @@ class ProductGroupController extends PageController
      */
     public function MaxNumberOfProductsPerPage(): int
     {
-        $perPage = $this->getNumberOfProductsPerPage();
+        $perPage = $this->getProductsPerPage();
         $total = $this->getFinalProductList()->getRawCount();
 
         return $perPage > $total ? $total : $perPage;
+    }
+
+    /**
+     * Provides a ArrayList of links for filters products.
+     *
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+     */
+    public function GroupFilterLinks(): ArrayList
+    {
+        user_error('Replace with filterfor links');
+        return $this->getUserPreferencesClass()->getLinksPerType('GROUPFILTER');
     }
 
     /**
@@ -729,7 +747,7 @@ class ProductGroupController extends PageController
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
-        if ($this->request->getVar('showdebug') && Permission::check('ADMIN') || Director::isDev()) {
+        if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
             $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
             die();
         }

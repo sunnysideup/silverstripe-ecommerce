@@ -95,7 +95,7 @@ class RelatedProductGroups
         return $list->filter($filter);
     }
 
-    public function getShowProductLevels(): array
+    public function getShowProductLevelsArray(): array
     {
         return self::SHOW_PRODUCT_LEVELS;
     }
