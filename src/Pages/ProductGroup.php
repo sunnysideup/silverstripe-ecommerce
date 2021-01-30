@@ -8,6 +8,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\ReadonlyField;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
@@ -16,6 +17,9 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
+
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -227,6 +231,15 @@ class ProductGroup extends Page
                 );
             }
         }
+
+        $fields->addFieldsToTab(
+            'Root.Advanced',
+            ReadonlyField::create(
+                'DebugLink',
+                'Debug Products and Links',
+                DBField::create_field('HTMLText', '<a href="'.$this->Link().'?showdebug=1">show debug information</a>')
+            )
+        );
 
         return $fields;
     }
