@@ -20,6 +20,7 @@ use SilverStripe\ORM\DB;
 
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Permission;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -32,6 +33,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConf
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * Product Group is a 'holder' for Products within the CMS
@@ -95,7 +97,9 @@ class ProductGroup extends Page
     private static $summary_fields = [
         'Image.CMSThumbnail' => 'Image',
         'Title' => 'Category',
-        'NumberOfProducts' => 'Direct Product Count',
+        'NumberOfProducts' => 'Direct Products',
+        'AlsoShowProducts.Count' => 'Also Show Products',
+        'Children.Count' => 'Child Categories',
     ];
 
     private static $casting = [
@@ -502,6 +506,11 @@ class ProductGroup extends Page
     public function getSortFilterDisplayNamesData(): array
     {
         return $this->getTemplateForProductsAndGroups()->getData();
+    }
+
+    public function ChildCategories() : DataList
+    {
+        return ProductGroup::inst()->get()->filter(['ParentID' => $this->ID]);
     }
 
     /**

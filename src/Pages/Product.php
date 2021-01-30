@@ -44,6 +44,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 
 /**
  * This is a standard Product page-type with fields like
@@ -420,6 +421,14 @@ class Product extends Page implements BuyableModel
                 }
             }
         }
+    }
+
+    public function onAfterDelete()
+    {
+        parent::onAfterDelete();
+        $obj = new EcommerceTaskRemoveSuperfluousLinksInProductProductGroups();
+        $obj->setVerbose(false);
+        $obj->run(null);
     }
 
     /**
