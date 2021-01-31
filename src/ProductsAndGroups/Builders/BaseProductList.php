@@ -92,6 +92,13 @@ class BaseProductList extends AbstractProductsAndGroupsList
         'AllowPurchase' => 1,
     ];
 
+    public static function apply_default_filter_to_products($list): SS_List
+    {
+        $filter = Config::inst()->get(self::class, 'default_product_filter');
+
+        return $list->filter($filter);
+    }
+
     /**
      * @param ProductGroup $rootGroup
      * @param string       $buyableClassName
@@ -120,13 +127,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         }
     }
 
-    public static function apply_default_filter_to_products($list): SS_List
-    {
-        $filter = Config::inst()->get(self::class, 'default_product_filter');
-
-        return $list->filter($filter);
-    }
-
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
         $cacheKey = implode('_', array_filter([$rootGroup->ID, $rootGroup->ClassName, $buyableClassName, $levelOfProductsToShow]));
@@ -136,6 +136,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
         return self::$singleton_caches[$cacheKey];
     }
+
+
+
+    ##########################################
+    # Setters
+    ##########################################
 
     /**
      * Override the class of buyable to display. Usually this is limited to
@@ -189,13 +195,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->getProductGroupListProvider()->getLevelOfProductsToShow();
     }
 
-    /**
-     * @return array
-     */
-    public function getParentGroupIds(): array
-    {
-        return ArrayMethods::filter_array($this->parentGroupIds);
-    }
+
+
+    ##########################################
+    # PRODUCTS: Also show
+    ##########################################
 
     /**
      * @return array
@@ -206,12 +210,36 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @return SS_List
+     * @return DataList
      */
     public function getAlsoShowProducts(): DataList
     {
         return $this->products->filter(['ID' => $this->getAlsoShowProductsIds()]);
     }
+
+    ##################################################
+    # GROUPS: Parents from natural hierachy
+    ##################################################
+
+
+    /**
+     * @return array
+     */
+    public function getParentGroupIds(): array
+    {
+        return ArrayMethods::filter_array($this->parentGroupIds);
+    }
+
+    public function getParentGroups() :DataList
+    {
+        return $this->turnIdListIntoProductGroups($this->getParentGroupIds());
+    }
+
+
+    ##################################################
+    # GROUPS: Also Show Products, based on Products included through AlsoShow Show
+    # NOTE: difference with below
+    ##################################################
 
     public function getAlsoShowParentIds(): array
     {
@@ -233,8 +261,16 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return RelatedProductGroups::apply_default_filter_to_groups($list);
     }
 
+
+
+
+    ##################################################
+    # HELPERS
+    ##################################################
+
     /**
      * Returns children ProductGroup pages of this group.
+     * Make it more accesible for ProductGroup
      *
      * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
      * @param string|array   $filter             - additional filter to be added
@@ -278,6 +314,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->blockedProductsIds;
     }
 
+
+    ##################################################
+    # BUILDERS
+    ##################################################
+
     /**
      * create a starting point
      */
@@ -312,10 +353,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         if ($levelToShow < 0) {
             //no produts but if LevelOfProductsToShow = -1 then show all
             //note the smartness here -1 == 1 || -1 == -2
-            $groupFilter = ' (' . $levelToShow . ' = -1) ';
+            $groupFilter = ' ' . $levelToShow . ' = -1 ';
         } elseif ($levelToShow === 0) {
             //backup - same as 1, but without also show!
-            $groupFilter = '"ParentID" = ' . $this->rootGroup->ID;
+            $groupFilter = '"'.$this->getSiteTreeTableName() .'"."ParentID" = ' . $this->rootGroup->ID;
+            $this->alsoShowProductsIds = [];
         } else {
             $this->parentGroupIds[$this->rootGroup->ID] = $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
@@ -332,21 +374,28 @@ class BaseProductList extends AbstractProductsAndGroupsList
                     );
                 }
             }
-            $obj = Injector::inst()->get($this->buyableClassName);
-            $stage = $this->getStage();
-            $tableName = $obj->baseTable() . $stage;
-            $siteTreeTable = 'SiteTree' . $stage;
-            $groupFilter = '(
-                "' . $siteTreeTable . '"."ParentID" IN (' . implode(',', $this->parentGroupIds) . ')
-                OR
-                "' . $tableName . '"."ID" IN (' . implode($this->alsoShowProductsIds) . ')
-            )';
+            $groupFilter =  '"' . $this->getSiteTreeTableName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) .')';
         }
-        $this->alsoShowProductsIds = ArrayMethods::filter_array($this->alsoShowProductsIds);
-        $this->products = $this->products->where($groupFilter);
+        $alsoShowFilter = '"' . $this->getSiteTreeTableName() . '"."ID" IN (' . implode(',',$this->getAlsoShowProductsIds()) . ')';
+        $fullFilter = '((' . $groupFilter . ') OR (' . $alsoShowFilter . '))';
+        $this->products = $this->products->where($fullFilter);
 
         return $this;
     }
+
+    protected function getSiteTreeTableName() : string
+    {
+        $stage = $this->getStage();
+        return 'SiteTree' . $stage;
+
+    }
+    protected function getBuyableTableNameName() : string
+    {
+        $obj = Injector::inst()->get($this->buyableClassName);
+        $stage = $this->getStage();
+        return $tableName = $obj->baseTable() . $stage;
+    }
+
 
     /**
      * Generate Excluded products that can not be purchased.
@@ -381,21 +430,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    /**
-     * Returns a versioned record stage table suffix (i.e "" or "_Live")
-     *
-     * @return string
-     */
-    protected function getStage()
-    {
-        $stage = '';
 
-        if (Versioned::get_stage() === 'Live') {
-            $stage = '_Live';
-        }
-
-        return $stage;
-    }
+    ##################################################
+    # CACHE
+    ##################################################
 
     /**
      * is there a cache available?

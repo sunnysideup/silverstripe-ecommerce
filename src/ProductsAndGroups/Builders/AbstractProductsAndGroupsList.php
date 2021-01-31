@@ -7,6 +7,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\Versioned\Versioned;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -42,7 +43,7 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return self
      */
-    public function setRootGroup(ProductGroup $rootGroup): self
+    final public function setRootGroup(ProductGroup $rootGroup): self
     {
         $this->rootGroup = $rootGroup;
         ClassHelpers::check_for_instance_of($rootGroup, ProductGroup::class, true);
@@ -56,10 +57,16 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return SS_List
      */
-    public function getProducts()
+    final public function setProducts($products): self
     {
-        return $this->products;
+        $this->products = $products;
+
+        return $this;
     }
+
+    ##########################################
+    # PRODUCTS: basics
+    ##########################################
 
     /**
      * Key Method!
@@ -67,25 +74,20 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return SS_List
      */
-    public function setProducts($products): self
+    final public function getProducts()
     {
-        $this->products = $products;
-
-        return $this;
+        return $this->products;
     }
 
     /**
      * IDs of all the products.
      * @return array
      */
-    public function getProductIds(): array
+    final public function getProductIds(): array
     {
         return ArrayMethods::filter_array($this->products->columnUnique());
     }
 
-    abstract public function getAlsoShowProductsIds(): array;
-
-    abstract public function getAlsoShowProducts(): DataList;
 
     ##########################################
     # PRODUCTS: Counts
@@ -97,7 +99,7 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return int
      */
-    public function getRawCount(): int
+    final public function getRawCount(): int
     {
         return $this->products->count();
     }
@@ -109,36 +111,52 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return bool
      */
-    public function hasMoreThanOne(?int $greaterThan = 1): bool
+    final public function hasMoreThanOne(?int $greaterThan = 1): bool
     {
         return $this->getRawCount() > $greaterThan;
     }
 
+
     ##########################################
-    # PRODUCTS: Direct
+    # PRODUCTS: Direct from the root group
     ##########################################
 
-    public function getDirectProducts(): DataList
+    final public function getDirectProducts(): DataList
     {
         return $this->products
             ->filter(['ParentID' => $this->rootGroup->ID]);
     }
 
-    public function getDirectProductsWithAlsoShow(): DataList
+    final public function getDirectProductsExclusingAlsoShow(): DataList
     {
         return $this->products
-            ->filter(['ParentID' => $this->rootGroup->ID]);
+            ->exclude(['ID' => $this->getAlsoShowProductsIds()]);
     }
 
+    final public function getDirectProductsWithAlsoShow(): DataList
+    {
+        return $this->products
+            ->filterAny(['ParentID' => $this->rootGroup->ID, 'ID' => $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()]);
+    }
+
+    /**
+     * @return DataList
+     */
+    final public function getAlsoShowProductsFromRootGroupExclusive(): DataList
+    {
+        return $this->getDirectProductsWithAlsoShow()->exclude(['ParentID' => $this->rootGroup->ID]);
+    }
+
+
     ##########################################
-    # PRODUCTS: Children
+    # PRODUCTS: Children -from hierarchy
     ##########################################
 
     /**
      * child products (including indirect children)
      * @return DataList
      */
-    public function getChildProductsInclusive(): DataList
+    final public function getChildProductsInclusive(): DataList
     {
         return $this->products
             ->filter(['ParentID' => $this->getParentGroupIds()]);
@@ -148,51 +166,49 @@ abstract class AbstractProductsAndGroupsList
      * child products (including indirect children, but also show excluded)
      * @return DataList [description]
      */
-    public function getChildProductsExclusive(): DataList
+    final public function getChildProductsExclusive(): DataList
     {
-        return $this->products
+        return $this->getChildProductsInclusive()
             ->exclude(['ID' => $this->getAlsoShowProductsIds()]);
     }
+
 
     ##########################################
     # PRODUCTS: Also show
     ##########################################
 
     /**
-     * products from Also Show from all product groups
-     * @return DataList
+     *
+     * @return array
      */
-    public function getAlsoShowProductsInclusive(): DataList
-    {
-        return $this->products
-            ->filter(['ID' => $this->getAlsoShowProductsIds()]);
-    }
+    abstract public function getAlsoShowProductsIds(): array;
 
     /**
-     * all Also Show products
+     *
      * @return DataList
      */
-    public function getAlsoShowProductsFromRootGroupOnly(): DataList
-    {
-        $ids = ArrayMethods::filter_array($this->getProducts()->columnUnique());
-        return $this->rootGroup->AlsoShowProducts()
-            ->filter(['ID' => $ids]);
-    }
+    abstract public function getAlsoShowProducts(): DataList;
 
     /**
      * like getAlsoShowProductsInclusive, but then without the Children from all groups
      * i.e. exclude ones that have one of the groups as Parent.
      * @return DataList [description]
      */
-    public function getAlsoShowProductsExclusive(): DataList
+    final public function getAlsoShowProductsExclusive(): DataList
     {
-        return $this->getAlsoShowProductsInclusive()
+        return $this->getAlsoShowProducts()
             ->exclude(['ParentID' => $this->getParentGroupIds()]);
     }
 
+
     ##########################################
-    # GROUPS - ALL
+    # GROUPS - ALL - based on products
     ##########################################
+
+    final public function getParentGroupIdsBasedOnProducts(): array
+    {
+        return ArrayMethods::filter_array($this->getParentGroupsBasedOnProducts()->columnUnique());
+    }
 
     /**
      * KEY METHOD!
@@ -205,20 +221,11 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getParentGroups()
+    final public function getParentGroupsBasedOnProducts() :DataList
     {
-        $ids = $this->getProducts()->columnUnique('ParentID');
-        $ids = ArrayMethods::filter_array($ids);
-
-        $groups = ProductGroup::get()->filter(['ID' => $ids]);
-
-        return RelatedProductGroups::apply_default_filter_to_groups($groups);
+        return $this->turnIdListIntoProductGroups($this->getProducts()->columnUnique('ParentID'));
     }
 
-    public function getParentGroupIds(): array
-    {
-        return ArrayMethods::filter_array($this->getParentGroups()->columnUnique());
-    }
 
     /**
      * Given the products for this page, retrieve the parent groups excluding
@@ -226,53 +233,14 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getProductGroupsExcludingRootGroup(): DataList
+    final public function getParentGroupsBasedOnProductsExcludingRootGroup(): DataList
     {
-        return $this->getParentGroups()->exclude(['ID' => $this->rootGroup->ID]);
+        return $this->getParentGroupsBasedOnProducts()->exclude(['ID' => $this->rootGroup->ID]);
     }
 
-    ##################################################
-    # GROUPS: Also Show Products
-    ##################################################
-
-    /**
-     * List of All Also Show Product Parents
-     * Excluding the Root Group
-     * INCLUDING any other Direct Parent Groups
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    public function getAlsoShowProductsProductGroupInclusive(): DataList
-    {
-        $parentIDs = $this->getAlsoShowProducts()->columnUnique('ParentID');
-        $parentIDs = ArrayMethods::filter_array($parentIDs);
-
-        $filter = array_diff($parentIDs, [$this->rootGroup->ID]);
-        return $this->getParentGroups()
-            ->filter(['ID' => $filter]);
-    }
-
-    /**
-     * List of All Also Show Product Parents Excluding the Root Group
-     * AND EXCLUDING any Parent Groups
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    public function getAlsoShowProductsProductGroupsExclusive(): DataList
-    {
-        $excludeFilter = array_unique(array_merge($this->getParentGroupIds(), [$this->rootGroup->ID]));
-        $excludeFilter = ArrayMethods::filter_array($excludeFilter);
-
-        return $this->getAlsoShowProductsProductGroupInclusive()
-            ->exclude(['ID' => $excludeFilter]);
-    }
-
-    abstract public function getAlsoShowParentIds(): array;
-
-    abstract public function getAlsoShowParents(): DataList;
 
     ##################################################
-    # GROUPS: Parents
+    # GROUPS: DIRECT
     ##################################################
 
     /**
@@ -283,9 +251,9 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getDirectParentGroupsInclusive(): DataList
+    final public function getDirectParentGroupsInclusive(): DataList
     {
-        return $this->getParentGroups();
+        return $this->getParentGroupsBasedOnProducts()->filter(['ParentID' => $this->rootGroup->ID]);
     }
 
     /**
@@ -295,10 +263,89 @@ abstract class AbstractProductsAndGroupsList
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function getDirectParentGroupsExclusive(): DataList
+    final public function getDirectParentGroupsExclusive(): DataList
     {
         return $this->getDirectParentGroupsInclusive()->exclude(['ID' => $this->getAlsoShowProductsProductGroupsExclusive()]);
     }
+
+
+    ##################################################
+    # GROUPS: Parents from natural hierachy
+    ##################################################
+
+    /**
+     * ids for getParentGroups
+     * @var array
+     */
+    abstract public function getParentGroupIds() : array;
+
+    /**
+     * parent groups that come from the natural hierarchy
+     * the baselist knows about these
+     * @var DataList
+     */
+    abstract public function getParentGroups() : DataList;
+
+
+    /**
+     * hierarchy parent groups excluding any parent groups that are included in AlsoShow
+     * @var DataList
+     */
+    final public function getParentGroupsExclusive() : DataList
+    {
+        return $this->getParentGroups()
+            ->exclude(['ID' => $this->getAlsoShowParentIds()]);
+    }
+
+    ##################################################
+    # GROUPS: Also Show Products, based on Products included through AlsoShow Show
+    # ie. from all the products, what ProductGroups are related through many-many (e.g. Brands)
+    # NOTE: difference with below
+    ##################################################
+
+    abstract public function getAlsoShowParentIds(): array;
+
+    abstract public function getAlsoShowParents(): DataList;
+
+
+    ##################################################
+    # GROUPS: Also Show Product Groups Based on Also Show Product ParentIDs
+    # i.e. from the Also Show products, what are the natural parents?
+    # NOTE: difference with above
+    ##################################################
+
+    /**
+     * List of All Also Show Product Parents
+     * Excluding the Root Group
+     * INCLUDING any other Direct Parent Groups
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    final public function getAlsoShowProductsProductGroupInclusive(): DataList
+    {
+        return $this->turnIdListIntoProductGroups($this->getAlsoShowProducts()->columnUnique('ParentID'));
+
+    }
+
+    /**
+     * List of All Also Show Product Parents Excluding the Root Group
+     * AND EXCLUDING any Parent Groups
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    final public function getAlsoShowProductsProductGroupsExclusive(): DataList
+    {
+        $excludeFilter = $this->getParentGroupIds();
+
+        return $this->getAlsoShowProductsProductGroupInclusive()
+            ->exclude(['ID' => $excludeFilter]);
+    }
+
+
+
+    ##################################################
+    # HELPERS
+    ##################################################
 
     /**
      * @return Template
@@ -309,4 +356,35 @@ abstract class AbstractProductsAndGroupsList
         ClassHelpers::check_for_instance_of($obj, Template::class, true);
         return $obj;
     }
+
+
+    abstract protected function getSiteTreeTableName() : string;
+
+    abstract protected function getBuyableTableNameName() : string;
+
+    /**
+     * Returns a versioned record stage table suffix (i.e "" or "_Live")
+     *
+     * @return string
+     */
+    protected function getStage()
+    {
+        $stage = '';
+
+        if (Versioned::get_stage() === 'Live') {
+            $stage = '_Live';
+        }
+
+        return $stage;
+    }
+
+    protected function turnIdListIntoProductGroups(array $ids) : DataList
+    {
+        $ids = ArrayMethods::filter_array($ids);
+
+        $groups = ProductGroup::get()->filter(['ID' => $ids]);
+
+        return RelatedProductGroups::apply_default_filter_to_groups($groups);
+    }
+
 }

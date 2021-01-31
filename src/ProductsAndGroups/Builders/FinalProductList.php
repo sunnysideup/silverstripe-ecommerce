@@ -49,19 +49,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
         $this->products = $this->baseProductList->getProducts();
     }
 
-    /**
-     * Set the root {@link ProductGroup} to display the products from.
-     * @param ProductGroup $rootGroupController
-     *
-     * @return self
-     */
-    public function setRootGroupController($rootGroupController): self
-    {
-        $this->rootGroupController = $rootGroupController;
-        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
-
-        return $this;
-    }
 
     /**
      * create instances
@@ -78,6 +65,25 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return self::$singleton_cache;
     }
 
+    ##################################################
+    # SETTERS / GETTERS
+    ##################################################
+
+
+    /**
+     * Set the root {@link ProductGroup} to display the products from.
+     * @param ProductGroup $rootGroupController
+     *
+     * @return self
+     */
+    public function setRootGroupController($rootGroupController): self
+    {
+        $this->rootGroupController = $rootGroupController;
+        ClassHelpers::check_for_instance_of($rootGroupController, ProductGroupController::class, true);
+
+        return $this;
+    }
+
     /**
      * returns the associated BaseProductList
      * @return BaseProductList
@@ -86,6 +92,13 @@ class FinalProductList extends AbstractProductsAndGroupsList
     {
         return $this->baseProductList;
     }
+
+
+    ##################################################
+    # APPLYERS
+    ##################################################
+
+
 
     public function apply(string $classNameOrType, string $key, $params = null): self
     {
@@ -142,6 +155,34 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->apply('DISPLAY', $key, $params);
     }
 
+
+
+    ##########################################
+    # PRODUCTS: Also show
+    ##########################################
+
+    /**
+     * @return array
+     */
+    public function getAlsoShowProductsIds(): array
+    {
+        return $this->baseProductList->getAlsoShowProductsIds();
+    }
+
+    /**
+     * @return DataList
+     */
+    public function getAlsoShowProducts(): DataList
+    {
+        return $this->baseProductList->getAlsoShowProducts();
+    }
+
+
+    ##################################################
+    # GROUPS: Parents from natural hierachy
+    ##################################################
+
+
     /**
      * required for SubGroups
      * @return array
@@ -151,14 +192,16 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getParentGroupIds();
     }
 
-    /**
-     * required for SubGroups
-     * @return array
-     */
-    public function getAlsoShowProductsIds(): array
+    public function getParentGroups() :DataList
     {
-        return $this->baseProductList->getAlsoShowProductsIds();
+        return $this->baseProductList->getParentGroups();
     }
+
+
+    ##################################################
+    # GROUPS: Also Show Products, based on Products included through AlsoShow Show
+    ##################################################
+
 
     public function getAlsoShowParentIds(): array
     {
@@ -170,14 +213,13 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getAlsoShowParents();
     }
 
-    /**
-     * required for SubGroups
-     * @return array
-     */
-    public function getAlsoShowProducts(): DataList
-    {
-        return $this->baseProductList->getAlsoShowProducts();
-    }
+
+
+    ##################################################
+    # HELPERS
+    ##################################################
+
+
 
     /**
      * @param  string $type
@@ -195,5 +237,15 @@ class FinalProductList extends AbstractProductsAndGroupsList
     protected function getApplyer(string $classNameOrType)
     {
         return $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType, $this);
+    }
+
+    protected function getSiteTreeTableName() : string
+    {
+        return $this->baseProductList->getSiteTreeTableName();
+
+    }
+    protected function getBuyableTableNameName() : string
+    {
+        return $this->baseProductList->getBuyableTableNameName();
     }
 }

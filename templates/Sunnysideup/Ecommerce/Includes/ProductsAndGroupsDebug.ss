@@ -43,35 +43,47 @@
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>Product (Buyable) Class Name:</strong> $getBuyableClassName</li>
     <li><strong>Children to show (levels):</strong> $getLevelOfProductsToShow</li>
+    <li><strong>List of level options:</strong> $getShowProductLevelsArray</li>
+    <li><strong>Excluded Products 1:</strong> $getExcludedProducts</li>
+    <li><strong>Excluded Products 2:</strong> $getBlockedProductIds</li>
 </ul>
 <h3>Products</h3>
 <ul>
-    <li><strong>Product Ids:</strong> $getProductIds</li>
-    <li><strong>Excluded Products 1:</strong> $getExcludedProducts</li>
-    <li><strong>Excluded Products 2:</strong> $getBlockedProductIds</li>
-    <li><strong>AlsoShow IDs:</strong> $getAlsoShowProductsIds</li>
-    <li><strong>Raw Count:</strong> $getRawCount</li>
-    <li><strong>More than one:</strong> $hasMoreThanOne</li>
-    <li><strong>More than ten:</strong> $hasMoreThanOne(10)</li>
-    <li><strong>More than a million:</strong> $hasMoreThanOne(99999999)</li>
-    <li><strong>Direct Products:</strong> $getDirectProducts</li>
-    <li><strong>Direct Products (AlsoShow products removed):</strong> $getDirectProductsWithAlsoShow</li>
-    <li><strong>Child Products:</strong> $getChildProductsInclusive</li>
-    <li><strong>Child Products (AlsoShow products removed):</strong> $getChildProductsExclusive</li>
-    <li><strong>AlsoShow:</strong> $getAlsoShowProductsInclusive</li>
-    <li><strong>AlsoShow (child products removed):</strong> $getAlsoShowProductsExclusive</li>
-    <li><strong>AlsoShow (root group only):</strong> $getAlsoShowProductsFromRootGroupOnly</li>
+<li><strong>Product Ids:</strong> $getProductIds</li>
+<li><strong>Products:</strong> $getProducts</li>
+<li><strong>Raw Count:</strong> $getRawCount</li>
+<li><strong>More than one:</strong> $hasMoreThanOne</li>
+<li><strong>More than ten:</strong> $hasMoreThanOne(10)</li>
+<li><strong>More than a million:</strong> $hasMoreThanOne(99999999)</li>
+<li><strong>Direct Products:</strong> $getDirectProducts</li>
+<li><strong>Direct Products without AlsoShow:</strong> $getDirectProductsExclusingAlsoShow</li>
+<li><strong>Direct Products with AlsoShow:</strong> $getDirectProductsWithAlsoShow</li>
+<li><strong>Direct Products AlsoShow only:</strong> $getAlsoShowProductsFromRootGroupExclusive</li>
+<li><strong>Hierarchy Children:</strong> $getChildProductsInclusive</li>
+<li><strong>Hierarchy Children without AlsoShow:</strong> $getChildProductsExclusive</li>
+<li><strong>AlsoShow IDs:</strong> $getAlsoShowProductsIds</li>
+<li><strong>AlsoShow Products:</strong> $getAlsoShowProducts</li>
+<li><strong>AlsoShow Products without hierary ones:</strong> $getAlsoShowProductsExclusive</li>
 </ul>
 
-<h3>Parents</h3>
+<h3>Categories</h3>
 <ul>
-    <li><strong>Parent Group IDs (based on actual products):</strong> $getParentGroupIds</li>
-    <li><strong>Parent Groups (based on actual products):</strong> $getParentGroups</li>
-    <li><strong>Parent Groups (based on included groups - excluded AlsoShow parents):</strong> $getDirectParentGroupsExclusive</li>
-    <li><strong>AlsoShow parents (inc. hierarchy parents):</strong> $getAlsoShowProductsProductGroupInclusive</li>
-    <li><strong>AlsoShow parents (exc. hierarchy parents):</strong> $getAlsoShowProductsProductGroupsExclusive</li>
-    <li><strong>Related AlsoShow Parents (IDs):</strong> $getAlsoShowParentIds</li>
-    <li><strong>Related AlsoShow Parents:</strong> $getAlsoShowParents</li>
+    <li><strong>Category Group IDs based on actual products:</strong> $getParentGroupIdsBasedOnProducts</li>
+    <li><strong>Category Groups based on actual products:</strong> $getParentGroupsBasedOnProducts</li>
+    <li><strong>Category Groups based on actual products, excluding root group:</strong> $getParentGroupsBasedOnProductsExcludingRootGroup</li>
+
+    <li><strong>Direct Child Category Groups:</strong> $getDirectParentGroupsInclusive</li>
+    <li><strong>Direct Child Category Groups without AlsoShow:</strong> $getDirectParentGroupsExclusive</li>
+
+    <li><strong>Hierarchy Category Ids:</strong> $getParentGroupIds</li>
+    <li><strong>Hierarchy Category:</strong> $getParentGroups</li>
+    <li><strong>Hierarchy Category without also show Categories:</strong> $getParentGroupsExclusive</li>
+
+    <li><strong>AlsoShow Category Ids related through AlsoShow (i.e. from all the products, what Categories are related through many-many):</strong> $getAlsoShowParentIds</li>
+    <li><strong>AlsoShow Categoroes related through AlsoShow (i.e. from all the products, what Categories are related through many-many):</strong> $getAlsoShowParents</li>
+
+    <li><strong>AlsoShow Product Parents (ie. from the Also Show products, what are the natural parents?) with hierarchy Categories:</strong> $getAlsoShowProductsProductGroupInclusive</li>
+    <li><strong>AlsoShow Product Parents (ie. from the Also Show products, what are the natural parents?) without hierarchy Categories:</strong> $getAlsoShowProductsProductGroupsExclusive</li>
 </ul>
     <%-- <li><strong>Direct Products ($getDirectProducts.Count):</strong> <ul><% loop $getDirectProducts %><li>$Title</li><% end_loop %></ul></li> --%>
     <%-- <li>Groups:<% with $getGroups %><ul><% loop $getGroups %><li>$MenuTitle</li><% end_loop %></ul><% end_with %></li> --%>
@@ -85,55 +97,7 @@
     <li><strong>ClassName:</strong> $ClassName</li>
 </ul>
 
-<h3>Products</h3>
-<ul>
-    <li><strong>Product Ids:</strong> $getProductIds</li>
-    <li><strong>AlsoShow IDs:</strong> $getAlsoShowProductsIds</li>
-    <li><strong>Raw Count:</strong> $getRawCount</li>
-    <li><strong>More than one:</strong> $hasMoreThanOne</li>
-    <li><strong>More than ten:</strong> $hasMoreThanOne(10)</li>
-    <li><strong>More than a million:</strong> $hasMoreThanOne(99999999)</li>
-    <li><strong>Direct Products:</strong> $getDirectProducts</li>
-    <li><strong>Direct Products (AlsoShow products removed):</strong> $getDirectProductsWithAlsoShow</li>
-    <li><strong>Child Products:</strong> $getChildProductsInclusive</li>
-    <li><strong>Child Products (AlsoShow products removed):</strong> $getChildProductsExclusive</li>
-    <li><strong>AlsoShow:</strong> $getAlsoShowProductsInclusive</li>
-    <li><strong>AlsoShow (child products removed):</strong> $getAlsoShowProductsExclusive</li>
-    <li><strong>AlsoShow (root group only):</strong> $getAlsoShowProductsFromRootGroupOnly</li>
-</ul>
-
-<h3>Parents</h3>
-<ul>
-    <li><strong>Parent Group IDs:</strong> $getParentGroupIds</li>
-    <li><strong>Parent Groups (based on actual products):</strong> $getParentGroups</li>
-    <li><strong>Parent Groups (excluded AlsoShow parents):</strong> $getDirectParentGroupsExclusive</li>
-    <li><strong>AlsoShow parents (inc. normal parents):</strong> $getAlsoShowProductsProductGroupInclusive</li>
-    <li><strong>AlsoShow parents (exc. normal parents):</strong> $getAlsoShowProductsProductGroupsExclusive</li>
-    <li><strong>Related AlsoShow Parents (IDs):</strong> $getAlsoShowParentIds</li>
-    <li><strong>Related AlsoShow Parents:</strong> $getAlsoShowParents</li>
-</ul>
 <% end_with %>
-
-<h2>Group Filters</h2>
-<ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
-    <%-- <li><strong>Standard Levels to Show:</strong> $getShowProductLevelsArray</li> --%>
-</ul>
-
-<h2>Filters</h2>
-<ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
-</ul>
-
-<h2>Sorters</h2>
-<ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
-</ul>
-
-<h2>Displayers</h2>
-<ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
-</ul>
 
 
 
