@@ -22,12 +22,12 @@ class Debug extends ViewableData
         echo $this->renderWith('Sunnysideup/Ecommerce/Includes/ProductsAndGroupsDebug');
     }
 
-    public function RootGroupController()
+    public function getRootGroup()
     {
-        return $this->getRootGroupContoller();
+        return $this->rootGroup;
     }
 
-    public function getRootGroupContoller()
+    public function getRootGroupController()
     {
         return $this->rootGroupController;
     }

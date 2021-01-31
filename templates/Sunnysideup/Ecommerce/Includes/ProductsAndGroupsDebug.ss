@@ -1,20 +1,89 @@
-<% with $RootGroupController %>
+<% with $getRootGroup %>
 <h1>Debug information for $Title</h1>
 
 <h2>Product Group Controller Details:</h2>
 <ul>
     <li><strong>ID:</strong> $ID</li>
     <li><strong>ClassName:</strong> $ClassName</li>
-    <li><strong>Number of Products Per Page:</strong> $getProductsPerPage</li>
-    <li><strong>Levels of product child groups to show:</strong> $getMyLevelOfProductsToShow</li>
-    <li><strong>Filter for segment:</strong> $FilterForGroupLinkSegment</li>
-    <%-- <li><strong>Child Categories:</strong> $ChildGroups</li>
-    <li><strong>Also Show Product Array:</strong> $getProductsToBeIncludedFromOtherGroupsArray</li> --%>
+    <li><strong>Number of Products Per Page:</strong> $DebugMe(getProductsPerPage)</li>
+    <li><strong>Levels of product child groups to show:</strong> $DebugMe(getMyLevelOfProductsToShow)</li>
+    <li><strong>Filter for segment:</strong> $DebugMe(FilterForGroupLinkSegment)</li>
+    <li><strong>Also Show Product Array:</strong> $DebugMe(getProductsToBeIncludedFromOtherGroupsArray)</li>
     <li><strong>ParentGroup:</strong> $DebugMe(ParentGroup)</li>
+    <li><strong>Groups Menu:</strong> $DebugMe(GroupsMenu)</li>
+    <li><strong>Image:</strong> $DebugMe(Image)</li>
+    <li><strong>Best Available Image (recursive):</strong> $DebugMe(BestAvailableImage)</li>
+    <li><strong>Number of Direct Products:</strong> $DebugMe(getNumberOfProducts)</li>
+    <li><strong>getSortFilterDisplayValues:</strong> $DebugMe(getSortFilterDisplayValues)</li>
+    <li><strong>getBuyableClassName:</strong> $DebugMe(getBuyableClassName)</li>
+    <li><strong>getProductsAlsoInOtherGroups:</strong> $DebugMe(getProductsAlsoInOtherGroups)</li>
+    <li><strong>getSortFilterDisplayNamesData:</strong> $DebugMe(getSortFilterDisplayNamesData)</li>
+    <li><strong>Child Categories (filtered):</strong> $DebugMe(ChildGroups)</li>
+    <li><strong>Child Categories (unfiltered):</strong> $DebugMe(ChildCategories)</li>
+    <li><strong>Show Levels:</strong> $DebugMe(getShowProductLevelsArray)</li>
 </ul>
 <% end_with %>
 
-<% with $RootGroupController %>
+<% with $getRootGroupController %>
+<h2>Controller</h2>
+<ul>
+<li><strong>ID:</strong> $ID</li>
+<li><strong>ClassName:</strong> $ClassName</li>
+<li><strong>Raw Product List:</strong> $DebugMe(getProductList)</li>
+<li><strong>Paginated Product List:</strong> $DebugMe(Products)</li>
+<li><strong>Products are Cacheable:</strong> $DebugMe(ProductGroupListAreCacheable)</li>
+<li><strong>Products are Cacheable in general:</strong> $DebugMe(productListsHTMLCanBeCached)</li>
+<li><strong>Products are Ajaxified:</strong> $DebugMe(ProductGroupListAreAjaxified)</li>
+<li><strong>OriginalTitle:</strong> $DebugMe(OriginalTitle)</li>
+<li><strong>Menu Child Categories:</strong> $DebugMe(MenuChildGroups)</li>
+</ul>
+<h4>Show Links?</h4>
+<ul>
+<li><strong>Show any sort of filter / sort:</strong> $DebugMe(ShowGroupFilterSortDisplayLinks)</li>
+<li><strong>Show Group Filter Links:</strong> $DebugMe(ShowGroupFilterLinks)</li>
+<li><strong>Show Filters Links:</strong> $DebugMe(ShowFilterLinks)</li>
+<li><strong>Show Sort Links:</strong> $DebugMe(ShowSortLinks)</li>
+<li><strong>Show Display Links:</strong> $DebugMe(ShowDisplayLinks)</li>
+<li><strong>Has Many Products:</strong> $DebugMe(HasManyProducts)</li>
+</ul>
+<h4>Has ... Right Now?</h4>
+<ul>
+<li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
+<li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
+<li><strong>Has Sort:</strong> $DebugMe(HasSort)</li>
+<li><strong>Has Display:</strong> $DebugMe(HasDisplay)</li>
+<li><strong>Has Any Sort of Filter / Sort:</strong> $DebugMe(HasGroupFilterSortDisplay)</li>
+</ul>
+<h4>Has ... Available?</h4>
+<ul>
+<li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
+<li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
+<li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
+<li><strong>Has Displays:</strong> $DebugMe(HasDisplays)</li>
+</ul>
+<h4>Pagination</h4>
+<ul>
+<li><strong>Current Page Number</strong> $DebugMe(getCurrentPageNumber)</li>
+<li><strong>Max Number Of Products Per Page</strong> $DebugMe(MaxNumberOfProductsPerPage)</li>
+</ul>
+<h4>Preferences</h4>
+<ul>
+<li><strong>Current Group Filter Title</strong> $DebugMe(getCurrentGroupFilterTitle)</li>
+<li><strong>Current Filter Title</strong> $DebugMe(getCurrentFilterTitle)</li>
+<li><strong>Current Sort Title</strong> $DebugMe(getCurrentSortTitle)</li>
+<li><strong>Current Display Title</strong> $DebugMe(getCurrentDisplayTitle)</li>
+<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
+</ul>
+<h4>Links</h4>
+<ul>
+<li><strong>Current Link</strong> $DebugMe(Link)</li>
+<li><strong>Group Filter Links</strong> $DebugMe(GroupFilterLinks)</li>
+<li><strong>Filter Links</strong> $DebugMe(FilterLinks)</li>
+<li><strong>Sort Links</strong> $DebugMe(SortLinks)</li>
+<li><strong>Display Links</strong> $DebugMe(DisplayLinks)</li>
+<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
+<li><strong>Search Link</strong> $DebugMe(SearchResultLink)</li>
+</ul>
 <% with $getUserPreferencesClass %>
 <h2>User Specific Details</h2>
 <ul>

@@ -25,6 +25,8 @@ use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
+use Sunnysideup\Vardump\Vardump;
+
 class ProductGroupController extends PageController
 {
     /**
@@ -301,12 +303,9 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function MenuChildGroups(): ?DataList
+    public function MenuChildGroups(?int $levels = 2): ?DataList
     {
-        return $this->ChildGroups(
-            2,
-            ['ShowInMenus' => 1]
-        );
+        return $this->ChildGroups($levels);
     }
 
     public function ShowGroupFilterLinks(): bool
@@ -314,7 +313,7 @@ class ProductGroupController extends PageController
         return $this->HasManyProducts() && $this->HasGroupFilters() ? true : false;
     }
 
-    public function ShowFiltersLinks(): bool
+    public function ShowFilterLinks(): bool
     {
         return $this->HasManyProducts() && $this->HasFilters() ? true : false;
     }
@@ -327,6 +326,11 @@ class ProductGroupController extends PageController
     public function ShowDisplayLinks(): bool
     {
         return $this->HasManyProducts() && $this->HasDisplays() ? true : false;
+    }
+
+    public function ShowGroupFilterSortDisplayLinks(): bool
+    {
+        return $this->ShowGroupFilterLinks() || $this->ShowFilterLinks() || $this->ShowSortLinks() || $this->ShowDisplayLinks();
     }
 
     public function HasManyProducts(): bool
@@ -354,11 +358,21 @@ class ProductGroupController extends PageController
         return $this->getCurrentUserPreferencesKey('DISPLAY') !== $this->getListConfigCalculated('DISPLAY');
     }
 
-    public function HasFilterOrSort(): bool
+    public function HasGroupFilterSortDisplay(): bool
     {
-        return $this->HasFilter() || $this->HasSort();
+        return $this->HasGroupFilter() || $this->HasFilter() || $this->HasSort() || $this->HasDisplay();
     }
 
+    /**
+     * Are group filters available? we check one at the time so that we do the least
+     * amount of DB queries.
+     *
+     * @return bool
+     */
+    public function HasGroupFilters(): bool
+    {
+        return $this->GroupFilterLinks()->count() > 1;
+    }
     /**
      * Are filters available? we check one at the time so that we do the least
      * amount of DB queries.
@@ -392,6 +406,19 @@ class ProductGroupController extends PageController
         return $this->DisplayLinks()->count() > 1;
     }
 
+    /**
+     * Number of entries per page limited by total number of pages available...
+     *
+     * @return int
+     */
+    public function MaxNumberOfProductsPerPage(): int
+    {
+        $perPage = $this->getProductsPerPage();
+        $total = $this->getFinalProductList()->getRawCount();
+
+        return $perPage > $total ? $total : $perPage;
+    }
+
     public function getCurrentPageNumber(): int
     {
         if ($pageStart = intval($this->request->getVar('start'))) {
@@ -406,6 +433,19 @@ class ProductGroupController extends PageController
         return $this->getTemplateForProductsAndGroups()->getUserPreferencesTitle($type, $key);
     }
 
+    /**
+     * returns the current filter applied to the list
+     * in a human readable string.
+     *
+     * @return string
+     */
+    public function getCurrentGroupFilterTitle(): string
+    {
+        if ($this->hasGroupFilter()) {
+            return $this->getUserPreferencesTitle('GROUPFILTER', $this->getCurrentUserPreferencesKey('GROUPFILTER'));
+        }
+        return '';
+    }
     /**
      * returns the current filter applied to the list
      * in a human readable string.
@@ -458,18 +498,6 @@ class ProductGroupController extends PageController
         return $this->getListConfigCalculated('DISPLAY');
     }
 
-    /**
-     * Number of entries per page limited by total number of pages available...
-     *
-     * @return int
-     */
-    public function MaxNumberOfProductsPerPage(): int
-    {
-        $perPage = $this->getProductsPerPage();
-        $total = $this->getFinalProductList()->getRawCount();
-
-        return $perPage > $total ? $total : $perPage;
-    }
 
     /**
      * Provides a ArrayList of links for filters products.
@@ -478,7 +506,6 @@ class ProductGroupController extends PageController
      */
     public function GroupFilterLinks(): ArrayList
     {
-        user_error('Replace with filterfor links');
         return $this->getUserPreferencesClass()->getLinksPerType('GROUPFILTER');
     }
 
@@ -776,6 +803,7 @@ class ProductGroupController extends PageController
      */
     protected function productListsHTMLCanBeCached(): bool
     {
+        //todo: FIX!
         return EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased ? false : true;
     }
 
@@ -830,5 +858,13 @@ class ProductGroupController extends PageController
     protected function addSecondaryTitle(?string $secondaryTitle = '')
     {
         $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
+    }
+
+
+    public function DebugMe(string $method)
+    {
+        if (Vardump::inst()->isSafe()) {
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method, get_called_class());
+        }
     }
 }

@@ -371,19 +371,6 @@ class ProductGroup extends Page
     }
 
     /**
-     * Returns children ProductGroup pages of this group.
-     *
-     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     * @param string | Array $filter             - additional filter to be added
-     *
-     * @return \SilverStripe\ORM\SS_List (ProductGroups)
-     */
-    public function ChildGroups(?int $maxRecursiveLevel = 99, ?string $filter = null)
-    {
-        return $this->getBaseProductList()->getGroups($maxRecursiveLevel, $filter);
-    }
-
-    /**
      * If products are show in more than one group then this returns an array for any products that are linked to this
      * product group.
      *
@@ -409,16 +396,20 @@ class ProductGroup extends Page
     }
 
     /**
-     * Recursively generate a product menu.
+     * Recursively generate a product menu. From the Top
      *
      * @param string $filter
      *
      * @return \SilverStripe\ORM\ArrayList (ProductGroups)
      */
-    public function GroupsMenu($filter = 'ShowInMenus = 1')
+    public function GroupsMenu($filter = '')
     {
-        if ($parent = $this->ParentGroup()) {
-            return $parent->GroupsMenu($filter);
+        $parent = $this->ParentGroup();
+        if ($parent && $parent->exists()) {
+            $parentMenu = $parent->ChildGroups(1, $filter);
+            if($parentMenu->count()) {
+                return $parent->GroupsMenu($filter);
+            }
         }
 
         return $this->ChildGroups(1, $filter);
@@ -498,12 +489,25 @@ class ProductGroup extends Page
 
     public function getSortFilterDisplayNamesData(): array
     {
-        return $this->getTemplateForProductsAndGroups()->getData();
+        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayValues();
+    }
+
+    /**
+     * Returns children ProductGroup pages of this group.
+     *
+     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
+     * @param string|array $filter             - additional filter to be added
+     *
+     * @return \SilverStripe\ORM\SS_List (ProductGroups)
+     */
+    public function ChildGroups(?int $maxRecursiveLevel = 99)
+    {
+        return $this->getBaseProductList()->getDirectParentGroupsInclusive();
     }
 
     public function ChildCategories() : DataList
     {
-        return ProductGroup::inst()->get()->filter(['ParentID' => $this->ID]);
+        return ProductGroup::get()->filter(['ParentID' => $this->ID]);
     }
 
     /**
@@ -602,21 +606,22 @@ class ProductGroup extends Page
         if (! isset($this->recursiveValues[$fieldNameOrMethod])) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
-            if ($this->hasMethod($fieldNameOrMethod)) {
-                $outcome = $this->{$fieldNameOrMethod}();
-                if (is_object($outcome) && $outcome->exists()) {
-                    $value = $outcome;
-                } elseif ($outcome && ! is_object($outcome)) {
-                    $value = $outcome;
+            $methodWorks = false;
+            foreach([$fieldNameOrMethod, $fieldNameOrMethodWithGet] as $method) {
+                if ($this->hasMethod($method)) {
+                    $methodWorks = true;
+                    $outcome = $this->{$method}();
+                    if ($outcome instanceof DataObject && $outcome->exists()) {
+                        $value = $outcome;
+                    } elseif ($outcome) {
+                        $value = $outcome;
+                    } else {
+                        print_r($outcome);
+                        user_error($fieldNameOrMethod . ' is empty');
+                    }
                 }
-            } elseif ($this->hasMethod($fieldNameOrMethodWithGet)) {
-                $outcome = $this->{$fieldNameOrMethodWithGet}();
-                if (is_object($outcome) && $outcome->exists()) {
-                    $value = $outcome;
-                } elseif ($outcome && ! is_object($outcome)) {
-                    $value = $outcome;
-                }
-            } else {
+            }
+            if($methodWorks === false) {
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
             if (! $value || $value === 'inherit') {
@@ -639,7 +644,7 @@ class ProductGroup extends Page
     public function DebugMe(string $method)
     {
         if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method);
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method, get_called_class());
         }
     }
 }

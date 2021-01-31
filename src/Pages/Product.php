@@ -590,9 +590,8 @@ class Product extends Page implements BuyableModel
      */
     public function BestAvailableImage()
     {
-        $product = Product::get()->byID($this->ID);
-        if ($product && $product->ImageID) {
-            $image = Image::get()->byID($product->ImageID);
+        if ($this->ImageID) {
+            $image = Image::get()->byID($this->ImageID);
             if ($image) {
                 if (file_exists(ASSETS_PATH . '/' . $image->getFilename())) {
                     return $image;

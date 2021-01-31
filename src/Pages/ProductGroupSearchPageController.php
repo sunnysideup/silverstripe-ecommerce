@@ -19,7 +19,7 @@ class ProductGroupSearchPageController extends ProductGroupController
      * Returns child product groups for use in 'in this section'. For example
      * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
      */
-    public function MenuChildGroups(): ?DataList
+    public function MenuChildGroups(?int $levels = 2): ?DataList
     {
         return null;
     }
