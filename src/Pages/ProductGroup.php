@@ -306,15 +306,6 @@ class ProductGroup extends Page
      * @param int $default, optional 10
      * @return int
      **/
-    public function MyNumberOfProductsPerPage(?int $default = 10): int
-    {
-        return $this->getProductsPerPage($default);
-    }
-
-    /**
-     * @param int $default, optional 10
-     * @return int
-     **/
     public function getProductsPerPage(?int $default = 10): int
     {
         return intval($this->recursiveValue('NumberOfProductsPerPage', $default));
@@ -383,9 +374,9 @@ class ProductGroup extends Page
      * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
      * @param string | Array $filter             - additional filter to be added
      *
-     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
+     * @return \SilverStripe\ORM\SS_List (ProductGroups)
      */
-    public function ChildGroups(?int $maxRecursiveLevel = 99, ?string $filter = null): ArrayList
+    public function ChildGroups(?int $maxRecursiveLevel = 99, ?string $filter = null)
     {
         return $this->getBaseProductList()->getGroups($maxRecursiveLevel, $filter);
     }

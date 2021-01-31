@@ -794,7 +794,7 @@ class ProductGroupController extends PageController
             if ($this->IsShowFullList()) {
                 $obj->setPageLength(EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') + 1);
             } else {
-                $obj->setPageLength($this->MyNumberOfProductsPerPage());
+                $obj->setPageLength($this->getProductsPerPage());
             }
         }
         return $obj;
