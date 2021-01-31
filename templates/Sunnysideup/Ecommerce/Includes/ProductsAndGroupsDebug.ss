@@ -68,6 +68,8 @@
 
 <h3>Categories</h3>
 <ul>
+    <li><strong>Filter for candidates IDs:</strong> $getFilterForCandidateCategoryIds</li>
+    <li><strong>Filter for candidates:</strong> $getFilterForCandidateCategories</li>
     <li><strong>Category Group IDs based on actual products:</strong> $getParentGroupIdsBasedOnProducts</li>
     <li><strong>Category Groups based on actual products:</strong> $getParentGroupsBasedOnProducts</li>
     <li><strong>Category Groups based on actual products, excluding root group:</strong> $getParentGroupsBasedOnProductsExcludingRootGroup</li>
@@ -80,7 +82,7 @@
     <li><strong>Hierarchy Category without also show Categories:</strong> $getParentGroupsExclusive</li>
 
     <li><strong>AlsoShow Category Ids related through AlsoShow (i.e. from all the products, what Categories are related through many-many):</strong> $getAlsoShowParentIds</li>
-    <li><strong>AlsoShow Categoroes related through AlsoShow (i.e. from all the products, what Categories are related through many-many):</strong> $getAlsoShowParents</li>
+    <li><strong>AlsoShow Categories related through AlsoShow (i.e. from all the products, what Categories are related through many-many):</strong> $getAlsoShowParents</li>
 
     <li><strong>AlsoShow Product Parents (ie. from the Also Show products, what are the natural parents?) with hierarchy Categories:</strong> $getAlsoShowProductsProductGroupInclusive</li>
     <li><strong>AlsoShow Product Parents (ie. from the Also Show products, what are the natural parents?) without hierarchy Categories:</strong> $getAlsoShowProductsProductGroupsExclusive</li>

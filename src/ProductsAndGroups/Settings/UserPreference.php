@@ -24,7 +24,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
 /**
- * keeps track of the current settings for FILTER / SORT / DISPLAY for user
+ * keeps track of the  settings for FILTER / SORT / DISPLAY for user
  * the associated links and all that sort of stuff.
  */
 class UserPreference
@@ -309,6 +309,8 @@ class UserPreference
             implode(
                 '_',
                 [
+                    serialize($this->request->param('Action')),
+                    serialize($this->request->param('ID')),
                     serialize($this->getCurrentUserPreferences('GROUPFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('SORT')),
                     serialize($this->getCurrentUserPreferencesKey('FILTER')),
@@ -404,11 +406,10 @@ class UserPreference
     {
         $answer = [];
         if ($classNameOrType === 'GROUPFILTER' || $classNameOrType instanceof ProductGroupFilter) {
-            $map = $this->getBaseProductList()->getAlsoShowParents()->map('ID', 'URLSegment');
-            if ($map->Count()) {
-                $array = $map->toArray();
-                foreach ($array as $id => $URLSegment) {
-                    $answer[] = 'filterforgroup/' . $URLSegment . ',' . $id . '/';
+            $groups = $this->getBaseProductList()->getFilterForCandidateCategories();
+            if ($groups->Count()) {
+                foreach ($groups as $group) {
+                    $answer[] = $group->FilterForGroupLinkSegment();
                 }
             }
         }
@@ -437,7 +438,8 @@ class UserPreference
         if (count($options) > 1 || count($actions) > 1) {
             foreach ($actions as $action) {
                 foreach ($options as $key => $data) {
-                    $isCurrent = $currentKey === $key;
+                    $isCurrent = $currentKey === $key && $this->matchingSegment($action);
+
                     $obj = new ArrayData(
                         [
                             'Title' => $data['Title'],
@@ -455,6 +457,7 @@ class UserPreference
 
         return $list;
     }
+
 
     /**
      * returns the current page with get variables. If a type is specified then
@@ -611,4 +614,24 @@ class UserPreference
 
         return $obj;
     }
+
+    ###############################
+    # segments and actions
+    ###############################
+
+
+    protected function matchingSegment(?string $action) : bool
+    {
+        $outcome =  true;
+        if($action) {
+            $outcome = $action === $this->mySegment();
+        }
+        return $outcome;
+    }
+
+    protected function mySegment() : string
+    {
+        return $this->request->param('Action') . '/' . $this->request->param('ID') . '/';
+    }
+
 }

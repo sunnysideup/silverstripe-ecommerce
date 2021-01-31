@@ -75,6 +75,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
     protected $alsoShowParentIds = [];
 
     /**
+     *
+     * @var int[]
+     */
+    protected $filterForCandidateCategoryIds = [];
+
+    /**
      * @var int[]
      */
     protected static $excluded_products = [];
@@ -217,6 +223,29 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->products->filter(['ID' => $this->getAlsoShowProductsIds()]);
     }
 
+    ##########################################
+    # GROUPS - smart
+    ##########################################
+
+    public function getFilterForCandidateCategoryIds() : array
+    {
+        return ArrayMethods::filter_array($this->filterForCandidateCategoryIds);
+    }
+
+    public function getFilterForCandidateCategories() : DataList
+    {
+        if (empty($this->filterForCandidateCategoryIds)) {
+            $ids1 = $this->getAlsoShowParents()->columnUnique();
+            $ids2 = $this->getAlsoShowProductsProductGroupInclusive()->columnUnique();
+            $this->filterForCandidateCategoryIds = array_merge($ids1, $ids2);
+        }
+        // print_r($idsAll);
+        $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
+        $list = $list->exclude(['ID' => $this->getParentGroupIds()]);
+        //
+        return $list;
+    }
+
     ##################################################
     # GROUPS: Parents from natural hierachy
     ##################################################
@@ -352,12 +381,16 @@ class BaseProductList extends AbstractProductsAndGroupsList
         //special cases
         if ($levelToShow < 0) {
             //no produts but if LevelOfProductsToShow = -1 then show all
-            //note the smartness here -1 == 1 || -1 == -2
+            //note the smartness here -1 == 1 || -1 == -2, i.e. minus 1 is include all and minus -2 is include none.
+            // ignore AlsoShow.
             $groupFilter = ' ' . $levelToShow . ' = -1 ';
         } elseif ($levelToShow === 0) {
-            //backup - same as 1, but without also show!
+            //backup - same as 1, but with also show!
             $groupFilter = '"'.$this->getSiteTreeTableName() .'"."ParentID" = ' . $this->rootGroup->ID;
-            $this->alsoShowProductsIds = [];
+            $this->alsoShowProductsIds = array_merge(
+                $this->alsoShowProductsIds,
+                $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
+            );
         } else {
             $this->parentGroupIds[$this->rootGroup->ID] = $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
@@ -461,6 +494,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $this->alsoShowProductsIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowProductsIds')));
         $this->parentGroupIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('parentGroupIds')));
         $this->getAlsoShowParentIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('alsoShowParentIds')));
+        $this->getfilterForCandidateCategoryIds = ArrayMethods::filter_array(EcommerceCache::inst()->retrieve($this->getCachekey('filterForCandidateCategoryIds')));
 
         return $this;
     }
@@ -480,6 +514,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
         EcommerceCache::inst()->save($this->getCachekey('alsoShowParentIds'), $this->getAlsoShowParentIds());
+        EcommerceCache::inst()->save($this->getCachekey('filterForCandidateCategoryIds'), $this->getfilterForCandidateCategoryIds());
 
         return $this;
     }

@@ -32,7 +32,7 @@ class RelatedProductGroups
      */
     protected const SHOW_PRODUCT_LEVELS = [
         99 => 'All Child Products (default)',
-        -2 => 'None',
+        -2 => 'None at all',
         -1 => 'All products',
         0 => 'Direct Child Products (exclude otherwise linked)',
         1 => 'Direct Child Products',

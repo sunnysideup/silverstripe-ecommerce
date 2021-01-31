@@ -202,6 +202,14 @@ abstract class AbstractProductsAndGroupsList
 
 
     ##########################################
+    # GROUPS - smart
+    ##########################################
+
+    abstract public function getFilterForCandidateCategoryIds() : array;
+
+    abstract public function getFilterForCandidateCategories() : DataList;
+
+    ##########################################
     # GROUPS - ALL - based on products
     ##########################################
 

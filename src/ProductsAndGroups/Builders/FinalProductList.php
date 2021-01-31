@@ -177,6 +177,19 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getAlsoShowProducts();
     }
 
+    ##########################################
+    # GROUPS - smart
+    ##########################################
+
+    public function getFilterForCandidateCategoryIds() : array
+    {
+        return $this->baseProductList->getFilterForCandidateCategoryIds();
+    }
+
+    public function getFilterForCandidateCategories() : DataList
+    {
+        return $this->baseProductList->getFilterForCandidateCategories();
+    }
 
     ##################################################
     # GROUPS: Parents from natural hierachy

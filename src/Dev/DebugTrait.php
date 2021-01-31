@@ -37,7 +37,10 @@ trait DebugTrait
             if (! is_array($arguments)) {
                 $arguments = [$arguments];
             }
-            return $this->arrayToUl($this->{$method}(...$arguments));
+            return
+                $this->arrayToUl($this->{$method}(...$arguments)) .
+                '<div style="color: blue; font-size: 12px; margin-top: 10px;">⇒' . get_class($this) . '::<strong>' . $method . '</strong></div>
+                <hr style="margin-bottom: 30px;"/>';
         }
     }
 
@@ -70,7 +73,12 @@ trait DebugTrait
         } elseif (is_array($mixed)) {
             $html = '';
             $isAssoc = $this->isAssoc($mixed);
-            $isLarge = count($mixed) > 20;
+            $count = count($mixed);
+            $isLarge = false;
+            if($count > 1) {
+                $html .= '' . count($mixed) . ' entries ... ';
+                $isLarge = count($mixed) > 20;
+            }
             $after = '';
             $style = '';
             $keyString = '';
@@ -78,7 +86,6 @@ trait DebugTrait
             if ($isLarge) {
                 $style = 'display: inline;';
                 $after = ', ';
-                $html .= '' . count($mixed) . ' entries ... ';
             }
             $html .= '<ul>';
             foreach ($mixed as $key => $item) {
