@@ -11,10 +11,11 @@ use SilverStripe\Versioned\Versioned;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\Dev\DebugTrait;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+
+use Sunnysideup\Vardump\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList
 {

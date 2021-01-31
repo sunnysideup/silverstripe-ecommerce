@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
 use SilverStripe\Assets\Image;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -35,6 +36,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+use Sunnysideup\Vardump\Vardump;
 /**
  * Product Group is a 'holder' for Products within the CMS
  *
@@ -632,5 +634,12 @@ class ProductGroup extends Page
         }
 
         return $this->recursiveValues[$fieldNameOrMethod];
+    }
+
+    public function DebugMe(string $method)
+    {
+        if (Vardump::inst()->isSafe()) {
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method);
+        }
     }
 }

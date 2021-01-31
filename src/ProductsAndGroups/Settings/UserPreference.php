@@ -15,11 +15,12 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\Dev\DebugTrait;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
+
+use Sunnysideup\Vardump\DebugTrait;
 
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 

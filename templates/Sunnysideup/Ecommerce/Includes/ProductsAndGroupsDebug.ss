@@ -10,7 +10,7 @@
     <li><strong>Filter for segment:</strong> $FilterForGroupLinkSegment</li>
     <%-- <li><strong>Child Categories:</strong> $ChildGroups</li>
     <li><strong>Also Show Product Array:</strong> $getProductsToBeIncludedFromOtherGroupsArray</li> --%>
-    <li><strong>ParentGroup:</strong> $ParentGroup</li>
+    <li><strong>ParentGroup:</strong> $DebugMe(ParentGroup)</li>
 </ul>
 <% end_with %>
 

@@ -6,7 +6,6 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\Dev\DebugTrait;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
@@ -20,6 +19,8 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
+
+use Sunnysideup\Vardump\DebugTrait;
 
 /**
  * In terms of ProductAndGroupsLists, this class knows all about
