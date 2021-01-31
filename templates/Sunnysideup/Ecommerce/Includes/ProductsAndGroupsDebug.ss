@@ -8,7 +8,7 @@
     <li><strong>Number of Products Per Page:</strong> $getProductsPerPage</li>
     <li><strong>Levels of product child groups to show:</strong> $getMyLevelOfProductsToShow</li>
     <li><strong>Filter for segment:</strong> $FilterForGroupLinkSegment</li>
-    <li><strong>Child Categories:</strong> $ChildGroups</li>
+    <li><strong>Child Categories:</strong> $ChildGroups.count</li>
     <%-- <li><strong>Also Show Product Array:</strong> $getProductsToBeIncludedFromOtherGroupsArray</li> --%>
     <li><strong>ParentGroup:</strong> $ParentGroup</li>
 </ul>
