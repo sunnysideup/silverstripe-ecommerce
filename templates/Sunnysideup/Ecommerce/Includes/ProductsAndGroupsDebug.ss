@@ -8,6 +8,7 @@
     <li><strong>Number of Products Per Page:</strong> $DebugMe(getProductsPerPage)</li>
     <li><strong>Levels of product child groups to show:</strong> $DebugMe(getMyLevelOfProductsToShow)</li>
     <li><strong>Filter for segment:</strong> $DebugMe(FilterForGroupLinkSegment)</li>
+    <li><strong>Search Link</strong> $DebugMe(SearchResultLink)</li>
     <li><strong>Also Show Product Array:</strong> $DebugMe(getProductsToBeIncludedFromOtherGroupsArray)</li>
     <li><strong>ParentGroup:</strong> $DebugMe(ParentGroup)</li>
     <li><strong>Groups Menu:</strong> $DebugMe(GroupsMenu)</li>
@@ -82,7 +83,7 @@
 <li><strong>Sort Links</strong> $DebugMe(SortLinks)</li>
 <li><strong>Display Links</strong> $DebugMe(DisplayLinks)</li>
 <li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
-<li><strong>Search Link</strong> $DebugMe(SearchResultLink)</li>
+
 </ul>
 <% with $getUserPreferencesClass %>
 <h2>User Specific Details</h2>

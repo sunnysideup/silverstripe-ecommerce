@@ -15,6 +15,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
@@ -182,13 +183,8 @@ class ShopAccountForm extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        unset($data['AccountInfo']);
-        unset($data['LoginDetails']);
-        unset($data['LoggedInAsNote']);
-        unset($data['PasswordCheck1']);
-        unset($data['PasswordCheck2']);
-
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 
     /**

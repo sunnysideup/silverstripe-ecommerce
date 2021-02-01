@@ -16,6 +16,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
@@ -31,6 +32,21 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
  */
 class ProductSearchForm extends Form
 {
+
+    private const FIELDS_TO_CACHE = [
+        'rawData',
+        'keywordPhrase',
+        'productIds',
+        'productGroupIds',
+        'resultArrayPos',
+        'immediateRedirectPage',
+        'baseList',
+        'baseClassNameForBuyables',
+        'baseClassNameForGroups',
+        'additionalGetParameters',
+        'maximumNumberOfResults'
+    ];
+
     /**
      * @var array
      *            List of words to be replaced.
@@ -160,7 +176,7 @@ class ProductSearchForm extends Form
     /**
      * @var bool
      */
-    private static $include_price_filters = false;
+    private static $include_price_filters = true;
 
     /**
      * ProductsToSearch can be left blank to search all products.
@@ -299,7 +315,7 @@ class ProductSearchForm extends Form
             $redirectToPage = $this->getResultsPage();
             $hash = $this->setCacheForHash();
             $data['searchcode'] = $hash;
-            $link = $redirectToPage->LinkForSearchResults($hash);
+            $link = $redirectToPage->SearchResultLink($hash);
             unset($data['action_doProductSearchForm']);
             $link .= '?';
             $link .= http_build_query($data);
@@ -329,6 +345,11 @@ class ProductSearchForm extends Form
             $this->debugOutput('<hr /><hr /><hr /><h2>Debugging Search Results</h2>');
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
         }
+    }
+
+    protected function doProcessSetup($data)
+    {
+
     }
 
     protected function doKeywordCleanup()
@@ -659,14 +680,17 @@ class ProductSearchForm extends Form
 
     protected function getSerializedObject(?array $data = [])
     {
-        $variables = get_object_vars($this);
-        foreach ($variables as $key => $value) {
+        $variables = [];
+        foreach (self::FIELDS_TO_CACHE as $variable) {
+            $value = $this->{$variable};
             if (is_object($value) && is_a($value, DataObject::class)) {
-                if (empty($value->ClassName) || empty($value->ID)) {
-                    unset($variables[$key]);
-                } else {
-                    $variables[$key] = $value->ClassName . '_' . $value->ID;
+                if ($value->ClassName && $value->ID) {
+                    $variables[$variable] = $value->ClassName . '_' . $value->ID;
                 }
+            } elseif(is_object($value)) {
+                //do nothing
+            } else {
+                $variables[$variable] = $value;
             }
         }
         return serialize($variables);
@@ -712,7 +736,17 @@ class ProductSearchForm extends Form
     {
         $array = $this->getCacheForHash($hash);
         foreach ($array as $variable => $value) {
-            $this->{$variable} = $value;
+            if (in_array($variable, self::FIELDS_TO_CACHE) ) {
+                $this->{$variable} = $value;
+                $dataObjectTest = explode('_', $value);
+                if(count($dataObjectTest) === 2) {
+                    $className = $dataObjectTest[0];
+                    $id = intval($dataObjectTest[1]);
+                    if(class_exists($className) && $id) {
+                        $this->{$variable} = $className::get()->byId($id);
+                    }
+                }
+            }
         }
         return $array;
     }
@@ -721,4 +755,18 @@ class ProductSearchForm extends Form
     {
         echo "<br />${string}";
     }
+
+    /**
+     * saves the form into session.
+     *
+     * @param array $data - data from form.
+     */
+    public function saveDataToSession()
+    {
+        $data = $this->getData();
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
+    }
+
+
 }

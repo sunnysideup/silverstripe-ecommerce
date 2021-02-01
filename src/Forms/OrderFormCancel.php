@@ -15,6 +15,8 @@ use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
 use Sunnysideup\Ecommerce\Model\Order;
 
+use Sunnysideup\Ecommerce\Api\Sanitizer;
+
 /**
  * @Description: allows customer to cancel their order.
  *
@@ -109,6 +111,7 @@ class OrderFormCancel extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 }

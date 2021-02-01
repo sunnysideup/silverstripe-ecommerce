@@ -353,6 +353,16 @@ class ProductGroup extends Page
     }
 
     /**
+     * Link to the search results.
+     *
+     * @return string
+     */
+    public function SearchResultLink(): string
+    {
+        return $this->Link('searchresults');
+    }
+
+    /**
      * Retrieve the base list of products for this group
      *
      * @return BaseProductList

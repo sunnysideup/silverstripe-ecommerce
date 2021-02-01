@@ -550,15 +550,6 @@ class ProductGroupController extends PageController
         return parent::link() . '?reload=1';
     }
 
-    /**
-     * Link to the search results.
-     *
-     * @return string
-     */
-    public function SearchResultLink(): string
-    {
-        return $this->Link('searchresults');
-    }
 
     public function searchResultsProductGroupsArrayFromSession(): array
     {
@@ -591,7 +582,7 @@ class ProductGroupController extends PageController
      * @param bool $forceInit optional - force to be reinitialised.
      * @return ProductSearchForm object
      */
-    public function ProductSearchForm(?bool $forceInit = false)
+    public function ProductSearchForm()
     {
         if ($this->searchForm === null || $forceInit) {
             $onlySearchTitle = $this->originalTitle;

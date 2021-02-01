@@ -17,6 +17,8 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
+use Sunnysideup\Ecommerce\Api\Sanitizer;
+
 class OrderFormFeedback extends Form
 {
     protected $order = null;
@@ -95,7 +97,8 @@ class OrderFormFeedback extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 
     protected function getValueFromOrderConfirmationPage($value)

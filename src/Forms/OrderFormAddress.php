@@ -19,6 +19,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
@@ -464,13 +465,9 @@ class OrderFormAddress extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        unset($data['AccountInfo']);
-        unset($data['LoginDetails']);
-        unset($data['LoggedInAsNote']);
-        unset($data['PasswordCheck1']);
-        unset($data['PasswordCheck2']);
+        $data = Sanitizer::remove_from_data_array($data);
 
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $this->setSessionData($data);
     }
 
     /**
