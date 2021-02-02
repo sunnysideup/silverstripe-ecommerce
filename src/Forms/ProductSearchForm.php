@@ -192,8 +192,8 @@ class ProductSearchForm extends Form
         $request = $controller->getRequest();
         $defaults = [
             'Keywords' => $request->getVar('Keywords'),
-            'MinimumPrice' => $request->getVar('MaximumPrice'),
-            'MaximumPrice' => $request->getVar('MaximumPrice'),
+            'MinimumPrice' => floatval($request->getVar('MinimumPrice')),
+            'MaximumPrice' => floatval($request->getVar('MaximumPrice')),
         ];
         //turn of security to allow caching of the form:
         if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
