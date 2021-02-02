@@ -12,7 +12,7 @@ class ProductDisplayer extends BaseApplyer
      * @var array
      */
     private static $options = [
-        'default' => [
+        BaseApplyer::DEFAULT_NAME => [
             'Title' => 'Paginated',
             'SQL' => '',
             'RequiresData' => false,

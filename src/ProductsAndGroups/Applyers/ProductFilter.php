@@ -12,7 +12,7 @@ class ProductFilter extends BaseApplyer
      * @var array
      */
     private static $options = [
-        'default' => [
+        BaseApplyer::DEFAULT_NAME => [
             'Title' => 'All Products (default)',
             'SQL' => [
                 'ShowInSearch' => 1,
@@ -41,10 +41,8 @@ class ProductFilter extends BaseApplyer
     {
         $this->applyStart($key, $params);
         $filter = $this->getSql($key, $params);
-        if (is_array($filter) && count($filter)) {
+        if (! empty($filter)) {
             $this->products = $this->products->filter($filter);
-        } elseif ($filter) {
-            $this->products = $this->products->where($filter);
         }
         $this->applyEnd($key, $params);
         return $this;

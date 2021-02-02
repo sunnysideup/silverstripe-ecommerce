@@ -41,28 +41,24 @@ class Template
      */
     protected const SORT_DISPLAY_NAMES = [
         'GROUPFILTER' => [
-            'value' => 'default',
             'getVariable' => 'groupfilter',
             'dbFieldName' => '',
             'translationCode' => 'GROUPFILTER_BY',
             'defaultApplyer' => ProductGroupFilter::class,
         ],
         'FILTER' => [
-            'value' => 'default',
             'getVariable' => 'filter',
             'dbFieldName' => 'DefaultFilter',
             'translationCode' => 'FILTER_BY',
             'defaultApplyer' => ProductFilter::class,
         ],
         'SORT' => [
-            'value' => 'default',
             'getVariable' => 'sort',
             'dbFieldName' => 'DefaultSortOrder',
             'translationCode' => 'SORT_BY',
             'defaultApplyer' => ProductSorter::class,
         ],
         'DISPLAY' => [
-            'value' => 'default',
             'getVariable' => 'display',
             'dbFieldName' => 'DisplayStyle',
             'translationCode' => 'DISPLAY_STYLE',

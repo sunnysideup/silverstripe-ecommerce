@@ -34,6 +34,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConf
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 use Sunnysideup\Vardump\Vardump;
@@ -83,9 +84,9 @@ class ProductGroup extends Page
     ];
 
     private static $defaults = [
-        'DefaultSortOrder' => 'default',
-        'DefaultFilter' => 'default',
-        'DisplayStyle' => 'default',
+        'DefaultSortOrder' => BaseApplyer::DEFAULT_NAME,
+        'DefaultFilter' => BaseApplyer::DEFAULT_NAME,
+        'DisplayStyle' => BaseApplyer::DEFAULT_NAME,
         'LevelOfProductsToShow' => 99,
     ];
 
@@ -322,9 +323,9 @@ class ProductGroup extends Page
     {
         $field = $this->getSortFilterDisplayValues($type, 'dbFieldName');
         if ($field) {
-            return $this->recursiveValue($field, 'default');
+            return $this->recursiveValue($field, BaseApplyer::DEFAULT_NAME);
         }
-        return 'default';
+        return BaseApplyer::DEFAULT_NAME;
     }
 
     /**
@@ -357,9 +358,12 @@ class ProductGroup extends Page
      *
      * @return string
      */
-    public function SearchResultLink(): string
+    public function SearchResultLink(?string $hash = ''): string
     {
-        return $this->Link('searchresults');
+        if($hash) {
+            $hash .= '/';
+        }
+        return $this->Link('searchresults/'.$hash);
     }
 
     /**

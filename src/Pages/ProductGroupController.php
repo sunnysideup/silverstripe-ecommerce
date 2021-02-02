@@ -125,14 +125,16 @@ class ProductGroupController extends PageController
     public function searchresults($request)
     {
         $this->isSearchResults = true;
-        $this->searchHash = $this->request->param('ID');
-        $this->ProductSearchForm(true);
+
+        $this->ProductSearchForm();
         //set last search results
         //get results array
         $keyword = $this->ProductSearchForm()->getSearchPhrase();
         if ($keyword) {
             $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
         }
+        $filter = ['ID' => $this->ProductSearchForm()->getProductIds()];
+        $this->getFinalProductList(true, $filter);
         //filters are irrelevant right now
         $this->addSecondaryTitle($keyword);
 
@@ -237,8 +239,7 @@ class ProductGroupController extends PageController
     public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         if ($this->ProductGroupListAreCacheable()) {
-            $searchKey = $this->IsSearchResult() ? 'search' : 'non-search';
-            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber, $searchKey);
+            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber, $this->searchResultHash);
         }
 
         return '';
@@ -305,6 +306,9 @@ class ProductGroupController extends PageController
      */
     public function MenuChildGroups(?int $levels = 2): ?DataList
     {
+        if($this->isSearchResults()) {
+            return $this->SearchResultsChildGroups();
+        }
         return $this->ChildGroups($levels);
     }
 
@@ -551,7 +555,7 @@ class ProductGroupController extends PageController
     }
 
 
-    public function searchResultsProductGroupsArrayFromSession(): array
+    public function searchResultsProductGroupsArray(): array
     {
         return $this->ProductSearchForm()->getProductGroupIds();
     }
@@ -565,8 +569,8 @@ class ProductGroupController extends PageController
      */
     public function SearchResultsChildGroups(): ?DataList
     {
-        $groupArray = $this->searchResultsProductGroupsArrayFromSession();
-        if (! empty($groupArray)) {
+        $groupArray = $this->searchResultsProductGroupsArray();
+        if (count($groupArray) > 1) {
             $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
 
             return ProductGroup::get()
@@ -578,25 +582,26 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * returns a search form to search current products.
+     * returns a search form to search current products ready to search
      * @param bool $forceInit optional - force to be reinitialised.
      * @return ProductSearchForm object
      */
     public function ProductSearchForm()
     {
-        if ($this->searchForm === null || $forceInit) {
+        if ($this->searchForm === null) {
             $onlySearchTitle = $this->originalTitle;
-            if (ClassHelpers::check_for_instance_of($this->dataRecord, ProductGroupSearchPage::class, false)) {
-                if ($this->HasSearchResults()) {
-                    $onlySearchTitle = 'Last Search Results';
-                }
-            }
+            // if (ClassHelpers::check_for_instance_of($this->dataRecord, ProductGroupSearchPage::class, false)) {
+            //     if ($this->HasSearchResults()) {
+            //         $onlySearchTitle = 'Last Search Results';
+            //     }
+            // }
             $this->searchForm = ProductSearchForm::create(
                 $this,
                 'ProductSearchForm',
-                $onlySearchTitle,
-                $this->getProductList()
             );
+            //load previous data.
+            $this->searchForm->setSearchHash($this->request->param('ID'));
+            $this->searchForm->setBaseList($this->getProductList());
             // $sortGetVariable = $this->getSortFilterDisplayValues('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
             // $form->setAdditionalGetParameters($additionalGetParameters);
@@ -615,14 +620,7 @@ class ProductGroupController extends PageController
      */
     public function HasSearchResults(): bool
     {
-        $resultArray = $this->searchResultsArrayFromSession();
-        if (! empty($resultArray)) {
-            $count = count($resultArray) - 1;
-
-            return $count ? true : false;
-        }
-
-        return false;
+        return $this->ProductSearchForm()->getHasResults();
     }
 
     /**
@@ -636,8 +634,7 @@ class ProductGroupController extends PageController
             if ($this->IsSearchResults()) {
                 return true;
             }
-
-            if (! $this->products || ($this->products && $this->products->count())) {
+            if ($this->getProductList()->count() > 0) {
                 return false;
             }
 
@@ -678,7 +675,7 @@ class ProductGroupController extends PageController
      */
     public function ActiveSearchTerm(): bool
     {
-        return $this->request->getVar('Keyword') || $this->request->getVar('searchcode') ? true : false;
+        return $this->request->getVar('Keyword') ? true : false;
     }
 
     public function saveUserPreferences(?array $data = [])
@@ -713,10 +710,16 @@ class ProductGroupController extends PageController
      */
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
-        if ($this->finalProductList === null) {
+        if ($this->finalProductList === null || $redo) {
             $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
+        }
+        if($extraFilter) {
+            $this->finalProductList->setExtraFilter($extraFilter);
+        }
+        if($alternativeSort) {
+            $this->finalProductList->setAlternatveSort($alternativeSort);
         }
         return $this->finalProductList;
     }

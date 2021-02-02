@@ -18,6 +18,7 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 
 use Sunnysideup\Vardump\DebugTrait;
@@ -483,7 +484,9 @@ class UserPreference
             } else {
                 $value = $this->getCurrentUserPreferencesKey($myType);
             }
-            $getVars[$values['getVariable']] = $value;
+            if($values['getVariable'] !== BaseApplyer::DEFAULT_NAME) {
+                $getVars[] = $value;
+            }
         }
 
         return $base . '?' . http_build_query($getVars);

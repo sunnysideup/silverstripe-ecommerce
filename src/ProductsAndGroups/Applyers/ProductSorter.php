@@ -13,7 +13,7 @@ class ProductSorter extends BaseApplyer
      * @var array
      */
     private static $options = [
-        'default' => [
+        BaseApplyer::DEFAULT_NAME => [
             'Title' => 'Default Order',
             'SQL' => '"Sort" ASC, "Title" ASC',
             'RequiresData' => false,

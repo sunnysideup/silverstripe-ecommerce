@@ -16,6 +16,8 @@ abstract class BaseApplyer
     use Injectable;
     use Configurable;
 
+    public const DEFAULT_NAME = 'default';
+
     private const SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
 
     /**

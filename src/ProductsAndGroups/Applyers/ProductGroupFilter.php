@@ -16,7 +16,7 @@ class ProductGroupFilter extends BaseApplyer
      * @var array
      */
     private static $options = [
-        'default' => [
+        BaseApplyer::DEFAULT_NAME => [
             'Title' => 'Filtered for Category',
             'SQL' => [
                 'ShowInSearch' => 1,
@@ -75,10 +75,8 @@ class ProductGroupFilter extends BaseApplyer
         }
 
         if ($filter) {
-            if (is_array($filter) && count($filter)) {
+            if (! empty($filter)) {
                 $this->products = $this->products->filter($filter);
-            } elseif ($filter) {
-                $this->products = $this->products->where($filter);
             }
         }
         $this->applyEnd($key, $params);
