@@ -129,12 +129,12 @@ class ProductGroupController extends PageController
         $this->ProductSearchForm();
         //set last search results
         //get results array
-        $keyword = $this->ProductSearchForm()->getSearchPhrase();
+        $keyword = $this->ProductSearchForm()->getLastSearchPhrase();
         if ($keyword) {
             $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
         }
         $filter = ['ID' => $this->ProductSearchForm()->getProductIds()];
-        $this->getFinalProductList(true, $filter);
+        $this->getFinalProductList($filter);
         //filters are irrelevant right now
         $this->addSecondaryTitle($keyword);
 
@@ -710,7 +710,7 @@ class ProductGroupController extends PageController
      */
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
-        if ($this->finalProductList === null || $redo) {
+        if ($this->finalProductList === null) {
             $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);

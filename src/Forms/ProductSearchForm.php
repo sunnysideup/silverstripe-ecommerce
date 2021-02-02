@@ -631,7 +631,7 @@ class ProductSearchForm extends Form
     protected function getResultsPage()
     {
         //if no specific section is being searched then we redirect to search page:
-        return DataObject::get_one(ProductGroupSearchPage::class);
+        return $this->controller->dataRecord;
     }
 
     protected function createBaseList()
@@ -689,7 +689,8 @@ class ProductSearchForm extends Form
             $value = $this->{$variable};
             if (is_object($value) && is_a($value, DataObject::class)) {
                 if ($value->ClassName && $value->ID) {
-                    $variables[$variable] = $value->ClassName . '_' . $value->ID;
+                    $variables[$variable]['ClassName'] = $value->ClassName;
+                    $variables[$variable]['ID'] = $value->ID;
                 }
             } elseif(is_object($value)) {
                 //do nothing
@@ -741,18 +742,23 @@ class ProductSearchForm extends Form
         $array = $this->getCacheForHash($hash);
         foreach ($array as $variable => $value) {
             if (in_array($variable, self::FIELDS_TO_CACHE) ) {
-                $this->{$variable} = $value;
-                $dataObjectTest = explode('_', $value);
-                if(count($dataObjectTest) === 2) {
-                    $className = $dataObjectTest[0];
-                    $id = intval($dataObjectTest[1]);
-                    if(class_exists($className) && $id) {
-                        $this->{$variable} = $className::get()->byId($id);
-                    }
-                }
+                $this->{$variable} = $this->arrayToObject($value);
             }
         }
         return $array;
+    }
+
+    protected function arrayToObject($value)
+    {
+        if(is_array($value) && count($value) == 2 && isset($value['ID']) && isset($value['ClassName'])) {
+            $className = $value['ClassName'];
+            $id = intval($value['ID']);
+            if(class_exists($className) && $id) {
+                return $className::get()->byId($id);
+            }
+        }
+
+        return $value;
     }
 
     ########################################

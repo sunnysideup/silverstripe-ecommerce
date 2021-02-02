@@ -84,15 +84,19 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    public function setExtraFilters($filter) : self
+    public function setExtraFilter($filter) : self
     {
-        $this->products = $this->products->filter($filter);
+        if($filter) {
+            $this->products = $this->products->filter($filter);
+        }
         return $this;
     }
 
     public function setAlternativeSort($sort) : self
     {
-        $this->products = $this->products->sort($sort);
+        if($sort) {
+            $this->products = $this->products->sort($sort);
+        }
 
         return $this;
     }
