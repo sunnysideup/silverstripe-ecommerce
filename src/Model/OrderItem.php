@@ -19,6 +19,7 @@ use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductDropdown;
 use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
@@ -144,6 +145,11 @@ class OrderItem extends OrderAttribute
         'OrderID' => [
             'field' => NumericField::class,
             'title' => 'Order Number',
+        ],
+        'BuyableID' => [
+            'field' => ProductDropdown::class,
+            'title' => 'Internal Item ID',
+            'filter' => 'OrderItemProductFilter',
         ],
         //"TableTitle" => "PartialMatchFilter",
         //"UnitPrice",

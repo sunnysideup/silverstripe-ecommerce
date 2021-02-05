@@ -33,6 +33,7 @@ use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductGroupDropdown;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
@@ -187,6 +188,11 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $searchable_fields = [
+        'ParentID' => [
+            'title' => 'Category',
+            'field' => ProductGroupDropdown::class,
+            'filter' => 'ExactMatchFilter',
+        ],
         'FullName' => [
             'title' => 'Keyword',
             'field' => TextField::class,
@@ -195,7 +201,7 @@ class Product extends Page implements BuyableModel
         'Price' => [
             'title' => 'Minimum Price',
             'field' => NumericField::class,
-            'filter' => 'ProductMaximumPriceFilter',
+            'filter' => 'ProductMinimumPriceFilter',
         ],
         //todo: hack - to allow multiple search
         'Weight' => [
@@ -284,7 +290,6 @@ class Product extends Page implements BuyableModel
      */
     public function getCMSFields()
     {
-        $this->BestAvailableImage();
         //prevent calling updateSettingsFields extend function too early
         //$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
         //$this->disableCMSFieldsExtensions();

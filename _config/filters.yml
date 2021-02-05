@@ -21,6 +21,10 @@ SilverStripe\Core\Injector\Injector:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersFromDateFilter
   DataListFilter.EcommercePaymentFiltersAroundDateFilter:
     class: Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter
+  DataListFilter.OrderFiltersMemberAndAddress:
+    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress
+  DataListFilter.OrderItemProductFilter:
+    class: Sunnysideup\Ecommerce\Search\Filters\OrderItemProductFilter
   DataListFilter.ProductMinimumPriceFilter:
     class: Sunnysideup\Ecommerce\Search\Filters\ProductMinimumPriceFilter
   DataListFilter.ProductMaximumPriceFilter:
@@ -35,5 +39,7 @@ SilverStripe\Core\Injector\Injector:
   OrderFiltersUntilDateFilter: '%$DataListFilter.OrderFiltersUntilDateFilter'
   OrderFiltersFromDateFilter: '%$DataListFilter.OrderFiltersFromDateFilter'
   EcommercePaymentFiltersAroundDateFilter: '%$DataListFilter.EcommercePaymentFiltersAroundDateFilter'
+  OrderFiltersMemberAndAddress: '%$DataListFilter.OrderFiltersMemberAndAddress'
+  OrderItemProductFilter: '%$DataListFilter.OrderItemProductFilter'
   ProductMinimumPriceFilter: '%$DataListFilter.ProductMinimumPriceFilter'
   ProductMaximumPriceFilter: '%$DataListFilter.ProductMaximumPriceFilter'
