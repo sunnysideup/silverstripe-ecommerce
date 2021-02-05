@@ -193,9 +193,15 @@ class Product extends Page implements BuyableModel
             'filter' => 'PartialMatchFilter',
         ],
         'Price' => [
-            'title' => 'Price',
+            'title' => 'Minimum Price',
             'field' => NumericField::class,
-            'filter' => 'ExactMatchFilter',
+            'filter' => 'ProductMaximumPriceFilter',
+        ],
+        //todo: hack - to allow multiple search
+        'Weight' => [
+            'title' => 'Maximum Price',
+            'field' => NumericField::class,
+            'filter' => 'ProductMaximumPriceFilter',
         ],
         'InternalItemID' => [
             'title' => 'Internal Item ID',
