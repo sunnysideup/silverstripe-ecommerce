@@ -1,4 +1,5 @@
 <?php
+
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Injector\Injectable;
@@ -10,13 +11,12 @@ class KeywordSearchBuilder
 
     protected $keywordPhrase = '';
 
-
     /**
      * creates three levels of searches that
      * can be executed one after the other, each
      * being less specific than the last...
      *
-     * @param string $keywordPhrase - keywordphrase
+     * @param string $phrase - keywordphrase
      * @param array $fields         - fields being searched
      *
      * @return array
@@ -96,7 +96,6 @@ class KeywordSearchBuilder
         return $returnArray;
     }
 
-
     public function processKeyword(string $keywordPhrase)
     {
         $this->keywordPhrase = $keywordPhrase;
@@ -139,9 +138,4 @@ class KeywordSearchBuilder
             }
         }
     }
-
-
-
-
-
 }

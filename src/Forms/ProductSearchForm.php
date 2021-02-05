@@ -13,22 +13,20 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
-use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Vardump\Vardump;
 
 /**
@@ -36,7 +34,6 @@ use Sunnysideup\Vardump\Vardump;
  */
 class ProductSearchForm extends Form
 {
-
     private const FIELDS_TO_CACHE = [
         'rawData',
         'keywordPhrase',
@@ -48,9 +45,8 @@ class ProductSearchForm extends Form
         'baseClassNameForBuyables',
         'baseClassNameForGroups',
         'additionalGetParameters',
-        'maximumNumberOfResults'
+        'maximumNumberOfResults',
     ];
-
 
     /**
      * set to TRUE to show the search logic.
@@ -239,7 +235,7 @@ class ProductSearchForm extends Form
      * they search phrase used.
      * @return string
      */
-    public function getLastSearchPhrase() : string
+    public function getLastSearchPhrase(): string
     {
         return $this->rawData['Keyword'] ?? '';
     }
@@ -254,19 +250,18 @@ class ProductSearchForm extends Form
         return ArrayMethods::filter_array($this->productGroupIds);
     }
 
-    public function getHasResults() : bool
+    public function getHasResults(): bool
     {
         return count($this->getProductIds) && count($this->getProductGroupIds) > 2;
     }
-
 
     ########################################
     # setters
     ########################################
 
-    public function setSearchHash(?string $hash = '') : self
+    public function setSearchHash(?string $hash = ''): self
     {
-        if($hash) {
+        if ($hash) {
             $oldData = $this->applyCacheFromHash($hash);
             if (! empty($this->rawData['rawData'])) {
                 $this->loadDataFrom($oldData['rawData']);
@@ -276,42 +271,40 @@ class ProductSearchForm extends Form
         return $this;
     }
 
-
-    public function setBaseList($baseList) : self
+    public function setBaseList($baseList): self
     {
         $this->baseList = $baseList;
 
         return $this;
     }
 
-    public function setSearchKeyword(string $keyword) : self
+    public function setSearchKeyword(string $keyword): self
     {
         $this->rawData['Keyword'] = urldecode($keyword);
 
         return $this;
     }
 
-
-    public function setExtraBuyableFieldsToSearchFullText(array $a) : self
+    public function setExtraBuyableFieldsToSearchFullText(array $a): self
     {
         $this->extraBuyableFieldsToSearchFullText = $a;
         return $this;
     }
 
-    public function setBaseClassNameForBuyables(string $s) : self
+    public function setBaseClassNameForBuyables(string $s): self
     {
         $this->baseClassNameForBuyables = $s;
         return $this;
     }
 
-    public function setMaximumNumberOfResults(int $i) : self
+    public function setMaximumNumberOfResults(int $i): self
     {
         $this->maximumNumberOfResults = $i;
 
         return $this;
     }
 
-    public function setAdditionalGetParameters(string $s) : self
+    public function setAdditionalGetParameters(string $s): self
     {
         $this->additionalGetParameters = $s;
 
@@ -321,7 +314,6 @@ class ProductSearchForm extends Form
     ########################################
     # do-ers
     ########################################
-
 
     public function doProductSearchForm($data, $form)
     {
@@ -351,6 +343,20 @@ class ProductSearchForm extends Form
         $this->doProcessResults();
     }
 
+    ########################################
+    # UTILS
+    ########################################
+
+    /**
+     * saves the form into session.
+     */
+    public function saveDataToSession()
+    {
+        $data = $this->getData();
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
+    }
+
     /**
      * set up basics, using data.
      * @param  array $data
@@ -377,7 +383,7 @@ class ProductSearchForm extends Form
         }
         $this->rawData['MinimumPrice'] = floatval($this->rawData['MinimumPrice']);
         $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice']);
-        if($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
+        if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             $oldMin = $this->rawData['MinimumPrice'];
             $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
             $this->rawData['MaximumPrice'] = $oldMin;
@@ -417,7 +423,7 @@ class ProductSearchForm extends Form
         $list1 = $this->baseList->filter(['InternalItemID' => $this->keywordPhrase]);
         $this->addToResults($list1, $allowOne = true);
         if ($this->debug) {
-            $this->debugOutput("<h3>SEARCH BY CODE RESULT: ".$list1->count()."</h3>");
+            $this->debugOutput('<h3>SEARCH BY CODE RESULT: ' . $list1->count() . '</h3>');
         }
     }
 
@@ -467,7 +473,7 @@ class ProductSearchForm extends Form
                 $list2 = $this->baseList->where($search);
                 $count += $list2->count();
                 if ($this->debug) {
-                    $this->debugOutput("<p>${search}: ".$list2->count()."</p>");
+                    $this->debugOutput("<p>${search}: " . $list2->count() . '</p>');
                 }
                 $this->addToResults($list2);
                 if ($this->weHaveEnoughResults()) {
@@ -479,7 +485,6 @@ class ProductSearchForm extends Form
             }
         }
     }
-
 
     /**
      * search for groups
@@ -524,7 +529,6 @@ class ProductSearchForm extends Form
             }
         }
     }
-
 
     /**
      * finalise results
@@ -574,32 +578,32 @@ class ProductSearchForm extends Form
     {
         if ($this->weHaveEnoughResults()) {
             return true;
-        } else {
-            $count = $listToAdd->count();
-            if ($allowOneAnswer && $count === 1 && $this->resultArrayPos === 0) {
-                // $this->immediateRedirectPage = $list1->First()->getRequestHandler()->Link();
-                $this->immediateRedirectPage = $listToAdd->First();
-                if ($this->debug) {
-                    $this->debugOutput(
-                        '<p style="color: red">Found one answer for potential immediate redirect: ' . $this->immediateRedirectPage->Link() . '</p>');
-                }
-                return true;
+        }
+        $count = $listToAdd->count();
+        if ($allowOneAnswer && $count === 1 && $this->resultArrayPos === 0) {
+            // $this->immediateRedirectPage = $list1->First()->getRequestHandler()->Link();
+            $this->immediateRedirectPage = $listToAdd->First();
+            if ($this->debug) {
+                $this->debugOutput(
+                    '<p style="color: red">Found one answer for potential immediate redirect: ' . $this->immediateRedirectPage->Link() . '</p>'
+                );
             }
-            if ($count > 0) {
-                $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
-                $listToAdd = $listToAdd->sort('Price', 'DESC');
-                foreach ($listToAdd as $page) {
-                    $id = $page->IDForSearchResults();
-                    // if ($this->debug) {
-                    //     $internalItemID = $page->InternalItemIDForSearchResults();
-                    // }
-                    if ($id) {
-                        if (! in_array($id, $this->productIds, true)) {
-                            ++$this->resultArrayPos;
-                            $this->productIds[$this->resultArrayPos] = $id;
-                            if ($this->weHaveEnoughResults()) {
-                                return true;
-                            }
+            return true;
+        }
+        if ($count > 0) {
+            $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
+            $listToAdd = $listToAdd->sort('Price', 'DESC');
+            foreach ($listToAdd as $page) {
+                $id = $page->IDForSearchResults();
+                // if ($this->debug) {
+                //     $internalItemID = $page->InternalItemIDForSearchResults();
+                // }
+                if ($id) {
+                    if (! in_array($id, $this->productIds, true)) {
+                        ++$this->resultArrayPos;
+                        $this->productIds[$this->resultArrayPos] = $id;
+                        if ($this->weHaveEnoughResults()) {
+                            return true;
                         }
                     }
                 }
@@ -613,12 +617,12 @@ class ProductSearchForm extends Form
      * do we need more results?
      * @return bool returns true if more results are needed.
      */
-    protected function weHaveEnoughResults() : bool
+    protected function weHaveEnoughResults(): bool
     {
-        if($this->immediateRedirectPage) {
+        if ($this->immediateRedirectPage) {
             return true;
         }
-        if($this->resultArrayPos >=  $this->maximumNumberOfResults) {
+        if ($this->resultArrayPos >= $this->maximumNumberOfResults) {
             return true;
         }
         return false;
@@ -636,7 +640,7 @@ class ProductSearchForm extends Form
 
     protected function createBaseList()
     {
-        if( ! $this->baseList instanceof SS_List) {
+        if (! $this->baseList instanceof SS_List) {
             $tmpVar = $this->baseClassNameForBuyables;
             $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
             $ecomConfig = EcommerceConfig::inst();
@@ -656,7 +660,7 @@ class ProductSearchForm extends Form
      */
     protected function doPriceSearch()
     {
-        if($this->hasMinMaxSearch()) {
+        if ($this->hasMinMaxSearch()) {
             $min = $this->rawData['MinimumPrice'];
             if ($min) {
                 $this->baseList = $this->baseList->filter(['Price:GreaterThanOrEqual' => $min]);
@@ -674,7 +678,6 @@ class ProductSearchForm extends Form
             if ($this->debug) {
                 $this->debugOutput('<h3>BASE LIST AFTER PRICE SEARCH</h3><p>Not required</p>');
             }
-
         }
     }
 
@@ -692,7 +695,7 @@ class ProductSearchForm extends Form
                     $variables[$variable]['ClassName'] = $value->ClassName;
                     $variables[$variable]['ID'] = $value->ID;
                 }
-            } elseif(is_object($value)) {
+            } elseif (is_object($value)) {
                 //do nothing
             } else {
                 $variables[$variable] = $value;
@@ -705,7 +708,7 @@ class ProductSearchForm extends Form
      * @param  string $data optional
      * @return float
      */
-    protected function getHash(?string $data = '') : int
+    protected function getHash(?string $data = ''): int
     {
         if (! $data) {
             $data = $this->getSerializedObject();
@@ -741,7 +744,7 @@ class ProductSearchForm extends Form
     {
         $array = $this->getCacheForHash($hash);
         foreach ($array as $variable => $value) {
-            if (in_array($variable, self::FIELDS_TO_CACHE) ) {
+            if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
                 $this->{$variable} = $this->arrayToObject($value);
             }
         }
@@ -750,10 +753,10 @@ class ProductSearchForm extends Form
 
     protected function arrayToObject($value)
     {
-        if(is_array($value) && count($value) == 2 && isset($value['ID']) && isset($value['ClassName'])) {
+        if (is_array($value) && count($value) === 2 && isset($value['ID']) && isset($value['ClassName'])) {
             $className = $value['ClassName'];
             $id = intval($value['ID']);
-            if(class_exists($className) && $id) {
+            if (class_exists($className) && $id) {
                 return $className::get()->byId($id);
             }
         }
@@ -770,27 +773,9 @@ class ProductSearchForm extends Form
         echo Vardump::inst()->mixedToUl($mixed);
     }
 
-
-    ########################################
-    # UTILS
-    ########################################
-
-
-    /**
-     * saves the form into session.
-     *
-     */
-    public function saveDataToSession()
+    protected function hasMinMaxSearch(): bool
     {
-        $data = $this->getData();
-        $data = Sanitizer::remove_from_data_array($data);
-        $this->setSessionData($data);
-    }
-
-
-    protected function hasMinMaxSearch() : bool
-    {
-        if($this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice']) {
+        if ($this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice']) {
             return true;
         }
         return false;
@@ -800,5 +785,4 @@ class ProductSearchForm extends Form
     {
         return Injector::inst()->get(KeywordSearchBuilder::class);
     }
-
 }

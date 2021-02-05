@@ -306,7 +306,7 @@ class ProductGroupController extends PageController
      */
     public function MenuChildGroups(?int $levels = 2): ?DataList
     {
-        if($this->isSearchResults()) {
+        if ($this->isSearchResults()) {
             return $this->SearchResultsChildGroups();
         }
         return $this->ChildGroups($levels);
@@ -377,6 +377,7 @@ class ProductGroupController extends PageController
     {
         return $this->GroupFilterLinks()->count() > 1;
     }
+
     /**
      * Are filters available? we check one at the time so that we do the least
      * amount of DB queries.
@@ -450,6 +451,7 @@ class ProductGroupController extends PageController
         }
         return '';
     }
+
     /**
      * returns the current filter applied to the list
      * in a human readable string.
@@ -502,7 +504,6 @@ class ProductGroupController extends PageController
         return $this->getListConfigCalculated('DISPLAY');
     }
 
-
     /**
      * Provides a ArrayList of links for filters products.
      *
@@ -554,7 +555,6 @@ class ProductGroupController extends PageController
         return parent::link() . '?reload=1';
     }
 
-
     public function searchResultsProductGroupsArray(): array
     {
         return $this->ProductSearchForm()->getProductGroupIds();
@@ -589,7 +589,7 @@ class ProductGroupController extends PageController
     public function ProductSearchForm()
     {
         if ($this->searchForm === null) {
-            $onlySearchTitle = $this->originalTitle;
+            // $onlySearchTitle = $this->originalTitle;
             // if (ClassHelpers::check_for_instance_of($this->dataRecord, ProductGroupSearchPage::class, false)) {
             //     if ($this->HasSearchResults()) {
             //         $onlySearchTitle = 'Last Search Results';
@@ -715,13 +715,20 @@ class ProductGroupController extends PageController
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
         }
-        if($extraFilter) {
+        if ($extraFilter) {
             $this->finalProductList->setExtraFilter($extraFilter);
         }
-        if($alternativeSort) {
+        if ($alternativeSort) {
             $this->finalProductList->setAlternatveSort($alternativeSort);
         }
         return $this->finalProductList;
+    }
+
+    public function DebugMe(string $method)
+    {
+        if (Vardump::inst()->isSafe()) {
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
+        }
     }
 
     protected function getCachedProductList(): ? DataList
@@ -852,13 +859,5 @@ class ProductGroupController extends PageController
     protected function addSecondaryTitle(?string $secondaryTitle = '')
     {
         $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
-    }
-
-
-    public function DebugMe(string $method)
-    {
-        if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method, get_called_class());
-        }
     }
 }

@@ -12,10 +12,10 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Security;
-use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
-use Sunnysideup\Ecommerce\Model\Order;
-
 use Sunnysideup\Ecommerce\Api\Sanitizer;
+use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
+
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * @Description: allows customer to cancel their order.

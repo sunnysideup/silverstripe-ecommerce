@@ -12,12 +12,12 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
-use Sunnysideup\Ecommerce\Api\Sanitizer;
+use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 class OrderFormFeedback extends Form
 {

@@ -4,24 +4,21 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
 use SilverStripe\Assets\Image;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\ReadonlyField;
-
 use SilverStripe\Forms\FieldList;
+
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DB;
-
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\DataList;
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -32,12 +29,12 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 use Sunnysideup\Vardump\Vardump;
+
 /**
  * Product Group is a 'holder' for Products within the CMS
  *
@@ -244,7 +241,7 @@ class ProductGroup extends Page
             ReadonlyField::create(
                 'DebugLink',
                 'Debug Products and Links',
-                DBField::create_field('HTMLText', '<a href="'.$this->Link().'?showdebug=1">show debug information</a>')
+                DBField::create_field('HTMLText', '<a href="' . $this->Link() . '?showdebug=1">show debug information</a>')
             )
         );
 
@@ -360,10 +357,10 @@ class ProductGroup extends Page
      */
     public function SearchResultLink(?string $hash = ''): string
     {
-        if($hash) {
+        if ($hash) {
             $hash .= '/';
         }
-        return $this->Link('searchresults/'.$hash);
+        return $this->Link('searchresults/' . $hash);
     }
 
     /**
@@ -421,7 +418,7 @@ class ProductGroup extends Page
         $parent = $this->ParentGroup();
         if ($parent && $parent->exists()) {
             $parentMenu = $parent->ChildGroups(1, $filter);
-            if($parentMenu->count()) {
+            if ($parentMenu->count()) {
                 return $parent->GroupsMenu($filter);
             }
         }
@@ -519,7 +516,7 @@ class ProductGroup extends Page
         return $this->getBaseProductList()->getDirectParentGroupsInclusive();
     }
 
-    public function ChildCategories() : DataList
+    public function ChildCategories(): DataList
     {
         return ProductGroup::get()->filter(['ParentID' => $this->ID]);
     }
@@ -530,6 +527,13 @@ class ProductGroup extends Page
     public function getShowProductLevelsArray(): array
     {
         return $this->getBaseProductList()->getShowProductLevelsArray();
+    }
+
+    public function DebugMe(string $method)
+    {
+        if (Vardump::inst()->isSafe()) {
+            return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
+        }
     }
 
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
@@ -621,7 +625,7 @@ class ProductGroup extends Page
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
             $methodWorks = false;
-            foreach([$fieldNameOrMethod, $fieldNameOrMethodWithGet] as $method) {
+            foreach ([$fieldNameOrMethod, $fieldNameOrMethodWithGet] as $method) {
                 if ($this->hasMethod($method)) {
                     $methodWorks = true;
                     $outcome = $this->{$method}();
@@ -635,7 +639,7 @@ class ProductGroup extends Page
                     }
                 }
             }
-            if($methodWorks === false) {
+            if ($methodWorks === false) {
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
             if (! $value || $value === 'inherit') {
@@ -653,12 +657,5 @@ class ProductGroup extends Page
         }
 
         return $this->recursiveValues[$fieldNameOrMethod];
-    }
-
-    public function DebugMe(string $method)
-    {
-        if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method, get_called_class());
-        }
     }
 }

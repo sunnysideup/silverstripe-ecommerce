@@ -7,7 +7,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -75,7 +74,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     protected $alsoShowParentIds = [];
 
     /**
-     *
      * @var int[]
      */
     protected $filterForCandidateCategoryIds = [];
@@ -97,13 +95,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     private static $default_product_filter = [
         'AllowPurchase' => 1,
     ];
-
-    public static function apply_default_filter_to_products($list): SS_List
-    {
-        $filter = Config::inst()->get(self::class, 'default_product_filter');
-
-        return $list->filter($filter);
-    }
 
     /**
      * @param ProductGroup $rootGroup
@@ -133,6 +124,13 @@ class BaseProductList extends AbstractProductsAndGroupsList
         }
     }
 
+    public static function apply_default_filter_to_products($list): SS_List
+    {
+        $filter = Config::inst()->get(self::class, 'default_product_filter');
+
+        return $list->filter($filter);
+    }
+
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
     {
         $cacheKey = implode('_', array_filter([$rootGroup->ID, $rootGroup->ClassName, $buyableClassName, $levelOfProductsToShow]));
@@ -142,8 +140,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
         return self::$singleton_caches[$cacheKey];
     }
-
-
 
     ##########################################
     # Setters
@@ -201,8 +197,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->getProductGroupListProvider()->getLevelOfProductsToShow();
     }
 
-
-
     ##########################################
     # PRODUCTS: Also show
     ##########################################
@@ -227,12 +221,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
     # GROUPS - smart
     ##########################################
 
-    public function getFilterForCandidateCategoryIds() : array
+    public function getFilterForCandidateCategoryIds(): array
     {
         return ArrayMethods::filter_array($this->filterForCandidateCategoryIds);
     }
 
-    public function getFilterForCandidateCategories() : DataList
+    public function getFilterForCandidateCategories(): DataList
     {
         if (empty($this->filterForCandidateCategoryIds)) {
             $ids1 = $this->getAlsoShowParents()->columnUnique();
@@ -241,15 +235,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
         }
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
-        $list = $list->exclude(['ID' => $this->getParentGroupIds()]);
-        //
-        return $list;
+        return $list->exclude(['ID' => $this->getParentGroupIds()]);
     }
 
     ##################################################
     # GROUPS: Parents from natural hierachy
     ##################################################
-
 
     /**
      * @return array
@@ -259,11 +250,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return ArrayMethods::filter_array($this->parentGroupIds);
     }
 
-    public function getParentGroups() :DataList
+    public function getParentGroups(): DataList
     {
         return $this->turnIdListIntoProductGroups($this->getParentGroupIds());
     }
-
 
     ##################################################
     # GROUPS: Also Show Products, based on Products included through AlsoShow Show
@@ -289,9 +279,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
         return RelatedProductGroups::apply_default_filter_to_groups($list);
     }
-
-
-
 
     ##################################################
     # HELPERS
@@ -343,7 +330,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->blockedProductsIds;
     }
 
-
     ##################################################
     # BUILDERS
     ##################################################
@@ -386,7 +372,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $groupFilter = ' ' . $levelToShow . ' = -1 ';
         } elseif ($levelToShow === 0) {
             //backup - same as 1, but with also show!
-            $groupFilter = '"'.$this->getSiteTreeTableName() .'"."ParentID" = ' . $this->rootGroup->ID;
+            $groupFilter = '"' . $this->getSiteTreeTableName() . '"."ParentID" = ' . $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
@@ -407,28 +393,28 @@ class BaseProductList extends AbstractProductsAndGroupsList
                     );
                 }
             }
-            $groupFilter =  '"' . $this->getSiteTreeTableName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) .')';
+            $groupFilter = '"' . $this->getSiteTreeTableName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) . ')';
         }
-        $alsoShowFilter = '"' . $this->getSiteTreeTableName() . '"."ID" IN (' . implode(',',$this->getAlsoShowProductsIds()) . ')';
+        $alsoShowFilter = '"' . $this->getSiteTreeTableName() . '"."ID" IN (' . implode(',', $this->getAlsoShowProductsIds()) . ')';
         $fullFilter = '((' . $groupFilter . ') OR (' . $alsoShowFilter . '))';
         $this->products = $this->products->where($fullFilter);
 
         return $this;
     }
 
-    protected function getSiteTreeTableName() : string
+    protected function getSiteTreeTableName(): string
     {
         $stage = $this->getStage();
         return 'SiteTree' . $stage;
-
     }
-    protected function getBuyableTableNameName() : string
+
+    protected function getBuyableTableNameName(): string
     {
         $obj = Injector::inst()->get($this->buyableClassName);
         $stage = $this->getStage();
-        return $tableName = $obj->baseTable() . $stage;
-    }
 
+        return $obj->baseTable() . $stage;
+    }
 
     /**
      * Generate Excluded products that can not be purchased.
@@ -462,7 +448,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
         return $this;
     }
-
 
     ##################################################
     # CACHE

@@ -9,11 +9,11 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormPaymentValidator;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-use Sunnysideup\Ecommerce\Model\Order;
 
-use Sunnysideup\Ecommerce\Api\Sanitizer;
+use Sunnysideup\Ecommerce\Model\Order;
 
 class OrderFormPayment extends Form
 {

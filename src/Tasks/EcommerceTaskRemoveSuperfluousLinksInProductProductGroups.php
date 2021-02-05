@@ -4,8 +4,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
-use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * Adds all members, who have bought something, to the customer group.
@@ -32,16 +30,16 @@ class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTas
 
     public function run($request)
     {
-        if($this->verbose) {
+        if ($this->verbose) {
             DB::alteration_message('Before: ' . DB::query('COUNT(ID) FROM Product_ProductGroups;')->value());
         }
-        $existingRows = DB::query('
+        DB::query('
             DELETE T1 FROM Product_ProductGroups AS T1
                 LEFT JOIN Product ON Product.ID = ProductID
                 LEFT JOIN ProductGroup ON ProductGroup.ID = ProductGroupID
             WHERE Product.ID IS NULL OR ProductGroup.ID IS NULL
         ');
-        if($this->verbose) {
+        if ($this->verbose) {
             DB::alteration_message('After: ' . DB::query('COUNT(ID) FROM Product_ProductGroups;')->value());
         }
     }

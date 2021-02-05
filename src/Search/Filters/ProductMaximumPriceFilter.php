@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
 use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 
 /**
@@ -19,8 +18,8 @@ class ProductMaximumPriceFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $value = floatval($this->getValue());
-        if($value) {
-            $query->where('"Product"."Price" <= '.$value);
+        if ($value) {
+            $query->where('"Product"."Price" <= ' . $value);
         }
 
         return $query;

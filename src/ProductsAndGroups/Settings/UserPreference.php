@@ -21,9 +21,9 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 
-use Sunnysideup\Vardump\DebugTrait;
-
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+
+use Sunnysideup\Vardump\DebugTrait;
 
 /**
  * keeps track of the  settings for FILTER / SORT / DISPLAY for user
@@ -460,7 +460,6 @@ class UserPreference
         return $list;
     }
 
-
     /**
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'
@@ -484,7 +483,7 @@ class UserPreference
             } else {
                 $value = $this->getCurrentUserPreferencesKey($myType);
             }
-            if($values['getVariable'] !== BaseApplyer::DEFAULT_NAME) {
+            if ($values['getVariable'] !== BaseApplyer::DEFAULT_NAME) {
                 $getVars[] = $value;
             }
         }
@@ -623,19 +622,17 @@ class UserPreference
     # segments and actions
     ###############################
 
-
-    protected function matchingSegment(?string $action) : bool
+    protected function matchingSegment(?string $action): bool
     {
-        $outcome =  true;
-        if($action) {
+        $outcome = true;
+        if ($action) {
             $outcome = $action === $this->mySegment();
         }
         return $outcome;
     }
 
-    protected function mySegment() : string
+    protected function mySegment(): string
     {
         return $this->request->param('Action') . '/' . $this->request->param('ID') . '/';
     }
-
 }

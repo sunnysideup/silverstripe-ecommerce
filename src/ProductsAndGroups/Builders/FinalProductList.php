@@ -49,7 +49,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
         $this->products = $this->baseProductList->getProducts();
     }
 
-
     /**
      * create instances
      * @param  ProductGroupController    $rootGroupController
@@ -69,7 +68,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     # SETTERS / GETTERS
     ##################################################
 
-
     /**
      * Set the root {@link ProductGroup} to display the products from.
      * @param ProductGroup $rootGroupController
@@ -84,17 +82,17 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    public function setExtraFilter($filter) : self
+    public function setExtraFilter($filter): self
     {
-        if($filter) {
+        if ($filter) {
             $this->products = $this->products->filter($filter);
         }
         return $this;
     }
 
-    public function setAlternativeSort($sort) : self
+    public function setAlternativeSort($sort): self
     {
-        if($sort) {
+        if ($sort) {
             $this->products = $this->products->sort($sort);
         }
 
@@ -110,12 +108,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList;
     }
 
-
     ##################################################
     # APPLYERS
     ##################################################
-
-
 
     public function apply(string $classNameOrType, string $key, $params = null): self
     {
@@ -172,8 +167,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->apply('DISPLAY', $key, $params);
     }
 
-
-
     ##########################################
     # PRODUCTS: Also show
     ##########################################
@@ -198,12 +191,12 @@ class FinalProductList extends AbstractProductsAndGroupsList
     # GROUPS - smart
     ##########################################
 
-    public function getFilterForCandidateCategoryIds() : array
+    public function getFilterForCandidateCategoryIds(): array
     {
         return $this->baseProductList->getFilterForCandidateCategoryIds();
     }
 
-    public function getFilterForCandidateCategories() : DataList
+    public function getFilterForCandidateCategories(): DataList
     {
         return $this->baseProductList->getFilterForCandidateCategories();
     }
@@ -211,7 +204,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     ##################################################
     # GROUPS: Parents from natural hierachy
     ##################################################
-
 
     /**
      * required for SubGroups
@@ -222,16 +214,14 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getParentGroupIds();
     }
 
-    public function getParentGroups() :DataList
+    public function getParentGroups(): DataList
     {
         return $this->baseProductList->getParentGroups();
     }
 
-
     ##################################################
     # GROUPS: Also Show Products, based on Products included through AlsoShow Show
     ##################################################
-
 
     public function getAlsoShowParentIds(): array
     {
@@ -243,13 +233,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getAlsoShowParents();
     }
 
-
-
     ##################################################
     # HELPERS
     ##################################################
-
-
 
     /**
      * @param  string $type
@@ -269,12 +255,12 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType, $this);
     }
 
-    protected function getSiteTreeTableName() : string
+    protected function getSiteTreeTableName(): string
     {
         return $this->baseProductList->getSiteTreeTableName();
-
     }
-    protected function getBuyableTableNameName() : string
+
+    protected function getBuyableTableNameName(): string
     {
         return $this->baseProductList->getBuyableTableNameName();
     }
