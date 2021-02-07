@@ -53,10 +53,26 @@ class ProductSorter extends BaseApplyer
         if (is_array($sort) && count($sort)) {
             $this->products = $this->products->sort($sort);
         } elseif ($sort) {
-            $this->products = $this->products->sort(Convert::raw2sql($sort));
+            $this->products = $this->products->sort($sort);
         }
         // @todo
         $this->applyEnd($key, $params);
         return $this;
+    }
+
+    /**
+     * if the key is default and you provide a param of IDs then it sort by params
+     * @param  string         $key
+     * @param  string|array   $params additional param for sql.
+     *
+     * @return string|array
+     */
+    public function getSql(?string $key = null, $params = null)
+    {
+        if($key === BaseApplyer::DEFAULT_NAME && is_array($params)) {
+            return ArrayMethods::create_sort_statement_from_id_array($params);
+        } else {
+            return parent::getSql($key, $params);
+        }
     }
 }
