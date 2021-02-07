@@ -497,25 +497,19 @@ class UserPreference
      * @param  mixed $alternativeSort optional alternative sort
      * @return mixed                  returns null|array|string
      */
-    public function getSearchResultsDefaultSort(?array $idArray = [], $alternativeSort = null)
+    public function setIdArrayDefaultSort(?array $idArray = [], $alternativeSort = null)
     {
         $array = null;
         if ($alternativeSort) {
             $array = $alternativeSort;
         }
-        $sortGetVariable = $this->rootGroupController->getSortFilterDisplayValues('SORT', 'getVariable');
-        if (! $this->request->getVar($sortGetVariable)) {
-            $suggestion = Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
-            if ($suggestion) {
-                $array = [
-                    'SORT' => [
-                        'key' => $suggestion,
-                        'params' => $idArray,
-                        'title' => 'Relevance',
-                    ],
-                ];
-            }
-        }
+        $array = [
+            'SORT' => [
+                'key' => BaseApplyer::DEFAULT_NAME,
+                'params' => $idArray,
+                'title' => 'Relevance',
+            ],
+        ];
 
         if ($array) {
             $this->saveUserPreferences($array);

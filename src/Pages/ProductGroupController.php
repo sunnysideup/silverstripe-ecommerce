@@ -133,8 +133,12 @@ class ProductGroupController extends PageController
         if ($keyword) {
             $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
         }
-        $filter = ['ID' => $this->ProductSearchForm()->getProductIds()];
-        $this->getFinalProductList($filter);
+        $ids = $this->ProductSearchForm()->getProductIds();
+        if(! $this->HasSort()) {
+            // set default sort
+            $this->setIdArrayDefaultSort($ids);
+        }
+        $this->getFinalProductList(['ID' => $ids]);
         //filters are irrelevant right now
         $this->addSecondaryTitle($keyword);
 
@@ -782,9 +786,9 @@ class ProductGroupController extends PageController
         //makes sure best match only applies to search -i.e. reset otherwise.
     }
 
-    protected function getSearchResultsDefaultSort($idArray, $alternativeSort = null)
+    protected function setIdArrayDefaultSort($idArray, $alternativeSort = null)
     {
-        return $this->getUserPreferencesClass()->getSearchResultsDefaultSort($idArray, $alternativeSort);
+        return $this->getUserPreferencesClass()->setIdArrayDefaultSort($idArray, $alternativeSort);
     }
 
     /**
