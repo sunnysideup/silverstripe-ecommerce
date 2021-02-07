@@ -504,6 +504,22 @@ class ProductGroup extends Page
     }
 
     /**
+     * @todo: add fitlerforgroup reverse
+     * @return bool
+     */
+    public function CurrentOrSection()
+    {
+        $outcome = $this->LinkingMode();
+        if ($outcome !== 'link') {
+            $action = Controller::curr()->getRequest()->param('Action');
+            if ($outcome === 'current' && in_array($action, ['filterforgroup', 'searchresults'], true)) {
+                return 'section';
+            }
+            return $outcome;
+        }
+    }
+
+    /**
      * Returns children ProductGroup pages of this group.
      *
      * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
