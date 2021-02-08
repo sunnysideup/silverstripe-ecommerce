@@ -1197,14 +1197,6 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * @int
-     */
-    public function IDForSearchResults()
-    {
-        return $this->ID;
-    }
-
-    /**
      * @string
      */
     public function InternalItemIDForSearchResults()

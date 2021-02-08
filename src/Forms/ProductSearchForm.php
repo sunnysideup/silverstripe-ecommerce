@@ -322,7 +322,7 @@ class ProductSearchForm extends Form
         $this->baseListOwner = $baseListOwner;
         $baseListCount = $this->baseListOwner->getProducts()->count();
         if ($baseListCount) {
-            $this->getFields()->replaceField(
+            $this->Fields()->replaceField(
                 'SearchOnlyFieldsInThisSection',
                 CheckboxField::create(
                     'SearchOnlyFieldsInThisSection',
