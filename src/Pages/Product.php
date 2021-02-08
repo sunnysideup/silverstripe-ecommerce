@@ -538,34 +538,6 @@ class Product extends Page implements BuyableModel
         return $this;
     }
 
-    /**
-     * Returns the direct parent group for the product.
-     *
-     * @return ProductGroup|null
-     **/
-    public function MainParentGroup()
-    {
-        return ProductGroup::get()->byID($this->ParentID);
-    }
-
-    /**
-     * Returns the top parent group of the product (in the hierarchy).
-     *
-     * @return ProductGroup | NULL
-     **/
-    public function TopParentGroup()
-    {
-        $returnValue = null;
-        $parent = $this->MainParentGroup();
-        while ($parent) {
-            $returnValue = $parent;
-            if ($parent->ParentID) {
-                $parent = ProductGroup::get()->byID($parent->ParentID);
-            }
-        }
-
-        return $returnValue;
-    }
 
     /**
      * Returns products in the same group.
@@ -603,15 +575,49 @@ class Product extends Page implements BuyableModel
     {
         if ($this->ImageID) {
             $image = Image::get()->byID($this->ImageID);
-            if ($image) {
-                if (file_exists(ASSETS_PATH . '/' . $image->getFilename())) {
-                    return $image;
-                }
+            if ($image && $image->exists()) {
+                return $image;
             }
         }
-        if ($parent = $this->MainParentGroup()) {
+        $parent = $this->ParentGroup();
+        if ($parent && $parent->exists()) {
             return $parent->BestAvailableImage();
         }
+    }
+
+
+    /**
+     * Returns the direct parent group for the product.
+     *
+     * @return ProductGroup|null
+     **/
+    public function ParentGroup()
+    {
+        return ProductGroup::get()->byID($this->ParentID);
+    }
+
+    /**
+     * Returns the parent page, but only if it is an instance of Product Group.
+     *
+     * @return ProductGroup|null
+     */
+    public function MainParentGroup(): ?ProductGroup
+    {
+        return $this->ParentGroup();
+    }
+    /**
+     * Returns the top parent group of the product (in the hierarchy).
+     *
+     * @return ProductGroup|null
+     **/
+    public function TopParentGroup()
+    {
+        $parent = $this->ParentGroup();
+        if ($parent && $parent->exists()) {
+            return $parent->TopParentGroup();
+        }
+
+        return null;
     }
 
     /**
@@ -1134,6 +1140,11 @@ class Product extends Page implements BuyableModel
         return $this->canEdit($member);
     }
 
+    public function IDForSearchResults() : int
+    {
+        return $this->ID;
+    }
+
     public function debug()
     {
         $config = EcommerceConfig::inst();
@@ -1166,7 +1177,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Calculated Price as Money:</b> ' . $this->getCalculatedPriceAsMoney()->Nice() . ' </li>';
 
         $html .= '<li><hr />Location<hr /></li>';
-        $html .= '<li><b>Main Parent Group:</b> ' . $this->MainParentGroup()->Title . '</li>';
+        $html .= '<li><b>Main Parent Group:</b> ' . $this->ParentGroup()->Title . '</li>';
         $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->count() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';

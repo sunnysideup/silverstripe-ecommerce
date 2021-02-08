@@ -382,6 +382,15 @@ class ProductGroup extends Page
     }
 
     /**
+     *
+     * @return DataList
+     */
+    public function getProducts()
+    {
+        return $this->getBaseProductList()->getProducts();
+    }
+
+    /**
      * If products are show in more than one group then this returns an array for any products that are linked to this
      * product group.
      *
@@ -396,6 +405,21 @@ class ProductGroup extends Page
         return ArrayMethods::filter_array($array);
     }
 
+    public function IDForSearchResults() : int
+    {
+        return $this->ID;
+    }
+
+    /**
+     * Returns the parent page, but only if it is an instance of Product Group.
+     *
+     * @return ProductGroup|null
+     */
+    public function MainParentGroup(): ?ProductGroup
+    {
+        return $this->ParentGroup();
+    }
+
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
      *
@@ -404,6 +428,21 @@ class ProductGroup extends Page
     public function ParentGroup(): ?ProductGroup
     {
         return ProductGroup::get()->byID($this->ParentID);
+    }
+
+    /**
+     * Returns the parent page, but only if it is an instance of Product Group.
+     *
+     * @return ProductGroup
+     */
+    public function TopParentGroup(): ProductGroup
+    {
+        $parent = $this->ParentGroup();
+        if($parent && $parent->exists()) {
+            return $parent->TopParentGroup();
+        }
+
+        return $this;
     }
 
     /**

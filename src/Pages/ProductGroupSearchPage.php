@@ -30,16 +30,6 @@ class ProductGroupSearchPage extends ProductGroup
      */
     private static $best_match_key = 'bestmatch';
 
-    /**
-     * @var array
-     */
-    private static $sort_options = [
-        'bestmatch' => [
-            'Title' => 'Best Match',
-            'SQL' => '"Price" DESC',
-        ],
-    ];
-
     private static $table_name = 'ProductGroupSearchPage';
 
     private static $icon = 'sunnysideup/ecommerce:client/images/icons/productgroupsearchpage-file.gif';
@@ -70,13 +60,35 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function canCreate($member = null, $context = [])
     {
-        return ProductGroupSearchPage::get()->filter([
-            'ClassName' => ProductGroupSearchPage::class,
-        ])->count() ? false : $this->canEdit($member);
+        return ProductGroupSearchPage::get()->count() ? false : $this->canEdit($member);
     }
 
     public function childGroups(?int $maxRecursiveLevel = 99, ?string $filter = null): ArrayList
     {
         return ArrayList::create();
     }
+
+    protected static $main_search_page = null;
+
+    /**
+     * @return ProductGroupSearchPage|null
+     */
+    public static function main_search_page()
+    {
+        if (! self::$main_search_page) {
+            self::$_main_search_page = ProductGroupSearchPage::get()->first();
+        }
+        return self::$_main_search_page;
+    }
+
+    /**
+     * return ID of the only ProductGroupSearchPage
+     * @return int
+     */
+    public static function main_search_page_id() :int
+    {
+        return self::main_search_page() ? self::main_search_page()->ID : 0 ;
+    }
+
+
 }

@@ -605,7 +605,7 @@ class ProductGroupController extends PageController
             );
             //load previous data.
             $this->searchForm->setSearchHash($this->request->param('ID'));
-            $this->searchForm->setBaseList($this->getProductList());
+            $this->searchForm->setBaseListOwner($this->dataRecord);
             // $sortGetVariable = $this->getSortFilterDisplayValues('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
             // $form->setAdditionalGetParameters($additionalGetParameters);

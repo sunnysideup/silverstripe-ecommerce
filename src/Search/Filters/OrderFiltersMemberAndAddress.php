@@ -40,7 +40,7 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
         ");
 
         if ($billingAddresses->count()) {
-            $billingAddressesIDs = $billingAddresses->map('ID', 'ID')->toArray();
+            $billingAddressesIDs = $billingAddresses->columnUnique();
         }
         $billingAddressesIDs = ArrayMethods::filter_array($billingAddressesIDs);
         $where[] = '"BillingAddressID" IN (' . implode(',', $billingAddressesIDs) . ')';
@@ -55,7 +55,7 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
             \"ShippingPhone\" LIKE '%${value}%'
         ");
         if ($shippingAddresses->count()) {
-            $shippingAddressesIDs = $shippingAddresses->map('ID', 'ID')->toArray();
+            $shippingAddressesIDs = $shippingAddresses->columnUnique();
         }
         $shippingAddressesIDs = ArrayMethods::filter_array($shippingAddressesIDs);
         $where[] = '"ShippingAddressID" IN (' . implode(',', $shippingAddressesIDs) . ')';
@@ -66,7 +66,7 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
             \"Email\" LIKE '%${value}%'
         ");
         if ($members->count()) {
-            $memberIDs = $members->map('ID', 'ID')->toArray();
+            $memberIDs = $members->columnUnique();
         }
         $memberIDs = ArrayMethods::filter_array($memberIDs);
         $where[] = '"MemberID" IN (' . implode(',', $memberIDs) . ')';
