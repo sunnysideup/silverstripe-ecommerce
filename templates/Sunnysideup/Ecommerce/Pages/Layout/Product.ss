@@ -3,15 +3,15 @@
 </div>
 
 <aside>
-	<div id="Sidebar">
-		<div class="sidebarTop"></div>
-		<% include Sunnysideup\Ecommerce\Includes\Sidebar_PreviousAndNextProduct %>
-		<% include Sunnysideup\Ecommerce\Includes\Sidebar_Cart %>
-		<% include Sunnysideup\Ecommerce\Includes\Sidebar_Currency %>
-		<% include Sunnysideup\Ecommerce\Includes\Sidebar_UserAccount %>
-		<% include Sunnysideup\Ecommerce\Includes\Sidebar %>
-		<div class="sidebarBottom"></div>
-	</div>
+    <div id="Sidebar">
+        <div class="sidebarTop"></div>
+        <% include Sunnysideup\Ecommerce\Includes\Sidebar_PreviousAndNextProduct %>
+        <% include Sunnysideup\Ecommerce\Includes\Sidebar_Cart %>
+        <% include Sunnysideup\Ecommerce\Includes\Sidebar_Currency %>
+        <% include Sunnysideup\Ecommerce\Includes\Sidebar_UserAccount %>
+        <% include Sunnysideup\Ecommerce\Includes\Sidebar %>
+        <div class="sidebarBottom"></div>
+    </div>
 </aside>
 
 

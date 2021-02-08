@@ -17,12 +17,12 @@
  * Payment
  */
 #Checkout form .paymentfields { width: 315px; }
-	#Checkout form .paymentfields label.left { float: none; font-weight: bold; margin-bottom: 10px; }
-	#Checkout form .paymentfields .middleColumn { background: none; margin: 0; }
-	#Checkout form .paymentfields input { width: 35px; }
-		#Checkout form .paymentfields input.text { width: 145px; }
-		#Checkout form .paymentfields input.text.maxlength { width: 37px !important; }
-	#Checkout form .paymentfields img { border: 0; margin-right: 7px; }
+    #Checkout form .paymentfields label.left { float: none; font-weight: bold; margin-bottom: 10px; }
+    #Checkout form .paymentfields .middleColumn { background: none; margin: 0; }
+    #Checkout form .paymentfields input { width: 35px; }
+        #Checkout form .paymentfields input.text { width: 145px; }
+        #Checkout form .paymentfields input.text.maxlength { width: 37px !important; }
+    #Checkout form .paymentfields img { border: 0; margin-right: 7px; }
 
 .productImage {float: right; }
 
@@ -30,7 +30,7 @@
  * Modifier forms
  */
 .modifierFormInner {
-	margin-top: 3em;
+    margin-top: 3em;
 }
 
 
@@ -38,11 +38,11 @@
  * previous and andex buttons
  */
 .next, .prev, #Checkout .btn-toolbar {
-	display: block;
-	margin-top: 2em;
-	margin-bottom: 2em;
-	float: none;
-	clear: both;
+    display: block;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    float: none;
+    clear: both;
 }
 
 .next .action {display: inline-block!important; float: right; }

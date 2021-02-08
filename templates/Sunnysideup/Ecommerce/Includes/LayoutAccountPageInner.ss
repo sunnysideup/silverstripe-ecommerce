@@ -1,7 +1,7 @@
 <h1 class="pageTitle">$Title</h1>
 
 <% if Message %>
-	<p id="AccountPageMessage" class="message">$Message</p>
+    <p id="AccountPageMessage" class="message">$Message</p>
 <% end_if %>
 
 
@@ -9,14 +9,14 @@
 
 
 <% if MemberForm %>
-	<div id="MemberForm">
-		$MemberForm
-	</div>
+    <div id="MemberForm">
+        $MemberForm
+    </div>
 <% end_if %>
 
 <% if CurrentMember  %>
     <div id="PastOrderHolder">
-    	<h3><% _t("Account.PreviousOrders","Previous Orders") %></h3>
-    	<% include Sunnysideup\Ecommerce\Includes\AccountPastOrders %>
+        <h3><% _t("Account.PreviousOrders","Previous Orders") %></h3>
+        <% include Sunnysideup\Ecommerce\Includes\AccountPastOrders %>
     </div>
 <% end_if %>

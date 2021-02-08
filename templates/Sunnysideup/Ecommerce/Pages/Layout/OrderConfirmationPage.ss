@@ -4,9 +4,9 @@
 
 
 <aside>
-	<div id="Sidebar">
-		<div class="sidebarTop"></div>
-		<% include Sunnysideup\Ecommerce\Includes\Sidebar_UserAccount %>
-		<div class="sidebarBottom"></div>
-	</div>
+    <div id="Sidebar">
+        <div class="sidebarTop"></div>
+        <% include Sunnysideup\Ecommerce\Includes\Sidebar_UserAccount %>
+        <div class="sidebarBottom"></div>
+    </div>
 </aside>
