@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use SilverStripe\Core\Convert;
-
 /**
  * provides data on the user
  */
@@ -69,10 +67,9 @@ class ProductSorter extends BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
-        if($key === BaseApplyer::DEFAULT_NAME && is_array($params)) {
+        if ($key === BaseApplyer::DEFAULT_NAME && is_array($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params);
-        } else {
-            return parent::getSql($key, $params);
         }
+        return parent::getSql($key, $params);
     }
 }

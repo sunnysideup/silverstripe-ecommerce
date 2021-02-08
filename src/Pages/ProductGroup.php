@@ -382,7 +382,6 @@ class ProductGroup extends Page
     }
 
     /**
-     *
      * @return DataList
      */
     public function getProducts()
@@ -405,7 +404,7 @@ class ProductGroup extends Page
         return ArrayMethods::filter_array($array);
     }
 
-    public function IDForSearchResults() : int
+    public function IDForSearchResults(): int
     {
         return $this->ID;
     }
@@ -438,7 +437,7 @@ class ProductGroup extends Page
     public function TopParentGroup(): ProductGroup
     {
         $parent = $this->ParentGroup();
-        if($parent && $parent->exists()) {
+        if ($parent && $parent->exists()) {
             return $parent->TopParentGroup();
         }
 

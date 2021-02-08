@@ -20,6 +20,8 @@ class ProductGroupSearchPage extends ProductGroup
      */
     protected $allowCaching = false;
 
+    protected static $main_search_page = null;
+
     /**
      * @var int
      */
@@ -68,8 +70,6 @@ class ProductGroupSearchPage extends ProductGroup
         return ArrayList::create();
     }
 
-    protected static $main_search_page = null;
-
     /**
      * @return ProductGroupSearchPage|null
      */
@@ -85,10 +85,8 @@ class ProductGroupSearchPage extends ProductGroup
      * return ID of the only ProductGroupSearchPage
      * @return int
      */
-    public static function main_search_page_id() :int
+    public static function main_search_page_id(): int
     {
-        return self::main_search_page() ? self::main_search_page()->ID : 0 ;
+        return self::main_search_page() ? self::main_search_page()->ID : 0;
     }
-
-
 }

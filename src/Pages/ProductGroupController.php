@@ -134,7 +134,7 @@ class ProductGroupController extends PageController
             $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
         }
         $ids = $this->ProductSearchForm()->getProductIds();
-        if(! $this->HasSort()) {
+        if (! $this->HasSort()) {
             // set default sort
             $this->setIdArrayDefaultSort($ids);
         }

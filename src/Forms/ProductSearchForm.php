@@ -31,15 +31,11 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 use Sunnysideup\Vardump\Vardump;
 
-
 /**
  * Product search form
  */
 class ProductSearchForm extends Form
 {
-
-    private static $in_group_sort_sql = ['Price' => 'DESC'];
-
     private const FIELDS_TO_CACHE = [
         'rawData',
         'keywordPhrase',
@@ -177,6 +173,8 @@ class ProductSearchForm extends Form
      */
     protected $maximumNumberOfResults = 1000;
 
+    private static $in_group_sort_sql = ['Price' => 'DESC'];
+
     /**
      * List of additional fields that should be searched full text.
      * We are matching this against the buyable class name.
@@ -301,7 +299,6 @@ class ProductSearchForm extends Form
     }
 
     /**
-     *
      * @param  DataList $baseList
      * @return self
      */
@@ -313,8 +310,7 @@ class ProductSearchForm extends Form
     }
 
     /**
-     *
-     * @param  ProductGroup $baseList
+     * @param  ProductGroup $baseListOwner
      * @return self
      */
     public function setBaseListOwner($baseListOwner): self
@@ -693,7 +689,7 @@ class ProductSearchForm extends Form
 
     protected function getResultsPage()
     {
-        if(empty($this->rawData['SearchOnlyFieldsInThisSection'])) {
+        if (empty($this->rawData['SearchOnlyFieldsInThisSection'])) {
             return ProductGroupSearchPage::main_search_page();
         }
         //if no specific section is being searched then we redirect to search page:
@@ -703,7 +699,7 @@ class ProductSearchForm extends Form
     protected function createBaseList()
     {
         if (! $this->baseList instanceof SS_List) {
-            if($this->baseListOwner) {
+            if ($this->baseListOwner) {
                 $this->baseList = $this->baseListOwner->getProducts();
             } else {
                 $tmpVar = $this->baseClassNameForBuyables;

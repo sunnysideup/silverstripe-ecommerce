@@ -538,7 +538,6 @@ class Product extends Page implements BuyableModel
         return $this;
     }
 
-
     /**
      * Returns products in the same group.
      *
@@ -585,7 +584,6 @@ class Product extends Page implements BuyableModel
         }
     }
 
-
     /**
      * Returns the direct parent group for the product.
      *
@@ -605,6 +603,7 @@ class Product extends Page implements BuyableModel
     {
         return $this->ParentGroup();
     }
+
     /**
      * Returns the top parent group of the product (in the hierarchy).
      *
@@ -1140,7 +1139,7 @@ class Product extends Page implements BuyableModel
         return $this->canEdit($member);
     }
 
-    public function IDForSearchResults() : int
+    public function IDForSearchResults(): int
     {
         return $this->ID;
     }
