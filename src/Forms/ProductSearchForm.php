@@ -876,7 +876,7 @@ class ProductSearchForm extends Form
     protected function applyCacheFromHash(string $hash): array
     {
         $array = $this->getCacheForHash($hash);
-        if(! empty($array['productIds'] && $this->config()->get('use_cache'))) {
+        if(! empty($array['productIds']) && $this->config()->get('use_cache')) {
             $this->hasCache = true;
             foreach ($array as $variable => $value) {
                 if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
