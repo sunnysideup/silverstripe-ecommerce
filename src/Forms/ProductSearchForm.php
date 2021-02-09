@@ -376,13 +376,16 @@ class ProductSearchForm extends Form
         if (isset($data['DebugSearch'])) {
             $this->debug = $data['DebugSearch'] ? true : false;
         }
+        if (isset($data['Keyword'])) {
+            $this->debug = $data['DebugSearch'] ? true : false;
+        }
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results</h2>');
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
             $this->debugOutput('<p style="color: red">data: ' . print_r($data, 1) . '</p>');
         }
-        $this->rawData['MinimumPrice'] = floatval($this->rawData['MinimumPrice']);
-        $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice']);
+        $this->rawData['MinimumPrice'] = floatval($this->rawData['MinimumPrice'] ?? 0);
+        $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice'] ?? 0);
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             $oldMin = $this->rawData['MinimumPrice'];
             $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
