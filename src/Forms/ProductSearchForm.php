@@ -52,7 +52,7 @@ class ProductSearchForm extends Form
         'maximumNumberOfResults',
     ];
 
-    private static $use_cache = true;
+    private static $use_cache = false;
 
     protected $nameOfProductsBeingSearched = '';
 
