@@ -11,7 +11,6 @@ use SilverStripe\Core\Convert;
 
 use SilverStripe\Core\Injector\Injectable;
 
-use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
@@ -23,7 +22,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
-use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Vardump\DebugTrait;
 
 /**
@@ -495,7 +493,7 @@ class UserPreference
                 $getVars[$values['getVariable']] = $value;
             }
         }
-        if(count($getVars)) {
+        if (count($getVars)) {
             return $base . '?' . http_build_query($getVars);
         }
         return $base;
