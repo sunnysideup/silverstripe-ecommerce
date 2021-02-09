@@ -11,6 +11,7 @@ use SilverStripe\Core\Convert;
 
 use SilverStripe\Core\Injector\Injectable;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 
@@ -22,6 +23,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 
+use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Vardump\DebugTrait;
 
 /**
@@ -403,21 +405,25 @@ class UserPreference
         return $this->getTemplateForProductsAndGroups()->getOptions($classNameOrType);
     }
 
-    public function getActions(string $classNameOrType): array
+    public function getActions(string $classNameOrType)
     {
-        $answer = [];
+        // $answer = [];
+        // if ($classNameOrType === 'GROUPFILTER' || $classNameOrType instanceof ProductGroupFilter) {
+        //     $groups = $this->getBaseProductList()->getFilterForCandidateCategories();
+        //     if ($groups->Count()) {
+        //         foreach ($groups as $group) {
+        //             $answer[] = $group->FilterForGroupLinkSegment();
+        //         }
+        //     }
+        // }
+        // if (! count($answer)) {
+        //     $answer = [null];
+        // }
+        // return $answer;
         if ($classNameOrType === 'GROUPFILTER' || $classNameOrType instanceof ProductGroupFilter) {
-            $groups = $this->getBaseProductList()->getFilterForCandidateCategories();
-            if ($groups->Count()) {
-                foreach ($groups as $group) {
-                    $answer[] = $group->FilterForGroupLinkSegment();
-                }
-            }
+            return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
-        if (! count($answer)) {
-            $answer = [null];
-        }
-        return $answer;
+        return null;
     }
 
     /**
@@ -436,19 +442,22 @@ class UserPreference
         }
         $options = $this->getOptions($type);
         $actions = $this->getActions($type);
-        if (count($options) > 1 || count($actions) > 1) {
-            foreach ($actions as $action) {
+
+        if ($actions && $options && ($actions->count() * count($options) > 1)) {
+            foreach ($actions as $group) {
                 foreach ($options as $key => $data) {
-                    $isCurrent = $currentKey === $key && $this->matchingSegment($action);
+                    $link = $group->FilterForGroupLinkSegment();
+                    $isCurrent = $currentKey === $key && $this->matchingSegment($link);
 
                     $obj = new ArrayData(
                         [
-                            'Title' => $data['Title'],
+                            'Title' => $group->MenuTitle,
                             'Current' => $isCurrent ? true : false,
                             //todo: fix this!!!!
-                            'Link' => $this->getLinkTemplate($action, $type, $key),
+                            'Link' => $this->getLinkTemplate($link, $type, $key),
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
                             'Ajaxify' => $ajaxify,
+                            'Object' => $group,
                         ]
                     );
                     $list->push($obj);
@@ -482,12 +491,14 @@ class UserPreference
             } else {
                 $value = $this->getCurrentUserPreferencesKey($myType);
             }
-            if ($values['getVariable'] !== BaseApplyer::DEFAULT_NAME) {
-                $getVars[] = $value;
+            if ($value !== BaseApplyer::DEFAULT_NAME) {
+                $getVars[$values['getVariable']] = $value;
             }
         }
-
-        return $base . '?' . http_build_query($getVars);
+        if(count($getVars)) {
+            return $base . '?' . http_build_query($getVars);
+        }
+        return $base;
     }
 
     /**

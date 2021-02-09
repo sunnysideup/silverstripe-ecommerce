@@ -126,7 +126,7 @@ class ProductGroupController extends PageController
     {
         $this->isSearchResults = true;
 
-        $this->ProductSearchForm();
+        $this->ProductSearchForm()->runFullProcess($this->request->getVars());
         //set last search results
         //get results array
         $keyword = $this->ProductSearchForm()->getLastSearchPhrase();
@@ -439,7 +439,7 @@ class ProductGroupController extends PageController
 
     public function getUserPreferencesTitle(string $type, ?string $key): string
     {
-        return $this->getTemplateForProductsAndGroups()->getUserPreferencesTitle($type, $key);
+        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayValues($type, 'Title');
     }
 
     /**
@@ -738,7 +738,7 @@ class ProductGroupController extends PageController
     protected function getCachedProductList(): ? DataList
     {
         $key = $this->ProductGroupListCachingKey(false);
-        if (EcommerceCache::inst()->hasCache($key)) {
+        if ($key && EcommerceCache::inst()->hasCache($key)) {
             $ids = EcommerceCache::inst()->retrieve($key);
             $ids = ArrayMethods::filter_array($ids);
             return Product::get()

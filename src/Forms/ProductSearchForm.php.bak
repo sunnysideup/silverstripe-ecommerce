@@ -17,7 +17,6 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -29,7 +28,6 @@ use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
 
 use Sunnysideup\Vardump\Vardump;
 
@@ -52,8 +50,6 @@ class ProductSearchForm extends Form
         'maximumNumberOfResults',
     ];
 
-    private static $use_cache = true;
-
     protected $nameOfProductsBeingSearched = '';
 
     protected $productsToSearch = null;
@@ -69,7 +65,7 @@ class ProductSearchForm extends Form
      *
      * @var bool
      */
-    protected $hasCache = false;
+    protected $hasCache = bool;
     /**
      * Fields are:
      * - Keyword
@@ -212,11 +208,12 @@ class ProductSearchForm extends Form
         $this->extraBuyableFieldsToSearchFullText = Config::inst()->get(self::class, 'extra_buyable_fields_to_search_full_text_default');
         $request = $controller->getRequest();
         $defaults = [
-            'Keyword' => $request->getVar('Keyword'),
+            'Keywords' => $request->getVar('Keywords'),
             'MinimumPrice' => floatval($request->getVar('MinimumPrice')),
             'MaximumPrice' => floatval($request->getVar('MaximumPrice')),
             'OnlyThisSection' => (intval($request->getVar('OnlyThisSection')) - 0 ? 1 : 0),
         ];
+
         //fields
         $fields = FieldList::create();
         //turn of security to allow caching of the form:
@@ -229,7 +226,7 @@ class ProductSearchForm extends Form
             );
         }
         $fields->push(
-            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
+            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keywords'])
         );
         $fields->push(
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
@@ -239,6 +236,7 @@ class ProductSearchForm extends Form
         if (Director::isDev() || Permission::check('ADMIN')) {
             $fields->push(CheckboxField::create('DebugSearch', 'Debug Search'));
         }
+
         // actions
         $actions = FieldList::create(
             FormAction::create('doProductSearchForm', 'Search')
@@ -260,29 +258,6 @@ class ProductSearchForm extends Form
         $this->extend('updateProductSearchForm', $this);
 
         return $this;
-    }
-
-    public function forTemplate()
-    {
-        if($this->hasOnlyThisSection()) {
-            $title = DBField::create_field(
-                'HTMLText',
-                _t('ProductSearchForm.ONLY_SHOW', 'Only search in')
-            );
-            if($this->baseListOwner) {
-                $title .= ' <em>' . $this->baseListOwner->Title . '</em> ';
-            }
-            $this->Fields()->replaceField(
-                'OnlyThisSection',
-                CheckboxField::create(
-                    'OnlyThisSection',
-
-                    true
-                )
-            );
-        }
-
-        return parent::forTemplate();
     }
 
     ########################################
@@ -347,24 +322,19 @@ class ProductSearchForm extends Form
     public function setBaseListOwner($baseListOwner): self
     {
         $this->baseListOwner = $baseListOwner;
-        return $this;
-    }
+        $baseListCount = $this->baseListOwner->getProducts()->count();
+        if ($baseListCount) {
+            $this->Fields()->replaceField(
+                'OnlyThisSection',
+                CheckboxField::create(
+                    'OnlyThisSection',
+                    _t('ProductSearchForm.ONLY_SHOW', 'Only search in') . ' <i>' . $baseListOwner->Title . '</i> ',
+                    true
+                )
+            );
+        }
 
-    protected function hasOnlyThisSection() : bool
-    {
-        if ($this->controller instanceof ProductGroupSearchPageController) {
-            return false;
-        }
-        if ($this->baseListOwner instanceof ProductGroupSearchPage) {
-            return false;
-        }
-        if($this->baseListOwner) {
-            return $this->baseListOwner->getProducts()->count() > 0;
-        }
-        if($this->baseList) {
-            return $this->baseList->count() > 0;
-        }
-        return true;
+        return $this;
     }
 
     public function setSearchKeyword(string $keyword): self
@@ -406,21 +376,6 @@ class ProductSearchForm extends Form
 
     public function doProductSearchForm($data, $form)
     {
-        $this->runFullProcessInner($data);
-        $this->doProcessResults();
-    }
-
-    ########################################
-    # UTILS
-    ########################################
-
-    public function runFullProcess($data)
-    {
-        $this->debug = false;
-        $this->runFullProcessInner($data);
-    }
-    protected function runFullProcessInner($data)
-    {
         $this->doProcessSetup($data);
 
         //basic get
@@ -429,7 +384,6 @@ class ProductSearchForm extends Form
         $this->doPriceSearch();
 
         //defining some variables
-        // die('xxx');
 
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
         if ($this->baseList->count()) {
@@ -445,8 +399,12 @@ class ProductSearchForm extends Form
                 $this->addToResults($this->baseList, true);
             }
         }
-
+        $this->doProcessResults();
     }
+
+    ########################################
+    # UTILS
+    ########################################
 
     /**
      * saves the form into session.
@@ -510,7 +468,7 @@ class ProductSearchForm extends Form
      */
     protected function doAddToSearchHistory()
     {
-        if($this->hasCache === true) {
+        if($this->hasCache === false) {
             SearchHistory::add_entry($this->keywordPhrase);
         }
     }
@@ -520,7 +478,7 @@ class ProductSearchForm extends Form
      */
     protected function doInternalItemSearch()
     {
-        if($this->hasCache === true) {
+        if($this->hasCache === false) {
             return;
         }
         if ($this->debug) {
@@ -540,7 +498,7 @@ class ProductSearchForm extends Form
      */
     protected function doKeywordReplacements()
     {
-        if($this->hasCache === true) {
+        if($this->hasCache === false) {
             return;
         }
         if (! $this->weHaveEnoughResults()) {
@@ -556,7 +514,7 @@ class ProductSearchForm extends Form
      */
     protected function doProductSearch()
     {
-        if($this->hasCache === true) {
+        if($this->hasCache === false) {
             return;
         }
         if (! $this->weHaveEnoughResults()) {
@@ -604,7 +562,7 @@ class ProductSearchForm extends Form
      */
     protected function doGroupSearch()
     {
-        if($this->hasCache === true) {
+        if($this->hasCache === false) {
             return;
         }
         if ($this->immediateRedirectPage === null) {
@@ -663,10 +621,7 @@ class ProductSearchForm extends Form
             }
         } else {
             $redirectToPage = $this->getResultsPage();
-            $hash = '';
-            if($this->hasCache === false && $this->config()->get('use_cache')) {
-                $hash = $this->setCacheForHash();
-            }
+            $hash = $this->setCacheForHash();
             $link = $redirectToPage->SearchResultLink($hash);
             $link .= '?';
             $link .= http_build_query($this->rawData);
@@ -763,9 +718,6 @@ class ProductSearchForm extends Form
 
     protected function createBaseList()
     {
-        if($this->hasCache === true) {
-            return;
-        }
         if (! $this->baseList instanceof SS_List) {
             if ($this->baseListOwner) {
                 $this->baseList = $this->baseListOwner->getProducts();
@@ -790,9 +742,6 @@ class ProductSearchForm extends Form
      */
     protected function doPriceSearch()
     {
-        if($this->hasCache === true) {
-            return;
-        }
         if ($this->hasMinMaxSearch()) {
             $min = $this->rawData['MinimumPrice'];
             if ($min) {
@@ -876,9 +825,11 @@ class ProductSearchForm extends Form
     protected function applyCacheFromHash(string $hash): array
     {
         $array = $this->getCacheForHash($hash);
-        if(! empty($array['productIds'] && $this->config()->get('use_cache'))) {
+        if(! empty($array['productIds'])) {
             $this->hasCache = true;
             foreach ($array as $variable => $value) {
+                print_r($array);
+                die('xxx');
                 if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
                     $this->{$variable} = $this->arrayToObject($value);
                 }

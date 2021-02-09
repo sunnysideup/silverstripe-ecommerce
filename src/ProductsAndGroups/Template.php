@@ -147,7 +147,7 @@ class Template
     {
         $data = $this->getData();
         if ($variable) {
-            return $data[$typeOrVariable][$variable];
+            return $data[$typeOrVariable][$variable] ?? 'error';
         }
 
         $newData = [];

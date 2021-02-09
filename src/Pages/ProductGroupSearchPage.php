@@ -71,6 +71,11 @@ class ProductGroupSearchPage extends ProductGroup
     }
 
     /**
+     * @var ProductGroupSearchPage
+     */
+    private static $_main_search_page = null;
+
+    /**
      * @return ProductGroupSearchPage|null
      */
     public static function main_search_page()
