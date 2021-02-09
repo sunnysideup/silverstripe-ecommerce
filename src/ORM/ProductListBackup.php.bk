@@ -466,7 +466,7 @@ class ProductListBackup extends ViewableData
     //     //Product.ID = IN ARRAY(bla bla)
     //     $array = [];
     //     if ($this->getProductsAlsoInOtherGroups()) {
-    //         $array = $this->AlsoShowProducts()->map('ID', 'ID')->toArray();
+    //         $array = $this->AlsoShowProducts()->columnUnique();
     //     }
     //     if (count($array)) {
     //         return ' OR ("Product"."ID" IN (' . implode(',', $array) . ')) ';

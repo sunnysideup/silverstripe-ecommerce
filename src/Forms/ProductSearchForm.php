@@ -11,6 +11,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
@@ -26,6 +27,7 @@ use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 use Sunnysideup\Vardump\Vardump;
 
@@ -41,12 +43,16 @@ class ProductSearchForm extends Form
         'productGroupIds',
         'resultArrayPos',
         'immediateRedirectPage',
-        'baseList',
+        'baseListOwner',
         'baseClassNameForBuyables',
         'baseClassNameForGroups',
         'additionalGetParameters',
         'maximumNumberOfResults',
     ];
+
+    protected $nameOfProductsBeingSearched = '';
+
+    protected $productsToSearch = null;
 
     /**
      * set to TRUE to show the search logic.
@@ -110,9 +116,16 @@ class ProductSearchForm extends Form
     protected $immediateRedirectPage = null;
 
     /**
+     * a custom base list
      * @var DataList
      */
     protected $baseList = null;
+
+    /**
+     * a product group that creates the base list.
+     * @var ProductGroup
+     */
+    protected $baseListOwner = null;
 
     /**
      * class name of the buyables to search
@@ -160,6 +173,8 @@ class ProductSearchForm extends Form
      */
     protected $maximumNumberOfResults = 1000;
 
+    private static $in_group_sort_sql = ['Price' => 'DESC'];
+
     /**
      * List of additional fields that should be searched full text.
      * We are matching this against the buyable class name.
@@ -190,29 +205,41 @@ class ProductSearchForm extends Form
             'Keywords' => $request->getVar('Keywords'),
             'MinimumPrice' => floatval($request->getVar('MinimumPrice')),
             'MaximumPrice' => floatval($request->getVar('MaximumPrice')),
+            'SearchOnlyFieldsInThisSection' => (intval($request->getVar('SearchOnlyFieldsInThisSection')) - 0 ? 1 : 0),
         ];
+
+        //fields
+        $fields = FieldList::create();
         //turn of security to allow caching of the form:
         if (Config::inst()->get(ProductSearchForm::class, 'include_price_filters')) {
-            $fields = FieldList::create(
-                $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keywords']),
+            $fields->push(
                 NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'), $defaults['MinimumPrice'])->setScale(2),
+            );
+            $fields->push(
                 NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'), $defaults['MaximumPrice'])->setScale(2)
             );
-        } else {
-            $fields = FieldList::create(
-                $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keywords'])
-            );
         }
-        $actions = FieldList::create(
-            FormAction::create('doProductSearchForm', 'Search')
+        $fields->push(
+            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keywords'])
         );
+        $fields->push(
+            HiddenField::create('SearchOnlyFieldsInThisSection', $defaults['SearchOnlyFieldsInThisSection'])
+        );
+        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
 
         if (Director::isDev() || Permission::check('ADMIN')) {
             $fields->push(CheckboxField::create('DebugSearch', 'Debug Search'));
         }
-        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
+
+        // actions
+        $actions = FieldList::create(
+            FormAction::create('doProductSearchForm', 'Search')
+        );
+
+        // required fields
         $requiredFields = [];
         $validator = ProductSearchFormValidator::create($requiredFields);
+
         $this->extend('updateFields', $fields);
         $this->extend('updateActions', $actions);
         $this->extend('updateValidator', $validator);
@@ -271,9 +298,35 @@ class ProductSearchForm extends Form
         return $this;
     }
 
+    /**
+     * @param  DataList $baseList
+     * @return self
+     */
     public function setBaseList($baseList): self
     {
         $this->baseList = $baseList;
+
+        return $this;
+    }
+
+    /**
+     * @param  ProductGroup $baseListOwner
+     * @return self
+     */
+    public function setBaseListOwner($baseListOwner): self
+    {
+        $this->baseListOwner = $baseListOwner;
+        $baseListCount = $this->baseListOwner->getProducts()->count();
+        if ($baseListCount) {
+            $this->Fields()->replaceField(
+                'SearchOnlyFieldsInThisSection',
+                CheckboxField::create(
+                    'SearchOnlyFieldsInThisSection',
+                    _t('ProductSearchForm.ONLY_SHOW', 'Only search in') . ' <i>' . $baseListOwner->Title . '</i> ',
+                    true
+                )
+            );
+        }
 
         return $this;
     }
@@ -376,9 +429,6 @@ class ProductSearchForm extends Form
         if (isset($data['DebugSearch'])) {
             $this->debug = $data['DebugSearch'] ? true : false;
         }
-        if (isset($data['Keyword'])) {
-            $this->debug = $data['DebugSearch'] ? true : false;
-        }
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results</h2>');
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
@@ -386,6 +436,7 @@ class ProductSearchForm extends Form
         }
         $this->rawData['MinimumPrice'] = floatval($this->rawData['MinimumPrice'] ?? 0);
         $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice'] ?? 0);
+        $this->rawData['SearchOnlyFieldsInThisSection'] = intval($this->rawData['SearchOnlyFieldsInThisSection']) ? 1 : 0;
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             $oldMin = $this->rawData['MinimumPrice'];
             $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
@@ -595,7 +646,8 @@ class ProductSearchForm extends Form
         }
         if ($count > 0) {
             $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
-            $listToAdd = $listToAdd->sort('Price', 'DESC');
+            $sort = $this->Config()->get('in_group_sort_sql');
+            $listToAdd = $listToAdd->sort($sort);
             foreach ($listToAdd as $page) {
                 $id = $page->IDForSearchResults();
                 // if ($this->debug) {
@@ -637,6 +689,9 @@ class ProductSearchForm extends Form
 
     protected function getResultsPage()
     {
+        if (empty($this->rawData['SearchOnlyFieldsInThisSection'])) {
+            return ProductGroupSearchPage::main_search_page();
+        }
         //if no specific section is being searched then we redirect to search page:
         return $this->controller->dataRecord;
     }
@@ -644,11 +699,15 @@ class ProductSearchForm extends Form
     protected function createBaseList()
     {
         if (! $this->baseList instanceof SS_List) {
-            $tmpVar = $this->baseClassNameForBuyables;
-            $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
-            $ecomConfig = EcommerceConfig::inst();
-            if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
-                $this->baseList->filter(['AllowPurchase' => 1]);
+            if ($this->baseListOwner) {
+                $this->baseList = $this->baseListOwner->getProducts();
+            } else {
+                $tmpVar = $this->baseClassNameForBuyables;
+                $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
+                $ecomConfig = EcommerceConfig::inst();
+                if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
+                    $this->baseList->filter(['AllowPurchase' => 1]);
+                }
             }
         }
         if ($this->debug) {

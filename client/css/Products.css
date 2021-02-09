@@ -16,11 +16,11 @@
 .category { overflow-x: hidden; }
 .sortOptions .current { text-decoration: none; font-weight: bold; }
 .productList { padding: 0; margin: 0; }
-	#Products .productItem { list-style: none; float: left; width: 200px; overflow: hidden; margin: 0 5px 5px 0; padding: 25px; }
-		.productItem .productActions { padding: 0; margin: 0; }
-		.productItem .productActions li { list-style: none; padding: 0; margin: 0; }
-		.resultsBar .resultsShowing,
-		.resultsBar .resultsShowing { float: right; width: 50%; text-align: right; }
-		.productItem a.noimage { padding: 20px; height: 60px; text-align: center; background: #eeeeee; color: #d3d3d3; display: block; text-decoration: none; font-size: 20px; }
+    #Products .productItem { list-style: none; float: left; width: 200px; overflow: hidden; margin: 0 5px 5px 0; padding: 25px; }
+        .productItem .productActions { padding: 0; margin: 0; }
+        .productItem .productActions li { list-style: none; padding: 0; margin: 0; }
+        .resultsBar .resultsShowing,
+        .resultsBar .resultsShowing { float: right; width: 50%; text-align: right; }
+        .productItem a.noimage { padding: 20px; height: 60px; text-align: center; background: #eeeeee; color: #d3d3d3; display: block; text-decoration: none; font-size: 20px; }
 
 

@@ -134,7 +134,7 @@ class ProductGroupController extends PageController
             $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
         }
         $ids = $this->ProductSearchForm()->getProductIds();
-        if(! $this->HasSort()) {
+        if (! $this->HasSort()) {
             // set default sort
             $this->setIdArrayDefaultSort($ids);
         }
@@ -605,7 +605,7 @@ class ProductGroupController extends PageController
             );
             //load previous data.
             $this->searchForm->setSearchHash($this->request->param('ID'));
-            $this->searchForm->setBaseList($this->getProductList());
+            $this->searchForm->setBaseListOwner($this->dataRecord);
             // $sortGetVariable = $this->getSortFilterDisplayValues('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');
             // $form->setAdditionalGetParameters($additionalGetParameters);
