@@ -42,6 +42,11 @@ class ProductGroupSearchPage extends ProductGroup
 
     private static $plural_name = 'Product Search Pages';
 
+    /**
+     * @var ProductGroupSearchPage
+     */
+    private static $_main_search_page = null;
+
     public function i18n_singular_name()
     {
         return _t('ProductGroupSearchPage.SINGULARNAME', 'Product Search Page');
@@ -69,11 +74,6 @@ class ProductGroupSearchPage extends ProductGroup
     {
         return ArrayList::create();
     }
-
-    /**
-     * @var ProductGroupSearchPage
-     */
-    private static $_main_search_page = null;
 
     /**
      * @return ProductGroupSearchPage|null

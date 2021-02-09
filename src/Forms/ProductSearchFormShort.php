@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
 
 class ProductSearchFormShort extends ProductSearchForm
 {
