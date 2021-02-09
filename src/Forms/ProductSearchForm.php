@@ -205,7 +205,7 @@ class ProductSearchForm extends Form
             'Keywords' => $request->getVar('Keywords'),
             'MinimumPrice' => floatval($request->getVar('MinimumPrice')),
             'MaximumPrice' => floatval($request->getVar('MaximumPrice')),
-            'SearchOnlyFieldsInThisSection' => (intval($request->getVar('SearchOnlyFieldsInThisSection')) - 0 ? 1 : 0),
+            'OnlyThisSection' => (intval($request->getVar('OnlyThisSection')) - 0 ? 1 : 0),
         ];
 
         //fields
@@ -223,7 +223,7 @@ class ProductSearchForm extends Form
             $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keywords'])
         );
         $fields->push(
-            HiddenField::create('SearchOnlyFieldsInThisSection', $defaults['SearchOnlyFieldsInThisSection'])
+            HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
         );
         $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
 
@@ -319,9 +319,9 @@ class ProductSearchForm extends Form
         $baseListCount = $this->baseListOwner->getProducts()->count();
         if ($baseListCount) {
             $this->Fields()->replaceField(
-                'SearchOnlyFieldsInThisSection',
+                'OnlyThisSection',
                 CheckboxField::create(
-                    'SearchOnlyFieldsInThisSection',
+                    'OnlyThisSection',
                     _t('ProductSearchForm.ONLY_SHOW', 'Only search in') . ' <i>' . $baseListOwner->Title . '</i> ',
                     true
                 )
@@ -436,7 +436,7 @@ class ProductSearchForm extends Form
         }
         $this->rawData['MinimumPrice'] = floatval($this->rawData['MinimumPrice'] ?? 0);
         $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice'] ?? 0);
-        $this->rawData['SearchOnlyFieldsInThisSection'] = intval($this->rawData['SearchOnlyFieldsInThisSection']) ? 1 : 0;
+        $this->rawData['OnlyThisSection'] = intval($this->rawData['OnlyThisSection']) ? 1 : 0;
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             $oldMin = $this->rawData['MinimumPrice'];
             $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
@@ -689,7 +689,7 @@ class ProductSearchForm extends Form
 
     protected function getResultsPage()
     {
-        if (empty($this->rawData['SearchOnlyFieldsInThisSection'])) {
+        if (empty($this->rawData['OnlyThisSection'])) {
             return ProductGroupSearchPage::main_search_page();
         }
         //if no specific section is being searched then we redirect to search page:
