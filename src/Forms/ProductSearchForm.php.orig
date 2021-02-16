@@ -52,6 +52,11 @@ class ProductSearchForm extends Form
         'maximumNumberOfResults',
     ];
 
+<<<<<<< HEAD
+    private static $use_cache = false;
+
+=======
+>>>>>>> ff6e30138bcf4b100001c591d9864188d74ee39d
     protected $nameOfProductsBeingSearched = '';
 
     protected $productsToSearch = null;
@@ -61,7 +66,7 @@ class ProductSearchForm extends Form
      *
      * @var bool
      */
-    protected $debug = false;
+    protected $debug = true;
 
     /**
      * @var bool
@@ -181,7 +186,7 @@ class ProductSearchForm extends Form
      */
     protected $maximumNumberOfResults = 1000;
 
-    private static $use_cache = false;
+    private static $use_cache = true;
 
     private static $in_group_sort_sql = ['Price' => 'DESC'];
 
@@ -265,17 +270,18 @@ class ProductSearchForm extends Form
     public function forTemplate()
     {
         if ($this->hasOnlyThisSection()) {
-            $title = _t('ProductSearchForm.ONLY_SHOW', 'Only search in');
+            $title = DBField::create_field(
+                'HTMLText',
+                _t('ProductSearchForm.ONLY_SHOW', 'Only search in')
+            );
             if ($this->baseListOwner) {
                 $title .= ' <em>' . $this->baseListOwner->Title . '</em> ';
             }
-            $title = DBField::create_field('HTMLText', $title);
             $this->Fields()->replaceField(
                 'OnlyThisSection',
                 CheckboxField::create(
                     'OnlyThisSection',
-                    $title,
-                    1
+                    true
                 )
             );
         }
@@ -874,7 +880,11 @@ class ProductSearchForm extends Form
     protected function applyCacheFromHash(string $hash): array
     {
         $array = $this->getCacheForHash($hash);
-        if (! empty($array['productIds']) && $this->config()->get('use_cache')) {
+<<<<<<< HEAD
+        if(! empty($array['productIds']) && $this->config()->get('use_cache')) {
+=======
+        if (! empty($array['productIds'] && $this->config()->get('use_cache'))) {
+>>>>>>> ff6e30138bcf4b100001c591d9864188d74ee39d
             $this->hasCache = true;
             foreach ($array as $variable => $value) {
                 if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
