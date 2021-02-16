@@ -536,11 +536,6 @@ class ProductGroup extends Page
         return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
-    public function getSortFilterDisplayNamesData(): array
-    {
-        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayValues();
-    }
-
     /**
      * @todo: add fitlerforgroup reverse
      * @return bool

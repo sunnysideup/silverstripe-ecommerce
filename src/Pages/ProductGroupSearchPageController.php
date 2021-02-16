@@ -15,15 +15,6 @@ class ProductGroupSearchPageController extends ProductGroupController
         'resetsort' => true,
     ];
 
-    /**
-     * Returns child product groups for use in 'in this section'. For example
-     * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
-     */
-    public function MenuChildGroups(?int $levels = 2): ?DataList
-    {
-        return null;
-    }
-
     protected function init()
     {
         parent::init();

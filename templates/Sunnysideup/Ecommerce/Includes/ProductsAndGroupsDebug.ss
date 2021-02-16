@@ -18,7 +18,6 @@
     <li><strong>getSortFilterDisplayValues:</strong> $DebugMe(getSortFilterDisplayValues)</li>
     <li><strong>getBuyableClassName:</strong> $DebugMe(getBuyableClassName)</li>
     <li><strong>getProductsAlsoInOtherGroups:</strong> $DebugMe(getProductsAlsoInOtherGroups)</li>
-    <li><strong>getSortFilterDisplayNamesData:</strong> $DebugMe(getSortFilterDisplayNamesData)</li>
     <li><strong>Child Categories (filtered):</strong> $DebugMe(ChildGroups)</li>
     <li><strong>Child Categories (unfiltered):</strong> $DebugMe(ChildCategories)</li>
     <li><strong>Show Levels:</strong> $DebugMe(getShowProductLevelsArray)</li>
