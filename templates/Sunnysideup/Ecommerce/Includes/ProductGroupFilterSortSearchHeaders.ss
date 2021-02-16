@@ -15,7 +15,6 @@
     </li>
 <% end_if %>
     <li>
-        <% if SearchResultLink %><a href="$SearchResultLink"><% _t("Product.LAST_SEARCH_RESULTS", "Last Search Results") %></a> | <% end_if %>
         <a href="#ProductSearchFormOuter" class="openCloseSectionLink close"><% _t("Product.Search_Form_Header", "New Search") %></a>
     </li>
 </ul>
