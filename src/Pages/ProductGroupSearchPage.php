@@ -13,12 +13,6 @@ use SilverStripe\ORM\ArrayList;
  */
 class ProductGroupSearchPage extends ProductGroup
 {
-    /**
-     * Can product list (and related) be cached at all?
-     *
-     * @var bool
-     */
-    protected $allowCaching = false;
 
     protected static $main_search_page = null;
 
@@ -68,11 +62,6 @@ class ProductGroupSearchPage extends ProductGroup
     public function canCreate($member = null, $context = [])
     {
         return ProductGroupSearchPage::get()->count() ? false : $this->canEdit($member);
-    }
-
-    public function childGroups(?int $maxRecursiveLevel = 99, ?string $filter = null): ArrayList
-    {
-        return ArrayList::create();
     }
 
     /**

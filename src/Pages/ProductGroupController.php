@@ -313,7 +313,7 @@ class ProductGroupController extends PageController
         if ($this->isSearchResults()) {
             return $this->SearchResultsChildGroups();
         }
-        return $this->ChildGroups($levels);
+        return $this->ChildCategories($levels);
     }
 
     public function ShowGroupFilterLinks(): bool
@@ -574,15 +574,10 @@ class ProductGroupController extends PageController
     public function SearchResultsChildGroups(): ?DataList
     {
         $groupArray = $this->searchResultsProductGroupsArray();
-        if (count($groupArray) > 1) {
-            $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
-
-            return ProductGroup::get()
-                ->filter(['ID' => $groupArray, 'ShowInSearch' => 1])
-                ->sort($sortStatement);
-        }
-
-        return null;
+        $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
+        return ProductGroup::get()
+            ->filter(['ID' => $groupArray])
+            ->sort($sortStatement);
     }
 
     /**

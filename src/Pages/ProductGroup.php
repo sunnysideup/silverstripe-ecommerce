@@ -445,26 +445,6 @@ class ProductGroup extends Page
     }
 
     /**
-     * Recursively generate a product menu. From the Top
-     *
-     * @param string $filter
-     *
-     * @return \SilverStripe\ORM\ArrayList (ProductGroups)
-     */
-    public function GroupsMenu($filter = '')
-    {
-        $parent = $this->ParentGroup();
-        if ($parent && $parent->exists()) {
-            $parentMenu = $parent->ChildGroups(1, $filter);
-            if ($parentMenu->count()) {
-                return $parent->GroupsMenu($filter);
-            }
-        }
-
-        return $this->ChildGroups(1, $filter);
-    }
-
-    /**
      * returns a "BestAvailable" image if the current one is not available
      * In some cases this is appropriate and in some cases this is not.
      * For example, consider the following setup
@@ -556,13 +536,12 @@ class ProductGroup extends Page
      * Returns children ProductGroup pages of this group.
      *
      * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     * @param string|array $filter             - additional filter to be added
      *
      * @return \SilverStripe\ORM\SS_List (ProductGroups)
      */
-    public function ChildGroups(?int $maxRecursiveLevel = 99)
+    public function ChildCategoriesBasedOnProducts()
     {
-        return $this->getBaseProductList()->getDirectParentGroupsInclusive();
+        return $this->getBaseProductList()->getParentGroupsBasedOnProductsExcludingRootGroup();
     }
 
     public function ChildCategories(): DataList

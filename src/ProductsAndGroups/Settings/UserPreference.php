@@ -445,34 +445,43 @@ class UserPreference
         if ($optionA) {
             foreach ($actions as $group) {
                 $link = $group->FilterForGroupLinkSegment();
-                $this->getLinksPerTypeInner($list, $options, $group, $link, $type, $currentKey, $ajaxify);
+                foreach ($options as $key => $data) {
+                    $isCurrent = $currentKey === $key && $this->matchingSegment($link);
+
+                    $obj = new ArrayData(
+                        [
+                            'Title' => $group->MenuTitle,
+                            'Current' => $isCurrent ? true : false,
+                            //todo: fix this!!!!
+                            'Link' => $this->getLinkTemplate($link, $type, $key),
+                            'LinkingMode' => $isCurrent ? 'current' : 'link',
+                            'Ajaxify' => $ajaxify,
+                            'Object' => $group,
+                        ]
+                    );
+                    $list->push($obj);
+                }
             }
         } elseif($optionB) {
             $link = $this->rootGroup->Link();
-            $this->getLinksPerTypeInner($list, $options, $this->rootGroup, $link, $type, $currentKey, $ajaxify);
+            foreach ($options as $key => $data) {
+                $isCurrent = $currentKey === $key;
+                $obj = new ArrayData(
+                    [
+                        'Title' => $data['Title'],
+                        'Current' => $isCurrent ? true : false,
+                        //todo: fix this!!!!
+                        'Link' => $this->getLinkTemplate('', $type, $key),
+                        'LinkingMode' => $isCurrent ? 'current' : 'link',
+                        'Ajaxify' => $ajaxify,
+                    ]
+                );
+                $list->push($obj);
+            }
         }
         return $list;
     }
 
-    protected function getLinksPerTypeInner($list, $options, $group, $link, $type, $currentKey, $ajaxify)
-    {
-        foreach ($options as $key => $data) {
-            $isCurrent = $currentKey === $key && $this->matchingSegment($link);
-
-            $obj = new ArrayData(
-                [
-                    'Title' => $group->MenuTitle,
-                    'Current' => $isCurrent ? true : false,
-                    //todo: fix this!!!!
-                    'Link' => $this->getLinkTemplate($link, $type, $key),
-                    'LinkingMode' => $isCurrent ? 'current' : 'link',
-                    'Ajaxify' => $ajaxify,
-                    'Object' => $group,
-                ]
-            );
-            $list->push($obj);
-        }
-    }
 
     /**
      * returns the current page with get variables. If a type is specified then

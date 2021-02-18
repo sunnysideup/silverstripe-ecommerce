@@ -130,6 +130,12 @@ class ProductSearchForm extends Form
     protected $baseList = null;
 
     /**
+     * a custom base list for ProductGroups
+     * @var DataList
+     */
+    protected $baseListForGroups = null;
+
+    /**
      * a product group that creates the base list.
      * @var ProductGroup
      */
@@ -181,8 +187,16 @@ class ProductSearchForm extends Form
      */
     protected $maximumNumberOfResults = 1000;
 
+    /**
+     * do we use the cache at all.
+     * @var bool
+     */
     private static $use_cache = false;
 
+    /**
+     * when we do not know the relevance then sort like this.
+     * @var array
+     */
     private static $in_group_sort_sql = ['Price' => 'DESC'];
 
     /**
@@ -337,6 +351,16 @@ class ProductSearchForm extends Form
 
         return $this;
     }
+    /**
+     * @param  DataList $baseList
+     * @return self
+     */
+    public function setBaseListForGroups($baseListForGroups): self
+    {
+        $this->baseListForGroups = $baseListForGroups;
+
+        return $this;
+    }
 
     /**
      * @param  ProductGroup $baseListOwner
@@ -465,7 +489,7 @@ class ProductSearchForm extends Form
         $this->saveDataToSession($data);
         $this->rawData = $data;
         if (! $this->maximumNumberOfResults) {
-            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list_for_search');
+            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
         }
         //what is the baseclass?
         $this->baseClassNameForBuyables;
@@ -554,6 +578,8 @@ class ProductSearchForm extends Form
      */
     protected function doProductSearch()
     {
+        // @todo: consider using
+        // DB::get_conn()->searchEngine(SiteTre::get(), $keywords, $start, $pageLength, "\"Relevance\" DESC", "", $booleanSearch);
         if ($this->hasCache === true) {
             return;
         }
@@ -624,7 +650,7 @@ class ProductSearchForm extends Form
             }
 
             foreach ($searches as $search) {
-                $productGroups = ProductGroup::get()->where($search)->filter(['ShowInSearch' => 1]);
+                $productGroups = $this->baseListForGroups->where($search)->filter(['ShowInSearch' => 1]);
                 $count = $productGroups->count();
                 //redirect if we find exactly one match and we have no matches so far...
                 if ($count === 1 && ! $this->resultArrayPos) {
@@ -642,6 +668,11 @@ class ProductSearchForm extends Form
                 $this->debugOutput("<h3>PRODUCT GROUP SEARCH: ${count}</h3>");
             }
         }
+    }
+
+    protected function getProductGroupBase()
+    {
+
     }
 
     /**
@@ -765,8 +796,9 @@ class ProductSearchForm extends Form
             return;
         }
         if (! $this->baseList instanceof SS_List) {
-            if ($this->baseListOwner) {
+            if ($this->rawData['OnlyThisSection']) {
                 $this->baseList = $this->baseListOwner->getProducts();
+                $this->baseListForGroups = $this->baseListOwner->getBaseProductList->getParentGroups();
             } else {
                 $tmpVar = $this->baseClassNameForBuyables;
                 $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
@@ -774,12 +806,13 @@ class ProductSearchForm extends Form
                 if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
                     $this->baseList->filter(['AllowPurchase' => 1]);
                 }
+                $this->baseListForGroups = ProductGroup::get();
             }
         }
         if ($this->debug) {
             $this->debugOutput('<hr />');
-            $this->debugOutput('<h3>BASE LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->baseList->sql()) . '</pre>');
-            $this->debugOutput('<h3>PRODUCTS IN BASE LIST</h3><pre>' . $this->baseList->count() . '</pre>');
+            $this->debugOutput('<h3>BASE LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->baseList) . '</pre>');
+            $this->debugOutput('<h3>BASE GROUP LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->baseListForGroups) . '</pre>');
         }
     }
 

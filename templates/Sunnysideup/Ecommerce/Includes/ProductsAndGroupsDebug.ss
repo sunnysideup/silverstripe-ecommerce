@@ -1,7 +1,7 @@
 <% with $getRootGroup %>
 <h1>Debug information for $Title</h1>
 
-<h2>Product Group Controller Details:</h2>
+<h2>Product Group Data Record Details:</h2>
 <ul>
     <li><strong>ID:</strong> $ID</li>
     <li><strong>ClassName:</strong> $ClassName</li>
@@ -11,15 +11,14 @@
     <li><strong>Search Link</strong> $DebugMe(SearchResultLink)</li>
     <li><strong>Also Show Product Array:</strong> $DebugMe(getProductsToBeIncludedFromOtherGroupsArray)</li>
     <li><strong>ParentGroup:</strong> $DebugMe(ParentGroup)</li>
-    <li><strong>Groups Menu:</strong> $DebugMe(GroupsMenu)</li>
     <li><strong>Image:</strong> $DebugMe(Image)</li>
     <li><strong>Best Available Image (recursive):</strong> $DebugMe(BestAvailableImage)</li>
     <li><strong>Number of Direct Products:</strong> $DebugMe(getNumberOfProducts)</li>
     <li><strong>getSortFilterDisplayValues:</strong> $DebugMe(getSortFilterDisplayValues)</li>
     <li><strong>getBuyableClassName:</strong> $DebugMe(getBuyableClassName)</li>
     <li><strong>getProductsAlsoInOtherGroups:</strong> $DebugMe(getProductsAlsoInOtherGroups)</li>
-    <li><strong>Child Categories (filtered):</strong> $DebugMe(ChildGroups)</li>
-    <li><strong>Child Categories (unfiltered):</strong> $DebugMe(ChildCategories)</li>
+    <li><strong>Child Categories (based on products):</strong> $DebugMe(ChildCategoriesBasedOnProducts)</li>
+    <li><strong>Child Categories (based on hierarchy):</strong> $DebugMe(ChildCategories)</li>
     <li><strong>Show Levels:</strong> $DebugMe(getShowProductLevelsArray)</li>
 </ul>
 <% end_with %>
@@ -37,6 +36,15 @@
 <li><strong>OriginalTitle:</strong> $DebugMe(OriginalTitle)</li>
 <li><strong>Menu Child Categories:</strong> $DebugMe(MenuChildGroups)</li>
 </ul>
+
+<h4>Has ... Available?</h4>
+<ul>
+<li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
+<li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
+<li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
+<li><strong>Has Displays:</strong> $DebugMe(HasDisplays)</li>
+</ul>
+
 <h4>Show Links?</h4>
 <ul>
 <li><strong>Show any sort of filter / sort:</strong> $DebugMe(ShowGroupFilterSortDisplayLinks)</li>
@@ -54,13 +62,7 @@
 <li><strong>Has Display:</strong> $DebugMe(HasDisplay)</li>
 <li><strong>Has Any Sort of Filter / Sort:</strong> $DebugMe(HasGroupFilterSortDisplay)</li>
 </ul>
-<h4>Has ... Available?</h4>
-<ul>
-<li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
-<li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
-<li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
-<li><strong>Has Displays:</strong> $DebugMe(HasDisplays)</li>
-</ul>
+
 <h4>Pagination</h4>
 <ul>
 <li><strong>Current Page Number</strong> $DebugMe(getCurrentPageNumber)</li>
@@ -95,10 +97,6 @@
     <li><strong>Filter:</strong> $getFilterTitle</li>
     <li><strong>Sort:</strong> $getSortTitle</li>
     <li><strong>Display:</strong> $getDisplayTitle</li>
-    <li><strong>Group Links:</strong> $getLinksPerType(GROUPFILTER)</li>
-    <li><strong>Filter Links:</strong> $getLinksPerType(FILTER)</li>
-    <li><strong>Sort Links:</strong> $getLinksPerType(SORT)</li>
-    <li><strong>Display Links:</strong> $getLinksPerType(DISPLAY)</li>
 </ul>
 <% end_with %>
 
