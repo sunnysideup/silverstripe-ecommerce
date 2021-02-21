@@ -32,6 +32,8 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
@@ -618,7 +620,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return '/admin/shop/EcommerceDBConfig/';
+        return CMSEditLinkAPI::find_edit_link_for_object($this);
     }
 
     public function getOrderStepsField()

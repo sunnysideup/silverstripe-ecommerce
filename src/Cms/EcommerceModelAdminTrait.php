@@ -37,6 +37,7 @@ trait EcommerceModelAdminTrait
                 </style>
             '
         );
+        $form->Fields()->push(LiteralField::create('EditRecords', '<a href="'.$record->CMSEditLink().'">Edit '.$record->getTitle().'</a>'));
         $form->Fields()->push($idField);
         $form->Fields()->push($cssField);
         return $form;
