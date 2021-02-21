@@ -170,7 +170,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $summary_fields = [
         'Title' => 'Title',
-        'UseThisOneNice' => 'Use this configuration set',
     ]; //note no => for relational fields
 
     /**
