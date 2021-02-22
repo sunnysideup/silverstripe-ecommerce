@@ -231,8 +231,18 @@ class ProductGroupController extends PageController
         $this->addSecondaryTitle();
 
         $this->cachingRelatedJavascript();
+        $list = $this->paginateList($this->getProductList());
 
-        return $this->paginateList($this->getProductList());
+        return $list;
+    }
+
+    protected function afterHandleRequest()
+    {
+        if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
+            $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
+            die();
+        }
+        parent::afterHandleRequest();
     }
 
     /**
@@ -310,7 +320,7 @@ class ProductGroupController extends PageController
      */
     public function MenuChildGroups(?int $levels = 2): ?DataList
     {
-        if ($this->isSearchResults()) {
+        if ($this->IsSearchResults()) {
             return $this->SearchResultsChildGroups();
         }
         return $this->ChildCategories($levels);
@@ -774,10 +784,6 @@ class ProductGroupController extends PageController
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
-        if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
-            $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
-            die();
-        }
         //makes sure best match only applies to search -i.e. reset otherwise.
     }
 

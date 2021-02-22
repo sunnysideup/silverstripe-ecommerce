@@ -24,10 +24,10 @@ class ProductGroupSearchPageController extends ProductGroupController
      *
      * @return \SilverStripe\ORM\PaginatedList
      */
-    public function Products(): ? PaginatedList
+    public function Products(): ?PaginatedList
     {
         if($this->IsSearchResults()) {
-            parent::Products();
+            return parent::Products();
         } else {
             return null;
         }
