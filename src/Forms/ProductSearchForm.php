@@ -504,7 +504,10 @@ class ProductSearchForm extends Form
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
             $this->debugOutput('<p style="color: red">data: ' . print_r($data, 1) . '</p>');
         }
-        $this->rawData['MinimumPrice'] = floatval($this->rawData['MinimumPrice'] ?? 0);
+        $this->rawData['MinimumPrice'] = $this->rawData['MinimumPrice'] ?? 0;
+        $this->rawData['MaximumPrice'] = $this->rawData['MaximumPrice'] ?? 0;
+        $this->rawData['MinimumPrice'] = floatval(str_replace(',', '', $this->rawData['MinimumPrice']));
+        $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', $this->rawData['MaximumPrice']));
         $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice'] ?? 0);
         $this->rawData['OnlyThisSection'] = intval($this->rawData['OnlyThisSection'] ?? 0) ? true : false;
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
@@ -798,7 +801,7 @@ class ProductSearchForm extends Form
         if (! $this->baseList instanceof SS_List) {
             if ($this->rawData['OnlyThisSection']) {
                 $this->baseList = $this->baseListOwner->getProducts();
-                $this->baseListForGroups = $this->baseListOwner->getBaseProductList->getParentGroups();
+                $this->baseListForGroups = $this->baseListOwner->getBaseProductList()->getParentGroups();
             } else {
                 $tmpVar = $this->baseClassNameForBuyables;
                 $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
@@ -828,10 +831,12 @@ class ProductSearchForm extends Form
             $min = $this->rawData['MinimumPrice'];
             if ($min) {
                 $this->baseList = $this->baseList->filter(['Price:GreaterThanOrEqual' => $min]);
+                $this->debugOutput('<h3>MIN PRICE</h3><pre>' . $min . '</pre>');
             }
             $max = $this->rawData['MaximumPrice'];
             if ($max) {
                 $this->baseList = $this->baseList->filter(['Price:LessThanOrEqual' => $max]);
+                $this->debugOutput('<h3>MAX PRICE</h3><pre>' . $max . '</pre>');
             }
             if ($this->debug) {
                 $this->debugOutput('<hr />');
