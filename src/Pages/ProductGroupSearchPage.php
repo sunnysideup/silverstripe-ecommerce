@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use SilverStripe\ORM\ArrayList;
-
 /**
  * This page manages searching for products.
  *
@@ -13,7 +11,6 @@ use SilverStripe\ORM\ArrayList;
  */
 class ProductGroupSearchPage extends ProductGroup
 {
-
     protected static $main_search_page = null;
 
     /**

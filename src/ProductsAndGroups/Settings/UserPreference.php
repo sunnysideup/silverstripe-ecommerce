@@ -462,7 +462,7 @@ class UserPreference
                     $list->push($obj);
                 }
             }
-        } elseif($optionB) {
+        } elseif ($optionB) {
             $link = $this->rootGroup->Link();
             foreach ($options as $key => $data) {
                 $isCurrent = $currentKey === $key;
@@ -481,7 +481,6 @@ class UserPreference
         }
         return $list;
     }
-
 
     /**
      * returns the current page with get variables. If a type is specified then

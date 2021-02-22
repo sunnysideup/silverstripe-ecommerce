@@ -231,18 +231,7 @@ class ProductGroupController extends PageController
         $this->addSecondaryTitle();
 
         $this->cachingRelatedJavascript();
-        $list = $this->paginateList($this->getProductList());
-
-        return $list;
-    }
-
-    protected function afterHandleRequest()
-    {
-        if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
-            $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
-            die();
-        }
-        parent::afterHandleRequest();
+        return $this->paginateList($this->getProductList());
     }
 
     /**
@@ -738,6 +727,15 @@ class ProductGroupController extends PageController
         if (Vardump::inst()->isSafe()) {
             return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
         }
+    }
+
+    protected function afterHandleRequest()
+    {
+        if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
+            $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
+            die();
+        }
+        parent::afterHandleRequest();
     }
 
     protected function getCachedProductList(): ? DataList

@@ -2,11 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\ErrorPage\ErrorPageController;
+use SilverStripe\Core\Convert;
 
 use SilverStripe\Core\Extension;
 
@@ -18,7 +17,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class ErrorPageExtension extends Extension
 {
-
     /**
      * @throws HTTPResponse_Exception
      * @param HTTPRequest $request
@@ -26,7 +24,7 @@ class ErrorPageExtension extends Extension
     public function onBeforeHTTPError404($request)
     {
         $product = $this->urlToProduct($request);
-        if($product){
+        if ($product) {
             $response = new HTTPResponse();
             $dest = $product->Link();
             $response->redirect(Director::absoluteURL($dest), '302');
@@ -36,8 +34,7 @@ class ErrorPageExtension extends Extension
     }
 
     /**
-     *
-     * @param  integer $errorCode [description]
+     * @param  integer $request [description]
      * @return Product
      */
     protected function urlToProduct($request)

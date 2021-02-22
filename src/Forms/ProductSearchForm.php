@@ -351,8 +351,9 @@ class ProductSearchForm extends Form
 
         return $this;
     }
+
     /**
-     * @param  DataList $baseList
+     * @param  DataList $baseListForGroups
      * @return self
      */
     public function setBaseListForGroups($baseListForGroups): self
@@ -675,7 +676,6 @@ class ProductSearchForm extends Form
 
     protected function getProductGroupBase()
     {
-
     }
 
     /**

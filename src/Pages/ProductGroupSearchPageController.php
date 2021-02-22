@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\PaginatedList;
 
 class ProductGroupSearchPageController extends ProductGroupController
@@ -26,10 +25,9 @@ class ProductGroupSearchPageController extends ProductGroupController
      */
     public function Products(): ?PaginatedList
     {
-        if($this->IsSearchResults()) {
+        if ($this->IsSearchResults()) {
             return parent::Products();
-        } else {
-            return null;
         }
+        return null;
     }
 }
