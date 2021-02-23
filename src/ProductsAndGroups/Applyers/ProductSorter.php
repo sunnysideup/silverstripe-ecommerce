@@ -1,6 +1,8 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * provides data on the user
@@ -68,7 +70,7 @@ class ProductSorter extends BaseApplyer
     public function getSql(?string $key = null, $params = null)
     {
         if ($key === BaseApplyer::DEFAULT_NAME && is_array($params)) {
-            return ArrayMethods::create_sort_statement_from_id_array($params);
+            return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
         return parent::getSql($key, $params);
     }

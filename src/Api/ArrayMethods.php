@@ -35,7 +35,7 @@ class ArrayMethods
      *
      * @return string
      */
-    public static function create_sort_statement_from_id_array(array $ids, ?string $className): string
+    public static function create_sort_statement_from_id_array(array $ids, ?string $className = ''): string
     {
         $ids = ArrayMethods::filter_array($ids);
         $ifStatement = 'CASE ';
