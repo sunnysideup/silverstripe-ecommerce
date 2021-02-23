@@ -593,7 +593,7 @@ class UserPreference
         return $this->getFinalProductList()->getBaseProductList();
     }
 
-    protected function getTitle(string $type, ?string $value = ''): string
+    public function getTitle(string $type, ?string $value = ''): string
     {
         $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
 

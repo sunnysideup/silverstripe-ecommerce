@@ -460,7 +460,7 @@ class ProductGroupController extends PageController
     public function getCurrentGroupFilterTitle(): string
     {
         if ($this->hasGroupFilter()) {
-            return $this->getUserPreferencesTitle('GROUPFILTER', $this->getCurrentUserPreferencesKey('GROUPFILTER'));
+            return $this->getUserPreferencesClass()->getGroupFilterTitle($this->getCurrentUserPreferencesKey('GROUPFILTER'));
         }
         return '';
     }
@@ -474,7 +474,7 @@ class ProductGroupController extends PageController
     public function getCurrentFilterTitle(): string
     {
         if ($this->hasFilter()) {
-            return $this->getUserPreferencesTitle('FILTER', $this->getCurrentUserPreferencesKey('FILTER'));
+            return $this->getUserPreferencesClass()->getFilterTitle($this->getCurrentUserPreferencesKey('FILTER'));
         }
         return '';
     }
@@ -488,7 +488,7 @@ class ProductGroupController extends PageController
     public function getCurrentSortTitle(): string
     {
         if ($this->HasSort()) {
-            return $this->getUserPreferencesTitle('SORT', $this->getCurrentUserPreferencesKey('SORT'));
+            return $this->getUserPreferencesClass()->getSortTitle($this->getCurrentUserPreferencesKey('SORT'));
         }
 
         return '';
@@ -500,7 +500,7 @@ class ProductGroupController extends PageController
     public function getCurrentDisplayTitle(): string
     {
         if ($this->HasDisplay()) {
-            return $this->getUserPreferencesTitle('DISPLAY', $this->getCurrentUserPreferencesKey('DISPLAY'));
+            return $this->getUserPreferencesClass()->getDisplayTitle($this->getCurrentUserPreferencesKey('DISPLAY'));
         }
 
         return '';
