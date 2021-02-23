@@ -1,6 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
+
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 

@@ -228,22 +228,6 @@ class UserPreference
         return $this;
     }
 
-    protected function savePreferenceToSession($type, $newPreference)
-    {
-        if ($this->getUseSession($type)) {
-            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
-            if ($this->getUseSessionPerPage($type)) {
-                $sessionName .= '_' . $this->rootGroup->ID;
-            }
-            $this->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
-        }
-    }
-
-    protected function getSession()
-    {
-        return $this->rootGroupController->request->getSession();
-    }
-
     /**
      * Checks for the most applicable user preferences for this user:
      * 1. session value
@@ -399,7 +383,7 @@ class UserPreference
             if (isset($keyOrArray['key']) && isset($keyOrArray['params']) && isset($keyOrArray['title'])) {
                 return $keyOrArray;
             }
-            user_error('Badly set key and params: '.print_r($keyOrArray, 1));
+            user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
         } else {
             return [
                 'key' => $keyOrArray,
@@ -474,7 +458,6 @@ class UserPreference
                 }
             }
         } elseif ($optionB) {
-            $link = $this->rootGroup->Link();
             foreach ($options as $key => $data) {
                 $isCurrent = $currentKey === $key;
                 $obj = new ArrayData(
@@ -583,6 +566,29 @@ class UserPreference
         return $val['title'];
     }
 
+    public function getTitle(string $type, ?string $value = ''): string
+    {
+        $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
+
+        return $obj->getTitle($value) . (string) $this->getCurrentUserPreferencesTitle($type);
+    }
+
+    protected function savePreferenceToSession($type, $newPreference)
+    {
+        if ($this->getUseSession($type)) {
+            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+            if ($this->getUseSessionPerPage($type)) {
+                $sessionName .= '_' . $this->rootGroup->ID;
+            }
+            $this->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
+        }
+    }
+
+    protected function getSession()
+    {
+        return $this->rootGroupController->request->getSession();
+    }
+
     protected function getFinalProductList()
     {
         return $this->rootGroupController->getFinalProductList();
@@ -591,13 +597,6 @@ class UserPreference
     protected function getBaseProductList()
     {
         return $this->getFinalProductList()->getBaseProductList();
-    }
-
-    public function getTitle(string $type, ?string $value = ''): string
-    {
-        $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
-
-        return $obj->getTitle($value) . (string) $this->getCurrentUserPreferencesTitle($type);
     }
 
     /**

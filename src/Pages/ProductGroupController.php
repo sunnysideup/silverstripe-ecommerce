@@ -432,7 +432,7 @@ class ProductGroupController extends PageController
         return $perPage > $total ? $total : $perPage;
     }
 
-    public function TotalCount() : int
+    public function TotalCount(): int
     {
         return $this->getFinalProductList()->getRawCount();
     }
@@ -568,12 +568,12 @@ class ProductGroupController extends PageController
         return parent::link() . '?reload=1';
     }
 
-    public function ListAllLink() : string
+    public function ListAllLink(): string
     {
         return $this->getLinkTemplate('', 'DISPLAY', 'all');
     }
 
-    public function ListAFewLink() : string
+    public function ListAFewLink(): string
     {
         return $this->getLinkTemplate('', 'DISPLAY', 'default');
     }
@@ -855,7 +855,7 @@ class ProductGroupController extends PageController
         return $obj;
     }
 
-    protected function MaxNumberOfProductsPerPageAbsolute() : int
+    protected function MaxNumberOfProductsPerPageAbsolute(): int
     {
         return EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list') + 1;
     }

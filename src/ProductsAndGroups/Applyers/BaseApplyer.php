@@ -7,7 +7,6 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
 /**
  * provides data on the user
@@ -61,7 +60,7 @@ abstract class BaseApplyer
 
     public function getOptions(): array
     {
-        return Config::inst()->get(get_class($this), 'options');
+        return Config::inst()->get(static::class, 'options');
     }
 
     public function getProducts()
