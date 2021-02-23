@@ -213,24 +213,35 @@ class UserPreference
 
         foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
             $getVariableName = $oneTypeArray['getVariable'];
-            if (isset($overrideArray[$getVariableName])) {
-                $newPreference = $overrideArray[$getVariableName];
+            if (isset($overrideArray[$type])) {
+                $newPreference = $overrideArray[$type];
             } elseif (! isset($this->userPreferences[$type])) {
                 $newPreference = $this->request->getVar($getVariableName);
             } else {
                 $newPreference = $this->userPreferences[$type];
             }
             $this->userPreferences[$type] = $newPreference;
-            if ($this->getUseSession($type)) {
-                $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
-                if ($this->getUseSessionPerPage($type)) {
-                    $sessionName .= '_' . $this->rootGroup->ID;
-                }
-                $this->rootGroupController->request->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
-            }
+            //save preference to session
+            $this->savePreferenceToSession($type, $newPreference);
         }
 
         return $this;
+    }
+
+    protected function savePreferenceToSession($type, $newPreference)
+    {
+        if ($this->getUseSession($type)) {
+            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+            if ($this->getUseSessionPerPage($type)) {
+                $sessionName .= '_' . $this->rootGroup->ID;
+            }
+            $this->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
+        }
+    }
+
+    protected function getSession()
+    {
+        return $this->rootGroupController->request->getSession();
     }
 
     /**
@@ -382,16 +393,16 @@ class UserPreference
         }
     }
 
-    public function standardiseCurrentUserPreferences($type, $key)
+    public function standardiseCurrentUserPreferences(string $type, $keyOrArray)
     {
-        if (is_array($key)) {
-            if (isset($key['key']) && isset($key['params']) && isset($key['title'])) {
-                return $key;
+        if (is_array($keyOrArray)) {
+            if (isset($keyOrArray['key']) && isset($keyOrArray['params']) && isset($keyOrArray['title'])) {
+                return $keyOrArray;
             }
-            user_error('Badly set key and params');
+            user_error('Badly set key and params: '.print_r($keyOrArray, 1));
         } else {
             return [
-                'key' => $key,
+                'key' => $keyOrArray,
                 'params' => null,
                 'title' => '',
             ];

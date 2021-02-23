@@ -7,6 +7,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
 /**
  * provides data on the user
@@ -60,7 +61,7 @@ abstract class BaseApplyer
 
     public function getOptions(): array
     {
-        return Config::inst()->get(static::class, 'options');
+        return Config::inst()->get(get_class($this), 'options');
     }
 
     public function getProducts()
@@ -114,7 +115,7 @@ abstract class BaseApplyer
     public function getSql(?string $key = null, $params = null)
     {
         $sql = $this->checkOption($key, 'SQL');
-        return str_replace($sql, self::SQL_PARAM_PLACEHOLDER, $params);
+        return str_replace(self::SQL_PARAM_PLACEHOLDER, $params, $sql);
     }
 
     /**
@@ -145,7 +146,7 @@ abstract class BaseApplyer
      *
      * @return mixed
      */
-    public function checkOption(?string $key = '', ?string $returnValue = 'SQL', ?string $defaultKey = 'default')
+    public function checkOption(?string $key = '', ?string $returnValue = 'SQL', ?string $defaultKey = BaseApplyer::DEFAULT_NAME)
     {
         // an array we leave alone...
         if (! $key) {

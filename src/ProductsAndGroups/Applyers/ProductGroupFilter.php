@@ -71,7 +71,11 @@ class ProductGroupFilter extends BaseApplyer
 
         $filter = null;
         if ($group && $group->exists()) {
-            $filter = ['ID' => $group->getBaseProductList()->getProductIds()];
+            $newIDs = array_intersect(
+                $group->getBaseProductList()->getProductIds(),
+                $this->products->columnUnique()
+            );
+            $filter = ['ID' => $newIDs];
         }
 
         if ($filter) {

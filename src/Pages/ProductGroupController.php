@@ -106,12 +106,14 @@ class ProductGroupController extends PageController
             $this->saveUserPreferences(
                 [
                     'GROUPFILTER' => [
-                        'type' => 'default',
+                        'key' => 'default',
                         'params' => $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID,
                         'title' => $otherProductGroup->MenuTitle,
                     ],
                 ]
             );
+        } else {
+            return $this->httpError('404', 'Could not find category.');
         }
         return $this->defaultReturn();
     }
@@ -421,10 +423,18 @@ class ProductGroupController extends PageController
      */
     public function MaxNumberOfProductsPerPage(): int
     {
+        if ($this->IsShowFullList()) {
+            return min($this->TotalCount(), $this->MaxNumberOfProductsPerPageAbsolute());
+        }
         $perPage = $this->getProductsPerPage();
-        $total = $this->getFinalProductList()->getRawCount();
+        $total = $this->TotalCount();
 
         return $perPage > $total ? $total : $perPage;
+    }
+
+    public function TotalCount() : int
+    {
+        return $this->getFinalProductList()->getRawCount();
     }
 
     public function getCurrentPageNumber(): int
@@ -556,6 +566,16 @@ class ProductGroupController extends PageController
     public function ResetPreferencesLink($action = null): string
     {
         return parent::link() . '?reload=1';
+    }
+
+    public function ListAllLink() : string
+    {
+        return $this->getLinkTemplate('', 'DISPLAY', 'all');
+    }
+
+    public function ListAFewLink() : string
+    {
+        return $this->getLinkTemplate('', 'DISPLAY', 'default');
     }
 
     public function searchResultsProductGroupsArray(): array
@@ -762,12 +782,15 @@ class ProductGroupController extends PageController
     /**
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'
-     * @return string   OPTIONAL: action - e.g. searchresults
-     * @param  string $action     OPTIONAL: FILTER|SORT|DISPLAY
+     * @param  string $action                 e.g. filterfor
+     * @param  string $type                   e.g. FILTER|SORT|DISPLAY
+     * @param  string $replacementForType     e.g. 'all'
+     *
+     * @return string
      */
-    protected function getLinkTemplate(?string $action = null): string
+    protected function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
-        return $this->getUserPreferencesClass()->getLinkTemplate($action);
+        return $this->getUserPreferencesClass()->getLinkTemplate($action, $type, $replacementForType);
     }
 
     protected function init()
@@ -824,12 +847,17 @@ class ProductGroupController extends PageController
         if ($list && $list->count()) {
             $obj = PaginatedList::create($list, $this->request);
             if ($this->IsShowFullList()) {
-                $obj->setPageLength(EcommerceConfig::get('ProductGroup', 'maximum_number_of_products_to_list') + 1);
+                $obj->setPageLength($this->MaxNumberOfProductsPerPageAbsolute());
             } else {
                 $obj->setPageLength($this->getProductsPerPage());
             }
         }
         return $obj;
+    }
+
+    protected function MaxNumberOfProductsPerPageAbsolute() : int
+    {
+        return EcommerceConfig::get(ProductGroup::class, 'maximum_number_of_products_to_list') + 1;
     }
 
     protected function IsShowFullList(): bool

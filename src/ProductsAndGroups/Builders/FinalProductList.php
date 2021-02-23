@@ -116,7 +116,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     {
         $obj = $this->getApplyer($classNameOrType);
 
-        $obj
+        $this->products = $obj
             ->apply($key, $params)
             ->getProducts();
 

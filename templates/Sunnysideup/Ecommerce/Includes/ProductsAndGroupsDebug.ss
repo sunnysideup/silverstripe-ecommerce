@@ -1,7 +1,81 @@
-<% with $getRootGroup %>
-<h1>Debug information for $Title</h1>
+<h1>Debug information for $getRootGroup.Title</h1>
 
-<h2>Product Group Data Record Details:</h2>
+
+<% with $getRootGroupController %>
+<hr /><hr /><h2 style="color: red; padding-top: 2rem">Controller</h2><hr />
+<ul>
+<li><strong>ID:</strong> $ID</li>
+<li><strong>ClassName:</strong> $ClassName</li>
+<li><strong>Raw Product List:</strong> $DebugMe(getProductList)</li>
+<li><strong>Paginated Product List:</strong> $DebugMe(Products)</li>
+<li><strong>Products are Cacheable:</strong> $DebugMe(ProductGroupListAreCacheable)</li>
+<li><strong>Products are Cacheable in general:</strong> $DebugMe(productListsHTMLCanBeCached)</li>
+<li><strong>Products are Ajaxified:</strong> $DebugMe(ProductGroupListAreAjaxified)</li>
+<li><strong>OriginalTitle:</strong> $DebugMe(OriginalTitle)</li>
+<li><strong>Menu Child Categories:</strong> $DebugMe(MenuChildGroups)</li>
+</ul>
+
+<h4>Show Links?</h4>
+<ul>
+<li><strong>Show any sort of filter / sort:</strong> $DebugMe(ShowGroupFilterSortDisplayLinks)</li>
+<li><strong>Show Group Filter Links:</strong> $DebugMe(ShowGroupFilterLinks)</li>
+<li><strong>Show Filters Links:</strong> $DebugMe(ShowFilterLinks)</li>
+<li><strong>Show Sort Links:</strong> $DebugMe(ShowSortLinks)</li>
+<li><strong>Show Display Links:</strong> $DebugMe(ShowDisplayLinks)</li>
+<li><strong>Has Many Products:</strong> $DebugMe(HasManyProducts)</li>
+</ul>
+
+<h4>Has ... Available?</h4>
+<ul>
+<li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
+<li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
+<li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
+<li><strong>Has Displays:</strong> $DebugMe(HasDisplays)</li>
+</ul>
+
+<h4>Has ... Right Now?</h4>
+<ul>
+<li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
+<li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
+<li><strong>Has Sort:</strong> $DebugMe(HasSort)</li>
+<li><strong>Has Display:</strong> $DebugMe(HasDisplay)</li>
+<li><strong>Has Any Sort of Filter / Sort:</strong> $DebugMe(HasGroupFilterSortDisplay)</li>
+</ul>
+
+<h4>Pagination and Counts</h4>
+<ul>
+<li><strong>Number of products</strong> $DebugMe(TotalCount)</li>
+<li><strong>Current Page Number</strong> $DebugMe(getCurrentPageNumber)</li>
+<li><strong>Number of Products per Page</strong> $DebugMe(getProductsPerPage)</li>
+<li><strong>IsShowFullList</strong> $DebugMe(IsShowFullList)</li>
+<li><strong>Absolute Max Number Of Products Per Page</strong> $DebugMe(MaxNumberOfProductsPerPage)</li>
+</ul>
+
+<h4>Preferences</h4>
+<ul>
+<li><strong>Current Group Filter Title</strong> $DebugMe(getCurrentGroupFilterTitle)</li>
+<li><strong>Current Filter Title</strong> $DebugMe(getCurrentFilterTitle)</li>
+<li><strong>Current Sort Title</strong> $DebugMe(getCurrentSortTitle)</li>
+<li><strong>Current Display Title</strong> $DebugMe(getCurrentDisplayTitle)</li>
+<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
+</ul>
+
+<h4>Links</h4>
+<ul>
+<li><strong>Current Link</strong> $DebugMe(Link)</li>
+<li><strong>Group Filter Links</strong> $DebugMe(GroupFilterLinks)</li>
+<li><strong>Filter Links</strong> $DebugMe(FilterLinks)</li>
+<li><strong>Sort Links</strong> $DebugMe(SortLinks)</li>
+<li><strong>Display Links</strong> $DebugMe(DisplayLinks)</li>
+<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
+<li><strong>ListAFewLink</strong> $DebugMe(ListAFewLink)</li>
+<li><strong>ListAllLink</strong> $DebugMe(ListAllLink)</li>
+</ul>
+
+
+
+<% with $getRootGroup %>
+<hr /><hr /><h2 style="color: red; padding-top: 2rem">Product Group Data Record Details:</h2><hr />
 <ul>
     <li><strong>ID:</strong> $ID</li>
     <li><strong>ClassName:</strong> $ClassName</li>
@@ -23,71 +97,8 @@
 </ul>
 <% end_with %>
 
-<% with $getRootGroupController %>
-<h2>Controller</h2>
-<ul>
-<li><strong>ID:</strong> $ID</li>
-<li><strong>ClassName:</strong> $ClassName</li>
-<li><strong>Raw Product List:</strong> $DebugMe(getProductList)</li>
-<li><strong>Paginated Product List:</strong> $DebugMe(Products)</li>
-<li><strong>Products are Cacheable:</strong> $DebugMe(ProductGroupListAreCacheable)</li>
-<li><strong>Products are Cacheable in general:</strong> $DebugMe(productListsHTMLCanBeCached)</li>
-<li><strong>Products are Ajaxified:</strong> $DebugMe(ProductGroupListAreAjaxified)</li>
-<li><strong>OriginalTitle:</strong> $DebugMe(OriginalTitle)</li>
-<li><strong>Menu Child Categories:</strong> $DebugMe(MenuChildGroups)</li>
-</ul>
-
-<h4>Has ... Available?</h4>
-<ul>
-<li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
-<li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
-<li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
-<li><strong>Has Displays:</strong> $DebugMe(HasDisplays)</li>
-</ul>
-
-<h4>Show Links?</h4>
-<ul>
-<li><strong>Show any sort of filter / sort:</strong> $DebugMe(ShowGroupFilterSortDisplayLinks)</li>
-<li><strong>Show Group Filter Links:</strong> $DebugMe(ShowGroupFilterLinks)</li>
-<li><strong>Show Filters Links:</strong> $DebugMe(ShowFilterLinks)</li>
-<li><strong>Show Sort Links:</strong> $DebugMe(ShowSortLinks)</li>
-<li><strong>Show Display Links:</strong> $DebugMe(ShowDisplayLinks)</li>
-<li><strong>Has Many Products:</strong> $DebugMe(HasManyProducts)</li>
-</ul>
-<h4>Has ... Right Now?</h4>
-<ul>
-<li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
-<li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
-<li><strong>Has Sort:</strong> $DebugMe(HasSort)</li>
-<li><strong>Has Display:</strong> $DebugMe(HasDisplay)</li>
-<li><strong>Has Any Sort of Filter / Sort:</strong> $DebugMe(HasGroupFilterSortDisplay)</li>
-</ul>
-
-<h4>Pagination</h4>
-<ul>
-<li><strong>Current Page Number</strong> $DebugMe(getCurrentPageNumber)</li>
-<li><strong>Max Number Of Products Per Page</strong> $DebugMe(MaxNumberOfProductsPerPage)</li>
-</ul>
-<h4>Preferences</h4>
-<ul>
-<li><strong>Current Group Filter Title</strong> $DebugMe(getCurrentGroupFilterTitle)</li>
-<li><strong>Current Filter Title</strong> $DebugMe(getCurrentFilterTitle)</li>
-<li><strong>Current Sort Title</strong> $DebugMe(getCurrentSortTitle)</li>
-<li><strong>Current Display Title</strong> $DebugMe(getCurrentDisplayTitle)</li>
-<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
-</ul>
-<h4>Links</h4>
-<ul>
-<li><strong>Current Link</strong> $DebugMe(Link)</li>
-<li><strong>Group Filter Links</strong> $DebugMe(GroupFilterLinks)</li>
-<li><strong>Filter Links</strong> $DebugMe(FilterLinks)</li>
-<li><strong>Sort Links</strong> $DebugMe(SortLinks)</li>
-<li><strong>Display Links</strong> $DebugMe(DisplayLinks)</li>
-<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
-
-</ul>
 <% with $getUserPreferencesClass %>
-<h2>User Specific Details</h2>
+<hr /><hr /><h2 style="color: red; padding-top: 2rem">User Specific Details</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>use session to remember settings:</strong> $getUseSessionAll</li>
@@ -101,7 +112,7 @@
 <% end_with %>
 
 <% with $getTemplateForProductsAndGroups %>
-<h2>Template Provider</h2>
+<hr /><hr /><h2 style="color: red; padding-top: 2rem">Template Provider</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>Data:</strong> $getData</li>
@@ -113,7 +124,7 @@
 <% end_with %>
 
 <% with $getBaseProductList %>
-<h2>Base List</h2>
+<hr /><hr /><h2 style="color: red; padding-top: 2rem">Base List</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>Product (Buyable) Class Name:</strong> $getBuyableClassName</li>
@@ -165,7 +176,7 @@
 <% end_with %>
 
 <% with $getFinalProductList %>
-<h2>Final List</h2>
+<hr /><hr /><h2 style="color: red; padding-top: 2rem">Final List</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
 </ul>
