@@ -4,9 +4,9 @@
 
 <div id="OrderHolder">
 <% if Order %>
-	<% if CanEditOrder %>
-		<% with Order %><% include Sunnysideup\Ecommerce\Includes\Order_Content_Editable %><% end_with %>
-	<% end_if %>
+    <% if CanEditOrder %>
+        <% with Order %><% include Sunnysideup\Ecommerce\Includes\Order_Content_Editable %><% end_with %>
+    <% end_if %>
 <% else %>
 <div class="message bad canNotView">$NonExistingOrderMessage</p>
 <% end_if %>

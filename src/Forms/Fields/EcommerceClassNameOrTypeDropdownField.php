@@ -37,11 +37,11 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
      * @return EcommerceClassNameOrTypeDropdownField
      */
     public function __construct(
-        $name = 'ClassName',
-        $title = 'Type',
-        $sourceClass = '',
-        $availableClasses = [],
-        $value = ''
+        ?string $name = 'ClassName',
+        ?string $title = 'Type',
+        ?string $sourceClass = '',
+        ?array $availableClasses = [],
+        ?string $value = ''
     ) {
         $this->sourceClass = $sourceClass;
         $this->availableClasses = $availableClasses;

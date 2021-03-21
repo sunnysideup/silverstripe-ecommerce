@@ -559,7 +559,8 @@ class ShoppingCartController extends Controller
     public function clearandlogout(HTTPRequest $request)
     {
         $this->cart->clear();
-        if ($member = Security::getCurrentUser()) {
+        $member = Security::getCurrentUser();
+        if ($member) {
             $member->logout();
         }
         $this->redirect(Director::baseURL());
@@ -689,7 +690,8 @@ class ShoppingCartController extends Controller
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $bestBuyable = $buyableClassName::get()->byID($buyableID);
-                if (is_a($bestBuyable, 'ProductVariation')) {
+                if (Product::is_product_variation($bestBuyable)) {
+                    //todo: make this part of ProductVariation.
                     $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
                     $this->redirect($link);
 
@@ -758,6 +760,7 @@ class ShoppingCartController extends Controller
             $newMember = Member::get()->byID(intval($request->param('ID')));
 
             if ($newMember) {
+                Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
                 $accountPage = AccountPage::get()->first();

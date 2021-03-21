@@ -30,7 +30,7 @@ class AccountPageController extends PageController
 
             return false;
         }
-        Requirements::themedCSS('AccountPage');
+        Requirements::themedCSS('client/css/AccountPage');
     }
 
     /**
@@ -50,17 +50,5 @@ class AccountPageController extends PageController
     public function AccountMember()
     {
         return Security::getCurrentUser();
-    }
-
-    /**
-     * The link that Google et al. need to index.
-     * @return string
-     */
-    public function CanonicalLink()
-    {
-        $link = $this->Link();
-        $this->extend('UpdateCanonicalLink', $link);
-
-        return $link;
     }
 }

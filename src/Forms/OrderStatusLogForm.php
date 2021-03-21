@@ -8,8 +8,10 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\OrderStatusLogFormController;
+
 use Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator;
 
 /**
@@ -77,7 +79,7 @@ class OrderStatusLogForm extends Form
 
         $this->setAttribute('autocomplete', 'off');
 
-        Requirements::themedCSS(ClassInfo::shortName($this->ClassName));
+        Requirements::themedCSS('client/css/client/css' . ClassInfo::shortName($this->ClassName));
         Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log
         $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
@@ -93,6 +95,7 @@ class OrderStatusLogForm extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 }

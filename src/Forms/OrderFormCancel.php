@@ -12,7 +12,9 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
+
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
@@ -109,6 +111,7 @@ class OrderFormCancel extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 }

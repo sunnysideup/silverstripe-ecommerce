@@ -5,14 +5,17 @@ namespace Sunnysideup\Ecommerce\Forms;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
@@ -157,7 +160,7 @@ class ShopAccountForm extends Form
                             $order->MemberID = $member->ID;
                             $order->write();
                         }
-                        $member->login();
+                        Injector::inst()->get(IdentityStore::class)->logIn($member);
                         $this->sessionMessage(_t('ShopAccountForm.SAVEDDETAILS', 'Your details has been saved.'), 'good');
                     } else {
                         $this->sessionMessage(_t('ShopAccountForm.COULD_NOT_CREATE_RECORD', 'Could not save create a record for your details.'), 'bad');
@@ -180,13 +183,8 @@ class ShopAccountForm extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        unset($data['AccountInfo']);
-        unset($data['LoginDetails']);
-        unset($data['LoggedInAsNote']);
-        unset($data['PasswordCheck1']);
-        unset($data['PasswordCheck2']);
-
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 
     /**

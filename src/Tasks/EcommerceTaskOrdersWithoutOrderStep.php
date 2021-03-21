@@ -40,7 +40,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         if ($submittedOrderStatusLogClassName) {
             $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
             if ($submittedStatusLog) {
-                $orderStepsIDArray = OrderStep::get()->column('ID');
+                $orderStepsIDArray = OrderStep::get()->columnUnique();
                 $orders = Order::get()
                     ->where('StatusID NOT IN (' . implode(',', $orderStepsIDArray) . ')')
                     ->innerJoin(

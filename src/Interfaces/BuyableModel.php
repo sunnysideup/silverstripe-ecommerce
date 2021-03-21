@@ -125,7 +125,7 @@ interface BuyableModel
      *
      * @return bool
      */
-    public function HasBeenSold() : bool;
+    public function HasBeenSold(): bool;
 
     //LINKS
 

@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -19,9 +18,11 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
@@ -31,10 +32,11 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\Ecommerce\Forms\Fields\ProductGroupDropdown;
+use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -43,6 +45,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 
 /**
  * This is a standard Product page-type with fields like
@@ -67,6 +70,8 @@ class Product extends Page implements BuyableModel
      * @var string
      */
     protected $defaultClassNameForOrderItem = ProductOrderItem::class;
+
+    private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
 
     /**
      * Standard SS variable.
@@ -94,9 +99,13 @@ class Product extends Page implements BuyableModel
     /**
      * @var bool
      */
-    private static $add_data_to_meta_description_for_search = false;
+    private static $use_search_data_field = false;
 
     private static $table_name = 'Product';
+
+    private static $create_table_options = [
+        MySQLSchemaManager::ID => 'ENGINE=MyISAM',
+    ];
 
     private static $db = [
         'Price' => 'Currency',
@@ -110,6 +119,7 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
+        'SearchData' => 'Text', //For use in lists.
     ];
 
     private static $has_one = [
@@ -138,6 +148,17 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
+        'SearchFields' => [
+            'type' => 'fulltext',
+            'columns' => [
+                //TODO : columns don't exist on product, migrate to yml?
+                //     'Title',
+                //     'MenuTitle',
+                //     'Content',
+                //     'MetaDescription',
+                'SearchData',
+            ],
+        ],
     ];
 
     /**
@@ -159,7 +180,7 @@ class Product extends Page implements BuyableModel
     private static $summary_fields = [
         'Image.CMSThumbnail' => 'Image',
         'FullName' => 'Description',
-        'Price' => 'Price',
+        'Price.Nice' => 'Price',
         'AllowPurchaseNice' => 'For Sale',
     ];
 
@@ -167,22 +188,41 @@ class Product extends Page implements BuyableModel
      * Standard SS variable.
      */
     private static $searchable_fields = [
+        'ParentID' => [
+            'title' => 'Category',
+            'field' => ProductGroupDropdown::class,
+            'filter' => 'ExactMatchFilter',
+        ],
         'FullName' => [
             'title' => 'Keyword',
             'field' => TextField::class,
+            'filter' => 'PartialMatchFilter',
         ],
         'Price' => [
-            'title' => 'Price',
+            'title' => 'Minimum Price',
             'field' => NumericField::class,
+            'filter' => 'ProductMinimumPriceFilter',
+        ],
+        //todo: hack - to allow multiple search
+        'Weight' => [
+            'title' => 'Maximum Price',
+            'field' => NumericField::class,
+            'filter' => 'ProductMaximumPriceFilter',
         ],
         'InternalItemID' => [
             'title' => 'Internal Item ID',
             'filter' => 'PartialMatchFilter',
         ],
-        'AllowPurchase',
-        'ShowInSearch',
-        'ShowInMenus',
-        'FeaturedProduct',
+        'AllowPurchase' => [
+            'title' => 'For Sale',
+            'field' => YesNoDropDownField::class,
+            'filter' => 'ExactMatchFilter',
+        ],
+        'FeaturedProduct' => [
+            'title' => 'Featured',
+            'field' => YesNoDropDownField::class,
+            'filter' => 'ExactMatchFilter',
+        ],
     ];
 
     /**
@@ -214,6 +254,13 @@ class Product extends Page implements BuyableModel
 
     private static $_calculated_price_cache = [];
 
+    public static function is_product_variation($buyable): bool
+    {
+        $name = Config::inst()->get(Product::class, 'buyable_product_variation_class_name');
+
+        return class_exists($name) && is_a($buyable, $name);
+    }
+
     /**
      * By default we search for products that are allowed to be purchased only
      * standard SS method.
@@ -243,13 +290,12 @@ class Product extends Page implements BuyableModel
      */
     public function getCMSFields()
     {
-        $this->BestAvailableImage();
         //prevent calling updateSettingsFields extend function too early
         //$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
         //$this->disableCMSFieldsExtensions();
         $fields = parent::getCMSFields();
-        if ($this->Config()->get('add_data_to_meta_description_for_search')) {
-            $fields->removeByName('MetaDescription');
+        if (! $this->Config()->get('use_search_data_field')) {
+            $fields->removeByName('SearchData');
         }
         //if($siteTreeFieldExtensions) {
         //$this->enableCMSFieldsExtensions();
@@ -362,13 +408,14 @@ class Product extends Page implements BuyableModel
 
         //we are adding all the fields to the keyword fields here for searching purposes.
         //because the MetaKeywords Field is being searched.
-        if ($this->Config()->get('add_data_to_meta_description_for_search')) {
-            $this->MetaDescription = '';
-            $fieldsToExclude = Config::inst()->get(SiteTree::class, 'db');
+        if ($this->Config()->get('use_search_data_field')) {
+            $this->SearchData = '';
+            $indexes = $this->Config()->get('indexes');
+            $fieldsToExclude = $indexes['SearchFields']['columns'];
             foreach (array_keys($this->Config()->get('db')) as $fieldName) {
                 if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
                     if (! in_array($fieldName, $fieldsToExclude, true)) {
-                        $this->MetaDescription .= strip_tags($this->{$fieldName});
+                        $this->SearchData .= strip_tags($this->{$fieldName});
                     }
                 }
             }
@@ -379,12 +426,20 @@ class Product extends Page implements BuyableModel
                     $variationCount = $variations->count();
                     if ($variationCount > 0 && $variationCount < 8) {
                         foreach ($variations as $variation) {
-                            $this->MetaDescription .= ' - ' . $variation->FullName;
+                            $this->SearchData .= ' - ' . $variation->FullName;
                         }
                     }
                 }
             }
         }
+    }
+
+    public function onAfterDelete()
+    {
+        parent::onAfterDelete();
+        $obj = new EcommerceTaskRemoveSuperfluousLinksInProductProductGroups();
+        $obj->setVerbose(false);
+        $obj->run(null);
     }
 
     /**
@@ -437,8 +492,8 @@ class Product extends Page implements BuyableModel
      */
     public function AllParentGroups()
     {
-        $otherGroupsArray = $this->ProductGroups()->column('ID');
-        $ids = array_merge([$this->ParentID], $otherGroupsArray);
+        $otherGroupsArray = $this->ProductGroups()->columnUnique();
+        $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
 
         if ($ids) {
             return ProductGroup::get()->filter([
@@ -463,7 +518,7 @@ class Product extends Page implements BuyableModel
             $allParentsArray[$obj->ID] = $obj->ID;
 
             while ($obj && $obj->ParentID) {
-                if ($obj && $obj instanceof ProductGroup) {
+                if ($obj && ClassHelpers::check_for_instance_of($obj, ProductGroup::class, false)) {
                     $allParentsArray[$obj->ID] = $obj->ID;
                 }
             }
@@ -481,35 +536,6 @@ class Product extends Page implements BuyableModel
     public function getProduct()
     {
         return $this;
-    }
-
-    /**
-     * Returns the direct parent group for the product.
-     *
-     * @return ProductGroup|null
-     **/
-    public function MainParentGroup()
-    {
-        return ProductGroup::get()->byID($this->ParentID);
-    }
-
-    /**
-     * Returns the top parent group of the product (in the hierarchy).
-     *
-     * @return ProductGroup | NULL
-     **/
-    public function TopParentGroup()
-    {
-        $returnValue = null;
-        $parent = $this->MainParentGroup();
-        while ($parent) {
-            $returnValue = $parent;
-            if ($parent->ParentID) {
-                $parent = ProductGroup::get()->byID($parent->ParentID);
-            }
-        }
-
-        return $returnValue;
     }
 
     /**
@@ -546,18 +572,51 @@ class Product extends Page implements BuyableModel
      */
     public function BestAvailableImage()
     {
-        $product = Product::get()->byID($this->ID);
-        if ($product && $product->ImageID) {
-            $image = Image::get()->byID($product->ImageID);
-            if ($image) {
-                if (file_exists(ASSETS_PATH . '/' . $image->getFilename())) {
-                    return $image;
-                }
+        if ($this->ImageID) {
+            $image = Image::get()->byID($this->ImageID);
+            if ($image && $image->exists()) {
+                return $image;
             }
         }
-        if ($parent = $this->MainParentGroup()) {
+        $parent = $this->ParentGroup();
+        if ($parent && $parent->exists()) {
             return $parent->BestAvailableImage();
         }
+    }
+
+    /**
+     * Returns the direct parent group for the product.
+     *
+     * @return ProductGroup|null
+     **/
+    public function ParentGroup()
+    {
+        return ProductGroup::get()->byID($this->ParentID);
+    }
+
+    /**
+     * Returns the parent page, but only if it is an instance of Product Group.
+     *
+     * @return ProductGroup|null
+     */
+    public function MainParentGroup(): ?ProductGroup
+    {
+        return $this->ParentGroup();
+    }
+
+    /**
+     * Returns the top parent group of the product (in the hierarchy).
+     *
+     * @return ProductGroup|null
+     **/
+    public function TopParentGroup()
+    {
+        $parent = $this->ParentGroup();
+        if ($parent && $parent->exists()) {
+            return $parent->TopParentGroup();
+        }
+
+        return null;
     }
 
     /**
@@ -738,6 +797,14 @@ class Product extends Page implements BuyableModel
     public function AddVariationsLink()
     {
         return $this->Link('selectvariation');
+    }
+
+    /**
+     * useful for Product Variations as they return the parent Product.
+     */
+    public function Product()
+    {
+        return $this;
     }
 
     /**
@@ -1009,9 +1076,6 @@ class Product extends Page implements BuyableModel
 
     public function canCreate($member = null, $context = [])
     {
-        if (! $member) {
-            $member = Security::getCurrentUser();
-        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1032,9 +1096,6 @@ class Product extends Page implements BuyableModel
      */
     public function canEdit($member = null, $context = [])
     {
-        if (! $member) {
-            $member = Security::getCurrentUser();
-        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1058,9 +1119,6 @@ class Product extends Page implements BuyableModel
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
-        if (! $member) {
-            $member = Security::getCurrentUser();
-        }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return $extended;
@@ -1079,6 +1137,11 @@ class Product extends Page implements BuyableModel
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
+    }
+
+    public function IDForSearchResults(): int
+    {
+        return $this->ID;
     }
 
     public function debug()
@@ -1113,7 +1176,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Calculated Price as Money:</b> ' . $this->getCalculatedPriceAsMoney()->Nice() . ' </li>';
 
         $html .= '<li><hr />Location<hr /></li>';
-        $html .= '<li><b>Main Parent Group:</b> ' . $this->MainParentGroup()->Title . '</li>';
+        $html .= '<li><b>Main Parent Group:</b> ' . $this->ParentGroup()->Title . '</li>';
         $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->count() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';
@@ -1130,14 +1193,6 @@ class Product extends Page implements BuyableModel
 
         return $html;
         return $html . '</ul>';
-    }
-
-    /**
-     * @int
-     */
-    public function IDForSearchResults()
-    {
-        return $this->ID;
     }
 
     /**

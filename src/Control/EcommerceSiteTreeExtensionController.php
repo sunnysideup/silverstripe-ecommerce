@@ -48,11 +48,19 @@ class EcommerceSiteTreeExtensionController extends Extension
      */
     public function onAfterInit()
     {
-        Requirements::javascript('sunnysideup/ecommerce: ' . EcommerceConfig::get(EcommerceConfigAjax::class, 'cart_js_file_location'));
-        Requirements::javascript('sunnysideup/ecommerce: ' . EcommerceConfig::get(EcommerceConfigAjax::class, 'dialogue_js_file_location'));
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomQuantityField.js');
-        Requirements::themedCSS('Cart');
-        Requirements::themedCSS('jquery.colorbox');
+        $jsFiles = [
+            'cart_js_file_location',
+            'dialogue_js_file_location',
+            'quantity_field_js_location',
+        ];
+        foreach ($jsFiles as $fileConfigString) {
+            $location = EcommerceConfig::get(EcommerceConfigAjax::class, $fileConfigString);
+            if ($location) {
+                Requirements::javascript('sunnysideup/ecommerce: ' . $location);
+            }
+        }
+        Requirements::themedCSS('client/css/Cart');
+        Requirements::themedCSS('client/css/jquery.colorbox');
     }
 
     /**

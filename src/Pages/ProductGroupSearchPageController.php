@@ -2,43 +2,32 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\ORM\PaginatedList;
+
 class ProductGroupSearchPageController extends ProductGroupController
 {
-    private static $allowed_actions = [
-        'debug' => 'ADMIN',
-        'filterforgroup' => true,
-        'ProductSearchForm' => true,
-        'searchresults' => true,
-        'resetfilter' => true,
-    ];
+    // private static $allowed_actions = [
+    //     'debug' => 'ADMIN',
+    //     'filterforgroup' => true,
+    //     'ProductSearchForm' => true,
+    //     'searchresults' => true,
+    //     'resetfilter' => true,
+    //     'resetsort' => true,
+    // ];
 
     /**
-     * Returns child product groups for use in 'in this section'. For example
-     * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
-     */
-    public function MenuChildGroups()
-    {
-        return;
-    }
-
-    /**
-     * The link that Google et al. need to index.
+     * Return the products for this group.
      *
-     * @return string
+     * This is the call that is made from the template and has the actual final
+     * products being shown.
+     *
+     * @return \SilverStripe\ORM\PaginatedList
      */
-    public function CanonicalLink()
+    public function Products(): ?PaginatedList
     {
-        $link = $this->Link();
-
-        $this->extend('updateCanonicalLink', $link);
-
-        return $link;
-    }
-
-    protected function init()
-    {
-        parent::init();
-
-        $this->isSearchResults = true;
+        if ($this->IsSearchResults()) {
+            return parent::Products();
+        }
+        return null;
     }
 }

@@ -19,13 +19,12 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @Description: form to submit order.
@@ -269,12 +268,8 @@ class OrderForm extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        unset($data['AccountInfo']);
-        unset($data['LoginDetails']);
-        unset($data['LoggedInAsNote']);
-        unset($data['PasswordCheck1']);
-        unset($data['PasswordCheck2']);
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 
     /**

@@ -12,9 +12,11 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
+
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 class OrderFormFeedback extends Form
@@ -95,7 +97,8 @@ class OrderFormFeedback extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 
     protected function getValueFromOrderConfirmationPage($value)

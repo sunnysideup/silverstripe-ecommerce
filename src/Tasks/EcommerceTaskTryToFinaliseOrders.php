@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use Exception;
-
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -13,6 +12,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -85,11 +85,11 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     } else {
                         $sort = ['ID' => 'ASC'];
                     }
-                    $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->column('ID') : [];
+                    $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->columnUnique() : [];
                     if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
                         //do nothing...
                     } else {
-                        $ordersInQueueArray = [-1 => -1];
+                        $ordersInQueueArray = ArrayMethods::filter_array([]);
                     }
                     $orders = Order::get()
                         ->sort($sort)

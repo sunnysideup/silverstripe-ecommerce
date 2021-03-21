@@ -17,8 +17,6 @@ abstract class EcommercePaymentResult
     public function __construct($value = null)
     {
         $this->value = $value;
-
-        parent::__construct();
     }
 
     public function getValue()

@@ -14,6 +14,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 
@@ -357,11 +358,11 @@ class OrderProcessQueue extends DataObject
             LIMIT ' . $limit . ';
         ';
         $rows = DB::query($sql);
-        $orderIDs = [0 => 0];
+        $orderIDs = [];
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
-
+        $orderIDs = ArrayMethods::filter_array($orderIDs);
         return Order::get()
             ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs));

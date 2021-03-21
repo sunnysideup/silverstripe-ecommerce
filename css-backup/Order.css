@@ -18,7 +18,7 @@ table.infotable  .right { text-align: right }
 table.infotable  .title span { display: block; }
 
 ul#OrderPrintAndMail {
-	margin-bottom: 3em;
+    margin-bottom: 3em;
 }
 #OrderPrintAndMail li {padding-bottom: 0.5em; }
 

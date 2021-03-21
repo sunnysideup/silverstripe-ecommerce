@@ -460,6 +460,9 @@ class Order extends DataObject implements EditableEcommerceObject
             'filter' => OrderFiltersHasBeenCancelled::class,
             'title' => 'Cancelled by ...',
         ],
+        'CustomerOrderNote' => [
+            'filter' => 'PartialMatchFilter',
+        ],
     ];
 
     /**

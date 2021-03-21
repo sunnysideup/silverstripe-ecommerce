@@ -30,7 +30,9 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
@@ -168,7 +170,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $summary_fields = [
         'Title' => 'Title',
-        'UseThisOneNice' => 'Use this configuration set',
     ]; //note no => for relational fields
 
     /**
@@ -618,7 +619,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return '/admin/shop/EcommerceDBConfig/';
+        return CMSEditLinkAPI::find_edit_link_for_object($this);
     }
 
     public function getOrderStepsField()
@@ -841,5 +842,39 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function UseThisOneNice()
     {
         return $this->UseThisOne ? 'YES' : 'NO';
+    }
+
+    /**
+     * get final value for recursive lookups
+     * @param  string $fieldNameOrMethod
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function recursiveValue(string $fieldNameOrMethod, $default = null)
+    {
+        $value = null;
+        $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
+        if ($this->hasMethod($fieldNameOrMethod)) {
+            $outcome = $this->{$fieldNameOrMethod}();
+            if (is_object($outcome) && $outcome->exists()) {
+                $value = $outcome;
+            } elseif ($outcome && ! is_object($outcome)) {
+                $value = $outcome;
+            }
+        } elseif ($this->hasMethod($fieldNameOrMethodWithGet)) {
+            $outcome = $this->{$fieldNameOrMethodWithGet}();
+            if (is_object($outcome) && $outcome->exists()) {
+                $value = $outcome;
+            } elseif ($outcome && ! is_object($outcome)) {
+                $value = $outcome;
+            }
+        } else {
+            $value = $this->{$fieldNameOrMethod} ?? null;
+        }
+        if (! $value) {
+            $value = $default;
+        }
+
+        return $value;
     }
 }

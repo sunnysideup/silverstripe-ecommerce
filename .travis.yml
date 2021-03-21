@@ -53,4 +53,4 @@ before_script:
 
 script:
   # Execute tests with no coverage.  This is the fastest option
- - php framework/cli-script.php dev/build flush=all
+ - vendor/bin/sake dev/build flush=all

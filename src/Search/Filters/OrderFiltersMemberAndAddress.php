@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Search\Filters;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 
@@ -26,7 +27,7 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $value = $this->getValue();
-        $billingAddressesIDs = [-1 => -1];
+        $billingAddressesIDs = [];
         $billingAddresses = BillingAddress::get()->where("
             \"FirstName\" LIKE '%${value}%' OR
             \"Surname\" LIKE '%${value}%' OR
@@ -39,10 +40,11 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
         ");
 
         if ($billingAddresses->count()) {
-            $billingAddressesIDs = $billingAddresses->map('ID', 'ID')->toArray();
+            $billingAddressesIDs = $billingAddresses->columnUnique();
         }
+        $billingAddressesIDs = ArrayMethods::filter_array($billingAddressesIDs);
         $where[] = '"BillingAddressID" IN (' . implode(',', $billingAddressesIDs) . ')';
-        $shippingAddressesIDs = [-1 => -1];
+        $shippingAddressesIDs = [];
         $shippingAddresses = ShippingAddress::get()->where("
             \"ShippingFirstName\" LIKE '%${value}%' OR
             \"ShippingSurname\" LIKE '%${value}%' OR
@@ -53,18 +55,20 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
             \"ShippingPhone\" LIKE '%${value}%'
         ");
         if ($shippingAddresses->count()) {
-            $shippingAddressesIDs = $shippingAddresses->map('ID', 'ID')->toArray();
+            $shippingAddressesIDs = $shippingAddresses->columnUnique();
         }
+        $shippingAddressesIDs = ArrayMethods::filter_array($shippingAddressesIDs);
         $where[] = '"ShippingAddressID" IN (' . implode(',', $shippingAddressesIDs) . ')';
-        $memberIDs = [-1 => -1];
+        $memberIDs = [];
         $members = Member::get()->where("
             \"FirstName\" LIKE '%${value}%' OR
             \"Surname\" LIKE '%${value}%' OR
             \"Email\" LIKE '%${value}%'
         ");
         if ($members->count()) {
-            $memberIDs = $members->map('ID', 'ID')->toArray();
+            $memberIDs = $members->columnUnique();
         }
+        $memberIDs = ArrayMethods::filter_array($memberIDs);
         $where[] = '"MemberID" IN (' . implode(',', $memberIDs) . ')';
         return $query->where('(' . implode(') OR (', $where) . ')');
     }

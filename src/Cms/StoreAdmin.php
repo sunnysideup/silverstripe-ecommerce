@@ -6,8 +6,11 @@ use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -112,15 +115,14 @@ class StoreAdmin extends ModelAdmin
     {
         $form = parent::getEditForm($id, $fields);
         if ($this->modelClass === EcommerceDBConfig::class || is_subclass_of($this->modelClass, EcommerceDBConfig::class)) {
-            $record = DataObject::get_one(EcommerceDBConfig::class);
-            if ($record && $record->exists()) {
-                return $this->oneItemForm($record);
-            }
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();
                     $config->removeComponentsByType(GridFieldExportButton::class);
                     $config->removeComponentsByType(GridFieldPrintButton::class);
+                    $config->removeComponentsByType(GridFieldImportButton::class);
+                    $config->removeComponentsByType(GridFieldFilterHeader::class);
+                    $config->removeComponentsByType(GridFieldSortableHeader::class);
                 }
             }
         }

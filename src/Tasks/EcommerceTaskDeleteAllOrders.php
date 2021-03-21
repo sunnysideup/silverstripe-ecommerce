@@ -6,6 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -169,7 +170,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     {
         if ($unlinkedObject) {
             if ($unlinkedObject->ClassName) {
-                if (class_exists($unlinkedObject->ClassName) && $unlinkedObject instanceof DataObject) {
+                if (class_exists($unlinkedObject->ClassName) && ClassHelpers::check_for_instance_of($unlinkedObject, DataObject::class, false)) {
                     $unlinkedObjectClassName = $unlinkedObject->ClassName;
                     $objectToDelete = $unlinkedObjectClassName::get()->byID($unlinkedObject->ID);
                     if ($objectToDelete) {

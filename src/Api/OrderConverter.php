@@ -29,15 +29,11 @@ abstract class OrderConverter
 
     public function __construct($order = null)
     {
-        parent::__construct();
         if ($order === null) {
             $order = ShoppingCart::current_order();
         }
-        if ($order instanceof Order) {
-            $this->order = $order;
-        } else {
-            user_error('We expect an order here ;-), provided is: ' . print_r($order, 1));
-        }
+        ClassHelpers::check_for_instance_of($order, Order::class);
+        $this->order = $order;
 
         $this->retrieveOrderDetails();
     }

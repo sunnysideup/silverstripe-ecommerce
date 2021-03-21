@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
@@ -14,9 +15,11 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
@@ -417,7 +420,7 @@ class OrderFormAddress extends Form
                 $this->orderMember->write();
             }
             if ($this->memberShouldBeLoggedIn($data)) {
-                $this->orderMember->LogIn();
+                Injector::inst()->get(IdentityStore::class)->logIn($this->orderMember);
             }
             //this causes ERRORS ....
             $this->order->MemberID = $this->orderMember->ID;
@@ -462,13 +465,9 @@ class OrderFormAddress extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        unset($data['AccountInfo']);
-        unset($data['LoginDetails']);
-        unset($data['LoggedInAsNote']);
-        unset($data['PasswordCheck1']);
-        unset($data['PasswordCheck2']);
+        $data = Sanitizer::remove_from_data_array($data);
 
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $this->setSessionData($data);
     }
 
     /**

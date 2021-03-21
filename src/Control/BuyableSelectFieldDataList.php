@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
@@ -92,7 +93,7 @@ class BuyableSelectFieldDataList extends Controller
                     $className = $buyableArray['ClassName'];
                     $tableName = $buyableArray['TableName'];
                     if (! isset($arrayOfAddedItemIDsByClassName[$className])) {
-                        $arrayOfAddedItemIDsByClassName[$className] = [-1 => -1];
+                        $arrayOfAddedItemIDsByClassName[$className] = ArrayMethods::filter_array([]);
                     }
                     if ($singleton->hasDatabaseField($fieldName)) {
                         // $where = "\"${fieldName}\" LIKE '%${term}%'

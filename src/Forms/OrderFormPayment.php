@@ -9,8 +9,10 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormPaymentValidator;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+
 use Sunnysideup\Ecommerce\Model\Order;
 
 class OrderFormPayment extends Form
@@ -103,7 +105,7 @@ class OrderFormPayment extends Form
     public function saveDataToSession()
     {
         $data = $this->getData();
-        unset($data['LoggedInAsNote']);
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
+        $data = Sanitizer::remove_from_data_array($data);
+        $this->setSessionData($data);
     }
 }

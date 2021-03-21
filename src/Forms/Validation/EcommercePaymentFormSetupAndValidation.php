@@ -3,12 +3,12 @@
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\TextField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCreditCardField;
 use Sunnysideup\Ecommerce\Forms\Fields\ExpiryDateField;

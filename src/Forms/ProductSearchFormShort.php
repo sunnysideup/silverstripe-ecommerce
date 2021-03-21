@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
 
 class ProductSearchFormShort extends ProductSearchForm
 {
@@ -11,9 +10,13 @@ class ProductSearchFormShort extends ProductSearchForm
     {
         parent::__construct($controller, $name);
         $fields = FieldList::create(
-            $shortKeywordField = TextField::create('Keyword', '')
+            $this->Fields()->dataFieldByName('Keyword')
+                ->setTitle('')
+                ->setAttribute(
+                    'placeholder',
+                    _t('ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER', 'search products ...')
+                )
         );
-        $shortKeywordField->setAttribute('placeholder', _t('ProductSearchForm.SHORT_KEYWORD_PLACEHOLDER', 'search products ...'));
         $this->setFields($fields);
     }
 }

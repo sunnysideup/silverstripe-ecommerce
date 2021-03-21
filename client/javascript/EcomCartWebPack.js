@@ -18,9 +18,9 @@
   * are applied. Instructions can be:
   *
   * type = "id" | "class"
-  * 	parameter = innerHTML => update innerHTML
-  * 	parameter = hide => show/hide, using "hideForNow" class
-  *  	parameter = anything else =>  update attribute
+  *     parameter = innerHTML => update innerHTML
+  *     parameter = hide => show/hide, using "hideForNow" class
+  *      parameter = anything else =>  update attribute
   * WITH name:
   *  - update attribute (e.g. update value for quantity field using the field's name)
   * WITH dropdownArray
@@ -49,8 +49,7 @@
     );
 })(jQuery);
 
-
-export var EcomCart = {
+EcomCart = {
 
     /**
      * Set to TRUE to see debug info.
@@ -921,4 +920,6 @@ export var EcomCart = {
 
 
 
-};
+}
+
+window.EcomCart = EcomCart
