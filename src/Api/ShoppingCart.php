@@ -22,7 +22,6 @@ use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
@@ -1255,14 +1254,6 @@ class ShoppingCart
     {
         $sessionVariableName = $this->sessionVariableName('Messages');
         Controller::curr()->getRequest()->getSession()->set($sessionVariableName, serialize($this->messages));
-    }
-
-    /**
-     * @return EcommerceDBConfig
-     */
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 
     /**

@@ -10,8 +10,9 @@
 <% with Order %>
     <% include Sunnysideup\Ecommerce\Includes\Order %>
 <% end_with %>
-<% if PaymentForm %><div id="PaymentForm">$PaymentForm</div><% end_if %>
-<% if CancelForm %><div id="CancelForm">$CancelForm</div><% end_if %>
+<% if $PaymentForm %><div id="PaymentForm">$PaymentForm</div><% end_if %>
+<% if $CancelForm %><div id="CancelForm">$CancelForm</div><% end_if %>
+<% if $CustomerOrderStepForm %><div id="CustomerOrderStepForm">$CustomerOrderStepForm</div><% end_if %>
 <% if FeedbackForm %>
     <div id="FeedbackForm">
         <h3>$FeedbackHeader</h3>

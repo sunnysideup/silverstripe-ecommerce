@@ -125,7 +125,7 @@ interface BuyableModel
      *
      * @return bool
      */
-    public function HasBeenSold();
+    public function HasBeenSold() : bool;
 
     //LINKS
 
@@ -206,13 +206,6 @@ interface BuyableModel
      * @return \Sunnysideup\Ecommerce\Config\EcommerceConfigAjax
      **/
     public function AJAXDefinitions();
-
-    /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return \Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig
-     **/
-    public function EcomConfig();
 
     /**
      * Is it a variation?

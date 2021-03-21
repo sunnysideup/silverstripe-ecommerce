@@ -2,10 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Money\Payment;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 
-abstract class EcommercePaymentResult extends ViewableData
+abstract class EcommercePaymentResult
 {
+    use Configurable;
+    use Extensible;
+    use Injectable;
+
     protected $value;
 
     public function __construct($value = null)

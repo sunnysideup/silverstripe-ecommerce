@@ -15,13 +15,18 @@ class EcommerceCMSButtonField extends LiteralField
         parent::__construct(
             $name,
             '
-            <h3>
-                <a href="' . $link . '" ' . $target . ' class="action ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-                    <span class="ui-button-text">
-                        ' . $title . '
-                    </span>
-                </a>
-            </h3>
+            <div class="form-group field readonly">
+                <label class="form__field-label"></label>
+                <div class="form__field-holder">
+                    <p class="form-control-static readonly">
+                        <a href="' . $link . '" ' . $target . ' class="btn action btn-outline-primary">
+                            <span class="ui-button-text">
+                                ' . $title . '
+                            </span>
+                        </a>
+                    </p>
+                </div>
+            </div>
 
         '
         );

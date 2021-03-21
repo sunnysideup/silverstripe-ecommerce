@@ -19,7 +19,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -28,8 +27,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 /**
- * @description: Allows user to specifically search products
- **/
+ * Product search form
+ */
 class ProductSearchForm extends Form
 {
     /**
@@ -215,12 +214,12 @@ class ProductSearchForm extends Form
 
     public function getProductIds(): array
     {
-        is_array($this->productIds) ? $this->productIds : [];
+        return is_array($this->productIds) ? $this->productIds : [];
     }
 
     public function getProductGroupIds(): array
     {
-        is_array($this->productGroupIds) ? $this->productGroupIds : [];
+        return is_array($this->productGroupIds) ? $this->productGroupIds : [];
     }
 
     public function setSearchKeyword(string $hash)
@@ -657,7 +656,7 @@ class ProductSearchForm extends Form
     {
         $tmpVar = $this->baseClassNameForBuyables;
         $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
-        $ecomConfig = EcommerceDBConfig::current_ecommerce_db_config();
+        $ecomConfig = EcommerceConfig::inst();
         if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
             $this->baseList->filter(['AllowPurchase' => 1]);
         }

@@ -3,10 +3,16 @@
 namespace Sunnysideup\Ecommerce\Dev;
 
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 
-class EcommerceCodeFilter extends ViewableData
+class EcommerceCodeFilter
 {
+    use Configurable;
+    use Extensible;
+    use Injectable;
+
     /**
      * @var array
      */

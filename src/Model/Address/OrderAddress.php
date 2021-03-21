@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Address;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
@@ -15,6 +16,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
@@ -537,16 +539,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns the instance of EcommerceDBConfig.
-     *
-     * @return EcommerceDBConfig | Object
-     **/
-    public function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
-    }
-
-    /**
      * standard SS Method
      * saves the region code.
      */
@@ -587,11 +579,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     protected function getPostalCodeField($name)
     {
         $field = new TextField($name, _t('OrderAddress.POSTALCODE', 'Postal Code'));
-        $postalCodeURL = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeURL;
-        $postalCodeLabel = EcommerceDBConfig::current_ecommerce_db_config()->PostalCodeLabel;
+        $postalCodeURL = EcommerceConfig::inst()->PostalCodeURL;
+        $postalCodeLabel = EcommerceConfig::inst()->PostalCodeLabel;
         if ($postalCodeURL && $postalCodeLabel) {
             $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
-            $field->setRightTitle(
+            $field->setDescription(
                 DBField::create_field(
                     'HTMLText',
                     '<a href="' . $postalCodeURL . '" id="' . $prefix . $name . 'Link" class="' . $prefix . 'postalCodeLink">' . $postalCodeLabel . '</a>'
@@ -663,7 +655,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
         }
         $countryField = new DropdownField($name, $title, $countriesForDropdown, $countryCode);
-        $countryField->setRightTitle(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ' '));
+        $countryField->setDescription(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ' '));
         if (count($countriesForDropdown) < 2) {
             $countryField = $countryField->performReadonlyTransformation();
             if (count($countriesForDropdown) < 1) {

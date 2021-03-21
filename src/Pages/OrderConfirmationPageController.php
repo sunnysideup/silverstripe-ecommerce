@@ -40,6 +40,7 @@ class OrderConfirmationPageController extends CartPageController
         'CancelForm',
         'FeedbackForm',
         'PaymentForm',
+        'CustomerOrderStepForm',
     ];
 
     /**
@@ -318,7 +319,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * show the payment form.
      *
-     * @return \SilverStripe\Forms\Form (OrderFormPayment) or Null
+     * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
      **/
     public function PaymentForm()
     {
@@ -327,6 +328,28 @@ class OrderConfirmationPageController extends CartPageController
                 Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
+            }
+        }
+
+        return [];
+    }
+
+    /**
+    * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
+     **/
+    public function CustomerOrderStepForm()
+    {
+        {
+            $order = $this->currentOrder;
+            if ($order) {
+                $status = $order->Status();
+                if ($status) {
+                    $form = $status->CustomerOrderStepForm($this, 'CustomerOrderStepForm', $order);
+                    if($form) {
+                        Requirements::javascript('sunnysideup/ecommerce: client/javascript/CustomerOrderStepForm.js');
+                        return $form;
+                    }
+                }
             }
         }
 

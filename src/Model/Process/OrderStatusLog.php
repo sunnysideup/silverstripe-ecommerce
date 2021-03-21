@@ -17,7 +17,6 @@ use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
@@ -385,6 +384,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
         }
+        $fields->replaceField(
+            'OrderID',
+            CMSEditLinkField::create(
+                'OrderID',
+                Injector::inst()->get(Order::class)->singular_name(),
+                $this->Order()
+            )
+        );
         return $fields;
     }
 
@@ -458,7 +465,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 //        }
 //        //END HACK TO PREVENT LOSS
         if (! $this->AuthorID) {
-            if ($member = Security::getCurrentUser()) {
+            $member = Security::getCurrentUser();
+            if ($member) {
                 $this->AuthorID = $member->ID;
             }
         }
@@ -502,15 +510,5 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             return false;
         }
         return true;
-    }
-
-    /**
-     * returns the standard EcommerceDBConfig for use within OrderSteps.
-     *
-     * @return EcommerceDBConfig | Object
-     */
-    protected function EcomConfig()
-    {
-        return EcommerceDBConfig::current_ecommerce_db_config();
     }
 }

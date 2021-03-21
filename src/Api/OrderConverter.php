@@ -2,11 +2,17 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Model\Order;
 
-abstract class OrderConverter extends ViewableData
+abstract class OrderConverter
 {
+    use Configurable;
+    use Extensible;
+    use Injectable;
+
     protected $order = null;
 
     protected $currencyCode = '';

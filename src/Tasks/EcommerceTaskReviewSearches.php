@@ -98,22 +98,22 @@ class EcommerceTaskReviewSearches extends BuildTask
                 'days',
                 'Number of days',
                 isset($_GET['days']) ? $_GET['days'] : $this->defaultDays
-            )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
+            )->setDescription('For example, enter 10 to get results from a 10 day period.'),
             NumericField::create(
                 'maxrows',
                 'Maximum Number of Rows?',
                 isset($_GET['maxrows']) ? $_GET['maxrows'] : $this->defaultMaxRows
-            )->setRightTitle('For example, enter 10 to get results from a 10 day period.'),
+            )->setDescription('For example, enter 10 to get results from a 10 day period.'),
             NumericField::create(
                 'ago',
                 'Up to how many days go',
                 isset($_GET['ago']) ? $_GET['ago'] : $this->endingDaysBack
-            )->setRightTitle('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
+            )->setDescription('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
             NumericField::create(
                 'min',
                 'Count treshold',
                 isset($_GET['min']) ? $_GET['min'] : $this->defaultMinimum
-            )->setRightTitle('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
+            )->setDescription('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
         );
         $actions = FieldList::create(FormAction::create('run')->setTitle('show results'));
         $form = Form::create(null, 'SearchFields', $fields, $actions, null);

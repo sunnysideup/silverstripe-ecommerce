@@ -19,6 +19,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
+use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
@@ -39,6 +40,14 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
+
+    public const INCOMPLETE_STATUS = 'Incomplete';
+
+    public const SUCCESS_STATUS = 'Success';
+
+    public const FAILURE_STATUS = 'Failure';
+
+    public const PENDING_STATUS = 'Pending';
     /**
      * automatically populated by the dependency manager.
      *
@@ -64,9 +73,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $table_name = 'EcommercePayment';
 
     private static $db = [
-        'Status' => "Enum('Incomplete,Success,Failure,Pending','Incomplete')",
+        'Status' => "Enum('".self::INCOMPLETE_STATUS.",".self::SUCCESS_STATUS.",".self::FAILURE_STATUS.",".self::PENDING_STATUS."','".self::INCOMPLETE_STATUS."')",
         'Amount' => 'Money',
-        'Message' => 'Text',
+        'Message' => 'HTMLText',
         'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
@@ -468,8 +477,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $array = [];
         $supportedMethods = self::get_supported_methods($order);
-        foreach ($supportedMethods as $methodClass => $methodName) {
+        foreach (array_keys($supportedMethods) as $methodClass) {
+            $array = array_merge(
+                $methodClass::create()->getPaymentFormRequirements(),
+                $array
+            );
         }
+        return $array;
     }
 
     /**

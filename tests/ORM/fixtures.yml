@@ -1,0 +1,24 @@
+Sunnysideup\Ecommerce\Pages\ProductGroup:
+  sports:
+    Title: 'Sports'
+  rugby:
+    Title: 'Rugby'
+    Parent: '=>Sunnysideup\Ecommerce\Pages\ProductGroup.sports'
+  mountainbiking:
+    Title: 'Mountain Biking'
+    Parent: '=>Sunnysideup\Ecommerce\Pages\ProductGroup.sports'
+  downhillmountainbiking:
+    Title: 'Downhill Mountain Biking'
+    Parent: '=>Sunnysideup\Ecommerce\Pages\ProductGroup.mountainbiking'
+Sunnysideup\Ecommerce\Pages\Product:
+  beach_ball:
+    Title: 'Beach Ball'
+    Price: 10
+  rugby_ball:
+    Title: 'Rugby Ball'
+    Price: 20
+    ProductGroups: '=>Sunnysideup\Ecommerce\Pages\ProductGroup.rugby'
+  bike:
+    Title: 'Bicycle'
+    Price: 20000
+    ProductGroups: '=>Sunnysideup\Ecommerce\Pages\ProductGroup.mountainbiking'
