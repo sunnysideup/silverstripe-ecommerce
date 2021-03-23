@@ -28,7 +28,7 @@ class YesNoDropDownField extends DropdownField
     ) {
         if (empty($source)) {
             $source = [
-                '' => self::ANY_IE_NO_SELECTION,
+                null => self::ANY_IE_NO_SELECTION,
                 '0' => 'No',
                 '1' => 'Yes',
             ];
