@@ -23,9 +23,10 @@ class EcommerceMoney extends Extension
      *
      * @return string
      */
-    public static function get_default_symbol($currency)
+    public static function get_default_symbol(?string $currency = 'NZD')
     {
         $money = DBMoney::create();
+        $money->setCurrency($currency);
 
         return $money->getSymbol();
     }
@@ -38,7 +39,7 @@ class EcommerceMoney extends Extension
      *
      * @return string
      */
-    public static function get_short_symbol($currency)
+    public static function get_short_symbol(?string $currency = 'NZD')
     {
         $symbol = self::get_default_symbol($currency);
         if ($symbol) {
@@ -58,7 +59,7 @@ class EcommerceMoney extends Extension
      *
      * @return string
      */
-    public static function get_long_symbol($currency)
+    public static function get_long_symbol(?string $currency = 'NZD')
     {
         $symbol = self::get_default_symbol($currency);
         if ($symbol && mb_strlen($symbol) < 3) {
