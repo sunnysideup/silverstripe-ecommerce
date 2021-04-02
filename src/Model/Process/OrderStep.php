@@ -523,8 +523,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function populateDefaults()
     {
-        parent::populateDefaults();
         $this->Description = $this->myDescription();
+        return parent::populateDefaults();
     }
 
     /**

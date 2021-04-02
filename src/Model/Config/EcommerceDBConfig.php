@@ -338,8 +338,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function populateDefaults()
     {
-        parent::populateDefaults();
         $this->ReceiptEmail = Email::config()->admin_email;
+        return parent::populateDefaults();
     }
 
     public function i18n_singular_name()

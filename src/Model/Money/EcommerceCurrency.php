@@ -741,8 +741,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function populateDefaults()
     {
-        parent::populateDefaults();
         $this->InUse = true;
+        return parent::populateDefaults();
     }
 
     /**

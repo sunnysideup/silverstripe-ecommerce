@@ -300,10 +300,10 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     public function populateDefaults()
     {
-        parent::populateDefaults();
         if (Security::database_is_ready()) {
             $this->AuthorID = Member::currentUserID();
         }
+        return parent::populateDefaults();
     }
 
     /**

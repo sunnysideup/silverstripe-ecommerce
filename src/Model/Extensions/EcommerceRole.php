@@ -524,7 +524,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * Update the CMS Fields
      * for /admin/security.
      *
-     * @return \SilverStripe\Forms\FieldList
      */
     public function updateCMSFields(FieldList $fields)
     {
@@ -561,8 +560,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 $orderForLink,
             ]
         );
-
-        return $fields;
     }
 
     /**

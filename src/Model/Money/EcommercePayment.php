@@ -407,9 +407,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function populateDefaults()
     {
-        parent::populateDefaults();
         $this->Amount->Currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         $this->setClientIP();
+        return parent::populateDefaults();
     }
 
     /**
