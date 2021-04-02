@@ -312,7 +312,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($extended !== null) {
             return $extended;
         }
-        return false;
         if (ShippingAddress::get()->filter(['ShippingCountry' => $this->Code])->count()) {
             return false;
         }
