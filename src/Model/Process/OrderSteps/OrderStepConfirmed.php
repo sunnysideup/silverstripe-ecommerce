@@ -85,7 +85,10 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     {
         $className = $this->getRelevantLogEntryClassName();
         $orderStatusLog_PaymentChecks = $className::get()
-            ->Filter(['OrderID' => $order->ID, 'PaymentConfirmed' => 1]);
+            ->Filter([
+                'OrderID' => $order->ID,
+                'PaymentConfirmed' => 1,
+            ]);
         if ($orderStatusLog_PaymentChecks->Count()) {
             return parent::nextStep($order);
         }
@@ -95,9 +98,6 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
-     *
-     * @param FieldList $fields
-     * @param Order     $order
      *
      * @return \SilverStripe\Forms\FieldList
      **/

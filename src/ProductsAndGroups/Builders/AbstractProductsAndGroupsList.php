@@ -40,9 +40,6 @@ abstract class AbstractProductsAndGroupsList
 
     /**
      * Set the root {@link ProductGroup} to display the products from.
-     * @param ProductGroup $rootGroup
-     *
-     * @return self
      */
     final public function setRootGroup(ProductGroup $rootGroup): self
     {
@@ -82,7 +79,6 @@ abstract class AbstractProductsAndGroupsList
 
     /**
      * IDs of all the products.
-     * @return array
      */
     final public function getProductIds(): array
     {
@@ -96,8 +92,6 @@ abstract class AbstractProductsAndGroupsList
     /**
      * Returns the total number of products available before pagination is
      * applied.
-     *
-     * @return int
      */
     final public function getRawCount(): int
     {
@@ -108,8 +102,6 @@ abstract class AbstractProductsAndGroupsList
      * Is there more than x products.
      *
      * @param int $greaterThan
-     *
-     * @return bool
      */
     final public function hasMoreThanOne(?int $greaterThan = 1): bool
     {
@@ -138,9 +130,6 @@ abstract class AbstractProductsAndGroupsList
             ->filterAny(['ParentID' => $this->rootGroup->ID, 'ID' => $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()]);
     }
 
-    /**
-     * @return DataList
-     */
     final public function getAlsoShowProductsFromRootGroupExclusive(): DataList
     {
         return $this->getDirectProductsWithAlsoShow()->exclude(['ParentID' => $this->rootGroup->ID]);
@@ -152,7 +141,6 @@ abstract class AbstractProductsAndGroupsList
 
     /**
      * child products (including indirect children)
-     * @return DataList
      */
     final public function getChildProductsInclusive(): DataList
     {
@@ -174,14 +162,8 @@ abstract class AbstractProductsAndGroupsList
     # PRODUCTS: Also show
     ##########################################
 
-    /**
-     * @return array
-     */
     abstract public function getAlsoShowProductsIds(): array;
 
-    /**
-     * @return DataList
-     */
     abstract public function getAlsoShowProducts(): DataList;
 
     /**
@@ -220,8 +202,6 @@ abstract class AbstractProductsAndGroupsList
      * With the current product list, return all the {@link ProductGroup}
      * instances that the products are displayed under. This only returns the
      * direct parents.
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     final public function getParentGroupsBasedOnProducts(): DataList
     {
@@ -231,8 +211,6 @@ abstract class AbstractProductsAndGroupsList
     /**
      * Given the products for this page, retrieve the parent groups excluding
      * the current one.
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     final public function getParentGroupsBasedOnProductsExcludingRootGroup(): DataList
     {
@@ -248,8 +226,6 @@ abstract class AbstractProductsAndGroupsList
      *
      * That is, it list the product groups that a product is primarily listed
      * under (exact parents only) from a "AlsoShow" product List.
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     final public function getDirectParentGroupsInclusive(): DataList
     {
@@ -260,8 +236,6 @@ abstract class AbstractProductsAndGroupsList
      * With the current product list, return all the {@link ProductGroup}
      * instances that the products are displayed under. This only returns the
      * direct parents.
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     final public function getDirectParentGroupsExclusive(): DataList
     {
@@ -315,8 +289,6 @@ abstract class AbstractProductsAndGroupsList
      * List of All Also Show Product Parents
      * Excluding the Root Group
      * INCLUDING any other Direct Parent Groups
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     final public function getAlsoShowProductsProductGroupInclusive(): DataList
     {
@@ -326,8 +298,6 @@ abstract class AbstractProductsAndGroupsList
     /**
      * List of All Also Show Product Parents Excluding the Root Group
      * AND EXCLUDING any Parent Groups
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     final public function getAlsoShowProductsProductGroupsExclusive(): DataList
     {

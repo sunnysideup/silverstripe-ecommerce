@@ -149,8 +149,6 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     /**
      * go to next step if order has been submitted.
      *
-     * @param Order $order
-     *
      * @return OrderStep|null    (next step OrderStep)
      **/
     public function nextStep(Order $order)
@@ -164,9 +162,6 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
-     *
-     * @param FieldList $fields
-     * @param Order     $order
      *
      * @return \SilverStripe\Forms\FieldList
      **/

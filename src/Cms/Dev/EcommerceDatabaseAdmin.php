@@ -346,7 +346,6 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * shows a "Task Completed Message" on the screen.
      *
-     * @param BuildTask $buildTask
      * @param string    $extraMessage
      */
     protected function displayCompletionMessage(BuildTask $buildTask, $extraMessage = '')

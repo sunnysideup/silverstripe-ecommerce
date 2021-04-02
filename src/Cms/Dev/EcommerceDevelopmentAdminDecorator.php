@@ -23,8 +23,6 @@ class EcommerceDevelopmentAdminDecorator extends Extension
     /**
      * handles ecommerce request or provide options to run request in the form of HTML output.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return EcommerceDatabaseAdmin
      **/
     public function ecommerce(HTTPRequest $request)

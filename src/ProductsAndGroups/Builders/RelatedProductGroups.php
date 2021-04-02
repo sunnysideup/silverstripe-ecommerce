@@ -101,8 +101,6 @@ class RelatedProductGroups
 
     /**
      * what is the the product group we are working with?
-     *
-     * @param ProductGroup $group
      */
     public function setRootGroup(ProductGroup $group): self
     {
@@ -114,9 +112,6 @@ class RelatedProductGroups
 
     /**
      * how many levels deep do we go?
-     * @param int $levels
-     *
-     * @return self
      */
     public function setLevelOfProductsToShow(int $levels): self
     {
@@ -128,10 +123,6 @@ class RelatedProductGroups
 
     /**
      * do we include the root?
-     *
-     * @param bool $includeRoot
-     *
-     * @return self
      */
     public function setIncludeRoot(bool $includeRoot): self
     {
@@ -194,11 +185,7 @@ class RelatedProductGroups
     /**
      * Returns all the Group IDs under a given root group to a max depth.
      *
-     * @param int $currentDepth
-     * @param int $groupId
      * @param int[] $ids
-     *
-     * @return array
      */
     protected function getGroupsRecursive(int $currentDepth, int $groupId, $ids = []): array
     {

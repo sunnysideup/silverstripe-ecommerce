@@ -1304,7 +1304,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->MyStep()->initStep($this)) {
             if ($this->MyStep()->doStep($this)) {
-                /** @var OrderStep|null */
+                /** @var OrderStep|null $nextOrderStepObject */
                 $nextOrderStepObject = $this->MyStep()->nextStep($this);
                 if ($nextOrderStepObject instanceof OrderStep) {
                     $this->StatusID = $nextOrderStepObject->ID;
@@ -2091,8 +2091,6 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns a modifier that is an instanceof the classname
      * it extends.
-     *
-     * @param string $className: class name for the modifier
      *
      * @return \SilverStripe\ORM\DataObject (OrderModifier)
      **/
@@ -3534,8 +3532,6 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * Collects the JSON data for an ajax return of the cart.
-     *
-     * @param array $js
      *
      * @return array (for use in AJAX for JSON)
      **/

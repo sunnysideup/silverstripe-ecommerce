@@ -39,7 +39,6 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 class OrderForm extends Form
 {
     /**
-     * @param Controller $controller
      * @param string $name
      */
     public function __construct(Controller $controller, $name)
@@ -262,8 +261,6 @@ class OrderForm extends Form
 
     /**
      * saves the form into session.
-     *
-     * @param array $data - data from form.
      */
     public function saveDataToSession()
     {

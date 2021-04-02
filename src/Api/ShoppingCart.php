@@ -585,7 +585,6 @@ class ShoppingCart
     /**
      * @todo: what does this method do???
      *
-     * @param BuyableModel $buyable
      * @param float $quantity
      *
      * @return float
@@ -604,9 +603,6 @@ class ShoppingCart
      * Helper function for making / retrieving order items.
      * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
      * NOTE: does not write!
-     *
-     * @param BuyableModel $buyable
-     * @param array      $parameters
      *
      * @return OrderItem | false
      */
@@ -1181,9 +1177,6 @@ class ShoppingCart
     /**
      * Gets an existing order item based on buyable and passed parameters.
      *
-     * @param BuyableModel $buyable
-     * @param array      $parameters
-     *
      * @return OrderItem|null
      */
     protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
@@ -1201,8 +1194,6 @@ class ShoppingCart
 
     /**
      * Removes parameters that aren't in the default array, merges with default parameters, and converts raw2SQL.
-     *
-     * @param array $params
      *
      * @return array cleaned
      */
@@ -1225,7 +1216,6 @@ class ShoppingCart
 
     /**
      * Converts parameter array to SQL query filter
-     * @param array $parameters
      */
     protected function parametersToSQL(array $parameters = [])
     {

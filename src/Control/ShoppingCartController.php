@@ -135,7 +135,6 @@ class ShoppingCartController extends Controller
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
-     * @param array  $parameters
      *
      * @return string
      */
@@ -148,7 +147,6 @@ class ShoppingCartController extends Controller
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
-     * @param array  $parameters
      *
      * @return string
      */
@@ -161,7 +159,6 @@ class ShoppingCartController extends Controller
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
-     * @param array  $parameters
      *
      * @return string
      */
@@ -174,7 +171,6 @@ class ShoppingCartController extends Controller
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
-     * @param array  $parameters
      *
      * @return string
      */
@@ -187,7 +183,6 @@ class ShoppingCartController extends Controller
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
-     * @param array  $parameters
      *
      * @return string
      */
@@ -199,7 +194,6 @@ class ShoppingCartController extends Controller
 
     /**
      * @param int   $modifierID
-     * @param array $parameters
      *
      * @return string
      */
@@ -210,7 +204,6 @@ class ShoppingCartController extends Controller
 
     /**
      * @param int   $modifierID
-     * @param array $parameters
      *
      * @return string
      */
@@ -222,7 +215,6 @@ class ShoppingCartController extends Controller
     /**
      * @param int    $addressID
      * @param string $addressClassName
-     * @param array  $parameters
      *
      * @return string
      */
@@ -242,8 +234,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param array $parameters
-     *
      * @return string
      */
     public static function save_cart_link(array $parameters = [])
@@ -252,8 +242,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param array $parameters
-     *
      * @return string
      */
     public static function clear_cart_and_logout_link(array $parameters = [])
@@ -262,8 +250,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param array $parameters
-     *
      * @return string
      */
     public static function delete_order_link($orderID, array $parameters = [])
@@ -321,8 +307,6 @@ class ShoppingCartController extends Controller
     /**
      * Adds item to cart via controller action; one by default.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      */
@@ -339,8 +323,6 @@ class ShoppingCartController extends Controller
     /**
      * Sets the exact passed quantity.
      * Note: If no ?quantity=x is specified in URL, then quantity will be set to 1.
-     *
-     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -359,8 +341,6 @@ class ShoppingCartController extends Controller
     /**
      * Removes item from cart via controller action; one by default.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      */
@@ -377,8 +357,6 @@ class ShoppingCartController extends Controller
 
     /**
      * Removes all of a specific item.
-     *
-     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -400,8 +378,6 @@ class ShoppingCartController extends Controller
     /**
      * Removes all of a specific item AND return back.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      */
@@ -420,8 +396,6 @@ class ShoppingCartController extends Controller
     /**
      * Removes a specified modifier from the cart;.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      */
@@ -437,8 +411,6 @@ class ShoppingCartController extends Controller
 
     /**
      * Adds a specified modifier to the cart;.
-     *
-     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -677,8 +649,6 @@ class ShoppingCartController extends Controller
      * where only old versions exist.
      * this method should redirect.
      *
-     * @param HTTPRequest $request
-     *
      * @return \SilverStripe\Control\HTTPResponse|string
      */
     public function submittedbuyable(HTTPRequest $request)
@@ -749,8 +719,6 @@ class ShoppingCartController extends Controller
     /**
      * This can be used by admins to log in as customers to place orders on
      * their behalf...
-     *
-     * @param \SilverStripe\Control\HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */

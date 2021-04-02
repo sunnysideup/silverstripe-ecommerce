@@ -542,8 +542,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param  int $var|string|EcommerceCountry
-     *
      * @return EcommerceCountry|string|null
      */
     public static function get_country_from_mixed_var($var, $asCode = false)

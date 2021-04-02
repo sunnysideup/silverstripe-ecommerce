@@ -71,8 +71,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     /**
      * Set the root {@link ProductGroup} to display the products from.
      * @param ProductGroup $rootGroupController
-     *
-     * @return self
      */
     public function setRootGroupController($rootGroupController): self
     {
@@ -124,10 +122,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param string         $key
      * @param array|string   $params optional additional filter
-     *
-     * @return self
      */
     public function applyGroupFilter(string $key, $params = null): self
     {
@@ -135,10 +130,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param string         $key
      * @param array|string   $params optional additional filter
-     *
-     * @return self
      */
     public function applyFilter(string $key, $params = null): self
     {
@@ -146,10 +138,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param string         $key
      * @param array|string   $params optional additional filter
-     *
-     * @return self
      */
     public function applySorter(string $key, $params = null): self
     {
@@ -157,10 +146,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param string         $key
      * @param array|string   $params optional additional filter
-     *
-     * @return self
      */
     public function applyDisplayer(string $key, $params = null): self
     {
@@ -171,17 +157,11 @@ class FinalProductList extends AbstractProductsAndGroupsList
     # PRODUCTS: Also show
     ##########################################
 
-    /**
-     * @return array
-     */
     public function getAlsoShowProductsIds(): array
     {
         return $this->baseProductList->getAlsoShowProductsIds();
     }
 
-    /**
-     * @return DataList
-     */
     public function getAlsoShowProducts(): DataList
     {
         return $this->baseProductList->getAlsoShowProducts();
@@ -207,7 +187,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
     /**
      * required for SubGroups
-     * @return array
      */
     public function getParentGroupIds(): array
     {
@@ -237,17 +216,12 @@ class FinalProductList extends AbstractProductsAndGroupsList
     # HELPERS
     ##################################################
 
-    /**
-     * @param  string $type
-     * @return string
-     */
     protected function getApplyerClassName(string $type): string
     {
         return $this->getTemplateForProductsAndGroups()->getApplyerClassName($type);
     }
 
     /**
-     * @param  string $classNameOrType
      * @return BaseApplyer
      */
     protected function getApplyer(string $classNameOrType)

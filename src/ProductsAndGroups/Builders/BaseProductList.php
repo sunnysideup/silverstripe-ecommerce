@@ -148,10 +148,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * Override the class of buyable to display. Usually this is limited to
      * `Product` but can be tailored to display specific subclasses.
-     *
-     * @param string $buyableClassName
-     *
-     * @return self
      */
     public function setBuyableClassName(string $buyableClassName): self
     {
@@ -160,27 +156,16 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getBuyableClassName(): string
     {
         return $this->buyableClassName;
     }
 
-    /**
-     * @return array
-     */
     public function getShowProductLevelsArray(): array
     {
         return $this->getProductGroupListProvider()->getShowProductLevelsArray();
     }
 
-    /**
-     * @param int $levelOfProductsToShow
-     *
-     * @return self
-     */
     public function setLevelOfProductsToShow(int $levelOfProductsToShow): self
     {
         $this->getProductGroupListProvider()->setLevelOfProductsToShow($levelOfProductsToShow);
@@ -190,7 +175,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     /**
      * how many children, grand-children, etc.. levels do we provide?
-     * @return int
      */
     public function getLevelOfProductsToShow(): int
     {
@@ -201,17 +185,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
     # PRODUCTS: Also show
     ##########################################
 
-    /**
-     * @return array
-     */
     public function getAlsoShowProductsIds(): array
     {
         return ArrayMethods::filter_array($this->alsoShowProductsIds);
     }
 
-    /**
-     * @return DataList
-     */
     public function getAlsoShowProducts(): DataList
     {
         return $this->products->filter(['ID' => $this->getAlsoShowProductsIds()]);
@@ -242,9 +220,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     # GROUPS: Parents from natural hierachy
     ##################################################
 
-    /**
-     * @return array
-     */
     public function getParentGroupIds(): array
     {
         return ArrayMethods::filter_array($this->parentGroupIds);
@@ -455,7 +430,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     /**
      * is there a cache available?
-     * @return bool
      */
     protected function hasCache(): bool
     {
@@ -506,8 +480,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     /**
      * @param  string $add key to add
-     *
-     * @return string
      */
     protected function getCachekey(?string $add = ''): string
     {

@@ -122,8 +122,6 @@ interface BuyableModel
 
     /**
      * Has it been sold?
-     *
-     * @return bool
      */
     public function HasBeenSold(): bool;
 

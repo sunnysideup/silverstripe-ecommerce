@@ -18,9 +18,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 class OrderFormPayment extends Form
 {
     /**
-     * @param Controller $controller
      * @param string     $name
-     * @param Order      $order
      * @param string $returnToLink
      */
     public function __construct(Controller $controller, $name, Order $order, $returnToLink = '')

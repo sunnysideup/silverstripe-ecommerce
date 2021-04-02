@@ -596,8 +596,6 @@ class Product extends Page implements BuyableModel
 
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
-     *
-     * @return ProductGroup|null
      */
     public function MainParentGroup(): ?ProductGroup
     {
@@ -755,8 +753,6 @@ class Product extends Page implements BuyableModel
 
     /**
      * Number of items sold.
-     *
-     * @return bool
      */
     public function HasBeenSold(): bool
     {

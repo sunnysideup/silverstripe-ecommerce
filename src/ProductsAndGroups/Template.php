@@ -124,7 +124,6 @@ class Template
     /**
      * @param  ProductGroupController $rootGroupController
      * @param  ProductGroup           $rootGroup
-     * @return Debug
      */
     public function getDebugProviderAsObject($rootGroupController, $rootGroup): Debug
     {
@@ -139,7 +138,6 @@ class Template
      * or both.
      *
      * @param string $typeOrVariable    FILTER | SORT | DISPLAY OR variable
-     * @param string $variable:         getVariable, etc...
      *
      * @return array|string
      */
@@ -168,7 +166,6 @@ class Template
     /**
      * @param  string  $type      FILTER|SORT|DISPLAY
      * @param  boolean $showError optional
-     * @return bool
      */
     public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
     {
@@ -181,10 +178,6 @@ class Template
         return false;
     }
 
-    /**
-     * @param  string $classNameOrType
-     * @return array
-     */
     public function getOptions(string $classNameOrType): array
     {
         $obj = $this->getApplyer($classNameOrType);
@@ -194,9 +187,6 @@ class Template
 
     /**
      * returns a dropdown like list of options for a filters
-     * @param  string $className
-     *
-     * @return array
      */
     public function getGroupFilterOptionsMap(): array
     {
@@ -205,9 +195,6 @@ class Template
 
     /**
      * returns a dropdown like list of options for a filters
-     * @param  string $className
-     *
-     * @return array
      */
     public function getFilterOptionsMap(): array
     {
@@ -216,9 +203,6 @@ class Template
 
     /**
      * returns a dropdown like list of options for a sorters
-     * @param  string $className
-     *
-     * @return array
      */
     public function getSortOptionsMap(): array
     {
@@ -227,9 +211,6 @@ class Template
 
     /**
      * returns a dropdown like list of options for a display styles
-     * @param  string $className
-     *
-     * @return array
      */
     public function getDisplayOptionsMap(): array
     {
@@ -257,8 +238,6 @@ class Template
 
     /**
      * todo: CHECK!
-     * @param  string $type
-     * @return string
      */
     public function getApplyerClassName(string $type): string
     {
@@ -270,7 +249,6 @@ class Template
 
     /**
      * you can provide type or class name
-     * @param  string $classNameOrType
      * @return BaseApplyer
      */
     public function getApplyer(string $classNameOrType, $finalProductList = null)
@@ -288,9 +266,6 @@ class Template
 
     /**
      * returns a dropdown like list of options for a BaseClass class name
-     * @param  string $classNameOrType
-     *
-     * @return array
      */
     protected function getOptionsMap(string $classNameOrType): array
     {

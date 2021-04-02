@@ -111,7 +111,6 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
     /**
      * Handle the actions and apply any changes to the GridField
      *
-     * @param GridField $gridField
      * @param string $actionName
      * @param mixed $arguments
      * @param array $data - form data

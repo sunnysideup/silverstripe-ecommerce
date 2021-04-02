@@ -34,7 +34,6 @@ class ShopAccountForm extends Form
 {
     /**
      * @param Controller $controller
-     * @param string     $name,      Name of the form
      */
     public function __construct($controller, $name, $mustCreateAccount = false)
     {
@@ -177,8 +176,6 @@ class ShopAccountForm extends Form
 
     /**
      * saves the form into session.
-     *
-     * @param array $data - data from form.
      */
     public function saveDataToSession()
     {

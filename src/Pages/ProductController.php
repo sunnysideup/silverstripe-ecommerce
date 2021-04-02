@@ -101,9 +101,6 @@ class ProductController extends PageController
 
     /**
      * executes the AddProductForm.
-     *
-     * @param array $data
-     * @param Form  $form
      */
     public function addproductfromform(array $data, Form $form)
     {

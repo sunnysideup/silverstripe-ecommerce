@@ -154,7 +154,10 @@ class EcommerceMoney extends Extension
         }
         $amount = $this->owner->getAmount();
 
-        $data = is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, ['symbol' => '', 'precision' => 0]) . ' ' . $code : '';
+        $data = is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, [
+            'symbol' => '',
+            'precision' => 0,
+        ]) . ' ' . $code : '';
         /** @var DBHTMLText */
         return DBField::create_field('HTMLText', $data);
     }

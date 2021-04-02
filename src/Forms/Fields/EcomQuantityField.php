@@ -95,7 +95,6 @@ class EcomQuantityField extends NumericField
     /**
      * set classes for field.  you can add or "overwrite".
      *
-     * @param array $newClasses
      * @param bool  $overwrite
      */
     public function setClasses(array $newClasses, $overwrite = false)

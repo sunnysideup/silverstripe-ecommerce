@@ -52,8 +52,6 @@ class BuyableSelectFieldDataList extends Controller
      *  Title => $name
      * );.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return string (JSON)
      */
     public function json(HTTPRequest $request)
@@ -150,8 +148,6 @@ class BuyableSelectFieldDataList extends Controller
 
     /**
      * converts an Array into JSON and formats it nicely for easy debugging.
-     *
-     * @param array $array
      *
      * @return string
      */

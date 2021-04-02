@@ -45,8 +45,6 @@ class OptionalTreeDropdownField extends TreeDropdownField
     /**
      * Get the whole tree of a part of the tree via an AJAX request with empty / none item prepended.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return HTTPResponse
      *                for version 2.4 and later
      */

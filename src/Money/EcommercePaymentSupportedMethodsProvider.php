@@ -80,10 +80,6 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
 
     /**
      * replace a payment with another one
-     * @param  array  $array
-     * @param  string $oldKey
-     * @param  string $newKey
-     * @return array
      */
     protected function arrayReplaceKey(array $array, string $oldKey, string $newKey): array
     {

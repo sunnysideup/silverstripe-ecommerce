@@ -53,8 +53,6 @@ abstract class BaseApplyer
      * manipulates the product lists.
      * @param string         $key     optional key
      * @param string|array   $params  optional params to go with key
-     *
-     * @return self
      */
     abstract public function apply(?string $key = null, $params = null): self;
 
@@ -80,7 +78,6 @@ abstract class BaseApplyer
 
     /**
      * dropdown list of options.
-     * @return array
      */
     public function getOptionsMap(): array
     {
@@ -97,7 +94,6 @@ abstract class BaseApplyer
      * get the title for an option
      * @param  string        $key - e.g. default
      * @param  mixed         $params - optional
-     * @return string
      */
     public function getTitle(?string $key = '', $params = null): string
     {
@@ -120,7 +116,6 @@ abstract class BaseApplyer
     /**
      * get the RequiresData for an option
      * @param  string        $key string, e.g. default.
-     * @return bool
      */
     public function getRequiresData(?string $key = null): bool
     {
@@ -130,7 +125,6 @@ abstract class BaseApplyer
     /**
      * get the sql for an option
      * @param  string        $key string, e.g. default.
-     * @return bool
      */
     public function IsShowFullList(?string $key = null): bool
     {

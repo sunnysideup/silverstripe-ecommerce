@@ -268,7 +268,9 @@ class EcommerceConfigDefinitions
      */
     public function GroupDefinitions()
     {
-        return $this->definitionGrouping + ['OTHER' => []];
+        return $this->definitionGrouping + [
+            'OTHER' => [],
+        ];
     }
 
     /**

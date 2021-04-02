@@ -297,7 +297,6 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * merges arrays...
      *
-     * @param array $a
      * @param int   $orderID
      */
     public static function set_for_current_order_only_show_regions(array $a, $orderID = 0)
@@ -322,7 +321,6 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * merges arrays...
      *
-     * @param array $a
      * @param int   $orderID
      */
     public static function set_for_current_order_do_not_show_regions(array $a, $orderID = 0)

@@ -65,8 +65,6 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order $order
-     *
      * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
@@ -80,9 +78,6 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
-     *
-     *@param FieldList $fields
-     *@param Order $order
      *
      *@return \SilverStripe\Forms\FieldList
      **/

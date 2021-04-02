@@ -681,9 +681,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * A form that can be used by the Customer to progress step!
-     * @param Controller $controller
-     * @param string     $name
-     * @param Order      $order
      * @return \SilverStripe\Forms\Form|null (CustomerOrderStepForm)
      **/
     public function CustomerOrderStepForm(Controller $controller, string $name, Order $order)
@@ -694,9 +691,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
      * Usually this is added before ActionNextStepManually.
-     *
-     * @param FieldList $fields
-     * @param Order     $order
      *
      * @return \SilverStripe\Forms\FieldList
      **/
@@ -774,8 +768,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @see Order::doNextStatus
      *
-     * @param Order $order
-     *
      * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
@@ -803,7 +795,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Checks if a step has passed (been completed) in comparison to the current step.
      *
-     * @param string $code:       the name of the step to check
      * @param bool   $orIsEqualTo if set to true, this method will return TRUE if the step being checked is the current one
      *
      * @return bool
@@ -887,7 +878,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * order step.
      *"-10 days".
      *
-     * @param Order $order
      * @param bool  $checkDateOfOrder
      *
      * @return bool
@@ -1056,8 +1046,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * returns the OrderStatusLog that is relevant to this step.
      *
-     * @param Order $order
-     *
      * @return OrderStatusLog|null
      */
     public function RelevantLogEntry(Order $order)
@@ -1071,8 +1059,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * returns the OrderStatusLogs that are relevant to this step.
      * It is important that getRelevantLogEntryClassName returns
      * a specific enough ClassName and not a base class name.
-     *
-     * @param Order $order
      *
      * @return \SilverStripe\ORM\DataList|null
      */

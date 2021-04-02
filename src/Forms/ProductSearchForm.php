@@ -303,7 +303,6 @@ class ProductSearchForm extends Form
 
     /**
      * they search phrase used.
-     * @return string
      */
     public function getLastSearchPhrase(): string
     {
@@ -343,7 +342,6 @@ class ProductSearchForm extends Form
 
     /**
      * @param  DataList $baseList
-     * @return self
      */
     public function setBaseList($baseList): self
     {
@@ -354,7 +352,6 @@ class ProductSearchForm extends Form
 
     /**
      * @param  DataList $baseListForGroups
-     * @return self
      */
     public function setBaseListForGroups($baseListForGroups): self
     {
@@ -365,7 +362,6 @@ class ProductSearchForm extends Form
 
     /**
      * @param  ProductGroup $baseListOwner
-     * @return self
      */
     public function setBaseListOwner($baseListOwner): self
     {
@@ -483,7 +479,6 @@ class ProductSearchForm extends Form
 
     /**
      * set up basics, using data.
-     * @param  array $data
      */
     protected function doProcessSetup(array $data)
     {
@@ -722,8 +717,6 @@ class ProductSearchForm extends Form
      * returns
      * - TRUE when done and
      * - FALSE when more results are needed
-     *
-     * @return bool
      */
     protected function addToResults(DataList $listToAdd, $allowOneAnswer = false): bool
     {

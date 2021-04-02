@@ -846,7 +846,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 
     /**
      * get final value for recursive lookups
-     * @param  string $fieldNameOrMethod
      * @param  mixed  $default
      * @return mixed
      */

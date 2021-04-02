@@ -369,7 +369,6 @@ class OrderItem extends OrderAttribute
     /**
      * standard SS method.
      *
-     * @param BuyableModel $buyable
      * @param float        $quantity
      *
      * @return \SilverStripe\Forms\FieldList
@@ -384,8 +383,6 @@ class OrderItem extends OrderAttribute
 
     /**
      * used to return data for ajax.
-     *
-     * @param array $js
      *
      * @return array used to create JSON for AJAX
      **/
@@ -533,8 +530,6 @@ class OrderItem extends OrderAttribute
     /**
      * Check if two Order Items are the same.
      * Useful when adding two items to cart.
-     *
-     * @param OrderItem $orderItem
      *
      * @return bool
      **/

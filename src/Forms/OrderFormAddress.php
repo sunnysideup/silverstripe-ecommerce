@@ -87,7 +87,6 @@ class OrderFormAddress extends Form
     private static $shipping_address_first = true;
 
     /**
-     * @param Controller $controller
      * @param string $name
      */
     public function __construct(Controller $controller, $name)
@@ -459,8 +458,6 @@ class OrderFormAddress extends Form
 
     /**
      * saves the form into session.
-     *
-     * @param array $data - data from form.
      */
     public function saveDataToSession()
     {

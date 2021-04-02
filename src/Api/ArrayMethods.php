@@ -13,8 +13,6 @@ class ArrayMethods
      * return an array that can be ued for ORM filters...
      *
      * @param  mixed $array - hopefully an array
-     *
-     * @return array
      */
     public static function filter_array($array): array
     {
@@ -32,8 +30,6 @@ class ArrayMethods
      * creates a sort string from a list of ID arrays...
      *
      * @param array $ids - list of product IDs
-     *
-     * @return string
      */
     public static function create_sort_statement_from_id_array(array $ids, ?string $className = ''): string
     {

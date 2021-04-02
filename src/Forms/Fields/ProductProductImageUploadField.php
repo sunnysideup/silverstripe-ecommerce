@@ -113,8 +113,6 @@ class ProductProductImageUploadField extends UploadField
      * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
      *
      *                       @link $record}, with the same name as the field name.
-     *
-     * @param SilverStripe\Forms\Form $form Reference to the container form
      */
     public function __construct($name, $title = null, SS_List $items = null)
     {

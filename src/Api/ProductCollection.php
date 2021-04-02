@@ -13,19 +13,10 @@ use SilverStripe\ORM\DB;
  **/
 abstract class ProductCollection
 {
-    /**
-     * @return \SilverStripe\ORM\ArrayList
-     */
     abstract public function getArrayList(): ArrayList;
 
-    /**
-     * @return array
-     */
     abstract public function getArrayFull(): array;
 
-    /**
-     * @return array
-     */
     public function getArrayBasic(): array
     {
         $array = [];

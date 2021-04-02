@@ -28,7 +28,6 @@ class ProductGroupFilter extends BaseApplyer
 
     /**
      * @param  string             $segment expected format: my-product-category,123 (URLSegment, ID)
-     * @return ProductGroup|null
      */
     public static function get_group_from_url_segment(?string $segment): ?ProductGroup
     {
@@ -57,8 +56,6 @@ class ProductGroupFilter extends BaseApplyer
     /**
      * @param string         $key     optional key
      * @param string|array   $params  optional params to go with key
-     *
-     * @return self
      */
     public function apply(string $key = null, $params = null): self
     {

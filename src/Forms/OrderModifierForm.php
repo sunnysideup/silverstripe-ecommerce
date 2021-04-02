@@ -42,9 +42,6 @@ class OrderModifierForm extends Form
      * to your own controller.
      *
      *@param Controller $optionalController
-     *@param string $name
-     *@param FieldList $fields
-     *@param FieldList $actions
      *@param Validator $optionalValidator
      **/
     public function __construct(
@@ -95,8 +92,6 @@ class OrderModifierForm extends Form
     }
 
     /**
-     * @param array  $data
-     * @param Form   $form
      * @param string $status
      * @param string $message
      *

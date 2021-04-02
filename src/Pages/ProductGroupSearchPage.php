@@ -74,7 +74,6 @@ class ProductGroupSearchPage extends ProductGroup
 
     /**
      * return ID of the only ProductGroupSearchPage
-     * @return int
      */
     public static function main_search_page_id(): int
     {

@@ -184,7 +184,6 @@ abstract class OrderEmail extends Email
     /**
      * Checks if an email has been sent for this Order for this status (order step).
      *
-     * @return bool
      **/
     public function hasBeenSent(): bool
     {
@@ -198,8 +197,6 @@ abstract class OrderEmail extends Email
     }
 
     /**
-     * @param bool $result: how did the email go? 1 = sent, 0 = not sent
-     *
      * @return OrderEmailRecord
      **/
     protected function createRecord($result)

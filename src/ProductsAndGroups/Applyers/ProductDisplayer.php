@@ -29,8 +29,6 @@ class ProductDisplayer extends BaseApplyer
     /**
      * @param string         $key     optional key
      * @param string|array   $params  optional params to go with key
-     *
-     * @return self
      */
     public function apply($key = null, $params = null): self
     {

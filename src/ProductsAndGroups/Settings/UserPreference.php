@@ -99,7 +99,6 @@ class UserPreference
 
     /**
      * @param  bool $useSession
-     * @return self
      */
     public function setUseSession(string $type, ?bool $useSession): self
     {
@@ -127,7 +126,6 @@ class UserPreference
 
     /**
      * @param  bool $useSessionPerPage
-     * @return self
      */
     public function setUseSessionPerPage(string $type, ?bool $useSessionPerPage): self
     {
@@ -155,7 +153,6 @@ class UserPreference
 
     /**
      * @param  HTTPRequest  $request
-     * @return self
      */
     public function setRequest($request): self
     {
@@ -167,7 +164,6 @@ class UserPreference
 
     /**
      * @param  ProductGroupController  $rootGroupController
-     * @return self
      */
     public function setRootGroupController($rootGroupController): self
     {
@@ -179,7 +175,6 @@ class UserPreference
 
     /**
      * @param  ProductGroup       $rootGroup
-     * @return self
      */
     public function setRootGroup($rootGroup): self
     {
@@ -205,7 +200,6 @@ class UserPreference
      * ```php
      *     FILTER => ['key' => 'foo', 'params' => 'bar', 'title' => 'foo bar']
      * ```
-     * @return self
      */
     public function saveUserPreferences(?array $overrideArray = []): self
     {
@@ -424,8 +418,6 @@ class UserPreference
      * @param  string    $type (GROUPFILTER|FILTER|SORT|DISPLAY)
      * @param  string    $currentKey
      * @param  boolean   $ajaxify
-     *
-     * @return ArrayList
      */
     public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
@@ -482,8 +474,6 @@ class UserPreference
      * @param  string $action                optional
      * @param  string $type                  optional
      * @param  string $replacementForType    optional - what you would like the type be instead! - e.g. for FILTER I'd like it to be "somethingelse"
-     *
-     * @return string
      */
     public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
@@ -537,7 +527,6 @@ class UserPreference
 
     /**
      * special case of full list.
-     * @return bool
      */
     public function IsShowFullList(): bool
     {
@@ -620,12 +609,6 @@ class UserPreference
         return $toAdd;
     }
 
-    /**
-     * @param string $field
-     * @param string $secondaryTitle
-     *
-     * @return self
-     */
     protected function addTitleToField(string $field, string $secondaryTitle): self
     {
         if (! empty($this->rootGroupController->{$field})) {

@@ -109,7 +109,6 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
     /**
      * Handle the actions and apply any changes to the GridField
      *
-     * @param GridField $gridField$gridField->getList()->remove($item);eld
      * @param string $actionName
      * @param mixed $arguments
      * @param array $data - form data

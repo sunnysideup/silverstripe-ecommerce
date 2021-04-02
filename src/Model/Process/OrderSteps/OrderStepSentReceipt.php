@@ -78,8 +78,6 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     /**
      * execute the step.
      *
-     * @param Order $order
-     *
      * @return bool
      */
     public function doStep(Order $order)
@@ -102,8 +100,6 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     /**
      * can continue if receipt has been sent or if there is no need to send a receipt.
      *
-     * @param Order $order
-     *
      * @return OrderStep|null - DataObject = next OrderStep
      **/
     public function nextStep(Order $order)
@@ -117,9 +113,6 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
-     *
-     * @param FieldList $fields
-     * @param Order     $order
      *
      * @return \SilverStripe\Forms\FieldList
      **/

@@ -48,8 +48,6 @@ class OrderStatusLogForm extends Form
      *
      *@param Controller $optionalController
      *@param string $name
-     *@param FieldList $fields
-     *@param FieldList $actions
      *@param Validator $optionalValidator
      **/
     public function __construct(

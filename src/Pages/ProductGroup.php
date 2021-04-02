@@ -250,7 +250,6 @@ class ProductGroup extends Page
 
     /**
      * used if you install lumberjack
-     * @return string
      */
     public function getLumberjackTitle(): string
     {
@@ -302,10 +301,6 @@ class ProductGroup extends Page
         return Injector::inst()->get($className);
     }
 
-    /**
-     * @param int $default, optional 10
-     * @return int
-     **/
     public function getProductsPerPage(?int $default = 10): int
     {
         return intval($this->recursiveValue('NumberOfProductsPerPage', $default));
@@ -314,7 +309,6 @@ class ProductGroup extends Page
     /**
      * work out the recursive value in the Database for SORT / FILTER / DISPLAY
      * @param string $type SORT|FILTER|DISPLAY
-     * @return string
      **/
     public function getListConfigCalculated(string $type): string
     {
@@ -328,8 +322,6 @@ class ProductGroup extends Page
     /**
      * Returns the number of product groups (children) to show in the current
      * product list based on the user setting for this page.
-     *
-     * @return int
      */
     public function getMyLevelOfProductsToShow(?int $defauult = 99): int
     {
@@ -342,8 +334,6 @@ class ProductGroup extends Page
      * KEEP FOR LEGACY
      * add this segment to the end of a Product Group
      * link to create a cross-filter between the two categories.
-     *
-     * @return string
      */
     public function FilterForGroupLinkSegment(): string
     {
@@ -352,8 +342,6 @@ class ProductGroup extends Page
 
     /**
      * Link to the search results.
-     *
-     * @return string
      */
     public function SearchResultLink(?string $hash = ''): string
     {
@@ -392,8 +380,6 @@ class ProductGroup extends Page
     /**
      * If products are show in more than one group then this returns an array for any products that are linked to this
      * product group.
-     *
-     * @return array
      */
     public function getProductsToBeIncludedFromOtherGroupsArray(): array
     {
@@ -411,8 +397,6 @@ class ProductGroup extends Page
 
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
-     *
-     * @return ProductGroup|null
      */
     public function MainParentGroup(): ?ProductGroup
     {
@@ -421,8 +405,6 @@ class ProductGroup extends Page
 
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
-     *
-     * @return ProductGroup|null
      */
     public function ParentGroup(): ?ProductGroup
     {
@@ -431,8 +413,6 @@ class ProductGroup extends Page
 
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
-     *
-     * @return ProductGroup
      */
     public function TopParentGroup(): ProductGroup
     {
@@ -464,8 +444,6 @@ class ProductGroup extends Page
 
     /**
      * tells us if the current page is part of e-commerce.
-     *
-     * @return bool
      */
     public function IsEcommercePage(): bool
     {
@@ -474,7 +452,6 @@ class ProductGroup extends Page
 
     /**
      * the number of direct descendants
-     * @return int
      */
     public function getNumberOfProducts(): int
     {
@@ -487,7 +464,6 @@ class ProductGroup extends Page
      * or both.
      *
      * @param string $typeOrVariable    optional GROUPFILTER | FILTER | SORT | DISPLAY OR variable
-     * @param string $variable:         optional getVariable, etc...
      *
      * @return array | String
      */
@@ -498,8 +474,6 @@ class ProductGroup extends Page
 
     /**
      * Returns the class we are working with.
-     *
-     * @return string
      */
     public function getBuyableClassName(): string
     {
@@ -508,8 +482,6 @@ class ProductGroup extends Page
 
     /**
      * Do products occur in more than one group.
-     *
-     * @return bool
      */
     public function getProductsAlsoInOtherGroups(): bool
     {
@@ -535,8 +507,6 @@ class ProductGroup extends Page
     /**
      * Returns children ProductGroup pages of this group.
      *
-     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     *
      * @return \SilverStripe\ORM\SS_List (ProductGroups)
      */
     public function ChildCategoriesBasedOnProducts()
@@ -549,9 +519,6 @@ class ProductGroup extends Page
         return ProductGroup::get()->filter(['ParentID' => $this->ID]);
     }
 
-    /**
-     * @return array
-     */
     public function getShowProductLevelsArray(): array
     {
         return $this->getBaseProductList()->getShowProductLevelsArray();
@@ -643,7 +610,6 @@ class ProductGroup extends Page
 
     /**
      * get recursive value for Product Group and check EcommerceConfig as last resort
-     * @param  string $fieldNameOrMethod
      * @param  mixed  $default
      * @return mixed
      */

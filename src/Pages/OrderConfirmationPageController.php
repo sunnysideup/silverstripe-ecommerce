@@ -81,8 +81,6 @@ class OrderConfirmationPageController extends CartPageController
      * This method exists just so that template
      * sets CurrentOrder variable.
      *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     *
      * @return array
      **/
     public function showorder(HTTPRequest $request)

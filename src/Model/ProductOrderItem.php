@@ -54,8 +54,6 @@ class ProductOrderItem extends OrderItem
     }
 
     /**
-     * @param OrderItem $orderItem
-     *
      * @return bool
      **/
     public function hasSameContent(OrderItem $orderItem)

@@ -18,8 +18,6 @@ class KeywordSearchBuilder
      *
      * @param string $phrase - keywordphrase
      * @param array $fields         - fields being searched
-     *
-     * @return array
      */
     public function getSearchArrays(string $phrase, $fields = ['Title', 'MenuTitle']): array
     {

@@ -252,8 +252,6 @@ class ProductGroupController extends PageController
 
     /**
      * Is the product list cache-able?
-     *
-     * @return bool
      */
     public function ProductGroupListAreCacheable(): bool
     {
@@ -276,8 +274,6 @@ class ProductGroupController extends PageController
 
     /**
      * is the product list ajaxified.
-     *
-     * @return bool
      */
     public function ProductGroupListAreAjaxified(): bool
     {
@@ -286,8 +282,6 @@ class ProductGroupController extends PageController
 
     /**
      * title without additions.
-     *
-     * @return string
      */
     public function OriginalTitle(): string
     {
@@ -375,8 +369,6 @@ class ProductGroupController extends PageController
     /**
      * Are group filters available? we check one at the time so that we do the least
      * amount of DB queries.
-     *
-     * @return bool
      */
     public function HasGroupFilters(): bool
     {
@@ -386,8 +378,6 @@ class ProductGroupController extends PageController
     /**
      * Are filters available? we check one at the time so that we do the least
      * amount of DB queries.
-     *
-     * @return bool
      */
     public function HasFilters(): bool
     {
@@ -397,8 +387,6 @@ class ProductGroupController extends PageController
     /**
      * Are filters available? we check one at the time so that we do the least
      * amount of DB queries.
-     *
-     * @return bool
      */
     public function HasSorts(): bool
     {
@@ -408,8 +396,6 @@ class ProductGroupController extends PageController
     /**
      * Are filters available? we check one at the time so that we do the least
      * amount of DB queries.
-     *
-     * @return bool
      */
     public function HasDisplays(): bool
     {
@@ -418,8 +404,6 @@ class ProductGroupController extends PageController
 
     /**
      * Number of entries per page limited by total number of pages available...
-     *
-     * @return int
      */
     public function MaxNumberOfProductsPerPage(): int
     {
@@ -454,8 +438,6 @@ class ProductGroupController extends PageController
     /**
      * returns the current filter applied to the list
      * in a human readable string.
-     *
-     * @return string
      */
     public function getCurrentGroupFilterTitle(): string
     {
@@ -468,8 +450,6 @@ class ProductGroupController extends PageController
     /**
      * returns the current filter applied to the list
      * in a human readable string.
-     *
-     * @return string
      */
     public function getCurrentFilterTitle(): string
     {
@@ -482,8 +462,6 @@ class ProductGroupController extends PageController
     /**
      * returns the current sort applied to the list
      * in a human readable string.
-     *
-     * @return string
      */
     public function getCurrentSortTitle(): string
     {
@@ -494,9 +472,6 @@ class ProductGroupController extends PageController
         return '';
     }
 
-    /**
-     * @return string
-     */
     public function getCurrentDisplayTitle(): string
     {
         if ($this->HasDisplay()) {
@@ -601,7 +576,6 @@ class ProductGroupController extends PageController
 
     /**
      * returns a search form to search current products ready to search
-     * @param bool $forceInit optional - force to be reinitialised.
      * @return ProductSearchForm object
      */
     public function ProductSearchForm()
@@ -634,7 +608,6 @@ class ProductGroupController extends PageController
      * If search was carried out without returns
      * then it returns zero (false).
      * @todo: to cleanup
-     * @return bool
      */
     public function HasSearchResults(): bool
     {
@@ -643,8 +616,6 @@ class ProductGroupController extends PageController
 
     /**
      * Should the product search form be shown immediately?
-     *
-     * @return bool
      */
     public function ShowSearchFormImmediately(): bool
     {
@@ -663,8 +634,6 @@ class ProductGroupController extends PageController
 
     /**
      * Show a search form on this page?
-     *
-     * @return bool
      */
     public function ShowSearchFormAtAll(): bool
     {
@@ -676,8 +645,6 @@ class ProductGroupController extends PageController
      *
      * This does not mean that something is actively being search for,
      * it could also be just "showing the search results"
-     *
-     * @return bool
      */
     public function IsSearchResults(): bool
     {
@@ -688,8 +655,6 @@ class ProductGroupController extends PageController
      * Is there something actively being searched for?
      *
      * This is different from IsSearchResults.
-     *
-     * @return bool
      */
     public function ActiveSearchTerm(): bool
     {
@@ -785,8 +750,6 @@ class ProductGroupController extends PageController
      * @param  string $action                 e.g. filterfor
      * @param  string $type                   e.g. FILTER|SORT|DISPLAY
      * @param  string $replacementForType     e.g. 'all'
-     *
-     * @return string
      */
     protected function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
@@ -815,8 +778,6 @@ class ProductGroupController extends PageController
 
     /**
      * Overload this function of ProductGroup Extensions.
-     *
-     * @return bool
      */
     protected function returnAjaxifiedProductList(): bool
     {
@@ -825,8 +786,6 @@ class ProductGroupController extends PageController
 
     /**
      * Overload this function of ProductGroup Extensions.
-     *
-     * @return bool
      */
     protected function productListsHTMLCanBeCached(): bool
     {
@@ -838,8 +797,6 @@ class ProductGroupController extends PageController
      * turns full list into paginated list.
      *
      * @param SS_List $list
-     *
-     * @return PaginatedList|null
      */
     protected function paginateList($list): ?PaginatedList
     {

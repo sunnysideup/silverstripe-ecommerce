@@ -31,8 +31,6 @@ class EcommerceCache implements Flushable
 
     /**
      * Set the cache object to use when storing / retrieving partial cache blocks.
-     *
-     * @param CacheInterface $cacheBackend
      */
     public function setCacheBackend(CacheInterface $cacheBackend): EcommerceCache
     {
@@ -68,8 +66,6 @@ class EcommerceCache implements Flushable
     /**
      * Retrieve an object from the cache
      *
-     * @param string $cacheKey
-     *
      * @return mixed|null
      */
     public function retrieve(string $cacheKey, ?bool $alreadyUnserialized = false)
@@ -92,8 +88,6 @@ class EcommerceCache implements Flushable
      *
      * @param string $cacheKey - key under which the data is saved...
      * @param mixed  $data
-     *
-     * @return bool
      */
     public function save($cacheKey, $data, ?bool $alreadySerialized = false): bool
     {
@@ -127,9 +121,6 @@ class EcommerceCache implements Flushable
 
     /**
      * @param string $cacheKey
-     * @param string $filterKey
-     *
-     * @return string
      */
     protected function cacheKeyRefiner($cacheKey): string
     {

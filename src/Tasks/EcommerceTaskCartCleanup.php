@@ -439,7 +439,6 @@ class EcommerceTaskCartCleanup extends BuildTask
 
     /**
      * delete an object
-     * @param  DataObject $objectToDelete
      */
     private function deleteObject(DataObject $objectToDelete)
     {
