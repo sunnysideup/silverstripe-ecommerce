@@ -20,6 +20,7 @@ use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use SilverStripe\Forms\Form;
 
 class OrderConfirmationPageController extends CartPageController
 {
@@ -163,7 +164,7 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function PaymentHeader()
     {
@@ -177,6 +178,7 @@ class OrderConfirmationPageController extends CartPageController
             }
             return $this->PaymentNotSuccessfulHeader;
         }
+        return null;
     }
 
     /**
@@ -194,6 +196,7 @@ class OrderConfirmationPageController extends CartPageController
             }
             return $this->PaymentNotSuccessfulMessage;
         }
+        return null;
     }
 
     /**
@@ -211,42 +214,46 @@ class OrderConfirmationPageController extends CartPageController
             }
             return 'bad';
         }
+        return null;
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
     public function OrderIsCancelled()
     {
         if ($order = $this->Order()) {
             return $order->getIsCancelled();
         }
+        return null;
     }
 
     /**
      * Is the Order paid?
      * This can be useful for choosing what header to show.
      *
-     * @return bool
+     * @return bool|null
      */
     public function IsPaid()
     {
         if ($order = $this->Order()) {
             return $order->IsPaid();
         }
+        return null;
     }
 
     /**
      * Are there any order Payments Pending
      * This can be useful for choosing what header to show.
      *
-     * @return bool
+     * @return bool|null
      */
     public function PaymentIsPending()
     {
         if ($order = $this->Order()) {
             return $order->PaymentIsPending();
         }
+        return null;
     }
 
     /**
@@ -254,7 +261,7 @@ class OrderConfirmationPageController extends CartPageController
      * checking to see if they can cancel their order
      * first of all.
      *
-     * @return OrderFormCancel
+     * @return OrderFormCancel|array|null
      */
     public function CancelForm()
     {
@@ -267,6 +274,7 @@ class OrderConfirmationPageController extends CartPageController
         if ($this->orderID) {
             return [];
         }
+        return null;
     }
 
     /**
@@ -274,7 +282,7 @@ class OrderConfirmationPageController extends CartPageController
      * checking to see if IsFeedbackEnabled is true
      * first of all.
      *
-     * @return OrderFormFeedback
+     * @return OrderFormFeedback|array|null
      */
     public function FeedbackForm()
     {
@@ -282,13 +290,15 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->IsFeedbackEnabled) {
                 return OrderFormFeedback::create($this, 'FeedbackForm', $this->currentOrder);
             }
+            return [];
         }
+        return null;
     }
 
     /**
      * show the payment form.
      *
-     * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
+     * @return OrderFormPayment|array|null
      **/
     public function PaymentForm()
     {
@@ -298,13 +308,14 @@ class OrderConfirmationPageController extends CartPageController
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
             }
+            return [];
         }
+        return null;
 
-        return [];
     }
 
     /**
-     * @return \SilverStripe\Forms\Form|array (OrderFormPayment)
+     * @return Form|array|null
      **/
     public function CustomerOrderStepForm()
     {
@@ -318,9 +329,10 @@ class OrderConfirmationPageController extends CartPageController
                     return $form;
                 }
             }
+            return [];
         }
+        return null;
 
-        return [];
     }
 
     /**
@@ -430,7 +442,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return bool
      */
-    protected function onlyShowSubmittedOrders()
+    protected function onlyShowSubmittedOrders() : bool
     {
         return true;
     }
@@ -440,7 +452,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return bool
      */
-    protected function onlyShowUnsubmittedOrders()
+    protected function onlyShowUnsubmittedOrders(): bool
     {
         return false;
     }
