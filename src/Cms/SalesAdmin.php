@@ -122,7 +122,6 @@ class SalesAdmin extends ModelAdmin
      */
     public function getList()
     {
-        return parent::getList();
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
