@@ -230,31 +230,29 @@ class OrderProcessQueue extends DataObject
             ) {
                 $message = 'Order has already moved on.';
                 $myQueueObject->delete();
-            } else {
-                if ($myQueueObject) {
-                    if ($myQueueObject->isReadyToGo()) {
-                        $oldOrderStatusID = $order->StatusID;
-                        $myQueueObject->InProcess = true;
-                        ++$myQueueObject->ProcessAttempts;
-                        $myQueueObject->write();
-                        $order->tryToFinaliseOrder(
-                            $tryAgain = false,
-                            $fromOrderQueue = true
-                        );
-                        $newOrderStatusID = $order->StatusID;
-                        if ($oldOrderStatusID !== $newOrderStatusID) {
-                            $myQueueObject->delete();
-                            return true;
-                        }
-                        $message = 'Attempt to move order was not successful.';
-                        $myQueueObject->InProcess = false;
-                        $myQueueObject->write();
-                    } else {
-                        $message = 'Minimum order queue time has not been passed.';
+            } elseif ($myQueueObject) {
+                if ($myQueueObject->isReadyToGo()) {
+                    $oldOrderStatusID = $order->StatusID;
+                    $myQueueObject->InProcess = true;
+                    ++$myQueueObject->ProcessAttempts;
+                    $myQueueObject->write();
+                    $order->tryToFinaliseOrder(
+                        $tryAgain = false,
+                        $fromOrderQueue = true
+                    );
+                    $newOrderStatusID = $order->StatusID;
+                    if ($oldOrderStatusID !== $newOrderStatusID) {
+                        $myQueueObject->delete();
+                        return true;
                     }
+                    $message = 'Attempt to move order was not successful.';
+                    $myQueueObject->InProcess = false;
+                    $myQueueObject->write();
                 } else {
-                    $message = 'Could not find queue object.';
+                    $message = 'Minimum order queue time has not been passed.';
                 }
+            } else {
+                $message = 'Could not find queue object.';
             }
         } else {
             $message = 'Can not find order.';

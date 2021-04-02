@@ -17,7 +17,7 @@ class OrderStatusLogFormController extends Controller
     /**
      * @var  Sunnysideup\Ecommerce\Model\Order
      */
-    protected $currentOrder = null;
+    protected $currentOrder;
 
     /**
      * @var array

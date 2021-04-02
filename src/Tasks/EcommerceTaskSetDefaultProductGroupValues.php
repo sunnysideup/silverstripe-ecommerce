@@ -49,10 +49,10 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
                 $faultyProductGroup->{$fieldName} = $resetValue;
                 $faultyProductGroup->writeToStage('Stage');
                 $faultyProductGroup->publish('Stage', 'Live');
-                DB::alteration_message("Reset ${fieldName} for " . $faultyProductGroup->Title, 'created');
+                DB::alteration_message("Reset {$fieldName} for " . $faultyProductGroup->Title, 'created');
             }
         } else {
-            DB::alteration_message("Could not find any faulty records for ProductGroup.${fieldName}");
+            DB::alteration_message("Could not find any faulty records for ProductGroup.{$fieldName}");
         }
     }
 }

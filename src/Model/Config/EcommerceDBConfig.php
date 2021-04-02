@@ -238,7 +238,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var string | NULL
      */
-    private static $_my_current_one = null;
+    private static $_my_current_one;
 
     /**
      * Standard SS Method.
@@ -587,11 +587,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
                 foreach ($fields->dataFields() as $field) {
                     if (isset($fieldDescriptions[$field->getName()])) {
-                        if ($field instanceof CheckboxField) {
-                            $field->setDescription($fieldDescriptions[$field->Name]);
-                        } else {
-                            $field->setDescription($fieldDescriptions[$field->Name]);
-                        }
+                        $field->setDescription($fieldDescriptions[$field->Name]);
                     }
                 }
                 Requirements::block('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
@@ -651,12 +647,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $className = ClassHelpers::unsanitise_class_name($className);
         $implementorsArray = class_implements($className);
-
-        if (is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true)) {
-            return true;
-        }
-
-        return false;
+        return is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true);
     }
 
     /**
@@ -779,33 +770,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * standard SS method.
-     */
-    public function onAfterWrite()
-    {
-        if ($this->UseThisOne) {
-            $configs = EcommerceDBConfig::get()
-                ->Filter(['UseThisOne' => 1])
-                ->Exclude(['ID' => $this->ID]);
-            if ($configs->count()) {
-                foreach ($configs as $config) {
-                    $config->UseThisOne = 0;
-                    $config->write();
-                }
-            }
-        }
-        $configs = EcommerceDBConfig::get()
-            ->Filter(['Title' => $this->Title])
-            ->Exclude(['ID' => $this->ID]);
-        if ($configs->count()) {
-            foreach ($configs as $config) {
-                $config->Title .= '_' . $config->ID;
-                $config->write();
-            }
-        }
-    }
-
-    /**
      * standard SS Method.
      */
     public function requireDefaultRecords()
@@ -875,5 +839,32 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         }
 
         return $value;
+    }
+
+    /**
+     * standard SS method.
+     */
+    protected function onAfterWrite()
+    {
+        if ($this->UseThisOne) {
+            $configs = EcommerceDBConfig::get()
+                ->Filter(['UseThisOne' => 1])
+                ->Exclude(['ID' => $this->ID]);
+            if ($configs->count()) {
+                foreach ($configs as $config) {
+                    $config->UseThisOne = 0;
+                    $config->write();
+                }
+            }
+        }
+        $configs = EcommerceDBConfig::get()
+            ->Filter(['Title' => $this->Title])
+            ->Exclude(['ID' => $this->ID]);
+        if ($configs->count()) {
+            foreach ($configs as $config) {
+                $config->Title .= '_' . $config->ID;
+                $config->write();
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ class EcomQuantityField extends NumericField
     /**
      *@var OrderItem | DataObject|null
      **/
-    protected $orderItem = null;
+    protected $orderItem;
 
     /**
      *@var Array();???
@@ -99,11 +99,7 @@ class EcomQuantityField extends NumericField
      */
     public function setClasses(array $newClasses, $overwrite = false)
     {
-        if ($overwrite) {
-            $this->classes = array_merge($this->classes, $newClasses);
-        } else {
-            $this->classes = $newClasses;
-        }
+        $this->classes = $overwrite ? array_merge($this->classes, $newClasses) : $newClasses;
     }
 
     /**

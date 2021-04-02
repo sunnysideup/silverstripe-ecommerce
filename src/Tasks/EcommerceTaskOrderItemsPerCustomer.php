@@ -30,7 +30,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 
         //file data
         $now = Date('d-m-Y-H-i');
-        $fileName = "export-${now}.csv";
+        $fileName = "export-{$now}.csv";
 
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
@@ -41,7 +41,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         $orders = Order::get()
             ->sort('"Order"."ID" ASC')
             ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-            ->innerJoin($orderStatusSubmissionLogTableName, "\"${orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+            ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset);
         $ordersCount = $orders->count();
@@ -71,7 +71,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             $orders = Order::get()
                 ->sort('"Order"."ID" ASC')
                 ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->innerJoin($orderStatusSubmissionLogTableName, "\"${orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+                ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
                 ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
                 ->limit($count, $offset);
             $ordersCount = $orders->count();
@@ -106,7 +106,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 $columnData[] = '"' . $date . '"';
                 foreach ($exportFields as $field) {
                     $value = $item->{$field};
-                    $value = preg_replace('/\s+/', ' ', $value);
+                    $value = preg_replace('#\s+#', ' ', $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);
                     $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
                     $columnData[] = $tmpColumnData;

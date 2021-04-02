@@ -38,21 +38,16 @@ class EcommerceTaskCountryAndRegion extends BuildTask
                 //do nothing
                 ++$count;
             } else {
-                DB::alteration_message("adding ${code} to Ecommerce Country", 'created');
+                DB::alteration_message("adding {$code} to Ecommerce Country", 'created');
                 $ecommerceCountry = EcommerceCountry::create();
                 $ecommerceCountry->Code = $code;
             }
             if ($allowedArray && count($allowedArray)) {
-                if (in_array($code, $allowedArray, true)) {
-                    //do nothing
-                    $ecommerceCountry->DoNotAllowSales = 0;
-                } else {
-                    $ecommerceCountry->DoNotAllowSales = 1;
-                }
+                $ecommerceCountry->DoNotAllowSales = in_array($code, $allowedArray, true) ? 0 : 1;
             }
             $ecommerceCountry->Name = $name;
             $ecommerceCountry->write();
         }
-        DB::alteration_message("Created / Checked ${count} Ecommerce Countries", 'edited');
+        DB::alteration_message("Created / Checked {$count} Ecommerce Countries", 'edited');
     }
 }

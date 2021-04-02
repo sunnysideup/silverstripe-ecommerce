@@ -101,14 +101,6 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         return $fields;
     }
 
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        if (! $this->DispatchedOn) {
-            $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
-        }
-    }
-
     /**
      *@return string
      **/
@@ -125,5 +117,13 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         Config::unnest();
 
         return $html;
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        if (! $this->DispatchedOn) {
+            $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
+        }
     }
 }

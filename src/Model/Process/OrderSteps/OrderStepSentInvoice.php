@@ -66,11 +66,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      **/
     public function initStep(Order $order)
     {
-        if ($order->IsSubmitted()) {
-            return true;
-        }
-
-        return false;
+        return $order->IsSubmitted();
     }
 
     /**
@@ -84,11 +80,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      **/
     public function doStep(Order $order)
     {
-        if ($this->SendInvoiceToCustomer) {
-            $adminOnlyOrToEmail = false;
-        } else {
-            $adminOnlyOrToEmail = true;
-        }
+        $adminOnlyOrToEmail = ! (bool) $this->SendInvoiceToCustomer;
         return $this->sendEmailForStep(
             $order,
             $subject = $this->EmailSubject,

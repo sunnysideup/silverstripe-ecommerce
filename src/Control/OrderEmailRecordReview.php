@@ -19,7 +19,7 @@ class OrderEmailRecordReview extends Controller
 
     public function read($request)
     {
-        $id = intval($request->param('ID'));
+        $id = (int) $request->param('ID');
         $email = OrderEmailRecord::get()->byID($id);
         if ($email) {
             return $email->Content;

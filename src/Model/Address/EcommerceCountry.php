@@ -381,11 +381,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
             if ($objects && $objects->count()) {
-                if ($useIDNotCode) {
-                    $idField = 'ID';
-                } else {
-                    $idField = 'Code';
-                }
+                $idField = $useIDNotCode ? 'ID' : 'Code';
                 $array = $objects->map($idField, 'Name')->toArray();
             }
             self::$_countries_from_db_cache[$key] = $array;
@@ -496,7 +492,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         $orderID = ShoppingCart::current_order_id($orderID);
         $countryCode = self::get_country_cache($orderID);
         if ($countryCode === null || $recalculate) {
-            $countryCode = '';
             //1. fixed country is first
             $countryCode = self::get_fixed_country_code();
             if (! $countryCode) {
@@ -689,17 +684,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
     }
 
-    /**
-     * standard SS method
-     * cleans up codes.
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        $filter = EcommerceCodeFilter::create();
-        $filter->checkCode($this);
-    }
-
     public static function get_for_current_order_only_show_countries()
     {
         return self::$for_current_order_only_show_countries;
@@ -781,10 +765,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
     public function getAllowSales()
     {
-        if ($this->DoNotAllowSales) {
-            return false;
-        }
-        return true;
+        return ! $this->DoNotAllowSales;
     }
 
     /**
@@ -806,6 +787,17 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * standard SS method
+     * cleans up codes.
+     */
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $filter = EcommerceCodeFilter::create();
+        $filter->checkCode($this);
+    }
+
+    /**
      * returns an array of Codes => Names of all countries that can be used.
      * Use "list_of_allowed_entries_for_dropdown" to get the list.
      *
@@ -816,7 +808,6 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     protected static function get_default_array()
     {
         $defaultArray = [];
-        $countries = null;
         if ($code = self::get_fixed_country_code()) {
             $defaultArray[$code] = self::find_title($code);
 

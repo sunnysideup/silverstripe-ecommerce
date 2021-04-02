@@ -390,10 +390,9 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param float | DBCurrency $price
-     * @param Order $order
+     * @param float|DBCurrency $price
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBMoney|\SilverStripe\ORM\FieldType\DBField
      */
     public static function get_money_object_from_order_currency($price, Order $order = null)
     {
@@ -501,8 +500,11 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         $fieldLabels = $this->fieldLabels();
         $codeField = $fields->dataFieldByName('Code');
         $codeField->setDescription('e.g. NZD, use uppercase codes');
+
         $titleField = $fields->dataFieldByName('Name');
+
         $titleField->setDescription('e.g. New Zealand Dollar');
+
         $fields->addFieldToTab('Root.Main', new ReadonlyField('IsDefaulNice', $fieldLabels['IsDefaultNice'], $this->getIsDefaultNice()));
         if (! $this->isDefault()) {
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRate', $fieldLabels['ExchangeRate'], $this->ExchangeRate()));
@@ -671,7 +673,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         $order = ShoppingCart::current_order();
 
-        return $order ? $order->CurrencyUsedID === $this->ID : false;
+        return $order && $order->CurrencyUsedID === $this->ID;
     }
 
     /**
@@ -721,7 +723,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $this->Code = strtoupper($this->Code);
             // Check that there are no 2 same code currencies in use
             if ($this->isChanged('Code')) {
-                if (EcommerceCurrency::get()->where("UPPER(\"Code\") = '" . $this->Code . "'")->exclude('ID', intval($this->ID) - 0)->count()) {
+                if (EcommerceCurrency::get()->where("UPPER(\"Code\") = '" . $this->Code . "'")->exclude('ID', (int) $this->ID - 0)->count()) {
                     $errors[] = "There is alreay another currency in use which code is '{$this->Code}'.";
                 }
             }
@@ -741,19 +743,6 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         parent::populateDefaults();
         $this->InUse = true;
-    }
-
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        // Check that there is always at least one currency in use
-        $this->Code = strtoupper($this->Code);
-        if (! $this->InUse) {
-            $list = self::get_list();
-            if ($list->count() === 0 || ($list->Count() === 1 && $list->First()->ID === $this->ID)) {
-                $this->InUse = true;
-            }
-        }
     }
 
     /**
@@ -779,11 +768,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         $code = trim(strtoupper($code));
         if (! $name) {
             $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
-            if (isset($currencies[$code])) {
-                $name = $currencies[$code];
-            } else {
-                $name = $code;
-            }
+            $name = isset($currencies[$code]) ? $currencies[$code] : $code;
         }
         $name = ucwords($name);
         $currency = DataObject::get_one(
@@ -818,5 +803,18 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        // Check that there is always at least one currency in use
+        $this->Code = strtoupper($this->Code);
+        if (! $this->InUse) {
+            $list = self::get_list();
+            if ($list->count() === 0 || ($list->Count() === 1 && $list->First()->ID === $this->ID)) {
+                $this->InUse = true;
+            }
+        }
     }
 }

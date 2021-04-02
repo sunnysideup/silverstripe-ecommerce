@@ -208,17 +208,6 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     }
 
     /**
-     * stardard SS method.
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        if (isset($_REQUEST['NoLinkForOrderModifierDescriptor']) && $_REQUEST['NoLinkForOrderModifierDescriptor']) {
-            $this->LinkID = 0;
-        }
-    }
-
-    /**
      * Adds OrderModifierDescriptors and deletes the irrelevant ones
      * stardard SS method.
      */
@@ -255,6 +244,17 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
                     DB::alteration_message('Deleting description for ' . $orderModifierDescriptor->ModifierClassName, 'deleted');
                 }
             }
+        }
+    }
+
+    /**
+     * stardard SS method.
+     */
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        if (isset($_REQUEST['NoLinkForOrderModifierDescriptor']) && $_REQUEST['NoLinkForOrderModifierDescriptor']) {
+            $this->LinkID = 0;
         }
     }
 }

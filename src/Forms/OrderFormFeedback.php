@@ -21,15 +21,16 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 class OrderFormFeedback extends Form
 {
-    protected $order = null;
+    protected $order;
 
-    protected $_orderConfirmationPage = null;
+    protected $_orderConfirmationPage;
 
     public function __construct(Controller $controller, $name, Order $order)
     {
         $this->order = $order;
         $values = $this->getValueFromOrderConfirmationPage('FeedbackValuesOptions');
         $values = explode(',', $values);
+
         $newValues = [];
         foreach ($values as $value) {
             $value = trim($value);

@@ -82,7 +82,7 @@ class ProductOrderItem extends OrderItem
         }
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);
         if ($updatedTableTitle !== null && is_array($updatedTableTitle) && count($updatedTableTitle)) {
-            $tableTitle = implode($updatedTableTitle);
+            $tableTitle = implode('', $updatedTableTitle);
         }
 
         return $tableTitle;
@@ -124,9 +124,9 @@ class ProductOrderItem extends OrderItem
         $html = parent::debug() . <<<HTML
             <h3>ProductOrderItem class details</h3>
             <p>
-                <b>Title : </b>${title}<br/>
-                <b>Product ID : </b>${productID}<br/>
-                <b>Product Version : </b>${productVersion}
+                <b>Title : </b>{$title}<br/>
+                <b>Product ID : </b>{$productID}<br/>
+                <b>Product Version : </b>{$productVersion}
             </p>
 HTML;
         $updatedHTML = $this->extend('updateDebug', $html);

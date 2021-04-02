@@ -23,7 +23,7 @@ class KeywordSearchBuilder
     {
         //make three levels of search
         $searches = [];
-        $wordsAsString = preg_replace('!\s+!', ' ', $phrase);
+        $wordsAsString = preg_replace('#\s+#', ' ', $phrase);
         $wordAsArray = explode(' ', $wordsAsString);
         $hasWordArray = false;
         $searchStringAND = '';
@@ -31,7 +31,7 @@ class KeywordSearchBuilder
             $hasWordArray = true;
             $searchStringArray = [];
             foreach ($wordAsArray as $word) {
-                $searchStringArray[] = "LOWER(\"FFFFFF\") LIKE '%${word}%'";
+                $searchStringArray[] = "LOWER(\"FFFFFF\") LIKE '%{$word}%'";
             }
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
             // $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
@@ -50,8 +50,8 @@ class KeywordSearchBuilder
             $completed['Title'] = 'Title';
         }
         if (in_array('MenuTitle', $fields, true)) {
-            $searches[++$count][] = "LOWER(\"MenuTitle\") = '${wordsAsString}'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+            $searches[++$count][] = "LOWER(\"MenuTitle\") = '{$wordsAsString}'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%{$wordsAsString}%'"; // b) Full match within a bigger string
             if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'MenuTitle', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'MenuTitle', $searchStringOR); // d) Words matched individually
@@ -59,8 +59,8 @@ class KeywordSearchBuilder
             $completed['MenuTitle'] = 'MenuTitle';
         }
         if (in_array('MetaTitle', $fields, true)) {
-            $searches[++$count][] = "LOWER(\"MetaTitle\") = '${wordsAsString}'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+            $searches[++$count][] = "LOWER(\"MetaTitle\") = '{$wordsAsString}'"; // a) Exact match
+            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%{$wordsAsString}%'"; // b) Full match within a bigger string
             if ($hasWordArray) {
                 $searches[++$count][] = str_replace('FFFFFF', 'MetaTitle', $searchStringAND); // d) Words matched individually
                 // $searches[++$count + 100][] = str_replace('FFFFFF', 'MetaTitle', $searchStringOR); // d) Words matched individually
@@ -69,8 +69,8 @@ class KeywordSearchBuilder
         }
         foreach ($fields as $field) {
             if (! isset($completed[$field])) {
-                $searches[++$count][] = "LOWER(\"${field}\") = '${wordsAsString}'"; // a) Exact match
-                $searches[++$count][] = "LOWER(\"${field}\") LIKE '%${wordsAsString}%'"; // b) Full match within a bigger string
+                $searches[++$count][] = "LOWER(\"{$field}\") = '{$wordsAsString}'"; // a) Exact match
+                $searches[++$count][] = "LOWER(\"{$field}\") LIKE '%{$wordsAsString}%'"; // b) Full match within a bigger string
                 if ($hasWordArray) {
                     $searches[++$count][] = str_replace('FFFFFF', $field, $searchStringAND); // d) Words matched individually
                     // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
@@ -99,7 +99,7 @@ class KeywordSearchBuilder
         $this->keywordPhrase = $keywordPhrase;
         $this->replaceSearchPhraseOrWord();
         //now we are going to look for synonyms
-        $words = explode(' ', trim(preg_replace('!\s+!', ' ', $this->keywordPhrase)));
+        $words = explode(' ', trim(preg_replace('#\s+#', ' ', $this->keywordPhrase)));
         foreach ($words as $word) {
             //todo: why are we looping through words?
             $this->replaceSearchPhraseOrWord($word);
@@ -120,10 +120,10 @@ class KeywordSearchBuilder
         $replacements = SearchReplacement::get()
             ->where(
                 "
-                LOWER(\"Search\") = '${word}' OR
-                LOWER(\"Search\") LIKE '%,${word}' OR
-                LOWER(\"Search\") LIKE '${word},%' OR
-                LOWER(\"Search\") LIKE '%,${word},%'"
+                LOWER(\"Search\") = '{$word}' OR
+                LOWER(\"Search\") LIKE '%,{$word}' OR
+                LOWER(\"Search\") LIKE '{$word},%' OR
+                LOWER(\"Search\") LIKE '%,{$word},%'"
             );
         //if it is a word replacement then we do not want replace whole phrase ones ...
         if ($this->keywordPhrase !== $word) {

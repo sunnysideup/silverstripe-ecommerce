@@ -13,17 +13,17 @@ abstract class OrderConverter
     use Extensible;
     use Injectable;
 
-    protected $order = null;
+    protected $order;
 
     protected $currencyCode = '';
 
-    protected $billingAddress = null;
+    protected $billingAddress;
 
-    protected $shippingAddress = null;
+    protected $shippingAddress;
 
-    protected $modifiers = null;
+    protected $modifiers;
 
-    protected $orderItems = null;
+    protected $orderItems;
 
     private $amountsPerModifierType = [];
 

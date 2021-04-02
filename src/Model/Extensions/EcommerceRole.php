@@ -550,7 +550,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             Director::baseURL(),
             Config::inst()->get(ShoppingCartController::class, 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
         );
-        $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"${link}\" target=\"_blank\">Place order for customer</a></p>");
+        $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"{$link}\" target=\"_blank\">Place order for customer</a></p>");
         $fields->addFieldsToTab(
             'Root.Orders',
             [
@@ -641,7 +641,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 }
                 //if they dont have a password then we now force them to create one.
                 //the fields of which are added further down the line...
-
                 //we simply hide these fields, as they add little extra ....
                 $loginDetailsHeader = new HiddenField('LoginDetails', _t('Account.LOGINDETAILS', 'Login Details'), 5);
                 $loginDetailsDescription = new HiddenField(
@@ -650,29 +649,26 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                     _t('OrderForm.PLEASE_REVIEW', 'Please review your log in details below.')
                     . '</p>'
                 );
+            } elseif (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') || $mustCreateAccount) {
+                $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 3);
+                //dont allow people to purchase without creating a password
+                $loginDetailsDescription = new LiteralField(
+                    'AccountInfo',
+                    '<p class"password-info">' .
+                    _t('OrderForm.MUSTCREATEPASSWORD', 'Please choose a password to create your account.')
+                    . '</p>'
+                );
             } else {
-                //login invite right on the top
-                if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') || $mustCreateAccount) {
-                    $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 3);
-                    //dont allow people to purchase without creating a password
-                    $loginDetailsDescription = new LiteralField(
-                        'AccountInfo',
-                        '<p class"password-info">' .
-                        _t('OrderForm.MUSTCREATEPASSWORD', 'Please choose a password to create your account.')
-                        . '</p>'
-                    );
-                } else {
-                    $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.CREATEANACCONTOPTIONAL', 'Create an account (optional)'), 3);
-                    //allow people to purchase without creating a password
-                    $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password" datano="' . Convert::raw2att(_t('Account.DO_NOT_CREATE_ACCOUNT', 'do not create account')) . '" class="choosePassword passwordToggleLink">choose a password</a>');
-                    $loginDetailsDescription = new LiteralField(
-                        'AccountInfo',
-                        '<p class="password-info">' .
-                        _t('OrderForm.SELECTPASSWORD', 'Please enter a password; this will allow you to check your order history in the future.')
-                        . '</p>'
-                    );
-                    //close by default
-                }
+                $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.CREATEANACCONTOPTIONAL', 'Create an account (optional)'), 3);
+                //allow people to purchase without creating a password
+                $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password" datano="' . Convert::raw2att(_t('Account.DO_NOT_CREATE_ACCOUNT', 'do not create account')) . '" class="choosePassword passwordToggleLink">choose a password</a>');
+                $loginDetailsDescription = new LiteralField(
+                    'AccountInfo',
+                    '<p class="password-info">' .
+                    _t('OrderForm.SELECTPASSWORD', 'Please enter a password; this will allow you to check your order history in the future.')
+                    . '</p>'
+                );
+                //close by default
             }
 
             $passwordDoubleCheckField = null;
@@ -868,7 +864,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      **/
     public function previousOrderAddress($type = BillingAddress::class, $excludeID = 0)
     {
-        $addresses = $this->previousOrderAddresses($type, $excludeID, true, false);
+        $addresses = $this->previousOrderAddresses($type, $excludeID, true);
         if ($addresses->count()) {
             return $addresses->First();
         }

@@ -33,7 +33,7 @@ class ProductGroupController extends PageController
      * the exact list of products that is going to be shown (excluding pagination)
      * @var SS_List
      */
-    protected $productList = null;
+    protected $productList;
 
     /**
      * the final product list that we use to collect products
@@ -52,13 +52,13 @@ class ProductGroupController extends PageController
 
     protected $secondaryTitleHasBeenAdded = false;
 
-    protected $userPreferencesObject = null;
+    protected $userPreferencesObject;
 
     /**
      * form for searching
      * @var ProductSearchForm
      */
-    protected $searchForm = null;
+    protected $searchForm;
 
     /**
      * Is this a product search?
@@ -261,12 +261,7 @@ class ProductGroupController extends PageController
             }
 
             $currentOrder = ShoppingCart::current_order();
-
-            if ($currentOrder->getHasAlternativeCurrency()) {
-                return false;
-            }
-
-            return true;
+            return ! $currentOrder->getHasAlternativeCurrency();
         }
 
         return false;
@@ -277,7 +272,7 @@ class ProductGroupController extends PageController
      */
     public function ProductGroupListAreAjaxified(): bool
     {
-        return $this->IsSearchResults() ? false : true;
+        return ! $this->IsSearchResults();
     }
 
     /**
@@ -294,7 +289,6 @@ class ProductGroupController extends PageController
      */
     public function SidebarProducts()
     {
-        return;
     }
 
     /**
@@ -313,22 +307,22 @@ class ProductGroupController extends PageController
 
     public function ShowGroupFilterLinks(): bool
     {
-        return $this->HasManyProducts() && $this->HasGroupFilters() ? true : false;
+        return $this->HasManyProducts() && $this->HasGroupFilters();
     }
 
     public function ShowFilterLinks(): bool
     {
-        return $this->HasManyProducts() && $this->HasFilters() ? true : false;
+        return $this->HasManyProducts() && $this->HasFilters();
     }
 
     public function ShowSortLinks(): bool
     {
-        return $this->HasManyProducts() && $this->HasSorts() ? true : false;
+        return $this->HasManyProducts() && $this->HasSorts();
     }
 
     public function ShowDisplayLinks(): bool
     {
-        return $this->HasManyProducts() && $this->HasDisplays() ? true : false;
+        return $this->HasManyProducts() && $this->HasDisplays();
     }
 
     public function ShowGroupFilterSortDisplayLinks(): bool
@@ -423,7 +417,7 @@ class ProductGroupController extends PageController
 
     public function getCurrentPageNumber(): int
     {
-        if ($pageStart = intval($this->request->getVar('start'))) {
+        if ($pageStart = (int) $this->request->getVar('start')) {
             return ($pageStart / $this->getProductsPerPage()) + 1;
         }
 
@@ -623,11 +617,7 @@ class ProductGroupController extends PageController
             if ($this->IsSearchResults()) {
                 return true;
             }
-            if ($this->getProductList()->count() > 0) {
-                return false;
-            }
-
-            return true;
+            return $this->getProductList()->count() <= 0;
         }
         return false;
     }
@@ -658,7 +648,7 @@ class ProductGroupController extends PageController
      */
     public function ActiveSearchTerm(): bool
     {
-        return $this->request->getVar('Keyword') ? true : false;
+        return (bool) $this->request->getVar('Keyword');
     }
 
     public function saveUserPreferences(?array $data = [])
@@ -725,7 +715,7 @@ class ProductGroupController extends PageController
 
     protected function getCachedProductList(): ? DataList
     {
-        $key = $this->ProductGroupListCachingKey(false);
+        $key = $this->ProductGroupListCachingKey();
         if ($key && EcommerceCache::inst()->hasCache($key)) {
             $ids = EcommerceCache::inst()->retrieve($key);
             $ids = ArrayMethods::filter_array($ids);
@@ -739,7 +729,7 @@ class ProductGroupController extends PageController
 
     protected function setCachedProductList($productList)
     {
-        $key = $this->ProductGroupListCachingKey(false);
+        $key = $this->ProductGroupListCachingKey();
         $ids = ArrayMethods::filter_array($productList->columnUnique());
         EcommerceCache::inst()->save($key, $ids);
     }
@@ -781,7 +771,7 @@ class ProductGroupController extends PageController
      */
     protected function returnAjaxifiedProductList(): bool
     {
-        return Director::is_ajax() ? true : false;
+        return Director::is_ajax();
     }
 
     /**
@@ -790,7 +780,7 @@ class ProductGroupController extends PageController
     protected function productListsHTMLCanBeCached(): bool
     {
         //todo: FIX!
-        return EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased ? false : true;
+        return ! (bool) EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased;
     }
 
     /**

@@ -158,7 +158,7 @@ class RelatedProductGroups
             } elseif ($maxRecursiveLevel === -1) {
                 $this->groups = ProductGroup::get();
             } elseif ($this->rootGroup) {
-                $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID, []);
+                $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID);
 
                 if ($this->includeRoot) {
                     $ids[$this->rootGroup->ID] = $this->rootGroup->ID;
@@ -170,13 +170,9 @@ class RelatedProductGroups
                 $this->groups = ProductGroup::get();
             }
             if ($filter) {
-                if (is_array($filter)) {
-                    $this->groups = $this->groups->filter($filter);
-                } else {
-                    $this->groups = $this->groups->where($filter);
-                }
+                $this->groups = is_array($filter) ? $this->groups->filter($filter) : $this->groups->where($filter);
             }
-            $this->groups === self::apply_default_filter_to_groups($this->groups);
+            self::apply_default_filter_to_groups($this->groups);
         }
 
         return $this->groups;

@@ -83,18 +83,6 @@ class SalesAdmin extends ModelAdmin
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/money-file.gif';
 
-    public function init()
-    {
-        parent::init();
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
-        Requirements::themedCSS('client/css/OrderStepField');
-        Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Requirements::themedCSS('client/css/Order_Invoice', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-        Requirements::themedCSS('client/css/Order_PackingSlip', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-
-        //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-    }
-
     public function urlSegmenter()
     {
         return $this->config()->get('url_segment');
@@ -182,5 +170,17 @@ class SalesAdmin extends ModelAdmin
             }
         }
         return $form;
+    }
+
+    protected function init()
+    {
+        parent::init();
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
+        Requirements::themedCSS('client/css/OrderStepField');
+        Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('client/css/Order_Invoice', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+        Requirements::themedCSS('client/css/Order_PackingSlip', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
+
+        //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
     }
 }

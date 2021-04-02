@@ -38,6 +38,9 @@ use Sunnysideup\Vardump\Vardump;
  */
 class ProductSearchForm extends Form
 {
+    /**
+     * @var string[]
+     */
     private const FIELDS_TO_CACHE = [
         'rawData',
         'keywordPhrase',
@@ -54,7 +57,7 @@ class ProductSearchForm extends Form
 
     protected $nameOfProductsBeingSearched = '';
 
-    protected $productsToSearch = null;
+    protected $productsToSearch;
 
     /**
      * set to TRUE to show the search logic.
@@ -121,25 +124,25 @@ class ProductSearchForm extends Form
     /**
      * @var SiteTree
      */
-    protected $immediateRedirectPage = null;
+    protected $immediateRedirectPage;
 
     /**
      * a custom base list
      * @var DataList
      */
-    protected $baseList = null;
+    protected $baseList;
 
     /**
      * a custom base list for ProductGroups
      * @var DataList
      */
-    protected $baseListForGroups = null;
+    protected $baseListForGroups;
 
     /**
      * a product group that creates the base list.
      * @var ProductGroup
      */
-    protected $baseListOwner = null;
+    protected $baseListOwner;
 
     /**
      * class name of the buyables to search
@@ -229,7 +232,7 @@ class ProductSearchForm extends Form
             'Keyword' => $request->getVar('Keyword'),
             'MinimumPrice' => floatval($request->getVar('MinimumPrice')),
             'MaximumPrice' => floatval($request->getVar('MaximumPrice')),
-            'OnlyThisSection' => (intval($request->getVar('OnlyThisSection')) - 0 ? 1 : 0),
+            'OnlyThisSection' => ((int) $request->getVar('OnlyThisSection') - 0 ? 1 : 0),
         ];
         //fields
         $fields = FieldList::create();
@@ -482,18 +485,17 @@ class ProductSearchForm extends Form
      */
     protected function doProcessSetup(array $data)
     {
-        $this->saveDataToSession($data);
+        $this->saveDataToSession();
         $this->rawData = $data;
         if (! $this->maximumNumberOfResults) {
             $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
         }
-        //what is the baseclass?
-        $this->baseClassNameForBuyables;
+
         if (! $this->baseClassNameForBuyables) {
             $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
         if (isset($data['DebugSearch'])) {
-            $this->debug = $data['DebugSearch'] ? true : false;
+            $this->debug = (bool) $data['DebugSearch'];
         }
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results</h2>');
@@ -505,7 +507,7 @@ class ProductSearchForm extends Form
         $this->rawData['MinimumPrice'] = floatval(str_replace(',', '', $this->rawData['MinimumPrice']));
         $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', $this->rawData['MaximumPrice']));
         $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice'] ?? 0);
-        $this->rawData['OnlyThisSection'] = intval($this->rawData['OnlyThisSection'] ?? 0) ? true : false;
+        $this->rawData['OnlyThisSection'] = (bool) (int) ($this->rawData['OnlyThisSection'] ?? 0);
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             $oldMin = $this->rawData['MinimumPrice'];
             $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
@@ -609,7 +611,7 @@ class ProductSearchForm extends Form
                 $list2 = $this->baseList->where($search);
                 $count += $list2->count();
                 if ($this->debug) {
-                    $this->debugOutput("<p>${search}: " . $list2->count() . '</p>');
+                    $this->debugOutput("<p>{$search}: " . $list2->count() . '</p>');
                 }
                 $this->addToResults($list2);
                 if ($this->weHaveEnoughResults()) {
@@ -617,7 +619,7 @@ class ProductSearchForm extends Form
                 }
             }
             if ($this->debug) {
-                $this->debugOutput("<h3>FULL KEYWORD SEARCH: ${count}</h3>");
+                $this->debugOutput("<h3>FULL KEYWORD SEARCH: {$count}</h3>");
             }
         }
     }
@@ -664,7 +666,7 @@ class ProductSearchForm extends Form
                 }
             }
             if ($this->debug) {
-                $this->debugOutput("<h3>PRODUCT GROUP SEARCH: ${count}</h3>");
+                $this->debugOutput("<h3>PRODUCT GROUP SEARCH: {$count}</h3>");
             }
         }
     }
@@ -767,10 +769,7 @@ class ProductSearchForm extends Form
         if ($this->immediateRedirectPage) {
             return true;
         }
-        if ($this->resultArrayPos >= $this->maximumNumberOfResults) {
-            return true;
-        }
-        return false;
+        return $this->resultArrayPos >= $this->maximumNumberOfResults;
     }
 
     ############################################
@@ -836,10 +835,8 @@ class ProductSearchForm extends Form
                 $this->debugOutput('<h3>BASE LIST AFTER PRICE SEARCH</h3><pre>' . Vardump::inst()->mixedToUl($this->baseList->sql()) . '</pre>');
                 $this->debugOutput('<h3>PRODUCTS AFTER PRICE SEARCH</h3><pre>' . $this->baseList->count() . '</pre>');
             }
-        } else {
-            if ($this->debug) {
-                $this->debugOutput('<h3>BASE LIST AFTER PRICE SEARCH</h3><p>Not required</p>');
-            }
+        } elseif ($this->debug) {
+            $this->debugOutput('<h3>BASE LIST AFTER PRICE SEARCH</h3><p>Not required</p>');
         }
     }
 
@@ -920,7 +917,7 @@ class ProductSearchForm extends Form
     {
         if (is_array($value) && count($value) === 2 && isset($value['ID']) && isset($value['ClassName'])) {
             $className = $value['ClassName'];
-            $id = intval($value['ID']);
+            $id = (int) $value['ID'];
             if (class_exists($className) && $id) {
                 return $className::get()->byId($id);
             }
@@ -940,10 +937,7 @@ class ProductSearchForm extends Form
 
     protected function hasMinMaxSearch(): bool
     {
-        if ($this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice']) {
-            return true;
-        }
-        return false;
+        return $this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice'];
     }
 
     protected function getSearchApi()

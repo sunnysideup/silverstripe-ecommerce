@@ -11,7 +11,7 @@ namespace Sunnysideup\Ecommerce\Pages;
  */
 class ProductGroupSearchPage extends ProductGroup
 {
-    protected static $main_search_page = null;
+    protected static $main_search_page;
 
     /**
      * @var int
@@ -36,7 +36,7 @@ class ProductGroupSearchPage extends ProductGroup
     /**
      * @var ProductGroupSearchPage
      */
-    private static $_main_search_page = null;
+    private static $_main_search_page;
 
     public function i18n_singular_name()
     {

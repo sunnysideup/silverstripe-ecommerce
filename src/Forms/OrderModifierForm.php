@@ -42,7 +42,6 @@ class OrderModifierForm extends Form
      * to your own controller.
      *
      *@param Controller $optionalController
-     *@param Validator $optionalValidator
      **/
     public function __construct(
         ?Controller $optionalController,

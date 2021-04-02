@@ -31,12 +31,12 @@ abstract class AbstractProductsAndGroupsList
     /**
      * @var SS_List|null
      */
-    protected $products = null;
+    protected $products;
 
     /**
      * @var ProductGroup|null
      */
-    protected $rootGroup = null;
+    protected $rootGroup;
 
     /**
      * Set the root {@link ProductGroup} to display the products from.

@@ -16,20 +16,26 @@ abstract class BaseApplyer
     use Injectable;
     use Configurable;
 
+    /**
+     * @var string
+     */
     public const DEFAULT_NAME = 'default';
 
+    /**
+     * @var string
+     */
     private const SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
 
     /**
      * final product list object, always present.
      * @var FinalProductList
      */
-    protected $finalProductList = null;
+    protected $finalProductList;
 
     /**
      * @var SS_List
      */
-    protected $products = null;
+    protected $products;
 
     protected $selectedOption = '';
 
@@ -109,7 +115,7 @@ abstract class BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
-        $sql = $this->checkOption($key, 'SQL');
+        $sql = $this->checkOption($key);
         return str_replace(self::SQL_PARAM_PLACEHOLDER, $params, $sql);
     }
 

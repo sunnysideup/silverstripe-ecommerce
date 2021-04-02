@@ -36,7 +36,7 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
                     }
                 }
             }
-            DB::alteration_message("Updated ${count} Products (" . $products->count() . " products on ${stage})");
+            DB::alteration_message("Updated {$count} Products (" . $products->count() . " products on {$stage})");
         }
     }
 }

@@ -34,7 +34,7 @@ class EcommercePaymentFormSetupAndValidation
     /**
      * @var EcommercePayment
      */
-    protected $paymentObject = null;
+    protected $paymentObject;
 
     /**
      * you can set specific EcommercePayment payment fields here, like this:
@@ -136,7 +136,7 @@ class EcommercePaymentFormSetupAndValidation
             return true;
         }
         if (! $this->paymentObject) {
-            $paymentClass = ! empty($data['PaymentMethod']) ? $data['PaymentMethod'] : null;
+            $paymentClass = empty($data['PaymentMethod']) ? null : $data['PaymentMethod'];
             if ($paymentClass) {
                 //important! convert back to PHP class
                 $paymentClass = EcommercePayment::html_class_to_php_class($paymentClass);
@@ -272,7 +272,7 @@ class EcommercePaymentFormSetupAndValidation
     public function processPaymentFormAndReturnNextStep(Order $order, $data, Form $form)
     {
         if (! $this->paymentObject) {
-            $paymentClass = ! empty($data['PaymentMethod']) ? $data['PaymentMethod'] : null;
+            $paymentClass = empty($data['PaymentMethod']) ? null : $data['PaymentMethod'];
             if ($paymentClass) {
                 if (class_exists($paymentClass)) {
                     $this->paymentObject = $paymentClass::create();
@@ -345,10 +345,10 @@ class EcommercePaymentFormSetupAndValidation
      */
     public function validateExpiryMonth($monthYear)
     {
-        $month = intval(substr($monthYear, 0, 2));
-        $year = intval('20' . substr($monthYear, 2));
-        $currentYear = intval(Date('Y'));
-        $currentMonth = intval(Date('m'));
+        $month = (int) substr($monthYear, 0, 2);
+        $year = (int) ('20' . substr($monthYear, 2));
+        $currentYear = (int) Date('Y');
+        $currentMonth = (int) Date('m');
         if (($month > 0 || $month < 13) && $year > 0) {
             if ($year > $currentYear) {
                 return true;
@@ -373,8 +373,8 @@ class EcommercePaymentFormSetupAndValidation
      */
     public function validateCVV($cardNumber, $cvv)
     {
-        $cardNumber = preg_replace('/\D/', '', $cardNumber);
-        $cvv = preg_replace('/\D/', '', $cvv);
+        $cardNumber = preg_replace('#\D#', '', $cardNumber);
+        $cvv = preg_replace('#\D#', '', $cvv);
 
         //Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
         if (is_numeric($cardNumber)) {
@@ -386,12 +386,12 @@ class EcommercePaymentFormSetupAndValidation
 
                 //If the card is an American Express
                 if ($firstTwo === '34' || $firstTwo === '37') {
-                    if (! preg_match("/^\d{4}$/", $cvv)) {
+                    if (! preg_match('#^\\d{4}$#', $cvv)) {
                         // The credit card is an American Express card
                         // but does not have a four digit CVV code
                         return false;
                     }
-                } elseif (! preg_match("/^\d{3}$/", $cvv)) {
+                } elseif (! preg_match('#^\\d{3}$#', $cvv)) {
                     // The credit card is a Visa, MasterCard, or Discover Card card
                     // but does not have a three digit CVV code
                     return false;

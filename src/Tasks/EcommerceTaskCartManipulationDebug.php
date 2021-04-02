@@ -41,6 +41,6 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
         }
         $html .= '
         </ul>';
-        DB::alteration_message("${html}");
+        DB::alteration_message("{$html}");
     }
 }

@@ -286,7 +286,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                     $obj = CheckoutPageStepDescription::create($filter);
                     $obj->Heading = $this->getDefaultTitle($code);
                     $obj->write();
-                    DB::alteration_message("Creating CheckoutPageStepDescription ${code}", 'created');
+                    DB::alteration_message("Creating CheckoutPageStepDescription {$code}", 'created');
                 }
                 $idArray[$obj->ID] = $obj->ID;
             }
@@ -312,13 +312,10 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         switch ($code) {
             case 'orderitems':
                 return _t('CheckoutPage.ORDERITEMS', 'Order items');
-                break;
             case 'orderformaddress':
                 return _t('CheckoutPage.ORDERFORMADDRESS', 'Your details');
-                break;
             case 'orderconfirmationandpayment':
                 return _t('CheckoutPage.ORDERCONFIRMATIONANDPAYMENT', 'Confirm and pay');
-                break;
         }
 
         return $code;

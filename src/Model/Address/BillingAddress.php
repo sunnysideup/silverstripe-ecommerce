@@ -250,8 +250,6 @@ class BillingAddress extends OrderAddress
     }
 
     /**
-     * @param \SilverStripe\Security\Member $member
-     *
      * @return \SilverStripe\Forms\FieldList
      **/
     public function getFields(Member $member = null)
@@ -268,6 +266,7 @@ class BillingAddress extends OrderAddress
                 ->setAttribute('data-title-with-shipping-address_default', $headerTitle)
         );
         $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
+
         $billingFields = new CompositeField();
         if ($member && Security::getCurrentUser()) {
             if ($member->exists() && ! $member->IsShopAdmin()) {

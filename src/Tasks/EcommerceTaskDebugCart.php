@@ -29,7 +29,7 @@ class EcommerceTaskDebugCart extends BuildTask
         if (count($fields)) {
             foreach ($fields as $key => $type) {
                 $value = self::cleanup_value($type, $obj->{$key});
-                $html .= "<li><b>${key} (${type}):</b> " . $value . '</li>';
+                $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
             }
         }
 
@@ -42,14 +42,10 @@ class EcommerceTaskDebugCart extends BuildTask
                     $value = $obj->{$method}();
                 } else {
                     $method = 'get' . $key;
-                    if ($obj->hasMethod($method)) {
-                        $value = $obj->{$method}();
-                    } else {
-                        $value = $obj->{$key};
-                    }
+                    $value = $obj->hasMethod($method) ? $obj->{$method}() : $obj->{$key};
                 }
                 $value = self::cleanup_value($type, $value);
-                $html .= "<li><b>${key} (${type}):</b> " . $value . '</li>';
+                $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
             }
         }
 
@@ -64,7 +60,7 @@ class EcommerceTaskDebugCart extends BuildTask
                         $value = ', ' . $object->getTitle();
                     }
                 }
-                $html .= "<li><b>${key} (${type}):</b> " . $obj->{$field} . $value . ' </li>';
+                $html .= "<li><b>{$key} ({$type}):</b> " . $obj->{$field} . $value . ' </li>';
             }
         }
         //to do: has_many and many_many
@@ -82,7 +78,6 @@ class EcommerceTaskDebugCart extends BuildTask
                 $value = $value ? 'YES' : 'NO';
                 break;
             default:
-                $value = $value;
                 break;
         }
 

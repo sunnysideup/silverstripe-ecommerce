@@ -282,9 +282,9 @@ class EcommerceDatabaseAdmin extends TaskRunner
         if (class_exists($taskName) && is_subclass_of($taskName, BuildTask::class)) {
             $title = singleton($taskName)->getTitle();
             if (Director::is_cli()) {
-                echo "Running task '${title}'...\n\n";
+                echo "Running task '{$title}'...\n\n";
             } elseif (! Director::is_ajax()) {
-                echo "<h1>Running task '${title}'...</h1>\n";
+                echo "<h1>Running task '{$title}'...</h1>\n";
             }
 
             $task = new $taskName();
@@ -295,7 +295,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 echo "<p>{$title} is disabled</p>";
             }
         } else {
-            echo "Build task '${taskName}' not found.";
+            echo "Build task '{$taskName}' not found.";
             if (class_exists($taskName)) {
                 echo "  It isn't a subclass of BuildTask.";
             }
@@ -357,7 +357,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
             <strong>' . $buildTask->getTitle() . '</strong><br />
             ' . $buildTask->getDescription() . " <br />
             ------------------------------------------------------- <br />
-            ${extraMessage}
+            {$extraMessage}
         ");
     }
 }

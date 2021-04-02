@@ -68,7 +68,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     public function setNumberOfDays($days)
     {
-        $this->numberOfDays = intval($days);
+        $this->numberOfDays = (int) $days;
 
         return $this;
     }
@@ -80,7 +80,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     public function setMinimumCount($count)
     {
-        $this->minimumCount = intval($count);
+        $this->minimumCount = (int) $count;
 
         return $this;
     }
@@ -104,7 +104,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     public function setEndingDaysBack($count)
     {
-        $this->endingDaysBack = intval($count);
+        $this->endingDaysBack = (int) $count;
 
         return $this;
     }
@@ -189,7 +189,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 <table class="highToLow" style="widht: 100%">';
             $list = [];
             foreach ($data as $key => $row) {
-                $count++;
+                ++$count;
                 //for the highest count, we work out a max-width
                 if (! $key) {
                     $maxWidth = $row['myCount'];

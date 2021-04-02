@@ -174,7 +174,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if (Config::inst()->get(EcommerceRegion::class, 'show_freetext_region_field')) {
             return true;
         }
-        return EcommerceRegion::get()->count() ? true : false;
+        return (bool) EcommerceRegion::get()->count();
     }
 
     /**
@@ -391,7 +391,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * standard SS method
      * cleans up codes.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         $filter = EcommerceCodeFilter::create();

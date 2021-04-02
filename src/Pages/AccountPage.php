@@ -46,7 +46,7 @@ class AccountPage extends Page
     /**
      *@var DataList
      */
-    protected $pastOrders = null;
+    protected $pastOrders;
 
     private static $table_name = 'AccountPage';
 
@@ -269,7 +269,7 @@ class AccountPage extends Page
      */
     protected function pastOrdersSelection()
     {
-        $memberID = intval(Member::currentUserID());
+        $memberID = (int) Member::currentUserID();
         if (! $memberID) {
             //set t
             $memberID = RAND(0, 1000000) * -1;

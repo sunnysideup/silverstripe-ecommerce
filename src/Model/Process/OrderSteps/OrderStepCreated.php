@@ -112,7 +112,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
                 if ($requiredBillingFields && is_array($requiredBillingFields) && count($requiredBillingFields)) {
                     foreach ($requiredBillingFields as $requiredBillingField) {
                         if (! $billingAddress->{$requiredBillingField}) {
-                            $problems[] = "There is no --- ${requiredBillingField} --- recorded in the billing address.";
+                            $problems[] = "There is no --- {$requiredBillingField} --- recorded in the billing address.";
                         }
                     }
                 }

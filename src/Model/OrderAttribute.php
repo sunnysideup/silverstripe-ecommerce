@@ -35,14 +35,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    protected $_canEdit = null;
+    protected $_canEdit = false;
 
     /**
      * save view status for speed's sake.
      *
      * @var bool
      */
-    protected $_canView = null;
+    protected $_canView = false;
 
     /**
      * we use this variable to make sure that the parent::runUpdate() is called in all child classes
@@ -258,7 +258,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             return true;
         }
         if ($this->_canEdit === null) {
-            $this->_canEdit = $this->priceHasBeenFixed() ? false : true;
+            $this->_canEdit = ! $this->priceHasBeenFixed();
         }
 
         return $this->_canEdit;
@@ -499,10 +499,19 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * Debug helper method.
+     * Access through : /shoppingcart/debug/.
+     */
+    public function debug()
+    {
+        return EcommerceTaskDebugCart::debug_object($this);
+    }
+
+    /**
      * Standard SS method
      * We add the Sort value from the OrderAttributeGroup to the OrderAttribute.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         if ($this->OrderAttributeGroupID) {
@@ -515,20 +524,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      */
-    public function onAfterWrite()
+    protected function onAfterWrite()
     {
         parent::onAfterWrite();
         //crucial!
         Order::set_needs_recalculating(true, $this->OrderID);
-    }
-
-    /**
-     * Debug helper method.
-     * Access through : /shoppingcart/debug/.
-     */
-    public function debug()
-    {
-        return EcommerceTaskDebugCart::debug_object($this);
     }
 
     /**

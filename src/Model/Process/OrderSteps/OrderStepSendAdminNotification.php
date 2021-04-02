@@ -40,11 +40,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      **/
     public function initStep(Order $order)
     {
-        if ($order->IsSubmitted()) {
-            return true;
-        }
-
-        return false;
+        return $order->IsSubmitted();
     }
 
     /**

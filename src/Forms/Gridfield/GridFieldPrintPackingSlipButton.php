@@ -116,7 +116,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
         if ($actionName === 'printpackingslip') {
-            $itemID = intval($arguments['RecordID']);
+            $itemID = (int) $arguments['RecordID'];
             if (! $itemID) {
                 return;
             }

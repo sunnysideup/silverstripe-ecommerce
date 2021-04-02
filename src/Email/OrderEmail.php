@@ -27,7 +27,7 @@ abstract class OrderEmail extends Email
     /**
      * @var Order
      */
-    protected $order = null;
+    protected $order;
 
     /**
      * @var bool
@@ -162,7 +162,7 @@ abstract class OrderEmail extends Email
             if (Director::isDev()) {
                 $result = true;
             }
-            $orderEmailRecord->Result = $result ? true : false;
+            $orderEmailRecord->Result = (bool) $result;
             $orderEmailRecord->write();
 
             return $result;
@@ -192,8 +192,6 @@ abstract class OrderEmail extends Email
             return $orderStep->hasBeenSent($this->order);
         }
         return false;
-
-        user_error('expects orderstep');
     }
 
     /**

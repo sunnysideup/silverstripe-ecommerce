@@ -210,12 +210,10 @@ class CheckoutPage extends CartPage
                         $nextStep = $steps[$key];
                     }
                 }
+            } elseif ($doPreviousInstead) {
+                $nextStep = array_shift($steps);
             } else {
-                if ($doPreviousInstead) {
-                    $nextStep = array_shift($steps);
-                } else {
-                    $nextStep = array_pop($steps);
-                }
+                $nextStep = array_pop($steps);
             }
             if ($nextStep) {
                 return $link . 'checkoutstep' . '/' . $nextStep . '/';
@@ -312,13 +310,16 @@ class CheckoutPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'CurrentOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'DeleteOrderLinkLabel');
+
         $termsPageIDField = OptionalTreeDropdownField::create(
             'TermsPageID',
             _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
             SiteTree::class
         );
         $termsPageIDField->setDescription(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+
         $fields->addFieldToTab('Root.Terms', $termsPageIDField);
+
         $fields->addFieldToTab(
             'Root.Terms',
             $termsPageIDFieldMessage = new TextField(

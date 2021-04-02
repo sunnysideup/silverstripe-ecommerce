@@ -108,11 +108,9 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
         if ($order && $order instanceof Order) {
             return $order;
         }
-        if (intval($order)) {
-            return Order::get()->byID(intval($order));
+        if ((int) $order) {
+            return Order::get()->byID((int) $order);
         }
         return ShoppingCart::current_order();
-
-        user_error("Can't find an order to use");
     }
 }

@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Money;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBMoney;
 
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -94,13 +93,12 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_short_symbol($this->owner->currency);
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">${symbol}</span></span>";
+            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">{$symbol}</span></span>";
         }
         $amount = $this->owner->getAmount();
 
         $formatter = $this->owner->getFormatter();
         $data = $formatter->format($amount);
-        /** @var DBHTMLText */
         return DBField::create_field('HTMLText', $data);
     }
 
@@ -118,7 +116,7 @@ class EcommerceMoney extends Extension
         $short = self::get_short_symbol($this->owner->currency);
         $pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">${pre}</span><span class=\"currencySymbol\">${short}</span></span>";
+            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">{$pre}</span><span class=\"currencySymbol\">{$short}</span></span>";
         } else {
             $symbol = $pre . $short;
         }
@@ -126,12 +124,7 @@ class EcommerceMoney extends Extension
         $currency = $this->owner->getCurrency();
 
         $formatter = $this->owner->getFormatter();
-        if (! $currency) {
-            $data = $symbol . $formatter->format($amount);
-        } else {
-            $data = $symbol . $formatter->formatCurrency($amount, $currency);
-        }
-        /** @var DBHTMLText */
+        $data = $currency ? $symbol . $formatter->formatCurrency($amount, $currency) : $symbol . $formatter->format($amount);
         return DBField::create_field('HTMLText', $data);
     }
 
@@ -146,11 +139,11 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_short_symbol($this->owner->currency);
         if ($html) {
-            $symbol = "<span class=\"currencySymbol\">${symbol}</span>";
+            $symbol = "<span class=\"currencySymbol\">{$symbol}</span>";
         }
         $code = strtolower($this->owner->currency);
         if ($html) {
-            $code = "<span class=\"currencyHolder\">${code}</span>";
+            $code = "<span class=\"currencyHolder\">{$code}</span>";
         }
         $amount = $this->owner->getAmount();
 
@@ -158,7 +151,6 @@ class EcommerceMoney extends Extension
             'symbol' => '',
             'precision' => 0,
         ]) . ' ' . $code : '';
-        /** @var DBHTMLText */
         return DBField::create_field('HTMLText', $data);
     }
 

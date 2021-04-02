@@ -91,13 +91,6 @@ class SalesAdminExtras extends ModelAdmin
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/money-file.gif';
 
-    public function init()
-    {
-        parent::init();
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
-        Requirements::css('sunnysideup/ecommerce: client/css/OrderStepField.css');
-    }
-
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      *               we make sure that the Order Admin is FIRST
@@ -162,5 +155,12 @@ class SalesAdminExtras extends ModelAdmin
             }
         }
         return $form;
+    }
+
+    protected function init()
+    {
+        parent::init();
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
+        Requirements::css('sunnysideup/ecommerce: client/css/OrderStepField.css');
     }
 }

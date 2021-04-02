@@ -353,13 +353,13 @@ class EcommerceConfigDefinitions
                     For performance reasons, we suggest you limit this to 1000 for big sites and as low as 200 for small servers.',
 
                 'sort_options' =>
-                    'Associative sort options array with sub-keys of Title and SQL, e.g. \'default\' = array(\'Title\' => \'default\', \'SQL\' => \'Title DESC\')',
+                    "Associative sort options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'default', 'SQL' => 'Title DESC')",
 
                 'filter_options' =>
-                    'Associative filters options array with sub-keys of Title and SQL, e.g. \'default\' = array(\'Title\' => \'Featured\', \'SQL\' => \'Featured = 1\')',
+                    "Associative filters options array with sub-keys of Title and SQL, e.g. 'default' = array('Title' => 'Featured', 'SQL' => 'Featured = 1')",
 
                 'display_styles' =>
-                    'Associative display styles array with its key as template name, e.g. \'MyTemplateName\' => \'Full Details\'',
+                    "Associative display styles array with its key as template name, e.g. 'MyTemplateName' => 'Full Details'",
 
                 'session_name_for_product_array' =>
                     'This is the name for variable stored in session.
@@ -531,7 +531,7 @@ class EcommerceConfigDefinitions
                     'Should all the emails be send as plain text?  Not recommended.',
 
                 'css_file_location' =>
-                    'This is a really useful setting where you can specify the location for a css file that is \'injected\' into the customer emails. ',
+                    "This is a really useful setting where you can specify the location for a css file that is 'injected' into the customer emails. ",
 
                 'copy_to_admin_for_all_emails' =>
                     'Send a copy to the shop administrator for every email sent?',

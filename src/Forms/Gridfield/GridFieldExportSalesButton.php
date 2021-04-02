@@ -70,7 +70,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     {
         if ($fileData = $this->generateExportFileData($gridField)) {
             $now = Date('d-m-Y-H-i');
-            $fileName = "sales-${now}.csv";
+            $fileName = "sales-{$now}.csv";
             return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
     }
@@ -171,13 +171,9 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                 $columnData[] = '"' . $email . '"';
                 $columnData[] = '"' . $date . '"';
                 foreach ($exportFields as $field) {
-                    if ($item->hasMethod($field)) {
-                        $value = $item->{$field}();
-                    } else {
-                        $value = $item->{$field};
-                    }
-                    $value = preg_replace('/\s+/', ' ', $value);
-                    $value = preg_replace('/\s+/', ' ', $value);
+                    $value = $item->hasMethod($field) ? $item->{$field}() : $item->{$field};
+                    $value = preg_replace('#\s+#', ' ', $value);
+                    $value = preg_replace('#\s+#', ' ', $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);
                     $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';

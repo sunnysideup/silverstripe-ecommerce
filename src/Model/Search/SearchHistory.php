@@ -89,15 +89,6 @@ class SearchHistory extends DataObject
     }
 
     /**
-     * remove excessive spaces.
-     */
-    public function onBeforeWrite()
-    {
-        $this->Title = trim(preg_replace('!\s+!', ' ', $this->Title));
-        parent::onBeforeWrite();
-    }
-
-    /**
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
@@ -154,5 +145,14 @@ class SearchHistory extends DataObject
     public function canDelete($member = null, $context = [])
     {
         return false;
+    }
+
+    /**
+     * remove excessive spaces.
+     */
+    protected function onBeforeWrite()
+    {
+        $this->Title = trim(preg_replace('#\s+#', ' ', $this->Title));
+        parent::onBeforeWrite();
     }
 }

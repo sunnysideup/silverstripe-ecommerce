@@ -461,7 +461,7 @@ class OrderItem extends OrderAttribute
     {
         $buyable = $this->Buyable(true);
         if ($buyable && $buyable->canPurchase()) {
-            if (isset($buyable->Version)) {
+            if (property_exists($buyable, 'Version') && $buyable->Version !== null) {
                 if ($this->Version !== $buyable->Version) {
                     $this->Version = $buyable->Version;
                     $this->write();
@@ -480,51 +480,6 @@ class OrderItem extends OrderAttribute
         }
 
         return parent::runUpdate($recalculate);
-    }
-
-    /**
-     * Standard SS method.
-     * If the quantity is zero then we set it to 1.
-     * TODO: evaluate this rule.
-     */
-    public function onBeforeWrite()
-    {
-        if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
-            $this->OrderID = intval(Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack'));
-        }
-        if (! $this->exists()) {
-            if ($buyable = $this->Buyable(true)) {
-                if ($this->ClassName === OrderItem::class && $this->BuyableClassName !== OrderItem::class) {
-                    $this->setClassName($buyable->classNameForOrderItem());
-                }
-            }
-        }
-        //now we can do the parent thing
-        parent::onBeforeWrite();
-        //always keep quantity above 0
-        if (floatval($this->Quantity) === 0) {
-            $this->Quantity = 1;
-        }
-        if (! $this->Version && $buyable = $this->Buyable(true)) {
-            $this->Version = $buyable->Version;
-        }
-    }
-
-    /**
-     * Standard SS method
-     * the method below is very important...
-     * We initialise the order once it has an OrderItem.
-     */
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        $order = $this->Order();
-        if ($order) {
-            if (! $order->StatusID) {
-                //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
-                $order->init(true);
-            }
-        }
     }
 
     /**
@@ -597,12 +552,7 @@ class OrderItem extends OrderAttribute
 
     public function getTotal($recalculate = false)
     {
-        if ($this->priceHasBeenFixed()) {
-            //get from database
-            $total = $this->CalculatedTotal;
-        } else {
-            $total = $this->getUnitPrice($recalculate) * $this->Quantity;
-        }
+        $total = $this->priceHasBeenFixed() ? $this->CalculatedTotal : $this->getUnitPrice($recalculate) * $this->Quantity;
         $updatedTotal = $this->extend('updateTotal', $total);
         if ($updatedTotal !== null && is_array($updatedTotal) && count($updatedTotal)) {
             $total = $updatedTotal[0];
@@ -667,7 +617,7 @@ class OrderItem extends OrderAttribute
      */
     public static function reset_price_has_been_fixed($orderID = 0)
     {
-        self::set_price_has_been_fixed($orderID, false);
+        self::set_price_has_been_fixed($orderID);
     }
 
     /**
@@ -826,7 +776,7 @@ class OrderItem extends OrderAttribute
         if ($buyable = $this->Buyable(true)) {
             $className = $buyable->ClassName;
             $id = $buyable->ID;
-            return $className::get()->byID($id) ? true : false;
+            return (bool) $className::get()->byID($id);
         }
 
         return false;
@@ -996,6 +946,51 @@ class OrderItem extends OrderAttribute
         $html .= '</ul>';
 
         return $html;
+    }
+
+    /**
+     * Standard SS method.
+     * If the quantity is zero then we set it to 1.
+     * TODO: evaluate this rule.
+     */
+    protected function onBeforeWrite()
+    {
+        if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
+            $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
+        }
+        if (! $this->exists()) {
+            if ($buyable = $this->Buyable(true)) {
+                if ($this->ClassName === OrderItem::class && $this->BuyableClassName !== OrderItem::class) {
+                    $this->setClassName($buyable->classNameForOrderItem());
+                }
+            }
+        }
+        //now we can do the parent thing
+        parent::onBeforeWrite();
+        //always keep quantity above 0
+        if (floatval($this->Quantity) === 0) {
+            $this->Quantity = 1;
+        }
+        if (! $this->Version && $buyable = $this->Buyable(true)) {
+            $this->Version = $buyable->Version;
+        }
+    }
+
+    /**
+     * Standard SS method
+     * the method below is very important...
+     * We initialise the order once it has an OrderItem.
+     */
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        $order = $this->Order();
+        if ($order) {
+            if (! $order->StatusID) {
+                //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
+                $order->init(true);
+            }
+        }
     }
 
     /**

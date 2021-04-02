@@ -40,7 +40,7 @@ class ArrayMethods
         $dataClasses = ClassInfo::dataClassesFor($className);
         $table = DataObject::getSchema()->tableName(array_shift($dataClasses));
         foreach ($ids as $id) {
-            $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = ${id} THEN ${count}";
+            $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
         return $ifStatement . ' END';

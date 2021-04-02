@@ -22,18 +22,18 @@ class FinalProductList extends AbstractProductsAndGroupsList
     /**
      * @var BaseProductList|null
      */
-    protected $baseProductList = null;
+    protected $baseProductList;
 
     /**
      * @var ProductGroupController|null
      */
-    protected $rootGroupController = null;
+    protected $rootGroupController;
 
     /**
      * singleton_cache
      * @var self|null
      */
-    protected static $singleton_cache = null;
+    protected static $singleton_cache;
 
     /**
      * @param ProductGroupController $rootGroupController

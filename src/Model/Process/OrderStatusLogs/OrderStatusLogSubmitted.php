@@ -126,7 +126,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * adding a sequential order number.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         if ($order = $this->Order()) {
@@ -135,24 +135,20 @@ class OrderStatusLogSubmitted extends OrderStatusLog
                 $this->SubTotal = $order->SubTotal();
             }
         }
-        if (! intval($this->SequentialOrderNumber)) {
+        if (! (int) $this->SequentialOrderNumber) {
             $this->SequentialOrderNumber = 1;
-            $min = intval(EcommerceConfig::get(Order::class, 'order_id_start_number')) - 0;
-            if (isset($this->ID)) {
-                $id = intval($this->ID);
-            } else {
-                $id = 0;
-            }
+            $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') - 0;
+            $id = $this->ID !== null ? (int) $this->ID : 0;
             $lastOne = DataObject::get_one(
                 OrderStatusLogSubmitted::class,
-                '\'ID\' != \'' . $id . '\'',
+                "'ID' != '" . $id . "'",
                 $cacheDataObjectGetOne = true,
                 ['SequentialOrderNumber' => 'DESC']
             );
             if ($lastOne) {
-                $this->SequentialOrderNumber = intval($lastOne->SequentialOrderNumber) + 1;
+                $this->SequentialOrderNumber = (int) $lastOne->SequentialOrderNumber + 1;
             }
-            if (intval($min) && $this->SequentialOrderNumber < $min) {
+            if ((int) $min && $this->SequentialOrderNumber < $min) {
                 $this->SequentialOrderNumber = $min;
             }
         }

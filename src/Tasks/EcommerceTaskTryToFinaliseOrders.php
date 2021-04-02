@@ -52,17 +52,17 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         //get limits
         $limit = null;
         if (isset($_GET['limit'])) {
-            $limit = intval($_GET['limit']);
+            $limit = (int) $_GET['limit'];
         }
-        if (! intval($limit)) {
+        if (! (int) $limit) {
             $limit = $this->limit;
         }
         $startAt = null;
         if (isset($_GET['startat'])) {
-            $startAt = intval($_GET['startat']);
+            $startAt = (int) $_GET['startat'];
         }
-        if (! intval($startAt)) {
-            $startAt = intval(Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class));
+        if (! (int) $startAt) {
+            $startAt = (int) Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class);
             if (! $startAt) {
                 $startAt = 0;
             }
@@ -80,11 +80,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             if ($submittedStatusLog) {
                 $lastOrderStep = OrderStep::last_order_step();
                 if ($lastOrderStep) {
-                    if ($this->isCli()) {
-                        $sort = 'RAND() ASC';
-                    } else {
-                        $sort = ['ID' => 'ASC'];
-                    }
+                    $sort = $this->isCli() ? 'RAND() ASC' : ['ID' => 'ASC'];
                     $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->columnUnique() : [];
                     if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
                         //do nothing...
@@ -101,7 +97,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         )
                         ->innerJoin(
                             $submittedOrderStatusLogTableName,
-                            "\"${submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                            "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                         );
                     $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
@@ -126,7 +122,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     {
         $orders = $orders->limit($limit, $startAt);
         if ($orders->count()) {
-            DB::alteration_message("<h1>Moving ${limit} Orders (starting from ${startAt})</h1>");
+            DB::alteration_message("<h1>Moving {$limit} Orders (starting from {$startAt})</h1>");
             foreach ($orders as $order) {
                 ++$startAt;
 
@@ -134,8 +130,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 $stepBefore = OrderStep::get()->byID($order->StatusID);
                 try {
                     $order->tryToFinaliseOrder();
-                } catch (Exception $e) {
-                    DB::alteration_message($e, 'deleted');
+                } catch (Exception $exception) {
+                    DB::alteration_message($exception, 'deleted');
                 }
                 $stepAfter = OrderStep::get()->byID($order->StatusID);
                 if ($stepBefore) {

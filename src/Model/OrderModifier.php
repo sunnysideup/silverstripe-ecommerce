@@ -209,7 +209,7 @@ class OrderModifier extends OrderAttribute
      *
      * @var OrderModifierDescriptor
      */
-    private $orderModifier_Descriptor = null;
+    private $orderModifier_Descriptor;
 
     public function i18n_singular_name()
     {
@@ -415,7 +415,7 @@ class OrderModifier extends OrderAttribute
     public function ShowFormOutsideEditableOrderTable()
     {
         //extend in OrderModifier Extensions
-        return $this->ShowFormInEditableOrderTable() ? false : true;
+        return ! $this->ShowFormInEditableOrderTable();
     }
 
     /**
@@ -542,11 +542,7 @@ class OrderModifier extends OrderAttribute
         if ($this->IsRemoved()) {
             return true;
         }
-        if ($this->ShowInTable()) {
-            return false;
-        }
-
-        return true;
+        return ! $this->ShowInTable();
     }
 
     /**
@@ -695,16 +691,6 @@ class OrderModifier extends OrderAttribute
     public function IsRemoved()
     {
         return $this->HasBeenRemoved;
-    }
-
-    // ######################################## ***  11. standard database related functions (e.g. onBeforeWrite, onAfterWrite, etc...)
-
-    /**
-     * standard SS method.
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
     }
 
     /**

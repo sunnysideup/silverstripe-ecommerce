@@ -41,7 +41,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
             Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         }
-        $id = intval($request->getVar('id')) - 0;
+        $id = (int) $request->getVar('id') - 0;
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
         if ($ordersinQueue->count() === 0) {
@@ -68,6 +68,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $orders = $orders->limit($this->limit);
         //we sort randomly so it is less likely we get stuck with the same ones
         $orders = $orders->sort('RAND()');
+
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         foreach ($orders as $order) {
             echo '<hr />Processing order: ' . $order->ID;

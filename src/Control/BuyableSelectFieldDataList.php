@@ -103,7 +103,7 @@ class BuyableSelectFieldDataList extends Controller
                                 $fieldName . ':PartialMatch' => $term,
                                 'AllowPurchase' => 1,
                             ])
-                            ->where("\"${tableName}\".\"ID\" NOT IN (" . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
+                            ->where("\"{$tableName}\".\"ID\" NOT IN (" . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
                             ->First();
                         if ($obj) {
                             //we found an object, we dont need to find it again.

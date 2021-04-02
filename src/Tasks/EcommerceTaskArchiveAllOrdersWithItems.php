@@ -53,17 +53,17 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
             $count = DB::query("
                 SELECT COUNT (\"Order\".\"ID\")
                 FROM \"Order\"
-                ${joinSQL}
-                ${whereSQL}
+                {$joinSQL}
+                {$whereSQL}
             ")->value();
             DB::query("
                 UPDATE \"Order\"
-                ${joinSQL}
+                {$joinSQL}
                 SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
-                ${whereSQL}
+                {$whereSQL}
             ");
             if ($count) {
-                DB::alteration_message("NOTE: ${count} records were updated.", 'created');
+                DB::alteration_message("NOTE: {$count} records were updated.", 'created');
             } else {
                 DB::alteration_message('No records were updated.');
             }
@@ -77,8 +77,8 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
     {
         return Order::get()
             ->filter(['StatusID' => $lastOrderStep->ID])
-            ->leftJoin($orderStatusLogTableName, "\"${orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"")
-            ->where("\"${orderStatusLogTableName}\".\"ID\" IS NULL")
+            ->leftJoin($orderStatusLogTableName, "\"{$orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"")
+            ->where("\"{$orderStatusLogTableName}\".\"ID\" IS NULL")
             ->limit(100, $offset);
     }
 

@@ -47,9 +47,9 @@ class ProductGroup extends Page
     /**
      * @var array
      */
-    protected $recursiveValues = null;
+    protected $recursiveValues = [];
 
-    protected $baseProductList = null;
+    protected $baseProductList;
 
     private static $template_for_selection_of_products = Template::class;
 
@@ -263,7 +263,7 @@ class ProductGroup extends Page
 
         foreach ($urlSegments as $urlSegment) {
             $counts = array_count_values($urlSegments);
-            $hasDuplicates = $counts[$urlSegment] > 1 ? true : false;
+            $hasDuplicates = $counts[$urlSegment] > 1;
 
             if ($hasDuplicates) {
                 DB::alteration_message('found duplicates for ' . $urlSegment, 'deleted');
@@ -283,7 +283,7 @@ class ProductGroup extends Page
                             DB::alteration_message(' ... .... from ' . $oldURLSegment . ' to ' . $newURLSegment, 'created');
                         }
 
-                        $count++;
+                        ++$count;
                     }
                 }
             }
@@ -303,7 +303,7 @@ class ProductGroup extends Page
 
     public function getProductsPerPage(?int $default = 10): int
     {
-        return intval($this->recursiveValue('NumberOfProductsPerPage', $default));
+        return (int) $this->recursiveValue('NumberOfProductsPerPage', $default);
     }
 
     /**
@@ -327,7 +327,7 @@ class ProductGroup extends Page
     {
         $value = $this->recursiveValue('LevelOfProductsToShow', 99);
 
-        return intval($value);
+        return (int) $value;
     }
 
     /**
@@ -439,7 +439,7 @@ class ProductGroup extends Page
      */
     public function BestAvailableImage()
     {
-        return $this->recursiveValue('Image', null);
+        return $this->recursiveValue('Image');
     }
 
     /**

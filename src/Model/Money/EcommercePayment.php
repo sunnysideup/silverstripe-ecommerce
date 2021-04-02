@@ -40,12 +40,24 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
+    /**
+     * @var string
+     */
     public const INCOMPLETE_STATUS = 'Incomplete';
 
+    /**
+     * @var string
+     */
     public const SUCCESS_STATUS = 'Success';
 
+    /**
+     * @var string
+     */
     public const FAILURE_STATUS = 'Failure';
 
+    /**
+     * @var string
+     */
     public const PENDING_STATUS = 'Pending';
 
     /**
@@ -53,7 +65,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @var EcommercePaymentSupportedMethodsProvider
      */
-    public $supportedMethodsProvider = null;
+    public $supportedMethodsProvider;
 
     /**
      * standard SS Variable.
@@ -148,7 +160,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'ID' => 'DESC',
     ];
 
-    private $ecommercePaymentFormSetupAndValidationObject = null;
+    private $ecommercePaymentFormSetupAndValidationObject;
 
     public function i18n_singular_name()
     {
@@ -364,29 +376,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * standard SS method
-     * try to finalise order if payment has been made.
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        $this->PaidByID = Member::currentUserID();
-    }
-
-    /**
-     * standard SS method
-     * try to finalise order if payment has been made.
-     */
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        $order = $this->Order();
-        if ($order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
-            $order->tryToFinaliseOrder();
-        }
-    }
-
-    /**
      *@return string
      **/
     public function Status()
@@ -454,7 +443,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * test methods are included if the site is in DEV mode OR
      * the current user is a ShopAdmin.
      *
-     * @return array
      *     [Code] => "Description",
      *     [Code] => "Description",
      *     [Code] => "Description"
@@ -517,7 +505,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             $methodFields = new CompositeField(
                 $methodClass::create()->getPaymentFormFields($amount, $order)
             );
-            $methodFields->addExtraClass("methodFields_${htmlClassName}");
+            $methodFields->addExtraClass("methodFields_{$htmlClassName}");
             $methodFields->addExtraClass('paymentfields');
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
@@ -627,6 +615,29 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public static function html_class_to_php_class(string $htmlClass): string
     {
         return str_replace('-', '\\', $htmlClass);
+    }
+
+    /**
+     * standard SS method
+     * try to finalise order if payment has been made.
+     */
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->PaidByID = Member::currentUserID();
+    }
+
+    /**
+     * standard SS method
+     * try to finalise order if payment has been made.
+     */
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        $order = $this->Order();
+        if ($order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
+            $order->tryToFinaliseOrder();
+        }
     }
 
     /**

@@ -232,6 +232,7 @@ class OrderConfirmationPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'ContinuePageID');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Errors', 'NoItemsInOrderMessage');
+
         $fieldLabels = $this->fieldLabels();
         $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
         $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
@@ -366,39 +367,6 @@ class OrderConfirmationPage extends CartPage
         $do->ID = 99;
 
         return $do;
-    }
-
-    /**
-     * standard SS method for use in templates
-     * we are overriding the code from the Cart Page here.
-     *
-     * @return string
-     */
-    public function LinkingMode()
-    {
-        return parent::LinkingMode();
-    }
-
-    /**
-     * standard SS method for use in templates
-     * we are overriding the code from the Cart Page here.
-     *
-     * @return string
-     */
-    public function LinkOrSection()
-    {
-        return parent::LinkOrSection();
-    }
-
-    /**
-     * standard SS method for use in templates
-     * we are overriding the code from the Cart Page here.
-     *
-     * @return string
-     */
-    public function LinkOrCurrent()
-    {
-        return parent::LinkOrCurrent();
     }
 
     public function requireDefaultRecords()

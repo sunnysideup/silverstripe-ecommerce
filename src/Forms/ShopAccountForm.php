@@ -38,7 +38,6 @@ class ShopAccountForm extends Form
     public function __construct($controller, $name, $mustCreateAccount = false)
     {
         $member = Security::getCurrentUser();
-        $requiredFields = null;
         if ($member && $member->exists()) {
             $fields = $member->getEcommerceFields(false);
             $clearCartAndLogoutLink = ShoppingCartController::clear_cart_and_logout_link();
@@ -123,7 +122,7 @@ class ShopAccountForm extends Form
      */
     public function submit($data, $form, $request)
     {
-        return $this->processForm($data, $form, $request, '');
+        return $this->processForm($data, $form, $request);
     }
 
     /**

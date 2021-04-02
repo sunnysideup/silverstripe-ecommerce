@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use SilverStripe\Forms\FieldList;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -70,16 +69,6 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
     {
         //IMPORTANT
         return null;
-    }
-
-    /**
-     * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
-     *
-     * @return \SilverStripe\Forms\FieldList
-     **/
-    public function addOrderStepFields(FieldList $fields, Order $order)
-    {
-        return parent::addOrderStepFields($fields, $order);
     }
 
     /**

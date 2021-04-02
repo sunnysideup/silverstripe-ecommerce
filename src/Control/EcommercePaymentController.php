@@ -23,7 +23,7 @@ class EcommercePaymentController extends Controller
     /**
      * @var Order|null
      */
-    protected $currentOrder = null;
+    protected $currentOrder;
 
     /**
      * @var string
@@ -137,9 +137,9 @@ class EcommercePaymentController extends Controller
 
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-        $id = intval($this->request->param('ID'));
+        $id = (int) $this->request->param('ID');
         if (! $id && isset($_REQUEST['OrderID'])) {
-            $id = intval($_REQUEST['OrderID']);
+            $id = (int) $_REQUEST['OrderID'];
         }
         if ($id) {
             $order = Order::get_by_id_if_can_view($id);

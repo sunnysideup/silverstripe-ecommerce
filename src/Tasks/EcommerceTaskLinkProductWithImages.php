@@ -64,11 +64,11 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
 
     public function run($request)
     {
-        if (isset($_REQUEST['start']) && intval($_REQUEST['start'])) {
-            $this->start = intval($_REQUEST['start']);
+        if (isset($_REQUEST['start']) && (int) $_REQUEST['start']) {
+            $this->start = (int) $_REQUEST['start'];
         }
-        if (isset($_REQUEST['productid']) && intval($_REQUEST['productid'])) {
-            $this->productID = intval($_REQUEST['productid']);
+        if (isset($_REQUEST['productid']) && (int) $_REQUEST['productid']) {
+            $this->productID = (int) $_REQUEST['productid'];
         }
         if ($this->productManyManyField) {
             $products = Product::get()->limit($this->limit, $this->start);
@@ -97,20 +97,14 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                                         DB::alteration_message('Adding image ' . $image->Name . ' to ' . $product->Title, 'created');
                                     }
                                 }
-                            } else {
-                                if ($this->verbose) {
-                                    DB::alteration_message('No images where found for product with Title <i>' . $product->Title . '</i>: no images could be added.');
-                                }
+                            } elseif ($this->verbose) {
+                                DB::alteration_message('No images where found for product with Title <i>' . $product->Title . '</i>: no images could be added.');
                             }
-                        } else {
-                            if ($this->verbose) {
-                                DB::alteration_message('The method <i>' . $this->productManyManyField . '</i> does not exist on <i>' . $product->Title . ' (' . $product->ClassName . ')</i>: no images could be added.');
-                            }
+                        } elseif ($this->verbose) {
+                            DB::alteration_message('The method <i>' . $this->productManyManyField . '</i> does not exist on <i>' . $product->Title . ' (' . $product->ClassName . ')</i>: no images could be added.');
                         }
-                    } else {
-                        if ($this->verbose) {
-                            DB::alteration_message('No InternalItemID set for <i>' . $product->Title . '</i>: no images could be added.');
-                        }
+                    } elseif ($this->verbose) {
+                        DB::alteration_message('No InternalItemID set for <i>' . $product->Title . '</i>: no images could be added.');
                     }
                 }
                 $productCount = Product::get()->count();
@@ -119,10 +113,8 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                     $controller->redirect($this->nextBatchLink());
                 }
             }
-        } else {
-            if ($this->verbose) {
-                DB::alteration_message('No product Many-2-Many method specified.  No further action taken.  ');
-            }
+        } elseif ($this->verbose) {
+            DB::alteration_message('No product Many-2-Many method specified.  No further action taken.  ');
         }
     }
 

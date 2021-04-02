@@ -65,20 +65,20 @@ class EcommerceTaskReviewSearches extends BuildTask
 
     public function run($request)
     {
-        $maxRows = intval(preg_replace('/[^\d.]/', '', $request->getVar('maxrows')));
-        $maxRows = intval($maxRows - 0);
+        $maxRows = (int) preg_replace('#[^\d.]#', '', $request->getVar('maxrows'));
+        $maxRows = (int) ($maxRows - 0);
         if (! $maxRows) {
             $maxRows = $this->defaultMaxRows;
         }
-        $days = intval($request->getVar('days') - 0);
+        $days = (int) ($request->getVar('days') - 0);
         if (! $days) {
             $days = $this->defaultDays;
         }
-        $countMin = intval($request->getVar('min') - 0);
+        $countMin = (int) ($request->getVar('min') - 0);
         if (! $countMin) {
             $countMin = $this->defaultMinimum;
         }
-        $endingDaysBack = intval($request->getVar('ago') - 0);
+        $endingDaysBack = (int) ($request->getVar('ago') - 0);
         if (! $endingDaysBack) {
             $endingDaysBack = $this->endingDaysBack;
         }

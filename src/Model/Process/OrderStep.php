@@ -212,7 +212,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     private static $default_sort = '"Sort" ASC';
 
-    private static $_last_order_step_cache = null;
+    private static $_last_order_step_cache;
 
     /**
      * IMPORTANT:: MUST HAVE Code must be defined!!!
@@ -712,7 +712,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'Code' => strtoupper($this->Code),
                 ]
             )
-            ->exclude(['ID' => intval($this->ID)])
+            ->exclude(['ID' => (int) $this->ID])
             ->First();
         if ($anotherOrderStepWithSameNameOrCode) {
             $result->addError(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
@@ -784,8 +784,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($nextOrderStepObject) {
             return $nextOrderStepObject;
         }
-
-        return;
     }
 
     /**************************************************
@@ -813,7 +811,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 return true;
             }
         } else {
-            user_error("could not find ${code} in OrderStep", E_USER_NOTICE);
+            user_error("could not find {$code} in OrderStep", E_USER_NOTICE);
         }
 
         return false;
@@ -848,7 +846,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      **/
     public function isBefore($code)
     {
-        return (bool) $this->hasPassed($code, false) ? false : true;
+        return ! (bool) $this->hasPassed($code);
     }
 
     /**
@@ -887,11 +885,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
         if ($checkDateOfOrder) {
-            if ($log = $order->SubmissionLog()) {
-                $lastEditedValue = $log->LastEdited;
-            } else {
-                $lastEditedValue = $order->LastEdited;
-            }
+            $lastEditedValue = ($log = $order->SubmissionLog()) ? $log->LastEdited : $order->LastEdited;
             if ((strtotime($lastEditedValue) < strtotime('-' . EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email') . ' days'))) {
                 return true;
             }
@@ -918,11 +912,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             )
             ->count();
         //tried it twice - abandon to avoid being stuck in a loop!
-        if ($count >= 2) {
-            return true;
-        }
-
-        return false;
+        return $count >= 2;
     }
 
     /**
@@ -1169,7 +1159,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             //do nothing
         } else {
             $orderCount = Order::get()
-                ->filter(['StatusID' => intval($this->ID) - 0])
+                ->filter(['StatusID' => (int) $this->ID - 0])
                 ->count();
             if ($orderCount) {
                 return false;
@@ -1193,9 +1183,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * standard SS method
+     * USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart.
+     */
+    public function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        $this->checkValidityOfOrderSteps();
+    }
+
+    /**
      * standard SS method.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         //make sure only one of three conditions applies ...
@@ -1212,14 +1212,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if (! $this->canBeDefered()) {
             $this->DeferTimeInSeconds = 0;
             $this->DeferFromSubmitTime = 0;
+        } elseif (is_numeric($this->DeferTimeInSeconds)) {
+            $this->DeferTimeInSeconds = (int) $this->DeferTimeInSeconds;
         } else {
-            if (is_numeric($this->DeferTimeInSeconds)) {
-                $this->DeferTimeInSeconds = intval($this->DeferTimeInSeconds);
-            } else {
-                $this->DeferTimeInSeconds = strtotime('+' . $this->DeferTimeInSeconds);
-                if ($this->DeferTimeInSeconds > 0) {
-                    $this->DeferTimeInSeconds -= time();
-                }
+            $this->DeferTimeInSeconds = strtotime('+' . $this->DeferTimeInSeconds);
+            if ($this->DeferTimeInSeconds > 0) {
+                $this->DeferTimeInSeconds -= time();
             }
         }
         $this->Code = strtoupper($this->Code);
@@ -1229,7 +1227,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * move linked orders to the next status
      * standard SS method.
      */
-    public function onBeforeDelete()
+    protected function onBeforeDelete()
     {
         $ordersWithThisStatus = Order::get()->filter(['StatusID' => $this->ID]);
         if ($ordersWithThisStatus->count()) {
@@ -1253,19 +1251,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
-    public function onAfterDelete()
+    protected function onAfterDelete()
     {
         parent::onAfterDelete();
-        $this->checkValidityOfOrderSteps();
-    }
-
-    /**
-     * standard SS method
-     * USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart.
-     */
-    public function requireDefaultRecords()
-    {
-        parent::requireDefaultRecords();
         $this->checkValidityOfOrderSteps();
     }
 
@@ -1329,10 +1317,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend
                 );
             }
-            if ($outcome || Director::isDev()) {
-                return true;
-            }
-            return false;
+            return $outcome || Director::isDev();
         }
 
         return true;
@@ -1478,7 +1463,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         $obj->Description = $obj->myDescription();
                         $obj->Sort = $indexNumber;
                         $obj->write();
-                        DB::alteration_message("Created \"${code}\" as ${className}.", 'created');
+                        DB::alteration_message("Created \"{$code}\" as {$className}.", 'created');
                     }
                     $obj = DataObject::get_one(
                         OrderStep::class,
@@ -1486,7 +1471,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         $cacheDataObjectGetOne = false
                     );
                     if (! $obj) {
-                        user_error("There was an error in creating the ${code} OrderStep");
+                        user_error("There was an error in creating the {$code} OrderStep");
                     }
                 }
             }

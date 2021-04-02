@@ -34,6 +34,9 @@ class UserPreference
     use Injectable;
     use DebugTrait;
 
+    /**
+     * @var string
+     */
     protected const GET_VAR_VALUE_PLACE_HOLDER = '[[INSERT_VALUE_HERE]]';
 
     /**
@@ -68,14 +71,14 @@ class UserPreference
     /**
      * @var HTTPRequest|null
      */
-    protected $request = null;
+    protected $request;
 
     /**
      * @var ContentController|null
      */
-    protected $rootGroupController = null;
+    protected $rootGroupController;
 
-    protected $rootGroup = null;
+    protected $rootGroup;
 
     /**
      * here is where we save the GET variables and any other settings for FILTER|SORT|DISPLAY
@@ -432,13 +435,13 @@ class UserPreference
         if ($optionA) {
             foreach ($actions as $group) {
                 $link = $group->FilterForGroupLinkSegment();
-                foreach ($options as $key => $data) {
+                foreach (array_keys($options) as $key) {
                     $isCurrent = $currentKey === $key && $this->matchingSegment($link);
 
                     $obj = new ArrayData(
                         [
                             'Title' => $group->MenuTitle,
-                            'Current' => $isCurrent ? true : false,
+                            'Current' => $isCurrent,
                             //todo: fix this!!!!
                             'Link' => $this->getLinkTemplate($link, $type, $key),
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
@@ -455,7 +458,7 @@ class UserPreference
                 $obj = new ArrayData(
                     [
                         'Title' => $data['Title'],
-                        'Current' => $isCurrent ? true : false,
+                        'Current' => $isCurrent,
                         //todo: fix this!!!!
                         'Link' => $this->getLinkTemplate('', $type, $key),
                         'LinkingMode' => $isCurrent ? 'current' : 'link',
@@ -481,11 +484,7 @@ class UserPreference
         $getVars = [];
         foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
             if ($type && $myType === $type) {
-                if ($replacementForType) {
-                    $value = $replacementForType;
-                } else {
-                    $value = self::GET_VAR_VALUE_PLACE_HOLDER;
-                }
+                $value = $replacementForType ? $replacementForType : self::GET_VAR_VALUE_PLACE_HOLDER;
             } else {
                 $value = $this->getCurrentUserPreferencesKey($myType);
             }
@@ -507,7 +506,6 @@ class UserPreference
      */
     public function setIdArrayDefaultSort(?array $idArray = [], $alternativeSort = null)
     {
-        $array = null;
         if ($alternativeSort) {
             $array = $alternativeSort;
         }
@@ -532,7 +530,7 @@ class UserPreference
     {
         return $this->getTemplateForProductsAndGroups()
             ->getApplyer('DISPLAY')
-            ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY')) ? true : false;
+            ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY'));
     }
 
     public function getCurrentUserPreferencesKey($type)
@@ -559,7 +557,7 @@ class UserPreference
     {
         $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
 
-        return $obj->getTitle($value) . (string) $this->getCurrentUserPreferencesTitle($type);
+        return $obj->getTitle($value) . $this->getCurrentUserPreferencesTitle($type);
     }
 
     protected function savePreferenceToSession($type, $newPreference)

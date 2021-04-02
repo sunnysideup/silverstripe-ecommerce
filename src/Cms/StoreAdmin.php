@@ -75,11 +75,6 @@ class StoreAdmin extends ModelAdmin
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/cart-file.gif';
 
-    public function init()
-    {
-        parent::init();
-    }
-
     /**
      *@return string (URLSegment)
      **/

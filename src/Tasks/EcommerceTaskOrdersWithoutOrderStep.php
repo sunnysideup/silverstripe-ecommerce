@@ -49,7 +49,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                     )
                     ->innerJoin(
                         $submittedOrderStatusLogTableName,
-                        "\"${submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                        "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                     );
                 if ($orders->count()) {
                     foreach ($orders as $order) {

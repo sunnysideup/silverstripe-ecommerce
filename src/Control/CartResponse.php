@@ -65,9 +65,7 @@ class CartResponse extends EcommerceResponse
      * Builds json object to be returned via ajax.
      *
      * @param array  $messages        (Type, Message)
-     * @param array  $additionalData
      * @param string $status
-     *
      * @return string HEADER + JSON
      **/
     public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
@@ -214,7 +212,7 @@ class CartResponse extends EcommerceResponse
         $json = str_replace('\t', ' ', $json);
         $json = str_replace('\r', ' ', $json);
         $json = str_replace('\n', ' ', $json);
-        $json = preg_replace('/\s\s+/', ' ', $json);
+        $json = preg_replace('#\s\s+#', ' ', $json);
         if (Director::isDev()) {
             $json = str_replace('{', "\r\n{", $json);
         }

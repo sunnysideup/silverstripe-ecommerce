@@ -16,24 +16,6 @@ class AccountPageController extends PageController
     ];
 
     /**
-     * standard controller function.
-     **/
-    public function init()
-    {
-        parent::init();
-        if (! $this->AccountMember() && 1 === 2) {
-            $messages = [
-                'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
-                'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
-            ];
-            Security::permissionFailure($this, $messages);
-
-            return false;
-        }
-        Requirements::themedCSS('client/css/AccountPage');
-    }
-
-    /**
      * Return a form allowing the user to edit
      * their details with the shop.
      *
@@ -50,5 +32,23 @@ class AccountPageController extends PageController
     public function AccountMember()
     {
         return Security::getCurrentUser();
+    }
+
+    /**
+     * standard controller function.
+     **/
+    protected function init()
+    {
+        parent::init();
+        if (! $this->AccountMember() && 1 === 2) {
+            $messages = [
+                'default' => '<p class="message good">' . _t('Account.LOGINFIRST', 'You will need to log in before you can access the account page. ') . '</p>',
+                'logInAgain' => _t('Account.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
+            ];
+            Security::permissionFailure($this, $messages);
+
+            return false;
+        }
+        Requirements::themedCSS('client/css/AccountPage');
     }
 }

@@ -43,7 +43,7 @@ class ProductController extends PageController
      */
     public function viewversion(HTTPRequest $request)
     {
-        $version = intval($request->param('ID')) - 0;
+        $version = (int) $request->param('ID') - 0;
         $currentVersion = $this->Version;
         if ($currentVersion !== $version) {
             if ($record = $this->getVersionOfBuyable($this->ID, $version)) {
@@ -137,7 +137,7 @@ class ProductController extends PageController
      */
     public function IsOlderVersion()
     {
-        return $this->isCurrentVersion ? false : true;
+        return ! $this->isCurrentVersion;
     }
 
     /**
@@ -147,7 +147,6 @@ class ProductController extends PageController
      */
     public function SidebarProducts()
     {
-        return;
     }
 
     /**
@@ -159,10 +158,10 @@ class ProductController extends PageController
     {
         $array = $this->getListOfIDs();
         foreach ($array as $key => $id) {
-            $id = intval($id);
+            $id = (int) $id;
             if ($id === $this->ID) {
                 if (isset($array[$key + 1])) {
-                    return Product::get()->byID(intval($array[$key + 1]));
+                    return Product::get()->byID((int) $array[$key + 1]);
                 }
             }
         }
@@ -178,14 +177,12 @@ class ProductController extends PageController
         $array = $this->getListOfIDs();
         $previousID = 0;
         foreach ($array as $id) {
-            $id = intval($id);
+            $id = (int) $id;
             if ($id === $this->ID) {
                 return Product::get()->byID($previousID);
             }
             $previousID = $id;
         }
-
-        return;
     }
 
     /**
@@ -195,7 +192,7 @@ class ProductController extends PageController
      */
     public function HasPreviousOrNextProduct()
     {
-        return $this->PreviousProduct() || $this->NextProduct() ? true : false;
+        return $this->PreviousProduct() || $this->NextProduct();
     }
 
     public function debug()

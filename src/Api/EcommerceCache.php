@@ -22,7 +22,7 @@ class EcommerceCache implements Flushable
     /**
      * @var CacheInterface
      */
-    protected $cacheBackend = null;
+    protected $cacheBackend;
 
     public static function inst(): EcommerceCache
     {

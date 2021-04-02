@@ -314,6 +314,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
+
         $config = EcommerceConfig::inst();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
@@ -322,7 +323,7 @@ class Product extends Page implements BuyableModel
                 $allowPurchaseField->setDescription(
                     _t(
                         'Product.DO_NOT_ALLOW_FREE_PRODUCTS_TO_BE_PURCHASED',
-                        "NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"${link}\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
+                        "NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"{$link}\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
                     )
                 );
             }
@@ -393,47 +394,6 @@ class Product extends Page implements BuyableModel
         return $this->Link('ajaxview');
     }
 
-    /**
-     * Adds keywords to the MetaKeyword
-     * Standard SS Method.
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-
-        $filter = EcommerceCodeFilter::create();
-        $filter->checkCode($this, 'InternalItemID');
-
-        $this->prepareFullFields();
-
-        //we are adding all the fields to the keyword fields here for searching purposes.
-        //because the MetaKeywords Field is being searched.
-        if ($this->Config()->get('use_search_data_field')) {
-            $this->SearchData = '';
-            $indexes = $this->Config()->get('indexes');
-            $fieldsToExclude = $indexes['SearchFields']['columns'];
-            foreach (array_keys($this->Config()->get('db')) as $fieldName) {
-                if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
-                    if (! in_array($fieldName, $fieldsToExclude, true)) {
-                        $this->SearchData .= strip_tags($this->{$fieldName});
-                    }
-                }
-            }
-
-            if ($this->hasExtension('ProductWithVariationDecorator')) {
-                $variations = $this->Variations();
-                if ($variations) {
-                    $variationCount = $variations->count();
-                    if ($variationCount > 0 && $variationCount < 8) {
-                        foreach ($variations as $variation) {
-                            $this->SearchData .= ' - ' . $variation->FullName;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public function onAfterDelete()
     {
         parent::onAfterDelete();
@@ -462,7 +422,7 @@ class Product extends Page implements BuyableModel
         $obj = $this;
         $parentTitleArray = [];
         while ($obj && $obj->ParentID) {
-            $obj = SiteTree::get()->byID(intval($obj->ParentID) - 0);
+            $obj = SiteTree::get()->byID((int) $obj->ParentID - 0);
             if ($obj) {
                 $parentSortArray[] = sprintf('%03d', $obj->Sort);
                 if (is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))) {
@@ -478,11 +438,7 @@ class Product extends Page implements BuyableModel
         //setting fields with new values!
         $this->FullName = $fullName . $parentTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
-        if (($this->dbObject('FullName') !== $this->FullName) || ($this->dbObject('FullSiteTreeSort') !== $this->FullSiteTreeSort)) {
-            return true;
-        }
-
-        return false;
+        return ($this->dbObject('FullName') !== $this->FullName) || ($this->dbObject('FullSiteTreeSort') !== $this->FullSiteTreeSort);
     }
 
     /**
@@ -774,7 +730,7 @@ class Product extends Page implements BuyableModel
             ]
         );
 
-        return $dataList->count() ? true : false;
+        return (bool) $dataList->count();
     }
 
     //LINKS
@@ -913,7 +869,7 @@ class Product extends Page implements BuyableModel
      */
     public function IsInCart()
     {
-        return $this->OrderItem() && $this->OrderItem()->Quantity > 0 ? true : false;
+        return $this->OrderItem() && $this->OrderItem()->Quantity > 0;
     }
 
     /**
@@ -1022,9 +978,7 @@ class Product extends Page implements BuyableModel
     /**
      * Is the product for sale?
      *
-     * @param \SilverStripe\Security\Member $member
      * @param bool   $checkPrice
-     *
      * @return bool
      */
     public function canPurchase(Member $member = null, $checkPrice = true)
@@ -1161,7 +1115,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><hr />Cart<hr /></li>';
         $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
-        $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed ? 'NO' : 'YES' . ' </li>';
+        $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed ? 'NO' : 'YES </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
@@ -1188,7 +1142,6 @@ class Product extends Page implements BuyableModel
         $html .= '</ul>';
 
         return $html;
-        return $html . '</ul>';
     }
 
     /**
@@ -1197,6 +1150,47 @@ class Product extends Page implements BuyableModel
     public function InternalItemIDForSearchResults()
     {
         return $this->InternalItemID;
+    }
+
+    /**
+     * Adds keywords to the MetaKeyword
+     * Standard SS Method.
+     */
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+
+        $filter = EcommerceCodeFilter::create();
+        $filter->checkCode($this, 'InternalItemID');
+
+        $this->prepareFullFields();
+
+        //we are adding all the fields to the keyword fields here for searching purposes.
+        //because the MetaKeywords Field is being searched.
+        if ($this->Config()->get('use_search_data_field')) {
+            $this->SearchData = '';
+            $indexes = $this->Config()->get('indexes');
+            $fieldsToExclude = $indexes['SearchFields']['columns'];
+            foreach (array_keys($this->Config()->get('db')) as $fieldName) {
+                if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
+                    if (! in_array($fieldName, $fieldsToExclude, true)) {
+                        $this->SearchData .= strip_tags($this->{$fieldName});
+                    }
+                }
+            }
+
+            if ($this->hasExtension('ProductWithVariationDecorator')) {
+                $variations = $this->Variations();
+                if ($variations) {
+                    $variationCount = $variations->count();
+                    if ($variationCount > 0 && $variationCount < 8) {
+                        foreach ($variations as $variation) {
+                            $this->SearchData .= ' - ' . $variation->FullName;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -1233,8 +1227,8 @@ class Product extends Page implements BuyableModel
                 Files need to be named in the following way:
                 An additional image for your product should be named &lt;Product Code&gt;_(00 to 99).(png/jpg/gif). <br />For example, you may name your image:
                 <strong>' . $this->InternalItemID . "_08.jpg</strong>.
-                <br /><br />You can <a href=\"${findImagesLinkOne}\" target='_blank'>find images for <i>" . $this->Title . "</i></a> or
-                <a href=\"${findImagesLink}\" target='_blank'>images for all products</a> ...
+                <br /><br />You can <a href=\"{$findImagesLinkOne}\" target='_blank'>find images for <i>" . $this->Title . "</i></a> or
+                <a href=\"{$findImagesLink}\" target='_blank'>images for all products</a> ...
             </p>";
         } else {
             $msg .= '

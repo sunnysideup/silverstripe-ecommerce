@@ -20,7 +20,7 @@ class SelectOrderAddressField extends OptionsetField
     /**
      * @var SilverStripe\ORM\DataList|null
      */
-    protected $addresses = null;
+    protected $addresses;
 
     /**
      * Creates a new optionset field.

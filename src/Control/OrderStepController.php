@@ -37,7 +37,7 @@ abstract class OrderStepController extends Controller
     /**
      * @var Sunnysideup\Ecommerce\Model\Order
      */
-    private static $_order = null;
+    private static $_order;
 
     /**
      * when no action is selected
@@ -170,10 +170,7 @@ abstract class OrderStepController extends Controller
     protected function checkOrder($dataOrRequest = null)
     {
         $order = $this->Order($dataOrRequest);
-        if ($order && $order->exists()) {
-            return true;
-        }
-        return false;
+        return $order && $order->exists();
     }
 
     /**
@@ -190,19 +187,19 @@ abstract class OrderStepController extends Controller
                 isset($dataOrRequest['OrderID']) &&
                 isset($dataOrRequest['OrderSessionID'])
             ) {
-                $id = intval($dataOrRequest['OrderID']);
+                $id = (int) $dataOrRequest['OrderID'];
                 $sessionID = Convert::raw2sql($dataOrRequest['OrderSessionID']);
             } elseif (isset($_POST['OrderID']) && isset($_POST['OrderSessionID'])) {
-                $id = intval($_POST['OrderID']);
+                $id = (int) $_POST['OrderID'];
                 $sessionID = Convert::raw2sql($_POST['OrderSessionID']);
             } elseif (isset($_GET['OrderID']) && isset($_GET['OrderSessionID'])) {
-                $id = intval($_GET['OrderID']);
+                $id = (int) $_GET['OrderID'];
                 $sessionID = Convert::raw2sql($_GET['OrderSessionID']);
             } elseif ($dataOrRequest instanceof HTTPRequest) {
-                $id = intval($dataOrRequest->param('ID'));
+                $id = (int) $dataOrRequest->param('ID');
                 $sessionID = Convert::raw2sql($dataOrRequest->param('OtherID'));
             } else {
-                $id = intval($this->request->param('ID'));
+                $id = (int) $this->request->param('ID');
                 $sessionID = Convert::raw2sql($this->request->param('OtherID'));
             }
             self::$_order = Order::get()->byID($id);

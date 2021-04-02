@@ -62,7 +62,7 @@ class ShoppingCartController extends Controller
     /**
      * @var ShoppingCart
      */
-    protected $cart = null;
+    protected $cart;
 
     /**
      * @var string
@@ -401,7 +401,7 @@ class ShoppingCartController extends Controller
      */
     public function removemodifier(HTTPRequest $request)
     {
-        $modifierID = intval($request->param('ID'));
+        $modifierID = (int) $request->param('ID');
         $this->cart->removeModifier($modifierID);
         $order = $this->cart->CurrentOrder();
         $order->calculateOrderAttributes($force = true);
@@ -417,7 +417,7 @@ class ShoppingCartController extends Controller
      */
     public function addmodifier(HTTPRequest $request)
     {
-        $modifierID = intval($request->param('ID'));
+        $modifierID = (int) $request->param('ID');
         $this->cart->addModifier($modifierID);
         $order = $this->cart->CurrentOrder();
         $order->calculateOrderAttributes($force = true);
@@ -450,7 +450,7 @@ class ShoppingCartController extends Controller
      **/
     public function setregion(HTTPRequest $request)
     {
-        $regionID = intval($request->param('ID'));
+        $regionID = (int) $request->param('ID');
         $this->cart->setRegion($regionID);
 
         return $this->cart->setMessageAndReturn();
@@ -480,7 +480,7 @@ class ShoppingCartController extends Controller
     {
         if (EcommerceRole::current_member_is_shop_assistant()) {
             $className = Convert::raw2sql($request->param('ID'));
-            $id = intval($request->param('OtherID'));
+            $id = (int) $request->param('OtherID');
             if (class_exists($className)) {
                 $obj = $className::get()->byID($id);
                 $obj->AllowPurchase = 0;
@@ -547,7 +547,7 @@ class ShoppingCartController extends Controller
      **/
     public function deleteorder(HTTPRequest $request)
     {
-        $orderID = intval($request->param('ID'));
+        $orderID = (int) $request->param('ID');
         if ($order = Order::get_by_id_if_can_view($orderID)) {
             if ($order->canDelete()) {
                 $order->delete();
@@ -558,7 +558,7 @@ class ShoppingCartController extends Controller
 
     public function copyorder($request)
     {
-        $orderID = intval($request->param('ID'));
+        $orderID = (int) $request->param('ID');
         if ($order = Order::get_by_id_if_can_view($orderID)) {
             $this->cart->copyOrder($order);
         }
@@ -601,7 +601,7 @@ class ShoppingCartController extends Controller
      */
     public function loadorder(HTTPRequest $request)
     {
-        $this->cart->loadOrder(intval($request->param('ID')));
+        $this->cart->loadOrder((int) $request->param('ID'));
         $cartPageLink = CartPage::find_link();
         if ($cartPageLink) {
             return $this->redirect($cartPageLink);
@@ -619,7 +619,7 @@ class ShoppingCartController extends Controller
      */
     public function removeaddress(HTTPRequest $request)
     {
-        $id = intval($request->param('ID'));
+        $id = (int) $request->param('ID');
 
         $className = Convert::raw2sql($request->param('OtherID'));
 
@@ -655,8 +655,9 @@ class ShoppingCartController extends Controller
     {
         $buyableClassName = Convert::raw2sql($this->getRequest()->param('ID'));
         $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
-        $buyableID = intval($this->getRequest()->param('OtherID'));
-        $version = intval($this->getRequest()->param('Version'));
+
+        $buyableID = (int) $this->getRequest()->param('OtherID');
+        $version = (int) $this->getRequest()->param('Version');
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $bestBuyable = $buyableClassName::get()->byID($buyableID);
@@ -683,8 +684,6 @@ class ShoppingCartController extends Controller
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
         }
-
-        return;
     }
 
     /**
@@ -698,7 +697,7 @@ class ShoppingCartController extends Controller
     public function placeorderformember(HTTPRequest $request)
     {
         if (EcommerceRole::current_member_is_shop_admin()) {
-            $member = Member::get()->byID(intval($request->param('ID')));
+            $member = Member::get()->byID((int) $request->param('ID'));
             if ($member) {
                 $newOrder = Order::create();
                 //copying fields.
@@ -725,7 +724,7 @@ class ShoppingCartController extends Controller
     public function loginas(HTTPRequest $request)
     {
         if (Permission::check('ADMIN')) {
-            $newMember = Member::get()->byID(intval($request->param('ID')));
+            $newMember = Member::get()->byID((int) $request->param('ID'));
 
             if ($newMember) {
                 Security::setCurrentUser($newMember);
@@ -853,23 +852,20 @@ class ShoppingCartController extends Controller
     {
         $buyableClassName = Convert::raw2sql($this->getRequest()->param('OtherID'));
         $buyableClassName = ClassHelpers::unsanitise_class_name($buyableClassName);
-        $buyableID = intval($this->getRequest()->param('ID'));
+
+        $buyableID = (int) $this->getRequest()->param('ID');
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
-                $obj = $buyableClassName::get()->byID(intval($buyableID));
+                $obj = $buyableClassName::get()->byID((int) $buyableID);
                 if ($obj) {
                     if ($obj->ClassName === $buyableClassName) {
                         return $obj;
                     }
                 }
-            } else {
-                if (strpos($buyableClassName, OrderItem::class)) {
-                    user_error('ClassName in URL should be buyable and not an orderitem', E_USER_NOTICE);
-                }
+            } elseif (strpos($buyableClassName, OrderItem::class)) {
+                user_error('ClassName in URL should be buyable and not an orderitem', E_USER_NOTICE);
             }
         }
-
-        return;
     }
 
     /**

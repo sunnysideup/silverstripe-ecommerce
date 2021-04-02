@@ -22,11 +22,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
     public function php($data, $allowExistingEmail = false)
     {
         $this->form->saveDataToSession();
-        if (Member::currentUserID()) {
-            $allowExistingEmail = false;
-        } else {
-            $allowExistingEmail = true;
-        }
+        $allowExistingEmail = ! (bool) Member::currentUserID();
         if (! isset($data['UseShippingAddress']) || ! $data['UseShippingAddress']) {
             foreach (array_keys($this->required) as $key) {
                 if (substr($key, 0, 8) === 'Shipping') {

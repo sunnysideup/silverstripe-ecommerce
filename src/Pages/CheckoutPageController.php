@@ -58,54 +58,6 @@ class CheckoutPageController extends CartPageController
     private static $ajaxify_steps = [];
 
     /**
-     * FOR STEP STUFF SEE BELOW.
-     **/
-
-    /**
-     * Standard SS function
-     * if set to false, user can edit order, if set to true, user can only review order.
-     **/
-    public function init()
-    {
-        parent::init();
-
-        Requirements::themedCSS('client/css/CheckoutPage');
-        $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
-        if (is_array($ajaxifyArray) && count($ajaxifyArray)) {
-            foreach ($ajaxifyArray as $js) {
-                Requirements::javascript($js);
-            }
-        }
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
-        Requirements::customScript(
-            '
-            if (typeof EcomOrderForm != "undefined") {
-                EcomOrderForm.set_TermsAndConditionsMessage(\'' . Convert::raw2js($this->TermsAndConditionsMessage) . '\');
-            }',
-            'TermsAndConditionsMessage'
-        );
-        $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
-        $this->currentStep = $this->request->Param('ID');
-        if ($this->currentStep && in_array($this->currentStep, $this->steps, true)) {
-            //do nothing
-        } else {
-            $this->currentStep = array_shift($this->steps);
-        }
-        //redirect to current order -
-        // this is only applicable when people submit order (start to pay)
-        // and then return back
-
-        if ($checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
-            if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
-                $this->clearRetrievalOrderID();
-            }
-        }
-        if ($this->currentOrder) {
-            $this->setRetrievalOrderID($this->currentOrder->ID);
-        }
-    }
-
-    /**
      * Returns a ArrayList of {@link OrderModifierForm} objects. These
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
@@ -208,7 +160,7 @@ class CheckoutPageController extends CartPageController
                         if ($completed) {
                             $do->Link = $this->Link('checkoutstep') . '/' . $do->Code . '/';
                         }
-                        $do->LinkingMode = "link ${completedClass}";
+                        $do->LinkingMode = "link {$completedClass}";
                     }
                     $do->Completed = $completed;
                     $returnData->push($do);
@@ -315,11 +267,7 @@ class CheckoutPageController extends CartPageController
      **/
     public function CanShowStep($step)
     {
-        if ($this->ShowOnlyCurrentStep()) {
-            $outcome = $step === $this->currentStep;
-        } else {
-            $outcome = in_array($step, $this->steps, true);
-        }
+        $outcome = $this->ShowOnlyCurrentStep() ? $step === $this->currentStep : in_array($step, $this->steps, true);
 
         // die($step.'sadf'.$outcome);
         return $outcome;
@@ -332,7 +280,7 @@ class CheckoutPageController extends CartPageController
      */
     public function ShowOnlyCurrentStep()
     {
-        return $this->currentStep ? true : false;
+        return (bool) $this->currentStep;
     }
 
     /**
@@ -357,6 +305,54 @@ class CheckoutPageController extends CartPageController
     public function PercentageDone()
     {
         return round($this->currentStepNumber() / $this->numberOfSteps(), 2) * 100;
+    }
+
+    /**
+     * FOR STEP STUFF SEE BELOW.
+     **/
+
+    /**
+     * Standard SS function
+     * if set to false, user can edit order, if set to true, user can only review order.
+     **/
+    protected function init()
+    {
+        parent::init();
+
+        Requirements::themedCSS('client/css/CheckoutPage');
+        $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
+        if (is_array($ajaxifyArray) && count($ajaxifyArray)) {
+            foreach ($ajaxifyArray as $js) {
+                Requirements::javascript($js);
+            }
+        }
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
+        Requirements::customScript(
+            '
+            if (typeof EcomOrderForm != "undefined") {
+                EcomOrderForm.set_TermsAndConditionsMessage(\'' . Convert::raw2js($this->TermsAndConditionsMessage) . '\');
+            }',
+            'TermsAndConditionsMessage'
+        );
+        $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
+        $this->currentStep = $this->request->Param('ID');
+        if ($this->currentStep && in_array($this->currentStep, $this->steps, true)) {
+            //do nothing
+        } else {
+            $this->currentStep = array_shift($this->steps);
+        }
+        //redirect to current order -
+        // this is only applicable when people submit order (start to pay)
+        // and then return back
+
+        if ($checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
+            if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
+                $this->clearRetrievalOrderID();
+            }
+        }
+        if ($this->currentOrder) {
+            $this->setRetrievalOrderID($this->currentOrder->ID);
+        }
     }
 
     /**

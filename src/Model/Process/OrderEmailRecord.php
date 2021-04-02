@@ -266,7 +266,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             ]
         );
         $emailLink = OrderEmailRecordReview::review_link($this);
-        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"${emailLink}\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
+        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"{$emailLink}\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
         $fields->replaceField(
             'OrderID',
             CMSEditLinkField::create(
@@ -312,6 +312,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     {
         $fieldList = parent::scaffoldSearchFields($_params);
         $fieldList->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
+
         $statusOptions = OrderStep::get();
         if ($statusOptions && $statusOptions->count()) {
             $preSelected = [];
@@ -324,12 +325,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                         $preSelected[$key] = $key;
                     }
                     $count = OrderEmailRecord::get()
-                        ->Filter(['OrderStepID' => intval($key)])
+                        ->Filter(['OrderStepID' => (int) $key])
                         ->count();
                     if ($count < 1) {
                         //do nothing
                     } else {
-                        $arrayOfStatusOptionsFinal[$key] = $value . " (${count})";
+                        $arrayOfStatusOptionsFinal[$key] = $value . " ({$count})";
                     }
                 }
             }

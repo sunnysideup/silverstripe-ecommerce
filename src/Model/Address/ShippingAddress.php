@@ -242,8 +242,6 @@ class ShippingAddress extends OrderAddress
     /**
      * Puts together the fields for the Order Form (and other front-end purposes).
      *
-     * @param \SilverStripe\Security\Member $member
-     *
      * @return \SilverStripe\Forms\FieldList
      **/
     public function getFields(Member $member = null)

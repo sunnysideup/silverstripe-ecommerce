@@ -79,19 +79,6 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         ];
     }
 
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        //all lower case and make replace double spaces
-        $this->Search = trim(preg_replace('!\s+!', ' ', strtolower($this->Search)));
-        $searchArray = [];
-        foreach (explode(',', $this->Search) as $term) {
-            $searchArray[] = trim($term);
-        }
-        $this->Search = implode(',', $searchArray);
-        $this->Replace = strtolower($this->Replace);
-    }
-
     /**
      * standard SS method.
      *
@@ -209,5 +196,18 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
                 'e.g. Sony'
             );
         return $fields;
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        //all lower case and make replace double spaces
+        $this->Search = trim(preg_replace('#\s+#', ' ', strtolower($this->Search)));
+        $searchArray = [];
+        foreach (explode(',', $this->Search) as $term) {
+            $searchArray[] = trim($term);
+        }
+        $this->Search = implode(',', $searchArray);
+        $this->Replace = strtolower($this->Replace);
     }
 }

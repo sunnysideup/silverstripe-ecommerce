@@ -21,7 +21,7 @@ class OrderFiltersHasBeenCancelled extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $value = intval($this->getValue());
+        $value = (int) $this->getValue();
         if ($value === 1) {
             $query->where('"CancelledByID" IS NOT NULL AND "CancelledByID" > 0');
         }

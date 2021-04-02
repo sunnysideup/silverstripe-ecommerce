@@ -242,7 +242,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * Event handler called before writing to the database.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         $this->Note = str_replace(["\n", "\r"], ' ¶ ', $this->Note);

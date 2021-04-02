@@ -42,7 +42,7 @@ class EcommerceTemplateTest extends PageController
                 ->limit(1, $offSet)
                 ->First();
             if ($product) {
-                $notForSale = $product->canPurchase() ? false : true;
+                $notForSale = ! (bool) $product->canPurchase();
             }
             ++$offSet;
         }

@@ -51,22 +51,22 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                     ['Sort' => 'DESC']
                 );
                 if ($lastOrderStep) {
-                    $joinSQL = "INNER JOIN \"${orderStatusLogTableName}\" ON \"${orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"";
-                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"${orderStatusLogTableName}\".ClassName = '${submittedOrderStatusLogTableName}'";
+                    $joinSQL = "INNER JOIN \"{$orderStatusLogTableName}\" ON \"{$orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"";
+                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"{$orderStatusLogTableName}\".ClassName = '{$submittedOrderStatusLogTableName}'";
                     $count = DB::query("
                         SELECT COUNT (\"Order\".\"ID\")
                         FROM \"Order\"
-                        ${joinSQL}
-                        ${whereSQL}
+                        {$joinSQL}
+                        {$whereSQL}
                     ")->value();
                     DB::query("
                         UPDATE \"Order\"
-                        ${joinSQL}
+                        {$joinSQL}
                         SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
-                        ${whereSQL}
+                        {$whereSQL}
                     ");
                     if ($count) {
-                        DB::alteration_message("NOTE: ${count} records were updated.", 'created');
+                        DB::alteration_message("NOTE: {$count} records were updated.", 'created');
                     } else {
                         DB::alteration_message('No records were updated.');
                     }

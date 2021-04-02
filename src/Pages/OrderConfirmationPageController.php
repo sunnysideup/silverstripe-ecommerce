@@ -49,35 +49,6 @@ class OrderConfirmationPageController extends CartPageController
     private static $include_as_checkout_step = true;
 
     /**
-     * standard controller function.
-     **/
-    public function init()
-    {
-        //we retrieve the order in the parent page
-        //the parent page also takes care of the security
-
-        if ($sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
-            $this->currentOrder = Order::get()->byID($sessionOrderID);
-            if ($this->currentOrder) {
-                $this->overrideCanView = true;
-                //more than an hour has passed...
-                $validUntil = intval($this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime')) - 0;
-                if ($validUntil < time()) {
-                    $this->clearRetrievalOrderID();
-                    $this->overrideCanView = false;
-                    $this->currentOrder = null;
-                }
-            }
-        }
-        parent::init();
-        Requirements::themedCSS('client/css/Order');
-        Requirements::themedCSS('client/css/Order_Print', 'print');
-        Requirements::themedCSS('client/css/CheckoutPage');
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
-    }
-
-    /**
      * This method exists just so that template
      * sets CurrentOrder variable.
      *
@@ -154,7 +125,7 @@ class OrderConfirmationPageController extends CartPageController
     {
         $where = '';
         if ($number) {
-            $where = "\"CheckoutPageStepDescription\".\"ID\" = ${number}";
+            $where = "\"CheckoutPageStepDescription\".\"ID\" = {$number}";
         }
         if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
             if ($this->currentOrder->IsInSession()) {
@@ -372,7 +343,7 @@ class OrderConfirmationPageController extends CartPageController
                     $emailClassName = $request->param('OtherID');
                 }
             }
-            if ($statusID = intval($request->getVar('test'))) {
+            if ($statusID = (int) $request->getVar('test')) {
                 $step = OrderStep::get()->byID($statusID);
                 $subject = $step->CalculatedEmailSubject($this->currentOrder);
                 $message = $step->CalculatedCustomerMessage($this->currentOrder);
@@ -423,6 +394,35 @@ class OrderConfirmationPageController extends CartPageController
             );
         }
         return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
+    }
+
+    /**
+     * standard controller function.
+     **/
+    protected function init()
+    {
+        //we retrieve the order in the parent page
+        //the parent page also takes care of the security
+
+        if ($sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
+            $this->currentOrder = Order::get()->byID($sessionOrderID);
+            if ($this->currentOrder) {
+                $this->overrideCanView = true;
+                //more than an hour has passed...
+                $validUntil = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime') - 0;
+                if ($validUntil < time()) {
+                    $this->clearRetrievalOrderID();
+                    $this->overrideCanView = false;
+                    $this->currentOrder = null;
+                }
+            }
+        }
+        parent::init();
+        Requirements::themedCSS('client/css/Order');
+        Requirements::themedCSS('client/css/Order_Print', 'print');
+        Requirements::themedCSS('client/css/CheckoutPage');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
+        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
     }
 
     /**

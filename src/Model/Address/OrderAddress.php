@@ -49,14 +49,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    protected $_canEdit = null;
+    protected $_canEdit = false;
 
     /**
      * save view status for speed's sake.
      *
      * @var bool
      */
-    protected $_canView = null;
+    protected $_canView = false;
 
     /**
      * @var bool
@@ -384,7 +384,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($fields) {
             foreach (array_keys($fields) as $field) {
                 if (! in_array($field, $excludedFields, true)) {
-                    $comparisonString .= preg_replace('/\s+/', '', $this->{$field});
+                    $comparisonString .= preg_replace('#\s+#', '', $this->{$field});
                 }
             }
         }
@@ -396,10 +396,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *@todo: are there times when the Shipping rather than the Billing address should be linked?
      * Copies the last address used by the member.
      *
-     * @param SilverStripe\Security\Member $member
      * @param bool            $write  - should the address be written
-     *
-     * @return OrderAddress | ShippingAddress | BillingAddress
+     * @return OrderAddress|ShippingAddress|BillingAddress
      **/
     public function FillWithLastAddressFromMember(Member $member, $write = false)
     {
@@ -462,8 +460,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     /**
      * make an address obsolete and include all the addresses that are identical.
-     *
-     * @param \SilverStripe\Security\Member $member
      */
     public function MakeObsolete(Member $member = null)
     {
@@ -479,26 +475,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         $this->Obsolete = 1;
         $this->write();
-    }
-
-    /**
-     * standard SS method
-     * We "hackishly" ensure that the OrderID is set to the right value.
-     */
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        if ($this->exists()) {
-            $order = DataObject::get_one(
-                Order::class,
-                [Config::inst()->get($this->ClassName, 'table_name') . 'ID' => $this->ID],
-                $cacheDataObjectGetOne = false
-            );
-            if ($order && $order->ID !== $this->OrderID) {
-                $this->OrderID = $order->ID;
-                $this->write();
-            }
-        }
     }
 
     /**
@@ -537,11 +513,36 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return Convert::array2json($jsArray);
     }
 
+    public function debug()
+    {
+        return EcommerceTaskDebugCart::debug_object($this);
+    }
+
+    /**
+     * standard SS method
+     * We "hackishly" ensure that the OrderID is set to the right value.
+     */
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+        if ($this->exists()) {
+            $order = DataObject::get_one(
+                Order::class,
+                [Config::inst()->get($this->ClassName, 'table_name') . 'ID' => $this->ID],
+                $cacheDataObjectGetOne = false
+            );
+            if ($order && $order->ID !== $this->OrderID) {
+                $this->OrderID = $order->ID;
+                $this->write();
+            }
+        }
+    }
+
     /**
      * standard SS Method
      * saves the region code.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         $fieldPrefix = $this->fieldPrefix();
@@ -553,11 +554,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 $this->{$codeField} = $region->Code;
             }
         }
-    }
-
-    public function debug()
-    {
-        return EcommerceTaskDebugCart::debug_object($this);
     }
 
     /**

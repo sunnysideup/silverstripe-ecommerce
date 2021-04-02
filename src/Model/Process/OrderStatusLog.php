@@ -350,6 +350,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         //ClassName Field
         $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
+
         $availableLogsAssociative = [];
 
         foreach ($availableLogs as $className) {
@@ -440,39 +441,17 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::scaffoldSearchFields($_params);
         $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
+
         $availableLogs = EcommerceConfig::get(OrderStatusLog::class, 'available_log_classes_array');
+
         $availableLogs = array_merge($availableLogs, [EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order')]);
+
         $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', OrderStatusLog::class, $availableLogs);
         $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
+
         $fields->replaceField('ClassName', $ecommerceClassNameOrTypeDropdownField);
 
         return $fields;
-    }
-
-    /**
-     * standard SS method.
-     */
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-//        //START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS....
-//        // THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER...
-//        if ($this->exists()) {
-//            $orderID = $this->getField('OrderID');
-//            if ($orderID) {
-//                $this->OrderID = $orderID;
-//            }
-//        }
-//        //END HACK TO PREVENT LOSS
-        if (! $this->AuthorID) {
-            $member = Security::getCurrentUser();
-            if ($member) {
-                $this->AuthorID = $member->ID;
-            }
-        }
-        if (! $this->Title) {
-            $this->Title = _t('OrderStatusLog.ORDERUPDATE', 'Order Update');
-        }
     }
 
     /**
@@ -500,15 +479,38 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * standard SS method.
+     */
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+//        //START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS....
+//        // THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER...
+//        if ($this->exists()) {
+//            $orderID = $this->getField('OrderID');
+//            if ($orderID) {
+//                $this->OrderID = $orderID;
+//            }
+//        }
+//        //END HACK TO PREVENT LOSS
+        if (! $this->AuthorID) {
+            $member = Security::getCurrentUser();
+            if ($member) {
+                $this->AuthorID = $member->ID;
+            }
+        }
+        if (! $this->Title) {
+            $this->Title = _t('OrderStatusLog.ORDERUPDATE', 'Order Update');
+        }
+    }
+
+    /**
      * when being created, can the user choose the type of log?
      *
      * @return bool
      */
     protected function limitedToOneClassName()
     {
-        if ($this->ClassName === OrderStatusLog::class) {
-            return false;
-        }
-        return true;
+        return $this->ClassName !== OrderStatusLog::class;
     }
 }

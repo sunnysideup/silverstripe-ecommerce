@@ -33,7 +33,7 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
         if ($rows) {
             foreach ($rows as $row) {
                 $orderID = $row['ID'];
-                $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = ${orderID}");
+                $inners = DB::query("SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = {$orderID}");
                 if ($inners->value() < 1) {
                     $sql = "
                     SELECT *
@@ -46,7 +46,7 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
                     if ($innerInners = DB::query($sql)) {
                         foreach ($innerInners as $innerInnerRow) {
                             DB::alteration_message('FOUND ' . $innerInnerRow['ID'], 'created');
-                            DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = ${orderID} WHERE \"OrderStatusLog\".\"ID\" = " . $innerInnerRow['ID'] . ' AND "OrderID" < 1');
+                            DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = {$orderID} WHERE \"OrderStatusLog\".\"ID\" = " . $innerInnerRow['ID'] . ' AND "OrderID" < 1');
                         }
                     }
                 }

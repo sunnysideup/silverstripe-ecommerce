@@ -35,11 +35,11 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
                 $productGroup1->URLSegment = 'products';
                 $productGroup1->writeToStage('Stage');
                 $productGroup1->publish('Stage', 'Live');
-                DB::alteration_message('Product group page \'Products\' created', 'created');
+                DB::alteration_message("Product group page 'Products' created", 'created');
             } else {
                 $productGroup1 = ProductGroup::get()->first();
             }
-            $content = '<p>This is a <em>product</em>. It\'s description goes into the Content field as a standard SilverStripe page would have it\'s content. This is an ideal place to describe your product.</p>';
+            $content = "<p>This is a <em>product</em>. It's description goes into the Content field as a standard SilverStripe page would have it's content. This is an ideal place to describe your product.</p>";
 
             $page1 = new Product();
             $page1->Title = 'Example product';
@@ -50,7 +50,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page1->FeaturedProduct = true;
             $page1->writeToStage('Stage');
             $page1->publish('Stage', 'Live');
-            DB::alteration_message('Product page \'Example product\' created', 'created');
+            DB::alteration_message("Product page 'Example product' created", 'created');
 
             $page2 = new Product();
             $page2->Title = 'Example product 2';
@@ -60,7 +60,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page2->Price = '25.00';
             $page2->writeToStage('Stage');
             $page2->publish('Stage', 'Live');
-            DB::alteration_message('Product page \'Example product 2\' created', 'created');
+            DB::alteration_message("Product page 'Example product 2' created", 'created');
         } else {
             DB::alteration_message('No products created as they already exist.');
         }

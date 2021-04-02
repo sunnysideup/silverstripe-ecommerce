@@ -43,7 +43,7 @@ class ProductGroupFilter extends BaseApplyer
                     $parts = [$parts[1], $parts[2]];
                 }
                 if (count($parts) === 2) {
-                    $groupId = intval($parts[1]);
+                    $groupId = (int) $parts[1];
                     if ($groupId) {
                         self::$get_group_from_url_segment_store[$segment] = ProductGroup::get()->byId($groupId);
                     }
@@ -60,11 +60,7 @@ class ProductGroupFilter extends BaseApplyer
     public function apply(string $key = null, $params = null): self
     {
         $this->applyStart($key, $params);
-        if ($params instanceof ProductGroup) {
-            $group = $params;
-        } else {
-            $group = $this->findGroup($params);
-        }
+        $group = $params instanceof ProductGroup ? $params : $this->findGroup($params);
 
         $filter = null;
         if ($group && $group->exists()) {
@@ -88,7 +84,7 @@ class ProductGroupFilter extends BaseApplyer
     public function getTitle(?string $key = '', $params = null): string
     {
         $groupId = $this->findGroupId($params);
-        $group = ProductGroup::get()->byID(intval($groupId) - 0);
+        $group = ProductGroup::get()->byID((int) $groupId - 0);
         if ($group) {
             return $group->MenuTitle;
         }

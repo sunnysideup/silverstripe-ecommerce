@@ -12,6 +12,9 @@ use SilverStripe\Forms\DropdownField;
  **/
 class YesNoDropDownField extends DropdownField
 {
+    /**
+     * @var string
+     */
     public const ANY_IE_NO_SELECTION = '-- any --';
 
     /**

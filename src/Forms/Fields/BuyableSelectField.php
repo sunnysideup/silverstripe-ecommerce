@@ -27,14 +27,14 @@ class BuyableSelectField extends FormField
      *
      * @var string
      */
-    protected $jquery_UI_JS_location = null; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.min.js';
+    protected $jquery_UI_JS_location; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.min.js';
 
     /**
      * Location for jQuery UI library location.
      *
      * @var string
      */
-    protected $jquery_UI_CSS_location = null; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.css';
+    protected $jquery_UI_CSS_location; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.css';
 
     /**
      * number of suggestions.
@@ -46,17 +46,17 @@ class BuyableSelectField extends FormField
     /**
      * @var FormField
      */
-    protected $fieldFindBuyable = null;
+    protected $fieldFindBuyable;
 
     /**
      * @var FormField
      */
-    protected $fieldSelectedBuyable = null;
+    protected $fieldSelectedBuyable;
 
     /**
      * @var SilverStripe\ORM\DataObject|null
      */
-    protected $buyable = null;
+    protected $buyable;
 
     /**
      * @param string $name

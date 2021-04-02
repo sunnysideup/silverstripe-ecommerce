@@ -50,6 +50,7 @@ class OrderForm extends Form
         //set basics
         $order = ShoppingCart::current_order();
         $order->calculateOrderAttributes($force = false);
+
         $requiredFields = [];
 
         //  ________________  3) Payment fields - BOTTOM FIELDS

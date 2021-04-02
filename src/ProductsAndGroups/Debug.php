@@ -6,9 +6,9 @@ use SilverStripe\View\ViewableData;
 
 class Debug extends ViewableData
 {
-    protected $rootGroup = null;
+    protected $rootGroup;
 
-    protected $rootGroupController = null;
+    protected $rootGroupController;
 
     public function __construct($rootGroupController, $rootGroup)
     {

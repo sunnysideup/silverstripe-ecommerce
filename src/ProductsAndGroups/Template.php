@@ -67,6 +67,11 @@ class Template
     ];
 
     /**
+     * @var array<string|null, mixed>|mixed
+     */
+    public $sortFilterDisplayNames;
+
+    /**
      * @var string
      */
     private static $product_group_list_class_name = RelatedProductGroups::class;
