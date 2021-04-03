@@ -122,7 +122,6 @@ class CartPageController extends PageController
     /**
      * share an order ...
      * @todo: do we still need loadorder controller method????
-     * @param HTTPRequest $request
      * @return array just so that template shows
      **/
     public function share(HTTPRequest $request)
@@ -173,8 +172,6 @@ class CartPageController extends PageController
      * @todountested
      * @todowhat to do with old order
      *
-     * @param HTTPRequest $request
-     *
      * @return array
      */
     public function loadorder(HTTPRequest $request)
@@ -188,8 +185,6 @@ class CartPageController extends PageController
 
     /**
      * save the order to a member. If no member exists then create the member first using the ShopAccountForm.
-     *
-     * @param HTTPRequest $request
      *
      * @return array
      *               TO DO: untested
@@ -218,8 +213,6 @@ class CartPageController extends PageController
      *
      * @todountested
      *
-     * @param HTTPRequest $request
-     *
      * @return array
      */
     public function deleteorder(HTTPRequest $request)
@@ -237,8 +230,6 @@ class CartPageController extends PageController
 
     /**
      * Start a new order.
-     *
-     * @param HTTPRequest $request
      *
      * @return array
      *               TO DO: untested

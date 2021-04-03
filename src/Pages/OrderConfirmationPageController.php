@@ -103,8 +103,6 @@ class OrderConfirmationPageController extends CartPageController
      * @todountested
      * @todowhat to do with old order
      *
-     * @param HTTPRequest $request
-     *
      * @return array
      */
     public function copyorder(HTTPRequest $request)
@@ -337,8 +335,6 @@ class OrderConfirmationPageController extends CartPageController
      * sends an order email, which can be specified in the URL
      * and displays a sample email
      * typically this link is opened in a new window.
-     *
-     * @param HTTPRequest $request
      *
      * @return string
      **/

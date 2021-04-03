@@ -28,7 +28,43 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 class EcommerceTaskCartCleanup extends BuildTask
 {
     /**
+     * @var string
+     */
+    public $joinShort = '';
+
+    /**
+     * @var array
+     */
+    public $oneToMany = [];
+
+    /**
+     * @var array
+     */
+    public $oneToOne = [];
+
+    /**
+     * @var array
+     */
+    public $manyToMany = [];
+
+    /**
+     * @var array
+     */
+    public $oneToOneIDArray = [];
+
+    /**
+     * @var array
+     */
+    public $oneToManyIDArray = [];
+
+    /**
+     * Output feedback about task?
      *
+     * @var bool
+     */
+    public $verbose = false;
+
+    /**
      * @var bool
      */
     protected $neverDeleteIfLinkedToMember = true;
@@ -69,47 +105,9 @@ class EcommerceTaskCartCleanup extends BuildTask
     protected $withMemberWhere = '';
 
     /**
-     *
      * @var string
      */
     protected $leftMemberJoin = '';
-
-    /**
-     * @var string
-     */
-    public $joinShort = '';
-
-    /**
-     * @var array
-     */
-    public $oneToMany = [];
-
-    /**
-     * @var array
-     */
-    public $oneToOne = [];
-
-    /**
-     * @var array
-     */
-    public $manyToMany = [];
-
-    /**
-     * @var array
-     */
-    public $oneToOneIDArray = [];
-
-    /**
-     * @var array
-     */
-    public $oneToManyIDArray = [];
-
-    /**
-     * Output feedback about task?
-     *
-     * @var bool
-     */
-    public $verbose = false;
 
     protected $title = 'Clear old carts';
 

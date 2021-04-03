@@ -38,11 +38,9 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order $order
-     *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order) : bool
+    public function initStep(Order $order): bool
     {
         return true;
     }
@@ -50,9 +48,8 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Add the member to the order, in case the member is not an admin.
      *
-     * @return bool
      **/
-    public function doStep(Order $order) : bool
+    public function doStep(Order $order): bool
     {
         if (! $order->MemberID) {
             $member = Security::getCurrentUser();

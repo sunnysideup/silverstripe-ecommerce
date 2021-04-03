@@ -64,7 +64,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order) : bool
+    public function initStep(Order $order): bool
     {
         return $order->IsSubmitted();
     }
@@ -76,9 +76,8 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @param SilverStripe\ORM\DataObject | Order $order
      *
-     * @return bool
      **/
-    public function doStep(Order $order) : bool
+    public function doStep(Order $order): bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendInvoiceToCustomer;
         return $this->sendEmailForStep(

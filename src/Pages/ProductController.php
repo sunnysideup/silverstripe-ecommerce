@@ -38,8 +38,6 @@ class ProductController extends PageController
      * view earlier version of a product
      * returns error or changes datarecord to earlier version
      * if the ID does not match the Page then we look for the variation.
-     *
-     * @param HTTPRequest $request
      */
     public function viewversion(HTTPRequest $request)
     {

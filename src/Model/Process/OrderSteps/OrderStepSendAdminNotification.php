@@ -38,7 +38,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order) : bool
+    public function initStep(Order $order): bool
     {
         return $order->IsSubmitted();
     }
@@ -50,9 +50,8 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @param SilverStripe\ORM\DataObject | Order $order
      *
-     * @return bool
      **/
-    public function doStep(Order $order) : bool
+    public function doStep(Order $order): bool
     {
         return $this->sendEmailForStep(
             $order,

@@ -82,7 +82,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order) : bool
+    public function initStep(Order $order): bool
     {
         return (bool) $order->TotalItems($recalculate = true);
     }
@@ -94,7 +94,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly.
      **/
-    public function doStep(Order $order) : bool
+    public function doStep(Order $order): bool
     {
         if (! $order->IsSubmitted()) {
             $className = $this->getRelevantLogEntryClassName();

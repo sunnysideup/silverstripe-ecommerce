@@ -285,8 +285,6 @@ class UserPreference
 
     /**
      * Unique caching key for the product list...
-     *
-     * @return string
      */
     public function ProductGroupListCachingKey(?bool $withPageNumber = false, ?string $additionalKey = ''): string
     {

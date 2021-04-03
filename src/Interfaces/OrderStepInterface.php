@@ -18,18 +18,16 @@ interface OrderStepInterface
      * Initiate the step. REturns true if the step is ready to run.
      * You should be able to run this method many times without causing problems.
      *
-     * @return bool
      **/
-    public function initStep(Order $order) : bool;
+    public function initStep(Order $order): bool;
 
     /**
      * Do the actual step.
      * Returns true if the step runs successfully.
      * You should be able to run this method many times without causing problems.
      *
-     * @return bool
      **/
-    public function doStep(Order $order) : bool;
+    public function doStep(Order $order): bool;
 
     /**
      * Returns the nextStep when we are ready or null if we are not ready.

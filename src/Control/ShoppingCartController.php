@@ -295,8 +295,6 @@ class ShoppingCartController extends Controller
     /**
      * return json for cart... no further actions.
      *
-     * @param HTTPRequest $request
-     *
      * @return string
      */
     public function json(HTTPRequest $request)
@@ -428,8 +426,6 @@ class ShoppingCartController extends Controller
     /**
      * sets the country.
      *
-     * @param HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      **/
@@ -443,8 +439,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      **/
@@ -457,8 +451,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      **/
@@ -471,8 +463,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      **/
@@ -498,8 +488,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
      **/
@@ -511,8 +499,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return \SilverStripe\Control\HTTPResponse|string
      **/
     public function clear(HTTPRequest $request)
@@ -524,8 +510,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return \SilverStripe\Control\HTTPResponse|string
      **/
     public function clearandlogout(HTTPRequest $request)
@@ -541,8 +525,6 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param HTTPRequest $request
-     *
      * @return \SilverStripe\Control\HTTPResponse|string
      **/
     public function deleteorder(HTTPRequest $request)
@@ -569,8 +551,6 @@ class ShoppingCartController extends Controller
     /**
      * return number of items in cart.
      *
-     * @param HTTPRequest $request
-     *
      * @return int
      **/
     public function numberofitemsincart(HTTPRequest $request)
@@ -583,8 +563,6 @@ class ShoppingCartController extends Controller
     /**
      * return cart for ajax call.
      *
-     * @param HTTPRequest $request
-     *
      * @return \SilverStripe\ORM\FieldType\DBHTMLText
      */
     public function showcart(HTTPRequest $request)
@@ -594,8 +572,6 @@ class ShoppingCartController extends Controller
 
     /**
      * loads an order.
-     *
-     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */
@@ -611,8 +587,6 @@ class ShoppingCartController extends Controller
 
     /**
      * remove address from list of available addresses in checkout.
-     *
-     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      * @TODO: add non-ajax version of this request.
@@ -689,8 +663,6 @@ class ShoppingCartController extends Controller
     /**
      * This can be used by admins to log in as customers
      * to place orders on their behalf...
-     *
-     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */
