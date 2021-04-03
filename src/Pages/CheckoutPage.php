@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 use Page;
 
 use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
@@ -16,9 +17,8 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Permission;
 
-use SilverStripe\Control\Controller;
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -154,7 +154,7 @@ class CheckoutPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function find_link($action = null) : string
+    public static function find_link($action = null): string
     {
         $page = DataObject::get_one(CheckoutPage::class);
         if ($page) {
@@ -173,7 +173,7 @@ class CheckoutPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function find_last_step_link(?string $step = '') : string
+    public static function find_last_step_link(?string $step = ''): string
     {
         if (! $step) {
             $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
@@ -182,7 +182,7 @@ class CheckoutPage extends CartPage
             }
         }
         if ($step) {
-            $step = Controller::join_links('checkoutstep' , strtolower($step)) . '/#' . $step;
+            $step = Controller::join_links('checkoutstep', strtolower($step)) . '/#' . $step;
         }
 
         return self::find_link($step);
@@ -196,7 +196,7 @@ class CheckoutPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function find_next_step_link($currentStep, $doPreviousInstead = false) : string
+    public static function find_next_step_link($currentStep, $doPreviousInstead = false): string
     {
         $nextStep = null;
         if ($link = self::find_link()) {
@@ -219,7 +219,7 @@ class CheckoutPage extends CartPage
                 $nextStep = array_pop($steps);
             }
             if ($nextStep) {
-                return Controller::join_links($link , 'checkoutstep' , $nextStep);
+                return Controller::join_links($link, 'checkoutstep', $nextStep);
             }
 
             return $link;
@@ -240,7 +240,7 @@ class CheckoutPage extends CartPage
     {
         $link = self::find_link();
         if ($link) {
-            return Controller::join_links($link , 'showorder' , $orderID);
+            return Controller::join_links($link, 'showorder', $orderID);
         }
 
         return '';

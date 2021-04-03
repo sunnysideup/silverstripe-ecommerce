@@ -414,10 +414,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     /**
      * Returns the Payment type currently in use.
-     *
-     * @return string|null
      */
-    public function PaymentMethod() : ?string
+    public function PaymentMethod(): ?string
     {
         $supportedMethods = self::get_supported_methods($this->Order());
         if (isset($supportedMethods[$this->ClassName])) {
@@ -431,7 +429,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * associative array that goes like ClassName => Description ...
      *
      * e.g. MyPaymentClass => Best Payment Method Ever     * @param array $array -
-     * @param array $array
      */
     public static function set_supported_methods(array $array)
     {
@@ -536,10 +533,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * payment type. Example: for {@link DPSPayment},
      * this would be a set of fields to enter your
      * credit card details.
-     *
-     * @return \SilverStripe\Forms\FieldList
      */
-    public function getPaymentFormFields(?float $amount = 0, ?Order $order = null) : FieldList
+    public function getPaymentFormFields(?float $amount = 0, ?Order $order = null): FieldList
     {
         user_error("Please implement getPaymentFormFields() on {$this->ClassName}", E_USER_ERROR);
         return FieldList::create();

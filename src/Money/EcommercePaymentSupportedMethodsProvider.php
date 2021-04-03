@@ -43,10 +43,8 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
     /**
      * this method returns an associative array of payment methods
      * available for the current order.
-     *
-     * @return array
      */
-    public function SupportedMethods(?Order $order = null) : array
+    public function SupportedMethods(?Order $order = null): array
     {
         $hideTestPaymentMethods = false;
         if (Director::isLive()) {

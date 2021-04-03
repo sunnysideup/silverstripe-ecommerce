@@ -71,7 +71,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
                     'width=600,height=300,location=0,menubar=0,scrollbars=1,status=0,toolbar=0,resizable=1'
                 );";
 
-             GridField_FormAction::create(
+            GridField_FormAction::create(
                 $gridField,
                 'PrintInvoice' . $record->ID,
                 false,

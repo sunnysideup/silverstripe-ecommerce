@@ -47,10 +47,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
         'SaveOrderAsSerializedObject' => 0,
     ];
 
-    /**
-     * @return string
-     */
-    public function getRelevantLogEntryClassName() : string
+    public function getRelevantLogEntryClassName(): string
     {
         return EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
     }

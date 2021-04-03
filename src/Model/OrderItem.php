@@ -367,7 +367,7 @@ class OrderItem extends OrderAttribute
         return $fields;
     }
 
-    public function addBuyableToOrderItem(BuyableModel $buyable, ?int $quantity = 1) : self
+    public function addBuyableToOrderItem(BuyableModel $buyable, ?int $quantity = 1): self
     {
         $this->Version = $buyable->Version;
         $this->BuyableID = $buyable->ID;

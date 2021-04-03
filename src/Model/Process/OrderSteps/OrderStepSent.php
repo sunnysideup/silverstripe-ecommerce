@@ -164,7 +164,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return $fields;
     }
 
-    public function CalculatedEmailSubject(?Order $order = null) : string
+    public function CalculatedEmailSubject(?Order $order = null): string
     {
         $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {
@@ -177,7 +177,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return $v;
     }
 
-    public function CalculatedCustomerMessage(Order $order = null) : string
+    public function CalculatedCustomerMessage(Order $order = null): string
     {
         $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {

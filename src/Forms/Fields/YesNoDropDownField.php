@@ -1,6 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
+
 use ArrayAccess;
 
 use SilverStripe\Forms\DropdownField;

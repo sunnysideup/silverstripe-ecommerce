@@ -256,7 +256,6 @@ class ShoppingCart
      *
      * However, you can pass an order in case you want to manipulate an order that is not in sesssion
      *
-     *
      * @return Order
      */
     public function currentOrder(?int $recurseCount = 0, ?Order $order = null)

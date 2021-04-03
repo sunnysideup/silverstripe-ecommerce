@@ -37,12 +37,12 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\FieldType\DBField;
 
-use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
@@ -499,7 +499,7 @@ class Order extends DataObject implements EditableEcommerceObject
         self::$_needs_recalculating[$orderID] = $b;
     }
 
-    public static function get_needs_recalculating(?int $orderID = 0) : bool
+    public static function get_needs_recalculating(?int $orderID = 0): bool
     {
         return isset(self::$_needs_recalculating[$orderID]) ? self::$_needs_recalculating[$orderID] : false;
     }
@@ -2208,19 +2208,15 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @param \SilverStripe\Security\Member $member
      *
-     * @return bool
      **/
-    public function canViewAdminStuff(?Member $member = null) : bool
+    public function canViewAdminStuff(?Member $member = null): bool
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
             return (bool) $extended;
         }
-        if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
-            return true;
-        }
-        return false;
+        return (bool) Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'));
     }
 
     /**
@@ -2260,9 +2256,8 @@ class Order extends DataObject implements EditableEcommerceObject
      * first after which it will go through to the checkout page.
      *
      *
-     * @return bool
      **/
-    public function canCheckout(?Member $member = null) : bool
+    public function canCheckout(?Member $member = null): bool
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -3251,7 +3246,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $created = $object ? $object->Created : $this->LastEdited;
 
         /** @var DBDatetime $obj */
-        $obj = DBField::create_field('DateTime', $created);
+        $obj = DBField::create_field(\DateTime::class, $created);
         // just here for linting ...
         $obj->getName();
         return $obj;

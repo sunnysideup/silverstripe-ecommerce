@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Config;
-use SilverStripe\ORM\DataList;
+
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Email\Email;
@@ -23,6 +23,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
@@ -674,10 +675,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 
     /**
      * Return the currency being used on the site e.g. "NZD" or "USD".
-     *
-     * @return string
      */
-    public function Currency() : string
+    public function Currency(): string
     {
         return EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
     }
@@ -685,8 +684,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * return null if there is less than two currencies in use
      * on the site.
-     *
-     * @return \SilverStripe\ORM\DataList|null
      */
     public function Currencies(): ?DataList
     {
@@ -701,7 +698,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function AccountPageLink() : string
+    public function AccountPageLink(): string
     {
         return AccountPage::find_link();
     }
@@ -709,7 +706,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function CheckoutLink() : string
+    public function CheckoutLink(): string
     {
         return CheckoutPage::find_link();
     }
@@ -717,7 +714,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function CartPageLink() : string
+    public function CartPageLink(): string
     {
         return CartPage::find_link();
     }
@@ -725,7 +722,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function OrderConfirmationPageLink() : string
+    public function OrderConfirmationPageLink(): string
     {
         return OrderConfirmationPage::find_link();
     }
@@ -734,10 +731,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * Returns a link to a default image.
      * If a default image is set in the site config then this link is returned
      * Otherwise, a standard link is returned.
-     *
-     * @return string
      */
-    public function DefaultImageLink() : string
+    public function DefaultImageLink(): string
     {
         if ($this->DefaultProductImageID) {
             $defaultImage = $this->DefaultProductImage();

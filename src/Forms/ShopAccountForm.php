@@ -2,9 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use GuzzleHttp\Exception\RequestException;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
@@ -21,9 +22,8 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
-use GuzzleHttp\Exception\RequestException;
+use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
 /**
  * @description: ShopAccountForm allows shop members to update their details.
@@ -212,10 +212,8 @@ class ShopAccountForm extends Form
             }
             $form->sessionMessage(_t('Account.DETAILSSAVED', 'Your details have been saved.'), 'good');
             return $this->controller->redirectBack();
-        } else {
-            $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
-            return $this->controller->redirectBack();
         }
-        return null;
+        $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
+        return $this->controller->redirectBack();
     }
 }

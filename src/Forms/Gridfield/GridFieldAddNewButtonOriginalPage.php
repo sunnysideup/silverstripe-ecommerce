@@ -81,6 +81,5 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
                 ->get(SiteTree::class, 'table_name') . $stage, 'Parent.ID = SiteTree' . $stage . '.ParentID', 'Parent')
                 ->First();
         }
-        return null;
     }
 }

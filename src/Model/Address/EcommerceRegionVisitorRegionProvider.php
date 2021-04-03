@@ -9,7 +9,7 @@ class EcommerceRegionVisitorRegionProvider
     /**
      * @return int - region ID
      */
-    public function getRegion() : int
+    public function getRegion(): int
     {
         $region = DataObject::get_one(EcommerceRegion::class);
         if ($region) {

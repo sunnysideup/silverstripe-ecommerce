@@ -11,8 +11,8 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\OrderStatusLogFormController;
-use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * @description: this class is the base class for Order Log Forms in the checkout form...

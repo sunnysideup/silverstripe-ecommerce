@@ -24,13 +24,12 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
-use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-
 
 /**
  * This class is the form for editing the Order Addresses.
@@ -522,10 +521,8 @@ class OrderFormAddress extends Form
      * Is there a member that is fully operational?
      * - saved
      * - has password.
-     *
-     * @return bool
      */
-    protected function orderHasFullyOperationalMember() : bool
+    protected function orderHasFullyOperationalMember(): bool
     {
         //orderMember is Created in __CONSTRUCT
         if ($this->orderMember) {
@@ -765,8 +762,6 @@ class OrderFormAddress extends Form
      * returns the email if
      * - user is logged in already
      * - user's email in DB does not match email entered.
-     *
-     * @param array $data
      *
      * @return string|false
      */

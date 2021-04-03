@@ -692,9 +692,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * returns the field prefix string for shipping addresses.
      *
-     * @return string|null
      **/
-    protected function baseClassLinkingToOrder() : ?string
+    protected function baseClassLinkingToOrder(): ?string
     {
         if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
             return BillingAddress::class;
@@ -707,9 +706,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * returns the field prefix string for shipping addresses.
      *
-     * @return string
      **/
-    protected function fieldPrefix() : string
+    protected function fieldPrefix(): string
     {
         if ($this->baseClassLinkingToOrder() === EcommerceConfigClassNames::getName(BillingAddress::class)) {
             return '';

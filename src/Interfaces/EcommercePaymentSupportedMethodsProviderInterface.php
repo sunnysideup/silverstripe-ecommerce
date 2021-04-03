@@ -9,10 +9,8 @@ interface EcommercePaymentSupportedMethodsProviderInterface
     /**
      * how can the customer pay?
      * @param Order $order
-     *
-     * @return array
      */
-    public function SupportedMethods(?Order $order = null) : array;
+    public function SupportedMethods(?Order $order = null): array;
 
     /**
      * assign the right payment gateways for the user

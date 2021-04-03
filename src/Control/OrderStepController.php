@@ -31,7 +31,6 @@ abstract class OrderStepController extends Controller
     protected $alternativeContent = '';
 
     /**
-     *
      * @var array
      */
     private static $allowed_actions = [

@@ -120,7 +120,7 @@ class CartPage extends Page
      * @param array $arguments
      * @param bool $cache Cache this object
      * @param string $cacheName a custom cache name
-     * @return Object|DBField
+     * @return object|DBField
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
