@@ -68,7 +68,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * can do next step once the admin notification has been sent
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order) : bool
+    public function nextStep(Order $order)
     {
         if ($this->hasBeenSent($order)) {
             return parent::nextStep($order);

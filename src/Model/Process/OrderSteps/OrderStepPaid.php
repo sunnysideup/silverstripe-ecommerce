@@ -66,7 +66,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      * @see Order::doNextStatus
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order) : bool
+    public function nextStep(Order $order)
     {
         if ($order->IsPaid()) {
             return parent::nextStep($order);

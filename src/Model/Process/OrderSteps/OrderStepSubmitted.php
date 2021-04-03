@@ -151,7 +151,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null    (next step OrderStep)
      **/
-    public function nextStep(Order $order) : bool
+    public function nextStep(Order $order)
     {
         if ($order->IsSubmitted()) {
             return parent::nextStep($order);

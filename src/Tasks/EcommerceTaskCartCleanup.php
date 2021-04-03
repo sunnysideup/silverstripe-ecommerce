@@ -49,10 +49,30 @@ class EcommerceTaskCartCleanup extends BuildTask
     protected $sort = '';
 
     /**
+     * @var string
+     */
+    protected $withoutMemberWhere = '';
+
+    /**
+     * @var string
+     */
+    protected $memberDeleteNote = '';
+
+    /**
+     * @var string
+     */
+    protected $userStatement = '';
+
+    /**
+     * @var string
+     */
+    protected $withMemberWhere = '';
+
+    /**
      *
      * @var string
      */
-    protected string $leftMemberJoin = '';
+    protected $leftMemberJoin = '';
 
     /**
      * @var string
@@ -192,21 +212,23 @@ class EcommerceTaskCartCleanup extends BuildTask
         $this->leftMemberJoin = 'LEFT JOIN Member ON "Member"."ID" = "Order"."MemberID"';
         $this->joinShort = '"Member"."ID" = "Order"."MemberID"';
 
+        $this->userStatement = '';
+        $this->withoutMemberWhere = '  ';
+        $this->withMemberWhere = '';
+        $this->memberDeleteNote = '(We will also delete carts in this category that are linked to a member)';
+        if ($this->neverDeleteIfLinkedToMember) {
+            $this->userStatement = 'or have a user associated with it';
+            $this->withoutMemberWhere = ' AND "Member"."ID" IS NULL ';
+            $this->withMemberWhere = ' OR "Member"."ID" IS NOT NULL ';
+            $this->memberDeleteNote = '(Carts linked to a member will NEVER be deleted)';
+        }
+
         $this->abandonnedCarts();
         $this->emptyCarts();
 
-        $this->oneToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_many_classes');
-        $this->oneToOne = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_one_classes');
-        $this->manyToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'many_to_many_classes');
-        if (! is_array($this->oneToOne)) {
-            $this->oneToOne = [];
-        }
-        if (! is_array($this->oneToMany)) {
-            $this->oneToMany = [];
-        }
-        if (! is_array($this->manyToMany)) {
-            $this->manyToMany = [];
-        }
+        $this->oneToMany = (array) EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_many_classes');
+        $this->oneToOne = (array) EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_one_classes');
+        $this->manyToMany = (array) EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'many_to_many_classes');
 
         $this->clearOneToOnes();
 
@@ -223,19 +245,9 @@ class EcommerceTaskCartCleanup extends BuildTask
         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
         $time = strtotime('-' . $clearMinutes . ' minutes');
         $where = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
-        if ($this->neverDeleteIfLinkedToMember) {
-            $userStatement = 'or have a user associated with it';
-            $withoutMemberWhere = ' AND "Member"."ID" IS NULL ';
-            $withMemberWhere = ' OR "Member"."ID" IS NOT NULL ';
-            $memberDeleteNote = '(Carts linked to a member will NEVER be deleted)';
-        } else {
-            $userStatement = '';
-            $withoutMemberWhere = '  ';
-            $withMemberWhere = '';
-            $memberDeleteNote = '(We will also delete carts in this category that are linked to a member)';
-        }
+
         $oldCarts = Order::get()
-            ->where($where . $withoutMemberWhere)
+            ->where($where . $this->withoutMemberWhere)
             ->this->sort($this->sort)
             ->limit($this->maximumNumberOfObjectsDeleted);
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
@@ -250,7 +262,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         ' . $this->leftMemberJoin . '
                     WHERE '
                         . $where
-                        . $withoutMemberWhere
+                        . $this->withoutMemberWhere
                     . ';'
                 );
                 $totalToDelete = $totalToDeleteSQLObject->value();
@@ -258,7 +270,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         <h2>Total number of abandonned carts: ' . $totalToDelete . '</h2>
                         <br /><b>number of records deleted at one time:</b> ' . $this->maximumNumberOfObjectsDeleted . '
                         <br /><b>Criteria:</b> last edited ' . $clearMinutes . ' (~' . round($clearMinutes / 60 / 24, 2) . " days)
-                        minutes ago or more {$memberDeleteNote}", 'created');
+                        minutes ago or more {$this->memberDeleteNote}", 'created');
             }
             foreach ($oldCarts as $oldCart) {
                 ++$count;
@@ -284,14 +296,14 @@ class EcommerceTaskCartCleanup extends BuildTask
                 AND
                 (
                     UNIX_TIMESTAMP("Order"."LastEdited") >= ' . $time . '
-                    ' . $withMemberWhere . '
+                    ' . $this->withMemberWhere . '
                 );
             ')->value();
             DB::alteration_message(
                 "
                     {$countCart} Orders are still in the CREATED cart state (not submitted),
                     {$countCartWithinTimeLimit} of them are within the time limit (last edited after {$timeLegible})
-                    " . $userStatement . ' so they are not deleted.',
+                    " . $this->userStatement . ' so they are not deleted.',
                 'created'
             );
         }
@@ -319,14 +331,14 @@ class EcommerceTaskCartCleanup extends BuildTask
                         ' . $this->leftMemberJoin . '
                     WHERE '
                         . $where
-                        . $withoutMemberWhere
+                        . $this->withoutMemberWhere
                     . ';'
                 )->value();
                 DB::alteration_message('
                         <h2>Total number of empty carts: ' . $totalToDelete . '</h2>
                         <br /><b>number of records deleted at one time:</b> ' . $this->maximumNumberOfObjectsDeleted . "
                         <br /><b>Criteria:</b> there are no order items and
-                        the order was last edited {$clearMinutes} minutes ago {$memberDeleteNote}", 'created');
+                        the order was last edited {$clearMinutes} minutes ago {$this->memberDeleteNote}", 'created');
             }
             foreach ($oldCarts as $oldCart) {
                 ++$count;
@@ -355,14 +367,14 @@ class EcommerceTaskCartCleanup extends BuildTask
                 WHERE "StatusID" = 0 AND
                 (
                     UNIX_TIMESTAMP("Order"."LastEdited") >= ' . $time . '
-                    ' . $withMemberWhere . '
+                    ' . $this->withMemberWhere . '
                 )'
             )->value();
             DB::alteration_message(
                 "
                     {$countCart} Orders are without status at all,
                     {$countCartWithinTimeLimit} are within the time limit (last edited after {$timeLegible})
-                    " . $userStatement . 'so they are not deleted yet.',
+                    " . $this->userStatement . 'so they are not deleted yet.',
                 'created'
             );
         }

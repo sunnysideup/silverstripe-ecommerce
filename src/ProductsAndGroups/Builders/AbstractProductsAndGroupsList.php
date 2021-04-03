@@ -53,7 +53,7 @@ abstract class AbstractProductsAndGroupsList
      * Key Method!
      * Returns a raw list of all the matching products without any pagination.
      *
-     * @return SS_List
+     * @return DataList
      */
     final public function setProducts($products): self
     {

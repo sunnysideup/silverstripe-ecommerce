@@ -139,7 +139,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order) : bool
+    public function nextStep(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
         if (! $this->SendDetailsToCustomer || $log->InternalUseOnly || $this->hasBeenSent($order, false)) {

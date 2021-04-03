@@ -286,7 +286,7 @@ class UserPreference
     /**
      * Unique caching key for the product list...
      *
-     * @return string | Null
+     * @return string
      */
     public function ProductGroupListCachingKey(?bool $withPageNumber = false, ?string $additionalKey = ''): string
     {
@@ -573,7 +573,7 @@ class UserPreference
 
     protected function getSession()
     {
-        return $this->rootGroupController->request->getSession();
+        return $this->rootGroupController->getRequest()->getSession();
     }
 
     protected function getFinalProductList()

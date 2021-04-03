@@ -98,7 +98,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null - DataObject = next OrderStep
      **/
-    public function nextStep(Order $order) : bool
+    public function nextStep(Order $order)
     {
         if ($this->hasBeenSent($order)) {
             return parent::nextStep($order);

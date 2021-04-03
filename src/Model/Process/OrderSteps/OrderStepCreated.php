@@ -74,7 +74,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order) : bool
+    public function nextStep(Order $order)
     {
         if ($order->TotalItems($recalculate = true)) {
             return parent::nextStep($order);
