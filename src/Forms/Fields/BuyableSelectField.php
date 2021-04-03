@@ -112,7 +112,7 @@ class BuyableSelectField extends FormField
      * @param mixed      $value
      * @param null|mixed $data
      */
-    public function setValue($value, $data = null) : self
+    public function setValue($value, $data = null): self
     {
         if ($this->buyable) {
             // $value = $this->buyable->FullName ?: $this->buyable->getTitle();
@@ -141,6 +141,7 @@ class BuyableSelectField extends FormField
             $this->fieldFindBuyable = $this->fieldFindBuyable->performReadonlyTransformation();
             $this->fieldSelectedBuyable = $this->fieldSelectedBuyable->performReadonlyTransformation();
         }
+
         return $this;
     }
 
@@ -151,9 +152,10 @@ class BuyableSelectField extends FormField
      *
      * @param string $pathFileName
      */
-    public function set_jquery_UI_JS_location($pathFileName) : self
+    public function set_jquery_UI_JS_location($pathFileName): self
     {
         $this->jquery_UI_JS_location = $pathFileName;
+
         return $this;
     }
 
@@ -164,9 +166,10 @@ class BuyableSelectField extends FormField
      *
      * @param string $pathFileName
      */
-    public function set_jquery_UI_CSS_location($pathFileName) : self
+    public function set_jquery_UI_CSS_location($pathFileName): self
     {
         $this->jquery_UI_CSS_location = $pathFileName;
+
         return $this;
     }
 

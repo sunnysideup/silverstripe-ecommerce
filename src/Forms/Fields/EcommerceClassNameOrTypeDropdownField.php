@@ -89,18 +89,20 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
     /**
      * @param array $array - e.g. Array(MyFavouriteClassName, MyOtherFavouriteClassName)
      */
-    public function setAvailableClasses(array $array) : self
+    public function setAvailableClasses(array $array): self
     {
         $this->availableClasses = $array;
+
         return $this;
     }
 
     /**
      * @param bool $bool
      */
-    public function setIncludeBaseClass($bool) : self
+    public function setIncludeBaseClass($bool): self
     {
         $this->includeBaseClass = $bool;
+
         return $this;
     }
 

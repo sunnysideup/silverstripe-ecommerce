@@ -2,16 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\View\ViewableData;
+
 class EcommerceCMSButtonField extends LiteralField
 {
     /**
-     * @param string  $name
-     * @param mixed  $link (string|ViewableData|FormField)
-     * @param string  $title
-     * @param boolean $newWindow
+     * @param string $name
+     * @param mixed  $link      (string|ViewableData|FormField)
+     * @param bool   $newWindow
      */
     public function __construct($name, $link, string $title, ?bool $newWindow = false)
     {

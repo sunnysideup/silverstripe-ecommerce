@@ -3,13 +3,11 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-use SilverStripe\View\ViewableData;
 
 class EcommerceSearchHistoryFormField extends LiteralField
 {
@@ -58,93 +56,49 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     protected $showMoreLink = false;
 
-    /**
-     *
-     * @param string $name
-     * @param mixed $title (string|ViewableData|FormField)
-     */
-    public function __construct(string $name, $title)
-    {
-        parent::__construct($name, $title);
-    }
-
-    /**
-     * @param int $days
-     *
-     * @return EcommerceSearchHistoryFormField
-     */
-    public function setNumberOfDays(int $days) : self
+    public function setNumberOfDays(int $days): self
     {
         $this->numberOfDays = (int) $days;
 
         return $this;
     }
 
-    /**
-     * @param int $count
-     *
-     */
-    public function setMinimumCount(int $count) : self
+    public function setMinimumCount(int $count): self
     {
         $this->minimumCount = (int) $count;
 
         return $this;
     }
 
-    /**
-     * @param bool $b
-     *
-     * @return EcommerceSearchHistoryFormField
-     */
-    public function setShowMoreLink(bool $b) : self
+    public function setShowMoreLink(bool $b): self
     {
         $this->showMoreLink = $b;
 
         return $this;
     }
 
-    /**
-     * @param int $count
-     *
-     * @return EcommerceSearchHistoryFormField
-     */
-    public function setEndingDaysBack(int $count) : self
+    public function setEndingDaysBack(int $count): self
     {
         $this->endingDaysBack = (int) $count;
 
         return $this;
     }
 
-    /**
-     * @param int $number
-     *
-     * @return EcommerceSearchHistoryFormField
-     */
-    public function setMaxRows(int $number) : self
+    public function setMaxRows(int $number): self
     {
         $this->maxRows = $number;
 
         return $this;
     }
 
-    /**
-     * @param bool $b
-     *
-     * @return EcommerceSearchHistoryFormField
-     */
-    public function setAddTitle(bool $b) : self
+    public function setAddTitle(bool $b): self
     {
         $this->addTitle = $b;
 
         return $this;
     }
 
-    /**
-     * @param bool $b
-     *
-     * @return EcommerceSearchHistoryFormField
-     */
-    public function setAddAtoZ(bool $b) : self
+    public function setAddAtoZ(bool $b): self
     {
         $this->addAtoZ = $b;
 

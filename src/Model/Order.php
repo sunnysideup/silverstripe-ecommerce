@@ -4001,7 +4001,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return Order - with most important has one and has many items included as variables
      */
-    protected function addHasOneAndHasManyAsVariables() : Order
+    protected function addHasOneAndHasManyAsVariables(): Order
     {
         $object = clone $this;
         $object->Member_serialized = serialize($this->Member());

@@ -98,52 +98,40 @@ abstract class OrderStepController extends Controller
         return $link . $this->getOrderGetParams();
     }
 
-    public function errorLink() : string
+    public function errorLink(): string
     {
         return $this->Link('error');
     }
 
-    /**
-     * @return string
-     */
-    protected static function name_of_controller_class() : string
+    protected static function name_of_controller_class(): string
     {
         return static::class;
     }
 
-    /**
-     * @param Order $order
-     *
-     * @return string
-     */
-    protected static function secure_hash(Order $order) : string
+    protected static function secure_hash(Order $order): string
     {
         $obj = Injector::inst()->get(self::name_of_controller_class());
 
         return $obj->secureHash($order);
     }
 
-    /**
-     * @return string
-     */
-    protected function nameOfControllerClass() : string
+    protected function nameOfControllerClass(): string
     {
         return self::name_of_controller_class();
     }
 
     /**
      * related OrderStatusLog class.
-     *
-     * @return string
      */
-    abstract protected function nameOfLogClass() : string;
+    abstract protected function nameOfLogClass(): string;
 
     /**
      * @return string ($html)
      */
-    protected function standardContent(?Order $order = null) : string
+    protected function standardContent(?Order $order = null): string
     {
         user_error('Make sure to put some content here in classes that extend ' . static::class);
+
         return '';
     }
 
@@ -166,21 +154,15 @@ abstract class OrderStepController extends Controller
 
     /**
      * used to secure page.
-     *
-     * @param Order $order
-     *
-     * @return string
      */
-    abstract protected function secureHash(Order $order) : string;
+    abstract protected function secureHash(Order $order): string;
 
     /**
      * is the order valid?
      *
      * @param null|mixed $dataOrRequest
-     *
-     * @return bool
      */
-    protected function checkOrder($dataOrRequest = null) : bool
+    protected function checkOrder($dataOrRequest = null): bool
     {
         $order = $this->Order($dataOrRequest);
 

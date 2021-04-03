@@ -97,18 +97,20 @@ class EcomQuantityField extends NumericField
      *
      * @param bool $overwrite
      */
-    public function setClasses(array $newClasses, $overwrite = false) : self
+    public function setClasses(array $newClasses, $overwrite = false): self
     {
         $this->classes = $overwrite ? array_merge($this->classes, $newClasses) : $newClasses;
+
         return $this;
     }
 
     /**
      * @param string $template
      */
-    public function setTemplate($template) : self
+    public function setTemplate($template): self
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -158,10 +160,8 @@ class EcomQuantityField extends NumericField
 
     /**
      * Used for storing the quantity update link for ajax use.
-     *
-     * @return string
      */
-    public function AJAXLinkHiddenField() : string
+    public function AJAXLinkHiddenField(): string
     {
         $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
         if ($quantitylink = $this->getQuantityLink()) {
@@ -174,6 +174,7 @@ class EcomQuantityField extends NumericField
 
             return HTML::createTag('input', $attributes);
         }
+
         return '';
     }
 
@@ -201,18 +202,12 @@ class EcomQuantityField extends NumericField
         return $this->renderWith($this->template);
     }
 
-    /**
-     * @return string
-     */
     protected function getQuantityLink(): string
     {
         return ShoppingCartController::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
 
-    /**
-     * @return float
-     */
-    protected function Quantity() : float
+    protected function Quantity(): float
     {
         if ($this->orderItem) {
             return floatval($this->orderItem->Quantity) - 0;

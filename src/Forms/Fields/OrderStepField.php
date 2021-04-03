@@ -106,10 +106,8 @@ class OrderStepField extends DatalessField
 
     /**
      * Sets the content of this field to a new value.
-     *
-     * @param string $content
      */
-    public function setContent(string $content)  : self
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
@@ -130,7 +128,7 @@ class OrderStepField extends DatalessField
      * @param mixed      $value
      * @param null|mixed $data
      */
-    public function setValue($value, $data = null) : self
+    public function setValue($value, $data = null): self
     {
         return $this->setContent($value);
     }

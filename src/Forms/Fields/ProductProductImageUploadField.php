@@ -127,7 +127,7 @@ class ProductProductImageUploadField extends UploadField
      *
      * @param string $name
      */
-    public function setCallingClass($name) : self
+    public function setCallingClass($name): self
     {
         $this->callingClass = $name;
 

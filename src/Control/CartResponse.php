@@ -55,9 +55,10 @@ class CartResponse extends EcommerceResponse
      *
      * @param $b
      */
-    public function setIncludeHeaders(bool $b) : self
+    public function setIncludeHeaders(bool $b): self
     {
         $this->includeHeaders = $b;
+
         return $this;
     }
 

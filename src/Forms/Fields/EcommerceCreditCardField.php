@@ -109,6 +109,7 @@ class EcommerceCreditCardField extends TextField
 
             return false;
         }
+
         return true;
     }
 }

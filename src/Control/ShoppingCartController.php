@@ -264,29 +264,23 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param int $orderID
      * @param mixed $parameters
-     *
-     * @return string
      */
-    public static function copy_order_link(int $orderID, $parameters = []) : string
+    public static function copy_order_link(int $orderID, $parameters = []): string
     {
         $order = Order::get()->byID($orderID);
         if ($order && $order->IsSubmitted()) {
             return self::create_link('copyorder/' . $orderID . '/' . self::params_to_get_string($parameters));
         }
+
         return '';
     }
 
     /**
      * returns a link that allows you to set a currency...
      * dont be fooled by the set_ part...
-     *
-     * @param string $code
-     *
-     * @return string
      */
-    public static function set_currency_link(string $code, array $parameters = []) : string
+    public static function set_currency_link(string $code, array $parameters = []): string
     {
         return self::create_link('setcurrency/' . $code . '/' . self::params_to_get_string($parameters));
     }
@@ -553,6 +547,7 @@ class ShoppingCartController extends Controller
                 $order->delete();
             }
         }
+
         return $this->redirectBack();
     }
 
@@ -658,11 +653,13 @@ class ShoppingCartController extends Controller
                 if (Product::is_product_variation($bestBuyable)) {
                     //todo: make this part of ProductVariation.
                     $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
+
                     return $this->redirect($link);
                 }
                 if ($bestBuyable) {
                     //show singleton with old version
                     $link = $bestBuyable->Link('viewversion/' . $version . '/');
+
                     return $this->redirect($link);
                 }
             }
@@ -674,6 +671,7 @@ class ShoppingCartController extends Controller
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
         }
+
         return '404-can-not-submit-buyable';
     }
 
@@ -702,6 +700,7 @@ class ShoppingCartController extends Controller
             //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/placeorderformember/".$request->param("ID")."/")."\">log in</a> first.";
             return Security::permissionFailure($this);
         }
+
         return '404-error-placeholder-for-member';
     }
 
@@ -772,6 +771,7 @@ class ShoppingCartController extends Controller
         if (! $request->isAjax()) {
             user_error('---- make sure to add ?ajax=1 to the URL ---');
         }
+
         return [];
     }
 
@@ -860,6 +860,7 @@ class ShoppingCartController extends Controller
                 user_error('ClassName in URL should be buyable and not an orderitem', E_USER_NOTICE);
             }
         }
+
         return null;
     }
 

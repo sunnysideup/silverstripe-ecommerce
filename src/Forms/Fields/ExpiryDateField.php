@@ -150,10 +150,8 @@ class ExpiryDateField extends TextField
 
     /**
      * @param string $title
-     *
-     * @return ExpiryDateField
      */
-    public function setDescription($title) : self
+    public function setDescription($title): self
     {
         /*
         foreach($this->children as $field) {
@@ -171,10 +169,8 @@ class ExpiryDateField extends TextField
      *
      * @param mixed      $value
      * @param null|mixed $data
-     *
-     * @return ExpiryDateField
      */
-    public function setValue($value, $data = null) : self
+    public function setValue($value, $data = null): self
     {
         //store this for later
         // $oldValue = $this->value;

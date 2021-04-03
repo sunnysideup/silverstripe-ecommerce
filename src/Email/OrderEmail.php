@@ -171,6 +171,7 @@ abstract class OrderEmail extends Email
 
             return $result;
         }
+
         return false;
     }
 

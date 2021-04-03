@@ -48,7 +48,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      *
      * @param dataObject $do - the object that requested the data
      */
-    public function setRequestor(DataObject $do) : self
+    public function setRequestor(DataObject $do): self
     {
         if (null === self::$prefix) {
             self::$prefix = EcommerceConfig::get(Order::class, 'template_id_prefix');
