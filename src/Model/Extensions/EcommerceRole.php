@@ -523,7 +523,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * Update the CMS Fields
      * for /admin/security.
-     *
      */
     public function updateCMSFields(FieldList $fields)
     {

@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
@@ -20,7 +21,6 @@ use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use SilverStripe\Forms\Form;
 
 class OrderConfirmationPageController extends CartPageController
 {
@@ -311,7 +311,6 @@ class OrderConfirmationPageController extends CartPageController
             return [];
         }
         return null;
-
     }
 
     /**
@@ -332,7 +331,6 @@ class OrderConfirmationPageController extends CartPageController
             return [];
         }
         return null;
-
     }
 
     /**
@@ -439,18 +437,14 @@ class OrderConfirmationPageController extends CartPageController
 
     /**
      * Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?
-     *
-     * @return bool
      */
-    protected function onlyShowSubmittedOrders() : bool
+    protected function onlyShowSubmittedOrders(): bool
     {
         return true;
     }
 
     /**
      * Can this page only show Unsubmitted Orders (e.g. CartPage) ?
-     *
-     * @return bool
      */
     protected function onlyShowUnsubmittedOrders(): bool
     {
