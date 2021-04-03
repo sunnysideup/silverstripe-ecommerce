@@ -208,7 +208,7 @@ class OrderProcessQueue extends DataObject
      * @param  Order $order optional
      * @return bool | string
      */
-    public function process($order = null)
+    public function process(?Order $order = null)
     {
         //find variables
         if (! $order) {

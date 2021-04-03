@@ -46,7 +46,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      *
      * @return array
      */
-    public function SupportedMethods($order = null)
+    public function SupportedMethods(?Order $order = null)
     {
         $hideTestPaymentMethods = false;
         if (Director::isLive()) {
@@ -99,17 +99,17 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      * You can provide one as a param,
      * which basically just checks that it is a real order.
      *
-     * @param Order $order (optional) | Int
+     * @param Order|int $orderOrOrderId (optional)
      *
      * @return Order | DataObject
      */
-    protected function orderToUse($order = null)
+    protected function orderToUse($orderOrOrderId = null)
     {
-        if ($order && $order instanceof Order) {
-            return $order;
+        if ($orderOrOrderId && $orderOrOrderId instanceof Order) {
+            return $orderOrOrderId;
         }
-        if ((int) $order) {
-            return Order::get()->byID((int) $order);
+        if ((int) $orderOrOrderId) {
+            return Order::get()->byID((int) $orderOrOrderId);
         }
         return ShoppingCart::current_order();
     }

@@ -41,6 +41,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
@@ -492,23 +494,12 @@ class Order extends DataObject implements EditableEcommerceObject
         return _t('Order.ORDERS', 'Orders');
     }
 
-    /**
-     * @param bool (optional) $b
-     * @param int (optional)  $orderID
-     *
-     * @return bool
-     */
-    public static function set_needs_recalculating($b = true, $orderID = 0)
+    public static function set_needs_recalculating(?bool $b = true, ?int $orderID = 0)
     {
         self::$_needs_recalculating[$orderID] = $b;
     }
 
-    /**
-     * @param int (optional) $orderID
-     *
-     * @return bool
-     */
-    public static function get_needs_recalculating($orderID = 0)
+    public static function get_needs_recalculating(?int $orderID = 0) : bool
     {
         return isset(self::$_needs_recalculating[$orderID]) ? self::$_needs_recalculating[$orderID] : false;
     }
@@ -545,7 +536,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * This function returns the OrderSteps.
      *
-     * @return \SilverStripe\ORM\ArrayList (OrderSteps)
+     * @return DataList (OrderSteps)
      **/
     public static function get_order_status_options()
     {
@@ -555,7 +546,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Like the standard byID, but it checks whether we are allowed to view the order.
      *
-     * @return: Order|null
+     * @return Order|null
      **/
     public static function get_by_id_if_can_view($id)
     {
@@ -568,6 +559,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             return $order;
         }
+        return null;
     }
 
     /**
@@ -2077,7 +2069,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * returns a modifier that is an instanceof the classname
      * it extends.
      *
-     * @return \SilverStripe\ORM\DataObject (OrderModifier)
+     * @return OrderModifier|null
      **/
     public function RetrieveModifier($className)
     {
@@ -2089,6 +2081,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -2106,6 +2099,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($member->exists()) {
             return $member->IsShopAdmin();
         }
+        return parent::canCreate($member, $context);
     }
 
     /**
@@ -2212,20 +2206,21 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param \SilverStripe\Security\Member (optional) $member
+     * @param \SilverStripe\Security\Member $member
      *
      * @return bool
      **/
-    public function canViewAdminStuff($member = null)
+    public function canViewAdminStuff(?Member $member = null) : bool
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
-            return $extended;
+            return (bool) $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+        return false;
     }
 
     /**
@@ -2264,16 +2259,15 @@ class Order extends DataObject implements EditableEcommerceObject
      * If any of them need immediate attention then this is done
      * first after which it will go through to the checkout page.
      *
-     * @param \SilverStripe\Security\Member (optional) $member
      *
      * @return bool
      **/
-    public function canCheckout(Member $member = null)
+    public function canCheckout(?Member $member = null) : bool
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if ($extended !== null) {
-            return $extended;
+            return (bool) $extended;
         }
         $submitErrors = $this->SubmitErrors();
         return ! ($submitErrors && $submitErrors->count());
@@ -2571,6 +2565,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($orderConfirmationPage->IsFeedbackEnabled) {
             return Director::AbsoluteURL($this->getRetrieveLink()) . '#OrderFormFeedback_FeedbackForm';
         }
+        return null;
     }
 
     /**
@@ -3255,7 +3250,11 @@ class Order extends DataObject implements EditableEcommerceObject
         $object = $this->SubmissionLog();
         $created = $object ? $object->Created : $this->LastEdited;
 
-        return DBField::create_field(DBDatetime::class, $created);
+        /** @var DBDateTime $obj */
+        $obj = DBField::create_field(DBDatetime::class, $created);
+        // just here for linting ...
+        $obj->getName();
+        return $obj;
     }
 
     /**
@@ -3374,7 +3373,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param string $action - any action that should be added to the link.
      *
-     * @return String(URLSegment)
+     * @return string (URLSegment)
      */
     public function Link($action = null)
     {
@@ -3382,7 +3381,6 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($page) {
             return $page->getOrderLink($this->ID);
         }
-        user_error('A Cart / Checkout Page + an Order Confirmation Page needs to be setup for the e-commerce module to work.', E_USER_NOTICE);
         $page = DataObject::get_one(
             ErrorPage::class,
             ['ErrorCode' => '404']
@@ -3390,25 +3388,13 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($page) {
             return $page->Link();
         }
-    }
-
-    /**
-     * Returns to link to access the Order's API.
-     *
-     * @param string $version
-     * @param string $extension
-     *
-     * @return String(URL)
-     */
-    public function APILink($version = 'v1', $extension = 'xml')
-    {
-        return Director::AbsoluteURL("/api/ecommerce/{$version}/Order/" . $this->ID . "/.{$extension}");
+        return '404-order-link-not-found';
     }
 
     /**
      * returns the link to finalise the Order.
      *
-     * @return String(URLSegment)
+     * @return string (URLSegment)
      */
     public function CheckoutLink()
     {
@@ -3423,6 +3409,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($page) {
             return $page->Link();
         }
+        return '404-no-order-found';
     }
 
     /**

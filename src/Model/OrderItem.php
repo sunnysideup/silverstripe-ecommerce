@@ -363,22 +363,17 @@ class OrderItem extends OrderAttribute
     {
         $fields = parent::scaffoldSearchFields($_params);
         $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
+
         return $fields;
     }
 
-    /**
-     * standard SS method.
-     *
-     * @param float        $quantity
-     *
-     * @return \SilverStripe\Forms\FieldList
-     **/
-    public function addBuyableToOrderItem(BuyableModel $buyable, $quantity = 1)
+    public function addBuyableToOrderItem(BuyableModel $buyable, ?int $quantity = 1) : self
     {
         $this->Version = $buyable->Version;
         $this->BuyableID = $buyable->ID;
         $this->BuyableClassName = $buyable->ClassName;
         $this->Quantity = $quantity;
+        return $this;
     }
 
     /**
@@ -615,7 +610,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param int $orderID
      */
-    public static function reset_price_has_been_fixed($orderID = 0)
+    public static function reset_price_has_been_fixed(?int $orderID = 0)
     {
         self::set_price_has_been_fixed($orderID);
     }

@@ -423,9 +423,9 @@ class OrderModifier extends OrderAttribute
      * @param Controller $optionalController - optional custom controller class
      * @param Validator  $optionalValidator  - optional custom validator class
      *
-     * @return OrderModifierForm or subclass
+     * @return OrderModifierForm|null or subclass
      */
-    public function getModifierForm(Controller $optionalController = null, Validator $optionalValidator = null)
+    public function getModifierForm(?Controller $optionalController = null, ?Validator $optionalValidator = null)
     {
         if ($this->ShowForm()) {
             $fields = new FieldList();
@@ -434,6 +434,7 @@ class OrderModifier extends OrderAttribute
 
             return OrderModifierForm::create($optionalController, 'ModifierForm', $fields, $actions = new FieldList(), $optionalValidator);
         }
+        return null;
     }
 
     // ######################################## *** 7. template functions (e.g. ShowInTable, TableTitle, etc...)

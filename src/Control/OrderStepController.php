@@ -65,7 +65,7 @@ abstract class OrderStepController extends Controller
      *
      * @return string
      */
-    public function Content($order = null)
+    public function Content(?Order $order = null)
     {
         if ($this->alternativeContent) {
             return $this->alternativeContent;
@@ -131,7 +131,7 @@ abstract class OrderStepController extends Controller
     /**
      * @return string ($html)
      */
-    protected function standardContent($order = null)
+    protected function standardContent(?Order $order = null)
     {
         user_error('Make sure to put some content here in classes that extend ' . static::class);
     }

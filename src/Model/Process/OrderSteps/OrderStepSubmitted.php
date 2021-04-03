@@ -50,7 +50,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     /**
      * @return string
      */
-    public function getRelevantLogEntryClassName()
+    public function getRelevantLogEntryClassName() : string
     {
         return EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
     }

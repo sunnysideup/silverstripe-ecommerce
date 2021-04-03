@@ -452,7 +452,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * @param int $orderID (optional)
      */
-    public static function reset_get_country_cache($orderID = 0)
+    public static function reset_get_country_cache(?int $orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
         unset(self::$_country_cache[$orderID]);
@@ -461,7 +461,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * @param int $orderID (optional)
      */
-    public static function get_country_cache($orderID = 0)
+    public static function get_country_cache(?int $orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 
@@ -619,7 +619,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public static function allow_sales($orderID = 0)
+    public static function allow_sales(?int $orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
         if (! isset(self::$_allow_sales_cache[$orderID])) {

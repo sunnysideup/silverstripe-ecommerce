@@ -27,7 +27,7 @@ abstract class OrderConverter
 
     private $amountsPerModifierType = [];
 
-    public function __construct($order = null)
+    public function __construct(?Order $order = null)
     {
         if ($order === null) {
             $order = ShoppingCart::current_order();

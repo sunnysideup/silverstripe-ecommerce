@@ -183,7 +183,7 @@ class ShoppingCart
      *
      * @return Order
      */
-    public static function current_order($order = null)
+    public static function current_order(?Order $order = null)
     {
         return self::singleton()->currentOrder(0, $order);
     }
@@ -390,7 +390,7 @@ class ShoppingCart
      *
      * @return string
      */
-    public function Link($order = null)
+    public function Link(?Order $order = null)
     {
         $order = self::singleton()->currentOrder(0, $order = null);
         if ($order) {
@@ -1061,7 +1061,7 @@ class ShoppingCart
      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
      *
      * $message the message, which could be a notification of successful action, or reason for failure
-     * @param $status - use good, bad, warning
+     * @param string $status - use good, bad, warning
      */
     public function addMessage($message, $status = 'good')
     {

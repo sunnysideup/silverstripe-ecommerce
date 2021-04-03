@@ -17,6 +17,8 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+
+use SilverStripe\Control\Controller;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -152,7 +154,7 @@ class CheckoutPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function find_link($action = null)
+    public static function find_link($action = null) : string
     {
         $page = DataObject::get_one(CheckoutPage::class);
         if ($page) {
@@ -160,7 +162,7 @@ class CheckoutPage extends CartPage
         }
         user_error('No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.', E_USER_NOTICE);
 
-        return '';
+        return '404-checkout-page';
     }
 
     /**
@@ -171,7 +173,7 @@ class CheckoutPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function find_last_step_link($step = '')
+    public static function find_last_step_link(?string $step = '') : string
     {
         if (! $step) {
             $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
@@ -180,7 +182,7 @@ class CheckoutPage extends CartPage
             }
         }
         if ($step) {
-            $step = 'checkoutstep/' . strtolower($step) . '/#' . $step;
+            $step = Controller::join_links('checkoutstep' , strtolower($step)) . '/#' . $step;
         }
 
         return self::find_link($step);
@@ -189,12 +191,12 @@ class CheckoutPage extends CartPage
     /**
      * Returns the link to the next step.
      *
-     * @param string - $currentStep       is the step that has just been actioned....
-     * @param bool -   $doPreviousInstead - return previous rather than next step
+     * @param string  $currentStep       is the step that has just been actioned....
+     * @param bool    $doPreviousInstead - return previous rather than next step
      *
      * @return string (URLSegment)
      */
-    public static function find_next_step_link($currentStep, $doPreviousInstead = false)
+    public static function find_next_step_link($currentStep, $doPreviousInstead = false) : string
     {
         $nextStep = null;
         if ($link = self::find_link()) {
@@ -217,7 +219,7 @@ class CheckoutPage extends CartPage
                 $nextStep = array_pop($steps);
             }
             if ($nextStep) {
-                return $link . 'checkoutstep' . '/' . $nextStep . '/';
+                return Controller::join_links($link , 'checkoutstep' , $nextStep);
             }
 
             return $link;
@@ -236,8 +238,9 @@ class CheckoutPage extends CartPage
      */
     public static function get_checkout_order_link($orderID)
     {
-        if ($page = self::find_link()) {
-            return $page->Link('showorder') . '/' . $orderID . '/';
+        $link = self::find_link();
+        if ($link) {
+            return Controller::join_links($link , 'showorder' , $orderID);
         }
 
         return '';

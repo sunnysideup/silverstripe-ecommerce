@@ -287,7 +287,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-    public static function get_for_current_order_only_show_regions($orderID = 0)
+    public static function get_for_current_order_only_show_regions(?int $orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 
@@ -311,7 +311,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-    public static function get_for_current_order_do_not_show_regions($orderID = 0)
+    public static function get_for_current_order_do_not_show_regions(?int $orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 

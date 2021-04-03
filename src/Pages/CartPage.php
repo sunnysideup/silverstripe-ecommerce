@@ -111,16 +111,28 @@ class CartPage extends Page
         return _t('CartPage.PLURALNAME', 'Cart Pages');
     }
 
-    /***
-     * override core function to turn "checkout" into "Checkout (1)"
-     * @return DBField
+    /**
+     * Get the value of a field on this object, automatically inserting the value into any available casting objects
+     * that have been specified.
+     * inherited from ViewableData
+     * @see ViewableData
+     * @param string $fieldName
+     * @param array $arguments
+     * @param bool $cache Cache this object
+     * @param string $cacheName a custom cache name
+     * @return Object|DBField
      */
-    public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null)
+    public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
         if ($fieldName === 'MenuTitle' && ! ($this instanceof OrderConfirmationPage)) {
-            return DBField::create_field('HTMLVarchar', strip_tags($this->EcommerceMenuTitle()), 'MenuTitle', $this);
+            return DBField::create_field(
+                'HTMLVarchar',
+                strip_tags($this->EcommerceMenuTitle()),
+                'MenuTitle',
+                $this
+            );
         }
-        return parent::obj($fieldName);
+        return parent::obj($fieldName, $arguments, $cache, $cacheName);
     }
 
     /**

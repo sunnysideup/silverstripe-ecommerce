@@ -129,6 +129,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
                 ! (bool) $this->SendDetailsToCustomer
             );
         }
+        return false;
     }
 
     /**
@@ -163,9 +164,9 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return $fields;
     }
 
-    public function CalculatedEmailSubject($order = null)
+    public function CalculatedEmailSubject(?Order $order = null) : string
     {
-        $v = null;
+        $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {
             $v = $this->EmailSubjectGift;
         }
@@ -176,9 +177,9 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return $v;
     }
 
-    public function CalculatedCustomerMessage($order = null)
+    public function CalculatedCustomerMessage(Order $order = null) : string
     {
-        $v = null;
+        $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {
             $v = $this->CustomerMessageGift;
         }

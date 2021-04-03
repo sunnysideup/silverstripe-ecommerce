@@ -292,7 +292,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @param int $orderID
      * @param bool $value
      */
-    public static function set_price_has_been_fixed($orderID = 0, $value = false)
+    public static function set_price_has_been_fixed(?int $orderID = 0, $value = false)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
         self::$_price_has_been_fixed[$orderID] = $value;
@@ -302,7 +302,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @param int $orderID
      * @return bool|null
      */
-    public static function get_price_has_been_fixed($orderID = 0)
+    public static function get_price_has_been_fixed(?int $orderID = 0)
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 

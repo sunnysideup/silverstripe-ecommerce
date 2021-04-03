@@ -417,12 +417,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return string|null
      */
-    public function PaymentMethod()
+    public function PaymentMethod() : ?string
     {
         $supportedMethods = self::get_supported_methods($this->Order());
         if (isset($supportedMethods[$this->ClassName])) {
             return $supportedMethods[$this->ClassName];
         }
+        return null;
     }
 
     /**
@@ -432,7 +433,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * e.g. MyPaymentClass => Best Payment Method Ever     * @param array $array -
      * @param array $array
      */
-    public static function set_supported_methods($array)
+    public static function set_supported_methods(array $array)
     {
         Config::modify()->update(EcommercePayment::class, 'supported_methods', null);
         Config::modify()->update(EcommercePayment::class, 'supported_methods', $array);
@@ -447,7 +448,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *     [Code] => "Description",
      *     [Code] => "Description"
      */
-    public static function get_supported_methods($order = null): array
+    public static function get_supported_methods(?Order $order = null): array
     {
         $obj = self::create();
 
@@ -461,7 +462,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return array An array suitable for passing to CustomRequiredFields
      */
-    public static function combined_form_requirements($order = null): array
+    public static function combined_form_requirements(?Order $order = null): array
     {
         $array = [];
         $supportedMethods = self::get_supported_methods($order);

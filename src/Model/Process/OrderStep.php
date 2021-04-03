@@ -235,12 +235,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function Title()
+    public function Title() : string
     {
         return $this->getTitle();
     }
 
-    public function getTitle()
+    public function getTitle() : string
     {
         return $this->Name;
     }
@@ -250,18 +250,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CustomerCanEditNice()
+    public function CustomerCanEditNice() : string
     {
         return $this->getCustomerCanEditNice();
     }
 
-    public function getCustomerCanEditNice()
+    public function getCustomerCanEditNice() : string
     {
-        if ($this->CustomerCanEdit) {
-            return _t('OrderStep.YES', 'Yes');
-        }
-
-        return _t('OrderStep.NO', 'No');
+        return $this->yesOrNoNiceHelper($this->CustomerCanEdit);
     }
 
     /**
@@ -269,18 +265,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CustomerCanPayNice()
+    public function CustomerCanPayNice() : string
     {
         return $this->getCustomerCanPayNice();
     }
 
-    public function getCustomerCanPayNice()
+    public function getCustomerCanPayNice() : string
     {
-        if ($this->CustomerCanPay) {
-            return _t('OrderStep.YES', 'Yes');
-        }
-
-        return _t('OrderStep.NO', 'No');
+        return $this->yesOrNoNiceHelper($this->CustomerCanPay);
     }
 
     /**
@@ -288,32 +280,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CustomerCanCancelNice()
+    public function CustomerCanCancelNice() : string
     {
         return $this->getCustomerCanCancelNice();
     }
 
-    public function getCustomerCanCancelNice()
+    public function getCustomerCanCancelNice() : string
     {
-        if ($this->CustomerCanCancel) {
-            return _t('OrderStep.YES', 'Yes');
-        }
-
-        return _t('OrderStep.NO', 'No');
+        return $this->yesOrNoNiceHelper($this->CustomerCanCancel) ;
     }
 
-    public function ShowAsUncompletedOrderNice()
+    public function ShowAsUncompletedOrderNice() : string
     {
         return $this->getShowAsUncompletedOrderNice();
     }
 
-    public function getShowAsUncompletedOrderNice()
+    public function getShowAsUncompletedOrderNice() : string
     {
-        if ($this->ShowAsUncompletedOrder) {
-            return _t('OrderStep.YES', 'Yes');
-        }
-
-        return _t('OrderStep.NO', 'No');
+        return $this->yesOrNoNiceHelper($this->ShowAsUncompletedOrder);
     }
 
     /**
@@ -321,18 +305,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function ShowAsInProcessOrderNice()
+    public function ShowAsInProcessOrderNice() : string
     {
         return $this->getShowAsInProcessOrderNice();
     }
 
-    public function getShowAsInProcessOrderNice()
+    public function getShowAsInProcessOrderNice() : string
     {
-        if ($this->ShowAsInProcessOrder) {
-            return _t('OrderStep.YES', 'Yes');
-        }
-
-        return _t('OrderStep.NO', 'No');
+        return $this->yesOrNoNiceHelper($this->ShowAsInProcessOrder);
     }
 
     /**
@@ -340,25 +320,21 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function ShowAsCompletedOrderNice()
+    public function ShowAsCompletedOrderNice() : string
     {
         return $this->getShowAsCompletedOrderNice();
     }
 
-    public function getShowAsCompletedOrderNice()
+    public function getShowAsCompletedOrderNice() : string
     {
-        if ($this->ShowAsCompletedOrder) {
-            return _t('OrderStep.YES', 'Yes');
-        }
-
-        return _t('OrderStep.NO', 'No');
+        return $this->yesOrNoNiceHelper($this->ShowAsCompletedOrder);
     }
 
     /**
      * do not show in steps at all.
      * @return bool
      */
-    public function HideFromEveryone()
+    public function HideFromEveryone() : bool
     {
         return false;
     }
@@ -368,18 +344,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function HideStepFromCustomerNice()
+    public function HideStepFromCustomerNice() : string
     {
         return $this->getHideStepFromCustomerNice();
     }
 
-    public function getHideStepFromCustomerNice()
+    public function getHideStepFromCustomerNice() : string
     {
-        if ($this->HideStepFromCustomer) {
-            return _t('OrderStep.YES', 'Yes');
-        }
+        return $this->yesOrNoNiceHelper($this->HideStepFromCustomer);
+    }
 
-        return _t('OrderStep.NO', 'No');
+    protected function yesOrNoNiceHelper(?bool $bool) : string
+    {
+        return $bool ? _t('OrderStep.YES', 'Yes') : _t('OrderStep.NO', 'No');
     }
 
     public function i18n_singular_name()
@@ -453,16 +430,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * turns code into ID.
      *
      * @param string $code
-     * @param int
+     * @return int
      */
-    public static function get_status_id_from_code($code)
+    public static function get_status_id_from_code(string $code) : int
     {
         $otherStatus = DataObject::get_one(
             OrderStep::class,
             ['Code' => $code]
         );
         if ($otherStatus) {
-            return $otherStatus->ID;
+            return (int) $otherStatus->ID;
         }
 
         return 0;
@@ -841,7 +818,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function isBefore($code)
+    public function isBefore(string $code) : bool
     {
         return ! (bool) $this->hasPassed($code);
     }
@@ -861,11 +838,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * sets the email class used for emailing the
      * customer during a specific step (IF ANY!).
      *
-     * @param $s
+     * @param string $s
      */
-    public function setEmailClassName($s)
+    public function setEmailClassName(string $s) : self
     {
         $this->emailClassName = $s;
+        return $this;
     }
 
     /**
@@ -877,7 +855,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      **/
-    public function hasBeenSent(Order $order, $checkDateOfOrder = true)
+    public function hasBeenSent(Order $order, ?bool $checkDateOfOrder = true)
     {
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
@@ -917,24 +895,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function HasCustomerMessageNice()
+    public function HasCustomerMessageNice() : string
     {
         return $this->getHasCustomerMessageNice();
     }
 
-    public function getHasCustomerMessageNice()
+    public function getHasCustomerMessageNice() : string
     {
         return $this->hasCustomerMessage() ? _t('OrderStep.YES', 'Yes') : _t('OrderStep.NO', 'No');
     }
 
-    public function CalculatedEmailSubject($order = null)
+    public function CalculatedEmailSubject(?Order $order = null) : string
     {
-        return $this->EmailSubject;
+        return (string) $this->EmailSubject;
     }
 
-    public function CalculatedCustomerMessage($order = null)
+    public function CalculatedCustomerMessage(?Order $order = null) : string
     {
-        return $this->CustomerMessage;
+        return (string) $this->CustomerMessage;
     }
 
     /**
@@ -942,7 +920,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function ShowAsSummary()
+    public function ShowAsSummary() : string
     {
         return $this->getShowAsSummary();
     }
@@ -950,7 +928,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * @return string
      */
-    public function getShowAsSummary()
+    public function getShowAsSummary() : string
     {
         $v = '<strong>';
         if ($this->ShowAsUncompletedOrder) {
@@ -1009,7 +987,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return int
      */
-    public function CalculatedDeferTimeInSeconds($order = null)
+    public function CalculatedDeferTimeInSeconds(?Order $order = null)
     {
         return $this->DeferTimeInSeconds;
     }
@@ -1017,17 +995,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * @return string
      */
-    public function getRelevantLogEntryClassName()
+    public function getRelevantLogEntryClassName() : string
     {
         return $this->relevantLogEntryClassName;
     }
 
     /**
-     * @param $s
+     * @param string $s
      */
-    public function setRelevantLogEntryClassName($s)
+    public function setRelevantLogEntryClassName(string $s) : self
     {
         $this->relevantLogEntryClassName = $s;
+        return $this;
     }
 
     /**
@@ -1040,6 +1019,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($this->getRelevantLogEntryClassName()) {
             return $this->RelevantLogEntries($order)->Last();
         }
+        return null;
     }
 
     /**
@@ -1058,6 +1038,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
+        return null;
     }
 
     /**************************************************
@@ -1109,7 +1090,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param  Member $member optional
      * @return bool
      */
-    public function canOverrideCanViewForOrder($order, $member = null)
+    public function canOverrideCanViewForOrder($order, $member = null) : bool
     {
         //return true if the order can have customer input
         // orders recently saved can also be views
@@ -1325,9 +1306,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * is being sent OR if there is no suitable Order
      * to test with...
      *
-     * @return string
+     * @return string|null
      */
-    protected function testEmailLink()
+    protected function testEmailLink() : ?string
     {
         if ($this->getEmailClassName()) {
             $order = DataObject::get_one(
@@ -1352,6 +1333,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 );
             }
         }
+        return null;
     }
 
     /**
@@ -1365,9 +1347,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    protected function humanReadeableDeferTimeInSeconds()
+    protected function humanReadeableDeferTimeInSeconds() : ?string
     {
         if ($this->canBeDefered()) {
             $field = DBField::create_field('DBDatetime', strtotime('+ ' . $this->DeferTimeInSeconds . ' seconds'));
@@ -1379,6 +1361,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     _t('OrderStep.FROM_START_OF_ORDSTEP', 'from the order arriving on this step');
             return $descr0 . ' ' . $descr1 . ' <span style="color: #338DC1">' . $descr2 . '</span> ' . $descr3 . '.';
         }
+        return null;
         // $dtF = new \DateTime('@0');
         // $dtT = new \DateTime("@".$this->DeferTimeInSeconds);
         //
@@ -1420,6 +1403,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($orderStepsToInclude && count($orderStepsToInclude)) {
             if ($codesToInclude && count($codesToInclude)) {
                 foreach ($codesToInclude as $className => $code) {
+                    $className = (string) $className;
                     $code = strtoupper($code);
                     $filter = ['ClassName' => $className];
                     $indexNumber += 10;

@@ -204,7 +204,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return array
      */
-    public function fieldLabels(?bool $includerelations = true)
+    public function fieldLabels($includerelations = true)
     {
         $defaultLabels = parent::fieldLabels();
         $newLabels = $this->customFieldLabels();
