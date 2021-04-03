@@ -1127,7 +1127,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         //cant delete last status if there are orders with this status
         $nextOrderStepObject = $this->NextOrderStep();

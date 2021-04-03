@@ -292,7 +292,7 @@ class EcommercePaymentFormSetupAndValidation
         $result = $this->paymentObject->processPayment($data, $form);
 
         if (! is_a($result, EcommerceConfigClassNames::getName(EcommercePaymentResult::class))) {
-            $form->controller->redirectBack();
+            $form->getController()->redirectBack();
 
             return false;
         }
@@ -305,9 +305,9 @@ class EcommercePaymentFormSetupAndValidation
         //payment is done, redirect to either returntolink
         //OR to the link of the order ....
         if (isset($data['returntolink'])) {
-            $form->controller->redirect($data['returntolink']);
+            $form->getController()->redirect($data['returntolink']);
         } else {
-            $form->controller->redirect($order->Link());
+            $form->getController()->redirect($order->Link());
         }
 
         return true;

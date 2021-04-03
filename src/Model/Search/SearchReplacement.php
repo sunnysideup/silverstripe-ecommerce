@@ -155,7 +155,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();

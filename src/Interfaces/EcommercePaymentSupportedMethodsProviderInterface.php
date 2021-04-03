@@ -8,7 +8,7 @@ interface EcommercePaymentSupportedMethodsProviderInterface
 {
     /**
      * how can the customer pay?
-     * @param mixed $order
+     * @param Order $order
      *
      * @return array
      */

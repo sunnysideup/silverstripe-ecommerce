@@ -57,7 +57,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
     /**
      * finds the most likely root parent for the shop.
      *
-     * @return SiteTree | DataObject|null
+     * @return SiteTree|null
      */
     public function BestParentPage()
     {
@@ -75,9 +75,12 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             if (Versioned::get_stage() === 'Live') {
                 $stage = '_Live';
             }
-            if ($result = $rootParentClass::get()->filter('Parent.ParentID', 0)->innerJoin(Config::inst()->get(SiteTree::class, 'table_name') . $stage, 'Parent.ID = SiteTree' . $stage . '.ParentID', 'Parent')->First()) {
-                return $result;
-            }
+            return $rootParentClass::get()
+                ->filter('Parent.ParentID', 0)
+                ->innerJoin(Config::inst()
+                ->get(SiteTree::class, 'table_name') . $stage, 'Parent.ID = SiteTree' . $stage . '.ParentID', 'Parent')
+                ->First();
         }
+        return null;
     }
 }

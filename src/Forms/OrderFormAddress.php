@@ -24,11 +24,13 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormAddressValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
 
 /**
  * This class is the form for editing the Order Addresses.
@@ -489,7 +491,7 @@ class OrderFormAddress extends Form
      * use the field - we just CAN NOT log in the member.
      * This method needs to be public because it is used by the OrderFormValidator (see below).
      *
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
      **/
@@ -523,7 +525,7 @@ class OrderFormAddress extends Form
      *
      * @return bool
      */
-    protected function orderHasFullyOperationalMember()
+    protected function orderHasFullyOperationalMember() : bool
     {
         //orderMember is Created in __CONSTRUCT
         if ($this->orderMember) {
@@ -533,6 +535,7 @@ class OrderFormAddress extends Form
                 }
             }
         }
+        return false;
     }
 
     /**
@@ -559,7 +562,7 @@ class OrderFormAddress extends Form
      * 6. At this stage, if we dont have a member, we will create one!
      * 7. We do one last check to see if we are allowed to create one.
      *
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return \SilverStripe\Security\Member|null
      **/
@@ -655,7 +658,7 @@ class OrderFormAddress extends Form
      * @Todo: explain why password needs to be more than three characters...
      * @todo: create class that checks if password is good enough
      *
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
      **/
@@ -683,7 +686,7 @@ class OrderFormAddress extends Form
     }
 
     /**
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
      **/
@@ -713,7 +716,7 @@ class OrderFormAddress extends Form
      * - the member is new AND
      * - the password is valid.
      *
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
      **/
@@ -732,7 +735,7 @@ class OrderFormAddress extends Form
      * returns existing member if it already exists and it is not the logged-in one.
      * Based on the unique field (email)).
      *
-     * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
+     * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      **/
     protected function anotherExistingMemberWithSameUniqueFieldValue(array $data)
     {
@@ -765,9 +768,9 @@ class OrderFormAddress extends Form
      *
      * @param array $data
      *
-     * @return string | false
+     * @return string|false
      */
-    protected function enteredEmailAddressDoesNotMatchLoggedInUser($data)
+    protected function enteredEmailAddressDoesNotMatchLoggedInUser(array $data)
     {
         if ($this->loggedInMember) {
             $DBUniqueFieldName = $this->loggedInMember->Email;
@@ -790,11 +793,11 @@ class OrderFormAddress extends Form
     /**
      * Check if the password is good enough.
      *
-     * @param $data (from form)
+     * @param array $data (from form)
      *
      * @return string
      */
-    protected function validPasswordHasBeenEntered($data)
+    protected function validPasswordHasBeenEntered(array $data)
     {
         return ShopAccountFormPasswordValidator::clean_password($data);
     }

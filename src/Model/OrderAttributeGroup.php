@@ -131,7 +131,7 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();

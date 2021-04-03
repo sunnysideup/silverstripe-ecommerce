@@ -49,6 +49,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
         if ($columnName === 'Packing Slip') {
             return ['title' => 'Packing Slip'];
         }
+        return [];
     }
 
     /**
@@ -69,7 +70,7 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
                 'width=600,height=300,location=0,menubar=0,scrollbars=1,status=0,toolbar=0,resizable=1'
             );";
 
-        $field = GridField_FormAction::create(
+        return GridField_FormAction::create(
             $gridField,
             'PrintPackingSlip' . $record->ID,
             false,
@@ -80,8 +81,8 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
             ->setAttribute('title', _t('GridPacking Slip.PRINT_PACKING_SLIP', 'Packing Slip'))
             ->setAttribute('data-icon', 'download-csv')
             ->setAttribute('onclick', $onclickStatement)
-            ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION', 'Print Packing Slip'));
-        return $field->FIeld();
+            ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION', 'Print Packing Slip'))
+            ->Field();
     }
 
     /**

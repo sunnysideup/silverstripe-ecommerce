@@ -26,6 +26,8 @@ use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
+
+use SilverStripe\CMS\Model\SiteTree;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
@@ -865,7 +867,7 @@ class ProductSearchForm extends Form
 
     /**
      * @param  string $data optional
-     * @return float
+     * @return int
      */
     protected function getHash(?string $data = ''): int
     {

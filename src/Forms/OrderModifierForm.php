@@ -13,7 +13,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\OrderModifierFormController;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderModifierFormValidator;
-
+use Sunnysideup\Ecommerce\Model\Order;
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
  *
@@ -25,7 +25,7 @@ use Sunnysideup\Ecommerce\Forms\Validation\OrderModifierFormValidator;
 class OrderModifierForm extends Form
 {
     /**
-     * @var Sunnysideup\Ecommerce\Model\Order
+     * @var Order
      */
     protected $order;
 

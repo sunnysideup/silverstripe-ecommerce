@@ -7,6 +7,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\Form;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * This controller allows you to submit Log forms from anywhere on the site,
@@ -15,7 +16,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 class OrderStatusLogFormController extends Controller
 {
     /**
-     * @var Sunnysideup\Ecommerce\Model\Order
+     * @var Order
      */
     protected $currentOrder;
 

@@ -49,6 +49,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
         if ($columnName === 'Print') {
             return ['title' => 'Invoice'];
         }
+        return [];
     }
 
     /**
@@ -70,7 +71,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
                     'width=600,height=300,location=0,menubar=0,scrollbars=1,status=0,toolbar=0,resizable=1'
                 );";
 
-            $field = GridField_FormAction::create(
+             GridField_FormAction::create(
                 $gridField,
                 'PrintInvoice' . $record->ID,
                 false,
@@ -81,9 +82,10 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
                 ->setAttribute('title', _t('GridAction.PRINT_INVOICE', 'Invoice'))
                 ->setAttribute('data-icon', 'grid_print')
                 ->setAttribute('onclick', $onclickStatement)
-                ->setDescription(_t('GridAction.PRINT_INVOICE_DESCRIPTION', 'Print Invoice'));
-            return $field->Field();
+                ->setDescription(_t('GridAction.PRINT_INVOICE_DESCRIPTION', 'Print Invoice'))
+                ->Field();
         }
+        return '';
     }
 
     /**

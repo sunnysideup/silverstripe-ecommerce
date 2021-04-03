@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -21,6 +22,8 @@ use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
+
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * @description: ShopAccountForm allows shop members to update their details.
@@ -184,9 +187,10 @@ class ShopAccountForm extends Form
     }
 
     /**
-     * @return bool + redirection
+     * redirects ....
+     * @return HTTPResponse
      **/
-    protected function processForm($data, $form, $request, $link = '')
+    protected function processForm(array $data, $form, RequestException $request, ?string $link = '')
     {
         $member = Security::getCurrentUser();
         if (! $member) {
@@ -199,7 +203,7 @@ class ShopAccountForm extends Form
             $member->changePassword($password);
         } elseif ($data['PasswordCheck1']) {
             $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.'), 'bad');
-            $this->controller->redirectBack();
+            return $this->controller->redirectBack();
         }
         if ($member->validate()->valid()) {
             $member->write();
@@ -207,10 +211,11 @@ class ShopAccountForm extends Form
                 return $this->controller->redirect($link);
             }
             $form->sessionMessage(_t('Account.DETAILSSAVED', 'Your details have been saved.'), 'good');
-            $this->controller->redirectBack();
+            return $this->controller->redirectBack();
         } else {
             $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
-            $this->controller->redirectBack();
+            return $this->controller->redirectBack();
         }
+        return null;
     }
 }

@@ -443,7 +443,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @Note: this needs to be public to give DODS (extensions access to this)
      * @todo: can wre write $this->Order() instead????
      *
-     * @return \SilverStripe\ORM\DataObject (Member)|null
+     * @return Member|null
      **/
     public function getMemberFromOrder()
     {
@@ -456,6 +456,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+        return null;
     }
 
     /**
@@ -691,15 +692,16 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * returns the field prefix string for shipping addresses.
      *
-     * @return string
+     * @return string|null
      **/
-    protected function baseClassLinkingToOrder()
+    protected function baseClassLinkingToOrder() : ?string
     {
         if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
             return BillingAddress::class;
         } elseif (is_a($this, EcommerceConfigClassNames::getName(ShippingAddress::class))) {
             return ShippingAddress::class;
         }
+        return null;
     }
 
     /**
@@ -707,7 +709,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *
      * @return string
      **/
-    protected function fieldPrefix()
+    protected function fieldPrefix() : string
     {
         if ($this->baseClassLinkingToOrder() === EcommerceConfigClassNames::getName(BillingAddress::class)) {
             return '';

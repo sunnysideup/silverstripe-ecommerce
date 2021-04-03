@@ -30,12 +30,16 @@ abstract class OrderStepController extends Controller
      */
     protected $alternativeContent = '';
 
+    /**
+     *
+     * @var array
+     */
     private static $allowed_actions = [
         'error' => true,
     ];
 
     /**
-     * @var Sunnysideup\Ecommerce\Model\Order
+     * @var Order
      */
     private static $_order;
 

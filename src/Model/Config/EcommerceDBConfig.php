@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Config;
-
+use SilverStripe\ORM\DataList;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Email\Email;
@@ -312,7 +312,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @var bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         if ($this->UseThisOne) {
             return false;
@@ -677,7 +677,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function Currency()
+    public function Currency() : string
     {
         return EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
     }
@@ -688,19 +688,20 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList|null
      */
-    public function Currencies()
+    public function Currencies(): ?DataList
     {
         $list = EcommerceCurrency::get_list();
 
         if ($list && $list->count() > 1) {
             return $list;
         }
+        return null;
     }
 
     /**
      * @return string (URLSegment)
      **/
-    public function AccountPageLink()
+    public function AccountPageLink() : string
     {
         return AccountPage::find_link();
     }
@@ -708,7 +709,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function CheckoutLink()
+    public function CheckoutLink() : string
     {
         return CheckoutPage::find_link();
     }
@@ -716,7 +717,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function CartPageLink()
+    public function CartPageLink() : string
     {
         return CartPage::find_link();
     }
@@ -724,7 +725,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      **/
-    public function OrderConfirmationPageLink()
+    public function OrderConfirmationPageLink() : string
     {
         return OrderConfirmationPage::find_link();
     }
@@ -736,7 +737,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function DefaultImageLink()
+    public function DefaultImageLink() : string
     {
         if ($this->DefaultProductImageID) {
             $defaultImage = $this->DefaultProductImage();

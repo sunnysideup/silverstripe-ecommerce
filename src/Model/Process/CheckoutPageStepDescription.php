@@ -184,7 +184,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @return bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         $array = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         if (in_array($this->getCode, $array, true)) {

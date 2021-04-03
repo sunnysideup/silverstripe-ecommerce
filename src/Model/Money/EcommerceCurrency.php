@@ -9,6 +9,8 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBField;
+
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
@@ -332,7 +334,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         if (! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
             if (! $member) {
@@ -376,7 +378,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         return $dos;
     }
 
-    public static function get_list()
+    public static function get_list(): DataList
     {
         return EcommerceCurrency::get()
             ->filter(['InUse' => 1])

@@ -56,7 +56,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     protected $showMoreLink = false;
 
-    public function __construct($name, $title = '')
+    public function __construct(string $name, ?string $title = '')
     {
         parent::__construct($name, $title);
     }

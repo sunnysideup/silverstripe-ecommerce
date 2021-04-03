@@ -171,7 +171,7 @@ class CartPage extends Page
      *
      * @return bool
      */
-    public function canDelete($member = null, $context = [])
+    public function canDelete($member = null)
     {
         return $this->canEdit($member);
     }

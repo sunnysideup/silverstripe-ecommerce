@@ -1,6 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
+use ArrayAccess;
 
 use SilverStripe\Forms\DropdownField;
 
@@ -18,10 +19,10 @@ class YesNoDropDownField extends DropdownField
     public const ANY_IE_NO_SELECTION = '-- any --';
 
     /**
-     * @param string $name             - this is usually classname, as in MyTable.ClassName
-     * @param string $title            - e.g. type of object
-     * @param array $value      - e.g. MyDataObject
-     * @param value $value      - e.g. MyDataObject
+     * @param string $name The field name
+     * @param string $title The field title
+     * @param array|ArrayAccess $source A map of the dropdown items
+     * @param mixed $value The current value
      */
     public function __construct(
         $name = '',

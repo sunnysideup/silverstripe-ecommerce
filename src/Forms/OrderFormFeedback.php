@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
@@ -61,11 +62,6 @@ class OrderFormFeedback extends Form
         $this->extend('updateOrderFormFeedback', $this);
     }
 
-    /**
-     * @param array        $data The form request data submitted
-     * @param Form         $form The {@link Form} this was submitted on
-     * @return \SilverStripe\Control\HTTPRequest The {@link Form} this was submitted on
-     */
     public function dofeedback(array $data, Form $form, HTTPRequest $request)
     {
         if ($this->order) {
@@ -78,16 +74,15 @@ class OrderFormFeedback extends Form
                 $this->getValueFromOrderConfirmationPage('FeedbackFormThankYou'),
                 'good'
             );
-
-            return $this->controller->redirect($this->order->FeedbackLink());
+        } else {
+            $form->sessionMessage(
+                _t(
+                    'OrderFormFeedback.COULD_NOT_RECORD_FEEDBACK',
+                    'Sorry, order feedback could not be recorded.'
+                ),
+                'bad'
+            );
         }
-        $form->sessionMessage(
-            _t(
-                'OrderFormFeedback.COULD_NOT_RECORD_FEEDBACK',
-                'Sorry, order feedback could not be recorded.'
-            ),
-            'bad'
-        );
 
         return $this->controller->redirect($this->order->FeedbackLink());
     }

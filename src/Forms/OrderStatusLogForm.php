@@ -11,7 +11,7 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\OrderStatusLogFormController;
-
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator;
 
 /**
@@ -27,7 +27,7 @@ use Sunnysideup\Ecommerce\Forms\Validation\OrderStatusLogFormValidator;
 class OrderStatusLogForm extends Form
 {
     /**
-     * @var Sunnysideup\Ecommerce\Model\Order
+     * @var Order
      */
     protected $order;
 
