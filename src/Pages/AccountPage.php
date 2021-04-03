@@ -65,21 +65,21 @@ class AccountPage extends Page
     /**
      * Standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Account Page';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Account Pages';
 

@@ -59,7 +59,7 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @var Boolean
+     * @var boolean
      */
     private static $hide_ancestor = CartPage::class;
 
@@ -73,7 +73,7 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $table_name = 'CheckoutPage';
 
@@ -85,7 +85,7 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $has_one = [
         'TermsPage' => 'Page',
@@ -94,7 +94,7 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $defaults = [
         'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.',
@@ -103,14 +103,14 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Checkout Page';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Checkout Pages';
 

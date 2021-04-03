@@ -25,7 +25,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $table_name = 'CheckoutPageStepDescription';
 
@@ -39,7 +39,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $searchable_fields = [
         'Heading' => 'PartialMatchFilter',
@@ -50,7 +50,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $field_labels = [
         'Above' => 'Above Checkout Step',
@@ -60,7 +60,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $summary_fields = [
         'ID' => 'Step Number',
@@ -74,7 +74,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @var Array
+     * @var array
      */
     private static $casting = [
         'Title' => 'Varchar',
@@ -83,14 +83,14 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Checkout Step Description';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Checkout Step Descriptions';
 

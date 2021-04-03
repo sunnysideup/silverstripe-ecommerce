@@ -447,7 +447,7 @@ class Product extends Page implements BuyableModel
      *
      * @return \SilverStripe\ORM\DataList|null (ProductGroups)
      */
-    public function AllParentGroups() : ?DataList
+    public function AllParentGroups(): ?DataList
     {
         $otherGroupsArray = $this->ProductGroups()->columnUnique();
         $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
@@ -526,10 +526,8 @@ class Product extends Page implements BuyableModel
      * on the product page, but if one of the variations is added to the
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
-     *
-     * @return Image|null
      */
-    public function BestAvailableImage() : ?Image
+    public function BestAvailableImage(): ?Image
     {
         if ($this->ImageID) {
             $image = Image::get()->byID($this->ImageID);
@@ -719,9 +717,6 @@ class Product extends Page implements BuyableModel
         return $this->getHasBeenSold();
     }
 
-    /**
-     * @return bool
-     */
     public function getHasBeenSold(): bool
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);

@@ -12,14 +12,14 @@ class EcommercePaymentTest extends EcommercePayment
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Ecommerce Test Payment';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Ecommerce Test Payments';
 

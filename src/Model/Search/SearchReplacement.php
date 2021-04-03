@@ -48,14 +48,14 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Search Replacement';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Search Replacements';
 

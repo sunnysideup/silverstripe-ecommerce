@@ -95,14 +95,14 @@ class OrderConfirmationPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Order Confirmation Page';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Order Confirmation Pages';
 
@@ -201,8 +201,6 @@ class OrderConfirmationPage extends CartPage
 
     /**
      * standard SS method for decorators.
-     *
-     * @param bool $includerelations: array of fields to start with
      *
      * @return array
      */

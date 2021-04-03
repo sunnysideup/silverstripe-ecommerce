@@ -43,14 +43,14 @@ class SearchHistory extends DataObject
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Search History Entry';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Search History Entries';
 
@@ -66,10 +66,6 @@ class SearchHistory extends DataObject
 
     /**
      * creates a new entry if you are not a shop admin.
-     *
-     * @param string $keywordString
-     *
-     * @return SearchHistory|null
      */
     public static function add_entry(string $keywordString, ?int $productCount = 0, ?int $groupCount = 0): ?SearchHistory
     {

@@ -134,14 +134,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Shop Payment';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Shop Payments';
 

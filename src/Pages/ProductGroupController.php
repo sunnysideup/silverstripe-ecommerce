@@ -237,8 +237,6 @@ class ProductGroupController extends PageController
 
     /**
      * Unique caching key for the product list...
-     *
-     * @return string
      */
     public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
@@ -284,9 +282,8 @@ class ProductGroupController extends PageController
 
     /**
      * This method can be extended to show products in the side bar.
-     * @return SS_List|null
      */
-    public function SidebarProducts() : ?SS_List
+    public function SidebarProducts(): ?SS_List
     {
         return null;
     }

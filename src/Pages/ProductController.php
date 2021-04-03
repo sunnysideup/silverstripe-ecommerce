@@ -11,13 +11,13 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
-use SilverStripe\ORM\DataList;
 
 class ProductController extends PageController
 {
@@ -131,20 +131,16 @@ class ProductController extends PageController
 
     /**
      * Is this an older version?
-     *
-     * @return bool
      */
-    public function IsOlderVersion() : bool
+    public function IsOlderVersion(): bool
     {
         return ! $this->isCurrentVersion;
     }
 
     /**
      * This method can be extended to show products in the side bar.
-     *
-     * @return \SilverStripe\ORM\DataList|null
      */
-    public function SidebarProducts() : ?DataList
+    public function SidebarProducts(): ?DataList
     {
         return null;
     }
@@ -191,10 +187,8 @@ class ProductController extends PageController
 
     /**
      * This method can be extended to show products in the side bar.
-     *
-     * @return bool
      */
-    public function HasPreviousOrNextProduct() : bool
+    public function HasPreviousOrNextProduct(): bool
     {
         return $this->PreviousProduct() || $this->NextProduct();
     }

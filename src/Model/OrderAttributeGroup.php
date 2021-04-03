@@ -34,14 +34,14 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $singular_name = 'Order Modifier Group';
 
     /**
      * standard SS variable.
      *
-     * @var String
+     * @var string
      */
     private static $plural_name = 'Order Modifier Types';
 

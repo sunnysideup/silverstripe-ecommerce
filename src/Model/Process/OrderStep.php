@@ -1121,8 +1121,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member|null
-     *
      * @return bool
      */
     public function canEdit($member = null, $context = [])
@@ -1281,8 +1279,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $resend = false,
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
-    ) : bool
-    {
+    ): bool {
         if ($this->hasBeenSent($order) === false || boolval($resend) === true) {
             if (! $subject) {
                 $subject = $this->CalculatedEmailSubject($order);

@@ -18,8 +18,8 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 
 use SilverStripe\Security\Permission;
@@ -493,9 +493,8 @@ class ProductGroup extends Page
 
     /**
      * @todo: add fitlerforgroup reverse
-     * @return string
      */
-    public function CurrentOrSection() : string
+    public function CurrentOrSection(): string
     {
         $outcome = $this->LinkingMode();
         if ($outcome !== 'link') {
