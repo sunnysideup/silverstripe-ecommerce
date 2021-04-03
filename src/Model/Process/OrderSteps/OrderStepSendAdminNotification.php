@@ -66,7 +66,6 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
 
     /**
      * can do next step once the admin notification has been sent
-     * @param Order $order
      * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)

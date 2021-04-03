@@ -64,7 +64,6 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      * can go to next step if order has been paid.
      *
      * @see Order::doNextStatus
-     * @param Order $order
      * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)

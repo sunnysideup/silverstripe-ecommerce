@@ -83,7 +83,7 @@ class RelatedProductGroups
     }
 
     /**
-     * @param  SS_List $list 
+     * @param  SS_List $list
      * @return SS_List
      */
     public static function apply_default_filter_to_groups($list)

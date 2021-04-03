@@ -386,10 +386,8 @@ class OrderModifier extends OrderAttribute
      * This determines whether the OrderModifierForm is shown or not. {@link OrderModifier::get_form()}.
      * OrderModifierForms are forms that are added to check out to facilitate the use of the modifier.
      * An example would be a form allowing the user to select the delivery option.
-     *
-     * @return bool
      */
-    public function ShowForm() : bool
+    public function ShowForm(): bool
     {
         return false;
     }
@@ -397,10 +395,8 @@ class OrderModifier extends OrderAttribute
     /**
      * Should the form be included in the EDITABLE form
      * on the checkout page?
-     *
-     * @return bool
      */
-    public function ShowFormInEditableOrderTable() : bool
+    public function ShowFormInEditableOrderTable(): bool
     {
         //extend in OrderModifier Extensions
         return false;
@@ -502,10 +498,8 @@ class OrderModifier extends OrderAttribute
     /**
      * tells you whether the modifier shows up on the checkout  / cart form.
      * this is also the place where we check if the modifier has been updated.
-     *
-     * @return bool
      */
-    public function ShowInTable() : bool
+    public function ShowInTable(): bool
     {
         if (! $this->baseRunUpdateCalled) {
             if ($this->canBeUpdated()) {

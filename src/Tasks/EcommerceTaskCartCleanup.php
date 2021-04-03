@@ -28,6 +28,63 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 class EcommerceTaskCartCleanup extends BuildTask
 {
     /**
+     *
+     * @var bool
+     */
+    protected $neverDeleteIfLinkedToMember = true;
+
+    /**
+     * @var int
+     */
+    protected $maximumNumberOfObjectsDeleted = 0;
+
+    /**
+     * @var int
+     */
+    protected $limitFromGetVar = 0;
+
+    /**
+     * @var string
+     */
+    protected $sort = '';
+
+    /**
+     *
+     * @var string
+     */
+    protected string $leftMemberJoin = '';
+
+    /**
+     * @var string
+     */
+    public $joinShort = '';
+
+    /**
+     * @var array
+     */
+    public $oneToMany = [];
+
+    /**
+     * @var array
+     */
+    public $oneToOne = [];
+
+    /**
+     * @var array
+     */
+    public $manyToMany = [];
+
+    /**
+     * @var array
+     */
+    public $oneToOneIDArray = [];
+
+    /**
+     * @var array
+     */
+    public $oneToManyIDArray = [];
+
+    /**
      * Output feedback about task?
      *
      * @var bool
@@ -108,9 +165,6 @@ class EcommerceTaskCartCleanup extends BuildTask
         return $this->run(null);
     }
 
-    /**
-     *
-     **/
     public function run($request)
     {
         if ($this->verbose || (isset($_GET['verbose']) && Permission::check('ADMIN'))) {
@@ -154,16 +208,13 @@ class EcommerceTaskCartCleanup extends BuildTask
             $this->manyToMany = [];
         }
 
-
         $this->clearOneToOnes();
 
         //one order has many other things so we increase the ability to delete stuff
         $this->maximumNumberOfObjectsDeleted *= 25;
 
         $this->clearOneToMany();
-
     }
-
 
     protected function abandonnedCarts()
     {
@@ -246,7 +297,6 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
     }
 
-
     protected function emptyCarts()
     {
         //EMPTY ORDERS
@@ -316,7 +366,6 @@ class EcommerceTaskCartCleanup extends BuildTask
                 'created'
             );
         }
-
     }
 
     protected function clearOneToOnes()
@@ -383,7 +432,6 @@ class EcommerceTaskCartCleanup extends BuildTask
                 }
             }
         }
-
     }
 
     protected function clearOneToMany()
@@ -449,14 +497,13 @@ class EcommerceTaskCartCleanup extends BuildTask
     /**
      * delete an object
      */
-    private function deleteObject(DataObject $objectToDelete)
+    protected function deleteObject(DataObject $objectToDelete)
     {
         $objectToDelete->delete();
         $objectToDelete->destroy();
     }
 
-
-    private function flush()
+    protected function flush()
     {
         if ((PHP_SAPI === 'cli')) {
             echo "\n";

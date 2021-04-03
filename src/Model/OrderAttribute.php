@@ -384,7 +384,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Should this item be shown on check out page table?
      * @return bool
      **/
-    public function ShowInTable() : bool
+    public function ShowInTable(): bool
     {
         return true;
     }

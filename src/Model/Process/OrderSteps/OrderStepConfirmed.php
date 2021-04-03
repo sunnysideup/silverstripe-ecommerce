@@ -77,8 +77,6 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     /**
      * can go to next step if order payment has been confirmed...
      *
-     * @param Order $order
-     *
      * @return OrderStep|null
      **/
     public function nextStep(Order $order)

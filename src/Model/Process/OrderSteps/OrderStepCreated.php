@@ -50,8 +50,6 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Add the member to the order, in case the member is not an admin.
      *
-     * @param Order $order
-     *
      * @return bool
      **/
     public function doStep(Order $order)
