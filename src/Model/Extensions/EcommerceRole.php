@@ -432,12 +432,14 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * you can't delete a Member with one or more orders.
+     * @param \SilverStripe\Security\Member $member
      */
     public function canDelete($member = null, $context = [])
     {
         if ($this->getOrders()->count()) {
             return false;
         }
+        return parent::canDelete($member, $context);
     }
 
     /**

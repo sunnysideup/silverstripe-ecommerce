@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Convert;
@@ -34,8 +35,8 @@ class ErrorPageExtension extends Extension
     }
 
     /**
-     * @param  integer $request
-     * @return Product
+     * @param  HTTPRequest $request
+     * @return Product|null
      */
     protected function urlToProduct($request)
     {
@@ -45,7 +46,10 @@ class ErrorPageExtension extends Extension
             $path = str_replace('/', '', $url['path']);
         }
         if ($path) {
-            return Product::get()->filter(['InternalItemID' => Convert::raw2sql($path)])->first();
+            return Product::get()
+                ->filter(['InternalItemID' => Convert::raw2sql($path)])
+                ->first();
         }
+        return null;
     }
 }

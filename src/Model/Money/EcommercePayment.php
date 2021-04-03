@@ -466,6 +466,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $array = [];
         $supportedMethods = self::get_supported_methods($order);
+        /** @var string $methodClass */
         foreach (array_keys($supportedMethods) as $methodClass) {
             $array = array_merge(
                 $methodClass::create()->getPaymentFormRequirements(),
@@ -481,11 +482,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * is used to define which methods are available.
      *
      * @param string       $amount formatted amount (e.g. 12.30) without the currency
-     * @param Order|null $order
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public static function combined_form_fields($amount, $order = null)
+    public static function combined_form_fields($amount, ?Order $order = null)
     {
         // Create the initial form fields, which defines an OptionsetField
         // allowing the user to choose which payment method to use.
@@ -498,6 +498,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             )
         );
         $options = [];
+        /** @var string $methodClass */
+        /** @var string $methodName */
         foreach ($supportedMethods as $methodClass => $methodName) {
             $htmlClassName = self::php_class_to_html_class($methodClass);
             $options[$htmlClassName] = $methodName;
@@ -537,9 +539,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function getPaymentFormFields($amount = 0, $order = null)
+    public function getPaymentFormFields(?float $amount = 0, ?Order $order = null) : FieldList
     {
         user_error("Please implement getPaymentFormFields() on {$this->ClassName}", E_USER_ERROR);
+        return FieldList::create();
     }
 
     /**

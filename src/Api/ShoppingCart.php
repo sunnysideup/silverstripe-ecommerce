@@ -256,12 +256,10 @@ class ShoppingCart
      *
      * However, you can pass an order in case you want to manipulate an order that is not in sesssion
      *
-     * @param int $recurseCount (optional)
-     * @param Order $order (optional)
      *
      * @return Order
      */
-    public function currentOrder($recurseCount = 0, $order = null)
+    public function currentOrder(?int $recurseCount = 0, ?Order $order = null)
     {
         if ($order) {
             $this->order = $order;
@@ -392,7 +390,7 @@ class ShoppingCart
      */
     public function Link(?Order $order = null)
     {
-        $order = self::singleton()->currentOrder(0, $order = null);
+        $order = self::singleton()->currentOrder(0, $order);
         if ($order) {
             return $order->Link();
         }

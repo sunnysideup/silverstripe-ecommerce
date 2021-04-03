@@ -46,7 +46,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      *
      * @return array
      */
-    public function SupportedMethods(?Order $order = null)
+    public function SupportedMethods(?Order $order = null) : array
     {
         $hideTestPaymentMethods = false;
         if (Director::isLive()) {
@@ -71,7 +71,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
         return $supportedMethods;
     }
 
-    public static function assign_payment_gateway($gateway = '')
+    public static function assign_payment_gateway(?string $gateway = '')
     {
         user_error('
             This function has not been implemented on this class.

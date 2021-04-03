@@ -3243,15 +3243,15 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Submission Log for this Order (if any).
      *
-     * @return \SilverStripe\ORM\FieldType\DBDateTime
+     * @return \SilverStripe\ORM\FieldType\DBDatetime
      **/
     public function OrderDate()
     {
         $object = $this->SubmissionLog();
         $created = $object ? $object->Created : $this->LastEdited;
 
-        /** @var DBDateTime $obj */
-        $obj = DBField::create_field(DBDatetime::class, $created);
+        /** @var DBDatetime $obj */
+        $obj = DBField::create_field('DateTime', $created);
         // just here for linting ...
         $obj->getName();
         return $obj;

@@ -378,7 +378,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return \SilverStripe\ORM\FieldType\DBDateTime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function ToBeProcessedAt()
     {
@@ -387,7 +387,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return \SilverStripe\ORM\FieldType\DBDateTime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function getToBeProcessedAt()
     {
@@ -396,7 +396,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return \SilverStripe\ORM\FieldType\DBDateTime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function HasBeenInQueueForSince()
     {
@@ -405,7 +405,7 @@ class OrderProcessQueue extends DataObject
 
     /**
      * casted variable
-     * @return \SilverStripe\ORM\FieldType\DBDateTime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function getHasBeenInQueueForSince()
     {

@@ -6,6 +6,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentFailure;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * Payment object representing a TEST = FAILURE.
@@ -51,7 +52,7 @@ class EcommercePaymentTestFailure extends EcommercePaymentTest
         return new EcommercePaymentFailure();
     }
 
-    public function getPaymentFormFields($amount = 0, $order = null)
+    public function getPaymentFormFields(?float $amount = 0, ?Order $order = null) : FieldList
     {
         return new FieldList(
             new LiteralField('SuccessBlurb', '<div>FAILURE PAYMENT TEST</div>')
