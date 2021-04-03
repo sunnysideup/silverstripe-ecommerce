@@ -29,12 +29,12 @@ abstract class AbstractProductsAndGroupsList
     ##########################################
 
     /**
-     * @var SS_List|null
+     * @var DataList
      */
     protected $products;
 
     /**
-     * @var ProductGroup|null
+     * @var ProductGroup
      */
     protected $rootGroup;
 
@@ -53,7 +53,7 @@ abstract class AbstractProductsAndGroupsList
      * Key Method!
      * Returns a raw list of all the matching products without any pagination.
      *
-     * @return DataList
+     * @param DataList $products
      */
     final public function setProducts($products): self
     {

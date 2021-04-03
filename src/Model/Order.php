@@ -145,7 +145,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @param Controller $optionalController
      * @param Validator  $optionalValidator
      *
-     * @return \SilverStripe\ORM\ArrayList (ArrayData) | Null
+     * @return \SilverStripe\ORM\ArrayList (ArrayData)|null
      **/
     protected static $_modifier_form_cache;
 
@@ -555,7 +555,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Like the standard byID, but it checks whether we are allowed to view the order.
      *
-     * @return: Order | Null
+     * @return: Order|null
      **/
     public static function get_by_id_if_can_view($id)
     {
@@ -666,7 +666,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */
@@ -3112,7 +3112,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * Returns the region that applies to the order.
      * we check both billing and shipping, in case one of them is empty.
      *
-     * @return \SilverStripe\ORM\DataObject | Null (EcommerceRegion)
+     * @return \SilverStripe\ORM\DataObject|null (EcommerceRegion)
      **/
     public function Region()
     {
@@ -3234,7 +3234,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Submission Log for this Order (if any).
      *
-     * @return OrderStatusLog (OrderStatusLogSubmitted) | Null
+     * @return OrderStatusLog (OrderStatusLogSubmitted)|null
      **/
     public function SubmissionLog()
     {
@@ -3345,7 +3345,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * returns the link to view the Order
      * WHY NOT CHECKOUT PAGE: first we check for cart page.
      *
-     * @return CartPage | Null
+     * @return CartPage|null
      */
     public function DisplayPage()
     {

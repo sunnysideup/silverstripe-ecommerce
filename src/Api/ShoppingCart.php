@@ -106,7 +106,7 @@ class ShoppingCart
     /**
      * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
      *
-     *@var array
+     * @var array
      **/
     protected $messages = [];
 

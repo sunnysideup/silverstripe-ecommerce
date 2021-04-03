@@ -194,7 +194,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */

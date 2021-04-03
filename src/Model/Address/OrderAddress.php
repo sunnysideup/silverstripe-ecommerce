@@ -162,7 +162,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */
@@ -443,7 +443,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @Note: this needs to be public to give DODS (extensions access to this)
      * @todo: can wre write $this->Order() instead????
      *
-     * @return \SilverStripe\ORM\DataObject (Member) | Null
+     * @return \SilverStripe\ORM\DataObject (Member)|null
      **/
     public function getMemberFromOrder()
     {

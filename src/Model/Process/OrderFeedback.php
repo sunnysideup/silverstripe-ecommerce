@@ -24,7 +24,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $table_name = 'OrderFeedback';
 
@@ -37,7 +37,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $has_one = [
         'Order' => Order::class,
@@ -46,7 +46,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $searchable_fields = [
         'Rating' => 'PartialMatchFilter',
@@ -60,7 +60,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $summary_fields = [
         'Order.Title' => 'Order',
@@ -72,7 +72,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $casting = [
         'Title' => 'Varchar',
@@ -81,7 +81,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $default_sorting = [
         'Created' => 'DESC',
@@ -90,14 +90,14 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Order Feedback';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Checkout Feedback Entries';
 
@@ -207,7 +207,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */

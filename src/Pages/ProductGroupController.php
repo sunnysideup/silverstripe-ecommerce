@@ -31,7 +31,7 @@ class ProductGroupController extends PageController
 {
     /**
      * the exact list of products that is going to be shown (excluding pagination)
-     * @var SS_List
+     * @var DataList
      */
     protected $productList;
 
@@ -122,7 +122,6 @@ class ProductGroupController extends PageController
      * get the search results.
      *
      * @param \SilverStripe\Control\HTTPRequest $request
-     * @param array
      */
     public function searchresults($request)
     {
@@ -239,7 +238,7 @@ class ProductGroupController extends PageController
     /**
      * Unique caching key for the product list...
      *
-     * @return string | Null
+     * @return string
      */
     public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
@@ -287,8 +286,9 @@ class ProductGroupController extends PageController
      * This method can be extended to show products in the side bar.
      * @return SS_List|null
      */
-    public function SidebarProducts()
+    public function SidebarProducts() : ?SS_List
     {
+        return null;
     }
 
     /**
@@ -557,7 +557,7 @@ class ProductGroupController extends PageController
      * of recommended product groups. They will be returned here...
      * We sort the list in the order that it is provided.
      *
-     * @return \SilverStripe\ORM\DataList | Null (ProductGroups)
+     * @return \SilverStripe\ORM\DataList|null (ProductGroups)
      */
     public function SearchResultsChildGroups(): ?DataList
     {

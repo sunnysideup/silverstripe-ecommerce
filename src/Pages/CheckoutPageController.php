@@ -21,12 +21,12 @@ class CheckoutPageController extends CartPageController
      */
 
     /**
-     *@var string
+     * @var string
      **/
     protected $currentStep = '';
 
     /**
-     *@var array
+     * @var array
      **/
     protected $steps = [];
 
@@ -62,7 +62,7 @@ class CheckoutPageController extends CartPageController
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
      *
-     * @return \SilverStripe\ORM\ArrayList (ModifierForms) | Null
+     * @return \SilverStripe\ORM\ArrayList (ModifierForms)|null
      */
     public function ModifierForms()
     {

@@ -223,7 +223,7 @@ class OrderItem extends OrderAttribute
      * @param int    $id
      * @param int    $version
      *
-     * @return \SilverStripe\ORM\DataObject | Null
+     * @return \SilverStripe\ORM\DataObject|null
      */
     public static function get_version($class, $id, $version)
     {

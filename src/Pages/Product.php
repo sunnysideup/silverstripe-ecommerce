@@ -19,6 +19,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -444,9 +445,9 @@ class Product extends Page implements BuyableModel
     /**
      * Returns all the parent groups for the product.
      *
-     * @return \SilverStripe\ORM\DataList (ProductGroups)
+     * @return \SilverStripe\ORM\DataList|null (ProductGroups)
      */
-    public function AllParentGroups()
+    public function AllParentGroups() : ?DataList
     {
         $otherGroupsArray = $this->ProductGroups()->columnUnique();
         $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
@@ -456,6 +457,7 @@ class Product extends Page implements BuyableModel
                 'ID' => $ids,
             ]);
         }
+        return null;
     }
 
     /**
@@ -497,7 +499,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns products in the same group.
      *
-     * @return \SilverStripe\ORM\DataList (Products)
+     * @return \SilverStripe\ORM\DataList|null (Products)
      **/
     public function Siblings()
     {
@@ -509,6 +511,7 @@ class Product extends Page implements BuyableModel
                 ])
                 ->exclude(['ID' => $this->ID]);
         }
+        return null;
     }
 
     //IMAGE
@@ -524,9 +527,9 @@ class Product extends Page implements BuyableModel
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
      *
-     * @return Image | Null
+     * @return Image|null
      */
-    public function BestAvailableImage()
+    public function BestAvailableImage() : ?Image
     {
         if ($this->ImageID) {
             $image = Image::get()->byID($this->ImageID);
@@ -538,6 +541,7 @@ class Product extends Page implements BuyableModel
         if ($parent && $parent->exists()) {
             return $parent->BestAvailableImage();
         }
+        return null;
     }
 
     /**
@@ -621,7 +625,7 @@ class Product extends Page implements BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return \SilverStripe\ORM\DataObject | Null
+     * @return \SilverStripe\ORM\DataObject|null
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
@@ -708,7 +712,7 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * Number of items sold.
+     * has it been sold
      */
     public function HasBeenSold(): bool
     {
@@ -716,7 +720,7 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * @return int
+     * @return bool
      */
     public function getHasBeenSold(): bool
     {

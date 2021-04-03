@@ -223,7 +223,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return Group | \SilverStripe\ORM\DataObject | NULL
+     * @return Group | \SilverStripe\ORM\DataObject|null
      **/
     public static function get_customer_group()
     {
@@ -328,7 +328,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param \SilverStripe\Security\Member | Null $member
+     * @param \SilverStripe\Security\Member|null $member
      *
      * @return bool
      */
@@ -347,7 +347,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param \SilverStripe\Security\Member | Null $member
+     * @param \SilverStripe\Security\Member|null $member
      *
      * @return bool
      */
@@ -366,7 +366,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member can process the orders
      *
-     * @param \SilverStripe\Security\Member | Null $member
+     * @param \SilverStripe\Security\Member|null $member
      *
      * @return bool
      */
@@ -383,7 +383,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Group) | NULL
+     * @return \SilverStripe\ORM\DataObject (Group)|null
      **/
     public static function get_admin_group()
     {
@@ -396,7 +396,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Group) | NULL
+     * @return \SilverStripe\ORM\DataObject (Group)|null
      **/
     public static function get_assistant_group()
     {
@@ -409,7 +409,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Member) | NULL
+     * @return \SilverStripe\ORM\DataObject (Member)|null
      **/
     public static function get_default_shop_admin_user()
     {
@@ -420,7 +420,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Member) | NULL
+     * @return \SilverStripe\ORM\DataObject (Member)|null
      **/
     public static function get_default_shop_assistant_user()
     {
@@ -878,7 +878,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */

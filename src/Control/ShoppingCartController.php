@@ -818,7 +818,7 @@ class ShoppingCartController extends Controller
     /**
      * Gets a buyable object based on URL actions.
      *
-     * @return \SilverStripe\ORM\DataObject | Null - returns buyable
+     * @return \SilverStripe\ORM\DataObject|null - returns buyable
      */
     protected function buyable()
     {

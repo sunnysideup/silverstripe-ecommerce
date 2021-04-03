@@ -177,7 +177,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */

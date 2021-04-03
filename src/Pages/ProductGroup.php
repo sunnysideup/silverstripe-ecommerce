@@ -5,20 +5,23 @@ namespace Sunnysideup\Ecommerce\Pages;
 use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
-
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
-use SilverStripe\ORM\DataList;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+
 use SilverStripe\Security\Permission;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -490,9 +493,9 @@ class ProductGroup extends Page
 
     /**
      * @todo: add fitlerforgroup reverse
-     * @return bool
+     * @return string
      */
-    public function CurrentOrSection()
+    public function CurrentOrSection() : string
     {
         $outcome = $this->LinkingMode();
         if ($outcome !== 'link') {
@@ -500,8 +503,8 @@ class ProductGroup extends Page
             if ($outcome === 'current' && in_array($action, ['filterforgroup', 'searchresults'], true)) {
                 return 'section';
             }
-            return $outcome;
         }
+        return $outcome;
     }
 
     /**
@@ -623,7 +626,7 @@ class ProductGroup extends Page
                 if ($this->hasMethod($method)) {
                     $methodWorks = true;
                     $outcome = $this->{$method}();
-                    if ($outcome instanceof DataObject && $outcome->exists()) {
+                    if ($outcome && $outcome instanceof DataObject && $outcome->exists()) {
                         $value = $outcome;
                     } elseif ($outcome) {
                         $value = $outcome;

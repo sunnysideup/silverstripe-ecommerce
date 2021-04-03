@@ -652,7 +652,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */
@@ -1121,7 +1121,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member | NULL
+     * @param \SilverStripe\Security\Member $member|null
      *
      * @return bool
      */
@@ -1281,7 +1281,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $resend = false,
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
-    ) {
+    ) : bool
+    {
         if ($this->hasBeenSent($order) === false || boolval($resend) === true) {
             if (! $subject) {
                 $subject = $this->CalculatedEmailSubject($order);

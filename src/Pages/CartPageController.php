@@ -77,7 +77,7 @@ class CartPageController extends PageController
     /**
      * Message shown (e.g. no current order, could not find order, order updated, etc...).
      *
-     *@var string
+     * @var string
      * @todo: check if we need this....!
      **/
     private $message = '';
@@ -276,7 +276,7 @@ class CartPageController extends PageController
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject | Null - Order
+     * @return \SilverStripe\ORM\DataObject|null - Order
      **/
     public function Order()
     {

@@ -561,7 +561,7 @@ class OrderFormAddress extends Form
      *
      * @param array - form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
-     * @return \SilverStripe\Security\Member | Null
+     * @return \SilverStripe\Security\Member|null
      **/
     protected function createOrFindMember(array $data)
     {

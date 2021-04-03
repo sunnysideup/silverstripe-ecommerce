@@ -236,7 +236,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * static holder for its own (or other EcommerceDBConfig) class.
      *
-     * @var string | NULL
+     * @var string|null
      */
     private static $_my_current_one;
 
@@ -609,7 +609,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */
@@ -686,7 +686,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * return null if there is less than two currencies in use
      * on the site.
      *
-     * @return \SilverStripe\ORM\DataList | Null
+     * @return \SilverStripe\ORM\DataList|null
      */
     public function Currencies()
     {

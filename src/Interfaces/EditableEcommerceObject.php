@@ -14,7 +14,7 @@ interface EditableEcommerceObject
     /**
      * returns the link to edit the object.
      *
-     * @param string | Null $action
+     * @param string|null $action
      *
      * @return string
      */

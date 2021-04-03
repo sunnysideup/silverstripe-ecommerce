@@ -15,14 +15,14 @@ class EcommercePaymentTestPending extends EcommercePaymentTest
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Ecommerce Test Pending Payment';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Ecommerce Test Pending Payments';
 

@@ -95,14 +95,14 @@ class OrderConfirmationPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Order Confirmation Page';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Order Confirmation Pages';
 
@@ -202,11 +202,11 @@ class OrderConfirmationPage extends CartPage
     /**
      * standard SS method for decorators.
      *
-     * @param bool - $includerelations: array of fields to start with
+     * @param bool $includerelations: array of fields to start with
      *
      * @return array
      */
-    public function fieldLabels($includerelations = true)
+    public function fieldLabels(?bool $includerelations = true)
     {
         $defaultLabels = parent::fieldLabels();
         $newLabels = $this->customFieldLabels();

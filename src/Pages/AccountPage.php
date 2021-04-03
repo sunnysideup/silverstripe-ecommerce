@@ -9,6 +9,7 @@ use Page;
 
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -29,22 +30,22 @@ use Sunnysideup\Ecommerce\Model\Order;
 class AccountPage extends Page
 {
     /**
-     *@var float
+     * @var float
      */
     protected $calculatedTotal = 0;
 
     /**
-     *@var float
+     * @var float
      */
     protected $calculatedPaid = 0;
 
     /**
-     *@var float
+     * @var float
      */
     protected $calculatedOutstanding = 0;
 
     /**
-     *@var DataList
+     * @var DataList
      */
     protected $pastOrders;
 
@@ -53,7 +54,7 @@ class AccountPage extends Page
     /**
      * standard SS variable.
      *
-     *@var array
+     * @var array
      */
     private static $casting = [
         'RunningTotal' => 'Currency',
@@ -64,21 +65,21 @@ class AccountPage extends Page
     /**
      * Standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Account Page';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Account Pages';
 
@@ -157,7 +158,7 @@ class AccountPage extends Page
      * @param string $action [optional]
      * @return string (URLSegment)
      */
-    public static function find_link($action = null)
+    public static function find_link(?string $action = null)
     {
         $page = DataObject::get_one(
             AccountPage::class,
@@ -166,6 +167,7 @@ class AccountPage extends Page
         if ($page) {
             return $page->Link($action);
         }
+        return '404-account-page';
     }
 
     /**

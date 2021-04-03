@@ -564,7 +564,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @param bool    $recalculate (optional)
      * @param string  $countryCode (optional)
      *
-     * @return EcommerceCountry | DataObject | Null
+     * @return EcommerceCountry | DataObject|null
      **/
     public static function get_country_object($recalculate = false, $countryCode = null)
     {

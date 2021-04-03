@@ -22,12 +22,12 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 class EcomQuantityField extends NumericField
 {
     /**
-     *@var OrderItem | DataObject|null
+     * @var OrderItem | DataObject|null
      **/
     protected $orderItem;
 
     /**
-     *@var Array();???
+     * @var Array();???
      **/
     protected $parameters = [];
 
@@ -39,19 +39,19 @@ class EcomQuantityField extends NumericField
     /**
      * max length in digits.
      *
-     *@var int
+     * @var int
      **/
     protected $maxLength = 3;
 
     /**
      * max length in digits.
      *
-     *@var int
+     * @var int
      **/
     protected $fieldSize = 3;
 
     /**
-     *@var string
+     * @var string
      **/
     protected $template = EcomQuantityField::class;
 

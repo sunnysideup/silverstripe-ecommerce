@@ -17,6 +17,7 @@ use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use SilverStripe\ORM\DataList;
 
 class ProductController extends PageController
 {
@@ -79,7 +80,7 @@ class ProductController extends PageController
     /**
      * returns a form for adding products to cart.
      *
-     * @return Form
+     * @return Form|string
      */
     public function AddProductForm()
     {
@@ -133,7 +134,7 @@ class ProductController extends PageController
      *
      * @return bool
      */
-    public function IsOlderVersion()
+    public function IsOlderVersion() : bool
     {
         return ! $this->isCurrentVersion;
     }
@@ -141,16 +142,17 @@ class ProductController extends PageController
     /**
      * This method can be extended to show products in the side bar.
      *
-     * @return \SilverStripe\ORM\DataList (Products)
+     * @return \SilverStripe\ORM\DataList|null
      */
-    public function SidebarProducts()
+    public function SidebarProducts() : ?DataList
     {
+        return null;
     }
 
     /**
      * This method can be extended to show products in the side bar.
      *
-     * @return Product | Null
+     * @return Product|null
      */
     public function NextProduct()
     {
@@ -163,12 +165,14 @@ class ProductController extends PageController
                 }
             }
         }
+
+        return null;
     }
 
     /**
      * This method can be extended to show products in the side bar.
      *
-     * @return Product | Null
+     * @return Product|null
      */
     public function PreviousProduct()
     {
@@ -181,6 +185,8 @@ class ProductController extends PageController
             }
             $previousID = $id;
         }
+
+        return null;
     }
 
     /**
@@ -188,7 +194,7 @@ class ProductController extends PageController
      *
      * @return bool
      */
-    public function HasPreviousOrNextProduct()
+    public function HasPreviousOrNextProduct() : bool
     {
         return $this->PreviousProduct() || $this->NextProduct();
     }

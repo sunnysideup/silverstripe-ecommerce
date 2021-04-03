@@ -848,7 +848,7 @@ class OrderModifier extends OrderAttribute
     /**
      * returns the relevant orderModifier_Descriptor.
      *
-     * @return OrderModifierDescriptor | DataObject | Null
+     * @return OrderModifierDescriptor | DataObject|null
      */
     protected function getOrderModifierDescriptor()
     {

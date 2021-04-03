@@ -43,14 +43,14 @@ class SearchHistory extends DataObject
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Search History Entry';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Search History Entries';
 
@@ -69,9 +69,9 @@ class SearchHistory extends DataObject
      *
      * @param string $keywordString
      *
-     * @return int
+     * @return SearchHistory|null
      */
-    public static function add_entry($keywordString, $productCount = 0, $groupCount = 0): ?SearchHistory
+    public static function add_entry(string $keywordString, ?int $productCount = 0, ?int $groupCount = 0): ?SearchHistory
     {
         $member = Security::getCurrentUser();
         if ($member) {

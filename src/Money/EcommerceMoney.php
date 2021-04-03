@@ -49,6 +49,7 @@ class EcommerceMoney extends Extension
 
             return substr($symbol, $i);
         }
+        return '$';
     }
 
     /**

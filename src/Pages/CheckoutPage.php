@@ -47,7 +47,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @see OrderModifier
  * @see CheckoutPage_Controller->ModifierForms()
  *
- * @todoget rid of all the messages...
+ * @todo get rid of all the messages...
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -59,21 +59,21 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @Var Boolean
+     * @var Boolean
      */
     private static $hide_ancestor = CartPage::class;
 
     /**
      * standard SS variable.
      *
-     * @Var string
+     * @var string
      */
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/CheckoutPage-file.gif';
 
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $table_name = 'CheckoutPage';
 
@@ -85,7 +85,7 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $has_one = [
         'TermsPage' => 'Page',
@@ -94,7 +94,7 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $defaults = [
         'TermsAndConditionsMessage' => 'You must agree with the terms and conditions before proceeding.',
@@ -103,14 +103,14 @@ class CheckoutPage extends CartPage
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Checkout Page';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Checkout Pages';
 
@@ -134,7 +134,7 @@ class CheckoutPage extends CartPage
     /**
      * Returns the Terms and Conditions Page (if there is one).
      *
-     * @return Page | NULL
+     * @return Page|null
      */
     public static function find_terms_and_conditions_page()
     {
@@ -142,6 +142,7 @@ class CheckoutPage extends CartPage
         if ($checkoutPage && $checkoutPage->TermsPageID) {
             return Page::get()->byID($checkoutPage->TermsPageID);
         }
+        return null;
     }
 
     /**

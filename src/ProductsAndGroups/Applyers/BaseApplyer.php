@@ -5,6 +5,8 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
+
+use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
@@ -33,7 +35,7 @@ abstract class BaseApplyer
     protected $finalProductList;
 
     /**
-     * @var SS_List
+     * @var DataList
      */
     protected $products;
 

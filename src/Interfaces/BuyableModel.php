@@ -49,7 +49,7 @@ interface BuyableModel
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
      *
-     * @return \SilverStripe\Assets\Image | Null
+     * @return \SilverStripe\Assets\Image|null
      */
     public function BestAvailableImage();
 
@@ -77,7 +77,7 @@ interface BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return \SilverStripe\ORM\DataObject | Null
+     * @return \SilverStripe\ORM\DataObject|null
      */
     public function getVersionOfBuyable($id = 0, $version = 0);
 

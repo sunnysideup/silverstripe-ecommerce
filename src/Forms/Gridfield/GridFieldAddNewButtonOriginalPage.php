@@ -57,7 +57,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
     /**
      * finds the most likely root parent for the shop.
      *
-     * @return SiteTree | DataObject | NULL
+     * @return SiteTree | DataObject|null
      */
     public function BestParentPage()
     {

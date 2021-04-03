@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 class OrderStatusLogFormController extends Controller
 {
     /**
-     * @var  Sunnysideup\Ecommerce\Model\Order
+     * @var Sunnysideup\Ecommerce\Model\Order
      */
     protected $currentOrder;
 

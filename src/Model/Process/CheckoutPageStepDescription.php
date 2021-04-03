@@ -25,7 +25,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $table_name = 'CheckoutPageStepDescription';
 
@@ -39,7 +39,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $searchable_fields = [
         'Heading' => 'PartialMatchFilter',
@@ -50,7 +50,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $field_labels = [
         'Above' => 'Above Checkout Step',
@@ -60,7 +60,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $summary_fields = [
         'ID' => 'Step Number',
@@ -74,7 +74,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @Var Array
+     * @var Array
      */
     private static $casting = [
         'Title' => 'Varchar',
@@ -83,14 +83,14 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $singular_name = 'Checkout Step Description';
 
     /**
      * standard SS variable.
      *
-     * @Var String
+     * @var String
      */
     private static $plural_name = 'Checkout Step Descriptions';
 
@@ -233,7 +233,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * link to edit the record.
      *
-     * @param string | Null $action - e.g. edit
+     * @param string|null $action - e.g. edit
      *
      * @return string
      */
