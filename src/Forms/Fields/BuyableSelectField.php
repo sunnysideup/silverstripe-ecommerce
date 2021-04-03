@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
@@ -19,7 +20,7 @@ use SilverStripe\View\Requirements;
  * @package: ecommerce
  * @sub-package: forms
  * @inspiration: https://github.com/sheadawson/silverstripe-zenautocompletefield
- **/
+ */
 class BuyableSelectField extends FormField
 {
     /**
@@ -54,7 +55,7 @@ class BuyableSelectField extends FormField
     protected $fieldSelectedBuyable;
 
     /**
-     * @var SilverStripe\ORM\DataObject|null
+     * @var DataObject
      */
     protected $buyable;
 
@@ -84,6 +85,8 @@ class BuyableSelectField extends FormField
     }
 
     /**
+     * @param mixed $properties
+     *
      * @return DBHTMLText
      */
     public function Field($properties = [])
@@ -105,14 +108,19 @@ class BuyableSelectField extends FormField
 
     /**
      * Do we do anything with data???
+     *
+     * @param mixed      $value
+     * @param null|mixed $data
      */
-    public function setValue($value, $data = null)
+    public function setValue($value, $data = null) : self
     {
         if ($this->buyable) {
             // $value = $this->buyable->FullName ?: $this->buyable->getTitle();
             //to TEST!!!
             $this->fieldSelectedBuyable->setValue('Once you have selected a new value, it will appear here...');
         }
+
+        return $this;
     }
 
     /**
@@ -128,11 +136,12 @@ class BuyableSelectField extends FormField
 
     public function setReadonly($bool)
     {
-        parent::setReadonly($bool);
+        parent::setReadonly((bool) $bool);
         if ($bool) {
             $this->fieldFindBuyable = $this->fieldFindBuyable->performReadonlyTransformation();
             $this->fieldSelectedBuyable = $this->fieldSelectedBuyable->performReadonlyTransformation();
         }
+        return $this;
     }
 
     /**
@@ -142,9 +151,10 @@ class BuyableSelectField extends FormField
      *
      * @param string $pathFileName
      */
-    public function set_jquery_UI_JS_location($pathFileName)
+    public function set_jquery_UI_JS_location($pathFileName) : self
     {
         $this->jquery_UI_JS_location = $pathFileName;
+        return $this;
     }
 
     /**
@@ -154,9 +164,10 @@ class BuyableSelectField extends FormField
      *
      * @param string $pathFileName
      */
-    public function set_jquery_UI_CSS_location($pathFileName)
+    public function set_jquery_UI_CSS_location($pathFileName) : self
     {
         $this->jquery_UI_CSS_location = $pathFileName;
+        return $this;
     }
 
     protected function getJavascript()

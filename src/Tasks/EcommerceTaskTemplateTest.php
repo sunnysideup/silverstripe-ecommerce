@@ -11,8 +11,10 @@ use SilverStripe\ORM\DB;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ *
+ * @internal
+ * @coversNothing
+ */
 class EcommerceTaskTemplateTest extends BuildTask
 {
     protected $title = 'Get help with building templates';

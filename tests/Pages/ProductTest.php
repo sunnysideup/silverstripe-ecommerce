@@ -6,6 +6,10 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use Sunnysideup\Ecommerce\Pages\Product;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class ProductTest extends SapphireTest
 {
     public function testGetCMSFields()

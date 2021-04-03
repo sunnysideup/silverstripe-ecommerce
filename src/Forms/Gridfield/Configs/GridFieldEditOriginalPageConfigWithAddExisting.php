@@ -21,6 +21,7 @@ class GridFieldEditOriginalPageConfigWithAddExisting extends GridFieldConfig_Rel
         $this
             ->removeComponentsByType(GridFieldEditButton::class)
             ->removeComponentsByType(GridFieldAddNewButton::class)
-            ->addComponent(new GridFieldEditButtonOriginalPage());
+            ->addComponent(new GridFieldEditButtonOriginalPage())
+        ;
     }
 }

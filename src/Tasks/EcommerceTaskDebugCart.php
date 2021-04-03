@@ -73,9 +73,11 @@ class EcommerceTaskDebugCart extends BuildTask
         switch ($type) {
             case 'HTMLText':
                 $value = substr(strip_tags($value), 0, 100);
+
                 break;
             case DBBoolean::class:
                 $value = $value ? 'YES' : 'NO';
+
                 break;
             default:
                 break;

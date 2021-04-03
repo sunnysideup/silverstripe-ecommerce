@@ -12,8 +12,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
 {
     protected $title = 'Disallows sale to all countries';
@@ -23,7 +22,8 @@ class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
     public function run($request)
     {
         $allowedArray = EcommerceCountry::get()
-            ->filter(['DoNotAllowSales' => 0]);
+            ->filter(['DoNotAllowSales' => 0])
+        ;
         if ($allowedArray->count()) {
             foreach ($allowedArray as $obj) {
                 $obj->DoNotAllowSales = 1;

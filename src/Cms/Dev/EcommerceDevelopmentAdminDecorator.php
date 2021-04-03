@@ -12,8 +12,7 @@ use SilverStripe\Core\Extension;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
-
- **/
+ */
 class EcommerceDevelopmentAdminDecorator extends Extension
 {
     private static $allowed_actions = [
@@ -24,7 +23,7 @@ class EcommerceDevelopmentAdminDecorator extends Extension
      * handles ecommerce request or provide options to run request in the form of HTML output.
      *
      * @return EcommerceDatabaseAdmin
-     **/
+     */
     public function ecommerce(HTTPRequest $request)
     {
         return EcommerceDatabaseAdmin::create();

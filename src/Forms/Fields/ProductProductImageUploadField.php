@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Forms\Fields;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\SS_List;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * This is a preset upload field for product images.
@@ -39,9 +40,7 @@ class ProductProductImageUploadField extends UploadField
      *            See framework/_config/uploadfield.yml for configuration defaults and documentation.
      */
     protected $ufConfig = [
-        /*
-         * @var boolean
-         */
+        // @var boolean
         'autoUpload' => true,
         /*
          * php validation of allowedMaxFileNumber only works when a db relation is available, set to null to allow
@@ -65,13 +64,9 @@ class ProductProductImageUploadField extends UploadField
          * rather than the actual file database record or filesystem entry.
          */
         'replaceExistingFile' => true,
-        /*
-         * @var int
-         */
+        // @var int
         'previewMaxWidth' => 80,
-        /*
-         * @var int
-         */
+        // @var int
         'previewMaxHeight' => 60,
         /*
          * javascript template used to display uploading files
@@ -108,11 +103,11 @@ class ProductProductImageUploadField extends UploadField
     /**
      * Construct a new UploadField instance.
      *
-     * @param string  $name  The internal field name, passed to forms.
-     * @param string  $title The field label.
+     * @param string  $name  the internal field name, passed to forms
+     * @param string  $title the field label
      * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
      *
-     *                       @link $record}, with the same name as the field name.
+     *                       @see $record}, with the same name as the field name.
      */
     public function __construct($name, $title = null, SS_List $items = null)
     {
@@ -132,13 +127,15 @@ class ProductProductImageUploadField extends UploadField
      *
      * @param string $name
      */
-    public function setCallingClass($name)
+    public function setCallingClass($name) : self
     {
         $this->callingClass = $name;
+
+        return $this;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     protected function getCallingClass()
     {
@@ -159,5 +156,7 @@ class ProductProductImageUploadField extends UploadField
                 }
             }
         }
+
+        return Product::class;
     }
 }

@@ -22,7 +22,6 @@ use Sunnysideup\Ecommerce\Model\Order;
  * This class provides a bunch of Meta Objects
  * that do not interact with the object at hand, but rather with the datalist as a whole.
  */
-
 class OrderProcessQueue extends DataObject
 {
     private static $table_name = 'OrderProcessQueue';
@@ -97,6 +96,7 @@ class OrderProcessQueue extends DataObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -109,6 +109,7 @@ class OrderProcessQueue extends DataObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -118,7 +119,7 @@ class OrderProcessQueue extends DataObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -136,6 +137,7 @@ class OrderProcessQueue extends DataObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -205,7 +207,8 @@ class OrderProcessQueue extends DataObject
      * processes the order ...
      * returns TRUE if SUCCESSFUL and a message if unsuccessful ...
      *
-     * @param  Order $order optional
+     * @param Order $order optional
+     *
      * @return bool | string
      */
     public function process(?Order $order = null)
@@ -243,6 +246,7 @@ class OrderProcessQueue extends DataObject
                     $newOrderStatusID = $order->StatusID;
                     if ($oldOrderStatusID !== $newOrderStatusID) {
                         $myQueueObject->delete();
+
                         return true;
                     }
                     $message = 'Attempt to move order was not successful.';
@@ -263,9 +267,9 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * META METHOD: returns the queue object if it exists
+     * META METHOD: returns the queue object if it exists.
      *
-     * @param  Order $order
+     * @param Order $order
      */
     public function getQueueObject($order)
     {
@@ -277,7 +281,7 @@ class OrderProcessQueue extends DataObject
     /**
      * META METHOD: Once you are done, you can remove the item like this ...
      *
-     * @param  Order $order
+     * @param Order $order
      */
     public function removeOrderFromQueue($order)
     {
@@ -288,15 +292,15 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * META METHOD: returns a list of orders to be processed
-     * @param int $id force this Order to be processed
+     * META METHOD: returns a list of orders to be processed.
+     *
+     * @param int $id    force this Order to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
      *
      * @return \SilverStripe\ORM\DataList (of orders)
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
     {
-
         //we sort the order randomly so that we get a nice mixture
         //not always the same ones holding up the process
         $sql = '
@@ -317,11 +321,13 @@ class OrderProcessQueue extends DataObject
 
         return Order::get()
             ->filter(['ID' => $orderIDs])
-            ->sort($this->sortPhraseForOrderIDs($orderIDs));
+            ->sort($this->sortPhraseForOrderIDs($orderIDs))
+        ;
     }
 
     /**
-     * META METHOD: all orders with a queue object
+     * META METHOD: all orders with a queue object.
+     *
      * @param int $limit total number of orders that can be retrieved at any one time
      *
      * @return \SilverStripe\ORM\DataList (of orders)
@@ -333,18 +339,19 @@ class OrderProcessQueue extends DataObject
         return empty($orderIDs) ? null : Order::get()
             ->filter(['ID' => $orderIDs])
             ->sort($this->sortPhraseForOrderIDs($orderIDs))
-            ->limit($limit);
+            ->limit($limit)
+        ;
     }
 
     /**
-     * META METHOD: returns a list of orders NOT YET to be processed
+     * META METHOD: returns a list of orders NOT YET to be processed.
+     *
      * @param int $limit total number of orders that can be retrieved at any one time
      *
      * @return \SilverStripe\ORM\DataList (of orders)
      */
     public function OrdersInQueueThatAreNotReady($limit = 9999)
     {
-
         //we sort the order randomly so that we get a nice mixture
         //not always the same ones holding up the process
         $sql = '
@@ -361,9 +368,11 @@ class OrderProcessQueue extends DataObject
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
         $orderIDs = ArrayMethods::filter_array($orderIDs);
+
         return Order::get()
             ->filter(['ID' => $orderIDs])
-            ->sort($this->sortPhraseForOrderIDs($orderIDs));
+            ->sort($this->sortPhraseForOrderIDs($orderIDs))
+        ;
     }
 
     /**
@@ -377,7 +386,8 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * casted variable
+     * casted variable.
+     *
      * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function ToBeProcessedAt()
@@ -386,7 +396,8 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * casted variable
+     * casted variable.
+     *
      * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function getToBeProcessedAt()
@@ -395,7 +406,8 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * casted variable
+     * casted variable.
+     *
      * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function HasBeenInQueueForSince()
@@ -404,7 +416,8 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * casted variable
+     * casted variable.
+     *
      * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
      */
     public function getHasBeenInQueueForSince()
@@ -413,7 +426,8 @@ class OrderProcessQueue extends DataObject
     }
 
     /**
-     * CMS Fields
+     * CMS Fields.
+     *
      * @return \SilverStripe\Forms\FieldList
      */
     public function getCMSFields()
@@ -458,6 +472,7 @@ class OrderProcessQueue extends DataObject
                 )
             );
         }
+
         return $fields;
     }
 
@@ -481,7 +496,9 @@ class OrderProcessQueue extends DataObject
 
     /**
      * sort phrase for orders, based in order IDs...
-     * @param  array $orderIDs
+     *
+     * @param array $orderIDs
+     *
      * @return string
      */
     protected function sortPhraseForOrderIDs($orderIDs)

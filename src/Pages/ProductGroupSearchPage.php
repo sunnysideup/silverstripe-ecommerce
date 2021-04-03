@@ -6,8 +6,6 @@ namespace Sunnysideup\Ecommerce\Pages;
  * This page manages searching for products.
  *
  * @author Nicolaas [at] Sunny Side Up .co.nz
- * @package ecommerce
- * @subpackage Pages
  */
 class ProductGroupSearchPage extends ProductGroup
 {
@@ -53,6 +51,7 @@ class ProductGroupSearchPage extends ProductGroup
      * but we do allow for extensions to exist at the same time.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -62,18 +61,19 @@ class ProductGroupSearchPage extends ProductGroup
     }
 
     /**
-     * @return ProductGroupSearchPage|null
+     * @return null|ProductGroupSearchPage
      */
     public static function main_search_page()
     {
         if (! self::$main_search_page) {
             self::$_main_search_page = ProductGroupSearchPage::get()->first();
         }
+
         return self::$_main_search_page;
     }
 
     /**
-     * return ID of the only ProductGroupSearchPage
+     * return ID of the only ProductGroupSearchPage.
      */
     public static function main_search_page_id(): int
     {

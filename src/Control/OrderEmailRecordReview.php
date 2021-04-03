@@ -24,6 +24,7 @@ class OrderEmailRecordReview extends Controller
         if ($email) {
             return $email->Content;
         }
+
         return _t('OrderEmailRecordReview.ERROR_EMAIL_COULD_NOT_BE_FOUND', 'Sorry, the content of this email is not available.');
     }
 }

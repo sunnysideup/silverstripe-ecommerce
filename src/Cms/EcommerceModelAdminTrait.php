@@ -18,6 +18,7 @@ trait EcommerceModelAdminTrait
         if ($obj->hasMethod('getExportFields')) {
             return $obj->getExportFields();
         }
+
         return $obj->summaryFields();
     }
 }

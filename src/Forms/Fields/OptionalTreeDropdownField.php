@@ -46,13 +46,14 @@ class OptionalTreeDropdownField extends TreeDropdownField
      * Get the whole tree of a part of the tree via an AJAX request with empty / none item prepended.
      *
      * @return HTTPResponse
-     *                for version 2.4 and later
+     *                      for version 2.4 and later
      */
     public function tree(HTTPRequest $request)
     {
         if ($request->latestparam('ID')) {
             return parent::tree($request);
         }
+
         return $this->preTree() . parent::tree($request) . self::$postTree;
     }
 }

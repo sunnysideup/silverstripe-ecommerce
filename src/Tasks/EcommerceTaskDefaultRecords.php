@@ -19,8 +19,7 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskDefaultRecords extends BuildTask
 {
     /**
@@ -78,7 +77,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             DB::alteration_message('No need to create an checkout page, it already exists.');
         }
         if ($checkoutPage) {
-            if ($checkoutPage->TermsPageID === 0 &&
+            if (0 === $checkoutPage->TermsPageID &&
                 $termsPage = DataObject::get_one(
                     'Page',
                     ['URLSegment' => 'terms-and-conditions'],

@@ -88,7 +88,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'Status' => "Enum('" . self::INCOMPLETE_STATUS . ',' . self::SUCCESS_STATUS . ',' . self::FAILURE_STATUS . ',' . self::PENDING_STATUS . "','" . self::INCOMPLETE_STATUS . "')",
         'Amount' => 'Money',
         'Message' => 'HTMLText',
-        'IP' => 'Varchar(45)', /* for IPv6 you have to make sure you have up to 45 characters */
+        'IP' => 'Varchar(45)', // for IPv6 you have to make sure you have up to 45 characters
         'ProxyIP' => 'Varchar(45)',
         'ExceptionError' => 'Text',
         'AlternativeEndPoint' => 'Varchar(255)',
@@ -205,7 +205,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -218,6 +218,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -227,7 +228,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -243,7 +244,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         $order = $this->Order();
@@ -261,6 +262,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -269,9 +271,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
-        if ($this->Status === 'Pending' || $this->Status === 'Incomplete') {
+        if ('Pending' === $this->Status || 'Incomplete' === $this->Status) {
             $extended = $this->extendedCan(__FUNCTION__, $member);
-            if ($extended !== null) {
+            if (null !== $extended) {
                 return $extended;
             }
             if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -299,7 +301,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     /**
      * redirects to this link after order has been placed ...
-     * @param  string $link
+     *
+     * @param string $link
+     * @param mixed  $write
      */
     public function addAlternativeEndPoint($link, $write = true)
     {
@@ -325,7 +329,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * alias
+     * alias.
+     *
      * @return string
      */
     public function Title()
@@ -342,7 +347,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * alias for getAmountValue
+     * alias for getAmountValue.
+     *
      * @return float
      */
     public function AmountValue()
@@ -359,7 +365,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * alias for getAmountCurrency
+     * alias for getAmountCurrency.
+     *
      * @return string
      */
     public function AmountCurrency()
@@ -377,7 +384,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string
-     **/
+     */
     public function Status()
     {
         return DBField::create_field(
@@ -409,6 +416,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $this->Amount->Currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         $this->setClientIP();
+
         return parent::populateDefaults();
     }
 
@@ -421,6 +429,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (isset($supportedMethods[$this->ClassName])) {
             return $supportedMethods[$this->ClassName];
         }
+
         return null;
     }
 
@@ -470,6 +479,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
                 $array
             );
         }
+
         return $array;
     }
 
@@ -478,7 +488,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * payment methods for this site, given the .
      * is used to define which methods are available.
      *
-     * @param string       $amount formatted amount (e.g. 12.30) without the currency
+     * @param string $amount formatted amount (e.g. 12.30) without the currency
      *
      * @return \SilverStripe\Forms\FieldList
      */
@@ -537,6 +547,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getPaymentFormFields(?float $amount = 0, ?Order $order = null): FieldList
     {
         user_error("Please implement getPaymentFormFields() on {$this->ClassName}", E_USER_ERROR);
+
         return FieldList::create();
     }
 
@@ -550,6 +561,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getPaymentFormRequirements(): array
     {
         user_error("Please implement getPaymentFormRequirements() on {$this->ClassName}", E_USER_ERROR);
+
         return [];
     }
 

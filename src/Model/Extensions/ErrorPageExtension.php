@@ -7,20 +7,18 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Convert;
-
 use SilverStripe\Core\Extension;
-
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Controller for ErrorPages.
- * @package cms
  */
 class ErrorPageExtension extends Extension
 {
     /**
-     * @throws HTTPResponse_Exception
      * @param HTTPRequest $request
+     *
+     * @throws HTTPResponse_Exception
      */
     public function onBeforeHTTPError404($request)
     {
@@ -35,8 +33,9 @@ class ErrorPageExtension extends Extension
     }
 
     /**
-     * @param  HTTPRequest $request
-     * @return Product|null
+     * @param HTTPRequest $request
+     *
+     * @return null|Product
      */
     protected function urlToProduct($request)
     {
@@ -48,8 +47,10 @@ class ErrorPageExtension extends Extension
         if ($path) {
             return Product::get()
                 ->filter(['InternalItemID' => Convert::raw2sql($path)])
-                ->first();
+                ->first()
+            ;
         }
+
         return null;
     }
 }

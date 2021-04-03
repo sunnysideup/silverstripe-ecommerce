@@ -14,8 +14,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @authors: Nicolaas
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskCartManipulationDebug extends BuildTask
 {
     protected $title = 'Show debug links';

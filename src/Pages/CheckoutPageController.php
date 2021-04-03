@@ -22,12 +22,12 @@ class CheckoutPageController extends CartPageController
 
     /**
      * @var string
-     **/
+     */
     protected $currentStep = '';
 
     /**
      * @var array
-     **/
+     */
     protected $steps = [];
 
     private static $allowed_actions = [
@@ -69,6 +69,7 @@ class CheckoutPageController extends CartPageController
         if ($this->currentOrder) {
             return $this->currentOrder->getModifierForms();
         }
+
         return null;
     }
 
@@ -109,7 +110,7 @@ class CheckoutPageController extends CartPageController
     }
 
     /**
-     * Can the user proceed? It must be an editable order (see @link CartPage)
+     * Can the user proceed? It must be an editable order (see @see CartPage)
      * and is must also contain items.
      *
      * @return bool
@@ -121,6 +122,8 @@ class CheckoutPageController extends CartPageController
 
     /**
      * Catch for incompatable coding only....
+     *
+     * @param mixed $request
      */
     public function ModifierForm($request)
     {
@@ -133,7 +136,7 @@ class CheckoutPageController extends CartPageController
      * returns a dataobject set of the steps.
      * Or just one step if that is more relevant.
      *
-     * @param int $number - if set, it returns that one step.
+     * @param int $number - if set, it returns that one step
      */
     public function CheckoutSteps($number = 0)
     {
@@ -242,6 +245,7 @@ class CheckoutPageController extends CartPageController
     {
         if ($this->request->isAjax()) {
             Requirements::clear();
+
             return $this->RenderWith('Sunnysideup\Ecommerce\Includes\LayoutCheckoutPageInner');
         }
 
@@ -262,13 +266,11 @@ class CheckoutPageController extends CartPageController
      * @param string $step
      *
      * @return bool
-     **/
+     */
     public function CanShowStep($step)
     {
-        $outcome = $this->ShowOnlyCurrentStep() ? $step === $this->currentStep : in_array($step, $this->steps, true);
-
+        return $this->ShowOnlyCurrentStep() ? $step === $this->currentStep : in_array($step, $this->steps, true);
         // die($step.'sadf'.$outcome);
-        return $outcome;
     }
 
     /**
@@ -292,6 +294,7 @@ class CheckoutPageController extends CartPageController
         foreach ($this->steps as $finalStep) {
             //do nothing...
         }
+
         return $this->currentStep === $finalStep;
     }
 
@@ -307,12 +310,12 @@ class CheckoutPageController extends CartPageController
 
     /**
      * FOR STEP STUFF SEE BELOW.
-     **/
+     */
 
     /**
      * Standard SS function
      * if set to false, user can edit order, if set to true, user can only review order.
-     **/
+     */
     protected function init()
     {
         parent::init();

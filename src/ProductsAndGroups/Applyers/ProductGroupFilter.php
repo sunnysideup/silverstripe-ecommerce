@@ -5,14 +5,15 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
- * provides data on the user
+ * provides data on the user.
  */
 class ProductGroupFilter extends BaseApplyer
 {
     protected static $get_group_from_url_segment_store = [];
 
     /**
-     * make sure that these do not exist as a URLSegment
+     * make sure that these do not exist as a URLSegment.
+     *
      * @var array
      */
     private static $options = [
@@ -27,7 +28,7 @@ class ProductGroupFilter extends BaseApplyer
     ];
 
     /**
-     * @param  string             $segment expected format: my-product-category,123 (URLSegment, ID)
+     * @param string $segment expected format: my-product-category,123 (URLSegment, ID)
      */
     public static function get_group_from_url_segment(?string $segment): ?ProductGroup
     {
@@ -37,12 +38,12 @@ class ProductGroupFilter extends BaseApplyer
         if (! isset(self::$get_group_from_url_segment_store[$segment])) {
             self::$get_group_from_url_segment_store[$segment] = null;
             $segment = trim($segment, '/');
-            if (is_string($segment) && strpos($segment, ',') !== false) {
+            if (is_string($segment) && false !== strpos($segment, ',')) {
                 $parts = explode(',', $segment);
-                if (count($parts) === 3) {
+                if (3 === count($parts)) {
                     $parts = [$parts[1], $parts[2]];
                 }
-                if (count($parts) === 2) {
+                if (2 === count($parts)) {
                     $groupId = (int) $parts[1];
                     if ($groupId) {
                         self::$get_group_from_url_segment_store[$segment] = ProductGroup::get()->byId($groupId);
@@ -50,12 +51,13 @@ class ProductGroupFilter extends BaseApplyer
                 }
             }
         }
+
         return self::$get_group_from_url_segment_store[$segment];
     }
 
     /**
-     * @param string         $key     optional key
-     * @param string|array   $params  optional params to go with key
+     * @param string       $key    optional key
+     * @param array|string $params optional params to go with key
      */
     public function apply(string $key = null, $params = null): self
     {
@@ -88,6 +90,7 @@ class ProductGroupFilter extends BaseApplyer
         if ($group) {
             return $group->MenuTitle;
         }
+
         return '';
     }
 
@@ -97,7 +100,8 @@ class ProductGroupFilter extends BaseApplyer
     }
 
     /**
-     * @param  string            $filter
+     * @param string $filter
+     *
      * @return ProductGroup
      */
     protected function findGroup(?string $filter)

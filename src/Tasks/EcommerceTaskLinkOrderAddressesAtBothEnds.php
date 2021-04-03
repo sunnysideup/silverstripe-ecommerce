@@ -14,8 +14,7 @@ use SilverStripe\ORM\DB;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask
 {
     protected $title = 'Links the Order Addresses at the Order And Address side';

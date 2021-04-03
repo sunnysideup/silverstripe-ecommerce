@@ -23,8 +23,7 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
-
- **/
+ */
 class BillingAddress extends OrderAddress
 {
     /**
@@ -82,14 +81,14 @@ class BillingAddress extends OrderAddress
      * (rather than in the parent class: OrderAddress)
      * because that makes for a cleaner relationship
      * (otherwise we ended up with a "has two" relationship in Order).
-     **/
+     */
     private static $has_one = [
         'Region' => EcommerceRegion::class,
     ];
 
     /**
      * standard SS static definition.
-     **/
+     */
     private static $belongs_to = [
         'Order' => Order::class,
     ];
@@ -214,7 +213,7 @@ class BillingAddress extends OrderAddress
      * method for casted variable.
      *
      * @return string
-     **/
+     */
     public function FullCountryName()
     {
         return $this->getFullCountryName();
@@ -227,7 +226,7 @@ class BillingAddress extends OrderAddress
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -251,7 +250,7 @@ class BillingAddress extends OrderAddress
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
@@ -331,7 +330,7 @@ class BillingAddress extends OrderAddress
     /*
      * standard SS method
      * sets the country to the best known country {@link EcommerceCountry}
-     **/
+     */
     //function populateDefaults() {
         //parent::populateDefaults();
         //$this->Country = EcommerceCountry::get_country(false, $this->OrderID);

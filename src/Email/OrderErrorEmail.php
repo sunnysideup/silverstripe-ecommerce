@@ -11,8 +11,7 @@ namespace Sunnysideup\Ecommerce\Email;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
-
- **/
+ */
 class OrderErrorEmail extends OrderEmail
 {
     /**

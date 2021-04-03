@@ -15,13 +15,12 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
-
- **/
+ */
 class OrderItemProductFilter extends ExactMatchFilter
 {
     /**
      * @return DataQuery
-     **/
+     */
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
@@ -30,6 +29,7 @@ class OrderItemProductFilter extends ExactMatchFilter
         if ($product) {
             $query->where("BuyableClassName = '" . addslashes($product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
         }
+
         return $query;
     }
 }

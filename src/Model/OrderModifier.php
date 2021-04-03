@@ -48,8 +48,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderModifier extends OrderAttribute
 {
     // ########################################  *** 3. other static variables (e.g. special_name_for_something)
@@ -60,14 +59,14 @@ class OrderModifier extends OrderAttribute
      * However, there are also ones that are not added automatically.
      *
      * @var bool
-     **/
+     */
     protected $doNotAddAutomatically = false;
 
     /**
      * $can_be_removed Identifies whether a modifier can be removed by the user.
      *
      * @var bool
-     **/
+     */
     protected $canBeRemoved = false;
 
     /**
@@ -75,7 +74,7 @@ class OrderModifier extends OrderAttribute
      * Running an update means that all fields are (re)set, using the Live{FieldName} methods.
      *
      * @var bool
-     **/
+     */
     protected $mustUpdate = false;
 
     /**
@@ -111,7 +110,7 @@ class OrderModifier extends OrderAttribute
 
     /**
      * @var string
-     * stardard SS definition
+     *             stardard SS definition
      */
     private static $table_name = 'OrderModifier';
 
@@ -201,7 +200,7 @@ class OrderModifier extends OrderAttribute
      * Always consider the "order" (which one first) of the order modifiers when using this variable.
      *
      * @var float
-     **/
+     */
     private $runningTotal = 0;
 
     /**
@@ -314,7 +313,7 @@ class OrderModifier extends OrderAttribute
 
     /**
      * This method runs when the OrderModifier is first added to the order.
-     **/
+     */
     public function init()
     {
         parent::init();
@@ -328,7 +327,7 @@ class OrderModifier extends OrderAttribute
     /*
      * all classes extending OrderModifier must have this method if it has more fields
      * @param bool $recalculate - run it, even if it has run already
-     **/
+     */
     public function runUpdate($recalculate = false)
     {
         if (! $this->IsRemoved()) {
@@ -347,8 +346,11 @@ class OrderModifier extends OrderAttribute
     /**
      * standard SS Method.
      *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
-     **/
+     */
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -357,8 +359,10 @@ class OrderModifier extends OrderAttribute
     /**
      * standard SS Method.
      *
+     * @param null|mixed $member
+     *
      * @return bool
-     **/
+     */
     public function canDelete($member = null)
     {
         return false;
@@ -423,7 +427,7 @@ class OrderModifier extends OrderAttribute
      * @param Controller $optionalController - optional custom controller class
      * @param Validator  $optionalValidator  - optional custom validator class
      *
-     * @return OrderModifierForm|null or subclass
+     * @return null|OrderModifierForm or subclass
      */
     public function getModifierForm(?Controller $optionalController = null, ?Validator $optionalValidator = null)
     {
@@ -434,6 +438,7 @@ class OrderModifier extends OrderAttribute
 
             return OrderModifierForm::create($optionalController, 'ModifierForm', $fields, $actions = new FieldList(), $optionalValidator);
         }
+
         return null;
     }
 
@@ -458,7 +463,7 @@ class OrderModifier extends OrderAttribute
      * returns a heading if there is one.
      *
      * @return string
-     **/
+     */
     public function Heading()
     {
         if ($obj = $this->getOrderModifierDescriptor()) {
@@ -472,7 +477,7 @@ class OrderModifier extends OrderAttribute
      * returns a description if there is one.
      *
      * @return string (html)
-     **/
+     */
     public function Description()
     {
         if ($obj = $this->getOrderModifierDescriptor()) {
@@ -486,7 +491,7 @@ class OrderModifier extends OrderAttribute
      * returns a page for a more info link... (if there is one).
      *
      * @return string
-     **/
+     */
     public function MoreInfoPage()
     {
         if ($obj = $this->getOrderModifierDescriptor()) {
@@ -515,7 +520,7 @@ class OrderModifier extends OrderAttribute
      * Returns the Money object of the Table Value.
      *
      * @return \SilverStripe\ORM\FieldType\DBMoney
-     **/
+     */
     public function TableValueAsMoney()
     {
         return $this->getTableValueAsMoney();
@@ -531,12 +536,13 @@ class OrderModifier extends OrderAttribute
      * There might be instances where ShowInTable (the starting point) is TRUE and HideInAjaxUpdate return false.
      *
      * @return bool
-     **/
+     */
     public function HideInAjaxUpdate()
     {
         if ($this->IsRemoved()) {
             return true;
         }
+
         return ! $this->ShowInTable();
     }
 
@@ -544,7 +550,7 @@ class OrderModifier extends OrderAttribute
      * Checks if the modifier can be removed.
      *
      * @return bool
-     **/
+     */
     public function CanBeRemoved()
     {
         return $this->canBeRemoved;
@@ -554,7 +560,7 @@ class OrderModifier extends OrderAttribute
      * Checks if the modifier can be added manually.
      *
      * @return bool
-     **/
+     */
     public function CanAdd()
     {
         return $this->HasBeenRemoved || $this->DoNotAddOnInit();
@@ -574,7 +580,7 @@ class OrderModifier extends OrderAttribute
      * Actual calculation used.
      *
      * @return float / Double
-     **/
+     */
     public function CalculatedTotal()
     {
         return $this->CalculatedTotal;
@@ -584,12 +590,12 @@ class OrderModifier extends OrderAttribute
      * This link is for modifiers that have been removed and are being put "back".
      *
      * @return string
-     **/
+     */
     public function AddLink()
     {
         $params = [];
         $updatedLinkParameters = $this->extend('ModifierAddLinkUpdate', $params);
-        if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
+        if (null !== $updatedLinkParameters && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
                 $params = array_merge($params, $updatedLinkParametersUpdate);
             }
@@ -602,12 +608,12 @@ class OrderModifier extends OrderAttribute
      * Link that can be used to remove the modifier.
      *
      * @return string
-     **/
+     */
     public function RemoveLink()
     {
         $param = [];
         $updatedLinkParameters = $this->extend('ModifierRemoveLinkUpdate', $param);
-        if ($updatedLinkParameters !== null && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
+        if (null !== $updatedLinkParameters && is_array($updatedLinkParameters) && count($updatedLinkParameters)) {
             foreach ($updatedLinkParameters as $updatedLinkParametersUpdate) {
                 $param = array_merge($param, $updatedLinkParametersUpdate);
             }
@@ -674,7 +680,7 @@ class OrderModifier extends OrderAttribute
      */
     public function IsNoChange()
     {
-        return $this->CalculatedTotal === 0;
+        return 0 === $this->CalculatedTotal;
     }
 
     /**
@@ -718,7 +724,7 @@ class OrderModifier extends OrderAttribute
      * @param array $js javascript array
      *
      * @return array for AJAX JSON
-     **/
+     */
     public function updateForAjax(array $js)
     {
         $function = EcommerceConfig::get(OrderModifier::class, 'ajax_total_format');
@@ -796,7 +802,7 @@ class OrderModifier extends OrderAttribute
      * You can overload this method as canEdit might not be the right indicator.
      *
      * @return bool
-     **/
+     */
     protected function canBeUpdated()
     {
         return $this->canEdit();
@@ -806,7 +812,7 @@ class OrderModifier extends OrderAttribute
      * This method simply checks if a fields has changed and if it has changed it updates the field.
      *
      * @param string $fieldName
-     **/
+     */
     protected function checkField($fieldName)
     {
         if ($this->canBeUpdated()) {
@@ -853,7 +859,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if ($this->orderModifier_Descriptor === null) {
+        if (null === $this->orderModifier_Descriptor) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]

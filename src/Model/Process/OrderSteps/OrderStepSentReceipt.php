@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
 {
     /**
@@ -69,7 +68,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return $order->IsPaid();
@@ -81,6 +80,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     public function doStep(Order $order): bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendReceiptToCustomer;
+
         return $this->sendEmailForStep(
             $order,
             $subject = $this->CalculatedEmailSubject($order),
@@ -94,8 +94,8 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     /**
      * can continue if receipt has been sent or if there is no need to send a receipt.
      *
-     * @return OrderStep|null - DataObject = next OrderStep
-     **/
+     * @return null|OrderStep - DataObject = next OrderStep
+     */
     public function nextStep(Order $order)
     {
         if ($this->hasBeenSent($order)) {
@@ -109,7 +109,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -123,7 +123,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      * For some ordersteps this returns true...
      *
      * @return bool
-     **/
+     */
     protected function hasCustomerMessage()
     {
         return $this->SendReceiptToCustomer;

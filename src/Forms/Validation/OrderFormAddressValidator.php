@@ -9,13 +9,14 @@ use SilverStripe\Security\Member;
  *
  * @package: ecommerce
  * @authors: Silverstripe, Jeremy, Nicolaas
- **/
+ */
 class OrderFormAddressValidator extends ShopAccountFormValidator
 {
     /**
      * Ensures member unique id stays unique and other basic stuff...
      *
-     * @param array $data = Form Data
+     * @param array $data               = Form Data
+     * @param mixed $allowExistingEmail
      *
      * @return bool
      */
@@ -25,7 +26,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
         $allowExistingEmail = ! (bool) Member::currentUserID();
         if (! isset($data['UseShippingAddress']) || ! $data['UseShippingAddress']) {
             foreach (array_keys($this->required) as $key) {
-                if (substr($key, 0, 8) === 'Shipping') {
+                if ('Shipping' === substr($key, 0, 8)) {
                     unset($this->required[$key]);
                 }
             }

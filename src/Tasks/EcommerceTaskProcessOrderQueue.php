@@ -17,8 +17,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskProcessOrderQueue extends BuildTask
 {
     protected $sendEmails = true;
@@ -44,8 +43,9 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $id = (int) $request->getVar('id') - 0;
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
-        if ($ordersinQueue->count() === 0) {
+        if (0 === $ordersinQueue->count()) {
             echo 'No orders in queue';
+
             return;
         }
         echo '<h3>There are ' . $ordersinQueue->count() . ' in the queue, processing ' . $this->limit . ' now</h3>';
@@ -60,7 +60,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
     }
 
     /**
-     * @param  DataList $orders orders to be processsed.
+     * @param DataList $orders orders to be processsed
      */
     protected function tryToFinaliseOrders(DataList $orders)
     {
@@ -73,7 +73,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         foreach ($orders as $order) {
             echo '<hr />Processing order: ' . $order->ID;
             $outcome = $queueObjectSingleton->process($order);
-            if ($outcome === true) {
+            if (true === $outcome) {
                 echo '<br />... Order moved successfully.<hr />';
             } else {
                 echo '<br />... ' . $outcome . '<hr />';

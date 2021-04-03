@@ -3,9 +3,6 @@
 namespace Sunnysideup\Ecommerce\Model\Fieldtypes;
 
 use SilverStripe\Core\ClassInfo;
-
-
-
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use Sunnysideup\Ecommerce\Forms\Fields\BuyableSelectField;
@@ -17,8 +14,7 @@ use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @subpackage: model
-
- **/
+ */
 class BuyableFieldType extends DBPolymorphicForeignKey
 {
     private static $classname_spec_cache = [];
@@ -33,7 +29,6 @@ class BuyableFieldType extends DBPolymorphicForeignKey
 
     public function compositeDatabaseFields()
     {
-
         // Ensure the table level cache exists
         if (empty(self::$classname_spec_cache[$this->tableName])) {
             self::$classname_spec_cache[$this->tableName] = [];

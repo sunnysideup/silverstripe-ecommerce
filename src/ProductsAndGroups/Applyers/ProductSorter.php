@@ -6,7 +6,7 @@ use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * provides data on the user
+ * provides data on the user.
  */
 class ProductSorter extends BaseApplyer
 {
@@ -41,8 +41,8 @@ class ProductSorter extends BaseApplyer
     ];
 
     /**
-     * @param string         $key     optional key
-     * @param string|array   $params  optional params to go with key
+     * @param string       $key    optional key
+     * @param array|string $params optional params to go with key
      */
     public function apply($key = null, $params = null): self
     {
@@ -56,21 +56,24 @@ class ProductSorter extends BaseApplyer
         }
         // @todo
         $this->applyEnd($key, $params);
+
         return $this;
     }
 
     /**
-     * if the key is default and you provide a param of IDs then it sort by params
-     * @param  string         $key
-     * @param  string|array   $params additional param for sql.
+     * if the key is default and you provide a param of IDs then it sort by params.
      *
-     * @return string|array
+     * @param string       $key
+     * @param array|string $params additional param for sql
+     *
+     * @return array|string
      */
     public function getSql(?string $key = null, $params = null)
     {
-        if ($key === BaseApplyer::DEFAULT_NAME && is_array($params)) {
+        if (BaseApplyer::DEFAULT_NAME === $key && is_array($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
+
         return parent::getSql($key, $params);
     }
 }

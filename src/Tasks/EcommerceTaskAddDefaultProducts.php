@@ -13,8 +13,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskAddDefaultProducts extends BuildTask
 {
     protected $title = 'Add default Products';
@@ -23,8 +22,8 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
 
     public function run($request)
     {
-        if (Product::get()->Count() === 0) {
-            if (ProductGroup::get()->Count() === 0) {
+        if (0 === Product::get()->Count()) {
+            if (0 === ProductGroup::get()->Count()) {
                 $productGroup1 = new ProductGroup();
                 $productGroup1->Title = 'Products';
                 $productGroup1->Content = "

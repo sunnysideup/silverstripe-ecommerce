@@ -15,11 +15,7 @@ use SilverStripe\View\SSViewer;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
- *
- * @package forms
- * @subpackage fields-gridfield
  */
-
 class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     /**
@@ -31,6 +27,7 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
 
     /**
      * @config
+     *
      * @var int
      */
     private static $packing_slip_bulk_printing_limit = 30;
@@ -44,7 +41,9 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     }
 
     /**
-     * Place the export button in a <p> tag below the field
+     * Place the export button in a <p> tag below the field.
+     *
+     * @param mixed $gridField
      */
     public function getHTMLFragments($gridField)
     {
@@ -58,13 +57,16 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
         $button->setAttribute('data-icon', 'grid_print');
         $button->addExtraClass('no-ajax action_print_all_packing_slips');
         $button->setForm($gridField->getForm());
+
         return [
             $this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
         ];
     }
 
     /**
-     * export is an action button
+     * export is an action button.
+     *
+     * @param mixed $gridField
      */
     public function getActions($gridField)
     {
@@ -73,13 +75,15 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName === 'printallpackingslips') {
+        if ('printallpackingslips' === $actionName) {
             return $this->handlePrintAllPackingSlips($gridField);
         }
     }
 
     /**
-     * it is also a URL
+     * it is also a URL.
+     *
+     * @param mixed $gridField
      */
     public function getURLHandlers($gridField)
     {
@@ -89,7 +93,10 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     }
 
     /**
-     * Handle the print, for both the action button and the URL
+     * Handle the print, for both the action button and the URL.
+     *
+     * @param mixed      $gridField
+     * @param null|mixed $request
      */
     public function handlePrintAllPackingSlips($gridField, $request = null)
     {
@@ -106,6 +113,7 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
         Requirements::themedCSS('client/css/Order_PackingSlip');
         $curr = Controller::curr();
         $curr->Orders = $al;
+
         return $curr->RenderWith('Sunnysideup\Ecommerce\Includes\PrintAllPackingSlips');
     }
 }

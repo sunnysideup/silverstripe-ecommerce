@@ -10,7 +10,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
 
 /**
- * Provides a standard interface for caching product and group information
+ * Provides a standard interface for caching product and group information.
  *
  * Can be used in conjuction with the standard Silverstripe Partial caching
  * functionality.
@@ -41,7 +41,7 @@ class EcommerceCache implements Flushable
 
     /**
      * Get the cache object to use when storing / retrieving stuff in the
-     * Silverstripe Cache
+     * Silverstripe Cache.
      *
      * @return CacheInterface
      */
@@ -50,6 +50,7 @@ class EcommerceCache implements Flushable
         if (! $this->cacheBackend) {
             $this->cacheBackend = Injector::inst()->get(CacheInterface::class . '.Ecommerce');
         }
+
         return $this->cacheBackend;
     }
 
@@ -60,20 +61,21 @@ class EcommerceCache implements Flushable
 
             return $this->getCacheBackend()->has($cacheKey);
         }
+
         return false;
     }
 
     /**
-     * Retrieve an object from the cache
+     * Retrieve an object from the cache.
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function retrieve(string $cacheKey, ?bool $alreadyUnserialized = false)
     {
         if ($this->hasCache($cacheKey)) {
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
             $data = $this->getCacheBackend()->get($cacheKey);
-            if ($alreadyUnserialized === false) {
+            if (false === $alreadyUnserialized) {
                 $data = unserialize($data);
             }
 
@@ -93,7 +95,7 @@ class EcommerceCache implements Flushable
     {
         if ($this->AllowCaching()) {
             $cacheKey = $this->cacheKeyRefiner($cacheKey);
-            if ($alreadySerialized === false) {
+            if (false === $alreadySerialized) {
                 $data = serialize($data);
             }
             $this->getCacheBackend()->set($cacheKey, $data);
@@ -136,6 +138,7 @@ class EcommerceCache implements Flushable
             ':',
             '.',
         ];
+
         return str_replace($arrayOfReservedChars, '_', $cacheKey);
     }
 }

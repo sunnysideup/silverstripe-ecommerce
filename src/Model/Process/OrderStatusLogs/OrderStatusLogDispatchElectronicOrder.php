@@ -6,8 +6,7 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStatusLogDispatchElectronicOrder extends OrderStatusLogDispatch
 {
     private static $table_name = 'OrderStatusLogDispatchElectronicOrder';

@@ -3,11 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-
-
-
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -25,8 +20,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: Pages
-
- **/
+ */
 class AccountPage extends Page
 {
     /**
@@ -95,9 +89,10 @@ class AccountPage extends Page
      * but we do allow for extensions to exist at the same time.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
-     **/
+     */
     public function canCreate($member = null, $context = [])
     {
         return AccountPage::get()->filter(['ClassName' => AccountPage::class])->Count() ? false : $this->canEdit($member);
@@ -107,6 +102,7 @@ class AccountPage extends Page
      * Shop Admins can edit.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -155,7 +151,9 @@ class AccountPage extends Page
 
     /**
      * Returns the link to the AccountPage on this site.
+     *
      * @param string $action [optional]
+     *
      * @return string (URLSegment)
      */
     public static function find_link(?string $action = null)
@@ -167,6 +165,7 @@ class AccountPage extends Page
         if ($page) {
             return $page->Link($action);
         }
+
         return '404-account-page';
     }
 
@@ -246,7 +245,7 @@ class AccountPage extends Page
     /**
      * retrieves previous orders and adds totals to it...
      * return DataList.
-     **/
+     */
     protected function calculatePastOrders()
     {
         if (! $this->pastOrders) {
@@ -274,7 +273,7 @@ class AccountPage extends Page
         $memberID = (int) Member::currentUserID();
         if (! $memberID) {
             //set t
-            $memberID = RAND(0, 1000000) * -1;
+            $memberID = rand(0, 1000000) * -1;
         }
         if ($memberID) {
             return Order::get()
@@ -282,7 +281,8 @@ class AccountPage extends Page
                     '"Order"."MemberID" = ' . $memberID . '
                     AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)'
                 )
-                ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"');
+                ->innerJoin('OrderStep', '"Order"."StatusID" = "OrderStep"."ID"')
+            ;
         }
 
         return 0;

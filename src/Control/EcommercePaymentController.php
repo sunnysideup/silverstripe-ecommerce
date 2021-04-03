@@ -17,11 +17,11 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
- **/
+ */
 class EcommercePaymentController extends Controller
 {
     /**
-     * @var Order|null
+     * @var null|Order
      */
     protected $currentOrder;
 
@@ -55,6 +55,7 @@ class EcommercePaymentController extends Controller
     public static function make_payment_link($orderID)
     {
         $urlSegment = EcommerceConfig::get(EcommercePaymentController::class, 'url_segment');
+
         return Controller::join_links(
             Director::baseURL(),
             $urlSegment . '/pay/' . $orderID . '/'
@@ -103,7 +104,7 @@ class EcommercePaymentController extends Controller
 
     /**
      * @return Form | Array (OrderFormPayment)
-     **/
+     */
     public function PaymentForm()
     {
         if ($this->currentOrder) {

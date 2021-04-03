@@ -19,8 +19,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStatusLogPaymentCheck extends OrderStatusLog
 {
     private static $table_name = 'OrderStatusLogPaymentCheck';
@@ -93,7 +92,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -109,7 +108,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
 
     /**
      * @return string
-     **/
+     */
     public function CustomerNote()
     {
         return $this->getCustomerNote();

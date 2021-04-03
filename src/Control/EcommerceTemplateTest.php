@@ -14,8 +14,10 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
-
- **/
+ *
+ * @internal
+ * @coversNothing
+ */
 class EcommerceTemplateTest extends PageController
 {
     public function index()
@@ -40,7 +42,8 @@ class EcommerceTemplateTest extends PageController
                 ->where('"AllowPurchase" = 1  AND "Price" > 0')
                 ->sort('RAND()')
                 ->limit(1, $offSet)
-                ->First();
+                ->First()
+            ;
             if ($product) {
                 $notForSale = ! (bool) $product->canPurchase();
             }

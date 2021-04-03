@@ -25,8 +25,7 @@ use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
-
-/**
+/*
  * ShoppingCart - provides a global way to interface with the cart (current order).
  *
  * This can be used in other code by calling $cart = ShoppingCart::singleton();
@@ -58,8 +57,8 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
-
- **/
+ *
+ */
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
@@ -96,7 +95,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
- **/
+ */
 class ShoppingCart
 {
     use Extensible;
@@ -107,15 +106,15 @@ class ShoppingCart
      * Feedback message to user (e.g. cart updated, could not delete item, someone in standing behind you).
      *
      * @var array
-     **/
+     */
     protected $messages = [];
 
     /**
      * stores a reference to the current order object.
      *
-     * @var object|null
-     **/
-    protected $order = null;
+     * @var null|object
+     */
+    protected $order;
 
     /**
      * This variable is set to YES when we actually need an order (i.e. write it).
@@ -171,6 +170,7 @@ class ShoppingCart
         if (! self::$_singletoncart) {
             self::$_singletoncart = Injector::inst()->get(ShoppingCart::class);
         }
+
         return self::$_singletoncart;
     }
 
@@ -219,6 +219,7 @@ class ShoppingCart
         } elseif (intval($orderOrOrderID)) {
             $orderID = intval($orderOrOrderID);
         }
+
         return $orderID;
     }
 
@@ -231,6 +232,7 @@ class ShoppingCart
     {
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
         $orderIDFromSession = intval(Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
+
         return Order::get()->byID($orderIDFromSession);
     }
 
@@ -244,6 +246,7 @@ class ShoppingCart
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this->order;
     }
 
@@ -312,6 +315,7 @@ class ShoppingCart
                                     if ($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
                                         $this->order->delete();
                                         $this->order = $previousOrderFromMember;
+
                                         break;
                                     }
                                     $previousOrderFromMember->delete();
@@ -372,8 +376,10 @@ class ShoppingCart
             //just in case ...
             if (! $this->order && $recurseCount < 3) {
                 ++$recurseCount;
+
                 return $this->currentOrder($recurseCount, $order);
             }
+
             return $this->order;
         }
         //we still return an order so that we do not end up with errors...
@@ -400,10 +406,10 @@ class ShoppingCart
      * Returns the order item on succes OR false on failure.
      *
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
-     * @param float      $quantity   - number of items add.
-     * @param mixed      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+     * @param float        $quantity   - number of items add
+     * @param mixed        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *                                 if you make it a form, it will save the form into the orderitem
-     * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
+     *                                 returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
      * @return false | DataObject (OrderItem)
      */
@@ -412,10 +418,12 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (! $buyable) {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEFOUND', 'This item could not be found.'), 'bad');
+
                 return false;
             }
             if (! $buyable->canPurchase()) {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'This item is not for sale.'), 'bad');
+
                 return false;
             }
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
@@ -439,6 +447,7 @@ class ShoppingCart
             } else {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'Item could not be added.'), 'bad');
             }
+
             return $item;
         }
     }
@@ -449,8 +458,8 @@ class ShoppingCart
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
-     * @param float      $quantity   - number of items add.
-     * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+     * @param float        $quantity   - number of items add
+     * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
      * @return false | DataObject (OrderItem)|null
      */
@@ -464,9 +473,11 @@ class ShoppingCart
                 //remove quantity
                 $item->write();
                 $this->addMessage(_t('Order.ITEMUPDATED', 'Item updated.'), 'good');
+
                 return $item;
             }
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+
             return false;
         }
     }
@@ -477,8 +488,8 @@ class ShoppingCart
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
-     * @param float      $quantity   - number of items add.
-     * @param array      $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+     * @param float        $quantity   - number of items add
+     * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
      * @return false | OrderItem|null
      */
@@ -500,9 +511,11 @@ class ShoppingCart
                     $msg = _t('Order.ITEMREMOVED', 'Item removed.');
                 }
                 $this->addMessage($msg, 'good');
+
                 return $item;
             }
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+
             return false;
         }
     }
@@ -513,7 +526,7 @@ class ShoppingCart
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
-     * @param array     $parameters - array of parameters to target a specific order item. eg: group=1, length=5
+     * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
      * @return bool | OrderItem|null - successfully removed
      */
@@ -526,9 +539,11 @@ class ShoppingCart
                 $item->delete();
                 $item->destroy();
                 $this->addMessage(_t('Order.ITEMCOMPLETELYREMOVED', 'Item removed from cart.'), 'good');
+
                 return $item;
             }
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
+
             return false;
         }
     }
@@ -536,11 +551,11 @@ class ShoppingCart
     /**
      * Checks and prepares variables for a quantity change (add, edit, remove) for an Order Item.
      *
-     * @param BuyableModel    $buyable             - the buyable (generally a product) being added to the cart
-     * @param array         $parameters
-     * @param bool          $mustBeExistingItem - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item.
-     * @param array | Form  $parameters          - array of parameters to target a specific order item. eg: group=1, length=5*
-     *                                           - form saved into item...
+     * @param BuyableModel $buyable            - the buyable (generally a product) being added to the cart
+     * @param array        $parameters
+     * @param bool         $mustBeExistingItem - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item
+     * @param array | Form $parameters         - array of parameters to target a specific order item. eg: group=1, length=5*
+     *                                         - form saved into item...
      *
      * @return DataObject
      */
@@ -593,6 +608,7 @@ class ShoppingCart
             return $quantity;
         }
         $this->addMessage(_t('Order.INVALIDQUANTITY', 'Invalid quantity.'), 'warning');
+
         return 0;
     }
 
@@ -612,6 +628,7 @@ class ShoppingCart
                 //otherwise create a new item
                 if (! $buyable instanceof BuyableModel) {
                     $this->addMessage(_t('ShoppingCart.ITEMNOTFOUND', 'Item is not buyable.'), 'bad');
+
                     return false;
                 }
                 $className = $buyable->classNameForOrderItem();
@@ -629,8 +646,10 @@ class ShoppingCart
             if ($parameters) {
                 $item->Parameters = $parameters;
             }
+
             return $item;
         }
+
         return OrderItem::create();
     }
 
@@ -648,21 +667,24 @@ class ShoppingCart
             $this->clear();
             //little hack to clear static memory
             OrderItem::reset_price_has_been_fixed($this->currentOrder()->ID);
+
             return true;
         }
+
         return false;
     }
 
     /**
-     * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
+     * returns null if the current user does not allow order manipulation or saving (e.g. session disabled).
      *
-     * @return bool|null
+     * @return null|bool
      */
     public function save()
     {
         if ($this->allowWrites()) {
             $this->currentOrder()->write();
             $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'), 'good');
+
             return true;
         }
     }
@@ -686,7 +708,7 @@ class ShoppingCart
             Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
             Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         }
-        $memberID = Intval(Member::currentUserID());
+        $memberID = intval(Member::currentUserID());
         if ($memberID) {
             $orders = Order::get()->filter(['MemberID' => $memberID]);
             if ($orders && $orders->count()) {
@@ -697,6 +719,7 @@ class ShoppingCart
                 }
             }
         }
+
         return true;
     }
 
@@ -718,7 +741,7 @@ class ShoppingCart
      *
      * @param OrderModifier $modifier | int
      *
-     * @return bool|null
+     * @return null|bool
      */
     public function removeModifier($modifier)
     {
@@ -726,10 +749,12 @@ class ShoppingCart
             $modifier = is_numeric($modifier) ? OrderModifier::get()->byID($modifier) : $modifier;
             if (! $modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
+
                 return false;
             }
             if (! $modifier->CanBeRemoved()) {
                 $this->addMessage(_t('Order.MODIFIERCANNOTBEREMOVED', 'Modifier can not be removed.'), 'bad');
+
                 return false;
             }
             $modifier->HasBeenRemoved = 1;
@@ -737,6 +762,7 @@ class ShoppingCart
             $modifier->write();
             $modifier->onAfterRemove();
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Removed.'), 'good');
+
             return true;
         }
     }
@@ -760,11 +786,13 @@ class ShoppingCart
             }
             if (! $modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
+
                 return false;
             }
             $modifier->HasBeenRemoved = 0;
             $modifier->write();
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'), 'good');
+
             return true;
         }
     }
@@ -796,15 +824,19 @@ class ShoppingCart
                     //we set session ID after can view check ...
                     Controller::curr()->getRequest()->getSession()->set($sessionVariableName, $this->order->ID);
                     $this->addMessage(_t('Order.LOADEDEXISTING', 'Order loaded.'), 'good');
+
                     return true;
                 }
                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
+
                 return false;
             }
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
+
             return false;
         }
         $this->addMessage(_t('Order.NOSAVE', 'You can not load orders as your session functionality is turned off.'), 'bad');
+
         return false;
     }
 
@@ -816,7 +848,7 @@ class ShoppingCart
      * @param int | Order $oldOrder
      *
      * @return Order | false|null
-     **/
+     */
     public function copyOrder($oldOrder)
     {
         if ($this->allowWrites()) {
@@ -848,9 +880,11 @@ class ShoppingCart
                     return $newOrder;
                 }
                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
+
                 return false;
             }
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
+
             return false;
         }
     }
@@ -873,15 +907,16 @@ class ShoppingCart
         $newOrder->CreateOrReturnExistingAddress(BillingAddress::class);
         $newOrder->CreateOrReturnExistingAddress(ShippingAddress::class);
         $newOrder->write();
+
         return $newOrder;
     }
 
     /**
-     * Add buyables into new Order
+     * Add buyables into new Order.
      *
-     * @param  Order $newOrder
-     * @param  OrderItem[] $items
-     * @param  array  $parameters
+     * @param Order       $newOrder
+     * @param OrderItem[] $items
+     * @param array       $parameters
      *
      * @return Order
      */
@@ -914,16 +949,18 @@ class ShoppingCart
      * @param string $countryCode
      *
      * @return bool
-     **/
+     */
     public function setCountry($countryCode)
     {
         if ($this->allowWrites()) {
             if (EcommerceCountry::code_allowed($countryCode)) {
                 $this->currentOrder()->SetCountryFields($countryCode);
                 $this->addMessage(_t('Order.UPDATEDCOUNTRY', 'Updated country.'), 'good');
+
                 return true;
             }
             $this->addMessage(_t('Order.NOTUPDATEDCOUNTRY', 'Could not update country.'), 'bad');
+
             return false;
         }
     }
@@ -931,18 +968,20 @@ class ShoppingCart
     /**
      * sets region in order so that modifiers can be recalculated, etc...
      *
-     * @param int | String $regionID you can use the ID or the code.
+     * @param int | String $regionID you can use the ID or the code
      *
      * @return bool
-     **/
+     */
     public function setRegion($regionID)
     {
         if (EcommerceRegion::regionid_allowed($regionID)) {
             $this->currentOrder()->SetRegionFields($regionID);
             $this->addMessage(_t('ShoppingCart.REGIONUPDATED', 'Region updated.'), 'good');
+
             return true;
         }
         $this->addMessage(_t('ORDER.NOTUPDATEDREGION', 'Could not update region.'), 'bad');
+
         return false;
     }
 
@@ -952,7 +991,7 @@ class ShoppingCart
      * @param string $currencyCode
      *
      * @return bool
-     **/
+     */
     public function setCurrency($currencyCode)
     {
         $currency = EcommerceCurrency::get_one_from_code($currencyCode);
@@ -966,10 +1005,12 @@ class ShoppingCart
             $this->currentOrder()->UpdateCurrency($currency);
             $msg = _t('Order.CURRENCYUPDATED', 'Currency updated.');
             $this->addMessage($msg, 'good');
+
             return true;
         }
         $msg = _t('Order.CURRENCYCOULDNOTBEUPDATED', 'Currency could not be updated.');
         $this->addMessage($msg, 'bad');
+
         return false;
     }
 
@@ -1058,7 +1099,9 @@ class ShoppingCart
      * Stores a message that can later be returned via ajax or to $form->sessionMessage();.
      *
      * $message the message, which could be a notification of successful action, or reason for failure
-     * @param string $status - use good, bad, warning
+     *
+     * @param string $status  - use good, bad, warning
+     * @param mixed  $message
      */
     public function addMessage($message, $status = 'good')
     {
@@ -1073,9 +1116,7 @@ class ShoppingCart
         $this->messages[] = ['Message' => $message, 'Type' => $status];
     }
 
-    /*******************************************************
-     * UI MESSAGE HANDLING
-     *******************************************************/
+    // UI MESSAGE HANDLING
 
     /**
      * Retrieves all good, bad, and ugly messages that have been produced during the current request.
@@ -1093,6 +1134,7 @@ class ShoppingCart
         if ($messages && count($messages)) {
             $this->messages = array_merge($messages, $this->messages);
         }
+
         return $this->messages;
     }
 
@@ -1121,6 +1163,7 @@ class ShoppingCart
         if (Director::is_ajax()) {
             $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
             $obj = new $responseClass();
+
             return $obj->ReturnCartData($this->getMessages());
         }
         //TODO: handle passing a message back to a form->sessionMessage
@@ -1139,48 +1182,48 @@ class ShoppingCart
                 Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
             }
         }
-        return;
     }
 
     /**
      * can the current user use sessions and therefore write to cart???
-     * the method also returns if an order has explicitely been set
+     * the method also returns if an order has explicitely been set.
+     *
      * @return bool
      */
     protected function allowWrites()
     {
-        if (self::$_allow_writes_cache === null) {
+        if (null === self::$_allow_writes_cache) {
             if ($this->order) {
                 self::$_allow_writes_cache = true;
             } else {
                 if (PHP_SAPI !== 'cli') {
                     if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-                        self::$_allow_writes_cache = session_status() === PHP_SESSION_ACTIVE ? true : false;
+                        self::$_allow_writes_cache = PHP_SESSION_ACTIVE === session_status() ? true : false;
                     } else {
-                        self::$_allow_writes_cache = session_id() === '' ? false : true;
+                        self::$_allow_writes_cache = '' === session_id() ? false : true;
                     }
                 } else {
                     self::$_allow_writes_cache = false;
                 }
             }
         }
+
         return self::$_allow_writes_cache;
     }
 
-    /*******************************************************
-     * HELPER FUNCTIONS
-     *******************************************************/
+    // HELPER FUNCTIONS
 
     /**
      * Gets an existing order item based on buyable and passed parameters.
      *
-     * @return OrderItem|null
+     * @return null|OrderItem
      */
     protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
     {
         $filterString = $this->parametersToSQL($parameters);
         if ($order = $this->currentOrder()) {
             $orderID = $order->ID;
+
             return DataObject::get_one(
                 OrderItem::class,
                 '"BuyableClassName" = ' . Convert::raw2sql($buyable->ClassName, true) . ' AND "BuyableID" = ' . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString,
@@ -1208,11 +1251,12 @@ class ShoppingCart
                 $newarray[$field] = Convert::raw2sql($params[$field]);
             }
         }
+
         return $newarray;
     }
 
     /**
-     * Converts parameter array to SQL query filter
+     * Converts parameter array to SQL query filter.
      */
     protected function parametersToSQL(array $parameters = [])
     {
@@ -1229,6 +1273,7 @@ class ShoppingCart
         if (count($outputArray)) {
             return implode(' AND ', $outputArray);
         }
+
         return '';
     }
 
@@ -1256,6 +1301,7 @@ class ShoppingCart
             user_error("Tried to set session variable {$name}, that is not in use", E_USER_NOTICE);
         }
         $sessionCode = EcommerceConfig::get(ShoppingCart::class, 'session_code');
+
         return $sessionCode . '_' . $name;
     }
 }

@@ -11,8 +11,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStatusLogArchived extends OrderStatusLog
 {
     private static $defaults = [
@@ -49,6 +48,7 @@ class OrderStatusLogArchived extends OrderStatusLog
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -58,7 +58,7 @@ class OrderStatusLogArchived extends OrderStatusLog
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -69,6 +69,7 @@ class OrderStatusLogArchived extends OrderStatusLog
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -79,7 +80,7 @@ class OrderStatusLogArchived extends OrderStatusLog
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();

@@ -14,8 +14,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
 {
     /**
@@ -63,7 +62,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return $order->IsSubmitted();
@@ -73,11 +72,11 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * send invoice to customer
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
-     *
-     **/
+     */
     public function doStep(Order $order): bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendInvoiceToCustomer;
+
         return $this->sendEmailForStep(
             $order,
             $subject = $this->EmailSubject,
@@ -91,8 +90,8 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
     /**
      * can do next step once the invoice has been sent or in case the invoice does not need to be sent.
      *
-     * @return OrderStep|null (next step OrderStep object)
-     **/
+     * @return null|OrderStep (next step OrderStep object)
+     */
     public function nextStep(Order $order)
     {
         if ($this->hasBeenSent($order)) {
@@ -106,7 +105,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -120,7 +119,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * For some ordersteps this returns true...
      *
      * @return bool
-     **/
+     */
     protected function hasCustomerMessage()
     {
         return $this->SendInvoiceToCustomer;

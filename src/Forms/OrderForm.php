@@ -34,8 +34,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderForm extends Form
 {
     /**
@@ -43,7 +42,6 @@ class OrderForm extends Form
      */
     public function __construct(Controller $controller, $name)
     {
-
         //requirements
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomOrderForm.js');
 
@@ -148,8 +146,9 @@ class OrderForm extends Form
      * {@link Payment} instance is created, linked to the order,
      * and payment is processed {@link EcommercePayment::processPayment()}
      *
-     * @param array       $data    Form request data submitted from OrderForm
-     * @param Form        $form    Form object for this action
+     * @param array $data Form request data submitted from OrderForm
+     * @param Form  $form Form object for this action
+     *
      * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function processOrder(array $data, Form $form, HTTPRequest $request)
@@ -256,7 +255,6 @@ class OrderForm extends Form
         }
 
         return false;
-
         //------------------------------
     }
 

@@ -36,7 +36,7 @@ class AccountPageController extends PageController
 
     /**
      * standard controller function.
-     **/
+     */
     protected function init()
     {
         parent::init();

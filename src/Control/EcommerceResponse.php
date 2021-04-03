@@ -10,14 +10,13 @@ use SilverStripe\Control\HTTPResponse;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
-
- **/
+ */
 abstract class EcommerceResponse extends HTTPResponse
 {
     /**
-     * @param string       $status  the status to return
-     * @param string       $additionalData the message to return with the retur
-     * @param array|null $messages   that should be included
+     * @param string     $status         the status to return
+     * @param string     $additionalData the message to return with the retur
+     * @param null|array $messages       that should be included
      */
     public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
     {

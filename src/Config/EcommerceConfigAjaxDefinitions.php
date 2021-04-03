@@ -18,8 +18,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
-
- **/
+ */
 class EcommerceConfigAjaxDefinitions extends ViewableData
 {
     /**
@@ -33,28 +32,30 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      *     }
      * </code>.
      *
-     * @var DataObject|null
+     * @var null|DataObject
      */
     protected $requestor;
 
     /**
      * prefix used for all classes and IDs.
      *
-     * @var string|null
+     * @var null|string
      */
     private static $prefix;
 
     /**
      * set the requestor.
      *
-     * @param DataObject $do - the object that requested the data.
+     * @param dataObject $do - the object that requested the data
      */
-    public function setRequestor(DataObject $do)
+    public function setRequestor(DataObject $do) : self
     {
-        if (self::$prefix === null) {
+        if (null === self::$prefix) {
             self::$prefix = EcommerceConfig::get(Order::class, 'template_id_prefix');
         }
         $this->requestor = $do;
+
+        return $this;
     }
 
     /*___________________
@@ -69,7 +70,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @see Sidebar_Cart.ss
      *
      * @return string
-     **/
+     */
     public function SideBarCartID()
     {
         return self::$prefix . 'Side_Bar_Cart';
@@ -81,7 +82,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @see CartShort.ss
      *
      * @return string
-     **/
+     */
     public function SmallCartID()
     {
         return self::$prefix . 'small_cart_id';
@@ -95,7 +96,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @see CartTiny.ss
      *
      * @return string
-     **/
+     */
     public function TinyCartClassName()
     {
         return self::$prefix . 'tiny_cart_class';
@@ -103,7 +104,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string
-     **/
+     */
     public function HiddenPageTitleID()
     {
         return self::$prefix . 'HiddenPageTitle';
@@ -111,7 +112,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string
-     **/
+     */
     public function ProductListHolderID()
     {
         return self::$prefix . ClassInfo::shortName(ProductGroup::class);
@@ -119,7 +120,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string
-     **/
+     */
     public function ProductListAjaxifiedLinkClassName()
     {
         return self::$prefix . 'ajaxifyMyProductGroupLinks';
@@ -131,7 +132,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @see ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss
      *
      * @return string
-     **/
+     */
     public function ProductListItemClassName()
     {
         return self::$prefix . 'productActions';
@@ -143,7 +144,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @see ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss
      *
      * @return string
-     **/
+     */
     public function ProductListItemInCartClassName()
     {
         return self::$prefix . 'inCart';
@@ -155,7 +156,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * @see ProductGroupItem.ss, ProductGroupItemMoreDetail.ss, and ProductGroupItemShort.ss
      *
      * @return string
-     **/
+     */
     public function ProductListItemNotInCartClassName()
     {
         return self::$prefix . 'notInCart';
@@ -168,7 +169,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string for use in the Templates
-     **/
+     */
     public function TableID()
     {
         return self::$prefix . ClassHelpers::sanitise_class_name($this->requestor->ClassName) . '_DB_' . $this->requestor->ID;
@@ -176,7 +177,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string for use in the Templates
-     **/
+     */
     public function TableTotalID()
     {
         return $this->TableID() . '_Total';
@@ -191,7 +192,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * id that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function TableMessageID()
     {
         return $this->TableID() . '_Message';
@@ -201,7 +202,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * id that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function TableSubTotalID()
     {
         return $this->TableID() . '_SubTotal';
@@ -211,7 +212,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * class that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function TotalItemsTimesQuantityClassName()
     {
         return self::$prefix . 'number_of_items_times_quantity';
@@ -221,7 +222,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * class that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function TotalItemsClassName()
     {
         return self::$prefix . 'number_of_items';
@@ -231,7 +232,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * class that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function ExpectedCountryClassName()
     {
         return self::$prefix . 'expected_country_selector';
@@ -241,7 +242,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * class that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function CountryFieldID()
     {
         return OrderAddress::get_country_field_ID();
@@ -251,7 +252,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * class that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function RegionFieldID()
     {
         return OrderAddress::get_region_field_ID();
@@ -264,7 +265,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string for use in the Templates
-     **/
+     */
     public function TableTitleID()
     {
         return $this->TableID() . '_Title';
@@ -272,7 +273,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string for use in the Templates
-     **/
+     */
     public function CartTitleID()
     {
         return $this->TableID() . '_Title_Cart';
@@ -280,7 +281,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string for use in the Templates
-     **/
+     */
     public function TableSubTitleID()
     {
         return $this->TableID() . '_Sub_Title';
@@ -288,7 +289,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
 
     /**
      * @return string for use in the Templates
-     **/
+     */
     public function CartSubTitleID()
     {
         return $this->TableID() . '_Sub_Title_Cart';
@@ -303,7 +304,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      * id that is used in templates and in the JSON return @see CartResponse.
      *
      * @return string
-     **/
+     */
     public function QuantityFieldName()
     {
         return $this->TableID() . '_Quantity_SetQuantityLink';

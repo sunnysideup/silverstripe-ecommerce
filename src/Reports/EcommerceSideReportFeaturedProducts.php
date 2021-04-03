@@ -9,8 +9,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /** @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
-
- **/
+ */
 class EcommerceSideReportFeaturedProducts extends Report
 {
     /**
@@ -49,13 +48,16 @@ class EcommerceSideReportFeaturedProducts extends Report
     /**
      * working out the items.
      *
+     * @param null|mixed $params
+     *
      * @return \SilverStripe\ORM\DataList
      */
     public function sourceRecords($params = null)
     {
         return Product::get()
             ->filter(['FeaturedProduct' => 1])
-            ->sort('FullSiteTreeSort', 'ASC');
+            ->sort('FullSiteTreeSort', 'ASC')
+        ;
     }
 
     /**

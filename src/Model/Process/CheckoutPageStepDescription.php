@@ -15,10 +15,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
 
-/***
- * Class used to describe the steps in the checkout
- *
- */
+// Class used to describe the steps in the checkout
 
 class CheckoutPageStepDescription extends DataObject implements EditableEcommerceObject
 {
@@ -123,6 +120,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -135,6 +133,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -144,7 +143,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -158,6 +157,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -167,7 +167,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -194,7 +194,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -233,7 +233,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -267,7 +267,8 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         if (is_array($steps) && count($steps)) {
             $idArray = [];
             $addCodeSteps = CheckoutPageStepDescription::get()
-                ->where('"Code" = \'\' OR "Code" IS NULL');
+                ->where('"Code" = \'\' OR "Code" IS NULL')
+            ;
 
             $stepsToAdd = $steps;
             if ($addCodeSteps->count()) {

@@ -3,9 +3,7 @@
 use SilverStripe\Admin\CMSMenu;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 
-/**
- * @author: Nicolaas - modules [at] sunnysideup.co.nz
- **/
+// @author: Nicolaas - modules [at] sunnysideup.co.nz
 
 // optional settings that may be useful
 //setlocale (LC_TIME, 'en_NZ@dollar', 'en_NZ.UTF-8', 'en_NZ', 'nz', 'nz');

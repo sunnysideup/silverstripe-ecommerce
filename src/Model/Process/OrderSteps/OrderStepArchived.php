@@ -10,8 +10,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepArchived extends OrderStep implements OrderStepInterface
 {
     private static $defaults = [
@@ -31,7 +30,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      * @see Order::doNextStatus
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return true;
@@ -45,8 +44,8 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @return bool - true if run correctly.
-     **/
+     * @return bool - true if run correctly
+     */
     public function doStep(Order $order): bool
     {
         return true;
@@ -59,8 +58,8 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @return OrderStep|null (next step OrderStep object)
-     **/
+     * @return null|OrderStep (next step OrderStep object)
+     */
     public function nextStep(Order $order)
     {
         //IMPORTANT

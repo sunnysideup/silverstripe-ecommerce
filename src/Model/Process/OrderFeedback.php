@@ -14,10 +14,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 
-/***
- * Class used to describe the steps in the checkout
- *
- */
+// Class used to describe the steps in the checkout
 
 class OrderFeedback extends DataObject implements EditableEcommerceObject
 {
@@ -130,6 +127,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -142,6 +140,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -151,7 +150,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -165,6 +164,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -201,13 +201,14 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
                 $this->Order()
             )
         );
+
         return $fields;
     }
 
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -236,6 +237,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         if ($this->Note) {
             $string .= ' / ' . substr($this->Note, 0, 25);
         }
+
         return $string;
     }
 

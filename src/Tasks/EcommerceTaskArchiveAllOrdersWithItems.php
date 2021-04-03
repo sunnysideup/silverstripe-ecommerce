@@ -19,8 +19,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
 {
     protected $title = 'Archive all orders with order items and payment and add a submit record.';
@@ -79,7 +78,8 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
             ->filter(['StatusID' => $lastOrderStep->ID])
             ->leftJoin($orderStatusLogTableName, "\"{$orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"")
             ->where("\"{$orderStatusLogTableName}\".\"ID\" IS NULL")
-            ->limit(100, $offset);
+            ->limit(100, $offset)
+        ;
     }
 
     protected function createSubmissionLogForArchivedOrders()
@@ -103,7 +103,8 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
             foreach ($orders as $order) {
                 $isSubmitted = $submissionLogClassName::get()
                     ->Filter(['OrderID' => $order->ID])
-                    ->count();
+                    ->count()
+                ;
                 if (! $isSubmitted) {
                     $obj = $submissionLogClassName::create();
 

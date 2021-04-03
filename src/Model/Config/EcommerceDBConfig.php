@@ -33,7 +33,6 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\Requirements;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
@@ -58,8 +57,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -237,7 +235,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * static holder for its own (or other EcommerceDBConfig) class.
      *
-     * @var string|null
+     * @var null|string
      */
     private static $_my_current_one;
 
@@ -245,6 +243,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * Standard SS Method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @var bool
      */
@@ -254,12 +253,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (EcommerceDBConfig::get()->count() > 0) {
             return false;
         }
+
         return $this->canEdit($member);
     }
 
@@ -267,6 +267,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * Standard SS Method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @var bool
      */
@@ -276,7 +277,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -287,6 +288,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * Standard SS Method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @var bool
      */
@@ -296,7 +298,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -322,7 +324,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -340,6 +342,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function populateDefaults()
     {
         $this->ReceiptEmail = Email::config()->admin_email;
+
         return parent::populateDefaults();
     }
 
@@ -399,7 +402,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $newLabels = $this->customFieldLabels();
         $labels = array_merge($defaultLabels, $newLabels);
         $extendedLabels = $this->extend('updateFieldLabels', $labels);
-        if ($extendedLabels !== null && is_array($extendedLabels) && count($extendedLabels)) {
+        if (null !== $extendedLabels && is_array($extendedLabels) && count($extendedLabels)) {
             foreach ($extendedLabels as $extendedLabelsUpdate) {
                 $labels = array_merge($labels, $extendedLabelsUpdate);
             }
@@ -604,13 +607,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 );
             }
         );
+
         return $fields;
     }
 
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -648,6 +652,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         $className = ClassHelpers::unsanitise_class_name($className);
         $implementorsArray = class_implements($className);
+
         return is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true);
     }
 
@@ -692,12 +697,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($list && $list->count() > 1) {
             return $list;
         }
+
         return null;
     }
 
     /**
      * @return string (URLSegment)
-     **/
+     */
     public function AccountPageLink(): string
     {
         return AccountPage::find_link();
@@ -705,7 +711,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string (URLSegment)
-     **/
+     */
     public function CheckoutLink(): string
     {
         return CheckoutPage::find_link();
@@ -713,7 +719,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string (URLSegment)
-     **/
+     */
     public function CartPageLink(): string
     {
         return CartPage::find_link();
@@ -721,7 +727,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string (URLSegment)
-     **/
+     */
     public function OrderConfirmationPageLink(): string
     {
         return OrderConfirmationPage::find_link();
@@ -805,8 +811,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * get final value for recursive lookups
-     * @param  mixed  $default
+     * get final value for recursive lookups.
+     *
+     * @param mixed $default
+     *
      * @return mixed
      */
     public function recursiveValue(string $fieldNameOrMethod, $default = null)
@@ -845,7 +853,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($this->UseThisOne) {
             $configs = EcommerceDBConfig::get()
                 ->Filter(['UseThisOne' => 1])
-                ->Exclude(['ID' => $this->ID]);
+                ->Exclude(['ID' => $this->ID])
+            ;
             if ($configs->count()) {
                 foreach ($configs as $config) {
                     $config->UseThisOne = 0;
@@ -855,7 +864,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         }
         $configs = EcommerceDBConfig::get()
             ->Filter(['Title' => $this->Title])
-            ->Exclude(['ID' => $this->ID]);
+            ->Exclude(['ID' => $this->ID])
+        ;
         if ($configs->count()) {
             foreach ($configs as $config) {
                 $config->Title .= '_' . $config->ID;

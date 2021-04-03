@@ -15,6 +15,7 @@ class EcommerceRegionVisitorRegionProvider
         if ($region) {
             return $region->ID;
         }
+
         return 0;
     }
 }

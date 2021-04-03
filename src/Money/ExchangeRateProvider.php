@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
-/***
+/*
  * the sole purpose of this class is to provide an exchange rate
  * from currency 1 to currency 2.
  * It can provide number that reads as follows:
@@ -17,14 +17,14 @@ namespace Sunnysideup\Ecommerce\Money;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: money
- **/
+ */
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 
-/***
+/*
  * the sole purpose of this class is to provide an exchange rate
  * from currency 1 to currency 2.
  * It can provide number that reads as follows:
@@ -39,7 +39,7 @@ use SilverStripe\Core\Injector\Injectable;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: money
- **/
+ */
 class ExchangeRateProvider
 {
     use Extensible;
@@ -84,12 +84,13 @@ class ExchangeRateProvider
             self::$_memory_cache[$cacheCode] = $value;
             Controller::curr()->getRequest()->getSession()->set($cacheCode, $value);
         }
+
         return self::$_memory_cache[$cacheCode];
     }
 
     /**
      * gets a rate from a FROM and a TO currency.
-     * see https://free.currencyconverterapi.com/ for limitations
+     * see https://free.currencyconverterapi.com/ for limitations.
      *
      * @param string $fromCode - UPPERCASE Code, e.g. NZD
      * @param string $toCode   - UPPERCASE Code, e.g. EUR
@@ -125,9 +126,10 @@ class ExchangeRateProvider
                 }
             }
         }
-        if ($rate !== 1) {
+        if (1 !== $rate) {
             $rate *= $this->exchangeCostMultiplier;
         }
+
         return $rate;
     }
 }

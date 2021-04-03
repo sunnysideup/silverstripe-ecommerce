@@ -305,6 +305,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         $renderer->writePostOutcome();
         $renderer->writeContent($this);
         $renderer->writeFooter();
+
         return [];
     }
 
@@ -321,7 +322,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     protected function createMenuDOSFromArray(array $buildTasksArray, $type = '')
     {
         $extendedArray = $this->extend('updateEcommerceDevMenu' . $type, $buildTasksArray);
-        if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+        if (null !== $extendedArray && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedBuildTasks) {
                 $buildTasksArray = array_merge($buildTasksArray, $extendedBuildTasks);
             }
@@ -346,7 +347,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * shows a "Task Completed Message" on the screen.
      *
-     * @param string    $extraMessage
+     * @param string $extraMessage
      */
     protected function displayCompletionMessage(BuildTask $buildTask, $extraMessage = '')
     {

@@ -18,8 +18,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepSubmitted extends OrderStep implements OrderStepInterface
 {
     /**
@@ -78,7 +77,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return (bool) $order->TotalItems($recalculate = true);
@@ -89,8 +88,8 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @param Order $order object
      *
-     * @return bool - true if run correctly.
-     **/
+     * @return bool - true if run correctly
+     */
     public function doStep(Order $order): bool
     {
         if (! $order->IsSubmitted()) {
@@ -146,8 +145,8 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     /**
      * go to next step if order has been submitted.
      *
-     * @return OrderStep|null    (next step OrderStep)
-     **/
+     * @return null|OrderStep (next step OrderStep)
+     */
     public function nextStep(Order $order)
     {
         if ($order->IsSubmitted()) {
@@ -161,7 +160,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);

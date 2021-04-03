@@ -3,8 +3,6 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Control\Controller;
-
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
@@ -41,6 +39,7 @@ class EcommerceCountryVisitorCountryProvider implements EcommerceGEOipProvider
         if (class_exists($class)) {
             return $class::visitor_country($ip);
         }
+
         return Config::inst()->get(EcommerceCountry::class, 'default_country_code');
     }
 

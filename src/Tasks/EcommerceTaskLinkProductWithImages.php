@@ -16,8 +16,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskLinkProductWithImages extends BuildTask
 {
     /**
@@ -87,7 +86,8 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                                 }
                             }
                             $images = File::get()
-                                ->filter(['Name:PartialMatch' => $whereStringArray]);
+                                ->filter(['Name:PartialMatch' => $whereStringArray])
+                            ;
                             if ($images->count()) {
                                 $method = $this->productManyManyField;
                                 $collection = $product->{$method}();

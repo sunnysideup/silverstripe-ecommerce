@@ -36,6 +36,7 @@ class EcommerceCodeFilter
      * should be run in onBeforeWrite.
      *
      * @param DataObject | String $obj
+     * @param mixed               $fieldName
      */
     public function checkCode($obj, $fieldName = 'Code')
     {

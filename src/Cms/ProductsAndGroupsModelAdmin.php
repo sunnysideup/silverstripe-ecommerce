@@ -16,7 +16,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- **/
+ */
 class ProductsAndGroupsModelAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
@@ -69,7 +69,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
-        if (is_subclass_of($this->modelClass, SiteTree::class) || $this->modelClass === SiteTree::class) {
+        if (is_subclass_of($this->modelClass, SiteTree::class) || SiteTree::class === $this->modelClass) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = GridFieldEditOriginalPageConfig::create();

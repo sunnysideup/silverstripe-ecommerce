@@ -54,7 +54,7 @@ class OrderConfirmationPageController extends CartPageController
      * sets CurrentOrder variable.
      *
      * @return array
-     **/
+     */
     public function showorder(HTTPRequest $request)
     {
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
@@ -70,7 +70,8 @@ class OrderConfirmationPageController extends CartPageController
             Config::unnest();
 
             return $html;
-        } elseif (isset($_REQUEST['packingslip'])) {
+        }
+        if (isset($_REQUEST['packingslip'])) {
             Requirements::clear();
             Requirements::themedCSS('client/css/typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -91,7 +92,7 @@ class OrderConfirmationPageController extends CartPageController
      * The order is already retrieved from the init function.
      *
      * @return array
-     **/
+     */
     public function retrieveorder(HTTPRequest $request)
     {
         return [];
@@ -118,7 +119,7 @@ class OrderConfirmationPageController extends CartPageController
      * the OrderConfirmationPage is shown as part of the checkout process
      * We repeat these here so that you can show the user that (s)he has reached the last step.
      *
-     * @param int $number - if set, it returns that one step.
+     * @param int $number - if set, it returns that one step
      */
     public function CheckoutSteps($number = 0)
     {
@@ -162,67 +163,80 @@ class OrderConfirmationPageController extends CartPageController
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function PaymentHeader()
     {
         if ($this->Order()) {
             if ($this->OrderIsCancelled()) {
                 return $this->OrderCancelledHeader;
-            } elseif ($this->PaymentIsPending()) {
+            }
+            if ($this->PaymentIsPending()) {
                 return $this->PaymentPendingHeader;
-            } elseif ($this->IsPaid()) {
+            }
+            if ($this->IsPaid()) {
                 return $this->PaymentSuccessfulHeader;
             }
+
             return $this->PaymentNotSuccessfulHeader;
         }
+
         return null;
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function PaymentMessage()
     {
         if ($this->Order()) {
             if ($this->OrderIsCancelled()) {
                 return $this->OrderCancelledMessage;
-            } elseif ($this->PaymentIsPending()) {
+            }
+            if ($this->PaymentIsPending()) {
                 return $this->PaymentPendingMessage;
-            } elseif ($this->IsPaid()) {
+            }
+            if ($this->IsPaid()) {
                 return $this->PaymentSuccessfulMessage;
             }
+
             return $this->PaymentNotSuccessfulMessage;
         }
+
         return null;
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function PaymentMessageType()
     {
         if ($this->Order()) {
             if ($this->OrderIsCancelled()) {
                 return 'bad';
-            } elseif ($this->PaymentIsPending()) {
+            }
+            if ($this->PaymentIsPending()) {
                 return 'warning';
-            } elseif ($this->IsPaid()) {
+            }
+            if ($this->IsPaid()) {
                 return 'good';
             }
+
             return 'bad';
         }
+
         return null;
     }
 
     /**
-     * @return bool|null
+     * @return null|bool
      */
     public function OrderIsCancelled()
     {
         if ($order = $this->Order()) {
             return $order->getIsCancelled();
         }
+
         return null;
     }
 
@@ -230,13 +244,14 @@ class OrderConfirmationPageController extends CartPageController
      * Is the Order paid?
      * This can be useful for choosing what header to show.
      *
-     * @return bool|null
+     * @return null|bool
      */
     public function IsPaid()
     {
         if ($order = $this->Order()) {
             return $order->IsPaid();
         }
+
         return null;
     }
 
@@ -244,13 +259,14 @@ class OrderConfirmationPageController extends CartPageController
      * Are there any order Payments Pending
      * This can be useful for choosing what header to show.
      *
-     * @return bool|null
+     * @return null|bool
      */
     public function PaymentIsPending()
     {
         if ($order = $this->Order()) {
             return $order->PaymentIsPending();
         }
+
         return null;
     }
 
@@ -259,7 +275,7 @@ class OrderConfirmationPageController extends CartPageController
      * checking to see if they can cancel their order
      * first of all.
      *
-     * @return OrderFormCancel|array|null
+     * @return null|array|OrderFormCancel
      */
     public function CancelForm()
     {
@@ -272,6 +288,7 @@ class OrderConfirmationPageController extends CartPageController
         if ($this->orderID) {
             return [];
         }
+
         return null;
     }
 
@@ -280,7 +297,7 @@ class OrderConfirmationPageController extends CartPageController
      * checking to see if IsFeedbackEnabled is true
      * first of all.
      *
-     * @return OrderFormFeedback|array|null
+     * @return null|array|OrderFormFeedback
      */
     public function FeedbackForm()
     {
@@ -288,16 +305,18 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->IsFeedbackEnabled) {
                 return OrderFormFeedback::create($this, 'FeedbackForm', $this->currentOrder);
             }
+
             return [];
         }
+
         return null;
     }
 
     /**
      * show the payment form.
      *
-     * @return OrderFormPayment|array|null
-     **/
+     * @return null|array|OrderFormPayment
+     */
     public function PaymentForm()
     {
         if ($this->currentOrder) {
@@ -306,14 +325,16 @@ class OrderConfirmationPageController extends CartPageController
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
             }
+
             return [];
         }
+
         return null;
     }
 
     /**
-     * @return Form|array|null
-     **/
+     * @return null|array|Form
+     */
     public function CustomerOrderStepForm()
     {
         $order = $this->currentOrder;
@@ -323,11 +344,14 @@ class OrderConfirmationPageController extends CartPageController
                 $form = $status->CustomerOrderStepForm($this, 'CustomerOrderStepForm', $order);
                 if ($form) {
                     Requirements::javascript('sunnysideup/ecommerce: client/javascript/CustomerOrderStepForm.js');
+
                     return $form;
                 }
             }
+
             return [];
         }
+
         return null;
     }
 
@@ -337,7 +361,7 @@ class OrderConfirmationPageController extends CartPageController
      * typically this link is opened in a new window.
      *
      * @return string
-     **/
+     */
     public function sendemail(HTTPRequest $request)
     {
         if ($this->currentOrder) {
@@ -393,18 +417,20 @@ class OrderConfirmationPageController extends CartPageController
             }
             //display same data...
             Requirements::clear();
+
             return $this->currentOrder->renderOrderInEmailFormat(
                 $emailClassName,
                 $subject,
                 $message
             );
         }
+
         return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
     }
 
     /**
      * standard controller function.
-     **/
+     */
     protected function init()
     {
         //we retrieve the order in the parent page

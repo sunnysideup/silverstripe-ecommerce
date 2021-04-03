@@ -25,8 +25,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
-
- **/
+ */
 class EcommerceSideReportEcommercePages extends Report
 {
     /**
@@ -66,6 +65,8 @@ class EcommerceSideReportEcommercePages extends Report
 
     /**
      * working out the items.
+     *
+     * @param null|mixed $params
      *
      * @return \SilverStripe\ORM\DataList
      */

@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskDeleteProducts extends BuildTask
 {
     protected $title = 'Delete e-commerce Buyables';

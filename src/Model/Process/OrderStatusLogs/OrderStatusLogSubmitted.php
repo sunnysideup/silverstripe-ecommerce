@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStatusLogSubmitted extends OrderStatusLog
 {
     private static $table_name = 'OrderStatusLogSubmitted';
@@ -74,6 +73,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -86,6 +86,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -95,7 +96,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -106,7 +107,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      * can only be created when the order is submitted.
      *
      * @return string
-     **/
+     */
     public function HTMLRepresentation()
     {
         return $this->getHTMLRepresentation();
@@ -116,7 +117,8 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     {
         if ($this->OrderAsHTML) {
             return $this->OrderAsHTML;
-        } elseif ($this->OrderAsString) {
+        }
+        if ($this->OrderAsString) {
             return unserialize($this->OrderAsString);
         }
 
@@ -138,7 +140,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         if (! (int) $this->SequentialOrderNumber) {
             $this->SequentialOrderNumber = 1;
             $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') - 0;
-            $id = $this->ID !== null ? (int) $this->ID : 0;
+            $id = null !== $this->ID ? (int) $this->ID : 0;
             $lastOne = DataObject::get_one(
                 OrderStatusLogSubmitted::class,
                 "'ID' != '" . $id . "'",

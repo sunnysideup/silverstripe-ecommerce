@@ -8,12 +8,14 @@ interface EcommercePaymentSupportedMethodsProviderInterface
 {
     /**
      * how can the customer pay?
+     *
      * @param Order $order
      */
     public function SupportedMethods(?Order $order = null): array;
 
     /**
-     * assign the right payment gateways for the user
+     * assign the right payment gateways for the user.
+     *
      * @param string $gateway (optional)
      */
     public static function assign_payment_gateway(?string $gateway = '');

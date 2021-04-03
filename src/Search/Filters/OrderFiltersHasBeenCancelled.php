@@ -11,18 +11,17 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
-
- **/
+ */
 class OrderFiltersHasBeenCancelled extends ExactMatchFilter
 {
     /**
      *  @return DataQuery
-     **/
+     */
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
         $value = (int) $this->getValue();
-        if ($value === 1) {
+        if (1 === $value) {
             $query->where('"CancelledByID" IS NOT NULL AND "CancelledByID" > 0');
         }
 

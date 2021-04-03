@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskCountryAndRegion extends BuildTask
 {
     protected $title = 'Create standard countries and regions';

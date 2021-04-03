@@ -12,8 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
 {
     protected $title = 'Cleanup Product Full SiteTree Sorting';
@@ -25,7 +24,7 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
 
     protected $deleteFirst = true;
 
-    public function setDeleteFirst($b)
+    public function setDeleteFirst(bool $b)
     {
         $this->deleteFirst = $b;
     }
@@ -70,7 +69,8 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
             }
         }
         $missedOnes = Product::get()
-            ->where("\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''");
+            ->where("\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''")
+        ;
         if ($missedOnes->count()) {
             DB::alteration_message('ERROR: could not updated all Product.FullSiteTreeSort numbers!', 'deleted');
         } else {
@@ -78,7 +78,8 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
         }
         $examples = Product::get()
             ->sort('RAND()')
-            ->limit(3);
+            ->limit(3)
+        ;
         if ($examples->count()) {
             foreach ($examples as $key => $example) {
                 DB::alteration_message("EXAMPLE #{$key}: " . $example->Title . ': <strong>' . $example->FullSiteTreeSort . '</strong>');

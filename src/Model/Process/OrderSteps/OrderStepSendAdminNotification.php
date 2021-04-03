@@ -13,8 +13,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepSendAdminNotification extends OrderStep implements OrderStepInterface
 {
     /**
@@ -37,7 +36,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return $order->IsSubmitted();
@@ -47,8 +46,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * send invoice to customer
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
-     *
-     **/
+     */
     public function doStep(Order $order): bool
     {
         return $this->sendEmailForStep(
@@ -62,9 +60,10 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
     }
 
     /**
-     * can do next step once the admin notification has been sent
-     * @return OrderStep|null (next step OrderStep object)
-     **/
+     * can do next step once the admin notification has been sent.
+     *
+     * @return null|OrderStep (next step OrderStep object)
+     */
     public function nextStep(Order $order)
     {
         if ($this->hasBeenSent($order)) {
@@ -78,7 +77,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -92,7 +91,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * For some ordersteps this returns true...
      *
      * @return bool
-     **/
+     */
     protected function hasCustomerMessage()
     {
         return false;

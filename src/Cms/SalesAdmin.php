@@ -15,7 +15,6 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
-
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
@@ -24,8 +23,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
-
- **/
+ */
 class SalesAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
@@ -111,7 +109,7 @@ class SalesAdmin extends ModelAdmin
     public function getList()
     {
         $list = parent::getList();
-        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+        if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
             $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
             $list = $list
@@ -120,7 +118,8 @@ class SalesAdmin extends ModelAdmin
                         'CancelledByID' => 0,
                         'StatusID:GreaterThan' => 0,
                     ]
-                );
+                )
+            ;
             $ids = $ordersinQueue->columnUnique();
             if (! empty($ids)) {
                 $list = $list->exclude(
@@ -135,7 +134,8 @@ class SalesAdmin extends ModelAdmin
                     [
                         'StatusID' => ArrayMethods::filter_array(OrderStep::non_admin_manageable_steps()->columnUnique()),
                     ]
-                );
+                )
+            ;
         }
 
         $newLists = $this->extend('updateGetList', $list);
@@ -146,13 +146,14 @@ class SalesAdmin extends ModelAdmin
                 }
             }
         }
+
         return $list;
     }
 
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+        if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();
@@ -169,6 +170,7 @@ class SalesAdmin extends ModelAdmin
                 }
             }
         }
+
         return $form;
     }
 

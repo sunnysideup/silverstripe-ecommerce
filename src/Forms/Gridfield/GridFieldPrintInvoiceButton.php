@@ -12,10 +12,10 @@ use SilverStripe\ORM\DataObject;
 class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField_ActionProvider
 {
     /**
-     * Add a column 'Delete'
+     * Add a column 'Delete'.
      *
      * @param GridField $gridField
-     * @param array $columns
+     * @param array     $columns
      */
     public function augmentColumns($gridField, &$columns)
     {
@@ -25,11 +25,12 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
     }
 
     /**
-     * Return any special attributes that will be used for FormField::create_tag()
+     * Return any special attributes that will be used for FormField::create_tag().
      *
-     * @param GridField $gridField
+     * @param GridField  $gridField
      * @param DataObject $record
-     * @param string $columnName
+     * @param string     $columnName
+     *
      * @return array
      */
     public function getColumnAttributes($gridField, $record, $columnName)
@@ -38,24 +39,26 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
     }
 
     /**
-     * Add the title
+     * Add the title.
      *
      * @param GridField $gridField
-     * @param string $columnName
+     * @param string    $columnName
+     *
      * @return array
      */
     public function getColumnMetadata($gridField, $columnName)
     {
-        if ($columnName === 'Print') {
+        if ('Print' === $columnName) {
             return ['title' => 'Invoice'];
         }
+
         return [];
     }
 
     /**
-     * @param GridField $gridField
+     * @param GridField  $gridField
      * @param DataObject $record
-     * @param string $columnName
+     * @param string     $columnName
      *
      * @return string - the HTML for the column
      */
@@ -83,15 +86,18 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
                 ->setAttribute('data-icon', 'grid_print')
                 ->setAttribute('onclick', $onclickStatement)
                 ->setDescription(_t('GridAction.PRINT_INVOICE_DESCRIPTION', 'Print Invoice'))
-                ->Field();
+                ->Field()
+            ;
         }
+
         return '';
     }
 
     /**
-     * Which columns are handled by this component
+     * Which columns are handled by this component.
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getColumnsHandled($gridField)
@@ -100,9 +106,10 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
     }
 
     /**
-     * Which GridField actions are this component handling
+     * Which GridField actions are this component handling.
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getActions($gridField)
@@ -111,15 +118,15 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
     }
 
     /**
-     * Handle the actions and apply any changes to the GridField
+     * Handle the actions and apply any changes to the GridField.
      *
      * @param string $actionName
-     * @param mixed $arguments
-     * @param array $data - form data
+     * @param mixed  $arguments
+     * @param array  $data       - form data
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName === 'printinvoice') {
+        if ('printinvoice' === $actionName) {
             $item = $gridField->getList()->byID($arguments['RecordID']);
             if (! $item) {
                 return;

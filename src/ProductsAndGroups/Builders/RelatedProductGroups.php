@@ -29,6 +29,7 @@ class RelatedProductGroups
 
     /**
      * list that a Product Page can choose from ...
+     *
      * @var array
      */
     protected const SHOW_PRODUCT_LEVELS = [
@@ -52,7 +53,7 @@ class RelatedProductGroups
      * How deep to go
      * special cases:
      *         -2 => 'None',
-     *         -1 => 'All products',
+     *         -1 => 'All products',.
      *
      * @var int
      */
@@ -69,7 +70,8 @@ class RelatedProductGroups
     protected $includeRoot = true;
 
     /**
-     * default filter
+     * default filter.
+     *
      * @var array
      */
     private static $default_product_group_filter = ['ShowInSearch' => 1];
@@ -84,7 +86,8 @@ class RelatedProductGroups
     }
 
     /**
-     * @param  SS_List $list
+     * @param SS_List $list
+     *
      * @return SS_List
      */
     public static function apply_default_filter_to_groups($list)
@@ -144,6 +147,8 @@ class RelatedProductGroups
     }
 
     /**
+     * @param null|mixed $filter
+     *
      * @return \SilverStripe\ORM\DataList
      */
     public function getGroups(?int $maxRecursiveLevel = 0, $filter = null)
@@ -152,11 +157,11 @@ class RelatedProductGroups
             $maxRecursiveLevel = $this->levelsToShow;
         }
         if (empty($this->groups) || ! empty($filter)) {
-            if ($maxRecursiveLevel === -2) {
+            if (-2 === $maxRecursiveLevel) {
                 // NONE !
                 $this->groups = ProductGroup::get()->filter(['ID' => -1]);
             // ALL !
-            } elseif ($maxRecursiveLevel === -1) {
+            } elseif (-1 === $maxRecursiveLevel) {
                 $this->groups = ProductGroup::get();
             } elseif ($this->rootGroup) {
                 $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID);

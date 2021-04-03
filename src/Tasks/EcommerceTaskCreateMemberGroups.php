@@ -14,8 +14,7 @@ use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskCreateMemberGroups extends BuildTask
 {
     protected $title = 'Create e-commerce Member Groups';
@@ -29,7 +28,8 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             ->setCode(EcommerceConfig::get(EcommerceRole::class, 'customer_group_code'))
             ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'customer_group_name'))
             ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code'))
-            ->CreateGroup($member = null);
+            ->CreateGroup($member = null)
+        ;
 
         DB::alteration_message('========================== <br />creating sales manager', 'created');
         //work out email
@@ -43,7 +43,8 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
             ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
             ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
-            ->CreateGroupAndMember();
+            ->CreateGroupAndMember()
+        ;
 
         DB::alteration_message('========================== <br />creating default shop assistant member', 'created');
         //work out email
@@ -57,6 +58,7 @@ class EcommerceTaskCreateMemberGroups extends BuildTask
             ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'))
             ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'))
             ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'assistant_role_permission_codes'))
-            ->CreateGroupAndMember();
+            ->CreateGroupAndMember()
+        ;
     }
 }

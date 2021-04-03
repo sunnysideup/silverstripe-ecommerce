@@ -3,15 +3,14 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use ArrayAccess;
-
 use SilverStripe\Forms\DropdownField;
 
 /**
  * this is a dropdown field just for selecting the right
  * classname.
  * usage:
- * EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type or so', 'MyBaseClass');
- **/
+ * EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type or so', 'MyBaseClass');.
+ */
 class YesNoDropDownField extends DropdownField
 {
     /**
@@ -20,10 +19,10 @@ class YesNoDropDownField extends DropdownField
     public const ANY_IE_NO_SELECTION = '-- any --';
 
     /**
-     * @param string $name The field name
-     * @param string $title The field title
+     * @param string            $name   The field name
+     * @param string            $title  The field title
      * @param array|ArrayAccess $source A map of the dropdown items
-     * @param mixed $value The current value
+     * @param mixed             $value  The current value
      */
     public function __construct(
         $name = '',

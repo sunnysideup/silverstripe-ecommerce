@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
-/**
+/*
  * This class returns the Ajax Definitions class.
  * The Ajax Definitions class is an object that contains all the values
  * for ajax references in the templates.
@@ -12,8 +12,8 @@ namespace Sunnysideup\Ecommerce\Config;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
-
- **/
+ *
+ */
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
@@ -29,7 +29,7 @@ use SilverStripe\ORM\DataObject;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
- **/
+ */
 class EcommerceConfigAjax
 {
     use Extensible;
@@ -81,6 +81,7 @@ class EcommerceConfigAjax
             self::$singleton[$requestor->ClassName][$requestor->ID] = new $className();
             self::$singleton[$requestor->ClassName][$requestor->ID]->setRequestor($requestor);
         }
+
         return self::$singleton[$requestor->ClassName][$requestor->ID];
     }
 }

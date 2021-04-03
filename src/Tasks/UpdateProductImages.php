@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\Image;
 use SilverStripe\Dev\BuildTask;
-
 use SilverStripe\ORM\DB;
 
 /**
@@ -16,8 +15,7 @@ use SilverStripe\ORM\DB;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class UpdateProductImages extends BuildTask
 {
     protected $title = 'Sets Product Images to a new ClassName compatible with Ecommerce for Silvertripe 4.0';

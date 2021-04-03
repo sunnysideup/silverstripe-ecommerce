@@ -14,8 +14,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepConfirmed extends OrderStep implements OrderStepInterface
 {
     /**
@@ -49,7 +48,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      * @see Order::doNextStatus
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return true;
@@ -63,8 +62,8 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @return bool - true if run correctly.
-     **/
+     * @return bool - true if run correctly
+     */
     public function doStep(Order $order): bool
     {
         return true;
@@ -73,8 +72,8 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     /**
      * can go to next step if order payment has been confirmed...
      *
-     * @return OrderStep|null
-     **/
+     * @return null|OrderStep
+     */
     public function nextStep(Order $order)
     {
         $className = $this->getRelevantLogEntryClassName();
@@ -82,7 +81,8 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
             ->Filter([
                 'OrderID' => $order->ID,
                 'PaymentConfirmed' => 1,
-            ]);
+            ])
+        ;
         if ($orderStatusLog_PaymentChecks->Count()) {
             return parent::nextStep($order);
         }
@@ -94,7 +94,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);

@@ -16,8 +16,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStepSent extends OrderStep implements OrderStepInterface
 {
     /**
@@ -97,7 +96,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      * @param Order $order object
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         return true;
@@ -113,14 +112,15 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @param Order $order object
      *
-     * @return bool - true if run correctly.
-     **/
+     * @return bool - true if run correctly
+     */
     public function doStep(Order $order): bool
     {
         if ($log = $this->RelevantLogEntry($order)) {
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
             }
+
             return $order->sendEmail(
                 $this->getEmailClassName(),
                 $subject = $this->CalculatedEmailSubject($order),
@@ -129,6 +129,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
                 ! (bool) $this->SendDetailsToCustomer
             );
         }
+
         return false;
     }
 
@@ -138,8 +139,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @return OrderStep|null (next step OrderStep object)
-     **/
+     * @return null|OrderStep (next step OrderStep object)
+     */
     public function nextStep(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
@@ -154,7 +155,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -194,7 +195,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      * For some ordersteps this returns true...
      *
      * @return bool
-     **/
+     */
     protected function hasCustomerMessage()
     {
         return $this->SendDetailsToCustomer;

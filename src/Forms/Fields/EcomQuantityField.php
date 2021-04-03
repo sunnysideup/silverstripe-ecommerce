@@ -17,42 +17,41 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class EcomQuantityField extends NumericField
 {
     /**
-     * @var OrderItem | DataObject|null
-     **/
+     * @var OrderItem
+     */
     protected $orderItem;
 
     /**
-     * @var Array();???
-     **/
+     * @var array
+     */
     protected $parameters = [];
 
     /**
      * @var array
-     **/
+     */
     protected $classes = ['ajaxQuantityField'];
 
     /**
      * max length in digits.
      *
      * @var int
-     **/
+     */
     protected $maxLength = 3;
 
     /**
      * max length in digits.
      *
      * @var int
-     **/
+     */
     protected $fieldSize = 3;
 
     /**
      * @var string
-     **/
+     */
     protected $template = EcomQuantityField::class;
 
     /**
@@ -62,13 +61,14 @@ class EcomQuantityField extends NumericField
      * It is saved like this: "FieldName (String)" => tabposition (int).
      *
      * @var array
-     **/
+     */
     private static $tabindex = [];
 
     /**
-     * @param buyable      $parameters - the buyable / OrderItem
-     * @param array|null $parameters - parameters
-     **/
+     * @param buyable    $parameters - the buyable / OrderItem
+     * @param null|array $parameters - parameters
+     * @param mixed      $object
+     */
     public function __construct($object, $parameters = [])
     {
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomQuantityField.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -95,26 +95,28 @@ class EcomQuantityField extends NumericField
     /**
      * set classes for field.  you can add or "overwrite".
      *
-     * @param bool  $overwrite
+     * @param bool $overwrite
      */
-    public function setClasses(array $newClasses, $overwrite = false)
+    public function setClasses(array $newClasses, $overwrite = false) : self
     {
         $this->classes = $overwrite ? array_merge($this->classes, $newClasses) : $newClasses;
+        return $this;
     }
 
     /**
      * @param string $template
      */
-    public function setTemplate($template)
+    public function setTemplate($template) : self
     {
         $this->template = $template;
+        return $this;
     }
 
     /**
      * alias of OrderItem.
      *
      * @return OrderItem
-     **/
+     */
     public function Item()
     {
         return $this->OrderItem();
@@ -122,7 +124,7 @@ class EcomQuantityField extends NumericField
 
     /**
      * @return OrderItem
-     **/
+     */
     public function OrderItem()
     {
         return $this->orderItem;
@@ -132,7 +134,7 @@ class EcomQuantityField extends NumericField
      * @param array $properties
      *
      * @return string (HTML)
-     **/
+     */
     public function Field($properties = [])
     {
         $name = $this->getName();
@@ -150,15 +152,16 @@ class EcomQuantityField extends NumericField
             'tabindex' => self::$tabindex[$name],
             'disabled' => 'disabled',
         ];
+
         return HTML::createTag('input', $attributes);
     }
 
     /**
      * Used for storing the quantity update link for ajax use.
      *
-     * @return string (HTML)
+     * @return string
      */
-    public function AJAXLinkHiddenField()
+    public function AJAXLinkHiddenField() : string
     {
         $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
         if ($quantitylink = $this->getQuantityLink()) {
@@ -168,30 +171,32 @@ class EcomQuantityField extends NumericField
                 'name' => $name,
                 'value' => $quantitylink,
             ];
+
             return HTML::createTag('input', $attributes);
         }
+        return '';
     }
 
     /**
      * @return string (URLSegment)
-     **/
-    public function IncrementLink()
+     */
+    public function IncrementLink(): string
     {
         return ShoppingCartController::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
 
     /**
      * @return string (URLSegment)
-     **/
-    public function DecrementLink()
+     */
+    public function DecrementLink(): string
     {
         return ShoppingCartController::remove_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
 
     /**
      * @return string (HTML)
-     **/
-    public function forTemplate()
+     */
+    public function forTemplate(): string
     {
         return $this->renderWith($this->template);
     }
@@ -199,7 +204,7 @@ class EcomQuantityField extends NumericField
     /**
      * @return string
      */
-    protected function getQuantityLink()
+    protected function getQuantityLink(): string
     {
         return ShoppingCartController::set_quantity_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
@@ -207,7 +212,7 @@ class EcomQuantityField extends NumericField
     /**
      * @return float
      */
-    protected function Quantity()
+    protected function Quantity() : float
     {
         if ($this->orderItem) {
             return floatval($this->orderItem->Quantity) - 0;

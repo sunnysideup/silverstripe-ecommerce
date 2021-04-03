@@ -38,8 +38,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderFormAddress extends Form
 {
     /**
@@ -92,7 +91,6 @@ class OrderFormAddress extends Form
      */
     public function __construct(Controller $controller, $name)
     {
-
         //set basics
         $requiredFields = [];
         $shippingAddress = null;
@@ -351,8 +349,9 @@ class OrderFormAddress extends Form
      * {@link Payment} instance is created, linked to the order,
      * and payment is processed {@link Payment::processPayment()}
      *
-     * @param array       $data    Form request data submitted from OrderForm
-     * @param Form        $form    Form object for this action
+     * @param array $data Form request data submitted from OrderForm
+     * @param Form  $form Form object for this action
+     *
      * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
@@ -373,8 +372,9 @@ class OrderFormAddress extends Form
      * {@link Payment} instance is created, linked to the order,
      * and payment is processed {@link Payment::processPayment()}
      *
-     * @param array       $data    Form request data submitted from OrderForm
-     * @param Form        $form    Form object for this action
+     * @param array $data Form request data submitted from OrderForm
+     * @param Form  $form Form object for this action
+     *
      * @return \SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
@@ -493,7 +493,7 @@ class OrderFormAddress extends Form
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
-     **/
+     */
     public function uniqueMemberFieldCanBeUsed(array $data)
     {
         if ($this->loggedInMember && $this->anotherExistingMemberWithSameUniqueFieldValue($data)) {
@@ -532,6 +532,7 @@ class OrderFormAddress extends Form
                 }
             }
         }
+
         return false;
     }
 
@@ -561,8 +562,8 @@ class OrderFormAddress extends Form
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
-     * @return \SilverStripe\Security\Member|null
-     **/
+     * @return null|\SilverStripe\Security\Member
+     */
     protected function createOrFindMember(array $data)
     {
         //get the best available from order.
@@ -658,7 +659,7 @@ class OrderFormAddress extends Form
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
-     **/
+     */
     protected function memberShouldBeCreated(array $data)
     {
         //shop admin and
@@ -686,10 +687,9 @@ class OrderFormAddress extends Form
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
-     **/
+     */
     protected function memberShouldBeSaved(array $data)
     {
-
         //new members always need to be saved
         $newMember = $this->memberShouldBeCreated($data) ||
             $this->newlyCreatedMemberID;
@@ -704,6 +704,7 @@ class OrderFormAddress extends Form
         $memberIsShopAdmin = $this->loggedInMember &&
             $this->loggedInMember->IsShopAdmin() &&
             EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details');
+
         return $newMember || $updateableMember || $memberIsShopAdmin;
     }
 
@@ -716,7 +717,7 @@ class OrderFormAddress extends Form
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
      * @return bool
-     **/
+     */
     protected function memberShouldBeLoggedIn(array $data)
     {
         if (! $this->loggedInMember) {
@@ -733,7 +734,7 @@ class OrderFormAddress extends Form
      * Based on the unique field (email)).
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
-     **/
+     */
     protected function anotherExistingMemberWithSameUniqueFieldValue(array $data)
     {
         $uniqueFieldName = Member::config()->get('unique_identifier_field');
@@ -753,7 +754,8 @@ class OrderFormAddress extends Form
                         'ID' => $currentUserID,
                     ]
                 )
-                ->First();
+                ->First()
+            ;
         }
         user_error('No email data was set, suspicious transaction', E_USER_WARNING);
     }
@@ -763,7 +765,7 @@ class OrderFormAddress extends Form
      * - user is logged in already
      * - user's email in DB does not match email entered.
      *
-     * @return string|false
+     * @return false|string
      */
     protected function enteredEmailAddressDoesNotMatchLoggedInUser(array $data)
     {

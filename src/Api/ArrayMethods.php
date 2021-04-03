@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\ClassInfo;
-
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 
@@ -12,14 +11,14 @@ class ArrayMethods
     /**
      * return an array that can be ued for ORM filters...
      *
-     * @param  mixed $array - hopefully an array
+     * @param mixed $array - hopefully an array
      */
     public static function filter_array($array): array
     {
         if (! is_array($array)) {
             $array = [];
         }
-        if (count($array) === 0) {
+        if (0 === count($array)) {
             $array = [0 => 0];
         }
 
@@ -43,11 +42,12 @@ class ArrayMethods
             $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
+
         return $ifStatement . ' END';
     }
 
     /**
-     * Returns a versioned record stage table suffix (i.e "" or "_Live")
+     * Returns a versioned record stage table suffix (i.e "" or "_Live").
      *
      * @return string
      */
@@ -55,7 +55,7 @@ class ArrayMethods
     {
         $stage = '';
 
-        if (Versioned::get_stage() === 'Live') {
+        if ('Live' === Versioned::get_stage()) {
             $stage = '_Live';
         }
 

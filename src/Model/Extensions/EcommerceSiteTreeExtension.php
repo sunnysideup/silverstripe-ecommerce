@@ -16,8 +16,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: extensions
-
- **/
+ */
 class EcommerceSiteTreeExtension extends SiteTreeExtension
 {
     /**
@@ -26,7 +25,7 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
      * $AJAXDefinitions.TableID.
      *
      * @return EcommerceConfigAjax
-     **/
+     */
     public function AJAXDefinitions()
     {
         return EcommerceConfigAjax::get_one($this->owner);
@@ -66,7 +65,8 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         if ($this->owner instanceof ProductGroup) {
             $checkForDuplicatesURLSegments = ProductGroup::get()
                 ->filter(['URLSegment' => $this->owner->URLSegment])
-                ->exclude(['ID' => $this->owner->ID]);
+                ->exclude(['ID' => $this->owner->ID])
+            ;
             if ($checkForDuplicatesURLSegments->count() > 0) {
                 return false;
             }

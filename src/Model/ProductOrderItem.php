@@ -55,7 +55,7 @@ class ProductOrderItem extends OrderItem
 
     /**
      * @return bool
-     **/
+     */
     public function hasSameContent(OrderItem $orderItem)
     {
         $parentIsTheSame = parent::hasSameContent($orderItem);
@@ -65,7 +65,7 @@ class ProductOrderItem extends OrderItem
 
     /**
      * @return string
-     **/
+     */
     public function TableTitle()
     {
         return $this->getTableTitle();
@@ -81,7 +81,7 @@ class ProductOrderItem extends OrderItem
             Config::unnest();
         }
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);
-        if ($updatedTableTitle !== null && is_array($updatedTableTitle) && count($updatedTableTitle)) {
+        if (null !== $updatedTableTitle && is_array($updatedTableTitle) && count($updatedTableTitle)) {
             $tableTitle = implode('', $updatedTableTitle);
         }
 
@@ -103,7 +103,7 @@ class ProductOrderItem extends OrderItem
             $tableSubTitle = $product->Quantifier;
         }
         $updatedSubTableTitle = $this->extend('updateSubTableTitle', $tableSubTitle);
-        if ($updatedSubTableTitle !== null && is_array($updatedSubTableTitle) && count($updatedSubTableTitle)) {
+        if (null !== $updatedSubTableTitle && is_array($updatedSubTableTitle) && count($updatedSubTableTitle)) {
             $tableSubTitle = implode('', $updatedSubTableTitle);
         }
 
@@ -130,7 +130,7 @@ class ProductOrderItem extends OrderItem
             </p>
 HTML;
         $updatedHTML = $this->extend('updateDebug', $html);
-        if ($updatedHTML !== null && is_array($updatedHTML) && count($updatedHTML)) {
+        if (null !== $updatedHTML && is_array($updatedHTML) && count($updatedHTML)) {
             $html = implode('', $updatedHTML);
         }
 

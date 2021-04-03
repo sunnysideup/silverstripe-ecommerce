@@ -8,7 +8,7 @@ use SilverStripe\View\TemplateGlobalProvider;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 /**
- * Proxy for `Config::inst()->get()`
+ * Proxy for `Config::inst()->get()`.
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -19,13 +19,13 @@ class EcommerceConfig implements TemplateGlobalProvider
     use Configurable;
 
     /**
-     * Fetches value for a class, or a property on that class
+     * Fetches value for a class, or a property on that class.
      *
-     * @param string $className Class name to retrieve config for
-     * @param string $identifier Optional class property to get
+     * @param string   $className         Class name to retrieve config for
+     * @param string   $identifier        Optional class property to get
      * @param int|true $excludeMiddleware Optional flag of middleware to disable.
-     * Passing in `true` disables all middleware.
-     * Can also pass in int flags to specify specific middlewares.
+     *                                    Passing in `true` disables all middleware.
+     *                                    Can also pass in int flags to specify specific middlewares.
      *
      * @see Config::get()
      */
@@ -43,7 +43,7 @@ class EcommerceConfig implements TemplateGlobalProvider
     }
 
     /**
-     * Add $EcomConfig to all SSViewers
+     * Add $EcomConfig to all SSViewers.
      *
      * @return array
      */

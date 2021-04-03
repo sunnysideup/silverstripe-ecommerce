@@ -13,22 +13,21 @@ use SilverStripe\View\Requirements;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class SelectOrderAddressField extends OptionsetField
 {
     /**
-     * @var SilverStripe\ORM\DataList|null
+     * @var null|\SilverStripe\ORM\DataList
      */
     protected $addresses;
 
     /**
      * Creates a new optionset field.
      *
-     * @param string    $name      The field name
-     * @param string    $title     The field title
+     * @param string                      $name      The field name
+     * @param string                      $title     The field title
      * @param \SilverStripe\ORM\ArrayList $addresses
-     * @param string    $value     The current value
+     * @param string                      $value     The current value
      */
     public function __construct($name, $title = '', $addresses = null, $value = '')
     {
@@ -46,6 +45,8 @@ class SelectOrderAddressField extends OptionsetField
     /**
      * Standard SS method - returns the string for the Field.
      * Note that we include JS from this method.
+     *
+     * @param mixed $properties
      *
      * @return DBHTMLText
      */

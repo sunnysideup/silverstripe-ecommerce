@@ -22,8 +22,7 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
-
- **/
+ */
 class ShippingAddress extends OrderAddress
 {
     /**
@@ -73,14 +72,14 @@ class ShippingAddress extends OrderAddress
 
     /**
      * standard SS static definition.
-     **/
+     */
     private static $has_one = [
         'ShippingRegion' => EcommerceRegion::class,
     ];
 
     /**
      * standard SS static definition.
-     **/
+     */
     private static $belongs_to = [
         'Order' => Order::class,
     ];
@@ -208,7 +207,7 @@ class ShippingAddress extends OrderAddress
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -228,7 +227,7 @@ class ShippingAddress extends OrderAddress
      * returns the full name for the shipping country code saved.
      *
      * @return string
-     **/
+     */
     public function ShippingFullCountryName()
     {
         return $this->getShippingFullCountryName();
@@ -243,7 +242,7 @@ class ShippingAddress extends OrderAddress
      * Puts together the fields for the Order Form (and other front-end purposes).
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();

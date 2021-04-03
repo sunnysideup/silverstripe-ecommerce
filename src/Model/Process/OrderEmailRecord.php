@@ -28,8 +28,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderEmailRecord extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -187,6 +186,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -199,6 +199,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -208,7 +209,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         $order = $this->Order();
@@ -226,6 +227,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -283,7 +285,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -326,7 +328,8 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                     }
                     $count = OrderEmailRecord::get()
                         ->Filter(['OrderStepID' => (int) $key])
-                        ->count();
+                        ->count()
+                    ;
                     if ($count < 1) {
                         //do nothing
                     } else {
@@ -350,7 +353,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * casted variable.
      *
      *@ return String
-     **/
+     */
     public function Title()
     {
         return $this->getTitle();
@@ -371,7 +374,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * casted variable.
      *
      *@ return String
-     **/
+     */
     public function OrderStepNice()
     {
         return $this->getOrderStepNice();

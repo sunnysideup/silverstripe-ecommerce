@@ -20,8 +20,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
-
- **/
+ */
 class EcommerceRegion extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -30,7 +29,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * NOTE: these methods / variables below are IMPORTANT, because they allow the dropdown for the region to be limited for just that order.
      *
      * @var array of regions codes, e.g. ("NSW", "WA", "VIC");
-     **/
+     */
     protected static $_for_current_order_only_show_regions = [];
 
     /**
@@ -168,12 +167,13 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * do we use regions at all in this ecommerce application?
      *
      * @return bool
-     **/
+     */
     public static function show()
     {
         if (Config::inst()->get(EcommerceRegion::class, 'show_freetext_region_field')) {
             return true;
         }
+
         return (bool) EcommerceRegion::get()->count();
     }
 
@@ -181,7 +181,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * Standard SS FieldList.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -194,7 +194,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -249,6 +249,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if ($options && isset($options[$regionID])) {
             return $options[$regionID];
         }
+
         return '';
     }
 
@@ -258,7 +259,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * takes the defaultArray and limits it with "only show" and "do not show" value, relevant for the current order.
      *
      * @return array (Code, Title)
-     **/
+     */
     public static function list_of_allowed_entries_for_dropdown()
     {
         $defaultArray = self::get_default_array();
@@ -297,7 +298,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * merges arrays...
      *
-     * @param int   $orderID
+     * @param int $orderID
      */
     public static function set_for_current_order_only_show_regions(array $a, $orderID = 0)
     {
@@ -321,7 +322,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * merges arrays...
      *
-     * @param int   $orderID
+     * @param int $orderID
      */
     public static function set_for_current_order_do_not_show_regions(array $a, $orderID = 0)
     {
@@ -334,7 +335,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * This function works out the most likely region for the current order.
      *
      * @return int
-     **/
+     */
     public static function get_region_id()
     {
         $regionID = 0;
@@ -367,7 +368,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * this is some sort of IP recogniser system (e.g. Geoip Class).
      *
      * @return int
-     **/
+     */
     public static function get_region_from_ip()
     {
         $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_region_provider');
@@ -402,12 +403,13 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * This function returns back the default list of regions, filtered by the currently selected country.
      *
      * @return array - array of Region.ID => Region.Name
-     **/
+     */
     protected static function get_default_array()
     {
         $defaultArray = [];
         $regions = EcommerceRegion::get()
-            ->Exclude(['DoNotAllowSales' => 1]);
+            ->Exclude(['DoNotAllowSales' => 1])
+        ;
         $defaultRegion = EcommerceCountry::get_country_id();
         if ($defaultRegion) {
             $regions = $regions->Filter(['CountryID' => EcommerceCountry::get_country_id()]);

@@ -16,7 +16,7 @@ use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
- **/
+ */
 class ProductConfigModelAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
@@ -64,7 +64,7 @@ class ProductConfigModelAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
-        if ($this->modelClass === SearchHistory::class) {
+        if (SearchHistory::class === $this->modelClass) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 $form->Fields()->replaceField(
                     $gridField->getName(),

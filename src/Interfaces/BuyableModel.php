@@ -18,22 +18,21 @@ use SilverStripe\Security\Member;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: buyables
-
- **/
+ */
 interface BuyableModel
 {
     //GROUPS AND SIBLINGS
 
     /**
      * Returns the direct parent (group) for the product.
-     **/
+     */
     public function MainParentGroup();
 
     /**
      * Returns Buybales in the same group.
      *
      * @return \SilverStripe\ORM\DataList (Products)
-     **/
+     */
     public function Siblings();
 
     //IMAGES
@@ -49,7 +48,7 @@ interface BuyableModel
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
      *
-     * @return \SilverStripe\Assets\Image|null
+     * @return null|\SilverStripe\Assets\Image
      */
     public function BestAvailableImage();
 
@@ -77,7 +76,7 @@ interface BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return \SilverStripe\ORM\DataObject|null
+     * @return null|\SilverStripe\ORM\DataObject
      */
     public function getVersionOfBuyable($id = 0, $version = 0);
 
@@ -89,7 +88,7 @@ interface BuyableModel
      * Does not write to database.
      *
      * @return \Sunnysideup\Ecommerce\Model\OrderItem (no kidding)
-     **/
+     */
     public function OrderItem();
 
     /**
@@ -101,14 +100,14 @@ interface BuyableModel
      * you can overwrite this function in your buyable items (such as Product).
      *
      * @return string
-     **/
+     */
     public function classNameForOrderItem();
 
     /**
      * You can set an alternative class name for order item using this method.
      *
      * @param string $className
-     **/
+     */
     public function setAlternativeClassNameForOrderItem($className);
 
     /**
@@ -117,7 +116,7 @@ interface BuyableModel
      * If you set it to -1 then you can add 10, 20, 30, etc.. products to cart.
      *
      * @return int
-     **/
+     */
     public function QuantityDecimals();
 
     /**
@@ -202,7 +201,7 @@ interface BuyableModel
      * $EcommerceConfigAjax.TableID.
      *
      * @return \Sunnysideup\Ecommerce\Config\EcommerceConfigAjax
-     **/
+     */
     public function AJAXDefinitions();
 
     /**
@@ -242,6 +241,8 @@ interface BuyableModel
 
     /**
      * Is the product for sale?
+     *
+     * @param mixed $checkPrice
      *
      * @return bool
      */

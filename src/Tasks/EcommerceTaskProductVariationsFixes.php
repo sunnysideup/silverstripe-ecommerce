@@ -13,8 +13,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskProductVariationsFixes extends BuildTask
 {
     protected $title = 'Fix Product Variations';

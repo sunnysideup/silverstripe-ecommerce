@@ -6,6 +6,10 @@ use SilverStripe\Dev\SapphireTest;
 use Sunnysideup\Ecommerce\ORM\RelatedProductGroups;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class ProductGroupListTest extends SapphireTest
 {
     protected static $fixture_file = 'fixtures.yml';

@@ -33,7 +33,6 @@ use Sunnysideup\Ecommerce\Model\Order;
  * }
  * </code>
  */
-
 class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSupportedMethodsProviderInterface
 {
     use Configurable;
@@ -66,6 +65,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
                 EcommercePayment::$supported_methods() requires an associative array.
                 Right now the supported payments methods are: ' . print_r($supportedMethods, 1), E_USER_NOTICE);
         }
+
         return $supportedMethods;
     }
 
@@ -77,7 +77,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
     }
 
     /**
-     * replace a payment with another one
+     * replace a payment with another one.
      */
     protected function arrayReplaceKey(array $array, string $oldKey, string $newKey): array
     {
@@ -97,7 +97,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      * You can provide one as a param,
      * which basically just checks that it is a real order.
      *
-     * @param Order|int $orderOrOrderId (optional)
+     * @param int|Order $orderOrOrderId (optional)
      *
      * @return Order | DataObject
      */
@@ -109,6 +109,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
         if ((int) $orderOrOrderId) {
             return Order::get()->byID((int) $orderOrOrderId);
         }
+
         return ShoppingCart::current_order();
     }
 }

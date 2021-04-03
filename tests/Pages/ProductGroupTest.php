@@ -5,6 +5,10 @@ namespace Sunnysideup\Ecommerce\Tests;
 use SilverStripe\Dev\FunctionalTest;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class ProductGroupTest extends FunctionalTest
 {
     protected static $fixture_file = 'fixtures.yml';

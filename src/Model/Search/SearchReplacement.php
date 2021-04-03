@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Model\Search;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
-
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
@@ -83,6 +82,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -92,7 +92,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -106,6 +106,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -115,7 +116,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -129,6 +130,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -138,7 +140,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -161,7 +163,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -174,7 +176,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -190,11 +192,14 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
             ->setDescription(
                 'e.g. Sonny<br />' .
                 'You can enter more than one search phrase and separate by: ' . $this->Config()->get('separator') . ''
-            );
+            )
+        ;
         $fields->dataFieldByName('Replace')
             ->setDescription(
                 'e.g. Sony'
-            );
+            )
+        ;
+
         return $fields;
     }
 

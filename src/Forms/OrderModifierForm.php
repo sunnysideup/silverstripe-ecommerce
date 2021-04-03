@@ -21,8 +21,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderModifierForm extends Form
 {
     /**
@@ -43,7 +42,7 @@ class OrderModifierForm extends Form
      * to your own controller.
      *
      * @param Controller $optionalController
-     **/
+     */
     public function __construct(
         ?Controller $optionalController,
         string $name,

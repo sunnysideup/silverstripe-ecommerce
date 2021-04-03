@@ -16,13 +16,12 @@ use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
-
- **/
+ */
 class OrderFiltersMemberAndAddress extends ExactMatchFilter
 {
     /**
      * @return DataQuery
-     **/
+     */
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
@@ -70,6 +69,7 @@ class OrderFiltersMemberAndAddress extends ExactMatchFilter
         }
         $memberIDs = ArrayMethods::filter_array($memberIDs);
         $where[] = '"MemberID" IN (' . implode(',', $memberIDs) . ')';
+
         return $query->where('(' . implode(') OR (', $where) . ')');
     }
 }

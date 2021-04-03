@@ -12,8 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
-
- **/
+ */
 class EcommerceSideReportNoPriceProducts extends Report
 {
     /**
@@ -52,13 +51,16 @@ class EcommerceSideReportNoPriceProducts extends Report
     /**
      * working out the items.
      *
+     * @param null|mixed $params
+     *
      * @return \SilverStripe\ORM\DataList
      */
     public function sourceRecords($params = null)
     {
         return Product::get()
             ->where('"Product"."Price" IS NULL OR "Product"."Price" = 0 ')
-            ->sort('FullSiteTreeSort', 'ASC');
+            ->sort('FullSiteTreeSort', 'ASC')
+        ;
     }
 
     /**

@@ -36,6 +36,8 @@ class OrderModifierFormController extends Controller
      * @ToDO: check this method
      * It looks like this: /$ClassName/$action/
      *
+     * @param null|mixed $action
+     *
      * @return string
      */
     public function Link($action = null)

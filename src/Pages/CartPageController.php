@@ -23,21 +23,21 @@ class CartPageController extends PageController
      * This ArraList holds DataObjects with a Link and Title each....
      *
      * @var ArrayList
-     **/
+     */
     protected $actionLinks;
 
     /**
      * to ensure messages and actions links are only worked out once...
      *
-     * @var boolean
-     **/
+     * @var bool
+     */
     protected $workedOutMessagesAndActions = false;
 
     /**
      * order currently being shown on this page.
      *
      * @var Order
-     **/
+     */
     protected $currentOrder;
 
     /**
@@ -79,16 +79,16 @@ class CartPageController extends PageController
      *
      * @var string
      * @todo: check if we need this....!
-     **/
+     */
     private $message = '';
 
-    public static function set_message($s)
+    public static function set_message(string $s)
     {
         $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
         Controller::curr()->getRequest()->getSession()->set($sessionCode, $s);
     }
 
-    /***********************
+    /*
      * Actions
      ***********************
 
@@ -100,7 +100,7 @@ class CartPageController extends PageController
      * @todo: do we still need loadorder controller method????
      * @param HTTPRequest $request
      * @return array just so that template shows
-     **/
+     */
     public function showorder(HTTPRequest $request)
     {
         if (! $this->currentOrder) {
@@ -121,9 +121,11 @@ class CartPageController extends PageController
 
     /**
      * share an order ...
+     *
      * @todo: do we still need loadorder controller method????
+     *
      * @return array just so that template shows
-     **/
+     */
     public function share(HTTPRequest $request)
     {
         $codes = Convert::raw2sql($request->param('ID'));
@@ -137,7 +139,7 @@ class CartPageController extends PageController
             $order = $sc->currentOrder();
             foreach ($buyables as $buyable) {
                 $details = explode(',', $buyable);
-                if (count($details) === 3) {
+                if (3 === count($details)) {
                     $className = $details[0];
                     $className = class_exists($className) ? $className : null;
                     $id = (int) $details[1];
@@ -163,6 +165,7 @@ class CartPageController extends PageController
         if (strlen($this->Title) > 255) {
             $this->Title = substr($this->Title, 0, 255) . ' ...';
         }
+
         return [];
     }
 
@@ -246,8 +249,8 @@ class CartPageController extends PageController
     /**
      * This returns a ArraList, each dataobject has two vars: Title and Link.
      *
-     * @return ArrayList|null
-     **/
+     * @return null|ArrayList
+     */
     public function ActionLinks()
     {
         $this->workOutMessagesAndActions();
@@ -260,7 +263,7 @@ class CartPageController extends PageController
 
     /**
      * @return string
-     **/
+     */
     public function Message()
     {
         $this->workOutMessagesAndActions();
@@ -272,12 +275,13 @@ class CartPageController extends PageController
                 Controller::curr()->getRequest()->getSession()->clear($sessionCode);
             }
         }
+
         return DBField::create_field('HTMLText', $this->message);
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject|null - Order
-     **/
+     * @return null|\SilverStripe\ORM\DataObject - Order
+     */
     public function Order()
     {
         return $this->currentOrder;
@@ -285,7 +289,7 @@ class CartPageController extends PageController
 
     /**
      * @return bool
-     **/
+     */
     public function CanEditOrder()
     {
         if ($this->currentOrder) {
@@ -303,7 +307,7 @@ class CartPageController extends PageController
      * Tells you if the order you are viewing at the moment is also in the cart.
      *
      * @return bool
-     **/
+     */
     public function CurrentOrderIsInCart()
     {
         $viewingRealCurrentOrder = false;
@@ -326,6 +330,7 @@ class CartPageController extends PageController
     {
         if ($this->getRequest()->getSession()->get('CartPageCreateAccountForm')) {
             $this->getRequest()->getSession()->set('CartPageCreateAccountForm', false);
+
             return true;
         }
         if (Security::getCurrentUser() || $this->currentOrder->MemberID) {
@@ -369,7 +374,7 @@ class CartPageController extends PageController
             $otherID = (int) $this->request->param('OtherID');
             //the code below is for submitted orders, but we still put it here so
             //we can do all the retrieval options at once.
-            if (($action === 'retrieveorder') && $id && $otherID) {
+            if (('retrieveorder' === $action) && $id && $otherID) {
                 $sessionID = Convert::raw2sql($id);
                 $retrievedOrder = Order::get()->filter(
                     [
@@ -428,7 +433,8 @@ class CartPageController extends PageController
     }
 
     /**
-     * We set sesssion ID for retrieval of order in non cart setting
+     * We set sesssion ID for retrieval of order in non cart setting.
+     *
      * @param int $orderID
      * @param int $validUntilTS timestamp (unix epoch) until which the current Order ID is valid
      */
@@ -445,7 +451,7 @@ class CartPageController extends PageController
     }
 
     /**
-     * we clear the retrieval Order ID
+     * we clear the retrieval Order ID.
      */
     protected function clearRetrievalOrderID()
     {
@@ -458,7 +464,7 @@ class CartPageController extends PageController
 
     /**
      * work out the options for the user.
-     **/
+     */
     protected function workOutMessagesAndActions()
     {
         if (! $this->workedOutMessagesAndActions) {
@@ -468,7 +474,7 @@ class CartPageController extends PageController
             $currentUserID = Member::currentUserID();
 
             //Continue Shopping
-            if (property_exists($this, 'ContinueShoppingLabel') && $this->ContinueShoppingLabel !== null && $this->ContinueShoppingLabel) {
+            if (property_exists($this, 'ContinueShoppingLabel') && null !== $this->ContinueShoppingLabel && $this->ContinueShoppingLabel) {
                 if ($viewingRealCurrentOrder) {
                     if ($this->isCartPage()) {
                         $continueLink = $this->ContinueShoppingLink();
@@ -487,7 +493,7 @@ class CartPageController extends PageController
             }
 
             //Proceed To CheckoutLabel
-            if (property_exists($this, 'ProceedToCheckoutLabel') && $this->ProceedToCheckoutLabel !== null && $this->ProceedToCheckoutLabel) {
+            if (property_exists($this, 'ProceedToCheckoutLabel') && null !== $this->ProceedToCheckoutLabel && $this->ProceedToCheckoutLabel) {
                 if ($viewingRealCurrentOrder) {
                     if ($this->isCartPage()) {
                         $checkoutPageLink = CheckoutPage::find_link();
@@ -502,7 +508,7 @@ class CartPageController extends PageController
             }
 
             //view account details
-            if (property_exists($this, 'ShowAccountLabel') && $this->ShowAccountLabel !== null && $this->ShowAccountLabel) {
+            if (property_exists($this, 'ShowAccountLabel') && null !== $this->ShowAccountLabel && $this->ShowAccountLabel) {
                 if ($this->isOrderConfirmationPage() || $this->isCartPage()) {
                     if (AccountPage::find_link()) {
                         if ($currentUserID) {
@@ -516,7 +522,7 @@ class CartPageController extends PageController
             }
 
             //go to current order
-            if (property_exists($this, 'CurrentOrderLinkLabel') && $this->CurrentOrderLinkLabel !== null && $this->CurrentOrderLinkLabel) {
+            if (property_exists($this, 'CurrentOrderLinkLabel') && null !== $this->CurrentOrderLinkLabel && $this->CurrentOrderLinkLabel) {
                 if ($this->isCartPage()) {
                     if (! $viewingRealCurrentOrder) {
                         $this->actionLinks->push(new ArrayData([
@@ -528,7 +534,7 @@ class CartPageController extends PageController
             }
 
             //Save order - we assume only current ones can be saved.
-            if (property_exists($this, 'SaveOrderLinkLabel') && $this->SaveOrderLinkLabel !== null && $this->SaveOrderLinkLabel) {
+            if (property_exists($this, 'SaveOrderLinkLabel') && null !== $this->SaveOrderLinkLabel && $this->SaveOrderLinkLabel) {
                 if ($viewingRealCurrentOrder) {
                     if ($currentUserID && $this->currentOrder->MemberID === $currentUserID) {
                         if ($this->isCartPage()) {
@@ -544,7 +550,7 @@ class CartPageController extends PageController
             }
 
             //load order
-            if (property_exists($this, 'LoadOrderLinkLabel') && $this->LoadOrderLinkLabel !== null && $this->LoadOrderLinkLabel) {
+            if (property_exists($this, 'LoadOrderLinkLabel') && null !== $this->LoadOrderLinkLabel && $this->LoadOrderLinkLabel) {
                 if ($this->isCartPage() && $this->currentOrder) {
                     if (! $viewingRealCurrentOrder) {
                         $this->actionLinks->push(new ArrayData([
@@ -556,7 +562,7 @@ class CartPageController extends PageController
             }
 
             //delete order
-            if (property_exists($this, 'DeleteOrderLinkLabel') && $this->DeleteOrderLinkLabel !== null && $this->DeleteOrderLinkLabel) {
+            if (property_exists($this, 'DeleteOrderLinkLabel') && null !== $this->DeleteOrderLinkLabel && $this->DeleteOrderLinkLabel) {
                 if ($this->isCartPage() && $this->currentOrder) {
                     if (! $viewingRealCurrentOrder) {
                         $this->actionLinks->push(new ArrayData([
@@ -570,7 +576,7 @@ class CartPageController extends PageController
             //Start new order
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (property_exists($this, 'StartNewOrderLinkLabel') && $this->StartNewOrderLinkLabel !== null && $this->StartNewOrderLinkLabel) {
+            if (property_exists($this, 'StartNewOrderLinkLabel') && null !== $this->StartNewOrderLinkLabel && $this->StartNewOrderLinkLabel) {
                 if ($this->isOrderConfirmationPage()) {
                     $this->actionLinks->push(new ArrayData([
                         'Title' => $this->StartNewOrderLinkLabel,
@@ -582,7 +588,7 @@ class CartPageController extends PageController
             //copy order
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (property_exists($this, 'CopyOrderLinkLabel') && $this->CopyOrderLinkLabel !== null && $this->CopyOrderLinkLabel) {
+            if (property_exists($this, 'CopyOrderLinkLabel') && null !== $this->CopyOrderLinkLabel && $this->CopyOrderLinkLabel) {
                 if ($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
                     $this->actionLinks->push(new ArrayData([
                         'Title' => $this->CopyOrderLinkLabel,
@@ -630,7 +636,7 @@ class CartPageController extends PageController
         }
     }
 
-    /***********************
+    /*
      * HELPER METHOD (PROTECTED)
      ***********************
 

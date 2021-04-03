@@ -84,9 +84,9 @@ class OrderStatusLogFormController extends Controller
      *
      * @param string $name The name of the form to return
      *
-     * @return Form
+     * @return null|OrderStatusLogForm
      */
-    protected function getOrderStatusLogForm($name)
+    protected function getOrderStatusLogForm(string $name)
     {
         if ($this->currentOrder) {
             if ($forms = $this->currentOrder->getLogForms($this)) {
@@ -97,5 +97,6 @@ class OrderStatusLogFormController extends Controller
                 }
             }
         }
+        return null;
     }
 }

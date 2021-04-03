@@ -74,7 +74,7 @@ class BuyableSelectFieldDataList extends Controller
             $buyables[$key]['TableName'] = $buyableClassName;
 
             if (is_a($singleton, EcommerceConfigClassNames::getName(SiteTree::class))) {
-                if (Versioned::get_stage() === 'Live') {
+                if ('Live' === Versioned::get_stage()) {
                     $buyables[$key]['TableName'] .= '_Live';
                 }
             }
@@ -104,7 +104,8 @@ class BuyableSelectFieldDataList extends Controller
                                 'AllowPurchase' => 1,
                             ])
                             ->where("\"{$tableName}\".\"ID\" NOT IN (" . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
-                            ->First();
+                            ->First()
+                        ;
                         if ($obj) {
                             //we found an object, we dont need to find it again.
                             $arrayOfAddedItemIDsByClassName[$className][$obj->ID] = $obj->ID;

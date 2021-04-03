@@ -22,8 +22,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskDeleteAllOrders extends BuildTask
 {
     public $verbose = false;
@@ -39,7 +38,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     /**
      *key = table where OrderID is saved
      *value = table where LastEdited is saved.
-     **/
+     */
     private static $linked_objects_array = [
         'OrderAttribute' => OrderAttribute::class,
         'BillingAddress' => OrderAddress::class,
@@ -52,7 +51,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     /**
      *key = table where OrderID is saved
      *value = table where LastEdited is saved.
-     **/
+     */
     private static $double_check_objects = [
         Order::class,
         OrderItem::class,
@@ -60,13 +59,13 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
         EcommercePayment::class,
     ];
 
-    /*******************************************************
-         * DELETE OLD SHOPPING CARTS
-    *******************************************************/
+    // DELETE OLD SHOPPING CARTS
 
     /**
+     * @param mixed $request
+     *
      * @return int - number of carts destroyed
-     **/
+     */
     public function run($request)
     {
         if (! Director::isDev() || Director::isLive()) {
@@ -75,7 +74,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
             if (! isset($_REQUEST['i-am-sure'])) {
                 $_REQUEST['i-am-sure'] = '';
             }
-            if ($_REQUEST['i-am-sure'] !== 'yes') {
+            if ('yes' !== $_REQUEST['i-am-sure']) {
                 die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/ecommercetaskdeleteallorders/?i-am-sure=yes");
             }
             $oldCarts = Order::get();
@@ -128,11 +127,13 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                 $unlinkedObjects = $classWithLastEdited::get();
                 if ($classWithLastEdited !== $classWithOrderID) {
                     $unlinkedObjects = $unlinkedObjects
-                        ->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"{$classWithOrderID}\".\"ID\"");
+                        ->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"{$classWithOrderID}\".\"ID\"")
+                    ;
                 }
                 $unlinkedObjects = $unlinkedObjects
                     ->where($where)
-                    ->leftJoin('Order', "\"Order\".\"ID\" = \"{$classWithOrderID}\".\"OrderID\"");
+                    ->leftJoin('Order', "\"Order\".\"ID\" = \"{$classWithOrderID}\".\"OrderID\"")
+                ;
 
                 if ($unlinkedObjects->count()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {

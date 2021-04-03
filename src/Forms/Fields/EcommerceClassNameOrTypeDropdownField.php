@@ -9,8 +9,8 @@ use SilverStripe\Forms\DropdownField;
  * this is a dropdown field just for selecting the right
  * classname.
  * usage:
- * EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type or so', 'MyBaseClass');
- **/
+ * EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type or so', 'MyBaseClass');.
+ */
 class EcommerceClassNameOrTypeDropdownField extends DropdownField
 {
     /**
@@ -89,17 +89,19 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
     /**
      * @param array $array - e.g. Array(MyFavouriteClassName, MyOtherFavouriteClassName)
      */
-    public function setAvailableClasses(array $array)
+    public function setAvailableClasses(array $array) : self
     {
         $this->availableClasses = $array;
+        return $this;
     }
 
     /**
      * @param bool $bool
      */
-    public function setIncludeBaseClass($bool)
+    public function setIncludeBaseClass($bool) : self
     {
         $this->includeBaseClass = $bool;
+        return $this;
     }
 
     /*

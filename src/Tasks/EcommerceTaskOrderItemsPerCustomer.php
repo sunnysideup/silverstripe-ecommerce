@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 {
     protected $title = 'Export all order items to CSV per customer';
@@ -29,7 +28,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         set_time_limit(1200);
 
         //file data
-        $now = Date('d-m-Y-H-i');
+        $now = date('d-m-Y-H-i');
         $fileName = "export-{$now}.csv";
 
         //data object variables
@@ -43,7 +42,8 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
             ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-            ->limit($count, $offset);
+            ->limit($count, $offset)
+        ;
         $ordersCount = $orders->count();
         while ($orders && $ordersCount) {
             $offset += $count;
@@ -73,7 +73,8 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
                 ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-                ->limit($count, $offset);
+                ->limit($count, $offset)
+            ;
             $ordersCount = $orders->count();
         }
         unset($orders);
@@ -114,12 +115,12 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 $fileData .= implode($separator, $columnData);
                 $fileData .= "\n";
                 $item->destroy();
-                unset($item);
-                unset($columnData);
+                unset($item, $columnData);
             }
 
             return $fileData;
         }
+
         return '';
     }
 }

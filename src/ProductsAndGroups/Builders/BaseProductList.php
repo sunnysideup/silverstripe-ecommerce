@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
- * The starting base of the Products
+ * The starting base of the Products.
  *
  * This is basically a list of products for a product group where we take into consider:
  *
@@ -35,7 +35,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 class BaseProductList extends AbstractProductsAndGroupsList
 {
     /**
-     * keep the lists in memory
+     * keep the lists in memory.
+     *
      * @var array
      */
     protected static $singleton_caches = [];
@@ -48,7 +49,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * @var RelatedProductGroups
      */
-    protected $productGroupListProvider = null;
+    protected $productGroupListProvider;
 
     /**
      * A list of relevant buyables that can not be purchased and therefore
@@ -90,6 +91,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     /**
      * default filter for products: show in search and allow purchase are recommended.
+     *
      * @var array'
      */
     private static $default_product_filter = [
@@ -112,7 +114,8 @@ class BaseProductList extends AbstractProductsAndGroupsList
             //set defaults
             ->setRootGroup($rootGroup)
             ->setBuyableClassName($buyableClassName)
-            ->setLevelOfProductsToShow($levelOfProductsToShow);
+            ->setLevelOfProductsToShow($levelOfProductsToShow)
+        ;
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
@@ -120,7 +123,8 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 ->applyDefaultFilters()
                 ->applyGroupFilter()
                 ->removeExcludedProducts()
-                ->storeInCache();
+                ->storeInCache()
+            ;
         }
     }
 
@@ -141,9 +145,9 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return self::$singleton_caches[$cacheKey];
     }
 
-    ##########################################
-    # Setters
-    ##########################################
+    //#########################################
+    // Setters
+    //#########################################
 
     /**
      * Override the class of buyable to display. Usually this is limited to
@@ -181,9 +185,9 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->getProductGroupListProvider()->getLevelOfProductsToShow();
     }
 
-    ##########################################
-    # PRODUCTS: Also show
-    ##########################################
+    //#########################################
+    // PRODUCTS: Also show
+    //#########################################
 
     public function getAlsoShowProductsIds(): array
     {
@@ -195,9 +199,9 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->products->filter(['ID' => $this->getAlsoShowProductsIds()]);
     }
 
-    ##########################################
-    # GROUPS - smart
-    ##########################################
+    //#########################################
+    // GROUPS - smart
+    //#########################################
 
     public function getFilterForCandidateCategoryIds(): array
     {
@@ -213,12 +217,13 @@ class BaseProductList extends AbstractProductsAndGroupsList
         }
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
+
         return $list->exclude(['ID' => $this->getParentGroupIds()]);
     }
 
-    ##################################################
-    # GROUPS: Parents from natural hierachy
-    ##################################################
+    //#################################################
+    // GROUPS: Parents from natural hierachy
+    //#################################################
 
     public function getParentGroupIds(): array
     {
@@ -230,10 +235,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->turnIdListIntoProductGroups($this->getParentGroupIds());
     }
 
-    ##################################################
-    # GROUPS: Also Show Products, based on Products included through AlsoShow Show
-    # NOTE: difference with below
-    ##################################################
+    //#################################################
+    // GROUPS: Also Show Products, based on Products included through AlsoShow Show
+    // NOTE: difference with below
+    //#################################################
 
     public function getAlsoShowParentIds(): array
     {
@@ -245,6 +250,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
             $this->alsoShowParentIds = ArrayMethods::filter_array($rows);
         }
+
         return $this->alsoShowParentIds;
     }
 
@@ -255,22 +261,22 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return RelatedProductGroups::apply_default_filter_to_groups($list);
     }
 
-    ##################################################
-    # HELPERS
-    ##################################################
+    //#################################################
+    // HELPERS
+    //#################################################
 
     /**
      * Returns children ProductGroup pages of this group.
-     * Make it more accesible for ProductGroup
+     * Make it more accesible for ProductGroup.
      *
-     * @param int            $maxRecursiveLevel  - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
-     * @param string|array   $filter             - additional filter to be added
+     * @param int          $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
+     * @param array|string $filter            - additional filter to be added
      *
      * @return SS_List (ProductGroups)
      */
     public function getGroups(?int $maxRecursiveLevel = null, $filter = null)
     {
-        if ($maxRecursiveLevel === null) {
+        if (null === $maxRecursiveLevel) {
             $maxRecursiveLevel = $this->getLevelOfProductsToShow();
         }
         $list = $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
@@ -280,7 +286,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * Returns a list of {@link RelatedProductGroups}
+     * Returns a list of {@link RelatedProductGroups}.
      *
      * @return RelatedProductGroups
      */
@@ -305,12 +311,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->blockedProductsIds;
     }
 
-    ##################################################
-    # BUILDERS
-    ##################################################
+    //#################################################
+    // BUILDERS
+    //#################################################
 
     /**
-     * create a starting point
+     * create a starting point.
      */
     protected function buildDefaultList(): self
     {
@@ -331,7 +337,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * apply group filters to products
+     * apply group filters to products.
      */
     protected function applyGroupFilter(): self
     {
@@ -345,7 +351,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             //note the smartness here -1 == 1 || -1 == -2, i.e. minus 1 is include all and minus -2 is include none.
             // ignore AlsoShow.
             $groupFilter = ' ' . $levelToShow . ' = -1 ';
-        } elseif ($levelToShow === 0) {
+        } elseif (0 === $levelToShow) {
             //backup - same as 1, but with also show!
             $groupFilter = '"' . $this->getSiteTreeTableName() . '"."ParentID" = ' . $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
@@ -380,6 +386,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     protected function getSiteTreeTableName(): string
     {
         $stage = $this->getStage();
+
         return 'SiteTree' . $stage;
     }
 
@@ -418,15 +425,16 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->blockedProductsIds
             ));
             $this->products = $this->products
-                ->exclude(['ID' => self::$excluded_products]);
+                ->exclude(['ID' => self::$excluded_products])
+            ;
         }
 
         return $this;
     }
 
-    ##################################################
-    # CACHE
-    ##################################################
+    //#################################################
+    // CACHE
+    //#################################################
 
     /**
      * is there a cache available?
@@ -442,7 +450,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * - blockedProductsIds
      * - blockedProductsIds
      * - alsoShowProductsIds
-     * - parentGroupIds
+     * - parentGroupIds.
      */
     protected function loadCache(): self
     {
@@ -464,7 +472,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * - blockedProductsIds
      * - blockedProductsIds
      * - alsoShowProductsIds
-     * - parentGroupIds
+     * - parentGroupIds.
      */
     protected function storeInCache(): self
     {
@@ -479,7 +487,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param  string $add key to add
+     * @param string $add key to add
      */
     protected function getCachekey(?string $add = ''): string
     {

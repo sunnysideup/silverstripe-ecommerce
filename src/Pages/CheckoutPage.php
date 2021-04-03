@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
@@ -17,7 +16,6 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
-
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
@@ -54,14 +52,13 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: Pages
-
- **/
+ */
 class CheckoutPage extends CartPage
 {
     /**
      * standard SS variable.
      *
-     * @var boolean
+     * @var bool
      */
     private static $hide_ancestor = CartPage::class;
 
@@ -136,7 +133,7 @@ class CheckoutPage extends CartPage
     /**
      * Returns the Terms and Conditions Page (if there is one).
      *
-     * @return Page|null
+     * @return null|Page
      */
     public static function find_terms_and_conditions_page()
     {
@@ -144,6 +141,7 @@ class CheckoutPage extends CartPage
         if ($checkoutPage && $checkoutPage->TermsPageID) {
             return Page::get()->byID($checkoutPage->TermsPageID);
         }
+
         return null;
     }
 
@@ -191,8 +189,8 @@ class CheckoutPage extends CartPage
     /**
      * Returns the link to the next step.
      *
-     * @param string  $currentStep       is the step that has just been actioned....
-     * @param bool    $doPreviousInstead - return previous rather than next step
+     * @param string $currentStep       is the step that has just been actioned....
+     * @param bool   $doPreviousInstead - return previous rather than next step
      *
      * @return string (URLSegment)
      */
@@ -203,7 +201,7 @@ class CheckoutPage extends CartPage
             $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
             if (in_array($currentStep, $steps, true)) {
                 $key = array_search($currentStep, $steps, true);
-                if ($key !== false) {
+                if (false !== $key) {
                     if ($doPreviousInstead) {
                         --$key;
                     } else {
@@ -251,9 +249,10 @@ class CheckoutPage extends CartPage
      * but we do allow for extensions to exist at the same time.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
-     **/
+     */
     public function canCreate($member = null, $context = [])
     {
         return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->Count() ? false : $this->canEdit($member);
@@ -263,6 +262,7 @@ class CheckoutPage extends CartPage
      * Shop Admins can edit.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -303,7 +303,7 @@ class CheckoutPage extends CartPage
      * Standard SS function.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent :: getCMSFields();

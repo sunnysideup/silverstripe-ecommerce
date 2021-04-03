@@ -14,8 +14,7 @@ use SilverStripe\View\SSViewer;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 {
     private static $table_name = 'OrderStatusLogDispatchPhysicalOrder';
@@ -81,12 +80,13 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
                 $this->DispatchedBy = Security::getCurrentUser()->getTitle();
             }
         }
+
         return parent::populateDefaults();
     }
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -98,12 +98,13 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         $dispatchLinkField = $fields->dataFieldByName('Note');
         $dispatchLinkField->setTitle(_t('OrderStatusLog.NOTE_NEW_TITLE', 'Customer Message (*)'));
         $dispatchLinkField->setDescription(_t('OrderStatusLog.NOTE_NOTE', 'This field is required'));
+
         return $fields;
     }
 
     /**
      * @return string
-     **/
+     */
     public function CustomerNote()
     {
         return $this->getCustomerNote();

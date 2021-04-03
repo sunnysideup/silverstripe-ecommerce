@@ -14,7 +14,6 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormCancelValidator;
-
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
@@ -23,8 +22,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderFormCancel extends Form
 {
     public function __construct(Controller $controller, $name, Order $order)

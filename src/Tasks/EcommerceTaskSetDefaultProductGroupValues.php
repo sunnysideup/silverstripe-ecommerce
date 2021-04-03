@@ -13,8 +13,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 {
     protected $title = 'Set Default Product Group Values';
@@ -43,7 +42,8 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
     protected function checkField($fieldName, $acceptableValuesArray, $resetValue)
     {
         $faultyProductGroups = ProductGroup::get()
-            ->exclude([$fieldName => $acceptableValuesArray]);
+            ->exclude([$fieldName => $acceptableValuesArray])
+        ;
         if ($faultyProductGroups->count()) {
             foreach ($faultyProductGroups as $faultyProductGroup) {
                 $faultyProductGroup->{$fieldName} = $resetValue;

@@ -38,7 +38,6 @@ use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
-
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -62,9 +61,9 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProd
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: buyables
-
+ *
  * @todo: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort
- **/
+ */
 class Product extends Page implements BuyableModel
 {
     /**
@@ -266,6 +265,8 @@ class Product extends Page implements BuyableModel
      * By default we search for products that are allowed to be purchased only
      * standard SS method.
      *
+     * @param null|mixed $_params
+     *
      * @return \SilverStripe\Forms\FieldList
      */
     public function scaffoldSearchFields($_params = null)
@@ -319,7 +320,7 @@ class Product extends Page implements BuyableModel
         $config = EcommerceConfig::inst();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
-            if ($price === 0) {
+            if (0 === $price) {
                 $link = $config->CMSEditLink();
                 $allowPurchaseField->setDescription(
                     _t(
@@ -379,6 +380,7 @@ class Product extends Page implements BuyableModel
                 ]
             );
         }
+
         return $fields;
     }
 
@@ -439,13 +441,14 @@ class Product extends Page implements BuyableModel
         //setting fields with new values!
         $this->FullName = $fullName . $parentTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
+
         return ($this->dbObject('FullName') !== $this->FullName) || ($this->dbObject('FullSiteTreeSort') !== $this->FullSiteTreeSort);
     }
 
     /**
      * Returns all the parent groups for the product.
      *
-     * @return \SilverStripe\ORM\DataList|null (ProductGroups)
+     * @return null|\SilverStripe\ORM\DataList (ProductGroups)
      */
     public function AllParentGroups(): ?DataList
     {
@@ -457,6 +460,7 @@ class Product extends Page implements BuyableModel
                 'ID' => $ids,
             ]);
         }
+
         return null;
     }
 
@@ -499,8 +503,8 @@ class Product extends Page implements BuyableModel
     /**
      * Returns products in the same group.
      *
-     * @return \SilverStripe\ORM\DataList|null (Products)
-     **/
+     * @return null|\SilverStripe\ORM\DataList (Products)
+     */
     public function Siblings()
     {
         if ($this->ParentID) {
@@ -509,8 +513,10 @@ class Product extends Page implements BuyableModel
                     'ShowInMenus' => 1,
                     'ParentID' => $this->ParentID,
                 ])
-                ->exclude(['ID' => $this->ID]);
+                ->exclude(['ID' => $this->ID])
+            ;
         }
+
         return null;
     }
 
@@ -539,14 +545,15 @@ class Product extends Page implements BuyableModel
         if ($parent && $parent->exists()) {
             return $parent->BestAvailableImage();
         }
+
         return null;
     }
 
     /**
      * Returns the direct parent group for the product.
      *
-     * @return ProductGroup|null
-     **/
+     * @return null|ProductGroup
+     */
     public function ParentGroup()
     {
         return ProductGroup::get()->byID($this->ParentID);
@@ -563,8 +570,8 @@ class Product extends Page implements BuyableModel
     /**
      * Returns the top parent group of the product (in the hierarchy).
      *
-     * @return ProductGroup|null
-     **/
+     * @return null|ProductGroup
+     */
     public function TopParentGroup()
     {
         $parent = $this->ParentGroup();
@@ -607,7 +614,7 @@ class Product extends Page implements BuyableModel
     /**
      * returns the default image of the product.
      *
-     * @return Image|null
+     * @return null|Image
      */
     public function DefaultImage()
     {
@@ -623,7 +630,7 @@ class Product extends Page implements BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return \SilverStripe\ORM\DataObject|null
+     * @return null|\SilverStripe\ORM\DataObject
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
@@ -657,7 +664,7 @@ class Product extends Page implements BuyableModel
         $filterArray = [];
         $extendedFilter = $this->extend('updateItemFilter', $filter);
 
-        if ($extendedFilter !== null && is_array($extendedFilter) && count($extendedFilter)) {
+        if (null !== $extendedFilter && is_array($extendedFilter) && count($extendedFilter)) {
             $filterArray = $extendedFilter;
         }
 
@@ -678,7 +685,7 @@ class Product extends Page implements BuyableModel
     {
         $className = $this->defaultClassNameForOrderItem;
         $updateClassName = $this->extend('updateClassNameForOrderItem', $className);
-        if ($updateClassName !== null && is_array($updateClassName) && count($updateClassName)) {
+        if (null !== $updateClassName && is_array($updateClassName) && count($updateClassName)) {
             $className = $updateClassName[0];
         }
 
@@ -689,7 +696,7 @@ class Product extends Page implements BuyableModel
      * You can set an alternative class name for order item using this method.
      *
      * @param string $className
-     **/
+     */
     public function setAlternativeClassNameForOrderItem($className)
     {
         $this->defaultClassNameForOrderItem = $className;
@@ -710,7 +717,7 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * has it been sold
+     * has it been sold.
      */
     public function HasBeenSold(): bool
     {
@@ -838,6 +845,7 @@ class Product extends Page implements BuyableModel
     {
         $array = $this->linkParameters();
         $array['BackURL'] = urlencode(CheckoutPage::find_link());
+
         return ShoppingCartController::add_item_link($this->ID, $this->ClassName, $array);
     }
 
@@ -885,7 +893,7 @@ class Product extends Page implements BuyableModel
      * $EcommerceConfigAjax.TableID.
      *
      * @return EcommerceConfigAjax
-     **/
+     */
     public function AJAXDefinitions()
     {
         return EcommerceConfigAjax::get_one($this);
@@ -934,6 +942,8 @@ class Product extends Page implements BuyableModel
      * We add three "hooks" / "extensions" here... so that you can update prices
      * in a logical order (e.g. firstly change to forex and then apply discount)
      *
+     * @param mixed $forceRecalculation
+     *
      * @return float
      */
     public function getCalculatedPrice($forceRecalculation = false)
@@ -941,19 +951,20 @@ class Product extends Page implements BuyableModel
         if (! isset(self::$_calculated_price_cache[$this->ID]) || $forceRecalculation) {
             $price = $this->Price;
             $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
-            if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
             $updatedPrice = $this->extend('updateCalculatedPrice', $price);
-            if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
             $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
-            if ($updatedPrice !== null && is_array($updatedPrice) && count($updatedPrice)) {
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
             self::$_calculated_price_cache[$this->ID] = $price;
         }
+
         return self::$_calculated_price_cache[$this->ID];
     }
 
@@ -977,7 +988,8 @@ class Product extends Page implements BuyableModel
     /**
      * Is the product for sale?
      *
-     * @param bool   $checkPrice
+     * @param bool $checkPrice
+     *
      * @return bool
      */
     public function canPurchase(Member $member = null, $checkPrice = true)
@@ -1001,7 +1013,7 @@ class Product extends Page implements BuyableModel
 
         $extended = $this->extendedCan('canPurchaseByCountry', $member);
 
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -1011,22 +1023,23 @@ class Product extends Page implements BuyableModel
 
         if ($checkPrice) {
             $price = $this->getCalculatedPrice();
-            if ($price === 0 && ! $config->AllowFreeProductPurchase) {
+            if (0 === $price && ! $config->AllowFreeProductPurchase) {
                 return false;
             }
         }
         // Standard mechanism for accepting permission changes from decorators
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
+
         return $this->AllowPurchase;
     }
 
     public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -1040,13 +1053,14 @@ class Product extends Page implements BuyableModel
      * Shop Admins can edit.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -1069,7 +1083,7 @@ class Product extends Page implements BuyableModel
             return false;
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -1115,7 +1129,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed ? 'NO' : 'YES </li>';
-        $html .= '<li><b>Extended Country Can Purchase:</b> ' . ($this->extendedCan('canPurchaseByCountry', null) === null ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
+        $html .= '<li><b>Extended Country Can Purchase:</b> ' . (null === $this->extendedCan('canPurchaseByCountry', null) ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
         $html .= '<li><b>Quantity Decimals:</b> ' . $this->QuantityDecimals() . ' </li>';
@@ -1196,7 +1210,7 @@ class Product extends Page implements BuyableModel
      * Used in getCSMFields.
      *
      * @return GridField
-     **/
+     */
     protected function getProductGroupsTableField()
     {
         return new GridField(
@@ -1211,7 +1225,7 @@ class Product extends Page implements BuyableModel
      * Used in getCSMFields.
      *
      * @return LiteralField
-     **/
+     */
     protected function getAdditionalImagesMessage()
     {
         $msg = '';
@@ -1234,6 +1248,7 @@ class Product extends Page implements BuyableModel
             <h3>Batch Upload</h3>
             <p>To batch upload additional images and files, you must first specify a product code.</p>';
         }
+
         return new LiteralField('ImageFileNote', $msg);
     }
 
@@ -1241,7 +1256,7 @@ class Product extends Page implements BuyableModel
      * Used in getCSMFields.
      *
      * @return GridField
-     **/
+     */
     protected function getAdditionalImagesField()
     {
         $uploadField = new UploadFIeld(
@@ -1249,6 +1264,7 @@ class Product extends Page implements BuyableModel
             'More images'
         );
         $uploadField->setAllowedMaxFileNumber(12);
+
         return $uploadField;
     }
 
@@ -1256,7 +1272,7 @@ class Product extends Page implements BuyableModel
      * Used in getCSMFields.
      *
      * @return GridField
-     **/
+     */
     protected function getAdditionalFilesField()
     {
         $uploadField = new UploadFIeld(
@@ -1264,6 +1280,7 @@ class Product extends Page implements BuyableModel
             'Additional Files'
         );
         $uploadField->setAllowedMaxFileNumber(12);
+
         return $uploadField;
     }
 
@@ -1279,13 +1296,15 @@ class Product extends Page implements BuyableModel
      *
      * You can also extend Product and override this method...
      *
+     * @param mixed $type
+     *
      * @return array
-     **/
+     */
     protected function linkParameters($type = '')
     {
         $array = [];
         $extendedArray = $this->extend('updateLinkParameters', $array, $type);
-        if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+        if (null !== $extendedArray && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedArrayUpdate) {
                 $array = array_merge($array, $extendedArrayUpdate);
             }

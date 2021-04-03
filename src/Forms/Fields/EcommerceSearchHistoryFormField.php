@@ -3,11 +3,13 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\View\ViewableData;
 
 class EcommerceSearchHistoryFormField extends LiteralField
 {
@@ -56,7 +58,12 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     protected $showMoreLink = false;
 
-    public function __construct(string $name, ?string $title = '')
+    /**
+     *
+     * @param string $name
+     * @param mixed $title (string|ViewableData|FormField)
+     */
+    public function __construct(string $name, $title)
     {
         parent::__construct($name, $title);
     }
@@ -66,7 +73,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setNumberOfDays($days)
+    public function setNumberOfDays(int $days) : self
     {
         $this->numberOfDays = (int) $days;
 
@@ -76,9 +83,8 @@ class EcommerceSearchHistoryFormField extends LiteralField
     /**
      * @param int $count
      *
-     * @return EcommerceSearchHistoryFormField
      */
-    public function setMinimumCount($count)
+    public function setMinimumCount(int $count) : self
     {
         $this->minimumCount = (int) $count;
 
@@ -86,11 +92,11 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param int $b
+     * @param bool $b
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setShowMoreLink($b)
+    public function setShowMoreLink(bool $b) : self
     {
         $this->showMoreLink = $b;
 
@@ -102,7 +108,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setEndingDaysBack($count)
+    public function setEndingDaysBack(int $count) : self
     {
         $this->endingDaysBack = (int) $count;
 
@@ -114,7 +120,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setMaxRows($number)
+    public function setMaxRows(int $number) : self
     {
         $this->maxRows = $number;
 
@@ -122,11 +128,11 @@ class EcommerceSearchHistoryFormField extends LiteralField
     }
 
     /**
-     * @param string $b
+     * @param bool $b
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setAddTitle($b)
+    public function setAddTitle(bool $b) : self
     {
         $this->addTitle = $b;
 
@@ -138,7 +144,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
      *
      * @return EcommerceSearchHistoryFormField
      */
-    public function setAddAtoZ($b)
+    public function setAddAtoZ(bool $b) : self
     {
         $this->addAtoZ = $b;
 
@@ -240,7 +246,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     </table>';
             }
         }
-        if ($count === 0) {
+        if (0 === $count) {
             //we replace table content here...
             $tableContent = '<p class="warning message">No searches found.</p>';
         }

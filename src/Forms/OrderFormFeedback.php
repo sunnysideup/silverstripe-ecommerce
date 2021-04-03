@@ -16,7 +16,6 @@ use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
-
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 class OrderFormFeedback extends Form
@@ -105,6 +104,7 @@ class OrderFormFeedback extends Form
         if ($defaults && is_array($defaults) && isset($defaults[$value])) {
             return $defaults[$value];
         }
+
         return _t('OrderFormFeedback.' . $value, 'OrderFormFeedback.' . $value . ' value not set in translations');
     }
 
@@ -113,6 +113,7 @@ class OrderFormFeedback extends Form
         if (! $this->_orderConfirmationPage) {
             $this->_orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
         }
+
         return $this->_orderConfirmationPage;
     }
 }

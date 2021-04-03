@@ -12,8 +12,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
-
- **/
+ */
 class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
 {
     /**
@@ -37,7 +36,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
 
     /**
      * @return DataQuery
-     **/
+     */
     protected function applyOne(DataQuery $query)
     {
         //$this->model = $query->applyRelation($this->relation);
@@ -54,7 +53,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
          * OLD: ->format( (case sensitive)
          * NEW: ->format( (COMPLEX)
          * EXP: If this is a PHP Date format call then this needs to be changed to new Date formatting system. (see http://userguide.icu-project.org/formatparse/datetime)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###
+         * ### @@@@ STOP REPLACEMENT @@@@ ###.
          */
         $formattedDate = $date->format('Y-MM-d');
 

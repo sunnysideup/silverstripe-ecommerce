@@ -11,8 +11,7 @@ use SilverStripe\ORM\DB;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTask
 {
     protected $title = 'Delete superfluous entries in Product_ProductGroups';

@@ -116,9 +116,10 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
-     **/
+     */
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -130,14 +131,14 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canEdit($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -153,7 +154,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canDelete($member = null)
     {
         return false;
@@ -177,7 +178,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -189,7 +190,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * casted Variable.
      *
-     * @return String.
+     * @return string
      */
     public function RealName()
     {

@@ -28,8 +28,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStatusLog extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -174,6 +173,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -183,7 +183,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -201,6 +201,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -210,7 +211,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -237,6 +238,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -246,13 +248,13 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
         if ($order = $this->Order()) {
             //Order Status Logs are so basic, anyone can edit them
-            if ($this->ClassName === OrderStatusLog::class) {
+            if (OrderStatusLog::class === $this->ClassName) {
                 return $order->canView($member);
             }
 
@@ -278,7 +280,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -303,12 +305,13 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         if (Security::database_is_ready()) {
             $this->AuthorID = Member::currentUserID();
         }
+
         return parent::populateDefaults();
     }
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -358,7 +361,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
         $title = _t('OrderStatusLog.TYPE', 'Type');
         if (($this->exists() || $this->limitedToOneClassName())
-
                 && $this->ClassName &&
                 isset($availableLogsAssociative[$this->ClassName])
         ) {
@@ -393,13 +395,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 $this->Order()
             )
         );
+
         return $fields;
     }
 
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -410,7 +413,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string
-     **/
+     */
     public function Type()
     {
         return $this->getType();
@@ -456,7 +459,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string
-     **/
+     */
     public function CustomerNote()
     {
         return $this->getCustomerNote();
@@ -511,6 +514,6 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      */
     protected function limitedToOneClassName()
     {
-        return $this->ClassName !== OrderStatusLog::class;
+        return OrderStatusLog::class !== $this->ClassName;
     }
 }

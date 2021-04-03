@@ -20,18 +20,19 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 class FinalProductList extends AbstractProductsAndGroupsList
 {
     /**
-     * @var BaseProductList|null
+     * @var null|BaseProductList
      */
     protected $baseProductList;
 
     /**
-     * @var ProductGroupController|null
+     * @var null|ProductGroupController
      */
     protected $rootGroupController;
 
     /**
-     * singleton_cache
-     * @var self|null
+     * singleton_cache.
+     *
+     * @var null|self
      */
     protected static $singleton_cache;
 
@@ -50,9 +51,10 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * create instances
-     * @param  ProductGroupController    $rootGroupController
-     * @param  ProductGroup              $rootGroup
+     * create instances.
+     *
+     * @param ProductGroupController $rootGroupController
+     * @param ProductGroup           $rootGroup
      *
      * @return FinalProductList
      */
@@ -61,15 +63,17 @@ class FinalProductList extends AbstractProductsAndGroupsList
         if (! isset(self::$singleton_cache)) {
             self::$singleton_cache = new FinalProductList($rootGroupController, $rootGroup);
         }
+
         return self::$singleton_cache;
     }
 
-    ##################################################
-    # SETTERS / GETTERS
-    ##################################################
+    //#################################################
+    // SETTERS / GETTERS
+    //#################################################
 
     /**
      * Set the root {@link ProductGroup} to display the products from.
+     *
      * @param ProductGroup $rootGroupController
      */
     public function setRootGroupController($rootGroupController): self
@@ -85,6 +89,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
         if ($filter) {
             $this->products = $this->products->filter($filter);
         }
+
         return $this;
     }
 
@@ -98,7 +103,8 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * returns the associated BaseProductList
+     * returns the associated BaseProductList.
+     *
      * @return BaseProductList
      */
     public function getBaseProductList()
@@ -106,9 +112,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList;
     }
 
-    ##################################################
-    # APPLYERS
-    ##################################################
+    //#################################################
+    // APPLYERS
+    //#################################################
 
     public function apply(string $classNameOrType, string $key, $params = null): self
     {
@@ -116,13 +122,14 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
         $this->products = $obj
             ->apply($key, $params)
-            ->getProducts();
+            ->getProducts()
+        ;
 
         return $this;
     }
 
     /**
-     * @param array|string   $params optional additional filter
+     * @param array|string $params optional additional filter
      */
     public function applyGroupFilter(string $key, $params = null): self
     {
@@ -130,7 +137,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param array|string   $params optional additional filter
+     * @param array|string $params optional additional filter
      */
     public function applyFilter(string $key, $params = null): self
     {
@@ -138,7 +145,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param array|string   $params optional additional filter
+     * @param array|string $params optional additional filter
      */
     public function applySorter(string $key, $params = null): self
     {
@@ -146,16 +153,16 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     * @param array|string   $params optional additional filter
+     * @param array|string $params optional additional filter
      */
     public function applyDisplayer(string $key, $params = null): self
     {
         return $this->apply('DISPLAY', $key, $params);
     }
 
-    ##########################################
-    # PRODUCTS: Also show
-    ##########################################
+    //#########################################
+    // PRODUCTS: Also show
+    //#########################################
 
     public function getAlsoShowProductsIds(): array
     {
@@ -167,9 +174,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getAlsoShowProducts();
     }
 
-    ##########################################
-    # GROUPS - smart
-    ##########################################
+    //#########################################
+    // GROUPS - smart
+    //#########################################
 
     public function getFilterForCandidateCategoryIds(): array
     {
@@ -181,12 +188,12 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getFilterForCandidateCategories();
     }
 
-    ##################################################
-    # GROUPS: Parents from natural hierachy
-    ##################################################
+    //#################################################
+    // GROUPS: Parents from natural hierachy
+    //#################################################
 
     /**
-     * required for SubGroups
+     * required for SubGroups.
      */
     public function getParentGroupIds(): array
     {
@@ -198,9 +205,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getParentGroups();
     }
 
-    ##################################################
-    # GROUPS: Also Show Products, based on Products included through AlsoShow Show
-    ##################################################
+    //#################################################
+    // GROUPS: Also Show Products, based on Products included through AlsoShow Show
+    //#################################################
 
     public function getAlsoShowParentIds(): array
     {
@@ -212,9 +219,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getAlsoShowParents();
     }
 
-    ##################################################
-    # HELPERS
-    ##################################################
+    //#################################################
+    // HELPERS
+    //#################################################
 
     protected function getApplyerClassName(string $type): string
     {

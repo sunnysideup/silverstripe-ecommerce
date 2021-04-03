@@ -22,8 +22,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderStatusLogForm extends Form
 {
     /**
@@ -47,7 +46,7 @@ class OrderStatusLogForm extends Form
      * to your own controller.
      *
      * @param string $name
-     **/
+     */
     public function __construct(
         Controller $optionalController = null,
         $name,

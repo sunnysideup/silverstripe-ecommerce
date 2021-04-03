@@ -14,12 +14,9 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
-
-
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
-
 use Sunnysideup\Vardump\DebugTrait;
 
 /**
@@ -67,7 +64,7 @@ class Template
     ];
 
     /**
-     * @var array<string|null, mixed>|mixed
+     * @var array<null|string, mixed>|mixed
      */
     public $sortFilterDisplayNames;
 
@@ -127,8 +124,8 @@ class Template
     }
 
     /**
-     * @param  ProductGroupController $rootGroupController
-     * @param  ProductGroup           $rootGroup
+     * @param ProductGroupController $rootGroupController
+     * @param ProductGroup           $rootGroup
      */
     public function getDebugProviderAsObject($rootGroupController, $rootGroup): Debug
     {
@@ -142,7 +139,7 @@ class Template
      * by either type (e.g. FILER) or variable (e.g dbFieldName)
      * or both.
      *
-     * @param string $typeOrVariable    FILTER | SORT | DISPLAY OR variable
+     * @param string $typeOrVariable FILTER | SORT | DISPLAY OR variable
      *
      * @return array|string
      */
@@ -169,17 +166,19 @@ class Template
     }
 
     /**
-     * @param  string  $type      FILTER|SORT|DISPLAY
-     * @param  boolean $showError optional
+     * @param string $type      FILTER|SORT|DISPLAY
+     * @param bool   $showError optional
      */
     public function IsSortFilterDisplayNamesType(string $type, ?bool $showError = true): bool
     {
         $data = $this->getData();
         if (isset($data[$type])) {
             return true;
-        } elseif ($showError) {
+        }
+        if ($showError) {
             user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY');
         }
+
         return false;
     }
 
@@ -191,7 +190,7 @@ class Template
     }
 
     /**
-     * returns a dropdown like list of options for a filters
+     * returns a dropdown like list of options for a filters.
      */
     public function getGroupFilterOptionsMap(): array
     {
@@ -199,7 +198,7 @@ class Template
     }
 
     /**
-     * returns a dropdown like list of options for a filters
+     * returns a dropdown like list of options for a filters.
      */
     public function getFilterOptionsMap(): array
     {
@@ -207,7 +206,7 @@ class Template
     }
 
     /**
-     * returns a dropdown like list of options for a sorters
+     * returns a dropdown like list of options for a sorters.
      */
     public function getSortOptionsMap(): array
     {
@@ -215,7 +214,7 @@ class Template
     }
 
     /**
-     * returns a dropdown like list of options for a display styles
+     * returns a dropdown like list of options for a display styles.
      */
     public function getDisplayOptionsMap(): array
     {
@@ -249,11 +248,15 @@ class Template
         if ($this->IsSortFilterDisplayNamesType($type)) {
             return $this->getSortFilterDisplayValues($type, 'defaultApplyer');
         }
+
         return '';
     }
 
     /**
-     * you can provide type or class name
+     * you can provide type or class name.
+     *
+     * @param null|mixed $finalProductList
+     *
      * @return BaseApplyer
      */
     public function getApplyer(string $classNameOrType, $finalProductList = null)
@@ -270,7 +273,7 @@ class Template
     }
 
     /**
-     * returns a dropdown like list of options for a BaseClass class name
+     * returns a dropdown like list of options for a BaseClass class name.
      */
     protected function getOptionsMap(string $classNameOrType): array
     {

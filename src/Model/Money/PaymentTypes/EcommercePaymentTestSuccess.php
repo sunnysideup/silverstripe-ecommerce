@@ -10,6 +10,9 @@ use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
 
 /**
  * Payment object representing a TEST = SUCCESS.
+ *
+ * @internal
+ * @coversNothing
  */
 class EcommercePaymentTestSuccess extends EcommercePaymentTest
 {

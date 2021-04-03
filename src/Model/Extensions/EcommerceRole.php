@@ -44,8 +44,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: extensions
-
- **/
+ */
 class EcommerceRole extends DataExtension implements PermissionProvider
 {
     private static $max_count_of_members_in_array = 1500;
@@ -224,7 +223,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * @return Group | \SilverStripe\ORM\DataObject|null
-     **/
+     */
     public static function get_customer_group()
     {
         $customerCode = EcommerceConfig::get(EcommerceRole::class, 'customer_group_code');
@@ -328,7 +327,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param \SilverStripe\Security\Member|null $member
+     * @param null|\SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -347,7 +346,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param \SilverStripe\Security\Member|null $member
+     * @param null|\SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -364,9 +363,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     * tells us if the current member can process the orders
+     * tells us if the current member can process the orders.
      *
-     * @param \SilverStripe\Security\Member|null $member
+     * @param null|\SilverStripe\Security\Member $member
      *
      * @return bool
      */
@@ -384,7 +383,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * @return \SilverStripe\ORM\DataObject (Group)|null
-     **/
+     */
     public static function get_admin_group()
     {
         $adminCode = EcommerceConfig::get(EcommerceRole::class, 'admin_group_code');
@@ -397,7 +396,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * @return \SilverStripe\ORM\DataObject (Group)|null
-     **/
+     */
     public static function get_assistant_group()
     {
         $assistantCode = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code');
@@ -410,7 +409,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * @return \SilverStripe\ORM\DataObject (Member)|null
-     **/
+     */
     public static function get_default_shop_admin_user()
     {
         $group = self::get_admin_group();
@@ -421,7 +420,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * @return \SilverStripe\ORM\DataObject (Member)|null
-     **/
+     */
     public static function get_default_shop_assistant_user()
     {
         $group = self::get_assistant_group();
@@ -432,6 +431,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     /**
      * you can't delete a Member with one or more orders.
+     *
      * @param \SilverStripe\Security\Member $member
      */
     public function canDelete($member = null)
@@ -439,6 +439,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         if ($this->getOrders()->count()) {
             return false;
         }
+
         return parent::canDelete($member);
     }
 
@@ -519,6 +520,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             ),
             'sort' => 101,
         ];
+
         return $perms;
     }
 
@@ -582,7 +584,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * get CMS fields describing the member in the CMS when viewing the order.
      *
      * @return CompositeField
-     **/
+     */
     public function getEcommerceFieldsForCMS()
     {
         $fields = new CompositeField();
@@ -613,10 +615,13 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             );
             $fields->push($linkField2);
         }
+
         return $fields;
     }
 
     /**
+     * @param mixed $mustCreateAccount
+     *
      * @return \SilverStripe\Forms\FieldList
      */
     public function getEcommerceFields($mustCreateAccount = false)
@@ -734,12 +739,13 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * Is the member a member of the ShopAdmin Group.
      *
      * @return bool
-     **/
+     */
     public function IsShopAdmin()
     {
         if (Permission::checkMember($this->owner, 'ADMIN')) {
             return true;
         }
+
         return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'));
     }
 
@@ -747,7 +753,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * Is the member a member of the SHOPASSISTANTS Group.
      *
      * @return bool
-     **/
+     */
     public function IsShopAssistant()
     {
         if ($this->owner->IsShopAdmin()) {
@@ -761,7 +767,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * Is the member a member of the SHOPASSISTANTS Group.
      *
      * @return bool
-     **/
+     */
     public function CanProcessOrders()
     {
         if ($this->owner->IsShopAdmin()) {
@@ -784,9 +790,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         } else {
             $orders = Order::get_datalist_of_orders_with_submit_record(true);
         }
+
         return $orders
             ->Filter(['MemberID' => $this->owner->ID])
-            ->First();
+            ->First()
+        ;
     }
 
     /**
@@ -813,7 +821,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * @param bool   $keepDoubles    - keep addresses that are the same (if set to false, only unique addresses are returned)
      *
      * @return \SilverStripe\ORM\ArrayList (BillingAddresses | ShippingAddresses)
-     **/
+     */
     public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
     {
         $returnArrayList = new ArrayList();
@@ -830,7 +838,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 ->sort('LastEdited', 'DESC')
                 ->exclude(['ID' => $excludeID])
                 ->limit($limit)
-                ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');
+                ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"')
+            ;
             if ($addresses->count()) {
                 if ($keepDoubles) {
                     foreach ($addresses as $address) {
@@ -859,7 +868,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      *
      * @param string $type
      * @param int    $excludeID - the ID of the record to exlcude (if any)
-     **/
+     */
     public function previousOrderAddress($type = BillingAddress::class, $excludeID = 0)
     {
         $addresses = $this->previousOrderAddresses($type, $excludeID, true);
@@ -880,7 +889,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */

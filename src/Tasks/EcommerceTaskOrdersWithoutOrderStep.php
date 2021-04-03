@@ -16,8 +16,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
 {
     protected $sendEmails = true;
@@ -50,7 +49,8 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                     ->innerJoin(
                         $submittedOrderStatusLogTableName,
                         "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
-                    );
+                    )
+                ;
                 if ($orders->count()) {
                     foreach ($orders as $order) {
                         $archivingNow = 'Open order to rectify.';

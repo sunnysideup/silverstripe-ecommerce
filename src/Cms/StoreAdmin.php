@@ -10,7 +10,6 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
-
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -22,8 +21,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
-
- **/
+ */
 class StoreAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
@@ -77,7 +75,7 @@ class StoreAdmin extends ModelAdmin
 
     /**
      * @return string (URLSegment)
-     **/
+     */
     public function urlSegmenter()
     {
         return $this->config()->get('url_segment');
@@ -109,7 +107,7 @@ class StoreAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if ($this->modelClass === EcommerceDBConfig::class || is_subclass_of($this->modelClass, EcommerceDBConfig::class)) {
+        if (EcommerceDBConfig::class === $this->modelClass || is_subclass_of($this->modelClass, EcommerceDBConfig::class)) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();

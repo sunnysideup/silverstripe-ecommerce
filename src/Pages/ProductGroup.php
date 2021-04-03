@@ -5,10 +5,8 @@ namespace Sunnysideup\Ecommerce\Pages;
 use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
@@ -16,14 +14,11 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
-
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
-
 use SilverStripe\Security\Permission;
-
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
@@ -35,11 +30,10 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
-
 use Sunnysideup\Vardump\Vardump;
 
 /**
- * Product Group is a 'holder' for Products within the CMS
+ * Product Group is a 'holder' for Products within the CMS.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -134,7 +128,7 @@ class ProductGroup extends Page
     public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -148,13 +142,14 @@ class ProductGroup extends Page
      * Shop Admins can edit.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -177,7 +172,7 @@ class ProductGroup extends Page
             return false;
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -252,7 +247,7 @@ class ProductGroup extends Page
     }
 
     /**
-     * used if you install lumberjack
+     * used if you install lumberjack.
      */
     public function getLumberjackTitle(): string
     {
@@ -271,7 +266,8 @@ class ProductGroup extends Page
             if ($hasDuplicates) {
                 DB::alteration_message('found duplicates for ' . $urlSegment, 'deleted');
                 $checkForDuplicatesURLSegments = ProductGroup::get()
-                    ->filter(['URLSegment' => $urlSegment]);
+                    ->filter(['URLSegment' => $urlSegment])
+                ;
 
                 if ($checkForDuplicatesURLSegments->count()) {
                     $count = 0;
@@ -294,7 +290,8 @@ class ProductGroup extends Page
     }
 
     /**
-     * returns the template for providing related groups and products
+     * returns the template for providing related groups and products.
+     *
      * @return Template
      */
     public function getTemplateForProductsAndGroups()
@@ -310,15 +307,17 @@ class ProductGroup extends Page
     }
 
     /**
-     * work out the recursive value in the Database for SORT / FILTER / DISPLAY
+     * work out the recursive value in the Database for SORT / FILTER / DISPLAY.
+     *
      * @param string $type SORT|FILTER|DISPLAY
-     **/
+     */
     public function getListConfigCalculated(string $type): string
     {
         $field = $this->getSortFilterDisplayValues($type, 'dbFieldName');
         if ($field) {
             return $this->recursiveValue($field, BaseApplyer::DEFAULT_NAME);
         }
+
         return BaseApplyer::DEFAULT_NAME;
     }
 
@@ -351,11 +350,12 @@ class ProductGroup extends Page
         if ($hash) {
             $hash .= '/';
         }
+
         return $this->Link('searchresults/' . $hash);
     }
 
     /**
-     * Retrieve the base list of products for this group
+     * Retrieve the base list of products for this group.
      *
      * @return BaseProductList
      */
@@ -369,6 +369,7 @@ class ProductGroup extends Page
                 $this->recursiveValue('LevelOfProductsToShow', 99)
             );
         }
+
         return $this->baseProductList;
     }
 
@@ -390,6 +391,7 @@ class ProductGroup extends Page
         if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->count()) {
             $array = $this->AlsoShowProducts()->columnUnique();
         }
+
         return ArrayMethods::filter_array($array);
     }
 
@@ -438,7 +440,7 @@ class ProductGroup extends Page
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
      *
-     * @return Image|null
+     * @return null|Image
      */
     public function BestAvailableImage()
     {
@@ -454,7 +456,7 @@ class ProductGroup extends Page
     }
 
     /**
-     * the number of direct descendants
+     * the number of direct descendants.
      */
     public function getNumberOfProducts(): int
     {
@@ -466,7 +468,7 @@ class ProductGroup extends Page
      * by either type (e.g. FILTER) or variable (e.g dbFieldName)
      * or both.
      *
-     * @param string $typeOrVariable    optional GROUPFILTER | FILTER | SORT | DISPLAY OR variable
+     * @param string $typeOrVariable optional GROUPFILTER | FILTER | SORT | DISPLAY OR variable
      *
      * @return array | String
      */
@@ -497,12 +499,13 @@ class ProductGroup extends Page
     public function CurrentOrSection(): string
     {
         $outcome = $this->LinkingMode();
-        if ($outcome !== 'link') {
+        if ('link' !== $outcome) {
             $action = Controller::curr()->getRequest()->param('Action');
-            if ($outcome === 'current' && in_array($action, ['filterforgroup', 'searchresults'], true)) {
+            if ('current' === $outcome && in_array($action, ['filterforgroup', 'searchresults'], true)) {
                 return 'section';
             }
         }
+
         return $outcome;
     }
 
@@ -539,7 +542,7 @@ class ProductGroup extends Page
         $options = $this->getOptionsForDropdown($type);
         if (count($options) > 2) {
             $field = $this->getSortFilterDisplayValues($type, 'dbFieldName');
-            if ($this->{$field} === 'inherit') {
+            if ('inherit' === $this->{$field}) {
                 $key = $this->getListConfigCalculated($type);
                 $actualValue = ' (' . ($options[$key] ?? _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $options['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
@@ -559,7 +562,7 @@ class ProductGroup extends Page
 
     /**
      * GROUPFILTER:
-     * not available
+     * not available.
      *
      * SORT:
      * returns an array of Key => Title for sort options.
@@ -577,7 +580,7 @@ class ProductGroup extends Page
      *
      * most likely values called: getDefaultFilterOptions,getDefaultSortOrderOptions, getDisplayStyleOptions
      *
-     * @param string $type - FILTER | SORT | DISPLAY
+     * @param string $type        - FILTER | SORT | DISPLAY
      * @param bool   $withInherit - optional
      *
      * @return array
@@ -611,8 +614,10 @@ class ProductGroup extends Page
     }
 
     /**
-     * get recursive value for Product Group and check EcommerceConfig as last resort
-     * @param  mixed  $default
+     * get recursive value for Product Group and check EcommerceConfig as last resort.
+     *
+     * @param mixed $default
+     *
      * @return mixed
      */
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
@@ -635,10 +640,10 @@ class ProductGroup extends Page
                     }
                 }
             }
-            if ($methodWorks === false) {
+            if (false === $methodWorks) {
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
-            if (! $value || $value === 'inherit') {
+            if (! $value || 'inherit' === $value) {
                 $parent = $this->ParentGroup();
                 if ($parent && $parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);

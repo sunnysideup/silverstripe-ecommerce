@@ -32,8 +32,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: address
-
- **/
+ */
 class OrderAddress extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -120,6 +119,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country')) {
             return 'ShippingCountry';
         }
+
         return 'Country';
     }
 
@@ -134,6 +134,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country')) {
             return 'ShippingRegion';
         }
+
         return 'Region';
     }
 
@@ -162,7 +163,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -177,7 +178,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -194,20 +195,20 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canView($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (! $this->exists()) {
             return $this->canCreate($member);
         }
-        if ($this->_canView === null) {
+        if (null === $this->_canView) {
             $this->_canView = false;
             if ($this->Order()) {
                 if ($this->Order()->exists()) {
@@ -228,20 +229,20 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canEdit($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (! $this->exists()) {
             return $this->canCreate($member);
         }
-        if ($this->_canEdit === null) {
+        if (null === $this->_canEdit) {
             $this->_canEdit = false;
             if ($this->Order()) {
                 if ($this->Order()->exists()) {
@@ -263,7 +264,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
 
@@ -306,7 +307,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * NOTE: do not call this method SetCountry as this has a special meaning! *.
      *
      * @param int $regionID -  RegionID
-     **/
+     */
     public function SetRegionFields($regionID)
     {
         $regionField = $this->fieldPrefix() . 'RegionID';
@@ -396,9 +397,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *@todo: are there times when the Shipping rather than the Billing address should be linked?
      * Copies the last address used by the member.
      *
-     * @param bool            $write  - should the address be written
-     * @return OrderAddress|ShippingAddress|BillingAddress
-     **/
+     * @param bool $write - should the address be written
+     *
+     * @return BillingAddress|OrderAddress|ShippingAddress
+     */
     public function FillWithLastAddressFromMember(Member $member, $write = false)
     {
         $excludedFields = ['ID', 'OrderID'];
@@ -443,8 +445,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @Note: this needs to be public to give DODS (extensions access to this)
      * @todo: can wre write $this->Order() instead????
      *
-     * @return Member|null
-     **/
+     * @return null|Member
+     */
     public function getMemberFromOrder()
     {
         if ($this->exists()) {
@@ -456,6 +458,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         return null;
     }
 
@@ -571,7 +574,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @param string $name - name of the field
      *
      * @return TextField
-     **/
+     */
     protected function getPostalCodeField($name)
     {
         $field = new TextField($name, _t('OrderAddress.POSTALCODE', 'Postal Code'));
@@ -593,10 +596,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * put together a dropdown for the region field.
      *
-     * @param string $name - name of the field
+     * @param string $name         - name of the field
+     * @param mixed  $freeTextName
      *
      * @return DropdownField
-     **/
+     */
     protected function getRegionField($name, $freeTextName = '')
     {
         if (EcommerceRegion::show()) {
@@ -634,7 +638,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * @param string $name - name of the field
      *
      * @return DropdownField
-     **/
+     */
     protected function getCountryField($name)
     {
         $countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
@@ -691,27 +695,28 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     /**
      * returns the field prefix string for shipping addresses.
-     *
-     **/
+     */
     protected function baseClassLinkingToOrder(): ?string
     {
         if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
             return BillingAddress::class;
-        } elseif (is_a($this, EcommerceConfigClassNames::getName(ShippingAddress::class))) {
+        }
+        if (is_a($this, EcommerceConfigClassNames::getName(ShippingAddress::class))) {
             return ShippingAddress::class;
         }
+
         return null;
     }
 
     /**
      * returns the field prefix string for shipping addresses.
-     *
-     **/
+     */
     protected function fieldPrefix(): string
     {
         if ($this->baseClassLinkingToOrder() === EcommerceConfigClassNames::getName(BillingAddress::class)) {
             return '';
         }
+
         return 'Shipping';
     }
 }

@@ -132,7 +132,7 @@ class EcommercePaymentFormSetupAndValidation
         }
 
         //nothing to pay, always valid
-        if (($order->TotalOutstanding() === 0 && $order->IsSubmitted()) || $order->IsPaid() || $order->Total() === 0) {
+        if ((0 === $order->TotalOutstanding() && $order->IsSubmitted()) || $order->IsPaid() || 0 === $order->Total()) {
             return true;
         }
         if (! $this->paymentObject) {
@@ -206,6 +206,7 @@ class EcommercePaymentFormSetupAndValidation
                         );
                         $errors = true;
                     }
+
                     break;
                 case 'ExpiryDate':
                     $this->paymentObject->{$dbFieldName} =
@@ -219,6 +220,7 @@ class EcommercePaymentFormSetupAndValidation
                         );
                         $errors = true;
                     }
+
                     break;
                 case 'CVVNumber':
                     $cardNumber = $this->paymentObject->{$dbFieldName};
@@ -230,6 +232,7 @@ class EcommercePaymentFormSetupAndValidation
                             'bad'
                         );
                     }
+
                     break;
                 case 'NameOnCard':
                     $this->paymentObject->{$dbFieldName} = trim($data[$formFieldName]);
@@ -241,6 +244,7 @@ class EcommercePaymentFormSetupAndValidation
                         );
                         $errors = true;
                     }
+
                     break;
                 default:
                     user_error('Type must be one of four options: CardNumber, NameOnCard, CVV, ExpiryDate');
@@ -263,11 +267,11 @@ class EcommercePaymentFormSetupAndValidation
      * 2. save form into payment
      * 3. return payment result.
      *
-     * @param Order $order - the order that is being paid
-     * @param array $data  - Array of data that is submittted
-     * @param Form  $form  - the form that is being submitted
-     * *
-     * @return bool - if successful, this method will return TRUE
+     * @param  Order $order - the order that is being paid
+     * @param  array $data  - Array of data that is submittted
+     * @param  Form  $form  - the form that is being submitted
+     *                      *
+     * @return bool  - if successful, this method will return TRUE
      */
     public function processPaymentFormAndReturnNextStep(Order $order, $data, Form $form)
     {
@@ -347,12 +351,13 @@ class EcommercePaymentFormSetupAndValidation
     {
         $month = (int) substr($monthYear, 0, 2);
         $year = (int) ('20' . substr($monthYear, 2));
-        $currentYear = (int) Date('Y');
-        $currentMonth = (int) Date('m');
+        $currentYear = (int) date('Y');
+        $currentMonth = (int) date('m');
         if (($month > 0 || $month < 13) && $year > 0) {
             if ($year > $currentYear) {
                 return true;
-            } elseif ($year === $currentYear) {
+            }
+            if ($year === $currentYear) {
                 if ($currentMonth <= $month) {
                     return true;
                 }
@@ -385,7 +390,7 @@ class EcommercePaymentFormSetupAndValidation
                 $firstTwo = substr($cardNumber, 0, 2);
 
                 //If the card is an American Express
-                if ($firstTwo === '34' || $firstTwo === '37') {
+                if ('34' === $firstTwo || '37' === $firstTwo) {
                     if (! preg_match('#^\\d{4}$#', $cvv)) {
                         // The credit card is an American Express card
                         // but does not have a four digit CVV code
@@ -399,8 +404,10 @@ class EcommercePaymentFormSetupAndValidation
                 //passed all checks
                 return true;
             }
+
             return false;
         }
+
         return false;
     }
 }

@@ -27,8 +27,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: cms
-
- **/
+ */
 class SalesAdminExtras extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
@@ -114,13 +113,14 @@ class SalesAdminExtras extends ModelAdmin
     public function getList()
     {
         $list = parent::getList();
-        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+        if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
             $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName($submittedOrderStatusLogClassName);
             $list = $list
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-                ->where('"OrderStatusLog"."ClassName" = ' . Convert::raw2sql($submittedOrderStatusLogClassName, true));
+                ->where('"OrderStatusLog"."ClassName" = ' . Convert::raw2sql($submittedOrderStatusLogClassName, true))
+            ;
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
@@ -137,7 +137,7 @@ class SalesAdminExtras extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (is_subclass_of($this->modelClass, Order::class) || $this->modelClass === Order::class) {
+        if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();
@@ -154,6 +154,7 @@ class SalesAdminExtras extends ModelAdmin
                 }
             }
         }
+
         return $form;
     }
 

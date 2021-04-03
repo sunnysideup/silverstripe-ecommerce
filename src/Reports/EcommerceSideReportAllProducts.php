@@ -12,8 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
-
- **/
+ */
 class EcommerceSideReportAllProducts extends Report
 {
     /**
@@ -51,6 +50,8 @@ class EcommerceSideReportAllProducts extends Report
 
     /**
      * working out the items.
+     *
+     * @param null|mixed $params
      *
      * @return \SilverStripe\ORM\DataList
      */

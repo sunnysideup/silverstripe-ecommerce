@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\Tab;
@@ -26,8 +25,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: Pages
-
- **/
+ */
 class CartPage extends Page
 {
     /**
@@ -114,17 +112,20 @@ class CartPage extends Page
     /**
      * Get the value of a field on this object, automatically inserting the value into any available casting objects
      * that have been specified.
-     * inherited from ViewableData
+     * inherited from ViewableData.
+     *
      * @see ViewableData
+     *
      * @param string $fieldName
-     * @param array $arguments
-     * @param bool $cache Cache this object
+     * @param array  $arguments
+     * @param bool   $cache     Cache this object
      * @param string $cacheName a custom cache name
-     * @return object|DBField
+     *
+     * @return DBField|object
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
-        if ($fieldName === 'MenuTitle' && ! ($this instanceof OrderConfirmationPage)) {
+        if ('MenuTitle' === $fieldName && ! ($this instanceof OrderConfirmationPage)) {
             return DBField::create_field(
                 'HTMLVarchar',
                 strip_tags($this->EcommerceMenuTitle()),
@@ -132,6 +133,7 @@ class CartPage extends Page
                 $this
             );
         }
+
         return parent::obj($fieldName, $arguments, $cache, $cacheName);
     }
 
@@ -140,6 +142,7 @@ class CartPage extends Page
      * but we do allow for extensions to exist at the same time.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -152,6 +155,7 @@ class CartPage extends Page
      * Shop Admins can edit.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -190,7 +194,7 @@ class CartPage extends Page
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -228,7 +232,9 @@ class CartPage extends Page
 
     /**
      * Returns the Link to the CartPage on this site.
+     *
      * @param string $action [optional]
+     *
      * @return string (URLSegment)
      */
     public static function find_link($action = null)
@@ -237,6 +243,7 @@ class CartPage extends Page
         if ($page) {
             return $page->Link($action);
         }
+
         return CheckoutPage::find_link($action);
     }
 
@@ -300,7 +307,7 @@ class CartPage extends Page
 
     /**
      * @return string (HTML Snippet)
-     **/
+     */
     public function EcommerceMenuTitle()
     {
         $count = 0;
@@ -329,9 +336,7 @@ class CartPage extends Page
         return $this->MenuTite;
     }
 
-    /***********************
-     * For use in templates
-     ***********************/
+    // For use in templates
 
     /**
      * standard SS method for use in templates.

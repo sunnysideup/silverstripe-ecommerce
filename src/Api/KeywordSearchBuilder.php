@@ -17,7 +17,7 @@ class KeywordSearchBuilder
      * being less specific than the last...
      *
      * @param string $phrase - keywordphrase
-     * @param array $fields         - fields being searched
+     * @param array  $fields - fields being searched
      */
     public function getSearchArrays(string $phrase, $fields = ['Title', 'MenuTitle']): array
     {
@@ -104,11 +104,12 @@ class KeywordSearchBuilder
             //todo: why are we looping through words?
             $this->replaceSearchPhraseOrWord($word);
         }
+
         return $this->keywordPhrase;
     }
 
     /**
-     * @param  string $word (optional word within keywordPhrase)
+     * @param string $word (optional word within keywordPhrase)
      *
      * @return string (updated Keyword Phrase)
      */
@@ -124,7 +125,8 @@ class KeywordSearchBuilder
                 LOWER(\"Search\") LIKE '%,{$word}' OR
                 LOWER(\"Search\") LIKE '{$word},%' OR
                 LOWER(\"Search\") LIKE '%,{$word},%'"
-            );
+            )
+        ;
         //if it is a word replacement then we do not want replace whole phrase ones ...
         if ($this->keywordPhrase !== $word) {
             $replacements = $replacements->exclude(['ReplaceWholePhrase' => 1]);

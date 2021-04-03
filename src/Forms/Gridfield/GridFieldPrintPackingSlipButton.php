@@ -12,10 +12,10 @@ use SilverStripe\ORM\DataObject;
 class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridField_ActionProvider
 {
     /**
-     * Add a column 'Delete'
+     * Add a column 'Delete'.
      *
      * @param GridField $gridField
-     * @param array $columns
+     * @param array     $columns
      */
     public function augmentColumns($gridField, &$columns)
     {
@@ -25,11 +25,12 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
     }
 
     /**
-     * Return any special attributes that will be used for FormField::create_tag()
+     * Return any special attributes that will be used for FormField::create_tag().
      *
-     * @param GridField $gridField
+     * @param GridField  $gridField
      * @param DataObject $record
-     * @param string $columnName
+     * @param string     $columnName
+     *
      * @return array
      */
     public function getColumnAttributes($gridField, $record, $columnName)
@@ -38,24 +39,26 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
     }
 
     /**
-     * Add the title
+     * Add the title.
      *
      * @param GridField $gridField
-     * @param string $columnName
+     * @param string    $columnName
+     *
      * @return array
      */
     public function getColumnMetadata($gridField, $columnName)
     {
-        if ($columnName === 'Packing Slip') {
+        if ('Packing Slip' === $columnName) {
             return ['title' => 'Packing Slip'];
         }
+
         return [];
     }
 
     /**
-     * @param GridField $gridField
+     * @param GridField  $gridField
      * @param DataObject $record
-     * @param string $columnName
+     * @param string     $columnName
      *
      * @return string - the HTML for the column
      */
@@ -82,13 +85,15 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
             ->setAttribute('data-icon', 'download-csv')
             ->setAttribute('onclick', $onclickStatement)
             ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION', 'Print Packing Slip'))
-            ->Field();
+            ->Field()
+        ;
     }
 
     /**
-     * Which columns are handled by this component
+     * Which columns are handled by this component.
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getColumnsHandled($gridField)
@@ -97,9 +102,10 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
     }
 
     /**
-     * Which GridField actions are this component handling
+     * Which GridField actions are this component handling.
      *
      * @param GridField $gridField
+     *
      * @return array
      */
     public function getActions($gridField)
@@ -108,15 +114,15 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
     }
 
     /**
-     * Handle the actions and apply any changes to the GridField
+     * Handle the actions and apply any changes to the GridField.
      *
      * @param string $actionName
-     * @param mixed $arguments
-     * @param array $data - form data
+     * @param mixed  $arguments
+     * @param array  $data       - form data
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName === 'printpackingslip') {
+        if ('printpackingslip' === $actionName) {
             $itemID = (int) $arguments['RecordID'];
             if (! $itemID) {
                 return;

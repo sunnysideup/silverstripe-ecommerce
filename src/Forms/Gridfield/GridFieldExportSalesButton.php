@@ -15,15 +15,12 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
- *
- * @package forms
- * @subpackage fields-gridfield
  */
-
 class GridFieldExportSalesButton extends GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     /**
-     * Array of fields to be exporoted
+     * Array of fields to be exporoted.
+     *
      * @var array
      */
     private static $fields_and_methods_to_be_exported = [
@@ -39,7 +36,9 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     private $isFirstRow = true;
 
     /**
-     * export is an action button
+     * export is an action button.
+     *
+     * @param mixed $gridField
      */
     public function getActions($gridField)
     {
@@ -48,13 +47,15 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName === 'exportsales') {
+        if ('exportsales' === $actionName) {
             return $this->handleSales($gridField);
         }
     }
 
     /**
-     * it is also a URL
+     * it is also a URL.
+     *
+     * @param mixed $gridField
      */
     public function getURLHandlers($gridField)
     {
@@ -64,19 +65,25 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     }
 
     /**
-     * Handle the export, for both the action button and the URL
+     * Handle the export, for both the action button and the URL.
+     *
+     * @param mixed      $gridField
+     * @param null|mixed $request
      */
     public function handleSales($gridField, $request = null)
     {
         if ($fileData = $this->generateExportFileData($gridField)) {
-            $now = Date('d-m-Y-H-i');
+            $now = date('d-m-Y-H-i');
             $fileName = "sales-{$now}.csv";
+
             return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
     }
 
     /**
-     * Place the export button in a <p> tag below the field
+     * Place the export button in a <p> tag below the field.
+     *
+     * @param mixed $gridField
      */
     public function getHTMLFragments($gridField)
     {
@@ -90,6 +97,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $button->setAttribute('data-icon', 'download-csv');
         $button->addExtraClass('no-ajax action_export');
         $button->setForm($gridField->getForm());
+
         return [
             $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',
         ];
@@ -99,7 +107,8 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * Generate export fields for CSV.
      *
      * @param GridField $gridField
-     * @return string|null
+     *
+     * @return null|string
      */
     public function generateExportFileData($gridField)
     {
@@ -152,6 +161,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         if ($fileData) {
             return $fileData;
         }
+
         return null;
     }
 
@@ -182,19 +192,20 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                 $fileData .= implode($separator, $columnData);
                 $fileData .= "\n";
                 $item->destroy();
-                unset($item);
-                unset($columnData);
+                unset($item, $columnData);
             }
 
             return $fileData;
         }
+
         return '';
     }
 
     /**
-     * @param  array    $idArray Order IDs
-     * @param  int      $count
-     * @param  int      $offset
+     * @param array $idArray Order IDs
+     * @param int   $count
+     * @param int   $offset
+     *
      * @return \SilverStripe\ORM\DataList
      */
     protected function getMyOrders($idArray, $count, $offset)
@@ -203,6 +214,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             ->sort('"Order"."ID" ASC')
             ->filter(['ID' => $idArray])
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
-            ->limit($count, $offset);
+            ->limit($count, $offset)
+        ;
     }
 }

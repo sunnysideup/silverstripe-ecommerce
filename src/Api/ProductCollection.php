@@ -10,7 +10,7 @@ use SilverStripe\ORM\DB;
  * returned as an array or ArrayList. Using the ORM can be inefficient to retrieve these collections.
  * This class is designed to be extended and allows you to retreive your desired product collection
  * using db query or whatever method you find to be most efficient.
- **/
+ */
 abstract class ProductCollection
 {
     abstract public function getArrayList(): ArrayList;

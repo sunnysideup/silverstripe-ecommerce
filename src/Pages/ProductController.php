@@ -93,8 +93,10 @@ class ProductController extends PageController
             );
             $requiredFields = ['Quantity'];
             $validator = new RequiredFields($requiredFields);
+
             return new Form($this, 'AddProductForm', $fields, $actions, $validator);
         }
+
         return _t('Product.PRODUCTNOTFORSALE', 'Product not for sale');
     }
 
@@ -148,7 +150,7 @@ class ProductController extends PageController
     /**
      * This method can be extended to show products in the side bar.
      *
-     * @return Product|null
+     * @return null|Product
      */
     public function NextProduct()
     {
@@ -168,7 +170,7 @@ class ProductController extends PageController
     /**
      * This method can be extended to show products in the side bar.
      *
-     * @return Product|null
+     * @return null|Product
      */
     public function PreviousProduct()
     {

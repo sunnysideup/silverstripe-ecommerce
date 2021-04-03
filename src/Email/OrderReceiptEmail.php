@@ -9,8 +9,7 @@ namespace Sunnysideup\Ecommerce\Email;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderReceiptEmail extends OrderEmail
 {
     /**

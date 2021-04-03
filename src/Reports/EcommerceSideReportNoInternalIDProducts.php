@@ -12,8 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
-
- **/
+ */
 class EcommerceSideReportNoInternalIDProducts extends Report
 {
     /**
@@ -52,13 +51,16 @@ class EcommerceSideReportNoInternalIDProducts extends Report
     /**
      * working out the items.
      *
+     * @param null|mixed $params
+     *
      * @return \SilverStripe\ORM\DataList
      */
     public function sourceRecords($params = null)
     {
         return Product::get()
             ->where("\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' ")
-            ->sort('FullSiteTreeSort', 'ASC');
+            ->sort('FullSiteTreeSort', 'ASC')
+        ;
     }
 
     /**

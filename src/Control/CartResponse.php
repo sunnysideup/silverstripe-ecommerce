@@ -16,8 +16,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
-
- **/
+ */
 class CartResponse extends EcommerceResponse
 {
     /**
@@ -56,18 +55,20 @@ class CartResponse extends EcommerceResponse
      *
      * @param $b
      */
-    public function setIncludeHeaders($b)
+    public function setIncludeHeaders(bool $b) : self
     {
         $this->includeHeaders = $b;
+        return $this;
     }
 
     /**
      * Builds json object to be returned via ajax.
      *
-     * @param array  $messages        (Type, Message)
+     * @param array  $messages (Type, Message)
      * @param string $status
+     *
      * @return string HEADER + JSON
-     **/
+     */
     public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
     {
         //add header
@@ -85,7 +86,7 @@ class CartResponse extends EcommerceResponse
         }
 
         //bad status
-        if ($status !== 'success') {
+        if ('success' !== $status) {
             $this->setStatusCode(400, $messagesImploded);
         }
 
@@ -173,7 +174,7 @@ class CartResponse extends EcommerceResponse
         foreach ($templates as $idMethod => $template) {
             $selector = $ajaxObject->{$idMethod}();
             $classOrID = 'id';
-            if (stripos($selector, 'class') !== false) {
+            if (false !== stripos($selector, 'class')) {
                 $classOrID = 'class';
             }
             $js[] = [

@@ -49,6 +49,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         ]);
 
         $templates = SSViewer::get_templates_by_class($this, '', GridFieldAddNewButton::class);
+
         return [
             $this->targetFragment => $data->renderWith($templates),
         ];
@@ -57,7 +58,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
     /**
      * finds the most likely root parent for the shop.
      *
-     * @return SiteTree|null
+     * @return null|SiteTree
      */
     public function BestParentPage()
     {
@@ -72,14 +73,16 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
                 return $result;
             }
             $stage = '';
-            if (Versioned::get_stage() === 'Live') {
+            if ('Live' === Versioned::get_stage()) {
                 $stage = '_Live';
             }
+
             return $rootParentClass::get()
                 ->filter('Parent.ParentID', 0)
                 ->innerJoin(Config::inst()
                 ->get(SiteTree::class, 'table_name') . $stage, 'Parent.ID = SiteTree' . $stage . '.ParentID', 'Parent')
-                ->First();
+                ->First()
+            ;
         }
     }
 }

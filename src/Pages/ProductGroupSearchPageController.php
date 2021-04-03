@@ -28,6 +28,7 @@ class ProductGroupSearchPageController extends ProductGroupController
         if ($this->IsSearchResults()) {
             return parent::Products();
         }
+
         return null;
     }
 }

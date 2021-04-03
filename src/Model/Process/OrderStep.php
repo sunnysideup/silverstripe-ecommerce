@@ -39,22 +39,17 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
-    /**************************************************
-    * Email
-    **************************************************/
+    // Email
 
     /**
      * @var string
      */
     protected $emailClassName = OrderInvoiceEmail::class;
 
-    /**************************************************
-    * Order Status Logs
-    **************************************************/
+    // Order Status Logs
 
     /**
      * The OrderStatusLog that is relevant to the particular step.
@@ -377,6 +372,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * @param bool $noCacheValues
+     *
      * @return OrderStep
      */
     public static function last_order_step($noCacheValues = false)
@@ -390,7 +386,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * return StatusIDs (orderstep IDs) from orders that are bad....
-     * (basically StatusID values that do not exist)
+     * (basically StatusID values that do not exist).
      *
      * @return array
      */
@@ -399,10 +395,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $badorderStatus = Order::get()
             ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
             ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
-            ->column('StatusID');
+            ->column('StatusID')
+        ;
         if (is_array($badorderStatus)) {
             return array_unique(array_values($badorderStatus));
         }
+
         return [-1];
     }
 
@@ -424,7 +422,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * @return array
-     **/
+     */
     public static function get_codes_for_order_steps_to_include()
     {
         $newArray = [];
@@ -443,7 +441,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * returns a list of ordersteps that have not been created yet.
      *
      * @return array
-     **/
+     */
     public static function get_not_created_codes_for_order_steps_to_include()
     {
         $array = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
@@ -461,7 +459,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * @return string
-     **/
+     */
     public function getMyCode()
     {
         $array = Config::inst()->get($this->ClassName, 'defaults', Config::UNINHERITED);
@@ -478,12 +476,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function populateDefaults()
     {
         $this->Description = $this->myDescription();
+
         return parent::populateDefaults();
     }
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -606,13 +605,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
     public function CMSEditLink($action = null)
     {
         $sanitisedClassName = ClassHelpers::sanitise_class_name(OrderStep::class);
+
         return 'admin/shop/' . $sanitisedClassName . '/EditForm/field/' . $sanitisedClassName . '/item/' . $this->ID . '/edit';
     }
 
@@ -626,8 +626,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @see Order::DisplayPage
      *
-     * @return object|null (Page)
-     **/
+     * @return null|object (Page)
+     */
     public function AlternativeDisplayPage()
     {
         return null;
@@ -635,8 +635,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * A form that can be used by the Customer to progress step!
-     * @return \SilverStripe\Forms\Form|null (CustomerOrderStepForm)
-     **/
+     *
+     * @return null|\SilverStripe\Forms\Form (CustomerOrderStepForm)
+     */
     public function CustomerOrderStepForm(Controller $controller, string $name, Order $order)
     {
         return null;
@@ -647,7 +648,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * Usually this is added before ActionNextStepManually.
      *
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function addOrderStepFields(FieldList $fields, Order $order)
     {
         return $fields;
@@ -655,7 +656,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * @return \SilverStripe\ORM\ValidationResult
-     **/
+     */
     public function validate()
     {
         $result = parent::validate();
@@ -667,7 +668,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ]
             )
             ->exclude(['ID' => (int) $this->ID])
-            ->First();
+            ->First()
+        ;
         if ($anotherOrderStepWithSameNameOrCode) {
             $result->addError(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
         }
@@ -675,9 +677,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $result;
     }
 
-    /**************************************************
-    * moving between statusses...
-    **************************************************/
+    // moving between statusses...
 
     /**
      *initStep:
@@ -687,7 +687,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @see Order::doNextStatus
      *
      * @return bool - true if the current step is ready to be run...
-     **/
+     */
     public function initStep(Order $order): bool
     {
         user_error('Please implement the initStep method in a subclass (' . __CLASS__ . ') of OrderStep', E_USER_WARNING);
@@ -703,8 +703,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @see Order::doNextStatus
      *
-     * @return bool - true if run correctly.
-     **/
+     * @return bool - true if run correctly
+     */
     public function doStep(Order $order): bool
     {
         user_error('Please implement the initStep method in a subclass (' . __CLASS__ . ') of OrderStep', E_USER_WARNING);
@@ -718,8 +718,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @see Order::doNextStatus
      *
-     * @return OrderStep|null (next step OrderStep object)
-     **/
+     * @return null|OrderStep (next step OrderStep object)
+     */
     public function nextStep(Order $order)
     {
         $sort = (int) $this->Sort;
@@ -734,20 +734,20 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($nextOrderStepObject) {
             return $nextOrderStepObject;
         }
+
         return null;
     }
 
-    /**************************************************
-    * Boolean checks
-    **************************************************/
+    // Boolean checks
 
     /**
      * Checks if a step has passed (been completed) in comparison to the current step.
      *
-     * @param bool   $orIsEqualTo if set to true, this method will return TRUE if the step being checked is the current one
+     * @param bool  $orIsEqualTo if set to true, this method will return TRUE if the step being checked is the current one
+     * @param mixed $code
      *
      * @return bool
-     **/
+     */
     public function hasPassed($code, $orIsEqualTo = false)
     {
         $otherStatus = DataObject::get_one(
@@ -772,7 +772,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param string $code
      *
      * @return bool
-     **/
+     */
     public function hasPassedOrIsEqualTo($code)
     {
         return $this->hasPassed($code, true);
@@ -782,7 +782,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param string $code
      *
      * @return bool
-     **/
+     */
     public function hasNotPassed($code)
     {
         return (bool) ! $this->hasPassed($code, true);
@@ -790,8 +790,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * Opposite of hasPassed.
-     *
-     **/
+     */
     public function isBefore(string $code): bool
     {
         return ! (bool) $this->hasPassed($code);
@@ -815,6 +814,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function setEmailClassName(string $s): self
     {
         $this->emailClassName = $s;
+
         return $this;
     }
 
@@ -823,10 +823,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * order step.
      *"-10 days".
      *
-     * @param bool  $checkDateOfOrder
+     * @param bool $checkDateOfOrder
      *
      * @return bool
-     **/
+     */
     public function hasBeenSent(Order $order, ?bool $checkDateOfOrder = true)
     {
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
@@ -845,7 +845,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'Result' => 1,
                 ]
             )
-            ->count();
+            ->count()
+        ;
         if ($count) {
             return true;
         }
@@ -857,7 +858,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'OrderStepID' => $this->ID,
                 ]
             )
-            ->count();
+            ->count()
+        ;
         //tried it twice - abandon to avoid being stuck in a loop!
         return $count >= 2;
     }
@@ -965,19 +967,21 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function setRelevantLogEntryClassName(string $s): self
     {
         $this->relevantLogEntryClassName = $s;
+
         return $this;
     }
 
     /**
      * returns the OrderStatusLog that is relevant to this step.
      *
-     * @return OrderStatusLog|null
+     * @return null|OrderStatusLog
      */
     public function RelevantLogEntry(Order $order)
     {
         if ($this->getRelevantLogEntryClassName()) {
             return $this->RelevantLogEntries($order)->Last();
         }
+
         return null;
     }
 
@@ -986,7 +990,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * It is important that getRelevantLogEntryClassName returns
      * a specific enough ClassName and not a base class name.
      *
-     * @return \SilverStripe\ORM\DataList|null
+     * @return null|\SilverStripe\ORM\DataList
      */
     public function RelevantLogEntries(Order $order)
     {
@@ -997,18 +1001,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
+
         return null;
     }
 
-    /**************************************************
-    * Silverstripe Standard Data Object Methods
-    **************************************************/
+    // Silverstripe Standard Data Object Methods
 
     /**
      * Standard SS method
      * These are only created programmatically.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -1021,6 +1025,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * Standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -1030,7 +1035,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -1041,12 +1046,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * the default for this is TRUE, but for completed order steps
+     * the default for this is TRUE, but for completed order steps.
      *
      * we do not allow this.
      *
-     * @param  Order $order
-     * @param  Member $member optional
+     * @param Order  $order
+     * @param Member $member optional
      */
     public function canOverrideCanViewForOrder($order, $member = null): bool
     {
@@ -1060,6 +1065,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
+     * @param null|mixed $member
+     * @param mixed      $context
+     *
      * @return bool
      */
     public function canEdit($member = null, $context = [])
@@ -1068,7 +1076,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -1094,7 +1102,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         } else {
             $orderCount = Order::get()
                 ->filter(['StatusID' => (int) $this->ID - 0])
-                ->count();
+                ->count()
+            ;
             if ($orderCount) {
                 return false;
             }
@@ -1106,7 +1115,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -1198,7 +1207,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * @return bool
-     **/
+     */
     protected function isDefaultStatusOption()
     {
         return in_array($this->Code, self::get_codes_for_order_steps_to_include(), true);
@@ -1224,7 +1233,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
     ): bool {
-        if ($this->hasBeenSent($order) === false || boolval($resend) === true) {
+        if (false === $this->hasBeenSent($order) || true === boolval($resend)) {
             if (! $subject) {
                 $subject = $this->CalculatedEmailSubject($order);
             }
@@ -1256,6 +1265,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend
                 );
             }
+
             return $outcome || Director::isDev();
         }
 
@@ -1283,7 +1293,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
                     ->sort('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
                     ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
-                    ->first();
+                    ->first()
+                ;
             }
             if ($order) {
                 return OrderConfirmationPage::get_email_link(
@@ -1294,6 +1305,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 );
             }
         }
+
         return null;
     }
 
@@ -1301,7 +1313,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * For some ordersteps this returns true...
      *
      * @return bool
-     **/
+     */
     protected function hasCustomerMessage()
     {
         return false;
@@ -1317,8 +1329,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $descr3 = $this->DeferFromSubmitTime ?
                     _t('OrderStep.FROM_ORDER_SUBMIT_TIME', 'from the order being submitted') :
                     _t('OrderStep.FROM_START_OF_ORDSTEP', 'from the order arriving on this step');
+
             return $descr0 . ' ' . $descr1 . ' <span style="color: #338DC1">' . $descr2 . '</span> ' . $descr3 . '.';
         }
+
         return null;
         // $dtF = new \DateTime('@0');
         // $dtT = new \DateTime("@".$this->DeferTimeInSeconds);
@@ -1329,11 +1343,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * can this order step be delayed?
      * in general, if there is a customer message
-     * we should be able to delay it
+     * we should be able to delay it.
      *
      * This method can be overridden in any orderstep
+     *
      * @return bool
-     **/
+     */
     protected function canBeDefered()
     {
         return $this->hasCustomerMessage();
@@ -1343,14 +1358,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         return OrderStep::get()
             ->filter(['Sort:GreaterThan' => $this->Sort])
-            ->First();
+            ->First()
+        ;
     }
 
     protected function PreviousOrderStep()
     {
         return OrderStep::get()
             ->filter(['Sort:LessThan' => $this->Sort])
-            ->First();
+            ->First()
+        ;
     }
 
     protected function checkValidityOfOrderSteps()

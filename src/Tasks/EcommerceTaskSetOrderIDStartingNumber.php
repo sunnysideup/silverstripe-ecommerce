@@ -13,8 +13,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
 {
     protected $title = 'Set Order ID starting number';
@@ -23,7 +22,6 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
 
     public function run($request)
     {
-
         //set starting order number ID
         $number = EcommerceConfig::get(Order::class, 'order_id_start_number');
         $currentMax = 0;

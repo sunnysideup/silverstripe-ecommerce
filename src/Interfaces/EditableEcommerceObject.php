@@ -8,13 +8,13 @@ namespace Sunnysideup\Ecommerce\Interfaces;
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- **/
+ */
 interface EditableEcommerceObject
 {
     /**
      * returns the link to edit the object.
      *
-     * @param string|null $action
+     * @param null|string $action
      *
      * @return string
      */

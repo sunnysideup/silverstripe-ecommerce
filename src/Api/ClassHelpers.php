@@ -5,9 +5,10 @@ namespace Sunnysideup\Ecommerce\Api;
 class ClassHelpers
 {
     /**
-     * Sanitise a model class' name for inclusion in a link
+     * Sanitise a model class' name for inclusion in a link.
      *
      * @param string $class
+     *
      * @return string
      */
     public static function sanitise_class_name($class)
@@ -16,9 +17,10 @@ class ClassHelpers
     }
 
     /**
-     * Unsanitise a model class' name from a URL param
+     * Unsanitise a model class' name from a URL param.
      *
      * @param string $class
+     *
      * @return string
      */
     public static function unsanitise_class_name($class)
@@ -34,6 +36,7 @@ class ClassHelpers
         if ($showError) {
             user_error('object provided is not an instanceof expected class ' . $className . ' instead it is a ' . get_class($obj));
         }
+
         return false;
     }
 }

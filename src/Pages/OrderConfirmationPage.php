@@ -23,8 +23,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: Pages
-
- **/
+ */
 class OrderConfirmationPage extends CartPage
 {
     /**
@@ -128,6 +127,7 @@ class OrderConfirmationPage extends CartPage
      * but we do allow for extensions to exist at the same time.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -140,6 +140,7 @@ class OrderConfirmationPage extends CartPage
      * Shop Admins can edit.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
      */
@@ -202,6 +203,8 @@ class OrderConfirmationPage extends CartPage
     /**
      * standard SS method for decorators.
      *
+     * @param mixed $includerelations
+     *
      * @return array
      */
     public function fieldLabels($includerelations = true)
@@ -210,7 +213,7 @@ class OrderConfirmationPage extends CartPage
         $newLabels = $this->customFieldLabels();
         $labels = array_merge($defaultLabels, $newLabels);
         $extendedArray = $this->extend('updateFieldLabels', $labels);
-        if ($extendedArray !== null && is_array($extendedArray) && count($extendedArray)) {
+        if (null !== $extendedArray && is_array($extendedArray) && count($extendedArray)) {
             foreach ($extendedArray as $extendedResult) {
                 $labels = array_merge($labels, $extendedResult);
             }
@@ -221,7 +224,7 @@ class OrderConfirmationPage extends CartPage
 
     /**
      * @return \SilverStripe\Forms\FieldList
-     **/
+     */
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -277,19 +280,23 @@ class OrderConfirmationPage extends CartPage
                 ]
             );
         }
+
         return $fields;
     }
 
     /**
      * Returns the link or the Link to the OrderConfirmationPage page on this site.
+     *
      * @param string $action [optional]
+     *
      * @return string (URLSegment)
      */
     public static function find_link($action = null)
     {
         if ($page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class])) {
             return $page->Link($action);
-        } elseif ($page = DataObject::get_one(OrderConfirmationPage::class)) {
+        }
+        if ($page = DataObject::get_one(OrderConfirmationPage::class)) {
             return $page->Link($action);
         }
 
@@ -312,7 +319,7 @@ class OrderConfirmationPage extends CartPage
      * Return a link to view the order on this page.
      *
      * @param int|string $orderID                ID of the order
-     * @param string     $emailClassName                   - the type of email you want to send.
+     * @param string     $emailClassName         - the type of email you want to send
      * @param bool       $actuallySendEmail      - do we actually send the email
      * @param int        $alternativeOrderStepID - OrderStep to use
      *
@@ -329,6 +336,7 @@ class OrderConfirmationPage extends CartPage
             $getParams['test'] = $alternativeOrderStepID;
         }
         $getParams = http_build_query($getParams);
+
         return $link . '?' . $getParams;
     }
 

@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderStepField extends DatalessField
 {
     /**
@@ -43,7 +42,8 @@ class OrderStepField extends DatalessField
         } else {
             $currentStep = $order->CurrentStepVisibleToCustomer();
             $orderSteps = $orderSteps
-                ->filter(['HideStepFromCustomer' => 0]);
+                ->filter(['HideStepFromCustomer' => 0])
+            ;
         }
         $future = false;
         $html = '
@@ -109,9 +109,11 @@ class OrderStepField extends DatalessField
      *
      * @param string $content
      */
-    public function setContent($content)
+    public function setContent(string $content)  : self
     {
         $this->content = $content;
+
+        return $this;
     }
 
     /**
@@ -125,9 +127,10 @@ class OrderStepField extends DatalessField
     /**
      * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
      *
-     * @param mixed $value
+     * @param mixed      $value
+     * @param null|mixed $data
      */
-    public function setValue($value, $data = null)
+    public function setValue($value, $data = null) : self
     {
         return $this->setContent($value);
     }

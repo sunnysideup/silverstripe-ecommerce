@@ -26,8 +26,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskTryToFinaliseOrders extends BuildTask
 {
     protected $sendEmails = true;
@@ -98,7 +97,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->innerJoin(
                             $submittedOrderStatusLogTableName,
                             "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
-                        );
+                        )
+                    ;
                     $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
                     DB::alteration_message('NO  order step.', 'deleted');
@@ -128,6 +128,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
                 Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
                 $stepBefore = OrderStep::get()->byID($order->StatusID);
+
                 try {
                     $order->tryToFinaliseOrder();
                 } catch (Exception $exception) {

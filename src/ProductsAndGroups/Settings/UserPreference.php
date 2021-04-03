@@ -6,22 +6,16 @@ use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-
 use SilverStripe\Core\Convert;
-
 use SilverStripe\Core\Injector\Injectable;
-
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
-
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
-
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
-
 use Sunnysideup\Vardump\DebugTrait;
 
 /**
@@ -69,26 +63,27 @@ class UserPreference
     ];
 
     /**
-     * @var HTTPRequest|null
+     * @var null|HTTPRequest
      */
     protected $request;
 
     /**
-     * @var ContentController|null
+     * @var null|ContentController
      */
     protected $rootGroupController;
 
     protected $rootGroup;
 
     /**
-     * here is where we save the GET variables and any other settings for FILTER|SORT|DISPLAY
+     * here is where we save the GET variables and any other settings for FILTER|SORT|DISPLAY.
+     *
      * @var array
      */
     protected $userPreferences = [];
 
     /**
      * keep a store for every page setting?
-     * For example, do we store in session how a particular page is filtered / sorted
+     * For example, do we store in session how a particular page is filtered / sorted.
      *
      * @var bool
      */
@@ -96,12 +91,13 @@ class UserPreference
 
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
+     *
      * @var bool
      */
     private static $use_session = [];
 
     /**
-     * @param  bool $useSession
+     * @param bool $useSession
      */
     public function setUseSession(string $type, ?bool $useSession): self
     {
@@ -124,11 +120,12 @@ class UserPreference
         foreach ($types as $type) {
             $array[$type] = $this->getUseSession($type);
         }
+
         return $array;
     }
 
     /**
-     * @param  bool $useSessionPerPage
+     * @param bool $useSessionPerPage
      */
     public function setUseSessionPerPage(string $type, ?bool $useSessionPerPage): self
     {
@@ -151,11 +148,12 @@ class UserPreference
         foreach ($types as $type) {
             $array[$type] = $this->getUseSessionPerPage($type);
         }
+
         return $array;
     }
 
     /**
-     * @param  HTTPRequest  $request
+     * @param HTTPRequest $request
      */
     public function setRequest($request): self
     {
@@ -166,7 +164,7 @@ class UserPreference
     }
 
     /**
-     * @param  ProductGroupController  $rootGroupController
+     * @param ProductGroupController $rootGroupController
      */
     public function setRootGroupController($rootGroupController): self
     {
@@ -177,7 +175,7 @@ class UserPreference
     }
 
     /**
-     * @param  ProductGroup       $rootGroup
+     * @param ProductGroup $rootGroup
      */
     public function setRootGroup($rootGroup): self
     {
@@ -195,14 +193,14 @@ class UserPreference
      * Some of these are saved to session.
      *
      * @param array $overrideArray - optional - override $_GET variable settings
-     * an array can be like this:
-     * ```php
-     *     FILTER => 'abc'
-     * ```
-     * OR
-     * ```php
-     *     FILTER => ['key' => 'foo', 'params' => 'bar', 'title' => 'foo bar']
-     * ```
+     *                             an array can be like this:
+     *                             ```php
+     *                             FILTER => 'abc'
+     *                             ```
+     *                             OR
+     *                             ```php
+     *                             FILTER => ['key' => 'foo', 'params' => 'bar', 'title' => 'foo bar']
+     *                             ```
      */
     public function saveUserPreferences(?array $overrideArray = []): self
     {
@@ -260,6 +258,7 @@ class UserPreference
         if (! $key) {
             $key = $this->rootGroup->getListConfigCalculated($type);
         }
+
         return $this->standardiseCurrentUserPreferences($type, $key);
     }
 
@@ -296,6 +295,7 @@ class UserPreference
         if ($this->getUseSessionPerPageKey('FILTER') || $this->getCurrentUserPreferencesKey('SORT') || $this->getCurrentUserPreferencesKey('DISPLAY')) {
             $pageId = $this->rootGroup->ID;
         }
+
         return $this->cacheKey(
             implode(
                 '_',
@@ -375,7 +375,7 @@ class UserPreference
     public function standardiseCurrentUserPreferences(string $type, $keyOrArray)
     {
         if (is_array($keyOrArray)) {
-            if (isset($keyOrArray['key']) && isset($keyOrArray['params']) && isset($keyOrArray['title'])) {
+            if (isset($keyOrArray['key'], $keyOrArray['params'], $keyOrArray['title'])) {
                 return $keyOrArray;
             }
             user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
@@ -408,17 +408,19 @@ class UserPreference
         //     $answer = [null];
         // }
         // return $answer;
-        if ($classNameOrType === 'GROUPFILTER' || $classNameOrType instanceof ProductGroupFilter) {
+        if ('GROUPFILTER' === $classNameOrType || $classNameOrType instanceof ProductGroupFilter) {
             return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
+
         return null;
     }
 
     /**
-     * full list of options with Links that know about "current"
-     * @param  string    $type (GROUPFILTER|FILTER|SORT|DISPLAY)
-     * @param  string    $currentKey
-     * @param  boolean   $ajaxify
+     * full list of options with Links that know about "current".
+     *
+     * @param string $type       (GROUPFILTER|FILTER|SORT|DISPLAY)
+     * @param string $currentKey
+     * @param bool   $ajaxify
      */
     public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
@@ -466,15 +468,17 @@ class UserPreference
                 $list->push($obj);
             }
         }
+
         return $list;
     }
 
     /**
      * returns the current page with get variables. If a type is specified then
-     * instead of the value for that type, we add: '[[INSERT_HERE]]'
-     * @param  string $action                optional
-     * @param  string $type                  optional
-     * @param  string $replacementForType    optional - what you would like the type be instead! - e.g. for FILTER I'd like it to be "somethingelse"
+     * instead of the value for that type, we add: '[[INSERT_HERE]]'.
+     *
+     * @param string $action             optional
+     * @param string $type               optional
+     * @param string $replacementForType optional - what you would like the type be instead! - e.g. for FILTER I'd like it to be "somethingelse"
      */
     public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
@@ -486,21 +490,24 @@ class UserPreference
             } else {
                 $value = $this->getCurrentUserPreferencesKey($myType);
             }
-            if ($value !== BaseApplyer::DEFAULT_NAME) {
+            if (BaseApplyer::DEFAULT_NAME !== $value) {
                 $getVars[$values['getVariable']] = $value;
             }
         }
         if (count($getVars)) {
             return $base . '?' . http_build_query($getVars);
         }
+
         return $base;
     }
 
     /**
      * TODO: move this to a better place!
-     * @param  array $idArray         optional array of IDs to sort by
-     * @param  mixed $alternativeSort optional alternative sort
-     * @return mixed                  returns null|array|string
+     *
+     * @param array $idArray         optional array of IDs to sort by
+     * @param mixed $alternativeSort optional alternative sort
+     *
+     * @return mixed returns null|array|string
      */
     public function setIdArrayDefaultSort(?array $idArray = [], $alternativeSort = null)
     {
@@ -518,6 +525,7 @@ class UserPreference
         if ($array) {
             $this->saveUserPreferences($array);
         }
+
         return $array;
     }
 
@@ -528,12 +536,14 @@ class UserPreference
     {
         return $this->getTemplateForProductsAndGroups()
             ->getApplyer('DISPLAY')
-            ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY'));
+            ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY'))
+        ;
     }
 
     public function getCurrentUserPreferencesKey($type)
     {
         $val = $this->getCurrentUserPreferences($type);
+
         return $val['key'];
     }
 
@@ -589,8 +599,9 @@ class UserPreference
      * anything to add at all.  Through the lang files, you can change the pipe
      * symbol to anything you like.
      *
-     * @param  string $toAdd the string to add
-     * @return string the string to add, cleaned up and with prefix and so on added.
+     * @param string $toAdd the string to add
+     *
+     * @return string the string to add, cleaned up and with prefix and so on added
      */
     protected function addToTitle(string $toAdd): string
     {
@@ -625,9 +636,9 @@ class UserPreference
         return $obj;
     }
 
-    ###############################
-    # segments and actions
-    ###############################
+    //##############################
+    // segments and actions
+    //##############################
 
     protected function matchingSegment(?string $action): bool
     {
@@ -635,6 +646,7 @@ class UserPreference
         if ($action) {
             $outcome = $action === $this->mySegment();
         }
+
         return $outcome;
     }
 

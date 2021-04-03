@@ -22,7 +22,6 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormPasswordValidator;
 use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
-
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 
 /**
@@ -31,12 +30,13 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class ShopAccountForm extends Form
 {
     /**
      * @param Controller $controller
+     * @param mixed      $name
+     * @param mixed      $mustCreateAccount
      */
     public function __construct($controller, $name, $mustCreateAccount = false)
     {
@@ -121,6 +121,10 @@ class ShopAccountForm extends Form
     /**
      * Save the changes to the form, and go back to the account page.
      *
+     * @param mixed $data
+     * @param mixed $form
+     * @param mixed $request
+     *
      * @return bool + redirection
      */
     public function submit($data, $form, $request)
@@ -130,6 +134,10 @@ class ShopAccountForm extends Form
 
     /**
      * Save the changes to the form, and redirect to the checkout page.
+     *
+     * @param mixed $data
+     * @param mixed $form
+     * @param mixed $request
      *
      * @return bool + redirection
      */
@@ -188,8 +196,11 @@ class ShopAccountForm extends Form
 
     /**
      * redirects ....
+     *
+     * @param mixed $form
+     *
      * @return HTTPResponse
-     **/
+     */
     protected function processForm(array $data, $form, RequestException $request, ?string $link = '')
     {
         $member = Security::getCurrentUser();
@@ -203,6 +214,7 @@ class ShopAccountForm extends Form
             $member->changePassword($password);
         } elseif ($data['PasswordCheck1']) {
             $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.'), 'bad');
+
             return $this->controller->redirectBack();
         }
         if ($member->validate()->valid()) {
@@ -211,9 +223,11 @@ class ShopAccountForm extends Form
                 return $this->controller->redirect($link);
             }
             $form->sessionMessage(_t('Account.DETAILSSAVED', 'Your details have been saved.'), 'good');
+
             return $this->controller->redirectBack();
         }
         $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
+
         return $this->controller->redirectBack();
     }
 }

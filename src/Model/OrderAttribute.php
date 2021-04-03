@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\Core\Config\Config;
-
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -26,8 +25,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: model
-
- **/
+ */
 class OrderAttribute extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -49,7 +47,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * this is similar to the checks run for parent::init in the controller class.
      *
      * @var bool
-     **/
+     */
     protected $baseInitCalled = false;
 
     /**
@@ -110,7 +108,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS variable.
      *
      * @var array
-     **/
+     */
     private static $default_sort = [
         'OrderAttribute.GroupSort' => 'ASC',
         'OrderAttribute.Sort' => 'ASC',
@@ -182,16 +180,17 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * standard SS method.
      *
      * @param \SilverStripe\Security\Member $member
+     * @param mixed                         $context
      *
      * @return bool
-     **/
+     */
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -208,20 +207,20 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canView($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (! $this->exists()) {
             return true;
         }
-        if ($this->_canView === null) {
+        if (null === $this->_canView) {
             $this->_canView = false;
             if ($this->OrderID) {
                 if ($o = $this->Order()) {
@@ -244,20 +243,20 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canEdit($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
+        if (null !== $extended) {
             return $extended;
         }
         if (! $this->exists()) {
             return true;
         }
-        if ($this->_canEdit === null) {
+        if (null === $this->_canEdit) {
             $this->_canEdit = ! $this->priceHasBeenFixed();
         }
 
@@ -270,7 +269,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      *
      * @return bool
-     **/
+     */
     public function canDelete($member = null)
     {
         return false;
@@ -279,7 +278,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * link to edit the record.
      *
-     * @param string|null $action - e.g. edit
+     * @param null|string $action - e.g. edit
      *
      * @return string
      */
@@ -289,7 +288,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int $orderID
+     * @param int  $orderID
      * @param bool $value
      */
     public static function set_price_has_been_fixed(?int $orderID = 0, $value = false)
@@ -300,7 +299,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     /**
      * @param int $orderID
-     * @return bool|null
+     *
+     * @return null|bool
      */
     public static function get_price_has_been_fixed(?int $orderID = 0)
     {
@@ -309,9 +309,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return isset(self::$_price_has_been_fixed[$orderID]) ? self::$_price_has_been_fixed[$orderID] : null;
     }
 
-    ######################
-    ## TEMPLATE METHODS ##
-    ######################
+    //#####################
+    //# TEMPLATE METHODS ##
+    //#####################
 
     /**
      * This is a key function that returns the type of the
@@ -357,7 +357,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         $class = static::class;
         $classes = [];
         $class = get_parent_class($class);
-        while ($class && $class !== DataObject::class) {
+        while ($class && DataObject::class !== $class) {
             $classes[] = strtolower($class);
             $class = get_parent_class($class);
         }
@@ -374,7 +374,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * $EcommerceConfigAjax.TableID.
      *
      * @return EcommerceConfigAjaxDefinitions
-     **/
+     */
     public function AJAXDefinitions()
     {
         return EcommerceConfigAjax::get_one($this);
@@ -383,7 +383,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /*
      * Should this item be shown on check out page table?
      * @return bool
-     **/
+     */
     public function ShowInTable(): bool
     {
         return true;
@@ -393,7 +393,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *Should this item be shown on in the cart (which is on other pages than the checkout page).
      *
      * @return bool
-     **/
+     */
     public function ShowInCart()
     {
         return $this->ShowInTable();
@@ -436,7 +436,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * the sub title for the order item or order modifier.
      *
      * @return string
-     **/
+     */
     public function TableSubTitle()
     {
         return $this->getTableSubTitle();
@@ -451,7 +451,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * the sub title for the order item or order modifier.
      *
      * @return string
-     **/
+     */
     public function TableSubTitleNOHTML()
     {
         return $this->getTableSubTitleNOHTML();
@@ -467,7 +467,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Cart is a short version of table.
      *
      * @return string
-     **/
+     */
     public function CartSubTitle()
     {
         return $this->getCartSubTitle();
@@ -482,7 +482,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Returns the Money object of the CalculatedTotal.
      *
      * @return \SilverStripe\ORM\FieldType\DBMoney
-     **/
+     */
     public function CalculatedTotalAsMoney()
     {
         return $this->getCalculatedTotalAsMoney();
@@ -541,11 +541,13 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * We use direct calls to self::$_price_has_been_fixed to make the code simpler and faster.
      *
+     * @param mixed $recalculate
+     *
      * @return bool
-     **/
+     */
     protected function priceHasBeenFixed($recalculate = false)
     {
-        if (self::get_price_has_been_fixed($this->OrderID) === null || $recalculate) {
+        if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate) {
             self::$_price_has_been_fixed[$this->OrderID] = false;
             if ($order = $this->Order()) {
                 if ($order->IsSubmitted()) {

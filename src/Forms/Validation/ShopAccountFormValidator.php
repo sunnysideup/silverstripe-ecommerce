@@ -24,7 +24,7 @@ class ShopAccountFormValidator extends RequiredFields
      * @param bool  $allowExistingEmail - see comment below
      *
      * @return bool
-     **/
+     */
     public function php($data, $allowExistingEmail = false)
     {
         $this->form->saveDataToSession();
@@ -47,7 +47,8 @@ class ShopAccountFormValidator extends RequiredFields
                 //can't be taken
                 $otherMembersWithSameEmail = Member::get()
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
-                    ->exclude(['ID' => $loggedInMemberID]);
+                    ->exclude(['ID' => $loggedInMemberID])
+                ;
                 if ($otherMembersWithSameEmail->count()) {
                     //we allow existing email
                     // if we are currently NOT logged in
@@ -71,7 +72,7 @@ class ShopAccountFormValidator extends RequiredFields
             }
         }
         // check password fields are the same before saving
-        if (isset($data['PasswordCheck1']) && isset($data['PasswordCheck2'])) {
+        if (isset($data['PasswordCheck1'], $data['PasswordCheck2'])) {
             if ($data['PasswordCheck1'] !== $data['PasswordCheck2']) {
                 $this->validationError(
                     'PasswordCheck1',

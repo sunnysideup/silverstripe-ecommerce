@@ -23,8 +23,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskCartCleanup extends BuildTask
 {
     /**
@@ -247,7 +246,8 @@ class EcommerceTaskCartCleanup extends BuildTask
         $oldCarts = Order::get()
             ->where($where . $this->withoutMemberWhere)
             ->this->sort($this->sort)
-            ->limit($this->maximumNumberOfObjectsDeleted);
+            ->limit($this->maximumNumberOfObjectsDeleted)
+        ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
         if ($oldCarts->count()) {
             $count = 0;
@@ -316,7 +316,8 @@ class EcommerceTaskCartCleanup extends BuildTask
         $oldCarts = Order::get()
             ->where($where)
             ->this->sort($this->sort)
-            ->limit($this->maximumNumberOfObjectsDeleted);
+            ->limit($this->maximumNumberOfObjectsDeleted)
+        ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
         if ($oldCarts->count()) {
             $count = 0;
@@ -380,10 +381,7 @@ class EcommerceTaskCartCleanup extends BuildTask
 
     protected function clearOneToOnes()
     {
-
-        /***********************************************
-        //CLEANING ONE-TO-ONES
-        ************************************************/
+        // //CLEANING ONE-TO-ONES
         if ($this->verbose) {
             $this->flush();
             DB::alteration_message('<h2>Checking one-to-one relationships</h2>.');
@@ -413,7 +411,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                     }
                     if (count($this->oneToOneIDArray)) {
                         $unlinkedObjects = $className::get()
-                            ->filter(['ID' => $this->oneToOneIDArray]);
+                            ->filter(['ID' => $this->oneToOneIDArray])
+                        ;
                         if ($unlinkedObjects->count()) {
                             foreach ($unlinkedObjects as $unlinkedObject) {
                                 if ($this->verbose) {
@@ -473,7 +472,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                     }
                     if (count($this->oneToManyIDArray)) {
                         $unlinkedObjects = $classWithLastEdited::get()
-                            ->filter(['ID' => $this->oneToManyIDArray]);
+                            ->filter(['ID' => $this->oneToManyIDArray])
+                        ;
                         if ($unlinkedObjects->count()) {
                             foreach ($unlinkedObjects as $unlinkedObject) {
                                 if ($this->verbose) {
@@ -505,7 +505,7 @@ class EcommerceTaskCartCleanup extends BuildTask
     }
 
     /**
-     * delete an object
+     * delete an object.
      */
     protected function deleteObject(DataObject $objectToDelete)
     {

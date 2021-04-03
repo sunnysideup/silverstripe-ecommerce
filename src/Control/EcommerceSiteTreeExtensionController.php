@@ -70,7 +70,7 @@ class EcommerceSiteTreeExtensionController extends Extension
      * It uses AjaxSimpleCart.ss to render the cart.
      *
      * @return string
-     **/
+     */
     public function SimpleCartLinkAjax()
     {
         return EcommerceConfig::get(ShoppingCartController::class, 'url_segment') . '/showcart/?ajax=1';
@@ -80,7 +80,7 @@ class EcommerceSiteTreeExtensionController extends Extension
      * returns the current order.
      *
      * @return Order
-     **/
+     */
     public function Cart()
     {
         return ShoppingCart::current_order();
@@ -109,54 +109,54 @@ class EcommerceSiteTreeExtensionController extends Extension
         return $this->owner->dataRecord instanceof CartPage;
     }
 
-    /**
+    /*
      * Redirect users if found on incorrect domain
      * Detects if $_GET['session'] is present, sets session
      * and redirects back to "clean URL"
      * Both _SECURE_URL and _STANDARD_URL must be defined,
      * and include protocol (http(s)://mydomain.com) with no trailing slash.
-    *    protected function secureHostSwitcher()
-    *     {
-    *    if (!DEFINED('_SECURE_URL') || !DEFINED('_STANDARD_URL')) {
-    *        return false;
-    *    }
-    *
-    *    $protocol = Director::is_https() ? 'https://' : 'http://';
-    *    $currentUrlFull = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-    *    list($currentUrlFull) = explode('#', $currentUrlFull);
-    *    $currentUrlWithoutHost = $_SERVER['REQUEST_URI'];
-    *    //remove fragment...just to keep it simple...
-    *    list($currentUrlWithoutHost) = explode('#', $currentUrlWithoutHost);
-    *    $sessionPartOfURL = '';
-    *    $sessionID = session_id();
-    *    if ($sessionID) {
-    *        if (strpos($currentUrlWithoutHost, '?')) {
-    *            $sessionPartOfURL .= '&';
-    *        } else {
-    *            $sessionPartOfURL = '?';
-    *        }
-    *        $sessionPartOfURL .= 'session='.$sessionID;
-    *        $currentUrlWithoutHost .= $sessionPartOfURL;
-    *    }
-    *
-    *        $isSecure = $this->owner->isSecurePage();
-    *
-    *    if ($isSecure && !preg_match('/^'.preg_quote(_SECURE_URL, '/').'/', $currentUrlFull)) {
-    *        return $this->owner->redirect(_SECURE_URL.$currentUrlWithoutHost);
-    *    } elseif (!$isSecure && !preg_match('/^'.preg_quote(_STANDARD_URL, '/').'/', $currentUrlFull)) {
-    *        return $this->owner->redirect(_STANDARD_URL.$currentUrlWithoutHost);
-    *    }
-    *
-    *    if ($sessionID = $this->owner->request->getVar('session')) {
-    *        $currentUrlFull = str_replace('?session='.$sessionID, '', $currentUrlFull);
-    *        $currentUrlFull = str_replace('&session='.$sessionID, '', $currentUrlFull);
-    *        // force hard-coded session setting
-    *        @session_write_close();
-    *        @session_id($sessionID);
-    *        @session_start();
-    *        header('location: '.$currentUrlFull, 302);
-    *        exit;
-    *    }
-    *}
-    */
+     *    protected function secureHostSwitcher()
+     *     {
+     *    if (!DEFINED('_SECURE_URL') || !DEFINED('_STANDARD_URL')) {
+     *        return false;
+     *    }
+     *
+     *    $protocol = Director::is_https() ? 'https://' : 'http://';
+     *    $currentUrlFull = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+     *    list($currentUrlFull) = explode('#', $currentUrlFull);
+     *    $currentUrlWithoutHost = $_SERVER['REQUEST_URI'];
+     *    //remove fragment...just to keep it simple...
+     *    list($currentUrlWithoutHost) = explode('#', $currentUrlWithoutHost);
+     *    $sessionPartOfURL = '';
+     *    $sessionID = session_id();
+     *    if ($sessionID) {
+     *        if (strpos($currentUrlWithoutHost, '?')) {
+     *            $sessionPartOfURL .= '&';
+     *        } else {
+     *            $sessionPartOfURL = '?';
+     *        }
+     *        $sessionPartOfURL .= 'session='.$sessionID;
+     *        $currentUrlWithoutHost .= $sessionPartOfURL;
+     *    }
+     *
+     *        $isSecure = $this->owner->isSecurePage();
+     *
+     *    if ($isSecure && !preg_match('/^'.preg_quote(_SECURE_URL, '/').'/', $currentUrlFull)) {
+     *        return $this->owner->redirect(_SECURE_URL.$currentUrlWithoutHost);
+     *    } elseif (!$isSecure && !preg_match('/^'.preg_quote(_STANDARD_URL, '/').'/', $currentUrlFull)) {
+     *        return $this->owner->redirect(_STANDARD_URL.$currentUrlWithoutHost);
+     *    }
+     *
+     *    if ($sessionID = $this->owner->request->getVar('session')) {
+     *        $currentUrlFull = str_replace('?session='.$sessionID, '', $currentUrlFull);
+     *        $currentUrlFull = str_replace('&session='.$sessionID, '', $currentUrlFull);
+     *        // force hard-coded session setting
+     *        @session_write_close();
+     *        @session_id($sessionID);
+     *        @session_start();
+     *        header('location: '.$currentUrlFull, 302);
+     *        exit;
+     *    }
+     *}
+     */
 }

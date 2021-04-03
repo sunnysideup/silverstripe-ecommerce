@@ -79,18 +79,21 @@ class OrderToArray extends OrderConverter
                         'amount' => $modifier->CalculatedTotal,
                         'currency' => $currency->Code,
                     ];
+
                     break;
                 case 'Delivery':
                     $array['shippingAmount'] = [
                         'amount' => $array['shippingAmount']['amount'] + $modifier->CalculatedTotal,
                         'currency' => $currency->Code,
                     ];
+
                     break;
                 case 'Tax':
                     $array['taxAmount'] = [
                         'amount' => $array['taxAmount']['amount'] + $modifier->CalculatedTotal,
                         'currency' => $currency->Code,
                     ];
+
                     break;
             }
         }

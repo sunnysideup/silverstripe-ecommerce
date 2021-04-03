@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Money;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBMoney;
-
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 class EcommerceMoney extends Extension
@@ -49,6 +48,7 @@ class EcommerceMoney extends Extension
 
             return substr($symbol, $i);
         }
+
         return '$';
     }
 
@@ -100,6 +100,7 @@ class EcommerceMoney extends Extension
 
         $formatter = $this->owner->getFormatter();
         $data = $formatter->format($amount);
+
         return DBField::create_field('HTMLText', $data);
     }
 
@@ -126,6 +127,7 @@ class EcommerceMoney extends Extension
 
         $formatter = $this->owner->getFormatter();
         $data = $currency ? $symbol . $formatter->formatCurrency($amount, $currency) : $symbol . $formatter->format($amount);
+
         return DBField::create_field('HTMLText', $data);
     }
 
@@ -152,6 +154,7 @@ class EcommerceMoney extends Extension
             'symbol' => '',
             'precision' => 0,
         ]) . ' ' . $code : '';
+
         return DBField::create_field('HTMLText', $data);
     }
 

@@ -13,8 +13,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
 {
     protected $title = 'Add Customers to Customer Group';
@@ -45,7 +44,8 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
                         'ID' => $alreadyAdded,
                     ]
                 )
-                ->innerJoin('Order', '"Order"."MemberID" = "Member"."ID"');
+                ->innerJoin('Order', '"Order"."MemberID" = "Member"."ID"')
+            ;
             //add combos
             if ($unlistedMembers->count()) {
                 $existingMembers = $customerGroup->Members();

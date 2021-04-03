@@ -20,8 +20,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
-
- **/
+ */
 abstract class OrderEmail extends Email
 {
     /**
@@ -60,13 +59,15 @@ abstract class OrderEmail extends Email
     public static function emogrify_html($html)
     {
         //get required files
-        /* UPGRADE TODO: find better solution for the following (without hardcoded path) */
+        // UPGRADE TODO: find better solution for the following (without hardcoded path)
         $cssFileLocation = Director::baseFolder() . '/' . EcommerceConfig::get(OrderEmail::class, 'css_file_location');
         $cssFileHandler = fopen($cssFileLocation, 'r');
         $css = fread($cssFileHandler, filesize($cssFileLocation));
         fclose($cssFileHandler);
-        $html = CssInliner::fromHtml($html->getValue())->inlineCss($css)
-            ->render();
+        $html = CssInliner::fromHtml($html)
+            ->inlineCss($css)
+            ->render()
+        ;
         //make links absolute!
         return HTTP::absoluteURLs($html);
     }
@@ -99,6 +100,7 @@ abstract class OrderEmail extends Email
         if ($siteConfig && $siteConfig->Title) {
             return _t('OrderEmail.SALEUPDATE', 'Sale Update for Order #[OrderNumber] from ') . $siteConfig->Title;
         }
+
         return _t('OrderEmail.SALEUPDATE', 'Sale Update for Order #[OrderNumber] ');
     }
 
@@ -115,6 +117,8 @@ abstract class OrderEmail extends Email
     /**
      * sets resend to true, which means that the email
      * is sent even if it has already been sent.
+     *
+     * @param mixed $resend
      */
     public function setResend($resend = true)
     {
@@ -122,10 +126,10 @@ abstract class OrderEmail extends Email
     }
 
     /**
-     * @param string|null $messageID - ID for the message, you can leave this blank
+     * @param null|string $messageID      - ID for the message, you can leave this blank
      * @param bool        $returnBodyOnly - rather than sending the email, only return the HTML BODY
      *
-     * @return bool - TRUE for success and FALSE for failure.
+     * @return bool - TRUE for success and FALSE for failure
      */
     public function send($messageID = null, $returnBodyOnly = false)
     {
@@ -167,6 +171,7 @@ abstract class OrderEmail extends Email
 
             return $result;
         }
+        return false;
     }
 
     /**
@@ -183,20 +188,22 @@ abstract class OrderEmail extends Email
 
     /**
      * Checks if an email has been sent for this Order for this status (order step).
-     *
-     **/
+     */
     public function hasBeenSent(): bool
     {
         $orderStep = $this->order->Status();
         if (is_a($orderStep, EcommerceConfigClassNames::getName(OrderStep::class))) {
             return $orderStep->hasBeenSent($this->order);
         }
+
         return false;
     }
 
     /**
+     * @param mixed $result
+     *
      * @return OrderEmailRecord
-     **/
+     */
     protected function createRecord($result)
     {
         $orderEmailRecord = OrderEmailRecord::create();

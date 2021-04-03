@@ -45,6 +45,8 @@ abstract class OrderStepController extends Controller
     /**
      * when no action is selected
      * this action runs...
+     *
+     * @param mixed $request
      */
     public function index($request)
     {
@@ -55,6 +57,8 @@ abstract class OrderStepController extends Controller
 
     /**
      * there is an error ...
+     *
+     * @param mixed $request
      */
     public function error($request)
     {
@@ -73,11 +77,14 @@ abstract class OrderStepController extends Controller
         if ($this->alternativeContent) {
             return $this->alternativeContent;
         }
+
         return $this->standardContent($order);
     }
 
     /**
      * @oaram string $action
+     *
+     * @param null|mixed $action
      *
      * @return string
      */
@@ -91,7 +98,7 @@ abstract class OrderStepController extends Controller
         return $link . $this->getOrderGetParams();
     }
 
-    public function errorLink()
+    public function errorLink() : string
     {
         return $this->Link('error');
     }
@@ -99,7 +106,7 @@ abstract class OrderStepController extends Controller
     /**
      * @return string
      */
-    protected static function name_of_controller_class()
+    protected static function name_of_controller_class() : string
     {
         return static::class;
     }
@@ -109,7 +116,7 @@ abstract class OrderStepController extends Controller
      *
      * @return string
      */
-    protected static function secure_hash($order)
+    protected static function secure_hash(Order $order) : string
     {
         $obj = Injector::inst()->get(self::name_of_controller_class());
 
@@ -119,7 +126,7 @@ abstract class OrderStepController extends Controller
     /**
      * @return string
      */
-    protected function nameOfControllerClass()
+    protected function nameOfControllerClass() : string
     {
         return self::name_of_controller_class();
     }
@@ -129,14 +136,15 @@ abstract class OrderStepController extends Controller
      *
      * @return string
      */
-    abstract protected function nameOfLogClass();
+    abstract protected function nameOfLogClass() : string;
 
     /**
      * @return string ($html)
      */
-    protected function standardContent(?Order $order = null)
+    protected function standardContent(?Order $order = null) : string
     {
         user_error('Make sure to put some content here in classes that extend ' . static::class);
+        return '';
     }
 
     /**
@@ -163,16 +171,19 @@ abstract class OrderStepController extends Controller
      *
      * @return string
      */
-    abstract protected function secureHash($order);
+    abstract protected function secureHash(Order $order) : string;
 
     /**
      * is the order valid?
      *
+     * @param null|mixed $dataOrRequest
+     *
      * @return bool
      */
-    protected function checkOrder($dataOrRequest = null)
+    protected function checkOrder($dataOrRequest = null) : bool
     {
         $order = $this->Order($dataOrRequest);
+
         return $order && $order->exists();
     }
 
@@ -187,15 +198,14 @@ abstract class OrderStepController extends Controller
     {
         if (! self::$_order) {
             if (is_array($dataOrRequest) &&
-                isset($dataOrRequest['OrderID']) &&
-                isset($dataOrRequest['OrderSessionID'])
+                isset($dataOrRequest['OrderID'], $dataOrRequest['OrderSessionID'])
             ) {
                 $id = (int) $dataOrRequest['OrderID'];
                 $sessionID = Convert::raw2sql($dataOrRequest['OrderSessionID']);
-            } elseif (isset($_POST['OrderID']) && isset($_POST['OrderSessionID'])) {
+            } elseif (isset($_POST['OrderID'], $_POST['OrderSessionID'])) {
                 $id = (int) $_POST['OrderID'];
                 $sessionID = Convert::raw2sql($_POST['OrderSessionID']);
-            } elseif (isset($_GET['OrderID']) && isset($_GET['OrderSessionID'])) {
+            } elseif (isset($_GET['OrderID'], $_GET['OrderSessionID'])) {
                 $id = (int) $_GET['OrderID'];
                 $sessionID = Convert::raw2sql($_GET['OrderSessionID']);
             } elseif ($dataOrRequest instanceof HTTPRequest) {

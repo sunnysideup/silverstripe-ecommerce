@@ -13,8 +13,7 @@ use SilverStripe\ORM\DB;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
 {
     protected $title = 'Fixes broken order submission links';

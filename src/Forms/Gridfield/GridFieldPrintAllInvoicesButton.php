@@ -15,11 +15,7 @@ use SilverStripe\View\SSViewer;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
- *
- * @package forms
- * @subpackage fields-gridfield
  */
-
 class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
     /**
@@ -31,6 +27,7 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
 
     /**
      * @config
+     *
      * @var int
      */
     private static $invoice_bulk_printing_limit = 30;
@@ -44,7 +41,9 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
     }
 
     /**
-     * Place the export button in a <p> tag below the field
+     * Place the export button in a <p> tag below the field.
+     *
+     * @param mixed $gridField
      */
     public function getHTMLFragments($gridField)
     {
@@ -58,13 +57,16 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
         $button->setAttribute('data-icon', 'grid_print');
         $button->addExtraClass('no-ajax action_print_all_invoices');
         $button->setForm($gridField->getForm());
+
         return [
             $this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
         ];
     }
 
     /**
-     * export is an action button
+     * export is an action button.
+     *
+     * @param mixed $gridField
      */
     public function getActions($gridField)
     {
@@ -73,13 +75,15 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
 
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
-        if ($actionName === 'printallinvoices') {
+        if ('printallinvoices' === $actionName) {
             return $this->handlePrint($gridField);
         }
     }
 
     /**
-     * it is also a URL
+     * it is also a URL.
+     *
+     * @param mixed $gridField
      */
     public function getURLHandlers($gridField)
     {
@@ -89,7 +93,10 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
     }
 
     /**
-     * Handle the print, for both the action button and the URL
+     * Handle the print, for both the action button and the URL.
+     *
+     * @param mixed      $gridField
+     * @param null|mixed $request
      */
     public function handlePrint($gridField, $request = null)
     {
@@ -107,6 +114,7 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
         Requirements::themedCSS('client/css/Order_Invoice_Print_Only', 'print');
         $curr = Controller::curr();
         $curr->Orders = $al;
+
         return $curr->RenderWith('Sunnysideup\Ecommerce\Includes\PrintAllInvoices');
     }
 }

@@ -22,8 +22,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
-
- **/
+ */
 class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
 {
     protected $title = 'Archive all submitted orders';

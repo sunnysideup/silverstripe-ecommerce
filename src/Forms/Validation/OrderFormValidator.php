@@ -15,8 +15,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
-
- **/
+ */
 class OrderFormValidator extends RequiredFields
 {
     /**

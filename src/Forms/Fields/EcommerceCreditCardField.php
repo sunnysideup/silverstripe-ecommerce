@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Forms\TextField;
-
 use SilverStripe\View\Requirements;
 
 /**
@@ -33,6 +32,8 @@ class EcommerceCreditCardField extends TextField
 
     /**
      * renders with EcommerceCreditCardField.ss.
+     *
+     * @param mixed $properties
      */
     public function Field($properties = [])
     {
@@ -60,7 +61,7 @@ class EcommerceCreditCardField extends TextField
     public function getTabIndexHTML($increment = 0)
     {
         // we can't add a tabindex if there hasn't been one set yet.
-        if ($this->getAttribute('tabindex') === null) {
+        if (null === $this->getAttribute('tabindex')) {
             return false;
         }
 
@@ -74,6 +75,7 @@ class EcommerceCreditCardField extends TextField
         if (is_array($this->value)) {
             return implode('', $this->value);
         }
+
         return $this->value;
     }
 
@@ -81,6 +83,8 @@ class EcommerceCreditCardField extends TextField
      * checks if a credit card is a real credit card number.
      *
      * @reference: http://en.wikipedia.org/wiki/Luhn_algorithm
+     *
+     * @param mixed $validator
      */
     public function validate($validator)
     {
@@ -105,5 +109,6 @@ class EcommerceCreditCardField extends TextField
 
             return false;
         }
+        return true;
     }
 }

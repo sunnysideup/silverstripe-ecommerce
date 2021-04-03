@@ -5,13 +5,12 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
 /**
- * provides data on the user
+ * provides data on the user.
  */
 abstract class BaseApplyer
 {
@@ -30,6 +29,7 @@ abstract class BaseApplyer
 
     /**
      * final product list object, always present.
+     *
      * @var FinalProductList
      */
     protected $finalProductList;
@@ -42,7 +42,7 @@ abstract class BaseApplyer
     protected $selectedOption = '';
 
     /**
-     * @var string|array
+     * @var array|string
      */
     protected $selectedOptionParams = '';
 
@@ -59,8 +59,9 @@ abstract class BaseApplyer
 
     /**
      * manipulates the product lists.
-     * @param string         $key     optional key
-     * @param string|array   $params  optional params to go with key
+     *
+     * @param string       $key    optional key
+     * @param array|string $params optional params to go with key
      */
     abstract public function apply(?string $key = null, $params = null): self;
 
@@ -99,9 +100,10 @@ abstract class BaseApplyer
     }
 
     /**
-     * get the title for an option
-     * @param  string        $key - e.g. default
-     * @param  mixed         $params - optional
+     * get the title for an option.
+     *
+     * @param string $key    - e.g. default
+     * @param mixed  $params - optional
      */
     public function getTitle(?string $key = '', $params = null): string
     {
@@ -109,21 +111,24 @@ abstract class BaseApplyer
     }
 
     /**
-     * get the sql for an option
-     * @param  string        $key string, e.g. default.
-     * @param  string|array  $params additional param for sql.
+     * get the sql for an option.
      *
-     * @return string|array
+     * @param string       $key    string, e.g. default.
+     * @param array|string $params additional param for sql
+     *
+     * @return array|string
      */
     public function getSql(?string $key = null, $params = null)
     {
         $sql = $this->checkOption($key);
+
         return str_replace(self::SQL_PARAM_PLACEHOLDER, $params, $sql);
     }
 
     /**
-     * get the RequiresData for an option
-     * @param  string        $key string, e.g. default.
+     * get the RequiresData for an option.
+     *
+     * @param string $key string, e.g. default.
      */
     public function getRequiresData(?string $key = null): bool
     {
@@ -131,8 +136,9 @@ abstract class BaseApplyer
     }
 
     /**
-     * get the sql for an option
-     * @param  string        $key string, e.g. default.
+     * get the sql for an option.
+     *
+     * @param string $key string, e.g. default.
      */
     public function IsShowFullList(?string $key = null): bool
     {
@@ -141,9 +147,10 @@ abstract class BaseApplyer
 
     /**
      * check for one option. If no return value is specified then all of the options are returned.
-     * @param  string $key        e.g. default
-     * @param  string $returnValue   mixed
-     * @param  string $defaultKey
+     *
+     * @param string $key         e.g. default
+     * @param string $returnValue mixed
+     * @param string $defaultKey
      *
      * @return mixed
      */

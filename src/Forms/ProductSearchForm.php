@@ -26,17 +26,15 @@ use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
-
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
-
 use Sunnysideup\Vardump\Vardump;
 
 /**
- * Product search form
+ * Product search form.
  */
 class ProductSearchForm extends Form
 {
@@ -78,26 +76,29 @@ class ProductSearchForm extends Form
      * - Keyword
      * - MinimumPrice
      * - MaximumPrice
-     * - OnlyThisSection
+     * - OnlyThisSection.
      *
      * @var array
      */
     protected $rawData = [];
 
     /**
-     * processed keyword
+     * processed keyword.
+     *
      * @var string
      */
     protected $keywordPhrase = '';
 
     /**
-     * processed keyword
+     * processed keyword.
+     *
      * @var string
      */
     protected $minPrice = 0;
 
     /**
-     * processed keyword
+     * processed keyword.
+     *
      * @var string
      */
     protected $maxPrice = 0;
@@ -129,19 +130,22 @@ class ProductSearchForm extends Form
     protected $immediateRedirectPage;
 
     /**
-     * a custom base list
+     * a custom base list.
+     *
      * @var DataList
      */
     protected $baseList;
 
     /**
-     * a custom base list for ProductGroups
+     * a custom base list for ProductGroups.
+     *
      * @var DataList
      */
     protected $baseListForGroups;
 
     /**
      * a product group that creates the base list.
+     *
      * @var ProductGroup
      */
     protected $baseListOwner;
@@ -194,12 +198,14 @@ class ProductSearchForm extends Form
 
     /**
      * do we use the cache at all.
+     *
      * @var bool
      */
     private static $use_cache = false;
 
     /**
      * when we do not know the relevance then sort like this.
+     *
      * @var array
      */
     private static $in_group_sort_sql = ['Price' => 'DESC'];
@@ -223,8 +229,8 @@ class ProductSearchForm extends Form
     /**
      * ProductsToSearch can be left blank to search all products.
      *
-     * @param Controller              $controller                  - associated controller
-     * @param string                  $name                        - name of form
+     * @param Controller $controller - associated controller
+     * @param string     $name       - name of form
      */
     public function __construct($controller, string $name)
     {
@@ -302,9 +308,9 @@ class ProductSearchForm extends Form
         return parent::forTemplate();
     }
 
-    ########################################
-    # getters
-    ########################################
+    //#######################################
+    // getters
+    //#######################################
 
     /**
      * they search phrase used.
@@ -329,9 +335,9 @@ class ProductSearchForm extends Form
         return count($this->getProductIds) && count($this->getProductGroupIds) > 2;
     }
 
-    ########################################
-    # setters
-    ########################################
+    //#######################################
+    // setters
+    //#######################################
 
     public function setSearchHash(?string $hash = ''): self
     {
@@ -346,7 +352,7 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * @param  DataList $baseList
+     * @param DataList $baseList
      */
     public function setBaseList($baseList): self
     {
@@ -356,7 +362,7 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * @param  DataList $baseListForGroups
+     * @param DataList $baseListForGroups
      */
     public function setBaseListForGroups($baseListForGroups): self
     {
@@ -366,11 +372,12 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * @param  ProductGroup $baseListOwner
+     * @param ProductGroup $baseListOwner
      */
     public function setBaseListOwner($baseListOwner): self
     {
         $this->baseListOwner = $baseListOwner;
+
         return $this;
     }
 
@@ -384,12 +391,14 @@ class ProductSearchForm extends Form
     public function setExtraBuyableFieldsToSearchFullText(array $a): self
     {
         $this->extraBuyableFieldsToSearchFullText = $a;
+
         return $this;
     }
 
     public function setBaseClassNameForBuyables(string $s): self
     {
         $this->baseClassNameForBuyables = $s;
+
         return $this;
     }
 
@@ -407,9 +416,9 @@ class ProductSearchForm extends Form
         return $this;
     }
 
-    ########################################
-    # do-ers
-    ########################################
+    //#######################################
+    // do-ers
+    //#######################################
 
     public function doProductSearchForm($data, $form)
     {
@@ -417,9 +426,9 @@ class ProductSearchForm extends Form
         $this->doProcessResults();
     }
 
-    ########################################
-    # UTILS
-    ########################################
+    //#######################################
+    // UTILS
+    //#######################################
 
     public function runFullProcess($data)
     {
@@ -451,6 +460,7 @@ class ProductSearchForm extends Form
         if ($this->baseList) {
             return $this->baseList->count() > 0;
         }
+
         return true;
     }
 
@@ -519,7 +529,7 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * cleanup keyword phrase
+     * cleanup keyword phrase.
      */
     protected function doKeywordCleanup()
     {
@@ -531,21 +541,21 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * add keywordphrase to search history
+     * add keywordphrase to search history.
      */
     protected function doAddToSearchHistory()
     {
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             SearchHistory::add_entry($this->keywordPhrase);
         }
     }
 
     /**
-     * look for internalItemID
+     * look for internalItemID.
      */
     protected function doInternalItemSearch()
     {
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             return;
         }
         if ($this->debug) {
@@ -565,7 +575,7 @@ class ProductSearchForm extends Form
      */
     protected function doKeywordReplacements()
     {
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             return;
         }
         if (! $this->weHaveEnoughResults()) {
@@ -577,13 +587,13 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * search for products
+     * search for products.
      */
     protected function doProductSearch()
     {
         // @todo: consider using
         // DB::get_conn()->searchEngine(SiteTre::get(), $keywords, $start, $pageLength, "\"Relevance\" DESC", "", $booleanSearch);
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             return;
         }
         if (! $this->weHaveEnoughResults()) {
@@ -598,6 +608,7 @@ class ProductSearchForm extends Form
             foreach ($this->extraBuyableFieldsToSearchFullText as $tempClassName => $fieldArrayTemp) {
                 if ($singleton instanceof $tempClassName) {
                     $fieldArray = $fieldArrayTemp;
+
                     break;
                 }
             }
@@ -627,14 +638,14 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * search for groups
+     * search for groups.
      */
     protected function doGroupSearch()
     {
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             return;
         }
-        if ($this->immediateRedirectPage === null) {
+        if (null === $this->immediateRedirectPage) {
             if ($this->debug) {
                 $this->debugOutput('<hr />');
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH</h3>');
@@ -656,7 +667,7 @@ class ProductSearchForm extends Form
                 $productGroups = $this->baseListForGroups->where($search)->filter(['ShowInSearch' => 1]);
                 $count = $productGroups->count();
                 //redirect if we find exactly one match and we have no matches so far...
-                if ($count === 1 && ! $this->resultArrayPos) {
+                if (1 === $count && ! $this->resultArrayPos) {
                     $this->immediateRedirectPage = $productGroups->First();
                 } elseif ($count > 0) {
                     foreach ($productGroups as $productGroup) {
@@ -678,7 +689,7 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * finalise results
+     * finalise results.
      */
     protected function doProcessResults()
     {
@@ -695,7 +706,7 @@ class ProductSearchForm extends Form
         } else {
             $redirectToPage = $this->getResultsPage();
             $hash = '';
-            if ($this->hasCache === false && $this->config()->get('use_cache')) {
+            if (false === $this->hasCache && $this->config()->get('use_cache')) {
                 $hash = $this->setCacheForHash();
             }
             $link = $redirectToPage->SearchResultLink($hash);
@@ -711,9 +722,9 @@ class ProductSearchForm extends Form
         $this->controller->redirect($link);
     }
 
-    ############################################
-    # results management: add / count
-    ############################################
+    //###########################################
+    // results management: add / count
+    //###########################################
 
     /**
      * add items to list.
@@ -721,6 +732,8 @@ class ProductSearchForm extends Form
      * returns
      * - TRUE when done and
      * - FALSE when more results are needed
+     *
+     * @param mixed $allowOneAnswer
      */
     protected function addToResults(DataList $listToAdd, $allowOneAnswer = false): bool
     {
@@ -728,7 +741,7 @@ class ProductSearchForm extends Form
             return true;
         }
         $count = $listToAdd->count();
-        if ($allowOneAnswer && $count === 1 && $this->resultArrayPos === 0) {
+        if ($allowOneAnswer && 1 === $count && 0 === $this->resultArrayPos) {
             // $this->immediateRedirectPage = $list1->First()->getRequestHandler()->Link();
             $this->immediateRedirectPage = $listToAdd->First();
             if ($this->debug) {
@@ -736,6 +749,7 @@ class ProductSearchForm extends Form
                     '<p style="color: red">Found one answer for potential immediate redirect: ' . $this->immediateRedirectPage->Link() . '</p>'
                 );
             }
+
             return true;
         }
         if ($count > 0) {
@@ -764,19 +778,21 @@ class ProductSearchForm extends Form
 
     /**
      * do we need more results?
-     * @return bool returns true if more results are needed.
+     *
+     * @return bool returns true if more results are needed
      */
     protected function weHaveEnoughResults(): bool
     {
         if ($this->immediateRedirectPage) {
             return true;
         }
+
         return $this->resultArrayPos >= $this->maximumNumberOfResults;
     }
 
-    ############################################
-    # results management: add / count
-    ############################################
+    //###########################################
+    // results management: add / count
+    //###########################################
 
     protected function getResultsPage()
     {
@@ -789,7 +805,7 @@ class ProductSearchForm extends Form
 
     protected function createBaseList()
     {
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             return;
         }
         if (! $this->baseList instanceof SS_List) {
@@ -814,11 +830,11 @@ class ProductSearchForm extends Form
     }
 
     /**
-     * filter baselist for price min and max
+     * filter baselist for price min and max.
      */
     protected function doPriceSearch()
     {
-        if ($this->hasCache === true) {
+        if (true === $this->hasCache) {
             return;
         }
         if ($this->hasMinMaxSearch()) {
@@ -842,9 +858,9 @@ class ProductSearchForm extends Form
         }
     }
 
-    ########################################
-    # CACHING AND SERIALIZING
-    ########################################
+    //#######################################
+    // CACHING AND SERIALIZING
+    //#######################################
 
     protected function getSerializedObject(?array $data = [])
     {
@@ -862,17 +878,19 @@ class ProductSearchForm extends Form
                 $variables[$variable] = $value;
             }
         }
+
         return serialize($variables);
     }
 
     /**
-     * @param  string $data optional
+     * @param string $data optional
      */
     protected function getHash(?string $data = ''): int
     {
         if (! $data) {
             $data = $this->getSerializedObject();
         }
+
         return crc32($data);
     }
 
@@ -911,12 +929,13 @@ class ProductSearchForm extends Form
                 }
             }
         }
+
         return $array;
     }
 
     protected function arrayToObject($value)
     {
-        if (is_array($value) && count($value) === 2 && isset($value['ID']) && isset($value['ClassName'])) {
+        if (is_array($value) && 2 === count($value) && isset($value['ID'], $value['ClassName'])) {
             $className = $value['ClassName'];
             $id = (int) $value['ID'];
             if (class_exists($className) && $id) {
@@ -927,9 +946,9 @@ class ProductSearchForm extends Form
         return $value;
     }
 
-    ########################################
-    # DEBUG
-    ########################################
+    //#######################################
+    // DEBUG
+    //#######################################
 
     protected function debugOutput($mixed)
     {

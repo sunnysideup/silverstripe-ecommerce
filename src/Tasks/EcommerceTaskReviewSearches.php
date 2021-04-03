@@ -14,7 +14,7 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
- **/
+ */
 class EcommerceTaskReviewSearches extends BuildTask
 {
     /**
@@ -86,7 +86,8 @@ class EcommerceTaskReviewSearches extends BuildTask
             ->setNumberOfDays($days)
             ->setMinimumCount($countMin)
             ->setMaxRows($maxRows)
-            ->setEndingDaysBack($endingDaysBack);
+            ->setEndingDaysBack($endingDaysBack)
+        ;
         echo $field->forTemplate();
 
         $fields = FieldList::create(
