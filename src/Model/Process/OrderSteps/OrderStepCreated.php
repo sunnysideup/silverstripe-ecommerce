@@ -38,11 +38,11 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @see Order::doNextStatus
      *
-     * @param Order $order object
+     * @param Order $order
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order)
+    public function initStep(Order $order) : bool
     {
         return true;
     }
@@ -52,7 +52,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @return bool
      **/
-    public function doStep(Order $order)
+    public function doStep(Order $order) : bool
     {
         if (! $order->MemberID) {
             $member = Security::getCurrentUser();
@@ -74,7 +74,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : bool
     {
         if ($order->TotalItems($recalculate = true)) {
             return parent::nextStep($order);

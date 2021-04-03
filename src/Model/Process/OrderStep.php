@@ -770,7 +770,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : bool
     {
         $sort = (int) $this->Sort;
         if (! $sort) {

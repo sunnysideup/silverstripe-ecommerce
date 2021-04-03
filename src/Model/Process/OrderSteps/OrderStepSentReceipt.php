@@ -70,7 +70,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order)
+    public function initStep(Order $order) : bool
     {
         return $order->IsPaid();
     }
@@ -80,7 +80,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return bool
      */
-    public function doStep(Order $order)
+    public function doStep(Order $order) : bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendReceiptToCustomer;
         return $this->sendEmailForStep(
@@ -98,7 +98,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null - DataObject = next OrderStep
      **/
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : bool
     {
         if ($this->hasBeenSent($order)) {
             return parent::nextStep($order);

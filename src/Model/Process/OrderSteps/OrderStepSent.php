@@ -98,7 +98,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order)
+    public function initStep(Order $order) : bool
     {
         return true;
     }
@@ -115,7 +115,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly.
      **/
-    public function doStep(Order $order)
+    public function doStep(Order $order) : bool
     {
         if ($log = $this->RelevantLogEntry($order)) {
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
@@ -139,7 +139,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : bool
     {
         $log = $this->RelevantLogEntry($order);
         if (! $this->SendDetailsToCustomer || $log->InternalUseOnly || $this->hasBeenSent($order, false)) {

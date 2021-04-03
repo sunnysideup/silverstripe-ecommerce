@@ -79,7 +79,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @return OrderStep|null
      **/
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : bool
     {
         $className = $this->getRelevantLogEntryClassName();
         $orderStatusLog_PaymentChecks = $className::get()

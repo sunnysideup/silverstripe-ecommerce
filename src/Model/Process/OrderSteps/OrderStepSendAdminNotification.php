@@ -38,7 +38,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return bool - true if the current step is ready to be run...
      **/
-    public function initStep(Order $order)
+    public function initStep(Order $order) : bool
     {
         return $order->IsSubmitted();
     }
@@ -52,7 +52,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return bool
      **/
-    public function doStep(Order $order)
+    public function doStep(Order $order) : bool
     {
         return $this->sendEmailForStep(
             $order,
@@ -68,7 +68,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * can do next step once the admin notification has been sent
      * @return OrderStep|null (next step OrderStep object)
      **/
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : bool
     {
         if ($this->hasBeenSent($order)) {
             return parent::nextStep($order);
