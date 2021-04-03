@@ -102,7 +102,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     }
 
     /**
-     *@return string
+     * @return string
      **/
     public function CustomerNote()
     {

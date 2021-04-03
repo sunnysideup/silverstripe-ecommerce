@@ -714,7 +714,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return string (URLSegment)
+     * @return string (URLSegment)
      **/
     public function CartPageLink()
     {
@@ -722,7 +722,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return string (URLSegment)
+     * @return string (URLSegment)
      **/
     public function OrderConfirmationPageLink()
     {

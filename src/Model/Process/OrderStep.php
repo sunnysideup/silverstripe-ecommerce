@@ -469,7 +469,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return array
+     * @return array
      **/
     public static function get_codes_for_order_steps_to_include()
     {
@@ -506,7 +506,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return string
+     * @return string
      **/
     public function getMyCode()
     {
@@ -528,7 +528,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -700,7 +700,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return \SilverStripe\ORM\ValidationResult
+     * @return \SilverStripe\ORM\ValidationResult
      **/
     public function validate()
     {
@@ -784,6 +784,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($nextOrderStepObject) {
             return $nextOrderStepObject;
         }
+        return null;
     }
 
     /**************************************************
@@ -1258,7 +1259,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return bool
+     * @return bool
      **/
     protected function isDefaultStatusOption()
     {

@@ -109,7 +109,7 @@ class EcommerceTaskCartCleanup extends BuildTask
     }
 
     /**
-     *@return int - number of carts destroyed
+     *
      **/
     public function run($request)
     {
@@ -120,30 +120,59 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = {$countAll})</h2>.");
         }
 
-        $neverDeleteIfLinkedToMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'never_delete_if_linked_to_member');
-        $maximumNumberOfObjectsDeleted = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'maximum_number_of_objects_deleted');
+        $this->neverDeleteIfLinkedToMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'never_delete_if_linked_to_member');
+        $this->maximumNumberOfObjectsDeleted = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'maximum_number_of_objects_deleted');
 
         //LIMITS ...
         if ($request) {
-            $limitFromGetVar = $request->getVar('limit');
-            if ($limitFromGetVar && Permission::check('ADMIN')) {
-                $maximumNumberOfObjectsDeleted = (int) $limitFromGetVar;
+            $this->limitFromGetVar = $request->getVar('limit');
+            if ($this->limitFromGetVar && Permission::check('ADMIN')) {
+                $this->maximumNumberOfObjectsDeleted = (int) $this->limitFromGetVar;
             }
         }
 
-        //sort
-        $sort = '"Order"."Created" ASC';
+        //this->sort
+        $this->sort = '"Order"."Created" ASC';
 
         //join
-        $leftMemberJoin = 'LEFT JOIN Member ON "Member"."ID" = "Order"."MemberID"';
-        $joinShort = '"Member"."ID" = "Order"."MemberID"';
+        $this->leftMemberJoin = 'LEFT JOIN Member ON "Member"."ID" = "Order"."MemberID"';
+        $this->joinShort = '"Member"."ID" = "Order"."MemberID"';
 
+        $this->abandonnedCarts();
+        $this->emptyCarts();
+
+        $this->oneToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_many_classes');
+        $this->oneToOne = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_one_classes');
+        $this->manyToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'many_to_many_classes');
+        if (! is_array($this->oneToOne)) {
+            $this->oneToOne = [];
+        }
+        if (! is_array($this->oneToMany)) {
+            $this->oneToMany = [];
+        }
+        if (! is_array($this->manyToMany)) {
+            $this->manyToMany = [];
+        }
+
+
+        $this->clearOneToOnes();
+
+        //one order has many other things so we increase the ability to delete stuff
+        $this->maximumNumberOfObjectsDeleted *= 25;
+
+        $this->clearOneToMany();
+
+    }
+
+
+    protected function abandonnedCarts()
+    {
         //ABANDONNED CARTS
         $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
         $time = strtotime('-' . $clearMinutes . ' minutes');
         $where = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
-        if ($neverDeleteIfLinkedToMember) {
+        if ($this->neverDeleteIfLinkedToMember) {
             $userStatement = 'or have a user associated with it';
             $withoutMemberWhere = ' AND "Member"."ID" IS NULL ';
             $withMemberWhere = ' OR "Member"."ID" IS NOT NULL ';
@@ -156,9 +185,9 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
         $oldCarts = Order::get()
             ->where($where . $withoutMemberWhere)
-            ->sort($sort)
-            ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $joinShort);
+            ->this->sort($this->sort)
+            ->limit($this->maximumNumberOfObjectsDeleted);
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -167,7 +196,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                     '
                     SELECT COUNT(*)
                     FROM "Order"
-                        ' . $leftMemberJoin . '
+                        ' . $this->leftMemberJoin . '
                     WHERE '
                         . $where
                         . $withoutMemberWhere
@@ -176,7 +205,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 $totalToDelete = $totalToDeleteSQLObject->value();
                 DB::alteration_message('
                         <h2>Total number of abandonned carts: ' . $totalToDelete . '</h2>
-                        <br /><b>number of records deleted at one time:</b> ' . $maximumNumberOfObjectsDeleted . '
+                        <br /><b>number of records deleted at one time:</b> ' . $this->maximumNumberOfObjectsDeleted . '
                         <br /><b>Criteria:</b> last edited ' . $clearMinutes . ' (~' . round($clearMinutes / 60 / 24, 2) . " days)
                         minutes ago or more {$memberDeleteNote}", 'created');
             }
@@ -199,7 +228,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             $countCartWithinTimeLimit = DB::query('
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
-                    ' . $leftMemberJoin . '
+                    ' . $this->leftMemberJoin . '
                 WHERE "StatusID" = ' . $createdStepID . '
                 AND
                 (
@@ -215,16 +244,20 @@ class EcommerceTaskCartCleanup extends BuildTask
                 'created'
             );
         }
+    }
 
+
+    protected function emptyCarts()
+    {
         //EMPTY ORDERS
         $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_empty_carts');
         $time = strtotime('-' . $clearMinutes . ' minutes');
         $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
         $oldCarts = Order::get()
             ->where($where)
-            ->sort($sort)
-            ->limit($maximumNumberOfObjectsDeleted);
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $joinShort);
+            ->this->sort($this->sort)
+            ->limit($this->maximumNumberOfObjectsDeleted);
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
         if ($oldCarts->count()) {
             $count = 0;
             if ($this->verbose) {
@@ -233,7 +266,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                     '
                     SELECT COUNT(*)
                     FROM "Order"
-                        ' . $leftMemberJoin . '
+                        ' . $this->leftMemberJoin . '
                     WHERE '
                         . $where
                         . $withoutMemberWhere
@@ -241,7 +274,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 )->value();
                 DB::alteration_message('
                         <h2>Total number of empty carts: ' . $totalToDelete . '</h2>
-                        <br /><b>number of records deleted at one time:</b> ' . $maximumNumberOfObjectsDeleted . "
+                        <br /><b>number of records deleted at one time:</b> ' . $this->maximumNumberOfObjectsDeleted . "
                         <br /><b>Criteria:</b> there are no order items and
                         the order was last edited {$clearMinutes} minutes ago {$memberDeleteNote}", 'created');
             }
@@ -261,14 +294,14 @@ class EcommerceTaskCartCleanup extends BuildTask
                 '
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
-                    ' . $leftMemberJoin . '
+                    ' . $this->leftMemberJoin . '
                 WHERE "StatusID" = 0 '
             )->value();
             $countCartWithinTimeLimit = DB::query(
                 '
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
-                    ' . $leftMemberJoin . '
+                    ' . $this->leftMemberJoin . '
                 WHERE "StatusID" = 0 AND
                 (
                     UNIX_TIMESTAMP("Order"."LastEdited") >= ' . $time . '
@@ -284,18 +317,10 @@ class EcommerceTaskCartCleanup extends BuildTask
             );
         }
 
-        $oneToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_many_classes');
-        $oneToOne = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'one_to_one_classes');
-        $manyToMany = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'many_to_many_classes');
-        if (! is_array($oneToOne)) {
-            $oneToOne = [];
-        }
-        if (! is_array($oneToMany)) {
-            $oneToMany = [];
-        }
-        if (! is_array($manyToMany)) {
-            $manyToMany = [];
-        }
+    }
+
+    protected function clearOneToOnes()
+    {
 
         /***********************************************
         //CLEANING ONE-TO-ONES
@@ -304,10 +329,10 @@ class EcommerceTaskCartCleanup extends BuildTask
             $this->flush();
             DB::alteration_message('<h2>Checking one-to-one relationships</h2>.');
         }
-        if (count($oneToOne)) {
-            foreach ($oneToOne as $orderFieldName => $className) {
+        if (count($this->oneToOne)) {
+            foreach ($this->oneToOne as $orderFieldName => $className) {
                 $tableName = Config::inst()->get($className, 'table_name');
-                if (! in_array($className, $oneToMany, true) && ! in_array($className, $manyToMany, true)) {
+                if (! in_array($className, $this->oneToMany, true) && ! in_array($className, $this->manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
                         DB::alteration_message("looking for {$className} objects without link to order.");
@@ -318,18 +343,18 @@ class EcommerceTaskCartCleanup extends BuildTask
                             LEFT JOIN \"Order\"
                                 ON \"Order\".\"{$orderFieldName}\" = \"{$tableName}\".\"ID\"
                         WHERE \"Order\".\"ID\" IS NULL
-                        LIMIT 0, " . $maximumNumberOfObjectsDeleted);
+                        LIMIT 0, " . $this->maximumNumberOfObjectsDeleted);
                     //the code below is a bit of a hack, but because of the one-to-one relationship we
                     //want to check both sides....
-                    $oneToOneIDArray = [];
+                    $this->oneToOneIDArray = [];
                     if ($rows) {
                         foreach ($rows as $row) {
-                            $oneToOneIDArray[$row['ID']] = $row['ID'];
+                            $this->oneToOneIDArray[$row['ID']] = $row['ID'];
                         }
                     }
-                    if (count($oneToOneIDArray)) {
+                    if (count($this->oneToOneIDArray)) {
                         $unlinkedObjects = $className::get()
-                            ->filter(['ID' => $oneToOneIDArray]);
+                            ->filter(['ID' => $this->oneToOneIDArray]);
                         if ($unlinkedObjects->count()) {
                             foreach ($unlinkedObjects as $unlinkedObject) {
                                 if ($this->verbose) {
@@ -359,20 +384,18 @@ class EcommerceTaskCartCleanup extends BuildTask
             }
         }
 
-        /***********************************************
-        //CLEANING ONE-TO-MANY
-        *************************************************/
+    }
 
-        //one order has many other things so we increase the ability to delete stuff
-        $maximumNumberOfObjectsDeleted *= 25;
+    protected function clearOneToMany()
+    {
         if ($this->verbose) {
             $this->flush();
             DB::alteration_message('<h2>Checking one-to-many relationships</h2>.');
         }
-        if (count($oneToMany)) {
-            foreach ($oneToMany as $classWithOrderID => $classWithLastEdited) {
+        if (count($this->oneToMany)) {
+            foreach ($this->oneToMany as $classWithOrderID => $classWithLastEdited) {
                 $tableWithOrderID = Config::inst()->get($classWithOrderID, 'table_name');
-                if (! in_array($classWithLastEdited, $oneToOne, true) && ! in_array($classWithLastEdited, $manyToMany, true)) {
+                if (! in_array($classWithLastEdited, $this->oneToOne, true) && ! in_array($classWithLastEdited, $this->manyToMany, true)) {
                     if ($this->verbose) {
                         $this->flush();
                         DB::alteration_message('looking for ' . $tableWithOrderID . ' objects without link to order.');
@@ -383,16 +406,16 @@ class EcommerceTaskCartCleanup extends BuildTask
                             LEFT JOIN \"Order\"
                                 ON \"Order\".\"ID\" = \"{$tableWithOrderID}\".\"OrderID\"
                         WHERE \"Order\".\"ID\" IS NULL
-                        LIMIT 0, " . $maximumNumberOfObjectsDeleted);
-                    $oneToManyIDArray = [];
+                        LIMIT 0, " . $this->maximumNumberOfObjectsDeleted);
+                    $this->oneToManyIDArray = [];
                     if ($rows) {
                         foreach ($rows as $row) {
-                            $oneToManyIDArray[$row['ID']] = $row['ID'];
+                            $this->oneToManyIDArray[$row['ID']] = $row['ID'];
                         }
                     }
-                    if (count($oneToManyIDArray)) {
+                    if (count($this->oneToManyIDArray)) {
                         $unlinkedObjects = $classWithLastEdited::get()
-                            ->filter(['ID' => $oneToManyIDArray]);
+                            ->filter(['ID' => $this->oneToManyIDArray]);
                         if ($unlinkedObjects->count()) {
                             foreach ($unlinkedObjects as $unlinkedObject) {
                                 if ($this->verbose) {
@@ -423,6 +446,16 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
     }
 
+    /**
+     * delete an object
+     */
+    private function deleteObject(DataObject $objectToDelete)
+    {
+        $objectToDelete->delete();
+        $objectToDelete->destroy();
+    }
+
+
     private function flush()
     {
         if ((PHP_SAPI === 'cli')) {
@@ -431,14 +464,5 @@ class EcommerceTaskCartCleanup extends BuildTask
             ob_flush();
             flush();
         }
-    }
-
-    /**
-     * delete an object
-     */
-    private function deleteObject(DataObject $objectToDelete)
-    {
-        $objectToDelete->delete();
-        $objectToDelete->destroy();
     }
 }

@@ -222,7 +222,7 @@ class OrderConfirmationPage extends CartPage
     }
 
     /**
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

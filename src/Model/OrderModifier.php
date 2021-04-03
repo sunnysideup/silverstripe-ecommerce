@@ -389,7 +389,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      */
-    public function ShowForm()
+    public function ShowForm() : bool
     {
         return false;
     }
@@ -400,7 +400,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      */
-    public function ShowFormInEditableOrderTable()
+    public function ShowFormInEditableOrderTable() : bool
     {
         //extend in OrderModifier Extensions
         return false;
@@ -505,7 +505,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      */
-    public function ShowInTable()
+    public function ShowInTable() : bool
     {
         if (! $this->baseRunUpdateCalled) {
             if ($this->canBeUpdated()) {
@@ -535,7 +535,7 @@ class OrderModifier extends OrderAttribute
      * some modifiers can be hidden after an ajax update (e.g. if someone enters a discount coupon and it does not exist).
      * There might be instances where ShowInTable (the starting point) is TRUE and HideInAjaxUpdate return false.
      *
-     *@return bool
+     * @return bool
      **/
     public function HideInAjaxUpdate()
     {

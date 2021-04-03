@@ -167,7 +167,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      ___________________*/
 
     /**
-     *@return string for use in the Templates
+     * @return string for use in the Templates
      **/
     public function TableID()
     {
@@ -175,7 +175,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
     }
 
     /**
-     *@return string for use in the Templates
+     * @return string for use in the Templates
      **/
     public function TableTotalID()
     {
@@ -263,7 +263,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      ___________________*/
 
     /**
-     *@return string for use in the Templates
+     * @return string for use in the Templates
      **/
     public function TableTitleID()
     {
@@ -271,7 +271,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
     }
 
     /**
-     *@return string for use in the Templates
+     * @return string for use in the Templates
      **/
     public function CartTitleID()
     {
@@ -279,7 +279,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
     }
 
     /**
-     *@return string for use in the Templates
+     * @return string for use in the Templates
      **/
     public function TableSubTitleID()
     {
@@ -287,7 +287,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
     }
 
     /**
-     *@return string for use in the Templates
+     * @return string for use in the Templates
      **/
     public function CartSubTitleID()
     {

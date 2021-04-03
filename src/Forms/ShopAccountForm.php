@@ -184,7 +184,7 @@ class ShopAccountForm extends Form
     }
 
     /**
-     *@return bool + redirection
+     * @return bool + redirection
      **/
     protected function processForm($data, $form, $request, $link = '')
     {

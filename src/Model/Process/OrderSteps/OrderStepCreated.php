@@ -50,7 +50,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Add the member to the order, in case the member is not an admin.
      *
-     * @param SilverStripe\ORM\DataObject | Order $order
+     * @param Order $order
      *
      * @return bool
      **/
@@ -88,7 +88,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {

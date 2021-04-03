@@ -455,7 +455,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return string
+     * @return string
      **/
     public function CustomerNote()
     {

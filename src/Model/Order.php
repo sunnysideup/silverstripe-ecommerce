@@ -3674,7 +3674,7 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return GridField
+     * @return GridField
      **/
     protected function getBillingAddressField()
     {
@@ -3694,7 +3694,7 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return GridField
+     * @return GridField
      **/
     protected function getShippingAddressField()
     {

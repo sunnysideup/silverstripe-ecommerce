@@ -1238,7 +1238,7 @@ class ShoppingCart
     /**
      *Saves current messages in session for retrieving them later.
      *
-     *@return array of messages
+     * @return array of messages
      */
     protected function StoreMessagesInSession()
     {

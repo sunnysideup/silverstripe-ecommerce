@@ -13,7 +13,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 class ProductMinimumPriceFilter extends ExactMatchFilter
 {
     /**
-     *@return DataQuery
+     * @return DataQuery
      **/
     public function apply(DataQuery $query)
     {

@@ -137,7 +137,7 @@ interface BuyableModel
     /**
      * link use to add (one) to cart.
      *
-     *@return string
+     * @return string
      */
     public function IncrementLink();
 

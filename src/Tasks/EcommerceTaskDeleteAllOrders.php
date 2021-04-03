@@ -65,7 +65,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     *******************************************************/
 
     /**
-     *@return int - number of carts destroyed
+     * @return int - number of carts destroyed
      **/
     public function run($request)
     {
@@ -109,6 +109,8 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 
             return $count;
         }
+
+        return 0;
     }
 
     public function cleanupUnlinkedOrderObjects()

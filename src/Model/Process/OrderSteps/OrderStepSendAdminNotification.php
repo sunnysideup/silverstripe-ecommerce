@@ -66,7 +66,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
 
     /**
      * can do next step once the admin notification has been sent
-     *
+     * @param Order $order
      * @return OrderStep|null (next step OrderStep object)
      **/
     public function nextStep(Order $order)
@@ -81,7 +81,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function addOrderStepFields(FieldList $fields, Order $order)
     {

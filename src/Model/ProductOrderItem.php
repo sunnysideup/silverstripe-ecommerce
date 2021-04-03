@@ -64,7 +64,7 @@ class ProductOrderItem extends OrderItem
     }
 
     /**
-     *@return string
+     * @return string
      **/
     public function TableTitle()
     {

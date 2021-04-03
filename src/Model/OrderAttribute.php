@@ -384,7 +384,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Should this item be shown on check out page table?
      * @return bool
      **/
-    public function ShowInTable()
+    public function ShowInTable() : bool
     {
         return true;
     }
@@ -392,7 +392,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      *Should this item be shown on in the cart (which is on other pages than the checkout page).
      *
-     *@return bool
+     * @return bool
      **/
     public function ShowInCart()
     {

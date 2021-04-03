@@ -41,7 +41,7 @@ class OrderModifierForm extends Form
      * You can use your own modifiers or an extension of OrderModifier_Controller by setting the first parameter (optionalController)
      * to your own controller.
      *
-     *@param Controller $optionalController
+     * @param Controller $optionalController
      **/
     public function __construct(
         ?Controller $optionalController,

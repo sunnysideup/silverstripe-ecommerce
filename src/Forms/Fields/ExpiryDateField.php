@@ -71,7 +71,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     *@return string
+     * @return string
      **/
     public function dataValue()
     {

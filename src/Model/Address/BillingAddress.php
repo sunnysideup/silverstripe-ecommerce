@@ -213,7 +213,7 @@ class BillingAddress extends OrderAddress
     /**
      * method for casted variable.
      *
-     *@return string
+     * @return string
      **/
     public function FullCountryName()
     {
@@ -226,7 +226,7 @@ class BillingAddress extends OrderAddress
     }
 
     /**
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

@@ -46,7 +46,7 @@ class OrderStatusLogForm extends Form
      * You can use your own Logs or an extension of OrderLog_Controller by setting the first parameter (optionalController)
      * to your own controller.
      *
-     *@param string $name
+     * @param string $name
      **/
     public function __construct(
         Controller $optionalController = null,

@@ -177,7 +177,7 @@ class CartPage extends Page
     }
 
     /**
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {
@@ -287,7 +287,7 @@ class CartPage extends Page
     }
 
     /**
-     *@return string (HTML Snippet)
+     * @return string (HTML Snippet)
      **/
     public function EcommerceMenuTitle()
     {

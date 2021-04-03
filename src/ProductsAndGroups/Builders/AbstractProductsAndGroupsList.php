@@ -150,7 +150,7 @@ abstract class AbstractProductsAndGroupsList
 
     /**
      * child products (including indirect children, but also show excluded)
-     * @return DataList [description]
+     * @return DataList 
      */
     final public function getChildProductsExclusive(): DataList
     {
@@ -169,7 +169,7 @@ abstract class AbstractProductsAndGroupsList
     /**
      * like getAlsoShowProductsInclusive, but then without the Children from all groups
      * i.e. exclude ones that have one of the groups as Parent.
-     * @return DataList [description]
+     * @return DataList 
      */
     final public function getAlsoShowProductsExclusive(): DataList
     {

@@ -223,7 +223,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     }
 
     /**
-     *@return Group | \SilverStripe\ORM\DataObject | NULL
+     * @return Group | \SilverStripe\ORM\DataObject | NULL
      **/
     public static function get_customer_group()
     {

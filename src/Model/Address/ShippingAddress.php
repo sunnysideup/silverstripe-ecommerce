@@ -207,7 +207,7 @@ class ShippingAddress extends OrderAddress
     }
 
     /**
-     *@return \SilverStripe\Forms\FieldList
+     * @return \SilverStripe\Forms\FieldList
      **/
     public function getCMSFields()
     {

@@ -105,7 +105,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * can only be created when the order is submitted.
      *
-     *@return string
+     * @return string
      **/
     public function HTMLRepresentation()
     {

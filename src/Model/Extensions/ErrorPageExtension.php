@@ -34,7 +34,7 @@ class ErrorPageExtension extends Extension
     }
 
     /**
-     * @param  integer $request [description]
+     * @param  integer $request 
      * @return Product
      */
     protected function urlToProduct($request)

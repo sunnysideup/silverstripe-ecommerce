@@ -376,7 +376,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *@return string
+     * @return string
      **/
     public function Status()
     {
