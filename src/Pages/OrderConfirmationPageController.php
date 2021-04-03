@@ -100,10 +100,10 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * copies either the current order into the shopping cart.
      *
-     * TO DO: untested
-     * TO DO: what to do with old order
+     * @todountested
+     * @todowhat to do with old order
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return array
      */
@@ -338,7 +338,7 @@ class OrderConfirmationPageController extends CartPageController
      * and displays a sample email
      * typically this link is opened in a new window.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return string
      **/

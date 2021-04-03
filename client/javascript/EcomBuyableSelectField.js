@@ -4,7 +4,7 @@
  *
  * Uses the Entwine jQuery Extension
  *
- * TO DO: can only have one EcomBuyableSelectField per page.
+ * @todocan only have one EcomBuyableSelectField per page.
  *
  *
  */

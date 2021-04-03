@@ -72,7 +72,7 @@ class EcommercePaymentController extends Controller
     }
 
     /**
-     * TO DO: TEST!!!
+     * @todoTEST!!!
      */
     public function thankyou()
     {

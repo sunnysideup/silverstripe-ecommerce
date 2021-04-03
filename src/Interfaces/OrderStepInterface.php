@@ -20,7 +20,7 @@ interface OrderStepInterface
      *
      * @return bool
      **/
-    public function initStep(Order $order);
+    public function initStep(Order $order) : bool;
 
     /**
      * Do the actual step.
@@ -29,7 +29,7 @@ interface OrderStepInterface
      *
      * @return bool
      **/
-    public function doStep(Order $order);
+    public function doStep(Order $order) : bool;
 
     /**
      * Returns the nextStep when we are ready or null if we are not ready.
@@ -37,7 +37,7 @@ interface OrderStepInterface
      *
      * @return OrderStep|null (nextStep DataObject)
      **/
-    public function nextStep(Order $order);
+    public function nextStep(Order $order) : bool;
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields

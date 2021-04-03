@@ -236,7 +236,7 @@ class CheckoutPageController extends CartPageController
      * if it is ajax it returns the current controller
      * as the inner for the page.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return array
      */

@@ -22,7 +22,7 @@ class CartPageController extends PageController
     /**
      * This ArraList holds DataObjects with a Link and Title each....
      *
-     * @var ArraList
+     * @var ArrayList
      **/
     protected $actionLinks;
 
@@ -36,7 +36,7 @@ class CartPageController extends PageController
     /**
      * order currently being shown on this page.
      *
-     * @var DataObject
+     * @var Order
      **/
     protected $currentOrder;
 
@@ -98,7 +98,7 @@ class CartPageController extends PageController
     /**
      * shows an order and loads it if it is not submitted.
      * @todo: do we still need loadorder controller method????
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      * @return array just so that template shows
      **/
     public function showorder(HTTPRequest $request)
@@ -122,7 +122,7 @@ class CartPageController extends PageController
     /**
      * share an order ...
      * @todo: do we still need loadorder controller method????
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      * @return array just so that template shows
      **/
     public function share(HTTPRequest $request)
@@ -170,10 +170,10 @@ class CartPageController extends PageController
     /**
      * Loads either the "current order""into the shopping cart.
      *
-     * TO DO: untested
-     * TO DO: what to do with old order
+     * @todountested
+     * @todowhat to do with old order
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return array
      */
@@ -189,7 +189,7 @@ class CartPageController extends PageController
     /**
      * save the order to a member. If no member exists then create the member first using the ShopAccountForm.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return array
      *               TO DO: untested
@@ -216,9 +216,9 @@ class CartPageController extends PageController
     /**
      * Delete the currently viewed order.
      *
-     * TO DO: untested
+     * @todountested
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return array
      */
@@ -238,7 +238,7 @@ class CartPageController extends PageController
     /**
      * Start a new order.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return array
      *               TO DO: untested

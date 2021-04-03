@@ -3443,7 +3443,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * Converts the Order into a serialized string
-     * TO DO: check if this works and check if we need to use special sapphire serialization code.
+     * @todocheck if this works and check if we need to use special sapphire serialization code.
      *
      * @return string - serialized object
      **/
@@ -3454,7 +3454,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     /**
      * Converts the Order into a JSON object
-     * TO DO: check if this works and check if we need to use special sapphire JSON code.
+     * @todocheck if this works and check if we need to use special sapphire JSON code.
      *
      * @return string -  JSON
      **/

@@ -295,7 +295,7 @@ class ShoppingCartController extends Controller
     /**
      * return json for cart... no further actions.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return string
      */
@@ -428,7 +428,7 @@ class ShoppingCartController extends Controller
     /**
      * sets the country.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -443,7 +443,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -457,7 +457,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -471,7 +471,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -498,7 +498,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
      *               If it is not AJAX it redirects back to requesting page.
@@ -511,7 +511,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      **/
@@ -524,7 +524,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      **/
@@ -541,7 +541,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      **/
@@ -569,7 +569,7 @@ class ShoppingCartController extends Controller
     /**
      * return number of items in cart.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return int
      **/
@@ -583,7 +583,7 @@ class ShoppingCartController extends Controller
     /**
      * return cart for ajax call.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\ORM\FieldType\DBHTMLText
      */
@@ -595,7 +595,7 @@ class ShoppingCartController extends Controller
     /**
      * loads an order.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */
@@ -612,7 +612,7 @@ class ShoppingCartController extends Controller
     /**
      * remove address from list of available addresses in checkout.
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      * @TODO: add non-ajax version of this request.
@@ -690,7 +690,7 @@ class ShoppingCartController extends Controller
      * This can be used by admins to log in as customers
      * to place orders on their behalf...
      *
-     * @param SS_HTTPRequest $request
+     * @param HTTPRequest $request
      *
      * @return \SilverStripe\Control\HTTPResponse|string
      */

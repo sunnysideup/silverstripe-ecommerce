@@ -47,7 +47,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @see OrderModifier
  * @see CheckoutPage_Controller->ModifierForms()
  *
- * TO DO: get rid of all the messages...
+ * @todoget rid of all the messages...
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
