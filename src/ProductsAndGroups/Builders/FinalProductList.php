@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
- * @subpackage: Pages
+ * @subpackage: Builders
  */
 class FinalProductList extends AbstractProductsAndGroupsList
 {
@@ -42,6 +42,9 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     public function __construct($rootGroupController, $rootGroup)
     {
+        if (self::$singleton_cache === false) {
+            user_error('Use ::inst to create me!');
+        }
         $this->setRootGroupController($rootGroupController);
         $this->setRootGroup($rootGroup);
 
@@ -61,6 +64,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public static function inst($rootGroupController, $rootGroup)
     {
         if (! isset(self::$singleton_cache)) {
+            self::$singleton_cache = false;
             self::$singleton_cache = new FinalProductList($rootGroupController, $rootGroup);
         }
 
