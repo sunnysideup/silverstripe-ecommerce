@@ -179,7 +179,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Memory for allow country to check.
      *
-     * @var null|array
+     * @var array
      */
     private static $_allow_sales_cache = [];
 

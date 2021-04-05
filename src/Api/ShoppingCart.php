@@ -112,7 +112,7 @@ class ShoppingCart
     /**
      * stores a reference to the current order object.
      *
-     * @var null|object
+     * @var object
      */
     protected $order;
 

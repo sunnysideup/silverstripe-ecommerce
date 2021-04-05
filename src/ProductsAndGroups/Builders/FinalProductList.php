@@ -20,19 +20,19 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 class FinalProductList extends AbstractProductsAndGroupsList
 {
     /**
-     * @var null|BaseProductList
+     * @var BaseProductList
      */
     protected $baseProductList;
 
     /**
-     * @var null|ProductGroupController
+     * @var ProductGroupController
      */
     protected $rootGroupController;
 
     /**
      * singleton_cache.
      *
-     * @var null|self
+     * @var self
      */
     protected static $singleton_cache;
 

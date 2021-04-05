@@ -21,7 +21,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 class EcommercePaymentController extends Controller
 {
     /**
-     * @var null|Order
+     * @var Order
      */
     protected $currentOrder;
 

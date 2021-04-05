@@ -32,14 +32,14 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
      *     }
      * </code>.
      *
-     * @var null|DataObject
+     * @var DataObject
      */
     protected $requestor;
 
     /**
      * prefix used for all classes and IDs.
      *
-     * @var null|string
+     * @var string
      */
     private static $prefix;
 

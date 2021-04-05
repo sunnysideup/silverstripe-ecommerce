@@ -63,12 +63,12 @@ class UserPreference
     ];
 
     /**
-     * @var null|HTTPRequest
+     * @var HTTPRequest
      */
     protected $request;
 
     /**
-     * @var null|ContentController
+     * @var ContentController
      */
     protected $rootGroupController;
 

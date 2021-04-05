@@ -235,7 +235,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * static holder for its own (or other EcommerceDBConfig) class.
      *
-     * @var null|string
+     * @var string
      */
     private static $_my_current_one;
 
