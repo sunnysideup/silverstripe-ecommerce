@@ -110,7 +110,6 @@ class KeywordSearchBuilder
 
     /**
      * @param string $word (optional word within keywordPhrase)
-     *
      */
     protected function replaceSearchPhraseOrWord(?string $word = '')
     {

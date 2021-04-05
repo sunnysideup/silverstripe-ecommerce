@@ -201,7 +201,7 @@ class ShoppingCart
      * you may supply an ID here, so that it looks up the current order ID
      * only when none is supplied.
      *
-     * @param Order|int $orderOrOrderID
+     * @param int|Order $orderOrOrderID
      *
      * @return int;
      */
@@ -411,7 +411,7 @@ class ShoppingCart
      *                                 if you make it a form, it will save the form into the orderitem
      *                                 returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @return boolean|OrderItem
+     * @return bool|OrderItem
      */
     public function addBuyable(BuyableModel $buyable, ?float $quantity = 1.00, $parameters = [])
     {
@@ -449,12 +449,10 @@ class ShoppingCart
             }
 
             return $item;
-        } else {
-            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
-
     }
 
     /**
@@ -466,7 +464,7 @@ class ShoppingCart
      * @param float        $quantity   - number of items add
      * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return boolean|OrderItem
+     * @return bool|OrderItem
      */
     public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
     {
@@ -498,7 +496,7 @@ class ShoppingCart
      * @param float        $quantity   - number of items add
      * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return OrderItem|bool
+     * @return bool|OrderItem
      */
     public function decrementBuyable(BuyableModel $buyable, $quantity = 1.00, array $parameters = [])
     {
@@ -525,6 +523,7 @@ class ShoppingCart
         } else {
             $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
         return false;
     }
 
@@ -627,7 +626,7 @@ class ShoppingCart
      * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
      * NOTE: does not write!
      *
-     * @return OrderItem|bool
+     * @return bool|OrderItem
      */
     public function findOrMakeItem(BuyableModel $buyable, array $parameters = [])
     {
@@ -699,12 +698,10 @@ class ShoppingCart
             $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'), 'good');
 
             return true;
-        } else {
-            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
-
     }
 
     /**
@@ -782,12 +779,10 @@ class ShoppingCart
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Removed.'), 'good');
 
             return true;
-        } else {
-            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
-
     }
 
     /**
@@ -817,12 +812,10 @@ class ShoppingCart
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'), 'good');
 
             return true;
-        } else {
-            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
-
     }
 
     /**
@@ -862,9 +855,8 @@ class ShoppingCart
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
 
             return false;
-        } else {
-            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
     }
@@ -918,7 +910,6 @@ class ShoppingCart
         }
 
         return false;
-
     }
 
     /**
@@ -997,7 +988,6 @@ class ShoppingCart
         }
 
         return false;
-
     }
 
     /**
@@ -1235,7 +1225,7 @@ class ShoppingCart
                     self::$_allow_writes_cache = false;
                 } else {
                     $noSession = '' === session_id();
-                    self::$_allow_writes_cache =  $noSession ? false : true;
+                    self::$_allow_writes_cache = $noSession ? false : true;
                 }
             }
         }
@@ -1311,7 +1301,6 @@ class ShoppingCart
 
     /**
      *Saves current messages in session for retrieving them later.
-     *
      */
     protected function StoreMessagesInSession()
     {
