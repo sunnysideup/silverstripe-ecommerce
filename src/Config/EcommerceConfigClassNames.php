@@ -38,9 +38,9 @@ class EcommerceConfigClassNames
     /**
      * @todo: make this more sophisticated / customisable
      *
-     * @return
+     * @return string
      */
-    public static function getName(string $class)
+    public static function getName(string $class) : string
     {
         return $class;
     }

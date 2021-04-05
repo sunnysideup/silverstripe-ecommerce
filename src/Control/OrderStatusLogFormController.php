@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\Form;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
 
 /**
  * This controller allows you to submit Log forms from anywhere on the site,

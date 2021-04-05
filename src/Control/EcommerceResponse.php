@@ -14,9 +14,9 @@ use SilverStripe\Control\HTTPResponse;
 abstract class EcommerceResponse extends HTTPResponse
 {
     /**
-     * @param string     $status         the status to return
-     * @param string     $additionalData the message to return with the retur
-     * @param null|array $messages       that should be included
+     * @param string[]         $messages         the status to return
+     * @param array            $additionalData   the message to return with the retur
+     * @param string           $status           that should be included
      */
     public function ReturnCartData(array $messages = [], array $additionalData = null, $status = 'success')
     {

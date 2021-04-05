@@ -201,7 +201,7 @@ class ShoppingCart
      * you may supply an ID here, so that it looks up the current order ID
      * only when none is supplied.
      *
-     * @param Order $orderOrOrderID | int (optional)
+     * @param Order|int $orderOrOrderID
      *
      * @return int;
      */
@@ -411,9 +411,9 @@ class ShoppingCart
      *                                 if you make it a form, it will save the form into the orderitem
      *                                 returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @return false | DataObject (OrderItem)
+     * @return boolean|OrderItem
      */
-    public function addBuyable(BuyableModel $buyable, $quantity = 1.00, $parameters = [])
+    public function addBuyable(BuyableModel $buyable, ?float $quantity = 1.00, $parameters = [])
     {
         if ($this->allowWrites()) {
             if (! $buyable) {
@@ -449,7 +449,12 @@ class ShoppingCart
             }
 
             return $item;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
+
     }
 
     /**
@@ -461,7 +466,7 @@ class ShoppingCart
      * @param float        $quantity   - number of items add
      * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return false | DataObject (OrderItem)|null
+     * @return boolean|OrderItem
      */
     public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
     {
@@ -477,9 +482,11 @@ class ShoppingCart
                 return $item;
             }
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
-
-            return false;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
     }
 
     /**
@@ -491,7 +498,7 @@ class ShoppingCart
      * @param float        $quantity   - number of items add
      * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return false | OrderItem|null
+     * @return OrderItem|bool
      */
     public function decrementBuyable(BuyableModel $buyable, $quantity = 1.00, array $parameters = [])
     {
@@ -515,9 +522,10 @@ class ShoppingCart
                 return $item;
             }
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
-
-            return false;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        return false;
     }
 
     /**
@@ -528,7 +536,7 @@ class ShoppingCart
      * @param BuyableModel $buyable    - the buyable (generally a product) being added to the cart
      * @param array        $parameters - array of parameters to target a specific order item. eg: group=1, length=5
      *
-     * @return bool | OrderItem|null - successfully removed
+     * @return bool|OrderItem
      */
     public function deleteBuyable(BuyableModel $buyable, array $parameters = [])
     {
@@ -540,12 +548,14 @@ class ShoppingCart
                 $item->destroy();
                 $this->addMessage(_t('Order.ITEMCOMPLETELYREMOVED', 'Item removed from cart.'), 'good');
 
-                return $item;
+                return true;
             }
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
-
-            return false;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
     }
 
     /**
@@ -617,7 +627,7 @@ class ShoppingCart
      * we do not need things like "canPurchase" here, because that is with the "addBuyable" method.
      * NOTE: does not write!
      *
-     * @return OrderItem | false
+     * @return OrderItem|bool
      */
     public function findOrMakeItem(BuyableModel $buyable, array $parameters = [])
     {
@@ -646,11 +656,14 @@ class ShoppingCart
             if ($parameters) {
                 $item->Parameters = $parameters;
             }
-
-            return $item;
+            if (! $item) {
+                $item = OrderItem::create();
+            }
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
 
-        return OrderItem::create();
+        return false;
     }
 
     /**
@@ -686,7 +699,12 @@ class ShoppingCart
             $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'), 'good');
 
             return true;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
+
     }
 
     /**
@@ -764,7 +782,12 @@ class ShoppingCart
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Removed.'), 'good');
 
             return true;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
+
     }
 
     /**
@@ -794,7 +817,12 @@ class ShoppingCart
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'), 'good');
 
             return true;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
+
     }
 
     /**
@@ -834,8 +862,9 @@ class ShoppingCart
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
 
             return false;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
-        $this->addMessage(_t('Order.NOSAVE', 'You can not load orders as your session functionality is turned off.'), 'bad');
 
         return false;
     }
@@ -884,9 +913,12 @@ class ShoppingCart
                 return false;
             }
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
-
-            return false;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
+
     }
 
     /**
@@ -960,9 +992,12 @@ class ShoppingCart
                 return true;
             }
             $this->addMessage(_t('Order.NOTUPDATEDCOUNTRY', 'Could not update country.'), 'bad');
-
-            return false;
+        } else {
+            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+
+        return false;
+
     }
 
     /**
@@ -1186,7 +1221,7 @@ class ShoppingCart
 
     /**
      * can the current user use sessions and therefore write to cart???
-     * the method also returns if an order has explicitely been set.
+     * the method also returns true if an order has explicitely been set.
      *
      * @return bool
      */
@@ -1196,14 +1231,11 @@ class ShoppingCart
             if ($this->order) {
                 self::$_allow_writes_cache = true;
             } else {
-                if (PHP_SAPI !== 'cli') {
-                    if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-                        self::$_allow_writes_cache = PHP_SESSION_ACTIVE === session_status() ? true : false;
-                    } else {
-                        self::$_allow_writes_cache = '' === session_id() ? false : true;
-                    }
-                } else {
+                if (PHP_SAPI === 'cli') {
                     self::$_allow_writes_cache = false;
+                } else {
+                    $noSession = '' === session_id();
+                    self::$_allow_writes_cache =  $noSession ? false : true;
                 }
             }
         }
@@ -1280,7 +1312,6 @@ class ShoppingCart
     /**
      *Saves current messages in session for retrieving them later.
      *
-     * @return array of messages
      */
     protected function StoreMessagesInSession()
     {

@@ -53,7 +53,7 @@ class CartResponse extends EcommerceResponse
      * useful if you want to use the json data
      * but not the associated header.
      *
-     * @param $b
+     * @param bool $b
      */
     public function setIncludeHeaders(bool $b): self
     {

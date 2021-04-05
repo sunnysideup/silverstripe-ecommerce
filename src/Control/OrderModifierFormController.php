@@ -93,7 +93,7 @@ class OrderModifierFormController extends Controller
      *
      * @param string $name The name of the form to return
      *
-     * @return Form
+     * @return Form|null`
      */
     protected function getOrderModifierForm($name)
     {
@@ -110,5 +110,6 @@ class OrderModifierFormController extends Controller
                 }
             }
         }
+        return null;
     }
 }
