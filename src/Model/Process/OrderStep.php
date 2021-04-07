@@ -235,7 +235,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     public function getTitle(): string
     {
-        return $this->Name;
+        return (string) $this->Name;
     }
 
     /**
