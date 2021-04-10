@@ -45,7 +45,7 @@ class UserPreference
     protected $secondaryTitleHasBeenAdded = false;
 
     /**
-     * @var bool
+     * @var array
      */
     protected $useSession = [
         'FILTER' => false,
@@ -54,7 +54,7 @@ class UserPreference
     ];
 
     /**
-     * @var bool
+     * @var array
      */
     protected $useSessionPerPage = [
         'FILTER' => false,
@@ -85,14 +85,14 @@ class UserPreference
      * keep a store for every page setting?
      * For example, do we store in session how a particular page is filtered / sorted.
      *
-     * @var bool
+     * @var array
      */
     private static $use_session_per_page = [];
 
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      *
-     * @var bool
+     * @var array
      */
     private static $use_session = [];
 

@@ -50,7 +50,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $accountPage->MetaTitle = 'Account';
             $accountPage->Content = '<p>This is the account page. It is used for shop users to login and change their member details if they have an account.</p>';
             $accountPage->URLSegment = 'account';
-            $accountPage->ShowInMenus = 0;
+            $accountPage->ShowInMenus = false;
             $accountPage->writeToStage('Stage');
             $accountPage->publish('Stage', 'Live');
             DB::alteration_message('Account page \'Account\' created', 'created');
@@ -71,7 +71,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $checkoutPage->MenuTitle = 'Checkout';
             $checkoutPage->URLSegment = 'checkout';
             $update[] = 'Checkout page \'Checkout\' created';
-            $checkoutPage->ShowInMenus = 0;
+            $checkoutPage->ShowInMenus = false;
             DB::alteration_message('new checkout page created.', 'created');
         } else {
             DB::alteration_message('No need to create an checkout page, it already exists.');
@@ -103,7 +103,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 $orderConfirmationPage->MetaTitle = 'Order confirmation';
                 $orderConfirmationPage->Content = '<p>This is the order confirmation page. It is used to confirm orders after they have been placed in the checkout page.</p>';
                 $orderConfirmationPage->URLSegment = 'order-confirmation';
-                $orderConfirmationPage->ShowInMenus = 0;
+                $orderConfirmationPage->ShowInMenus = false;
                 $orderConfirmationPage->writeToStage('Stage');
                 $orderConfirmationPage->publish('Stage', 'Live');
                 DB::alteration_message('Order Confirmation created', 'created');

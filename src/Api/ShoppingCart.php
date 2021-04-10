@@ -25,6 +25,10 @@ use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Model\OrderModifier;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
+
 /*
  * ShoppingCart - provides a global way to interface with the cart (current order).
  *
@@ -58,43 +62,6 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
  * @package: ecommerce
  * @sub-package: control
  *
- */
-use Sunnysideup\Ecommerce\Model\OrderModifier;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
-
-/**
- * ShoppingCart - provides a global way to interface with the cart (current order).
- *
- * This can be used in other code by calling $cart = ShoppingCart::singleton();
- *
- * The shopping cart can be accessed as an order handler from the back-end
- * (e.g. when creating an order programmatically), while the accompagnying controller
- * is used by web-users to manipulate their order.
- *
- * A bunch of core functions are also stored in the order itself.
- * Methods and variables are in the shopping cart if they are relevant
- * only before (and while) the order is placed (e.g. latest update message),
- * and others are in the order because they are relevant even after the
- * order has been submitted (e.g. Total Cost).
- *
- * Key methods:
- *
- * //get Cart
- * $myCart = ShoppingCart::singleton();
- *
- * //get order
- * $myOrder = ShoppingCart::current_order();
- *
- * //view order (from another controller)
- * $this->redirect(ShoppingCart::current_order()->Link());
- *
- * //add item to cart
- * ShoppingCart::singleton()->addBuyable($myProduct);
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: control
  */
 class ShoppingCart
 {
