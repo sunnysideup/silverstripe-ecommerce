@@ -45,7 +45,7 @@ class RelatedProductGroups
     ];
 
     /**
-     * @var DataList
+     * @var DataList|null
      */
     protected $groups;
 

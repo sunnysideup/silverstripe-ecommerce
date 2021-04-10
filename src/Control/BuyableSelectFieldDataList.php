@@ -67,8 +67,8 @@ class BuyableSelectFieldDataList extends Controller
         $absoluteCount = 0;
         $buyables = [];
         foreach ($arrayOfBuyables as $key => $buyableClassName) {
-            $buyables[$key] = [];
             $singleton = singleton($buyableClassName);
+            $buyables[$key] = [];
             $buyables[$key]['Singleton'] = $singleton;
             $buyables[$key]['ClassName'] = $buyableClassName;
             $buyables[$key]['TableName'] = $buyableClassName;
