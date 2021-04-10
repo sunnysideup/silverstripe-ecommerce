@@ -86,13 +86,13 @@ class RelatedProductGroups
     }
 
     /**
-     * @param SS_List $list
+     * @param DataList $list
      *
-     * @return SS_List
+     * @return DataList
      */
     public static function apply_default_filter_to_groups($list)
     {
-        ClassHelpers::check_for_instance_of($list, SS_List::class, true);
+        ClassHelpers::check_for_instance_of($list, DataList::class, true);
         $filter = Config::inst()->get(self::class, 'default_product_group_filter');
 
         return $list->filter($filter);
@@ -109,7 +109,7 @@ class RelatedProductGroups
     public function setRootGroup(ProductGroup $group): self
     {
         $this->rootGroup = $group;
-        $this->groups = [];
+        $this->groups = null;
 
         return $this;
     }
@@ -120,7 +120,7 @@ class RelatedProductGroups
     public function setLevelOfProductsToShow(int $levels): self
     {
         $this->levelsToShow = $levels;
-        $this->groups = [];
+        $this->groups = null;
 
         return $this;
     }
@@ -131,7 +131,7 @@ class RelatedProductGroups
     public function setIncludeRoot(bool $includeRoot): self
     {
         $this->includeRoot = $includeRoot;
-        $this->groups = [];
+        $this->groups = null;
 
         return $this;
     }
