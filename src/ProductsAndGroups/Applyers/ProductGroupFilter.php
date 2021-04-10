@@ -59,7 +59,7 @@ class ProductGroupFilter extends BaseApplyer
      * @param string       $key    optional key
      * @param array|string $params optional params to go with key
      */
-    public function apply(string $key = null, $params = null): self
+    public function apply(?string $key = null, $params = null): self
     {
         $this->applyStart($key, $params);
         $group = $params instanceof ProductGroup ? $params : $this->findGroup($params);
