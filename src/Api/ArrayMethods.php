@@ -9,7 +9,7 @@ use SilverStripe\Versioned\Versioned;
 class ArrayMethods
 {
     /**
-     * return an array that can be ued for ORM filters...
+     * return an array of ids that can be ued for ORM filters...
      *
      * @param mixed $array - hopefully an array
      */
