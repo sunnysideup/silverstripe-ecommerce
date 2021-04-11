@@ -239,13 +239,4 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType, $this);
     }
 
-    protected function getSiteTreeTableName(): string
-    {
-        return $this->baseProductList->getSiteTreeTableName();
-    }
-
-    protected function getBuyableTableNameName(): string
-    {
-        return $this->baseProductList->getBuyableTableNameName();
-    }
 }

@@ -15,6 +15,9 @@ class Debug extends ViewableData
         parent::__construct();
         $this->rootGroupController = $rootGroupController;
         $this->rootGroup = $rootGroup;
+        if (! $this->rootGroup) {
+            user_error('Please specify rootGroup');
+        }
     }
 
     public function print()

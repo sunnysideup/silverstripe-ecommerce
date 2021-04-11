@@ -1,8 +1,15 @@
 <h1>Debug information for $getRootGroup.Title</h1>
-
+<ul>
+<li><a href="#Controller">Controller</a></li>
+<li><a href="#ProductGroup">Model</a></li>
+<li><a href="#TemplateProvider">Template Provider</a>: KEY PLAYER - provides the classes and the basic set up for product selection</li>
+<li><a href="#BaseList">Base List</a>: the basic list of products available</li>
+<li><a href="#FinalList">Final List</a>: the sorted / filtered list</li>
+<li><a href="#UserDetails">User Specific Details</a></li>
+</ul>
 
 <% with $getRootGroupController %>
-<hr /><hr /><h2 style="color: red; padding-top: 2rem">Controller</h2><hr />
+<hr /><hr /><h2 id="Controller" style="color: red; padding-top: 2rem">Controller</h2><hr />
 <ul>
 <li><strong>ID:</strong> $ID</li>
 <li><strong>ClassName:</strong> $ClassName</li>
@@ -73,9 +80,10 @@
 </ul>
 
 
+<% end_with %>
 
 <% with $getRootGroup %>
-<hr /><hr /><h2 style="color: red; padding-top: 2rem">Product Group Data Record Details:</h2><hr />
+<hr /><hr /><h2 id="ProductGroup" style="color: red; padding-top: 2rem">Product Group Data Record Details:</h2><hr />
 <ul>
     <li><strong>ID:</strong> $ID</li>
     <li><strong>ClassName:</strong> $ClassName</li>
@@ -97,22 +105,10 @@
 </ul>
 <% end_with %>
 
-<% with $getUserPreferencesClass %>
-<hr /><hr /><h2 style="color: red; padding-top: 2rem">User Specific Details</h2><hr />
-<ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
-    <li><strong>use session to remember settings:</strong> $getUseSessionAll</li>
-    <li><strong>use session to remember settings for each page:</strong> $getUseSessionPerPageAll</li>
-    <li><strong>User Settings:</strong> $getCurrentUserPreferences</li>
-    <li><strong>Group Filter:</strong> $getGroupFilterTitle</li>
-    <li><strong>Filter:</strong> $getFilterTitle</li>
-    <li><strong>Sort:</strong> $getSortTitle</li>
-    <li><strong>Display:</strong> $getDisplayTitle</li>
-</ul>
-<% end_with %>
+<% with $getRootGroupController %>
 
 <% with $getTemplateForProductsAndGroups %>
-<hr /><hr /><h2 style="color: red; padding-top: 2rem">Template Provider</h2><hr />
+<hr /><hr /><h2 id="TemplateProvider" style="color: red; padding-top: 2rem">Template Provider</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>Data:</strong> $getData</li>
@@ -124,7 +120,7 @@
 <% end_with %>
 
 <% with $getBaseProductList %>
-<hr /><hr /><h2 style="color: red; padding-top: 2rem">Base List</h2><hr />
+<hr /><hr /><h2 id="BaseList" style="color: red; padding-top: 2rem">Base List</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>Product (Buyable) Class Name:</strong> $getBuyableClassName</li>
@@ -176,14 +172,26 @@
 <% end_with %>
 
 <% with $getFinalProductList %>
-<hr /><hr /><h2 style="color: red; padding-top: 2rem">Final List</h2><hr />
+<hr /><hr /><h2 id="FinalList" style="color: red; padding-top: 2rem">Final List</h2><hr />
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
 </ul>
 
 <% end_with %>
 
-
+<% with $getUserPreferencesClass %>
+<hr /><hr /><h2 id="UserDetails" style="color: red; padding-top: 2rem">User Specific Details</h2><hr />
+<ul>
+    <li><strong>ClassName:</strong> $ClassName</li>
+    <li><strong>use session to remember settings:</strong> $getUseSessionAll</li>
+    <li><strong>use session to remember settings for each page:</strong> $getUseSessionPerPageAll</li>
+    <li><strong>User Settings:</strong> $getCurrentUserPreferences</li>
+    <li><strong>Group Filter:</strong> $getGroupFilterTitle</li>
+    <li><strong>Filter:</strong> $getFilterTitle</li>
+    <li><strong>Sort:</strong> $getSortTitle</li>
+    <li><strong>Display:</strong> $getDisplayTitle</li>
+</ul>
+<% end_with %>
 
 
 <% end_with %>

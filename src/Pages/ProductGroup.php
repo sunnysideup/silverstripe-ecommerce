@@ -366,7 +366,7 @@ class ProductGroup extends Page
             $this->baseProductList = $className::inst(
                 $this,
                 $this->getBuyableClassName(),
-                $this->recursiveValue('LevelOfProductsToShow', 99)
+                $this->getMyLevelOfProductsToShow()
             );
         }
 

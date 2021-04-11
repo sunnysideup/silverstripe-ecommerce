@@ -18,6 +18,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
 use Sunnysideup\Vardump\DebugTrait;
+use SilverStripe\Core\Config\Config;
 
 /**
  * In terms of ProductAndGroupsLists, this class knows all about
@@ -100,27 +101,27 @@ class Template
 
     public function getBaseProductListClassName(): string
     {
-        return $this->Config()->get('base_product_list_class_name');
+        return Config::inst()->get(static::class, 'base_product_list_class_name');
     }
 
     public function getFinalProductListClassName(): string
     {
-        return $this->Config()->get('final_product_list_class_name');
+        return Config::inst()->get(static::class, 'final_product_list_class_name');
     }
 
     public function getProductGroupListClassName(): string
     {
-        return $this->Config()->get('product_group_list_class_name');
+        return Config::inst()->get(static::class, 'product_group_list_class_name');
     }
 
     public function getUserPreferencesClassName(): string
     {
-        return $this->Config()->get('user_preferences_class_name');
+        return Config::inst()->get(static::class, 'user_preferences_class_name');
     }
 
     public function getDebugProvider(): string
     {
-        return $this->Config()->get('debug_provider_class_name');
+        return Config::inst()->get(static::class, 'debug_provider_class_name');
     }
 
     /**

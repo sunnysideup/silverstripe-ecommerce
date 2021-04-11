@@ -8,6 +8,8 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
+
 
 /**
  * Provides a standard interface for caching product and group information.
@@ -83,6 +85,11 @@ class EcommerceCache implements Flushable
         }
 
         return null;
+    }
+
+    public function retrieveAsIdList(string $cacheKey, ?bool $alreadyUnserialized = false)
+    {
+        return ArrayMethods::filter_array($this->retrieve($cacheKey, $alreadyUnserialized));
     }
 
     /**
