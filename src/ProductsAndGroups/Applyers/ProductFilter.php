@@ -32,11 +32,7 @@ class ProductFilter extends BaseApplyer
         ],
     ];
 
-    /**
-     * @param string       $key    optional key
-     * @param array|string $params optional params to go with key
-     */
-    public function apply(?string $key = null, $params = null): self
+    public function apply(?string $key = null, $params = null)
     {
         $this->applyStart($key, $params);
         $filter = $this->getSql($key, $params);

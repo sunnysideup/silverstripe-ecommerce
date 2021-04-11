@@ -9,6 +9,8 @@ use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+
 /**
  * provides data on the user.
  */
@@ -62,8 +64,9 @@ abstract class BaseApplyer
      *
      * @param string       $key    optional key
      * @param array|string $params optional params to go with key
+     * @return BaseApplyer (or other ones)
      */
-    abstract public function apply(?string $key = null, $params = null): self;
+    abstract public function apply(?string $key = null, $params = null);
 
     public function getOptions(): array
     {
