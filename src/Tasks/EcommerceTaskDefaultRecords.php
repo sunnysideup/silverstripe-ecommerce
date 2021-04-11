@@ -53,7 +53,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $accountPage->ShowInMenus = false;
             $accountPage->writeToStage('Stage');
             $accountPage->publish('Stage', 'Live');
-            DB::alteration_message('Account page \'Account\' created', 'created');
+            DB::alteration_message("Account page 'Account' created", 'created');
         } else {
             DB::alteration_message('No need to create an account page, it already exists.');
         }
@@ -70,7 +70,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $checkoutPage->MetaTitle = 'Checkout';
             $checkoutPage->MenuTitle = 'Checkout';
             $checkoutPage->URLSegment = 'checkout';
-            $update[] = 'Checkout page \'Checkout\' created';
+            $update[] = "Checkout page 'Checkout' created";
             $checkoutPage->ShowInMenus = false;
             DB::alteration_message('new checkout page created.', 'created');
         } else {

@@ -79,9 +79,9 @@ class ShoppingCart
     /**
      * stores a reference to the current order object.
      *
-     * @var Order|null
+     * @var null|Order
      */
-    protected $order = null;
+    protected $order;
 
     /**
      * This variable is set to YES when we actually need an order (i.e. write it).
@@ -123,9 +123,9 @@ class ShoppingCart
      *
      * @var object (ShoppingCart)
      */
-    private static $_singletoncart = null;
+    private static $_singletoncart;
 
-    private static $_allow_writes_cache = null;
+    private static $_allow_writes_cache;
 
     /**
      * Allows access to the cart from anywhere in code.
@@ -183,8 +183,8 @@ class ShoppingCart
         }
         if (ClassHelpers::check_for_instance_of($orderOrOrderID, Order::class, false)) {
             $orderID = $orderOrOrderID->ID;
-        } elseif (intval($orderOrOrderID)) {
-            $orderID = intval($orderOrOrderID);
+        } elseif ((int) $orderOrOrderID) {
+            $orderID = (int) $orderOrOrderID;
         }
 
         return $orderID;
@@ -198,14 +198,13 @@ class ShoppingCart
     public static function session_order()
     {
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
-        $orderIDFromSession = intval(Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
+        $orderIDFromSession = (int) Controller::curr()->getRequest()->getSession()->get($sessionVariableName) - 0;
 
-        /** @var Order|null */
+        // @var Order|null
         return Order::get()->byID($orderIDFromSession);
     }
 
     /**
-     *
      * set a specific order, other than the one from session ....
      *
      * @param Order $order
@@ -270,7 +269,7 @@ class ShoppingCart
                             //we assume the first step always exists.
                             //TODO: what sort order?
                             $count = 0;
-                            /** @var Order|null */
+                            /** @var null|Order $previousOrderFromMember */
                             $previousOrderFromMember = DataObject::get_one(Order::class, '
                                     "MemberID" = ' . $loggedInMember->ID . '
                                     AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
@@ -301,7 +300,7 @@ class ShoppingCart
                 if (! $this->order) {
                     if ($loggedInMember) {
                         //find previour order...
-                        /** @var OrderStep|null $firstStep */
+                        /** @var null|OrderStep $firstStep */
                         $firstStep = DataObject::get_one(OrderStep::class);
                         if ($firstStep) {
                             $previousOrderFromMember = Order::get()->filter(['MemberID' => $loggedInMember->ID, 'StatusID' => [$firstStep->ID, 0]])->first();
@@ -330,7 +329,7 @@ class ShoppingCart
                         $this->order->write();
                     }
                     $sessionVariableName = $this->sessionVariableName('OrderID');
-                    Controller::curr()->getRequest()->getSession()->set($sessionVariableName, intval($this->order->ID));
+                    Controller::curr()->getRequest()->getSession()->set($sessionVariableName, (int) $this->order->ID);
                 }
                 if ($this->order) {
                     if ($this->order->exists()) {
@@ -404,15 +403,8 @@ class ShoppingCart
                 $item->Quantity += $quantity;
                 $item->write();
                 $this->currentOrder()->Attributes()->add($item);
-                //save to current order
-                //TODO: distinquish between incremented and set
-                //TODO: use sprintf to allow product name etc to be included in message
-                if ($quantity > 1) {
-                    $msg = _t('Order.ITEMSADDED', 'Items added.');
-                } else {
-                    $msg = _t('Order.ITEMADDED', 'Item added.');
-                }
-                $this->addMessage($msg, 'good');
+                $msg = $quantity > 1 ? _t('Order.ITEMSADDED', 'Items added.') : _t('Order.ITEMADDED', 'Item added.');
+                $this->addMessage($msg);
             } elseif (! $item) {
                 $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
             } else {
@@ -446,7 +438,7 @@ class ShoppingCart
                 $item->Quantity = $quantity;
                 //remove quantity
                 $item->write();
-                $this->addMessage(_t('Order.ITEMUPDATED', 'Item updated.'), 'good');
+                $this->addMessage(_t('Order.ITEMUPDATED', 'Item updated.'));
 
                 return $item;
             }
@@ -481,12 +473,8 @@ class ShoppingCart
                     $item->Quantity = 0;
                 }
                 $item->write();
-                if ($quantity > 1) {
-                    $msg = _t('Order.ITEMSREMOVED', 'Items removed.');
-                } else {
-                    $msg = _t('Order.ITEMREMOVED', 'Item removed.');
-                }
-                $this->addMessage($msg, 'good');
+                $msg = $quantity > 1 ? _t('Order.ITEMSREMOVED', 'Items removed.') : _t('Order.ITEMREMOVED', 'Item removed.');
+                $this->addMessage($msg);
 
                 return $item;
             }
@@ -516,7 +504,7 @@ class ShoppingCart
                 $this->currentOrder()->Attributes()->remove($item);
                 $item->delete();
                 $item->destroy();
-                $this->addMessage(_t('Order.ITEMCOMPLETELYREMOVED', 'Item removed from cart.'), 'good');
+                $this->addMessage(_t('Order.ITEMCOMPLETELYREMOVED', 'Item removed from cart.'));
 
                 return true;
             }
@@ -618,7 +606,7 @@ class ShoppingCart
                     $item->OrderID = $order->ID;
                     $item->BuyableID = $buyable->ID;
                     $item->BuyableClassName = $buyable->ClassName;
-                    if (isset($buyable->Version)) {
+                    if (property_exists($buyable, 'Version') && null !== $buyable->Version) {
                         $item->Version = $buyable->Version;
                     }
                 }
@@ -666,7 +654,7 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             $this->currentOrder()->write();
-            $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'), 'good');
+            $this->addMessage(_t('Order.ORDERSAVED', 'Order Saved.'));
 
             return true;
         }
@@ -694,7 +682,7 @@ class ShoppingCart
             Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
             Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         }
-        $memberID = intval(Member::currentUserID());
+        $memberID = (int) Member::currentUserID();
         if ($memberID) {
             $orders = Order::get()->filter(['MemberID' => $memberID]);
             if ($orders && $orders->count()) {
@@ -747,7 +735,7 @@ class ShoppingCart
             $modifier->onBeforeRemove();
             $modifier->write();
             $modifier->onAfterRemove();
-            $this->addMessage(_t('Order.MODIFIERREMOVED', 'Removed.'), 'good');
+            $this->addMessage(_t('Order.MODIFIERREMOVED', 'Removed.'));
 
             return true;
         }
@@ -780,7 +768,7 @@ class ShoppingCart
             }
             $modifier->HasBeenRemoved = 0;
             $modifier->write();
-            $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'), 'good');
+            $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'));
 
             return true;
         }
@@ -815,7 +803,7 @@ class ShoppingCart
                     $sessionVariableName = $this->sessionVariableName('OrderID');
                     //we set session ID after can view check ...
                     Controller::curr()->getRequest()->getSession()->set($sessionVariableName, $this->order->ID);
-                    $this->addMessage(_t('Order.LOADEDEXISTING', 'Order loaded.'), 'good');
+                    $this->addMessage(_t('Order.LOADEDEXISTING', 'Order loaded.'));
 
                     return true;
                 }
@@ -845,7 +833,7 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             if (is_numeric($oldOrder)) {
-                $oldOrder = Order::get()->byID(intval($oldOrder));
+                $oldOrder = Order::get()->byID((int) $oldOrder);
             } elseif (is_a($oldOrder, EcommerceConfigClassNames::getName(Order::class))) {
                 //$oldOrder = $oldOrder;
             } else {
@@ -854,7 +842,7 @@ class ShoppingCart
 
             if ($oldOrder) {
                 if ($oldOrder->canView() && $oldOrder->IsSubmitted()) {
-                    $this->addMessage(_t('Order.ORDERCOPIED', 'Order has been copied.'), 'good');
+                    $this->addMessage(_t('Order.ORDERCOPIED', 'Order has been copied.'));
 
                     $newOrder = Order::create();
                     $newOrder = $this->CopyOrderOnly($oldOrder, $newOrder);
@@ -949,7 +937,7 @@ class ShoppingCart
         if ($this->allowWrites()) {
             if (EcommerceCountry::code_allowed($countryCode)) {
                 $this->currentOrder()->SetCountryFields($countryCode);
-                $this->addMessage(_t('Order.UPDATEDCOUNTRY', 'Updated country.'), 'good');
+                $this->addMessage(_t('Order.UPDATEDCOUNTRY', 'Updated country.'));
 
                 return true;
             }
@@ -972,7 +960,7 @@ class ShoppingCart
     {
         if (EcommerceRegion::regionid_allowed($regionID)) {
             $this->currentOrder()->SetRegionFields($regionID);
-            $this->addMessage(_t('ShoppingCart.REGIONUPDATED', 'Region updated.'), 'good');
+            $this->addMessage(_t('ShoppingCart.REGIONUPDATED', 'Region updated.'));
 
             return true;
         }
@@ -1000,7 +988,7 @@ class ShoppingCart
             }
             $this->currentOrder()->UpdateCurrency($currency);
             $msg = _t('Order.CURRENCYUPDATED', 'Currency updated.');
-            $this->addMessage($msg, 'good');
+            $this->addMessage($msg);
 
             return true;
         }
@@ -1147,7 +1135,6 @@ class ShoppingCart
      *
      * @param string $message
      * @param string $status
-     * @param Form   $form
      * @returns String (JSON)
      */
     public function setMessageAndReturn($message = '', $status = '', Form $form = null)
@@ -1171,12 +1158,10 @@ class ShoppingCart
             $this->order->calculateOrderAttributes($force = false);
             $form->sessionMessage($message, $status);
         // let the form controller do the redirectback or whatever else is needed.
+        } elseif (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
+            Controller::curr()->redirectBack();
         } else {
-            if (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
-                Controller::curr()->redirectBack();
-            } else {
-                Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
-            }
+            Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
         }
     }
 
@@ -1191,13 +1176,11 @@ class ShoppingCart
         if (null === self::$_allow_writes_cache) {
             if ($this->order) {
                 self::$_allow_writes_cache = true;
+            } elseif (PHP_SAPI === 'cli') {
+                self::$_allow_writes_cache = false;
             } else {
-                if (PHP_SAPI === 'cli') {
-                    self::$_allow_writes_cache = false;
-                } else {
-                    $noSession = '' === session_id();
-                    self::$_allow_writes_cache = $noSession ? false : true;
-                }
+                $noSession = '' === session_id();
+                self::$_allow_writes_cache = ! $noSession;
             }
         }
 

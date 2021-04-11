@@ -149,7 +149,7 @@ class OrderForm extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
+     * @return bool|\SilverStripe\Control\HTTPRequest Request object for this action
      */
     public function processOrder(array $data, Form $form, HTTPRequest $request)
     {

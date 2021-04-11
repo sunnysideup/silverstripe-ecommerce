@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
@@ -18,7 +19,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Settings\UserPreference;
 use Sunnysideup\Vardump\DebugTrait;
-use SilverStripe\Core\Config\Config;
 
 /**
  * In terms of ProductAndGroupsLists, this class knows all about

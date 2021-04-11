@@ -238,5 +238,4 @@ class FinalProductList extends AbstractProductsAndGroupsList
     {
         return $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType, $this);
     }
-
 }

@@ -97,7 +97,8 @@ class ProductGroupFilter extends BaseApplyer
     protected function findGroupId(?string $filter): int
     {
         $group = $this->findGroup($filter);
-        return  $group && $group->exits() ? $group->ID :  0;
+
+        return  $group && $group->exits() ? $group->ID : 0;
     }
 
     /**

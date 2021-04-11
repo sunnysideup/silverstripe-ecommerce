@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
@@ -12,8 +13,7 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\CMS\Model\SiteTree;
+
 /**
  * The starting base of the Products.
  *
@@ -34,6 +34,8 @@ use SilverStripe\CMS\Model\SiteTree;
  */
 class BaseProductList extends AbstractProductsAndGroupsList
 {
+    public $getAlsoShowParentIds;
+    public $getfilterForCandidateCategoryIds;
     /**
      * keep the lists in memory.
      *
@@ -353,7 +355,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $groupFilter = ' ' . $levelToShow . ' = -1 ';
         } elseif (0 === $levelToShow) {
             //backup - same as 1, but with also show!
-            $groupFilter = '"' . $this->getBuyableTableNameName(SiteTree::class) . '"."ParentID" = ' . $this->rootGroup->ID;
+            $groupFilter = '"' . $this->getBuyableTableNameName() . '"."ParentID" = ' . $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
@@ -374,7 +376,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                     );
                 }
             }
-            $groupFilter = '"' . $this->getBuyableTableNameName(SiteTree::class) . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) . ')';
+            $groupFilter = '"' . $this->getBuyableTableNameName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) . ')';
         }
         $alsoShowFilter = '"' . $this->getBuyableTableNameName() . '"."ID" IN (' . implode(',', $this->getAlsoShowProductsIds()) . ')';
         $fullFilter = '((' . $groupFilter . ') OR (' . $alsoShowFilter . '))';

@@ -8,8 +8,6 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
-
 
 /**
  * Provides a standard interface for caching product and group information.

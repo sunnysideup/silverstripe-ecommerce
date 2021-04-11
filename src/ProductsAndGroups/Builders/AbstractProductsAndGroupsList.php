@@ -2,9 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
@@ -14,8 +16,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
 use Sunnysideup\Vardump\DebugTrait;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Core\Injector\Injector;
 
 abstract class AbstractProductsAndGroupsList
 {
@@ -331,7 +331,6 @@ abstract class AbstractProductsAndGroupsList
         return $obj;
     }
 
-
     final protected function getBuyableTableNameName(?string $baseClass = SiteTree::class): string
     {
         $obj = Injector::inst()->get($baseClass);
@@ -339,7 +338,6 @@ abstract class AbstractProductsAndGroupsList
 
         return $obj->baseTable() . $stage;
     }
-
 
     /**
      * Returns a versioned record stage table suffix (i.e "" or "_Live").
