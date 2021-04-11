@@ -28,6 +28,13 @@ class ClassHelpers
         return str_replace('-', '\\', $class);
     }
 
+    /**
+     *
+     * @param  object  $obj
+     * @param  string  $className
+     * @param  boolean $showError
+     * @return bool
+     */
     public static function check_for_instance_of($obj, string $className, ?bool $showError = true): bool
     {
         if ($obj instanceof $className) {

@@ -79,9 +79,9 @@ class ShoppingCart
     /**
      * stores a reference to the current order object.
      *
-     * @var object
+     * @var Order|null
      */
-    protected $order;
+    protected $order = null;
 
     /**
      * This variable is set to YES when we actually need an order (i.e. write it).
@@ -200,10 +200,12 @@ class ShoppingCart
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
         $orderIDFromSession = intval(Controller::curr()->getRequest()->getSession()->get($sessionVariableName)) - 0;
 
+        /** @var Order|null */
         return Order::get()->byID($orderIDFromSession);
     }
 
     /**
+     *
      * set a specific order, other than the one from session ....
      *
      * @param Order $order
@@ -268,6 +270,7 @@ class ShoppingCart
                             //we assume the first step always exists.
                             //TODO: what sort order?
                             $count = 0;
+                            /** @var Order|null */
                             $previousOrderFromMember = DataObject::get_one(Order::class, '
                                     "MemberID" = ' . $loggedInMember->ID . '
                                     AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
@@ -298,6 +301,7 @@ class ShoppingCart
                 if (! $this->order) {
                     if ($loggedInMember) {
                         //find previour order...
+                        /** @var OrderStep|null $firstStep */
                         $firstStep = DataObject::get_one(OrderStep::class);
                         if ($firstStep) {
                             $previousOrderFromMember = Order::get()->filter(['MemberID' => $loggedInMember->ID, 'StatusID' => [$firstStep->ID, 0]])->first();
