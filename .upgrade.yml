@@ -168,7 +168,7 @@ mappings:
   EcommerceTaskCountryAndRegionAllowAllCountries: Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegionAllowAllCountries
   EcommerceTaskDebugCart: Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart
   EcommerceTaskOrderItemsPerCustomer: Sunnysideup\Ecommerce\Tasks\EcommerceTaskOrderItemsPerCustomer
-  OrderFiltersMustHaveAtLeastOnePayment: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePayment
+  OrderFiltersMustHaveAtLeastOnePayment: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePaymentFilter
   OrderFiltersAroundDateFilter: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter
   OrderFiltersMultiOptionsetStatusIDFilter: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter
   OrderFiltersMemberAndAddress: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress

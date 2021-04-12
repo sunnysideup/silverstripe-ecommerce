@@ -169,11 +169,11 @@ SilverStripe\ORM\DatabaseAdmin:
     EcommerceTaskCountryAndRegionAllowAllCountries: Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegionAllowAllCountries
     EcommerceTaskDebugCart: Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart
     EcommerceTaskOrderItemsPerCustomer: Sunnysideup\Ecommerce\Tasks\EcommerceTaskOrderItemsPerCustomer
-    OrderFiltersMustHaveAtLeastOnePayment: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePayment
+    OrderFiltersMustHaveAtLeastOnePayment: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePaymentFilter
     OrderFiltersAroundDateFilter: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter
     OrderFiltersMultiOptionsetStatusIDFilter: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter
-    OrderFiltersMemberAndAddress: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress
-    OrderFiltersHasBeenCancelled: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelled
+    OrderFiltersMemberAndAddress: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddressFilter
+    OrderFiltersHasBeenCancelled: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelledFilter
     OrderEmailRecordFiltersMultiOptionsetStatusIDFilter: Sunnysideup\Ecommerce\Search\Filters\OrderEmailRecordFiltersMultiOptionsetStatusIDFilter
     EcommercePaymentFiltersAroundDateFilter: Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter
     EcommerceSideReportEcommercePages: Sunnysideup\Ecommerce\Reports\EcommerceSideReportEcommercePages

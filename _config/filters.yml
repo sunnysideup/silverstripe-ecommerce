@@ -4,15 +4,13 @@ Name: ecommerce_filters
 
 SilverStripe\Core\Injector\Injector:
   DataListFilter.OrderFiltersMustHaveAtLeastOnePayment:
-    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePayment
+    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePaymentFilter
   DataListFilter.OrderFiltersAroundDate:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter
   DataListFilter.OrderFiltersMultiOptionsetStatusID:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter
-  DataListFilter.OrderFiltersMemberAndAddress:
-    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress
   DataListFilter.OrderFiltersHasBeenCancelled:
-    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelled
+    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelledFilter
   DataListFilter.OrderEmailRecordFiltersMultiOptionsetStatusID:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderEmailRecordFiltersMultiOptionsetStatusIDFilter
   DataListFilter.OrderFiltersUntilDate:
@@ -22,7 +20,7 @@ SilverStripe\Core\Injector\Injector:
   DataListFilter.EcommercePaymentFiltersAroundDate:
     class: Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter
   DataListFilter.OrderFiltersMemberAndAddress:
-    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress
+    class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddressFilter
   DataListFilter.OrderItemProduct:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderItemProductFilter
   DataListFilter.ProductMinimumPrice:
@@ -30,16 +28,15 @@ SilverStripe\Core\Injector\Injector:
   DataListFilter.ProductMaximumPrice:
     class: Sunnysideup\Ecommerce\Search\Filters\ProductMaximumPriceFilter
 
-  OrderFiltersMustHaveAtLeastOnePayment: '%$DataListFilter.OrderFiltersMustHaveAtLeastOnePayment'
+  OrderFiltersMustHaveAtLeastOnePaymentFilter: '%$DataListFilter.OrderFiltersMustHaveAtLeastOnePayment'
   OrderFiltersAroundDateFilter: '%$DataListFilter.OrderFiltersAroundDate'
   OrderFiltersMultiOptionsetStatusIDFilter: '%$DataListFilter.OrderFiltersMultiOptionsetStatusID'
-  OrderFiltersMemberAndAddress: '%$$DataListFilter.OrderFiltersMemberAndAddress'
-  OrderFiltersHasBeenCancelled: '%$DataListFilter.OrderFiltersHasBeenCancelled'
+  OrderFiltersHasBeenCancelledFilter: '%$DataListFilter.OrderFiltersHasBeenCancelled'
   OrderEmailRecordFiltersMultiOptionsetStatusIDFilter: '%$DataListFilter.OrderEmailRecordFiltersMultiOptionsetStatusID'
   OrderFiltersUntilDateFilter: '%$DataListFilter.OrderFiltersUntilDate'
   OrderFiltersFromDateFilter: '%$DataListFilter.OrderFiltersFromDate'
   EcommercePaymentFiltersAroundDateFilter: '%$DataListFilter.EcommercePaymentFiltersAroundDate'
-  OrderFiltersMemberAndAddress: '%$DataListFilter.OrderFiltersMemberAndAddress'
+  OrderFiltersMemberAndAddressFilter: '%$DataListFilter.OrderFiltersMemberAndAddress'
   OrderItemProductFilter: '%$DataListFilter.OrderItemProduct'
   ProductMinimumPriceFilter: '%$DataListFilter.ProductMinimumPrice'
   ProductMaximumPriceFilter: '%$DataListFilter.ProductMaximumPrice'

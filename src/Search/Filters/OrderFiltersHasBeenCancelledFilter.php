@@ -12,7 +12,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
  * @package: ecommerce
  * @sub-package: search
  */
-class OrderFiltersHasBeenCancelled extends ExactMatchFilter
+class OrderFiltersHasBeenCancelledFilter extends ExactMatchFilter
 {
     /**
      *  @return DataQuery

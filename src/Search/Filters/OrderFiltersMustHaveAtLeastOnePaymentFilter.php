@@ -12,7 +12,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
  * @package: ecommerce
  * @sub-package: search
  */
-class OrderFiltersMustHaveAtLeastOnePayment extends ExactMatchFilter
+class OrderFiltersMustHaveAtLeastOnePaymentFilter extends ExactMatchFilter
 {
     /**
      * @return DataQuery

@@ -84,7 +84,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersFromDateFilter;
-use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelled;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelledFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersUntilDateFilter;
@@ -457,7 +457,7 @@ class Order extends DataObject implements EditableEcommerceObject
             'filter' => OrderFiltersMultiOptionsetStatusIDFilter::class,
         ],
         'CancelledByID' => [
-            'filter' => OrderFiltersHasBeenCancelled::class,
+            'filter' => OrderFiltersHasBeenCancelledFilter::class,
             'title' => 'Cancelled by ...',
         ],
         'CustomerOrderNote' => [

@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
  * @package: ecommerce
  * @sub-package: search
  */
-class OrderFiltersMemberAndAddress extends ExactMatchFilter
+class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
 {
     /**
      * @return DataQuery
