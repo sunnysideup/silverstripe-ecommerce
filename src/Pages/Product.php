@@ -46,7 +46,8 @@ use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
-
+use Sunnysideup\Ecommerce\Search\Filters\ProductMinimumPriceFilter;
+use Sunnysideup\Ecommerce\Search\Filters\ProductMaximumPriceFilter;
 /**
  * This is a standard Product page-type with fields like
  * Price, Weight, Model and basic management of

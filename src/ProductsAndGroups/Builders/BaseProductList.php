@@ -448,7 +448,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $this->alsoShowProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowProductsIds'));
         $this->parentGroupIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('parentGroupIds'));
         $this->getAlsoShowParentIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowParentIds'));
-        $this->getfilterForCandidateCategoryIds = EcommerceCache::retrieveAsIdList()->retrieve($this->getCachekey('filterForCandidateCategoryIds'));
+        $this->getfilterForCandidateCategoryIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('filterForCandidateCategoryIds'));
 
         return $this;
     }

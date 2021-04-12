@@ -7,7 +7,7 @@ SilverStripe\Core\Injector\Injector:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMustHaveAtLeastOnePayment
   DataListFilter.OrderFiltersAroundDateFilter:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter
-  DataListFilter.OrderFiltersMultiOptionsetStatusIDFilter:
+  DataListFilter.OrderFiltersMultiOptionsetStatusID:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter
   DataListFilter.OrderFiltersMemberAndAddress:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress
@@ -25,9 +25,9 @@ SilverStripe\Core\Injector\Injector:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress
   DataListFilter.OrderItemProductFilter:
     class: Sunnysideup\Ecommerce\Search\Filters\OrderItemProductFilter
-  DataListFilter.ProductMinimumPriceFilter:
+  DataListFilter.ProductMinimumPrice:
     class: Sunnysideup\Ecommerce\Search\Filters\ProductMinimumPriceFilter
-  DataListFilter.ProductMaximumPriceFilter:
+  DataListFilter.ProductMaximumPrice:
     class: Sunnysideup\Ecommerce\Search\Filters\ProductMaximumPriceFilter
 
   OrderFiltersMustHaveAtLeastOnePayment: '%$DataListFilter.OrderFiltersMustHaveAtLeastOnePayment'
@@ -41,5 +41,5 @@ SilverStripe\Core\Injector\Injector:
   EcommercePaymentFiltersAroundDateFilter: '%$DataListFilter.EcommercePaymentFiltersAroundDateFilter'
   OrderFiltersMemberAndAddress: '%$DataListFilter.OrderFiltersMemberAndAddress'
   OrderItemProductFilter: '%$DataListFilter.OrderItemProductFilter'
-  ProductMinimumPriceFilter: '%$DataListFilter.ProductMinimumPriceFilter'
-  ProductMaximumPriceFilter: '%$DataListFilter.ProductMaximumPriceFilter'
+  ProductMinimumPriceFilter: '%$DataListFilter.ProductMinimumPrice'
+  ProductMaximumPriceFilter: '%$DataListFilter.ProductMaximumPrice'
