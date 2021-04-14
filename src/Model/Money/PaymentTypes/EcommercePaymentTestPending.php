@@ -55,7 +55,7 @@ class EcommercePaymentTestPending extends EcommercePaymentTest
         return new EcommercePaymentProcessing();
     }
 
-    public function getPaymentFormFields(?float $amount = 0, ?Order $order = null): FieldList
+    public function getPaymentFormFields($amount = 0, ?Order $order = null): FieldList
     {
         return new FieldList(
             new LiteralField('SuccessBlurb', '<div>PENDING PAYMENT TEST</div>')

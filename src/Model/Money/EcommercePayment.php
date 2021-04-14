@@ -224,7 +224,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -240,7 +240,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     public function canView($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -268,7 +268,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         if ('Pending' === $this->Status || 'Incomplete' === $this->Status) {
@@ -401,7 +401,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public static function site_currency()
     {
         $currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
-        if (! $currency) {
+        if (!$currency) {
             user_error('It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)', E_USER_NOTICE);
         }
 
@@ -544,7 +544,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * this would be a set of fields to enter your
      * credit card details.
      */
-    public function getPaymentFormFields(?float $amount = 0, ?Order $order = null): FieldList
+    public function getPaymentFormFields($amount = 0, ?Order $order = null): FieldList
     {
         user_error("Please implement getPaymentFormFields() on {$this->ClassName}", E_USER_ERROR);
 
@@ -669,10 +669,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         // Only set the IP and ProxyIP if none currently set
-        if (! $this->IP) {
+        if (!$this->IP) {
             $this->IP = $ip;
         }
-        if (! $this->ProxyIP) {
+        if (!$this->ProxyIP) {
             $this->ProxyIP = $proxy;
         }
     }
@@ -688,7 +688,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     protected function ecommercePaymentFormSetupAndValidationObject()
     {
-        if (! $this->ecommercePaymentFormSetupAndValidationObject) {
+        if (!$this->ecommercePaymentFormSetupAndValidationObject) {
             $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create(EcommercePaymentFormSetupAndValidation::class);
         }
 
