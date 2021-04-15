@@ -32,6 +32,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
 use Sunnysideup\Vardump\Vardump;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 
 /**
  * Product search form.
@@ -472,6 +473,7 @@ class ProductSearchForm extends Form
 
         $this->createBaseList();
         $this->doPriceSearch();
+        $this->doAdvancedSearch();
 
         //defining some variables
         // die('xxx');
@@ -510,7 +512,7 @@ class ProductSearchForm extends Form
             $this->debug = (bool) $data['DebugSearch'];
         }
         if ($this->debug) {
-            $this->debugOutput('<h2>Debugging Search Results</h2>');
+            $this->debugOutput('<h2>Debugging Search Results in '.get_class($this).'</h2>');
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
             $this->debugOutput('<p style="color: red">data: ' . print_r($data, 1) . '</p>');
         }
@@ -664,7 +666,8 @@ class ProductSearchForm extends Form
             }
 
             foreach ($searches as $search) {
-                $productGroups = $this->baseListForGroups->where($search)->filter(['ShowInSearch' => 1]);
+                $defaultGroupFilter = Config::inst()->get(RelatedProductGroups::class, 'default_product_group_filter');
+                $productGroups = $this->baseListForGroups->where($search)->filter($defaultGroupFilter);
                 $count = $productGroups->count();
                 //redirect if we find exactly one match and we have no matches so far...
                 if (1 === $count && ! $this->resultArrayPos) {
@@ -814,7 +817,8 @@ class ProductSearchForm extends Form
                 $this->baseListForGroups = $this->baseListOwner->getBaseProductList()->getParentGroups();
             } else {
                 $tmpVar = $this->baseClassNameForBuyables;
-                $this->baseList = $tmpVar::get()->filter(['ShowInSearch' => 1]);
+                $defaultGroupFilter = Config::inst()->get(RelatedProductGroups::class, 'default_product_group_filter');
+                $this->baseList = $tmpVar::get()->filter($defaultGroupFilter);
                 $ecomConfig = EcommerceConfig::inst();
                 if ($ecomConfig->OnlyShowProductsThatCanBePurchased) {
                     $this->baseList->filter(['AllowPurchase' => 1]);
@@ -841,12 +845,16 @@ class ProductSearchForm extends Form
             $min = $this->rawData['MinimumPrice'];
             if ($min) {
                 $this->baseList = $this->baseList->filter(['Price:GreaterThanOrEqual' => $min]);
-                $this->debugOutput('<h3>MIN PRICE</h3><pre>' . $min . '</pre>');
+                if ($this->debug) {
+                    $this->debugOutput('<h3>MIN PRICE</h3><pre>' . $min . '</pre>');
+                }
             }
             $max = $this->rawData['MaximumPrice'];
             if ($max) {
                 $this->baseList = $this->baseList->filter(['Price:LessThanOrEqual' => $max]);
-                $this->debugOutput('<h3>MAX PRICE</h3><pre>' . $max . '</pre>');
+                if ($this->debug) {
+                    $this->debugOutput('<h3>MAX PRICE</h3><pre>' . $max . '</pre>');
+                }
             }
             if ($this->debug) {
                 $this->debugOutput('<hr />');
@@ -858,9 +866,16 @@ class ProductSearchForm extends Form
         }
     }
 
+    protected function doAdvancedSearch()
+    {
+        $this->extend('doAdvancedSearchExtended', $this->baseList);
+    }
+
     //#######################################
     // CACHING AND SERIALIZING
     //#######################################
+
+    // @todo: move to trait!
 
     protected function getSerializedObject(?array $data = [])
     {
@@ -933,6 +948,11 @@ class ProductSearchForm extends Form
         return $array;
     }
 
+    /**
+     * turns an array of ClassName and ID into objects
+     * @param  array $value['ID' => , 'ClassName']
+     * @return DataObject
+     */
     protected function arrayToObject($value)
     {
         if (is_array($value) && 2 === count($value) && isset($value['ID'], $value['ClassName'])) {
@@ -952,7 +972,9 @@ class ProductSearchForm extends Form
 
     protected function debugOutput($mixed)
     {
-        echo Vardump::inst()->mixedToUl($mixed);
+        if($this->debug) {
+            echo Vardump::inst()->mixedToUl($mixed);
+        }
     }
 
     protected function hasMinMaxSearch(): bool

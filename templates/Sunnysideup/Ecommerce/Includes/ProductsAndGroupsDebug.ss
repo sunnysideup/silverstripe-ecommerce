@@ -121,6 +121,9 @@
 
 <% with $getBaseProductList %>
 <hr /><hr /><h2 id="BaseList" style="color: red; padding-top: 2rem">Base List</h2><hr />
+<p>
+Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
+</p>
 <ul>
     <li><strong>ClassName:</strong> $ClassName</li>
     <li><strong>Product (Buyable) Class Name:</strong> $getBuyableClassName</li>
