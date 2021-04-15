@@ -28,6 +28,11 @@ class ClassHelpers
         return str_replace('-', '\\', $class);
     }
 
+    public static function class_name_for_db_query($className)
+    {
+        return str_replace('\\', '\\\\', $className);
+    }
+
     /**
      * @param object $obj
      * @param bool   $showError
