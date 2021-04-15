@@ -127,28 +127,28 @@ class OrderConfirmationPageController extends CartPageController
         if ($number) {
             $where = "\"CheckoutPageStepDescription\".\"ID\" = {$number}";
         }
-        if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
-            if ($this->currentOrder->IsInSession()) {
-                $dos = CheckoutPageStepDescription::get()->where($where)->sort('ID', 'ASC');
-                if ($number) {
-                    if ($dos && $dos->count()) {
-                        return $dos->First();
-                    }
-                }
-                $arrayList = new ArrayList([]);
-                foreach ($dos as $do) {
-                    $do->LinkingMode = 'link completed';
-                    $do->Completed = 1;
-                    $do->Link = '';
-                    $arrayList->push($do);
-                }
-                $do = $this->CurrentCheckoutStep(true);
-                if ($do) {
-                    $arrayList->push($do);
-                }
 
-                return $arrayList;
+        if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
+            $dos = CheckoutPageStepDescription::get()->where($where)->sort('ID', 'ASC');
+            if ($number) {
+                if ($dos && $dos->count()) {
+                    return $dos->First();
+                }
             }
+            $arrayList = new ArrayList([]);
+            foreach ($dos as $do) {
+                $do->LinkingMode = 'link completed';
+                $do->Completed = 1;
+                $do->Link = '';
+                $arrayList->push($do);
+            }
+            $do = $this->CurrentCheckoutStep(true);
+            $do->LinkingMode = 'current';
+            if ($do) {
+                $arrayList->push($do);
+            }
+
+            return $arrayList;
         }
     }
 
@@ -382,7 +382,7 @@ class OrderConfirmationPageController extends CartPageController
                 }
                 if ($request->getVar('send')) {
                     $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
-                    if (! $email) {
+                    if (!$email) {
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(
@@ -405,8 +405,7 @@ class OrderConfirmationPageController extends CartPageController
                         $message,
                         $resend = true,
                         $adminOnlyOrToEmail = false
-                    )
-                    ) {
+                    )) {
                         $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ') . $email . '.';
                     } else {
                         $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . $email;
