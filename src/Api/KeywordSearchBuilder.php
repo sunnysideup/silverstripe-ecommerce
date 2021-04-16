@@ -39,42 +39,16 @@ class KeywordSearchBuilder
         // $wordsAsLikeString = trim(implode('%', $wordAsArray));
         $completed = [];
         $count = -1;
-        //@todo: make this smarter!
-        if (in_array('Title', $fields, true)) {
-            //$searches[++$count][] = "LOWER(\"Title\") = '${$wordsAsLikeString}'"; // a) Exact match
-            //$searches[++$count][] = "LOWER(\"Title\") LIKE '%${$wordsAsLikeString}%'"; // b) Full match within a bigger string
-            if ($hasWordArray) {
-                $searches[++$count][] = str_replace('FFFFFF', 'Title', $searchStringAND); // d) Words matched individually
-                // $searches[++$count + 100][] = str_replace('FFFFFF', 'Title', $searchStringOR); // d) Words matched individually
-            }
-            $completed['Title'] = 'Title';
-        }
-        if (in_array('MenuTitle', $fields, true)) {
-            $searches[++$count][] = "LOWER(\"MenuTitle\") = '{$wordsAsString}'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"MenuTitle\") LIKE '%{$wordsAsString}%'"; // b) Full match within a bigger string
-            if ($hasWordArray) {
-                $searches[++$count][] = str_replace('FFFFFF', 'MenuTitle', $searchStringAND); // d) Words matched individually
-                // $searches[++$count + 100][] = str_replace('FFFFFF', 'MenuTitle', $searchStringOR); // d) Words matched individually
-            }
-            $completed['MenuTitle'] = 'MenuTitle';
-        }
-        if (in_array('MetaTitle', $fields, true)) {
-            $searches[++$count][] = "LOWER(\"MetaTitle\") = '{$wordsAsString}'"; // a) Exact match
-            $searches[++$count][] = "LOWER(\"MetaTitle\") LIKE '%{$wordsAsString}%'"; // b) Full match within a bigger string
-            if ($hasWordArray) {
-                $searches[++$count][] = str_replace('FFFFFF', 'MetaTitle', $searchStringAND); // d) Words matched individually
-                // $searches[++$count + 100][] = str_replace('FFFFFF', 'MetaTitle', $searchStringOR); // d) Words matched individually
-            }
-            $completed['MetaTitle'] = 'MetaTitle';
+        foreach ($fields as $field) {
+            $searches[++$count][] = "LOWER(\"{$field}\") = '{$wordsAsString}'"; // a) Exact match
         }
         foreach ($fields as $field) {
-            if (! isset($completed[$field])) {
-                $searches[++$count][] = "LOWER(\"{$field}\") = '{$wordsAsString}'"; // a) Exact match
-                $searches[++$count][] = "LOWER(\"{$field}\") LIKE '%{$wordsAsString}%'"; // b) Full match within a bigger string
-                if ($hasWordArray) {
-                    $searches[++$count][] = str_replace('FFFFFF', $field, $searchStringAND); // d) Words matched individually
-                    // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
-                }
+            $searches[++$count][] = "LOWER(\"{$field}\") LIKE '%{$wordsAsString}%'"; // a) Exact match
+        }
+        foreach ($fields as $field) {
+            if ($hasWordArray) {
+                $searches[++$count][] = str_replace('FFFFFF', $field, $searchStringAND); // d) Words matched individually
+                // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
             }
             /*
              * OR WORD SEARCH

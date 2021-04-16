@@ -20,6 +20,7 @@
 <li><strong>Products are Ajaxified:</strong> $DebugMe(ProductGroupListAreAjaxified)</li>
 <li><strong>OriginalTitle:</strong> $DebugMe(OriginalTitle)</li>
 <li><strong>Menu Child Categories:</strong> $DebugMe(MenuChildGroups)</li>
+<li><strong>MetaTitle (check for secondary title):</strong> $Title $MenuTitle</li>
 </ul>
 
 <h4>Show Links?</h4>

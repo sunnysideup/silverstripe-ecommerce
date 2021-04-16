@@ -833,6 +833,10 @@ class ProductGroupController extends PageController
     {
         if ($this->returnAjaxifiedProductList()) {
             return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
+        } else {
+            // important - because we want to get all the details loaded before we start with
+            // building template
+            $this->Products();
         }
 
         return [];

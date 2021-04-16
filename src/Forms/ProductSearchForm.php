@@ -202,7 +202,7 @@ class ProductSearchForm extends Form
      *
      * @var bool
      */
-    private static $use_cache = false;
+    private static $use_cache = true;
 
     /**
      * when we do not know the relevance then sort like this.
@@ -423,6 +423,7 @@ class ProductSearchForm extends Form
 
     public function doProductSearchForm($data, $form)
     {
+        $this->debug = isset($data['DebugSearch']) ? true : false;
         $this->runFullProcessInner($data);
         $this->doProcessResults();
     }
@@ -431,10 +432,13 @@ class ProductSearchForm extends Form
     // UTILS
     //#######################################
 
-    public function runFullProcess($data)
+    /**
+     * run process from ProductGroup
+     */
+    public function runFullProcess(array $requestVars) : self
     {
-        $this->debug = false;
-        $this->runFullProcessInner($data);
+        $this->runFullProcessInner($requestVars);
+        return $this;
     }
 
     /**
@@ -508,9 +512,7 @@ class ProductSearchForm extends Form
         if (! $this->baseClassNameForBuyables) {
             $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
-        if (isset($data['DebugSearch'])) {
-            $this->debug = (bool) $data['DebugSearch'];
-        }
+
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results in '.get_class($this).'</h2>');
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
@@ -520,7 +522,7 @@ class ProductSearchForm extends Form
         $this->rawData['MaximumPrice'] = $this->rawData['MaximumPrice'] ?? 0;
         $this->rawData['MinimumPrice'] = floatval(str_replace(',', '', $this->rawData['MinimumPrice']));
         $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', $this->rawData['MaximumPrice']));
-        $this->rawData['MaximumPrice'] = floatval($this->rawData['MaximumPrice'] ?? 0);
+
         $this->rawData['OnlyThisSection'] = (bool) (int) ($this->rawData['OnlyThisSection'] ?? 0);
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             $oldMin = $this->rawData['MinimumPrice'];
@@ -626,7 +628,7 @@ class ProductSearchForm extends Form
                 $list2 = $this->baseList->where($search);
                 $count += $list2->count();
                 if ($this->debug) {
-                    $this->debugOutput("<p>{$search}: " . $list2->count() . '</p>');
+                    $this->debugOutput("<p>{$search} from (".$this->baseList->count()."): " . $list2->count() . '</p>');
                 }
                 $this->addToResults($list2);
                 if ($this->weHaveEnoughResults()) {
@@ -809,9 +811,10 @@ class ProductSearchForm extends Form
     protected function createBaseList()
     {
         if (true === $this->hasCache) {
-            return;
-        }
-        if (! $this->baseList instanceof SS_List) {
+            $tmpVar = $this->baseClassNameForBuyables;
+            $filter = ['ID' => ArrayMethods::filter_array($this->productIds)];
+            $this->baseList = $tmpVar::get()->filter($filter);
+        } elseif (! $this->baseList instanceof SS_List) {
             if ($this->rawData['OnlyThisSection']) {
                 $this->baseList = $this->baseListOwner->getProducts();
                 $this->baseListForGroups = $this->baseListOwner->getBaseProductList()->getParentGroups();
@@ -936,7 +939,7 @@ class ProductSearchForm extends Form
     protected function applyCacheFromHash(string $hash): array
     {
         $array = $this->getCacheForHash($hash);
-        if (! empty($array['productIds']) && $this->config()->get('use_cache')) {
+        if ($array && count($array) && $this->config()->get('use_cache')) {
             $this->hasCache = true;
             foreach ($array as $variable => $value) {
                 if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
