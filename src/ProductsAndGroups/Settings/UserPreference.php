@@ -564,7 +564,13 @@ class UserPreference
     public function getTitle(string $type, ?string $value = ''): string
     {
         $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
-
+        if($type === 'SORT') {
+            echo '00000';
+            print_r($obj->getTitle($value));
+            echo '00000';
+            print_r($this->getCurrentUserPreferencesTitle($type));
+            echo '00000';
+        }
         return $obj->getTitle($value) . $this->getCurrentUserPreferencesTitle($type);
     }
 
