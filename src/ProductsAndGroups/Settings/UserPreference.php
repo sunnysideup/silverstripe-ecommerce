@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
 
 /**
@@ -116,7 +116,7 @@ class UserPreference
     public function getUseSessionAll(): array
     {
         $array = [];
-        $types = array_keys($this->getTemplateForProductsAndGroups()->getData());
+        $types = array_keys($this->getProductGroupSchema()->getData());
         foreach ($types as $type) {
             $array[$type] = $this->getUseSession($type);
         }
@@ -144,7 +144,7 @@ class UserPreference
     public function getUseSessionPerPageAll(): array
     {
         $array = [];
-        $types = array_keys($this->getTemplateForProductsAndGroups()->getData());
+        $types = array_keys($this->getProductGroupSchema()->getData());
         foreach ($types as $type) {
             $array[$type] = $this->getUseSessionPerPage($type);
         }
@@ -247,7 +247,7 @@ class UserPreference
     public function getCurrentUserPreferences(?string $type = '')
     {
         if (! $type) {
-            $types = array_keys($this->getTemplateForProductsAndGroups()->getData());
+            $types = array_keys($this->getProductGroupSchema()->getData());
             $arrayValues = [];
             foreach ($types as $type) {
                 $arrayValues[$type] = $this->getCurrentUserPreferences($type);
@@ -407,7 +407,7 @@ class UserPreference
 
     public function getOptions(string $classNameOrType): array
     {
-        return $this->getTemplateForProductsAndGroups()->getOptions($classNameOrType);
+        return $this->getProductGroupSchema()->getOptions($classNameOrType);
     }
 
     public function getActions(string $classNameOrType)
@@ -539,7 +539,7 @@ class UserPreference
      */
     public function IsShowFullList(): bool
     {
-        return $this->getTemplateForProductsAndGroups()
+        return $this->getProductGroupSchema()
             ->getApplyer('DISPLAY')
             ->IsShowFullList($this->getCurrentUserPreferencesKey('DISPLAY'))
         ;
@@ -568,7 +568,7 @@ class UserPreference
 
     public function getTitle(string $type, ?string $value = ''): string
     {
-        $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
+        $obj = $this->getProductGroupSchema()->getApplyer($type);
 
         return $obj->getTitle($value) . $this->getCurrentUserPreferencesTitle($type);
     }
@@ -631,12 +631,12 @@ class UserPreference
     }
 
     /**
-     * @return Template
+     * @return ProductGroupSchema
      */
-    protected function getTemplateForProductsAndGroups()
+    protected function getProductGroupSchema()
     {
-        $obj = $this->rootGroup->getTemplateForProductsAndGroups();
-        ClassHelpers::check_for_instance_of($obj, Template::class, true);
+        $obj = $this->rootGroup->getProductGroupSchema();
+        ClassHelpers::check_for_instance_of($obj, ProductGroupSchema::class, true);
 
         return $obj;
     }

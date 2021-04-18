@@ -236,7 +236,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
     protected function getApplyerClassName(string $type): string
     {
-        return $this->getTemplateForProductsAndGroups()->getApplyerClassName($type);
+        return $this->getProductGroupSchema()->getApplyerClassName($type);
     }
 
     /**
@@ -244,6 +244,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     protected function getApplyer(string $classNameOrType)
     {
-        return $this->getTemplateForProductsAndGroups()->getApplyer($classNameOrType, $this);
+        return $this->getProductGroupSchema()->getApplyer($classNameOrType, $this);
     }
 }

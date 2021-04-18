@@ -9,7 +9,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * @description: used to display a random product in the Template Test.
+ * @description: used to display a random product in the ProductGroupSchema Test.
  *
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce

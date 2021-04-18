@@ -3439,7 +3439,7 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * Converts the Order into HTML, based on the Order Template.
+     * Converts the Order into HTML, based on the Order ProductGroupSchema.
      *
      * @return \SilverStripe\ORM\FieldType\DBHTMLText
      */

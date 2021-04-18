@@ -27,7 +27,7 @@ use Sunnysideup\Vardump\DebugTrait;
  * It is linked to the ProductGroup and so it does not know about user preferences
  * and other settings that are set in run-time.
  */
-class Template
+class ProductGroupSchema
 {
     use Configurable;
     use Injectable;

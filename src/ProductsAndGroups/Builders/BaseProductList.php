@@ -295,7 +295,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     public function getProductGroupListProvider()
     {
         if (! $this->productGroupListProvider) {
-            $className = $this->rootGroup->getTemplateForProductsAndGroups()->getProductGroupListClassName();
+            $className = $this->rootGroup->getProductGroupSchema()->getProductGroupListClassName();
             //note, CAN NOT BE A SINGLETON if we want to pass it variables!
             $this->productGroupListProvider = Injector::inst()->get($className, false, [$this->rootGroup]);
         }

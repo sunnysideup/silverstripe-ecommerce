@@ -14,7 +14,7 @@ use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList
@@ -321,12 +321,12 @@ abstract class AbstractProductsAndGroupsList
     //#################################################
 
     /**
-     * @return Template
+     * @return ProductGroupSchema
      */
-    protected function getTemplateForProductsAndGroups()
+    protected function getProductGroupSchema()
     {
-        $obj = $this->rootGroup->getTemplateForProductsAndGroups();
-        ClassHelpers::check_for_instance_of($obj, Template::class, true);
+        $obj = $this->rootGroup->getProductGroupSchema();
+        ClassHelpers::check_for_instance_of($obj, ProductGroupSchema::class, true);
 
         return $obj;
     }

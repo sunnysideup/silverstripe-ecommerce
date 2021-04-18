@@ -420,7 +420,7 @@ class ProductGroupController extends PageController
 
     public function getUserPreferencesTitle(string $type, ?string $key): string
     {
-        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayValues($type, 'Title');
+        return $this->getProductGroupSchema()->getSortFilterDisplayValues($type, 'Title');
     }
 
     /**
@@ -707,7 +707,7 @@ class ProductGroupController extends PageController
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
         if (null === $this->finalProductList) {
-            $className = $this->getTemplateForProductsAndGroups()->getFinalProductListClassName();
+            $className = $this->getProductGroupSchema()->getFinalProductListClassName();
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
         }
@@ -731,7 +731,7 @@ class ProductGroupController extends PageController
     protected function afterHandleRequest()
     {
         if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
-            $this->getTemplateForProductsAndGroups()->getDebugProviderAsObject($this, $this->dataRecord)->print();
+            $this->getProductGroupSchema()->getDebugProviderAsObject($this, $this->dataRecord)->print();
             die();
         }
         parent::afterHandleRequest();
@@ -856,7 +856,7 @@ class ProductGroupController extends PageController
     protected function getUserPreferencesClass()
     {
         if (null === $this->userPreferencesObject) {
-            $className = $this->getTemplateForProductsAndGroups()->getUserPreferencesClassName();
+            $className = $this->getProductGroupSchema()->getUserPreferencesClassName();
             $this->userPreferencesObject = Injector::inst()->get($className)
                 ->setRootGroup($this->dataRecord)
                 ->setRootGroupController($this)

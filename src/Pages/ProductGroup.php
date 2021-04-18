@@ -29,7 +29,7 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConf
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Template;
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\Vardump;
 
 /**
@@ -48,7 +48,7 @@ class ProductGroup extends Page
 
     protected $baseProductList;
 
-    private static $template_for_selection_of_products = Template::class;
+    private static $template_for_selection_of_products = ProductGroupSchema::class;
 
     /**
      * @var string
@@ -297,9 +297,9 @@ class ProductGroup extends Page
     /**
      * returns the template for providing related groups and products.
      *
-     * @return Template
+     * @return ProductGroupSchema
      */
-    public function getTemplateForProductsAndGroups()
+    public function getProductGroupSchema()
     {
         $className = $this->Config()->get('template_for_selection_of_products');
 
@@ -357,7 +357,7 @@ class ProductGroup extends Page
     public function getBaseProductList()
     {
         if (! $this->baseProductList) {
-            $className = $this->getTemplateForProductsAndGroups()->getBaseProductListClassName();
+            $className = $this->getProductGroupSchema()->getBaseProductListClassName();
             $this->baseProductList = $className::inst(
                 $this,
                 $this->getBuyableClassName(),
@@ -469,7 +469,7 @@ class ProductGroup extends Page
      */
     public function getSortFilterDisplayValues(?string $typeOrVariable = '', ?string $variable = '')
     {
-        return $this->getTemplateForProductsAndGroups()->getSortFilterDisplayValues($typeOrVariable, $variable);
+        return $this->getProductGroupSchema()->getSortFilterDisplayValues($typeOrVariable, $variable);
     }
 
     /**
@@ -573,7 +573,7 @@ class ProductGroup extends Page
             $array = ['inherit' => $inheritTitle];
         }
         $method = 'get' . ucwords(strtolower($type)) . 'OptionsMap';
-        $options = $this->getTemplateForProductsAndGroups()->{$method}();
+        $options = $this->getProductGroupSchema()->{$method}();
 
         return array_merge($array, $options);
     }
