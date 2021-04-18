@@ -134,6 +134,14 @@ class FinalProductList extends AbstractProductsAndGroupsList
     /**
      * @param array|string $params optional additional filter
      */
+    public function applySearchFilter(string $key, $params = null): self
+    {
+        return $this->apply('SEARCHFILTER', $key, $params);
+    }
+
+    /**
+     * @param array|string $params optional additional filter
+     */
     public function applyGroupFilter(string $key, $params = null): self
     {
         return $this->apply('GROUPFILTER', $key, $params);

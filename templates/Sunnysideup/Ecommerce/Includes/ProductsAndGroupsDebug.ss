@@ -12,7 +12,7 @@
 <hr /><hr /><h2 id="Controller" style="color: red; padding-top: 2rem">Controller</h2><hr />
 <ul>
 <li><strong>ID:</strong> $ID</li>
-<li><strong>ClassName:</strong> $ClassName</li>
+<li><strong>ClassName:</strong> $VardumpClassName</li>
 <li><strong>Raw Product List:</strong> $DebugMe(getProductList)</li>
 <li><strong>Paginated Product List:</strong> $DebugMe(Products)</li>
 <li><strong>Products are Cacheable:</strong> $DebugMe(ProductGroupListAreCacheable)</li>
@@ -26,6 +26,7 @@
 <h4>Show Links?</h4>
 <ul>
 <li><strong>Show any sort of filter / sort:</strong> $DebugMe(ShowGroupFilterSortDisplayLinks)</li>
+<li><strong>Show Search Filter Links:</strong> $DebugMe(ShowSearchFilterLinks)</li>
 <li><strong>Show Group Filter Links:</strong> $DebugMe(ShowGroupFilterLinks)</li>
 <li><strong>Show Filters Links:</strong> $DebugMe(ShowFilterLinks)</li>
 <li><strong>Show Sort Links:</strong> $DebugMe(ShowSortLinks)</li>
@@ -35,6 +36,7 @@
 
 <h4>Has ... Available?</h4>
 <ul>
+<li><strong>Has Search Filters:</strong> $DebugMe(HasSearchFilters)</li>
 <li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
 <li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
 <li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
@@ -43,6 +45,7 @@
 
 <h4>Has ... Right Now?</h4>
 <ul>
+<li><strong>Has Search Filter:</strong> $DebugMe(HasSearchFilter)</li>
 <li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
 <li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
 <li><strong>Has Sort:</strong> $DebugMe(HasSort)</li>
@@ -61,6 +64,7 @@
 
 <h4>Preferences</h4>
 <ul>
+<li><strong>Current Search Filter Title</strong> $DebugMe(getCurrentSearchFilterTitle)</li>
 <li><strong>Current Group Filter Title</strong> $DebugMe(getCurrentGroupFilterTitle)</li>
 <li><strong>Current Filter Title</strong> $DebugMe(getCurrentFilterTitle)</li>
 <li><strong>Current Sort Title</strong> $DebugMe(getCurrentSortTitle)</li>
@@ -71,6 +75,7 @@
 <h4>Links</h4>
 <ul>
 <li><strong>Current Link</strong> $DebugMe(Link)</li>
+<li><strong>Search Filter Links</strong> $DebugMe(SearchFilterLinks)</li>
 <li><strong>Group Filter Links</strong> $DebugMe(GroupFilterLinks)</li>
 <li><strong>Filter Links</strong> $DebugMe(FilterLinks)</li>
 <li><strong>Sort Links</strong> $DebugMe(SortLinks)</li>
@@ -87,10 +92,10 @@
 <hr /><hr /><h2 id="ProductGroup" style="color: red; padding-top: 2rem">Product Group Data Record Details:</h2><hr />
 <ul>
     <li><strong>ID:</strong> $ID</li>
-    <li><strong>ClassName:</strong> $ClassName</li>
+    <li><strong>ClassName:</strong> $VardumpClassName</li>
     <li><strong>Number of Products Per Page:</strong> $DebugMe(getProductsPerPage)</li>
     <li><strong>Levels of product child groups to show:</strong> $DebugMe(getMyLevelOfProductsToShow)</li>
-    <li><strong>Filter for segment:</strong> $DebugMe(FilterForGroupLinkSegment)</li>
+    <li><strong>Filter for segment:</strong> $DebugMe(FilterForGroupSegment)</li>
     <li><strong>Search Link</strong> $DebugMe(SearchResultLink)</li>
     <li><strong>Also Show Product Array:</strong> $DebugMe(getProductsToBeIncludedFromOtherGroupsArray)</li>
     <li><strong>ParentGroup:</strong> $DebugMe(ParentGroup)</li>
@@ -111,8 +116,9 @@
 <% with $getTemplateForProductsAndGroups %>
 <hr /><hr /><h2 id="TemplateProvider" style="color: red; padding-top: 2rem">Template Provider</h2><hr />
 <ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
+<li><strong>ClassName:</strong> $VardumpClassName</li>
     <li><strong>Data:</strong> $getData</li>
+    <li><strong>Search Filter Options:</strong> $getSearchFilterOptionsMap</li>
     <li><strong>Group Filter Options:</strong> $getGroupFilterOptionsMap</li>
     <li><strong>Filter Options:</strong> $getFilterOptionsMap</li>
     <li><strong>Sort Options:</strong> $getSortOptionsMap</li>
@@ -126,7 +132,7 @@
 Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
 </p>
 <ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
+    <li><strong>ClassName:</strong> $VardumpClassName</li>
     <li><strong>Product (Buyable) Class Name:</strong> $getBuyableClassName</li>
     <li><strong>Children to show (levels):</strong> $getLevelOfProductsToShow</li>
     <li><strong>List of level options:</strong> $getShowProductLevelsArray</li>
@@ -186,10 +192,11 @@ Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
 <% with $getUserPreferencesClass %>
 <hr /><hr /><h2 id="UserDetails" style="color: red; padding-top: 2rem">User Specific Details</h2><hr />
 <ul>
-    <li><strong>ClassName:</strong> $ClassName</li>
+    <li><strong>ClassName:</strong> $VardumpClassName</li>
     <li><strong>use session to remember settings:</strong> $getUseSessionAll</li>
     <li><strong>use session to remember settings for each page:</strong> $getUseSessionPerPageAll</li>
     <li><strong>User Settings:</strong> $getCurrentUserPreferences</li>
+    <li><strong>Search Filter:</strong> $getSearchFilterTitle</li>
     <li><strong>Group Filter:</strong> $getGroupFilterTitle</li>
     <li><strong>Filter:</strong> $getFilterTitle</li>
     <li><strong>Sort:</strong> $getSortTitle</li>

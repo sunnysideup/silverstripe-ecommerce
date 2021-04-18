@@ -22,6 +22,7 @@ use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Vardump\Vardump;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
 class ProductGroupController extends PageController
 {
@@ -45,10 +46,6 @@ class ProductGroupController extends PageController
      * @var string
      */
     protected $originalTitle = '';
-
-    protected $hasGroupFilter = false;
-
-    protected $secondaryTitleHasBeenAdded = false;
 
     protected $userPreferencesObject;
 
@@ -77,9 +74,7 @@ class ProductGroupController extends PageController
 
     private static $allowed_actions = [
         'debug' => 'ADMIN',
-        'filterforgroup' => true,
         'ProductSearchForm' => true,
-        'searchresults' => true,
     ];
 
     //#######################################
@@ -88,35 +83,6 @@ class ProductGroupController extends PageController
 
     public function index()
     {
-        return $this->defaultReturn();
-    }
-
-    /**
-     * LEGACY METHOD!!!
-     * This allows you to do a cross filter (e.g. Category Watches, Brand Swatch).
-     *
-     * @param mixed $request
-     *
-     * @return \SilverStripe\Control\HTTPRequest
-     */
-    public function filterforgroup($request)
-    {
-        $otherProductGroup = ProductGroupFilter::get_group_from_url_segment($request->param('ID'));
-        if ($otherProductGroup) {
-            $this->hasGroupFilter = true;
-            $this->saveUserPreferences(
-                [
-                    'GROUPFILTER' => [
-                        'key' => 'default',
-                        'params' => $otherProductGroup->URLSegment . ',' . $otherProductGroup->ID,
-                        'title' => $otherProductGroup->MenuTitle,
-                    ],
-                ]
-            );
-        } else {
-            return $this->httpError('404', 'Could not find category.');
-        }
-
         return $this->defaultReturn();
     }
 
@@ -210,6 +176,7 @@ class ProductGroupController extends PageController
             $this->productList = $this->getCachedProductList();
             if (! $this->productList) {
                 $this->productList = $this->getFinalProductList()
+                    ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
                     ->applyGroupFilter($this->getCurrentUserPreferencesKey('GROUPFILTER'), $this->getCurrentUserPreferencesParams('GROUPFILTER'))
                     ->applyFilter($this->getCurrentUserPreferencesKey('FILTER'), $this->getCurrentUserPreferencesParams('FILTER'))
                     ->applySorter($this->getCurrentUserPreferencesKey('SORT'), $this->getCurrentUserPreferencesParams('SORT'))
@@ -313,6 +280,10 @@ class ProductGroupController extends PageController
     {
         return $this->HasManyProducts() && $this->HasGroupFilters();
     }
+    public function ShowSearchFilterLinks(): bool
+    {
+        return $this->HasManyProducts() && $this->HasSearchFilters();
+    }
 
     public function ShowFilterLinks(): bool
     {
@@ -331,7 +302,7 @@ class ProductGroupController extends PageController
 
     public function ShowGroupFilterSortDisplayLinks(): bool
     {
-        return $this->ShowGroupFilterLinks() || $this->ShowFilterLinks() || $this->ShowSortLinks() || $this->ShowDisplayLinks();
+        return $this->ShowSearchFilterLinks() || $this->ShowGroupFilterLinks() || $this->ShowFilterLinks() || $this->ShowSortLinks() || $this->ShowDisplayLinks();
     }
 
     public function HasManyProducts(): bool
@@ -339,9 +310,14 @@ class ProductGroupController extends PageController
         return $this->getFinalProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
     }
 
+    public function HasSearchFilter(): bool
+    {
+        return (bool) $this->getCurrentUserPreferencesParams('SEARCHFILTER');
+    }
+
     public function HasGroupFilter(): bool
     {
-        return $this->hasGroupFilter;
+        return (bool) $this->getCurrentUserPreferencesParams('GROUPFILTER');
     }
 
     public function HasFilter(): bool
@@ -351,6 +327,12 @@ class ProductGroupController extends PageController
 
     public function HasSort(): bool
     {
+        if ($this->IsSearchResults()) {
+            return
+                $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT') &&
+                $this->getCurrentUserPreferencesKey('SORT') !== BaseApplyer::DEFAULT_NAME
+            ;
+        }
         return $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT');
     }
 
@@ -361,7 +343,15 @@ class ProductGroupController extends PageController
 
     public function HasGroupFilterSortDisplay(): bool
     {
-        return $this->HasGroupFilter() || $this->HasFilter() || $this->HasSort() || $this->HasDisplay();
+        return $this->HasSearchFilter() || $this->HasGroupFilter() || $this->HasFilter() || $this->HasSort() || $this->HasDisplay();
+    }
+
+    /**
+     * we can use this for pre-set search filters
+     */
+    public function HasSearchFilters(): bool
+    {
+        return false;
     }
 
     /**
@@ -434,6 +424,18 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * returns the current searcj filter applied to the list
+     * in a human readable string.
+     */
+    public function getCurrentSearchFilterTitle(): string
+    {
+        if ($this->hasSearchFilter()) {
+            return $this->getUserPreferencesClass()->getSearchFilterTitle($this->getCurrentUserPreferencesKey('SEARCHFILTER'));
+        }
+
+        return '';
+    }
+    /**
      * returns the current filter applied to the list
      * in a human readable string.
      */
@@ -490,6 +492,16 @@ class ProductGroupController extends PageController
     public function MyDefaultDisplayStyle(): string
     {
         return $this->getListConfigCalculated('DISPLAY');
+    }
+
+    /**
+     * Provides a ArrayList of links for filters products.
+     *
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+     */
+    public function SearchFilterLinks(): ArrayList
+    {
+        return $this->getUserPreferencesClass()->getLinksPerType('SEARCHFILTER');
     }
 
     /**
@@ -595,7 +607,6 @@ class ProductGroupController extends PageController
                 'ProductSearchForm',
             );
             //load previous data.
-            $this->searchForm->setSearchHash($this->request->param('ID'));
             $this->searchForm->setBaseListOwner($this->dataRecord);
             // $sortGetVariable = $this->getSortFilterDisplayValues('SORT', 'getVariable');
             // $additionalGetParameters = $sortGetVariable . '=' . Config::inst()->get(ProductGroupSearchPage::class, 'best_match_key');

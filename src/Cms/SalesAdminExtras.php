@@ -20,6 +20,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)

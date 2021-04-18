@@ -17,25 +17,25 @@ class ProductSorter extends BaseApplyer
         BaseApplyer::DEFAULT_NAME => [
             'Title' => 'Default Order',
             'SQL' => '"Sort" ASC, "Title" ASC',
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
         'lowprice' => [
             'Title' => 'Lowest Price',
             'SQL' => '"Price" ASC, "Sort" ASC, "Title" ASC',
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
         'highprice' => [
             'Title' => 'Highest Price',
             'SQL' => '"Price" DESC, "Sort" ASC, "Title" ASC',
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
         'name' => [
             'Title' => 'Name',
             'SQL' => '"Title" ASC, "Sort" ASC',
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
     ];

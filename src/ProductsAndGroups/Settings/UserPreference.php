@@ -212,6 +212,18 @@ class UserPreference
                 $newPreference = $overrideArray[$type];
             } elseif (! isset($this->userPreferences[$type])) {
                 $newPreference = $this->request->getVar($getVariableName);
+                if ($type === 'GROUPFILTER') {
+                    if ($newPreference) {
+                        $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
+                        if ($otherProductGroup) {
+                            $newPreference = [
+                                'key' => 'default',
+                                'params' => $otherProductGroup->FilterForGroupSegment(),
+                                'title' => $otherProductGroup->MenuTitle,
+                            ];
+                        }
+                    }
+                }
             } else {
                 $newPreference = $this->userPreferences[$type];
             }
@@ -395,19 +407,6 @@ class UserPreference
 
     public function getActions(string $classNameOrType)
     {
-        // $answer = [];
-        // if ($classNameOrType === 'GROUPFILTER' || $classNameOrType instanceof ProductGroupFilter) {
-        //     $groups = $this->getBaseProductList()->getFilterForCandidateCategories();
-        //     if ($groups->Count()) {
-        //         foreach ($groups as $group) {
-        //             $answer[] = $group->FilterForGroupLinkSegment();
-        //         }
-        //     }
-        // }
-        // if (! count($answer)) {
-        //     $answer = [null];
-        // }
-        // return $answer;
         if ('GROUPFILTER' === $classNameOrType || $classNameOrType instanceof ProductGroupFilter) {
             return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
@@ -418,32 +417,30 @@ class UserPreference
     /**
      * full list of options with Links that know about "current".
      *
-     * @param string $type       (GROUPFILTER|FILTER|SORT|DISPLAY)
+     * @param string $type       (SEARCHFILTER|GROUPFILTER|FILTER|SORT|DISPLAY)
      * @param string $currentKey
      * @param bool   $ajaxify
      */
     public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
-        if (! $currentKey) {
-            $currentKey = $this->getCurrentUserPreferencesKey($type);
-        }
         $options = $this->getOptions($type);
         $actions = $this->getActions($type);
         $optionA = $actions && $options && ($actions->count() * count($options) > 1);
         $optionB = count($options);
         $list = new ArrayList();
         if ($optionA) {
+            if (! $currentKey) {
+                $currentKey = $this->getCurrentUserPreferencesParams($type);
+            }
             foreach ($actions as $group) {
-                $link = $group->FilterForGroupLinkSegment();
                 foreach (array_keys($options) as $key) {
-                    $isCurrent = $currentKey === $key && $this->matchingSegment($link);
-
+                    $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $obj = new ArrayData(
                         [
                             'Title' => $group->MenuTitle,
                             'Current' => $isCurrent,
                             //todo: fix this!!!!
-                            'Link' => $this->getLinkTemplate($link, $type, $key),
+                            'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
                             'Ajaxify' => $ajaxify,
                             'Object' => $group,
@@ -453,6 +450,9 @@ class UserPreference
                 }
             }
         } elseif ($optionB) {
+            if (! $currentKey) {
+                $currentKey = $this->getCurrentUserPreferencesKey($type);
+            }
             foreach ($options as $key => $data) {
                 $isCurrent = $currentKey === $key;
                 $obj = new ArrayData(
@@ -513,15 +513,15 @@ class UserPreference
     {
         if ($alternativeSort) {
             $array = $alternativeSort;
+        } else {
+            $array = [
+                'SORT' => [
+                    'key' => BaseApplyer::DEFAULT_NAME,
+                    'params' => $idArray,
+                    'title' => 'Relevance',
+                ],
+            ];
         }
-        $array = [
-            'SORT' => [
-                'key' => BaseApplyer::DEFAULT_NAME,
-                'params' => $idArray,
-                'title' => 'Relevance',
-            ],
-        ];
-
         if ($array) {
             $this->saveUserPreferences($array);
         }
@@ -564,13 +564,7 @@ class UserPreference
     public function getTitle(string $type, ?string $value = ''): string
     {
         $obj = $this->getTemplateForProductsAndGroups()->getApplyer($type);
-        if($type === 'SORT') {
-            echo '00000';
-            print_r($obj->getTitle($value));
-            echo '00000';
-            print_r($this->getCurrentUserPreferencesTitle($type));
-            echo '00000';
-        }
+
         return $obj->getTitle($value) . $this->getCurrentUserPreferencesTitle($type);
     }
 

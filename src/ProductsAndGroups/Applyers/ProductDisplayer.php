@@ -16,13 +16,13 @@ class ProductDisplayer extends BaseApplyer
         BaseApplyer::DEFAULT_NAME => [
             'Title' => 'Paginated',
             'SQL' => '',
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
         'all' => [
             'Title' => 'Full List',
             'SQL' => '',
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => true,
         ],
     ];

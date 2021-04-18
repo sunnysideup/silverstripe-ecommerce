@@ -14,6 +14,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)

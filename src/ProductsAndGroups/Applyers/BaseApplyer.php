@@ -128,13 +128,13 @@ abstract class BaseApplyer
     }
 
     /**
-     * get the RequiresData for an option.
+     * get the UsesParamData for an option.
      *
      * @param string $key string, e.g. default.
      */
     public function getRequiresData(?string $key = null): bool
     {
-        return $this->checkOption($key, 'RequiresData');
+        return $this->checkOption($key, 'UsesParamData');
     }
 
     /**

@@ -246,6 +246,11 @@ class ProductGroup extends Page
         return $fields;
     }
 
+    public function FilterForGroupSegment() : string
+    {
+        return $this->URLSegment . '.' . $this->ID;
+    }
+
     /**
      * used if you install lumberjack.
      */
@@ -330,16 +335,6 @@ class ProductGroup extends Page
         $value = $this->recursiveValue('LevelOfProductsToShow', 99);
 
         return (int) $value;
-    }
-
-    /**
-     * KEEP FOR LEGACY
-     * add this segment to the end of a Product Group
-     * link to create a cross-filter between the two categories.
-     */
-    public function FilterForGroupLinkSegment(): string
-    {
-        return 'filterforgroup/' . $this->URLSegment . ',' . $this->ID . '/';
     }
 
     /**
@@ -468,7 +463,7 @@ class ProductGroup extends Page
      * by either type (e.g. FILTER) or variable (e.g dbFieldName)
      * or both.
      *
-     * @param string $typeOrVariable optional GROUPFILTER | FILTER | SORT | DISPLAY OR variable
+     * @param string $typeOrVariable optional SEARCHFILTER|SEARCHFILTER|GROUPFILTER|FILTER|SORT|DISPLAY OR variable
      *
      * @return array | String
      */
@@ -493,21 +488,6 @@ class ProductGroup extends Page
         return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
-    /**
-     * @todo: add fitlerforgroup reverse
-     */
-    public function CurrentOrSection(): string
-    {
-        $outcome = $this->LinkingMode();
-        if ('link' !== $outcome) {
-            $action = Controller::curr()->getRequest()->param('Action');
-            if ('current' === $outcome && in_array($action, ['filterforgroup', 'searchresults'], true)) {
-                return 'section';
-            }
-        }
-
-        return $outcome;
-    }
 
     /**
      * Returns children ProductGroup pages of this group.

@@ -18,7 +18,7 @@ class ProductFilter extends BaseApplyer
             'SQL' => [
                 'ShowInSearch' => 1,
             ],
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
         'featuredonly' => [
@@ -27,7 +27,7 @@ class ProductFilter extends BaseApplyer
                 'ShowInSearch' => 1,
                 'FeaturedProduct' => 1,
             ],
-            'RequiresData' => false,
+            'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
     ];

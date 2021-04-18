@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideup\Ecommerce\Cms;
+namespace Sunnysideup\Ecommerce\Traits;
 
 use SilverStripe\Core\Injector\Injector;
 

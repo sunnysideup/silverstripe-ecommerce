@@ -9,7 +9,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class ProductGroupFilter extends BaseApplyer
 {
-    protected static $get_group_from_url_segment_store = [];
+    protected static $get_group_from_get_variable_store = [];
 
     /**
      * make sure that these do not exist as a URLSegment.
@@ -22,7 +22,7 @@ class ProductGroupFilter extends BaseApplyer
             'SQL' => [
                 'ShowInSearch' => 1,
             ],
-            'RequiresData' => true,
+            'UsesParamData' => true,
             'IsShowFullList' => false,
         ],
     ];
@@ -30,29 +30,23 @@ class ProductGroupFilter extends BaseApplyer
     /**
      * @param string $segment expected format: my-product-category,123 (URLSegment, ID)
      */
-    public static function get_group_from_url_segment(?string $segment): ?ProductGroup
+    public static function get_group_from_get_variable(?string $getVar): ?ProductGroup
     {
-        if (! $segment) {
+        if (! $getVar) {
             return null;
         }
-        if (! isset(self::$get_group_from_url_segment_store[$segment])) {
-            self::$get_group_from_url_segment_store[$segment] = null;
-            $segment = trim($segment, '/');
-            if (is_string($segment) && false !== strpos($segment, ',')) {
-                $parts = explode(',', $segment);
-                if (3 === count($parts)) {
-                    $parts = [$parts[1], $parts[2]];
-                }
-                if (2 === count($parts)) {
-                    $groupId = (int) $parts[1];
-                    if ($groupId) {
-                        self::$get_group_from_url_segment_store[$segment] = ProductGroup::get()->byId($groupId);
-                    }
+        if (! isset(self::$get_group_from_get_variable_store[$getVar])) {
+            self::$get_group_from_get_variable_store[$getVar] = null;
+            if (is_string($getVar) && false !== strpos($getVar, '.')) {
+                $parts = explode('.', $getVar);
+                $groupId = (int) $parts[1];
+                if ($groupId) {
+                    self::$get_group_from_get_variable_store[$getVar] = ProductGroup::get()->byId($groupId);
                 }
             }
         }
 
-        return self::$get_group_from_url_segment_store[$segment];
+        return self::$get_group_from_get_variable_store[$getVar];
     }
 
     /**
@@ -108,6 +102,6 @@ class ProductGroupFilter extends BaseApplyer
      */
     protected function findGroup(?string $filter)
     {
-        return self::get_group_from_url_segment($filter);
+        return self::get_group_from_get_variable($filter);
     }
 }

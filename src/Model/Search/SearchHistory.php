@@ -12,8 +12,13 @@ class SearchHistory extends DataObject
 {
     private static $table_name = 'SearchHistory';
 
+    public const KEYWORD_LENGTH_LIMIT = 80;
+
+    /**
+     * we limit keyword searchres to 80 characters ...
+     */
     private static $db = [
-        'Title' => 'Varchar(255)',
+        'Title' => 'Varchar('.self::KEYWORD_LENGTH_LIMIT.')',
         'ProductCount' => 'Int',
         'GroupCount' => 'Int',
     ];

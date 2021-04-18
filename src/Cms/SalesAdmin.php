@@ -16,6 +16,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)

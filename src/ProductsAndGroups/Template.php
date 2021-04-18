@@ -12,6 +12,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
@@ -38,6 +39,12 @@ class Template
      * @var array
      */
     protected const SORT_DISPLAY_NAMES = [
+        'SEARCHFILTER' => [
+            'getVariable' => 'searchfilter',
+            'dbFieldName' => '',
+            'translationCode' => 'SEARCH_RESULTS',
+            'defaultApplyer' => ProductSearchFilter::class,
+        ],
         'GROUPFILTER' => [
             'getVariable' => 'groupfilter',
             'dbFieldName' => '',
@@ -191,6 +198,14 @@ class Template
     }
 
     /**
+     * returns a dropdown like list of options for a searches.
+     */
+    public function getSearchFilterOptionsMap(): array
+    {
+        return $this->getOptionsMap('SEARCHFILTER');
+    }
+
+    /**
      * returns a dropdown like list of options for a filters.
      */
     public function getGroupFilterOptionsMap(): array
@@ -221,25 +236,6 @@ class Template
     {
         return $this->getOptionsMap('DISPLAY');
     }
-
-    // public function getDefaultGroupFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    // {
-    //     return $this->getOptionsList('GROUPFILTER', $linkTemplate, $currentKey, $ajaxify);
-    // }
-    // public function getDefaultFilterList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    // {
-    //     return $this->getOptionsList('FILTER', $linkTemplate, $currentKey, $ajaxify);
-    // }
-    //
-    // public function getDefaultSortOrderList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    // {
-    //     return $this->getOptionsList('SORT', $linkTemplate, $currentKey, $ajaxify);
-    // }
-    //
-    // public function getDisplayStyleList(string $linkTemplate, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
-    // {
-    //     return $this->getOptionsList('DISPLAY', $linkTemplate, $currentKey, $ajaxify);
-    // }
 
     /**
      * todo: CHECK!
