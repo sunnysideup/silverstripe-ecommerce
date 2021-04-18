@@ -1,5 +1,7 @@
 <?php
 
+namespace Sunnysideup\Ecommerce\Traits;
+
 /**
  * To make this trait work, you will need to add a method `getFieldsToCache` to
  * any object that you are adding this to.
