@@ -274,6 +274,11 @@ class UserPreference
         return $this->standardiseCurrentUserPreferences($type, $key);
     }
 
+    public function getSearchFilterTitle(?string $value = ''): string
+    {
+        return $this->getTitle('SEARCHFILTER', $value);
+    }
+
     public function getGroupFilterTitle(?string $value = ''): string
     {
         return $this->getTitle('GROUPFILTER', $value);

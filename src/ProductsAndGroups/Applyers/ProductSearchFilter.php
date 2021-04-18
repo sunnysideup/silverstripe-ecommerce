@@ -73,13 +73,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function getTitle(?string $key = '', $params = null): string
     {
-        $groupId = $this->findGroupId($params);
-        $group = ProductGroup::get()->byID((int) $groupId - 0);
-        if ($group) {
-            return $group->MenuTitle;
-        }
-
-        return '';
+        return 'to be completed';
     }
     /**
      * @var string[]
