@@ -10,6 +10,14 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class ProductSorter extends BaseApplyer
 {
+
+    protected static $defaultSortOrderFromFilter = null;
+
+    public static function setDefaultSortOrderFromFilter($mixed)
+    {
+        self::$defaultSortOrderFromFilter = $mixed;
+    }
+
     /**
      * @var array
      */
@@ -70,6 +78,9 @@ class ProductSorter extends BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
+        if( ! $params && self::$setDefaultSortOrderFromFilter) {
+            $params = self::$setDefaultSortOrderFromFilter;
+        }
         if (BaseApplyer::DEFAULT_NAME === $key && is_array($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }

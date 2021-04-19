@@ -42,6 +42,8 @@ class ProductSearchFilter extends BaseApplyer
 {
     use PartialObjectCache;
 
+    public const DEFAULT_NAME = 'searchfilter';
+
     /**
      * @var string[]
      */
@@ -133,13 +135,12 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected $baseClassNameForGroups = ProductGroup::class;
 
-    // /**
-    //  * this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html.
-    //  * not used at the moment!
-    //  * @var bool
-    //  */
-    // protected $useBooleanSearch = true;
-
+    /**
+     * this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html.
+     * not used at the moment!
+     * @var bool
+     */
+    protected $useBooleanSearch = true;
 
     /**
      * Maximum number of results to return
@@ -241,6 +242,7 @@ class ProductSearchFilter extends BaseApplyer
             $this->rawData = $params;
             $this->runFullProcess();
             $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
+            ProductSorter::setDefaultSortOrderFromFilter($this->getProductIds());
         }
         if($this->debug) {
             die('debug');

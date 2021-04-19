@@ -86,33 +86,6 @@ class ProductGroupController extends PageController
         return $this->defaultReturn();
     }
 
-    /**
-     * get the search results.
-     *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     */
-    public function searchresults($request)
-    {
-        $this->isSearchResults = true;
-
-        $this->ProductSearchForm()->runFullProcess($this->request->getVars());
-        //set last search results
-        //get results array
-        $keyword = $this->ProductSearchForm()->getLastSearchPhrase();
-        if ($keyword) {
-            $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
-        }
-        $ids = $this->ProductSearchForm()->getProductIds();
-        if (! $this->HasSort()) {
-            // set default sort
-            $this->setIdArrayDefaultSort($ids);
-        }
-        $this->getFinalProductList(['ID' => $ids]);
-        //filters are irrelevant right now
-        $this->addSecondaryTitle($keyword);
-
-        return [];
-    }
 
     //##################################
     // template methods
