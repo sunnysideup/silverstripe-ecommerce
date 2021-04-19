@@ -57,7 +57,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var bool
      */
-    protected $debug = true;
+    protected $debug = false;
 
     /**
      * Fields are:
@@ -240,6 +240,7 @@ class ProductSearchFilter extends BaseApplyer
         if(is_array($params) && count($params)) {
             $this->rawData = $params;
             $this->runFullProcess();
+            $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
         }
         if($this->debug) {
             die('debug');
