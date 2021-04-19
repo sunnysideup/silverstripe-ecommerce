@@ -66,6 +66,11 @@ abstract class AbstractProductsAndGroupsList
     // PRODUCTS: basics
     //#########################################
 
+    final public function getRootGroup()
+    {
+        return $this->rootGroup;
+    }
+
     /**
      * Key Method!
      * Returns a raw list of all the matching products without any pagination.

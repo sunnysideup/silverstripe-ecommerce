@@ -97,7 +97,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * @var array'
      */
     private static $default_product_filter = [
-        'AllowPurchase' => 1,
+        'ShowInSearch' => 1,
     ];
 
     /**
@@ -132,8 +132,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
     public static function apply_default_filter_to_products($list): SS_List
     {
         $filter = Config::inst()->get(self::class, 'default_product_filter');
+        if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
+            $filter['AllowPurchase'] = 1;
+        }
+        $list = $list->filter($filter);
 
-        return $list->filter($filter);
+        return $list;
     }
 
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)

@@ -34,6 +34,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
 use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 
 /**
  * Product search form.
@@ -41,12 +42,12 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 class ProductSearchForm extends Form
 {
 
-
     /**
      *
      * @var array
      */
     protected $rawData = [];
+
     /**
      * a product group that creates the base list.
      *
@@ -54,13 +55,6 @@ class ProductSearchForm extends Form
      */
     protected $baseListOwner;
 
-
-    // /**
-    //  * this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html.
-    //  * not used at the moment!
-    //  * @var bool
-    //  */
-    // protected $useBooleanSearch = true;
 
     /**
      * get parameters added to the link
@@ -197,24 +191,26 @@ class ProductSearchForm extends Form
 
     public function doProductSearchForm($data, $form)
     {
+        $this->rawData['Keyword'] = $data['Keyword'] ?? '';
+        $this->rawData['Keyword'] = ProductSearchFilter::keyword_sanitised($this->rawData['Keyword']);
+        SearchHistory::add_entry($this->rawData['Keyword']);
         $this->runFullProcessInner($data);
         $this->doProcessResults();
     }
 
     protected function runFullProcessInner($data)
     {
-        $this->doProcessSetup($data);
-
-    }
-
-    /**
-     * set up basics, using data.
-     */
-    protected function doProcessSetup(array $data)
-    {
         $this->saveDataToSession();
+        $this->rawData = array_filter($this->rawData);
         unset($this->rawData['action_doProductSearchForm']);
+        if(floatval($this->rawData['MinimumPrice']) === 0) {
+            unset($this->rawData['MinimumPrice']);
+        }
+        if(floatval($this->rawData['MaximumPrice']) === 0) {
+            unset($this->rawData['MaximumPrice']);
+        }
     }
+
 
     /**
      * finalise results.
@@ -227,7 +223,7 @@ class ProductSearchForm extends Form
         $link = $redirectToPage->Link();
         $this->rawData = array_filter($this->rawData);
         $link .= '?' .
-            $this->controller->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable') . '=' . BaseApplyer::DEFAULT_NAME .
+            $this->controller->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable') . '=1' .
             '&' . http_build_query($this->rawData);
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');

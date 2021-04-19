@@ -224,6 +224,15 @@ class UserPreference
                         }
                     }
                 }
+                if ($type === 'SEARCHFILTER') {
+                    if (1 === (int) $newPreference) {
+                        $newPreference = [
+                            'key' => 'default',
+                            'params' => $this->request->getVars(),
+                            'title' => 'Search Results',
+                        ];
+                    }
+                }
             } else {
                 $newPreference = $this->userPreferences[$type];
             }
