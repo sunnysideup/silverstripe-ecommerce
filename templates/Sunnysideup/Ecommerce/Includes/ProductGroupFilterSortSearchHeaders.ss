@@ -1,20 +1,32 @@
 <ul class="filterSortSearchHeaders">
-<% if DisplayLinks %>
+
+<% if HasSearchFilters %>
     <li>
-        <a href="#DisplayOptionsForList" class="openCloseSectionLink close"><% _t('ProductGroup.DISPLAY','Display Options') %><% if CurrentDisplayTitle %> ($CurrentDisplayTitle)<% end_if %></a>
+        <a href="#SearchFilterForList" class="openCloseSectionLink close">$SearchFilterHeader<% if $CurrentFilterTitle %> ($CurrentSearchFilterTitle)<% end_if %></a>
     </li>
 <% end_if %>
+
+<% if HasGroupFilters %>
+    <li>
+        <a href="#GroupFilterForList" class="openCloseSectionLink close">$GroupFilterHeader<% if $CurrentGroupFilterTitle %> ($CurrentGroupFilterTitle)<% end_if %></a>
+    </li>
+<% end_if %>
+
 <% if HasFilters %>
     <li>
-        <a href="#FilterForList" class="openCloseSectionLink close"><% _t('ProductGroup.SUB_CATEGORIES','Sub-categories') %><% if CurrentFilterTitle %> ($CurrentFilterTitle)<% end_if %></a>
+    <a href="#FilterForList" class="openCloseSectionLink close">$FilterHeader<% if $CurrentFilterTitle %> ($CurrentFilterTitle)<% end_if %></a>
     </li>
 <% end_if %>
-<% if MenuChildGroups %>
+
+<% if HasSorts %>
     <li>
-        <a href="#MenuChildGroupsList" class="openCloseSectionLink close"><% _t("Product.INTHISSECTION", "In This Section") %></a>
+        <a href="#SortForList" class="openCloseSectionLink close">$SortHeader<% if CurrentFilterTitle %> ($CurrentSortTitle)<% end_if %></a>
     </li>
 <% end_if %>
+
+<% if DisplayLinks %>
     <li>
-        <a href="#ProductSearchFormOuter" class="openCloseSectionLink close"><% _t("Product.Search_Form_Header", "New Search") %></a>
+        <a href="#DisplayForList" class="openCloseSectionLink close">$DisplayHeader<% if $CurrentDisplayTitle %> ($CurrentDisplayTitle)<% end_if %></a>
     </li>
+<% end_if %>
 </ul>

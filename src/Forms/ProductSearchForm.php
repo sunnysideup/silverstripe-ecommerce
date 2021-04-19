@@ -33,6 +33,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
 use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
 /**
  * Product search form.
@@ -41,6 +42,11 @@ class ProductSearchForm extends Form
 {
 
 
+    /**
+     *
+     * @var array
+     */
+    protected $rawData = [];
     /**
      * a product group that creates the base list.
      *
@@ -78,6 +84,7 @@ class ProductSearchForm extends Form
      */
     public function __construct($controller, string $name)
     {
+        $this->rawData = $this->request->getVars();
         $this->extraBuyableFieldsToSearchFullText = Config::inst()->get(static::class, 'extra_buyable_fields_to_search_full_text_default');
         $request = $controller->getRequest();
         $defaults = [
@@ -218,7 +225,10 @@ class ProductSearchForm extends Form
         $this->extend('updateProcessResults');
         $redirectToPage = $this->getResultsPage();
         $link = $redirectToPage->Link();
-        $link .= '?' . http_build_query($this->rawData, '', '...');
+        $this->rawData = array_filter($this->rawData);
+        $link .= '?' .
+            $this->controller->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable') . '=' . BaseApplyer::DEFAULT_NAME .
+            '&' . http_build_query($this->rawData);
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }

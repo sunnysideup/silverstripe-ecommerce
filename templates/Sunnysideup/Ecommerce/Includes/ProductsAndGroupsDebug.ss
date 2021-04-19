@@ -2,7 +2,7 @@
 <ul>
 <li><a href="#Controller">Controller</a></li>
 <li><a href="#ProductGroup">Model</a></li>
-<li><a href="#TemplateProvider">Template Provider</a>: KEY PLAYER - provides the classes and the basic set up for product selection</li>
+<li><a href="#SchemaProvider">Schema Provider</a>: KEY PLAYER - provides the classes and the basic set up for product selection</li>
 <li><a href="#BaseList">Base List</a>: the basic list of products available</li>
 <li><a href="#FinalList">Final List</a>: the sorted / filtered list</li>
 <li><a href="#UserDetails">User Specific Details</a></li>
@@ -113,10 +113,10 @@
 
 <% with $getRootGroupController %>
 
-<% with $getTemplateForProductsAndGroups %>
-<hr /><hr /><h2 id="TemplateProvider" style="color: red; padding-top: 2rem">Template Provider</h2><hr />
+<% with $getProductGroupSchema %>
+<hr /><hr /><h2 id="SchemaProvider" style="color: red; padding-top: 2rem">Schema Provider</h2><hr />
 <ul>
-<li><strong>ClassName:</strong> $VardumpClassName</li>
+    <li><strong>ClassName:</strong> $VardumpClassName</li>
     <li><strong>Data:</strong> $getData</li>
     <li><strong>Search Filter Options:</strong> $getSearchFilterOptionsMap</li>
     <li><strong>Group Filter Options:</strong> $getGroupFilterOptionsMap</li>

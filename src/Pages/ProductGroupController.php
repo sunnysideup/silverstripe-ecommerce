@@ -483,6 +483,31 @@ class ProductGroupController extends PageController
         return '';
     }
 
+    public function getSearchFilterHeader() : string
+    {
+        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search');
+    }
+
+    public function getGroupFilterHeader() : string
+    {
+        return _t('Ecommerce.FILTER_BY_CATEGORY', 'Filter by Category');
+    }
+
+    public function getFilterHeader() : string
+    {
+        return _t('Ecommerce.FILTER', 'Filter');
+    }
+
+    public function getSortHeader() : string
+    {
+        return _t('Ecommerce.SORT', 'SORT');
+    }
+
+    public function getDisplayHeader() : string
+    {
+        return _t('Ecommerce.DISPLAY', 'Presentation');
+    }
+
     /**
      * short-cut for getListConfigCalculated("DISPLAY")
      * for use in templtes.
