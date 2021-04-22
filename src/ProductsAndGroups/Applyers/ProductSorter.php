@@ -5,6 +5,8 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 
+use Sunnysideup\Vardump\Vardump;
+
 /**
  * provides data on the user.
  */
@@ -81,7 +83,8 @@ class ProductSorter extends BaseApplyer
         if( ! $params && self::$defaultSortOrderFromFilter) {
             $params = self::$defaultSortOrderFromFilter;
         }
-        if (BaseApplyer::DEFAULT_NAME === $key && is_array($params)) {
+        // @todo: make smarter...
+        if (is_array($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
 
