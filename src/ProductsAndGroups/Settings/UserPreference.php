@@ -92,7 +92,7 @@ class UserPreference
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      *
-     * @var array
+     * @var arrayn setUser
      */
     private static $use_session = [];
 
@@ -205,7 +205,7 @@ class UserPreference
     public function saveUserPreferences(?array $overrideArray = []): self
     {
         $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
-
+        $isSearch = false;
         foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
             $getVariableName = $oneTypeArray['getVariable'];
             if (isset($overrideArray[$type])) {
@@ -226,6 +226,7 @@ class UserPreference
                 }
                 if ($type === 'SEARCHFILTER') {
                     if (1 === (int) $newPreference) {
+                        $isSearch = true;
                         $newPreference = [
                             'key' => 'default',
                             'params' => $this->request->getVars(),
@@ -240,7 +241,10 @@ class UserPreference
             //save preference to session
             $this->savePreferenceToSession($type, $newPreference);
         }
-
+        // irrespective of preference for page, use default for SORT in case of SEARCH.
+        if ($isSearch && ! $this->userPreferences['SORT']) {
+            $this->userPreferences['SORT'] = BaseApplyer::DEFAULT_NAME;
+        }
         return $this;
     }
 
@@ -311,7 +315,7 @@ class UserPreference
     /**
      * Unique caching key for the product list...
      */
-    public function ProductGroupListCachingKey(?bool $withPageNumber = false, ?string $additionalKey = ''): string
+    public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         $pageStart = '';
         if ($withPageNumber) {
@@ -331,6 +335,7 @@ class UserPreference
                     serialize($this->getCurrentUserPreferences('GROUPFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('SORT')),
                     serialize($this->getCurrentUserPreferencesKey('FILTER')),
+                    serialize($this->getCurrentUserPreferencesKey('SEARCHFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('DISPLAY')),
                     $pageStart,
                     $additionalKey,

@@ -186,7 +186,7 @@ class ProductGroupController extends PageController
     public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         if ($this->ProductGroupListAreCacheable()) {
-            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber, $this->searchResultHash);
+            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber);
         }
 
         return '';
@@ -301,10 +301,7 @@ class ProductGroupController extends PageController
     public function HasSort(): bool
     {
         if ($this->IsSearchResults()) {
-            return
-                $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT') &&
-                $this->getCurrentUserPreferencesKey('SORT') !== BaseApplyer::DEFAULT_NAME
-            ;
+            return $this->getCurrentUserPreferencesKey('SORT') !== BaseApplyer::DEFAULT_NAME;
         }
         return $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT');
     }
@@ -458,7 +455,7 @@ class ProductGroupController extends PageController
 
     public function getSearchFilterHeader() : string
     {
-        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search');
+        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ' . $this->Title);
     }
 
     public function getGroupFilterHeader() : string
@@ -565,7 +562,7 @@ class ProductGroupController extends PageController
 
     public function searchResultsProductGroupsArray(): array
     {
-        return $this->ProductSearchForm()->getProductGroupIds();
+        return $this->getFinalProductList()->getApplyer('SEARCHFILTER')->getProductGroupIds();
     }
 
     /**
@@ -778,6 +775,7 @@ class ProductGroupController extends PageController
             return $this->redirect($this->Link());
         }
         $this->originalTitle = $this->Title;
+        $this->isSearchResults = (bool) $this->request->getVar('searchfilter');
         Requirements::themedCSS('client/css/ProductGroup');
         Requirements::themedCSS('client/css/ProductGroupPopUp');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');

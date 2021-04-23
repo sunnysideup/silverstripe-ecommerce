@@ -242,7 +242,12 @@ class ProductSearchFilter extends BaseApplyer
             $this->rawData = $params;
             $this->runFullProcess();
             $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
-            ProductSorter::setDefaultSortOrderFromFilter($this->getProductIds());
+            ProductSorter::setDefaultSortOrderFromFilter(
+                ArrayMethods::create_sort_statement_from_id_array(
+                    $this->getProductIds(),
+                    Product::class
+                )
+            );
         }
         if($this->debug) {
             die('debug');
