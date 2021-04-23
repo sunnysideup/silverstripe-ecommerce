@@ -20,6 +20,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
@@ -62,13 +63,6 @@ class ProductGroupController extends PageController
      * @var bool
      */
     protected $isSearchResults = false;
-
-    /**
-     * Is this a product search?
-     *
-     * @var string
-     */
-    protected $searchResultHash = '';
 
     private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
 
@@ -562,7 +556,7 @@ class ProductGroupController extends PageController
 
     public function searchResultsProductGroupsArray(): array
     {
-        return $this->getFinalProductList()->getApplyer('SEARCHFILTER')->getProductGroupIds();
+        return $this->getSearchApplyer()->getProductGroupIds();
     }
 
     /**
@@ -621,7 +615,7 @@ class ProductGroupController extends PageController
      */
     public function HasSearchResults(): bool
     {
-        return $this->ProductSearchForm()->getHasResults();
+        return $this->getSearchApplyer()->getHasResults();
     }
 
     /**
@@ -650,23 +644,10 @@ class ProductGroupController extends PageController
 
     /**
      * Is the current page a display of search results.
-     *
-     * This does not mean that something is actively being search for,
-     * it could also be just "showing the search results"
      */
     public function IsSearchResults(): bool
     {
         return $this->isSearchResults;
-    }
-
-    /**
-     * Is there something actively being searched for?
-     *
-     * This is different from IsSearchResults.
-     */
-    public function ActiveSearchTerm(): bool
-    {
-        return (bool) $this->request->getVar('Keyword');
     }
 
     public function saveUserPreferences(?array $data = [])
@@ -834,6 +815,15 @@ class ProductGroupController extends PageController
     protected function IsShowFullList(): bool
     {
         return $this->getUserPreferencesClass()->IsShowFullList();
+    }
+
+    /**
+     *
+     * @return ProductSearchFilter
+     */
+    protected function getSearchApplyer()
+    {
+        return $this->getFinalProductList()->getApplyer('SEARCHFILTER');
     }
 
     protected function defaultReturn()

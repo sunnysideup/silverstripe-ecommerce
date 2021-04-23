@@ -45,6 +45,7 @@
 
 <h4>Has ... Right Now?</h4>
 <ul>
+<li><strong>Is Search Results:</strong> $DebugMe(IsSearchResults)</li>
 <li><strong>Has Search Filter:</strong> $DebugMe(HasSearchFilter)</li>
 <li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
 <li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
