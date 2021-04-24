@@ -249,9 +249,6 @@ class ProductSearchFilter extends BaseApplyer
                 )
             );
         }
-        if($this->debug) {
-            die('debug');
-        }
         $this->applyEnd($key, $params);
 
         return $this;
@@ -386,6 +383,7 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->baseClassNameForBuyables) {
             $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
+        $this->debug = empty($this->rawData['showdebug']) ? false : true;
 
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results in '.get_class($this).'</h2>');

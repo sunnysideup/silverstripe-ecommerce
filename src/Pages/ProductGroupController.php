@@ -143,8 +143,8 @@ class ProductGroupController extends PageController
             $this->productList = $this->getCachedProductList();
             if (! $this->productList) {
                 $this->productList = $this->getFinalProductList()
-                    ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
                     ->applyGroupFilter($this->getCurrentUserPreferencesKey('GROUPFILTER'), $this->getCurrentUserPreferencesParams('GROUPFILTER'))
+                    ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->request->getVars())
                     ->applyFilter($this->getCurrentUserPreferencesKey('FILTER'), $this->getCurrentUserPreferencesParams('FILTER'))
                     ->applySorter($this->getCurrentUserPreferencesKey('SORT'), $this->getCurrentUserPreferencesParams('SORT'))
                     ->applyDisplayer($this->getCurrentUserPreferencesKey('DISPLAY'), $this->getCurrentUserPreferencesParams('DISPLAY'))
