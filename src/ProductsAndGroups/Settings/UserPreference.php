@@ -217,7 +217,7 @@ class UserPreference
                         $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
                         if ($otherProductGroup) {
                             $newPreference = [
-                                'key' => 'default',
+                                'key' => BaseApplyer::DEFAULT_NAME,
                                 'params' => $otherProductGroup->FilterForGroupSegment(),
                                 'title' => $otherProductGroup->MenuTitle,
                             ];
@@ -225,14 +225,12 @@ class UserPreference
                     }
                 }
                 if ($type === 'SEARCHFILTER') {
-                    if (1 === (int) $newPreference) {
-                        $isSearch = true;
-                        $newPreference = [
-                            'key' => 'default',
-                            'params' => $this->request->getVars(),
-                            'title' => 'Search Results',
-                        ];
-                    }
+                    $isSearch = true;
+                    $newPreference = [
+                        'key' => BaseApplyer::DEFAULT_NAME,
+                        'params' => $newPreference,
+                        'title' => 'Search Results',
+                    ];
                 }
             } else {
                 $newPreference = $this->userPreferences[$type];
@@ -360,14 +358,19 @@ class UserPreference
                 $secondaryTitle = $this->addToTitle($secondaryTitle);
             }
 
-            if ($this->rootGroupController->IsSearchResults()) {
+            if ($this->rootGroupController->HasSearchFilter()) {
+
                 $count = $this->getFinalProductList()->getRawCount();
 
+                $productString = $string = _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
                 if ($count) {
-                    $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                    if($count === 1) {
+                        $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Product Found');
+                    }
+                    $toAdd = $count . ' ' . $productString;
                     $secondaryTitle .= $this->addToTitle($toAdd);
                 } else {
-                    $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
+                    $toAdd = 'No ' . $productString;
                     $secondaryTitle .= $this->addToTitle($toAdd);
                 }
             }

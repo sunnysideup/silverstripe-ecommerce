@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use Sunnysideup\Ecommerce\Api\GetVariables;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -9,6 +10,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -90,21 +92,22 @@ class ProductSearchForm extends Form
         //fields
         $fields = FieldList::create();
         //turn of security to allow caching of the form:
-        if ($this->config()->get('include_price_filters')) {
-            $fields->push(
-                NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'), $defaults['MinimumPrice'])->setScale(2),
-            );
-            $fields->push(
-                NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'), $defaults['MaximumPrice'])->setScale(2)
-            );
-        }
         $fields->push(
             $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), Convert::raw2att($defaults['Keyword']))
         );
+        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
+        if ($this->config()->get('include_price_filters')) {
+            $minMaxHolder = CompositeField::create(
+                [
+                    NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'), $defaults['MinimumPrice'])->setScale(2),
+                    NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'), $defaults['MaximumPrice'])->setScale(2),
+                ]
+            )->addExtraClass('min-max-holder');
+            $fields->push($minMaxHolder);
+        }
         $fields->push(
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
         );
-        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
 
         if (Director::isDev() || Permission::check('ADMIN')) {
             $fields->push(CheckboxField::create('DebugSearch', 'Debug Search'));
@@ -216,14 +219,13 @@ class ProductSearchForm extends Form
         $link = $redirectToPage->Link();
         $this->rawData = array_filter($this->rawData);
         $getVar = Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable');
-        $link .= '?' .
-            $getVar . '=1' .
-            '&' . http_build_query($this->rawData);
+        $link .= '?' . $getVar . '=' . GetVariables::array_to_url_string($this->rawData);
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
         $this->controller->redirect($link);
     }
+
     //#######################################
     // get-ers
     //#######################################

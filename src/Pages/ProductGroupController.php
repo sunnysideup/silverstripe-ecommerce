@@ -144,7 +144,7 @@ class ProductGroupController extends PageController
             if (! $this->productList) {
                 $this->productList = $this->getFinalProductList()
                     ->applyGroupFilter($this->getCurrentUserPreferencesKey('GROUPFILTER'), $this->getCurrentUserPreferencesParams('GROUPFILTER'))
-                    ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->request->getVars())
+                    ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
                     ->applyFilter($this->getCurrentUserPreferencesKey('FILTER'), $this->getCurrentUserPreferencesParams('FILTER'))
                     ->applySorter($this->getCurrentUserPreferencesKey('SORT'), $this->getCurrentUserPreferencesParams('SORT'))
                     ->applyDisplayer($this->getCurrentUserPreferencesKey('DISPLAY'), $this->getCurrentUserPreferencesParams('DISPLAY'))
@@ -167,11 +167,14 @@ class ProductGroupController extends PageController
      */
     public function Products(): ?PaginatedList
     {
+        //get the list first, so that everything is calculated
+        $list = $this->getProductList();
+
         $this->addSecondaryTitle();
 
         $this->cachingRelatedJavascript();
 
-        return $this->paginateList($this->getProductList());
+        return $this->paginateList($list);
     }
 
     /**
@@ -449,7 +452,7 @@ class ProductGroupController extends PageController
 
     public function getSearchFilterHeader() : string
     {
-        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ' . $this->Title);
+        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ' . $this->originalTitle);
     }
 
     public function getGroupFilterHeader() : string
@@ -647,7 +650,7 @@ class ProductGroupController extends PageController
      */
     public function IsSearchResults(): bool
     {
-        return $this->isSearchResults;
+        return $this->HasSearchFilter();
     }
 
     public function saveUserPreferences(?array $data = [])
@@ -756,7 +759,6 @@ class ProductGroupController extends PageController
             return $this->redirect($this->Link());
         }
         $this->originalTitle = $this->Title;
-        $this->isSearchResults = (bool) $this->request->getVar('searchfilter');
         Requirements::themedCSS('client/css/ProductGroup');
         Requirements::themedCSS('client/css/ProductGroupPopUp');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');

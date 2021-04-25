@@ -34,7 +34,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\Traits\PartialObjectCache;
 use Sunnysideup\Vardump\Vardump;
-
+use Sunnysideup\Ecommerce\Api\GetVariables;
 /**
  * provides data on the user.
  */
@@ -42,7 +42,6 @@ class ProductSearchFilter extends BaseApplyer
 {
     use PartialObjectCache;
 
-    public const DEFAULT_NAME = 'searchfilter';
 
     /**
      * @var string[]
@@ -237,6 +236,9 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
+        if (($params)) {
+            $params = GetVariables::url_string_to_array((string) $params);
+        }
         $this->applyStart($key, $params);
         if(is_array($params) && count($params)) {
             $this->rawData = $params;
