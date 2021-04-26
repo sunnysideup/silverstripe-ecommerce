@@ -409,14 +409,17 @@ class UserPreference
     public function standardiseCurrentUserPreferences(string $type, $keyOrArray)
     {
         if (is_array($keyOrArray)) {
-            if (isset($keyOrArray['key'], $keyOrArray['params'], $keyOrArray['title'])) {
+            if($keyOrArray['params'] === null) {
+                $keyOrArray['params'] = [];
+            }
+            if (isset($keyOrArray['key']) && isset($keyOrArray['params']) &&  isset($keyOrArray['title'])) {
                 return $keyOrArray;
             }
             user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
         } else {
             return [
                 'key' => $keyOrArray,
-                'params' => null,
+                'params' => [],
                 'title' => '',
             ];
         }

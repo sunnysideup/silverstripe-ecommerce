@@ -6,6 +6,7 @@
 <li><a href="#BaseList">Base List</a>: the basic list of products available</li>
 <li><a href="#FinalList">Final List</a>: the sorted / filtered list</li>
 <li><a href="#UserDetails">User Specific Details</a></li>
+<li><a href="#Search">Search </a></li>
 </ul>
 
 <% with $getRootGroupController %>
@@ -205,5 +206,9 @@ Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
 </ul>
 <% end_with %>
 
+<hr /><hr /><h2 id="FinalList" style="color: red; padding-top: 2rem">Search</h2><hr />
+<ul>
+<li><strong>Debug:</strong> $DebugSearchString</li>
+</ul>
 
 <% end_with %>

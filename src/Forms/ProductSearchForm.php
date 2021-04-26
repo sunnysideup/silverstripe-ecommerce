@@ -81,19 +81,19 @@ class ProductSearchForm extends Form
     public function __construct($controller, string $name)
     {
         $request = $controller->getRequest();
-        $condensedData = $request->getVar($this->getVariableContainingSearchParams());
+        $getVars = $request->requestVars();
+        $searchVar = $this->getVariableContainingSearchParams();
+        $condensedData = $request->getVar($searchVar);
+        unset($getVars[$searchVar]);
         if ($condensedData) {
             $data = GetVariables::url_string_to_array($condensedData);
-            $defaults['Keyword'] = $data['Keyword'] ?? '';
-            $defaults['MinimumPrice'] = $data['Keyword'] ?? 0;
-            $defaults['MaximumPrice'] = $data['Keyword'] ?? 0;
-            $defaults['OnlyThisSection'] = $data['OnlyThisSection'] ?? 0;
-        } else {
-            $defaults['Keyword'] = $request->getVar('Keyword');
-            $defaults['MinimumPrice'] = $request->getVar('MinimumPrice');
-            $defaults['MaximumPrice'] = $request->getVar('MaximumPrice');
-            $defaults['OnlyThisSection'] = ((int) $request->getVar('OnlyThisSection') - 0 ? 1 : 0);
+            $getVars = array_merge($getVars, $data);
         }
+        $defaults = [];
+        $defaults['Keyword'] = $getVars['Keyword'] ?? '';
+        $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? 0;
+        $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? 0;
+        $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? 0;
         $defaults = [
             'Keyword' => Convert::raw2att($defaults['Keyword']),
             'MinimumPrice' => (float) str_replace(', ', '', $defaults['MinimumPrice']),
