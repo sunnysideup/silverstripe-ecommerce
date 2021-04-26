@@ -81,11 +81,24 @@ class ProductSearchForm extends Form
     public function __construct($controller, string $name)
     {
         $request = $controller->getRequest();
+        $condensedData = $request->getVar($this->getVariableContainingSearchParams());
+        if ($condensedData) {
+            $data = GetVariables::url_string_to_array($condensedData);
+            $defaults['Keyword'] = $data['Keyword'] ?? '';
+            $defaults['MinimumPrice'] = $data['Keyword'] ?? 0;
+            $defaults['MaximumPrice'] = $data['Keyword'] ?? 0;
+            $defaults['OnlyThisSection'] = $data['OnlyThisSection'] ?? 0;
+        } else {
+            $defaults['Keyword'] = $request->getVar('Keyword');
+            $defaults['MinimumPrice'] = $request->getVar('MinimumPrice');
+            $defaults['MaximumPrice'] = $request->getVar('MaximumPrice');
+            $defaults['OnlyThisSection'] = ((int) $request->getVar('OnlyThisSection') - 0 ? 1 : 0);
+        }
         $defaults = [
-            'Keyword' => $request->getVar('Keyword'),
-            'MinimumPrice' => (float) str_replace(', ', '', $request->getVar('MinimumPrice')),
-            'MaximumPrice' => (float) str_replace(', ', '', $request->getVar('MaximumPrice')),
-            'OnlyThisSection' => ((int) $request->getVar('OnlyThisSection') - 0 ? 1 : 0),
+            'Keyword' => Convert::raw2att($defaults['Keyword']),
+            'MinimumPrice' => (float) str_replace(', ', '', $defaults['MinimumPrice']),
+            'MaximumPrice' => (float) str_replace(', ', '', $defaults['MaximumPrice']),
+            'OnlyThisSection' => (int) $defaults['OnlyThisSection'] ? 1 : 0,
         ];
         $this->rawData = $defaults;
 
@@ -93,7 +106,7 @@ class ProductSearchForm extends Form
         $fields = FieldList::create();
         //turn of security to allow caching of the form:
         $fields->push(
-            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), Convert::raw2att($defaults['Keyword']))
+            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
         );
         $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         if ($this->config()->get('include_price_filters')) {
@@ -218,8 +231,7 @@ class ProductSearchForm extends Form
         $redirectToPage = $this->getResultsPage();
         $link = $redirectToPage->Link();
         $this->rawData = array_filter($this->rawData);
-        $getVar = Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable');
-        $link .= '?' . $getVar . '=' . GetVariables::array_to_url_string($this->rawData);
+        $link .= '?' . $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->rawData);
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
@@ -229,6 +241,12 @@ class ProductSearchForm extends Form
     //#######################################
     // get-ers
     //#######################################
+
+    protected function getVariableContainingSearchParams() : string
+    {
+        return Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable');
+
+    }
 
     protected function hasOnlyThisSection(): bool
     {

@@ -236,7 +236,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        if (($params)) {
+        if ( ! is_array($params)) {
             $params = GetVariables::url_string_to_array((string) $params);
         }
         $this->applyStart($key, $params);
