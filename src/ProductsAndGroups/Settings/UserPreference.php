@@ -92,7 +92,7 @@ class UserPreference
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      *
-     * @var array
+     * @var arrayn setUser
      */
     private static $use_session = [];
 
@@ -205,7 +205,7 @@ class UserPreference
     public function saveUserPreferences(?array $overrideArray = []): self
     {
         $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
-
+        $isSearch = false;
         foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
             $getVariableName = $oneTypeArray['getVariable'];
             if (isset($overrideArray[$type])) {
@@ -217,7 +217,7 @@ class UserPreference
                         $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
                         if ($otherProductGroup) {
                             $newPreference = [
-                                'key' => 'default',
+                                'key' => BaseApplyer::DEFAULT_NAME,
                                 'params' => $otherProductGroup->FilterForGroupSegment(),
                                 'title' => $otherProductGroup->MenuTitle,
                             ];
@@ -225,13 +225,12 @@ class UserPreference
                     }
                 }
                 if ($type === 'SEARCHFILTER') {
-                    if (1 === (int) $newPreference) {
-                        $newPreference = [
-                            'key' => 'default',
-                            'params' => $this->request->getVars(),
-                            'title' => 'Search Results',
-                        ];
-                    }
+                    $isSearch = true;
+                    $newPreference = [
+                        'key' => BaseApplyer::DEFAULT_NAME,
+                        'params' => $newPreference,
+                        'title' => 'Search Results',
+                    ];
                 }
             } else {
                 $newPreference = $this->userPreferences[$type];
@@ -240,7 +239,10 @@ class UserPreference
             //save preference to session
             $this->savePreferenceToSession($type, $newPreference);
         }
-
+        // irrespective of preference for page, use default for SORT in case of SEARCH.
+        if ($isSearch && ! $this->userPreferences['SORT']) {
+            $this->userPreferences['SORT'] = BaseApplyer::DEFAULT_NAME;
+        }
         return $this;
     }
 
@@ -311,7 +313,7 @@ class UserPreference
     /**
      * Unique caching key for the product list...
      */
-    public function ProductGroupListCachingKey(?bool $withPageNumber = false, ?string $additionalKey = ''): string
+    public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         $pageStart = '';
         if ($withPageNumber) {
@@ -331,6 +333,7 @@ class UserPreference
                     serialize($this->getCurrentUserPreferences('GROUPFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('SORT')),
                     serialize($this->getCurrentUserPreferencesKey('FILTER')),
+                    serialize($this->getCurrentUserPreferencesKey('SEARCHFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('DISPLAY')),
                     $pageStart,
                     $additionalKey,
@@ -355,14 +358,19 @@ class UserPreference
                 $secondaryTitle = $this->addToTitle($secondaryTitle);
             }
 
-            if ($this->rootGroupController->IsSearchResults()) {
+            if ($this->rootGroupController->HasSearchFilter()) {
+
                 $count = $this->getFinalProductList()->getRawCount();
 
+                $productString = $string = _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
                 if ($count) {
-                    $toAdd = $count . ' ' . _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                    if($count === 1) {
+                        $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Product Found');
+                    }
+                    $toAdd = $count . ' ' . $productString;
                     $secondaryTitle .= $this->addToTitle($toAdd);
                 } else {
-                    $toAdd = _t('ProductGroup.SEARCH_RESULTS', 'Search Results');
+                    $toAdd = 'No ' . $productString;
                     $secondaryTitle .= $this->addToTitle($toAdd);
                 }
             }
@@ -401,14 +409,17 @@ class UserPreference
     public function standardiseCurrentUserPreferences(string $type, $keyOrArray)
     {
         if (is_array($keyOrArray)) {
-            if (isset($keyOrArray['key'], $keyOrArray['params'], $keyOrArray['title'])) {
+            if($keyOrArray['params'] === null) {
+                $keyOrArray['params'] = [];
+            }
+            if (isset($keyOrArray['key']) && isset($keyOrArray['params']) &&  isset($keyOrArray['title'])) {
                 return $keyOrArray;
             }
             user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
         } else {
             return [
                 'key' => $keyOrArray,
-                'params' => null,
+                'params' => [],
                 'title' => '',
             ];
         }

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use Sunnysideup\Ecommerce\Api\GetVariables;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -9,6 +10,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -35,7 +37,7 @@ use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
-
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 /**
  * Product search form.
  */
@@ -78,33 +80,47 @@ class ProductSearchForm extends Form
      */
     public function __construct($controller, string $name)
     {
-        $this->rawData = $this->request->getVars();
-        $this->extraBuyableFieldsToSearchFullText = Config::inst()->get(static::class, 'extra_buyable_fields_to_search_full_text_default');
         $request = $controller->getRequest();
+        $getVars = $request->requestVars();
+        $searchVar = $this->getVariableContainingSearchParams();
+        $condensedData = $request->getVar($searchVar);
+        unset($getVars[$searchVar]);
+        if ($condensedData) {
+            $data = GetVariables::url_string_to_array($condensedData);
+            $getVars = array_merge($getVars, $data);
+        }
+        $defaults = [];
+        $defaults['Keyword'] = $getVars['Keyword'] ?? '';
+        $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? 0;
+        $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? 0;
+        $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? 0;
         $defaults = [
-            'Keyword' => $request->getVar('Keyword'),
-            'MinimumPrice' => (float) $request->getVar('MinimumPrice'),
-            'MaximumPrice' => (float) $request->getVar('MaximumPrice'),
-            'OnlyThisSection' => ((int) $request->getVar('OnlyThisSection') - 0 ? 1 : 0),
+            'Keyword' => Convert::raw2att($defaults['Keyword']),
+            'MinimumPrice' => (float) str_replace(', ', '', $defaults['MinimumPrice']),
+            'MaximumPrice' => (float) str_replace(', ', '', $defaults['MaximumPrice']),
+            'OnlyThisSection' => (int) $defaults['OnlyThisSection'] ? 1 : 0,
         ];
+        $this->rawData = $defaults;
+
         //fields
         $fields = FieldList::create();
         //turn of security to allow caching of the form:
-        if ($this->config()->get('include_price_filters')) {
-            $fields->push(
-                NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'), $defaults['MinimumPrice'])->setScale(2),
-            );
-            $fields->push(
-                NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'), $defaults['MaximumPrice'])->setScale(2)
-            );
-        }
         $fields->push(
-            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), Convert::raw2att($defaults['Keyword']))
+            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
         );
+        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
+        if ($this->config()->get('include_price_filters')) {
+            $minMaxHolder = CompositeField::create(
+                [
+                    NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'), $defaults['MinimumPrice'])->setScale(2),
+                    NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'), $defaults['MaximumPrice'])->setScale(2),
+                ]
+            )->addExtraClass('min-max-holder');
+            $fields->push($minMaxHolder);
+        }
         $fields->push(
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
         );
-        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
 
         if (Director::isDev() || Permission::check('ADMIN')) {
             $fields->push(CheckboxField::create('DebugSearch', 'Debug Search'));
@@ -202,13 +218,6 @@ class ProductSearchForm extends Form
     {
         $this->saveDataToSession();
         $this->rawData = array_filter($this->rawData);
-        unset($this->rawData['action_doProductSearchForm']);
-        if(floatval($this->rawData['MinimumPrice']) === 0) {
-            unset($this->rawData['MinimumPrice']);
-        }
-        if(floatval($this->rawData['MaximumPrice']) === 0) {
-            unset($this->rawData['MaximumPrice']);
-        }
     }
 
 
@@ -222,17 +231,22 @@ class ProductSearchForm extends Form
         $redirectToPage = $this->getResultsPage();
         $link = $redirectToPage->Link();
         $this->rawData = array_filter($this->rawData);
-        $link .= '?' .
-            $this->controller->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable') . '=1' .
-            '&' . http_build_query($this->rawData);
+        $link .= '?' . $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->rawData);
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
         $this->controller->redirect($link);
     }
+
     //#######################################
     // get-ers
     //#######################################
+
+    protected function getVariableContainingSearchParams() : string
+    {
+        return Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable');
+
+    }
 
     protected function hasOnlyThisSection(): bool
     {

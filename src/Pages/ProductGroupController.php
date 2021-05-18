@@ -20,6 +20,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
@@ -63,13 +64,6 @@ class ProductGroupController extends PageController
      */
     protected $isSearchResults = false;
 
-    /**
-     * Is this a product search?
-     *
-     * @var string
-     */
-    protected $searchResultHash = '';
-
     private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
 
     private static $allowed_actions = [
@@ -86,33 +80,6 @@ class ProductGroupController extends PageController
         return $this->defaultReturn();
     }
 
-    /**
-     * get the search results.
-     *
-     * @param \SilverStripe\Control\HTTPRequest $request
-     */
-    public function searchresults($request)
-    {
-        $this->isSearchResults = true;
-
-        $this->ProductSearchForm()->runFullProcess($this->request->getVars());
-        //set last search results
-        //get results array
-        $keyword = $this->ProductSearchForm()->getLastSearchPhrase();
-        if ($keyword) {
-            $keyword = _t('Ecommerce.SEARCH_FOR', 'search for: ') . substr($keyword, 0, 25);
-        }
-        $ids = $this->ProductSearchForm()->getProductIds();
-        if (! $this->HasSort()) {
-            // set default sort
-            $this->setIdArrayDefaultSort($ids);
-        }
-        $this->getFinalProductList(['ID' => $ids]);
-        //filters are irrelevant right now
-        $this->addSecondaryTitle($keyword);
-
-        return [];
-    }
 
     //##################################
     // template methods
@@ -200,11 +167,14 @@ class ProductGroupController extends PageController
      */
     public function Products(): ?PaginatedList
     {
+        //get the list first, so that everything is calculated
+        $list = $this->getProductList();
+
         $this->addSecondaryTitle();
 
         $this->cachingRelatedJavascript();
 
-        return $this->paginateList($this->getProductList());
+        return $this->paginateList($list);
     }
 
     /**
@@ -213,7 +183,7 @@ class ProductGroupController extends PageController
     public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
     {
         if ($this->ProductGroupListAreCacheable()) {
-            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber, $this->searchResultHash);
+            return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber);
         }
 
         return '';
@@ -328,10 +298,7 @@ class ProductGroupController extends PageController
     public function HasSort(): bool
     {
         if ($this->IsSearchResults()) {
-            return
-                $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT') &&
-                $this->getCurrentUserPreferencesKey('SORT') !== BaseApplyer::DEFAULT_NAME
-            ;
+            return $this->getCurrentUserPreferencesKey('SORT') !== BaseApplyer::DEFAULT_NAME;
         }
         return $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT');
     }
@@ -485,7 +452,7 @@ class ProductGroupController extends PageController
 
     public function getSearchFilterHeader() : string
     {
-        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search');
+        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ' . $this->originalTitle);
     }
 
     public function getGroupFilterHeader() : string
@@ -592,7 +559,7 @@ class ProductGroupController extends PageController
 
     public function searchResultsProductGroupsArray(): array
     {
-        return $this->ProductSearchForm()->getProductGroupIds();
+        return $this->getSearchApplyer()->getProductGroupIds();
     }
 
     /**
@@ -651,7 +618,7 @@ class ProductGroupController extends PageController
      */
     public function HasSearchResults(): bool
     {
-        return $this->ProductSearchForm()->getHasResults();
+        return $this->getSearchApplyer()->getHasResults();
     }
 
     /**
@@ -680,23 +647,10 @@ class ProductGroupController extends PageController
 
     /**
      * Is the current page a display of search results.
-     *
-     * This does not mean that something is actively being search for,
-     * it could also be just "showing the search results"
      */
     public function IsSearchResults(): bool
     {
-        return $this->isSearchResults;
-    }
-
-    /**
-     * Is there something actively being searched for?
-     *
-     * This is different from IsSearchResults.
-     */
-    public function ActiveSearchTerm(): bool
-    {
-        return (bool) $this->request->getVar('Keyword');
+        return $this->HasSearchFilter();
     }
 
     public function saveUserPreferences(?array $data = [])
@@ -744,6 +698,11 @@ class ProductGroupController extends PageController
         }
 
         return $this->finalProductList;
+    }
+
+    public function DebugSearchString() : string
+    {
+        return $this->getSearchApplyer()->getDebugOutputString();
     }
 
     public function DebugMe(string $method)
@@ -863,6 +822,15 @@ class ProductGroupController extends PageController
     protected function IsShowFullList(): bool
     {
         return $this->getUserPreferencesClass()->IsShowFullList();
+    }
+
+    /**
+     *
+     * @return ProductSearchFilter
+     */
+    protected function getSearchApplyer()
+    {
+        return $this->getFinalProductList()->getApplyer('SEARCHFILTER');
     }
 
     protected function defaultReturn()

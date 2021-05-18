@@ -6,6 +6,7 @@
 <li><a href="#BaseList">Base List</a>: the basic list of products available</li>
 <li><a href="#FinalList">Final List</a>: the sorted / filtered list</li>
 <li><a href="#UserDetails">User Specific Details</a></li>
+<li><a href="#Search">Search </a></li>
 </ul>
 
 <% with $getRootGroupController %>
@@ -45,6 +46,7 @@
 
 <h4>Has ... Right Now?</h4>
 <ul>
+<li><strong>Is Search Results:</strong> $DebugMe(IsSearchResults)</li>
 <li><strong>Has Search Filter:</strong> $DebugMe(HasSearchFilter)</li>
 <li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
 <li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
@@ -204,5 +206,9 @@ Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
 </ul>
 <% end_with %>
 
+<hr /><hr /><h2 id="FinalList" style="color: red; padding-top: 2rem">Search</h2><hr />
+<ul>
+<li><strong>Debug:</strong> $DebugSearchString</li>
+</ul>
 
 <% end_with %>

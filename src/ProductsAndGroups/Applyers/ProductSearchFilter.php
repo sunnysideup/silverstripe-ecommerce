@@ -34,13 +34,14 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\Traits\PartialObjectCache;
 use Sunnysideup\Vardump\Vardump;
-
+use Sunnysideup\Ecommerce\Api\GetVariables;
 /**
  * provides data on the user.
  */
 class ProductSearchFilter extends BaseApplyer
 {
     use PartialObjectCache;
+
 
     /**
      * @var string[]
@@ -58,6 +59,13 @@ class ProductSearchFilter extends BaseApplyer
      * @var bool
      */
     protected $debug = false;
+
+    /**
+     * set to TRUE to show the search logic.
+     *
+     * @var string
+     */
+    protected $debugOutputString = '';
 
     /**
      * Fields are:
@@ -133,13 +141,12 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected $baseClassNameForGroups = ProductGroup::class;
 
-    // /**
-    //  * this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html.
-    //  * not used at the moment!
-    //  * @var bool
-    //  */
-    // protected $useBooleanSearch = true;
-
+    /**
+     * this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html.
+     * not used at the moment!
+     * @var bool
+     */
+    protected $useBooleanSearch = true;
 
     /**
      * Maximum number of results to return
@@ -236,14 +243,20 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
+        if ( ! is_array($params)) {
+            $params = GetVariables::url_string_to_array((string) $params);
+        }
         $this->applyStart($key, $params);
         if(is_array($params) && count($params)) {
             $this->rawData = $params;
             $this->runFullProcess();
             $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
-        }
-        if($this->debug) {
-            die('debug');
+            ProductSorter::setDefaultSortOrderFromFilter(
+                ArrayMethods::create_sort_statement_from_id_array(
+                    $this->getProductIds(),
+                    Product::class
+                )
+            );
         }
         $this->applyEnd($key, $params);
 
@@ -279,7 +292,12 @@ class ProductSearchFilter extends BaseApplyer
 
     public function getHasResults(): bool
     {
-        return count($this->getProductIds) && count($this->getProductGroupIds) > 2;
+        return count($this->getProductIds) > 1 || count($this->getProductGroupIds) > 1;
+    }
+
+    public function getDebugOutputString()
+    {
+        return $this->debugOutputString;
     }
 
     //#######################################
@@ -379,6 +397,7 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->baseClassNameForBuyables) {
             $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
+        $this->debug = isset($_GET['showdebug']) && Director::isDev();
 
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results in '.get_class($this).'</h2>');
@@ -510,7 +529,7 @@ class ProductSearchFilter extends BaseApplyer
         if (null === $this->immediateRedirectPage) {
             if ($this->debug) {
                 $this->debugOutput('<hr />');
-                $this->debugOutput('<h3>PRODUCT GROUP SEARCH</h3>');
+                $this->debugOutput('<h3>PRODUCT GROUP SEARCH '.$this->productsForGroups->count().'</h3>');
             }
 
             $count = 0;
@@ -524,18 +543,19 @@ class ProductSearchFilter extends BaseApplyer
             }
 
             foreach ($searches as $search) {
-                $this->productsForGroups = $this->productsForGroups->where($search);
-                $count = $this->productsForGroups->count();
+                $tempGroups = $this->productsForGroups->where($search);
+                $count = $tempGroups->count();
                 //redirect if we find exactly one match and we have no matches so far...
                 if (1 === $count && ! $this->resultArrayPos) {
-                    $this->immediateRedirectPage = $productGroups->First();
+                    $this->immediateRedirectPage = $tempGroups->First();
                 } elseif ($count > 0) {
-                    foreach ($this->productsForGroups as $productGroup) {
+                    foreach ($tempGroups as $productGroup) {
                         //we add them like this because we like to keep them in order!
-                        if (! in_array($productGroup->ID, $this->productGroupIds, true)) {
-                            $this->productGroupIds[] = $productGroup->ID;
-                        }
+                        $this->productGroupIds[$productGroup->ID] = $productGroup->ID;
                     }
+                }
+                if ($this->debug) {
+                    $this->debugOutput('result: ' . $count);
                 }
             }
             if ($this->debug) {
@@ -700,7 +720,7 @@ class ProductSearchFilter extends BaseApplyer
     protected function debugOutput($mixed)
     {
         if($this->debug) {
-            echo Vardump::inst()->mixedToUl($mixed);
+            $this->debugOutputString .=  Vardump::inst()->mixedToUl($mixed);
         }
     }
 
