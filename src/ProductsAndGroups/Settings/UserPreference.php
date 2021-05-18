@@ -376,7 +376,7 @@ class UserPreference
             }
 
             if ($this->rootGroupController->HasGroupFilter()) {
-                $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentFilterTitle());
+                $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentGroupFilterTitle());
             }
 
             if ($this->rootGroupController->HasFilter()) {
@@ -384,7 +384,7 @@ class UserPreference
             }
 
             if ($this->rootGroupController->HasSort()) {
-                $secondaryTitle .= $this->addToTitle($this->rootGroupController->getCurrentSortTitle());
+                $secondaryTitle .= $this->addToTitle(_t('Sunnysideup\\Ecommerce\\ProductsAndGroups\\Settings.SORTED_BY', 'sorted by') . ' ' . $this->rootGroupController->getCurrentSortTitle());
             }
 
             $currentPageNumber = $this->rootGroupController->getCurrentPageNumber();

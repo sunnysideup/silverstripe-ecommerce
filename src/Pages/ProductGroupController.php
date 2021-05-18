@@ -277,7 +277,7 @@ class ProductGroupController extends PageController
 
     public function HasManyProducts(): bool
     {
-        return $this->getFinalProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
+        return $this->getBaseProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
     }
 
     public function HasSearchFilter(): bool
