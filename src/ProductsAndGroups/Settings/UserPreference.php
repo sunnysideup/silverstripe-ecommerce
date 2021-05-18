@@ -458,6 +458,7 @@ class UserPreference
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
                             'Ajaxify' => $ajaxify,
                             'Object' => $group,
+                            'Key' => $key,
                         ]
                     );
                     $list->push($obj);
@@ -477,6 +478,7 @@ class UserPreference
                         'Link' => $this->getLinkTemplate('', $type, $key),
                         'LinkingMode' => $isCurrent ? 'current' : 'link',
                         'Ajaxify' => $ajaxify,
+                        'Key' => $key,
                     ]
                 );
                 $list->push($obj);
