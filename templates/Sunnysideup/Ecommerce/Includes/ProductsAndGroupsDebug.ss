@@ -13,78 +13,77 @@
 <hr /><hr /><h2 id="Controller" style="color: red; padding-top: 2rem">Controller</h2><hr />
 <ul>
 <li><strong>ID:</strong> $ID</li>
-<li><strong>ClassName:</strong> $VardumpClassName</li>
-<li><strong>Raw Product List:</strong> $DebugMe(getProductList)</li>
-<li><strong>Paginated Product List:</strong> $DebugMe(Products)</li>
-<li><strong>Products are Cacheable:</strong> $DebugMe(ProductGroupListAreCacheable)</li>
-<li><strong>Products are Cacheable in general:</strong> $DebugMe(productListsHTMLCanBeCached)</li>
-<li><strong>Products are Ajaxified:</strong> $DebugMe(ProductGroupListAreAjaxified)</li>
-<li><strong>OriginalTitle:</strong> $DebugMe(OriginalTitle)</li>
-<li><strong>Menu Child Categories:</strong> $DebugMe(MenuChildGroups)</li>
+<li><strong>ClassName:</strong> $ClassName</li>
+<li><strong>Raw Product List:</strong> $VardumpMe(getProductList)</li>
+<li><strong>Products are Cacheable:</strong> $VardumpMe(ProductGroupListAreCacheable)</li>
+<li><strong>Products are Cacheable in general:</strong> $VardumpMe(productListsHTMLCanBeCached)</li>
+<li><strong>Products are Ajaxified:</strong> $VardumpMe(ProductGroupListAreAjaxified)</li>
+<li><strong>OriginalTitle:</strong> $VardumpMe(OriginalTitle)</li>
+<li><strong>Menu Child Categories:</strong> $VardumpMe(MenuChildGroups)</li>
 <li><strong>MetaTitle (check for secondary title):</strong> $Title $MenuTitle</li>
 </ul>
 
 <h4>Show Links?</h4>
 <ul>
-<li><strong>Show any sort of filter / sort:</strong> $DebugMe(ShowGroupFilterSortDisplayLinks)</li>
-<li><strong>Show Search Filter Links:</strong> $DebugMe(ShowSearchFilterLinks)</li>
-<li><strong>Show Group Filter Links:</strong> $DebugMe(ShowGroupFilterLinks)</li>
-<li><strong>Show Filters Links:</strong> $DebugMe(ShowFilterLinks)</li>
-<li><strong>Show Sort Links:</strong> $DebugMe(ShowSortLinks)</li>
-<li><strong>Show Display Links:</strong> $DebugMe(ShowDisplayLinks)</li>
-<li><strong>Has Many Products:</strong> $DebugMe(HasManyProducts)</li>
+<li><strong>Show any sort of filter / sort:</strong> $VardumpMe(ShowGroupFilterSortDisplayLinks)</li>
+<li><strong>Show Search Filter Links:</strong> $VardumpMe(ShowSearchFilterLinks)</li>
+<li><strong>Show Group Filter Links:</strong> $VardumpMe(ShowGroupFilterLinks)</li>
+<li><strong>Show Filters Links:</strong> $VardumpMe(ShowFilterLinks)</li>
+<li><strong>Show Sort Links:</strong> $VardumpMe(ShowSortLinks)</li>
+<li><strong>Show Display Links:</strong> $VardumpMe(ShowDisplayLinks)</li>
+<li><strong>Has Many Products:</strong> $VardumpMe(HasManyProducts)</li>
 </ul>
 
 <h4>Has ... Available?</h4>
 <ul>
-<li><strong>Has Search Filters:</strong> $DebugMe(HasSearchFilters)</li>
-<li><strong>Has Group Filters:</strong> $DebugMe(HasGroupFilters)</li>
-<li><strong>Has Filters:</strong> $DebugMe(HasFilters)</li>
-<li><strong>Has Sorts:</strong> $DebugMe(HasSorts)</li>
-<li><strong>Has Displays:</strong> $DebugMe(HasDisplays)</li>
+<li><strong>Has Search Filters:</strong> $VardumpMe(HasSearchFilters)</li>
+<li><strong>Has Group Filters:</strong> $VardumpMe(HasGroupFilters)</li>
+<li><strong>Has Filters:</strong> $VardumpMe(HasFilters)</li>
+<li><strong>Has Sorts:</strong> $VardumpMe(HasSorts)</li>
+<li><strong>Has Displays:</strong> $VardumpMe(HasDisplays)</li>
 </ul>
 
 <h4>Has ... Right Now?</h4>
 <ul>
-<li><strong>Is Search Results:</strong> $DebugMe(IsSearchResults)</li>
-<li><strong>Has Search Filter:</strong> $DebugMe(HasSearchFilter)</li>
-<li><strong>Has Group Filter:</strong> $DebugMe(HasGroupFilter)</li>
-<li><strong>Has Filter:</strong> $DebugMe(HasFilter)</li>
-<li><strong>Has Sort:</strong> $DebugMe(HasSort)</li>
-<li><strong>Has Display:</strong> $DebugMe(HasDisplay)</li>
-<li><strong>Has Any Sort of Filter / Sort:</strong> $DebugMe(HasGroupFilterSortDisplay)</li>
+<li><strong>Is Search Results:</strong> $VardumpMe(IsSearchResults)</li>
+<li><strong>Has Search Filter:</strong> $VardumpMe(HasSearchFilter)</li>
+<li><strong>Has Group Filter:</strong> $VardumpMe(HasGroupFilter)</li>
+<li><strong>Has Filter:</strong> $VardumpMe(HasFilter)</li>
+<li><strong>Has Sort:</strong> $VardumpMe(HasSort)</li>
+<li><strong>Has Display:</strong> $VardumpMe(HasDisplay)</li>
+<li><strong>Has Any Sort of Filter / Sort:</strong> $VardumpMe(HasGroupFilterSortDisplay)</li>
 </ul>
 
 <h4>Pagination and Counts</h4>
 <ul>
-<li><strong>Number of products</strong> $DebugMe(TotalCount)</li>
-<li><strong>Current Page Number</strong> $DebugMe(getCurrentPageNumber)</li>
-<li><strong>Number of Products per Page</strong> $DebugMe(getProductsPerPage)</li>
-<li><strong>IsShowFullList</strong> $DebugMe(IsShowFullList)</li>
-<li><strong>Absolute Max Number Of Products Per Page</strong> $DebugMe(MaxNumberOfProductsPerPage)</li>
+<li><strong>Number of products</strong> $VardumpMe(TotalCount)</li>
+<li><strong>Current Page Number</strong> $VardumpMe(getCurrentPageNumber)</li>
+<li><strong>Number of Products per Page</strong> $VardumpMe(getProductsPerPage)</li>
+<li><strong>IsShowFullList</strong> $VardumpMe(IsShowFullList)</li>
+<li><strong>Absolute Max Number Of Products Per Page</strong> $VardumpMe(MaxNumberOfProductsPerPage)</li>
 </ul>
 
 <h4>Preferences</h4>
 <ul>
-<li><strong>Current Search Filter Title</strong> $DebugMe(getCurrentSearchFilterTitle)</li>
-<li><strong>Current Group Filter Title</strong> $DebugMe(getCurrentGroupFilterTitle)</li>
-<li><strong>Current Filter Title</strong> $DebugMe(getCurrentFilterTitle)</li>
-<li><strong>Current Sort Title</strong> $DebugMe(getCurrentSortTitle)</li>
-<li><strong>Current Display Title</strong> $DebugMe(getCurrentDisplayTitle)</li>
-<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
+<li><strong>Current Search Filter Title</strong> $VardumpMe(getCurrentSearchFilterTitle)</li>
+<li><strong>Current Group Filter Title</strong> $VardumpMe(getCurrentGroupFilterTitle)</li>
+<li><strong>Current Filter Title</strong> $VardumpMe(getCurrentFilterTitle)</li>
+<li><strong>Current Sort Title</strong> $VardumpMe(getCurrentSortTitle)</li>
+<li><strong>Current Display Title</strong> $VardumpMe(getCurrentDisplayTitle)</li>
+<li><strong>Default Display</strong> $VardumpMe(MyDefaultDisplayStyle)</li>
 </ul>
 
 <h4>Links</h4>
 <ul>
-<li><strong>Current Link</strong> $DebugMe(Link)</li>
-<li><strong>Search Filter Links</strong> $DebugMe(SearchFilterLinks)</li>
-<li><strong>Group Filter Links</strong> $DebugMe(GroupFilterLinks)</li>
-<li><strong>Filter Links</strong> $DebugMe(FilterLinks)</li>
-<li><strong>Sort Links</strong> $DebugMe(SortLinks)</li>
-<li><strong>Display Links</strong> $DebugMe(DisplayLinks)</li>
-<li><strong>Default Display</strong> $DebugMe(MyDefaultDisplayStyle)</li>
-<li><strong>ListAFewLink</strong> $DebugMe(ListAFewLink)</li>
-<li><strong>ListAllLink</strong> $DebugMe(ListAllLink)</li>
+<li><strong>Current Link</strong> $VardumpMe(Link)</li>
+<li><strong>Search Filter Links</strong> $VardumpMe(SearchFilterLinks)</li>
+<li><strong>Group Filter Links</strong> $VardumpMe(GroupFilterLinks)</li>
+<li><strong>Filter Links</strong> $VardumpMe(FilterLinks)</li>
+<li><strong>Sort Links</strong> $VardumpMe(SortLinks)</li>
+<li><strong>Display Links</strong> $VardumpMe(DisplayLinks)</li>
+<li><strong>Default Display</strong> $VardumpMe(MyDefaultDisplayStyle)</li>
+<li><strong>ListAFewLink</strong> $VardumpMe(ListAFewLink)</li>
+<li><strong>ListAllLink</strong> $VardumpMe(ListAllLink)</li>
 </ul>
 
 
@@ -95,21 +94,21 @@
 <ul>
     <li><strong>ID:</strong> $ID</li>
     <li><strong>ClassName:</strong> $VardumpClassName</li>
-    <li><strong>Number of Products Per Page:</strong> $DebugMe(getProductsPerPage)</li>
-    <li><strong>Levels of product child groups to show:</strong> $DebugMe(getMyLevelOfProductsToShow)</li>
-    <li><strong>Filter for segment:</strong> $DebugMe(FilterForGroupSegment)</li>
-    <li><strong>Search Link</strong> $DebugMe(SearchResultLink)</li>
-    <li><strong>Also Show Product Array:</strong> $DebugMe(getProductsToBeIncludedFromOtherGroupsArray)</li>
-    <li><strong>ParentGroup:</strong> $DebugMe(ParentGroup)</li>
-    <li><strong>Image:</strong> $DebugMe(Image)</li>
-    <li><strong>Best Available Image (recursive):</strong> $DebugMe(BestAvailableImage)</li>
-    <li><strong>Number of Direct Products:</strong> $DebugMe(getNumberOfProducts)</li>
-    <li><strong>getSortFilterDisplayValues:</strong> $DebugMe(getSortFilterDisplayValues)</li>
-    <li><strong>getBuyableClassName:</strong> $DebugMe(getBuyableClassName)</li>
-    <li><strong>getProductsAlsoInOtherGroups:</strong> $DebugMe(getProductsAlsoInOtherGroups)</li>
-    <li><strong>Child Categories (based on products):</strong> $DebugMe(ChildCategoriesBasedOnProducts)</li>
-    <li><strong>Child Categories (based on hierarchy):</strong> $DebugMe(ChildCategories)</li>
-    <li><strong>Show Levels:</strong> $DebugMe(getShowProductLevelsArray)</li>
+    <li><strong>Number of Products Per Page:</strong> $VardumpMe(getProductsPerPage)</li>
+    <li><strong>Levels of product child groups to show:</strong> $VardumpMe(getMyLevelOfProductsToShow)</li>
+    <li><strong>Filter for segment:</strong> $VardumpMe(FilterForGroupSegment)</li>
+    <li><strong>Search Link</strong> $VardumpMe(SearchResultLink)</li>
+    <li><strong>Also Show Product Array:</strong> $VardumpMe(getProductsToBeIncludedFromOtherGroupsArray)</li>
+    <li><strong>ParentGroup:</strong> $VardumpMe(ParentGroup)</li>
+    <li><strong>Image:</strong> $VardumpMe(Image)</li>
+    <li><strong>Best Available Image (recursive):</strong> $VardumpMe(BestAvailableImage)</li>
+    <li><strong>Number of Direct Products:</strong> $VardumpMe(getNumberOfProducts)</li>
+    <li><strong>getSortFilterDisplayValues:</strong> $VardumpMe(getSortFilterDisplayValues)</li>
+    <li><strong>getBuyableClassName:</strong> $VardumpMe(getBuyableClassName)</li>
+    <li><strong>getProductsAlsoInOtherGroups:</strong> $VardumpMe(getProductsAlsoInOtherGroups)</li>
+    <li><strong>Child Categories (based on products):</strong> $VardumpMe(ChildCategoriesBasedOnProducts)</li>
+    <li><strong>Child Categories (based on hierarchy):</strong> $VardumpMe(ChildCategories)</li>
+    <li><strong>Show Levels:</strong> $VardumpMe(getShowProductLevelsArray)</li>
 </ul>
 <% end_with %>
 
@@ -140,6 +139,7 @@ Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
     <li><strong>List of level options:</strong> $getShowProductLevelsArray</li>
     <li><strong>Excluded Products 1:</strong> $getExcludedProducts</li>
     <li><strong>Excluded Products 2:</strong> $getBlockedProductIds</li>
+    <li><strong>Product Count:</strong> $getProductIds</li>
 </ul>
 <h3>Products</h3>
 <ul>

@@ -84,7 +84,7 @@ class ProductSorter extends BaseApplyer
             return self::$defaultSortOrderFromFilter;
         }
         // @todo: make smarter...
-        if (is_array($params)) {
+        if (is_array($params) && count ($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
 

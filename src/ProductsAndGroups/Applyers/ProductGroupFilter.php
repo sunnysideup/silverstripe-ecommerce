@@ -28,9 +28,9 @@ class ProductGroupFilter extends BaseApplyer
     ];
 
     /**
-     * @param string $segment expected format: my-product-category,123 (URLSegment, ID)
+     * @param string|null $getVar expected format: my-product-category.123 (URLSegment.ID)
      */
-    public static function get_group_from_get_variable(?string $getVar): ?ProductGroup
+    public static function get_group_from_get_variable(?string $getVar = null): ?ProductGroup
     {
         if (! $getVar) {
             return null;
@@ -96,12 +96,18 @@ class ProductGroupFilter extends BaseApplyer
     }
 
     /**
-     * @param string $filter
+     * @param string|array|null $filter
      *
      * @return ProductGroup
      */
-    protected function findGroup(?string $filter)
+    protected function findGroup($filter)
     {
+        if(empty($filter)) {
+            $filter = '';
+        }
+        if(is_array($filter)) {
+                $filter = array_flush($filter);
+        }
         return self::get_group_from_get_variable($filter);
     }
 }

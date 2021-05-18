@@ -7,6 +7,7 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+use Sunnysideup\Vardump\Vardump;
 
 /**
  * A wrapper for a paginated of products which can be filtered and sorted.
@@ -122,11 +123,13 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public function apply(string $classNameOrType, string $key, $params = null): self
     {
         $obj = $this->getApplyer($classNameOrType);
+        //Vardump::now(get_class($obj));
 
         $this->products = $obj
             ->apply($key, $params)
             ->getProducts()
         ;
+        //Vardump::now($this->products);
 
         return $this;
     }

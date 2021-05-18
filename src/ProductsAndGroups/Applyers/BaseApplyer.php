@@ -122,9 +122,42 @@ abstract class BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
+        if(empty($params)) {
+            $params = null;
+        }
         $sql = $this->checkOption($key);
+        if(is_array($sql)) {
+            if (count($sql)) {
+                foreach($sql as $key => $item) {
+                    $sql[$key] = $this->sqlPlaceholderReplacer($item, $params);
+                }
+            }
+        } else {
+            $sql = $this->sqlPlaceholderReplacer($sql, $params);
+        }
+        return $sql;
+    }
 
-        return str_replace(self::SQL_PARAM_PLACEHOLDER, $params, $sql);
+    /**
+     * get the sql for an option.
+     *
+     * @param string       $key    string, e.g. default.
+     * @param array|string $params additional param for sql
+     *
+     * @return array|string
+     */
+    protected function sqlPlaceholderReplacer(string $sql, $params = null)
+    {
+        if (! empty ($params)) {
+            if(! is_array($params)) {
+                $params = [$params];
+            }
+            foreach($params as $param) {
+                $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);
+            }
+        }
+        return $sql;
+
     }
 
     /**

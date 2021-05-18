@@ -705,11 +705,9 @@ class ProductGroupController extends PageController
         return $this->getSearchApplyer()->getDebugOutputString();
     }
 
-    public function DebugMe(string $method)
+    public function VardumpMe(string $method)
     {
-        if (Vardump::inst()->isSafe()) {
-            return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
-        }
+        return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
     }
 
     protected function afterHandleRequest()
