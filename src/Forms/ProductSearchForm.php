@@ -16,6 +16,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -110,13 +111,21 @@ class ProductSearchForm extends Form
         );
         $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         if ($this->config()->get('include_price_filters')) {
-            $minMaxHolder = CompositeField::create(
-                [
-                    NumericField::create('MinimumPrice', _t('ProductSearchForm.MINIMUM_PRICE', 'Minimum Price'), $defaults['MinimumPrice'])->setScale(2),
-                    NumericField::create('MaximumPrice', _t('ProductSearchForm.MAXIMUM_PRICE', 'Maximum Price'), $defaults['MaximumPrice'])->setScale(2),
-                ]
-            )->addExtraClass('min-max-holder');
-            $fields->push($minMaxHolder);
+            $fields->push(
+                CompositeField::create(
+                    LiteralField::create('PriceHeader', '<label class="left">'._t('ProductSearchForm.PRICE_RANGE', 'Price Range').'</label>'),
+                    CompositeField::create(
+                        NumericField::create('MinimumPrice', '$', $defaults['MinimumPrice'])->setScale(2)->setAttribute('placeholder', 'Min'),
+                        LiteralField::create('PriceSeparator', '<label class="separator">'._t('ProductSearchForm.TO', 'To').'</label>'),
+                        NumericField::create('MaximumPrice', '$', $defaults['MaximumPrice'])->setScale(2)->setAttribute('placeholder', 'Max')
+                    )
+                        ->setName('PriceRangeInner')
+                        ->addExtraClass('min-max-inner')
+                )
+                    ->setName('PriceRange')
+                    ->addExtraClass('min-max-holder')
+            );
+
         }
         $fields->push(
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])

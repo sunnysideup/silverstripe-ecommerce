@@ -450,7 +450,7 @@ class UserPreference
     {
         $options = $this->getOptions($type);
         $actions = $this->getActions($type);
-        $optionA = $actions && $options && ($actions->count() * count($options) > 1);
+        $IsGroupSegmentStyle = $actions && $options && ($actions->count() * count($options) > 1);
         $optionB = count($options);
         $list = new ArrayList();
         if ($optionA) {
