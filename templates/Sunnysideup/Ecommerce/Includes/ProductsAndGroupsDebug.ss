@@ -25,7 +25,7 @@
 <% with $getRootGroupController %>
 <hr /><hr /><h2 id="Controller" style="color: red; padding-top: 2rem">Controller</h2><hr />
 <ul>
-<li><strong>ID:</strong>                <div class="answer">$ID</div></div></li>
+<li><strong>ID:</strong> <div class="answer">$ID</div></div></li>
 <li><strong>ClassName:</strong> <div class="answer">$ClassName</div></li>
 <li><strong>Raw Product List:</strong> <div class="answer">$VardumpMe(getProductList)</div></li>
 <li><strong>Products are Cacheable:</strong> <div class="answer">$VardumpMe(ProductGroupListAreCacheable)</div></li>

@@ -450,10 +450,10 @@ class UserPreference
     {
         $options = $this->getOptions($type);
         $actions = $this->getActions($type);
-        $IsGroupSegmentStyle = $actions && $options && ($actions->count() * count($options) > 1);
-        $optionB = count($options);
+        $isGroupSegmentStyle = $actions && $options && ($actions->count() * count($options) > 1);
+        $isNonGroupSegmentStyle = count($options) > 1;
         $list = new ArrayList();
-        if ($optionA) {
+        if ($isGroupSegmentStyle) {
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesParams($type);
             }
@@ -475,7 +475,7 @@ class UserPreference
                     $list->push($obj);
                 }
             }
-        } elseif ($optionB) {
+        } elseif ($isNonGroupSegmentStyle) {
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesKey($type);
             }
