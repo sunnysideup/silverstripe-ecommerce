@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -358,7 +359,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         $classes = [];
         $class = get_parent_class($class);
         while ($class && DataObject::class !== $class) {
-            $classes[] = strtolower($class);
+            $classes[] = strtolower(ClassInfo::shortName($class));
             $class = get_parent_class($class);
         }
         if (is_a($this, EcommerceConfigClassNames::getName(OrderItem::class))) {
