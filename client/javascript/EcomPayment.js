@@ -5,7 +5,7 @@
 
 ;
 if(
-    (document.getElementById("PaymentMethod") !== null && typeof document.getElementById("PaymentMethod") !== "undefined")
+    (document.getElementById("OrderForm_OrderForm_PaymentMethod") !== null && typeof document.getElementById("OrderForm_OrderForm_PaymentMethod") !== "undefined")
 ) {
     (function(jQuery){
         jQuery(document).ready(
@@ -19,9 +19,9 @@ if(
 
     var EcomPayment = {
 
-        paymentInputsSelectorParent: '#PaymentMethod',
+        paymentInputsSelectorParent: '#OrderForm_OrderForm_PaymentMethod',
 
-        paymentInputsSelector: '#PaymentMethod input[type=radio]',
+        paymentInputsSelector: '#OrderForm_OrderForm_PaymentMethod input[type=radio]',
 
         paymentFieldSelector: 'div.paymentfields',
 
@@ -29,6 +29,7 @@ if(
 
         init: function () {
             EcomPayment.ecomForm = jQuery(EcomPayment.paymentInputsSelector).closest('form');
+            console.log(EcomPayment.ecomForm);
             var paymentInputs = jQuery(EcomPayment.paymentInputsSelector);
             var methodFields = jQuery(EcomPayment.paymentFieldSelector);
 
