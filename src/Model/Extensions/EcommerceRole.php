@@ -683,14 +683,19 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             if (empty($updatePasswordLinkField)) {
                 $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '');
             }
+
+            $loginDetailsField = CompositeField::create();
+            $loginDetailsField->setName('LoginDetails');
+            $loginDetailsField->push($loginDetailsHeader);
+            $loginDetailsField->push($loginDetailsDescription);
+            $loginDetailsField->push($updatePasswordLinkField);
+            $loginDetailsField->push($passwordField);
+
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
                 new TextField('Surname', _t('EcommerceRole.SURNAME', 'Surname')),
                 new EmailField('Email', _t('EcommerceRole.EMAIL', 'Email')),
-                $loginDetailsHeader,
-                $loginDetailsDescription,
-                $updatePasswordLinkField,
-                $passwordField
+                $loginDetailsField,
             );
 
             if ($passwordDoubleCheckField) {
