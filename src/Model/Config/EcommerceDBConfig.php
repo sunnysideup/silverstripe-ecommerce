@@ -6,6 +6,8 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
@@ -740,14 +742,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function DefaultImageLink(): string
     {
+
         if ($this->DefaultProductImageID) {
             $defaultImage = $this->DefaultProductImage();
             if ($defaultImage && $defaultImage->exists()) {
                 return $defaultImage->Link();
             }
         }
-
-        return 'ecommerce/images/productPlaceHolderThumbnail.gif';
+        return ModuleResourceLoader::resourceURL('sunnysideup/ecommerce: client/images/productPlaceHolderThumbnail.gif');
     }
 
     /**
