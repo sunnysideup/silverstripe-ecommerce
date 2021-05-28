@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\HeaderField;
@@ -276,7 +277,7 @@ class ShippingAddress extends OrderAddress
             $shippingFields->push(new TextField('ShippingPhone', _t('ShippingAddress.PHONE', 'Phone')));
             $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
             if (is_array($mappingArray) && count($mappingArray)) {
-                if (! class_exists('GoogleAddressField')) {
+                if (! class_exists(GoogleAddressField::class)) {
                     user_error('You must install the Sunny Side Up google_address_field module OR remove entries from: ShippingAddress.fields_to_google_geocode_conversion');
                 }
                 $shippingFields->push(
@@ -291,11 +292,11 @@ class ShippingAddress extends OrderAddress
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             }
 
-            $shippingFields->push(new TextField(ShippingAddress::class, _t('ShippingAddress.ADDRESS', 'Address')));
-            $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', '')));
+            $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
+            $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', 'Address Line 2')));
             $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
-            $shippingFields->push($this->getRegionField('ShippingRegionID', 'ShippingRegionCode'));
             $shippingFields->push($this->getPostalCodeField('ShippingPostalCode'));
+            $shippingFields->push($this->getRegionField('ShippingRegionID', 'ShippingRegionCode'));
             $shippingFields->push($this->getCountryField('ShippingCountry'));
             $this->makeSelectedFieldsReadOnly($shippingFields);
             $shippingFieldsHeader->addExtraClass('shippingFieldsHeader');

@@ -207,17 +207,17 @@ class OrderFormAddress extends Form
         $leftFieldsMember->addExtraClass('leftOrderMember');
 
         //creating shipping fields holder
-        $leftFieldsShipping = CompositeField::create($addressFieldsShipping);
+        $leftFieldsShipping = CompositeField::create($addressFieldsShipping)->setName('ShippingFields');
         $leftFieldsShipping->addExtraClass('leftOrderShipping');
 
         //creating billing fields holder
-        $leftFieldsBilling = CompositeField::create($addressFieldsBilling);
+        $leftFieldsBilling = CompositeField::create($addressFieldsBilling)->setName('BillingxFields');
         $leftFieldsBilling->addExtraClass('leftOrderBilling');
 
         //adding member fields ...
         $allLeftFields->push($leftFieldsMember);
         if ($useShippingAddressField) {
-            $leftFieldsShippingOptions = CompositeField::create($useShippingAddressField);
+            $leftFieldsShippingOptions = CompositeField::create($useShippingAddressField)->setName('ShippingAddressSelector');
             $leftFieldsShippingOptions->addExtraClass('leftOrderShippingOptions');
             $allLeftFields->push($leftFieldsShippingOptions);
         }
