@@ -178,13 +178,27 @@ abstract class OrderEmail extends Email
     /**
      * converts an Email to A Varchar.
      *
-     * @param string $email - email address
+     * @param string|array $email - email address
      *
      * @return string - returns email address without &gt; and &lt;
      */
     public function emailToVarchar($email)
     {
-        return str_replace(['<', '>', '"', "'"], ' - ', $email);
+        $emailString = '';
+        if(is_string($email)){
+            $emailString = $email;
+        }
+        else if(is_array($email)){
+            $count = 0;
+            foreach ($email as $address) {
+                if($count){
+                    $emailString .= ', ';
+                }
+                $emailString .= $address;
+                $count++;
+            }
+        }
+        return str_replace(['<', '>', '"', "'"], ' - ', $emailString);
     }
 
     /**

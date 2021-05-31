@@ -60,7 +60,6 @@ class OrderConfirmationPageController extends CartPageController
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
         if (isset($_REQUEST['print'])) {
             Requirements::clear();
-            Requirements::themedCSS('client/css/typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/Order_Invoice'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/Order_Invoice_Print_Only', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -73,7 +72,6 @@ class OrderConfirmationPageController extends CartPageController
         }
         if (isset($_REQUEST['packingslip'])) {
             Requirements::clear();
-            Requirements::themedCSS('client/css/typography'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/Order_PackingSlip'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Config::nest();
