@@ -1886,7 +1886,7 @@ class Order extends DataObject implements EditableEcommerceObject
     ) {
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         Config::nest();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        Config::modify()->set(SSViewer::class, 'theme_enabled', true);
         $html = $arrayData->RenderWith($emailClassName);
         Config::unnest();
 

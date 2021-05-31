@@ -253,4 +253,20 @@ abstract class OrderEmail extends Email
 
         return $orderEmailRecord;
     }
+
+    /**
+
+     * Render the email
+     * @param bool $plainOnly Only render the message as plain text
+     * @return $this
+     */
+    public function render($plainOnly = false)
+    {
+        parent::render($plainOnly);
+        //moves CSS to inline CSS in email.
+        if (!$plainOnly) {
+            $this->body = $this->body ? self::emogrify_html($this->body) : '';
+        }
+    }
+
 }
