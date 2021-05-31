@@ -3817,14 +3817,12 @@ class Order extends DataObject implements EditableEcommerceObject
                 $email->setBcc($bcc);
             }
 
-            foreach ($arrayData as $key => $value) {
-                $email->addData($key, $value);
-            }
+            $email->setData($arrayData);
             // This might be called from within the CMS,
             // so we need to restore the theme, just in case
             // templates within the theme exist
             Config::nest();
-            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+            Config::modify()->set(SSViewer::class, 'theme_enabled', true);
             $email->setOrder($this);
             $email->setResend($resend);
             $result = $email->send(null);
