@@ -85,7 +85,7 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersAroundDateFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersFromDateFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersHasBeenCancelledFilter;
-use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddress;
+use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddressFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersUntilDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
@@ -434,7 +434,7 @@ class Order extends DataObject implements EditableEcommerceObject
         ],
         'MemberID' => [
             'field' => TextField::class,
-            'filter' => OrderFiltersMemberAndAddress::class,
+            'filter' => OrderFiltersMemberAndAddressFilter::class,
             'title' => 'Customer Details',
         ],
         'LastEdited' => [
