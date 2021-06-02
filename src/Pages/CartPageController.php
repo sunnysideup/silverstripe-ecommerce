@@ -414,7 +414,7 @@ class CartPageController extends PageController
                     $this->LoginToOrderLinkLabel = _t('CartPage.LOGINFIRST', 'You will need to log in before you can access the requested order order. ');
                 }
                 $messages = [
-                    'default' => '<p class="message good">' . $this->LoginToOrderLinkLabel . '</p>',
+                    'default' => DBField::create_field('HTMLText', '<p class="message good">' . $this->LoginToOrderLinkLabel . '</p>'),
                     'logInAgain' => _t('CartPage.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
                 ];
                 Security::permissionFailure($this, $messages);
