@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
@@ -16,6 +17,7 @@ abstract class BaseApplyer
 {
     use Injectable;
     use Configurable;
+    use Extensible;
 
     /**
      * @var string
