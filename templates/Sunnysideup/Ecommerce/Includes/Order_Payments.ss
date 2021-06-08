@@ -15,10 +15,10 @@
     <tbody>
     <% loop RelevantPayments %>
         <tr>
-            <td class="center">$LastEdited.Format('dd-MM-y HH:mm')</td>
+            <td class="center">$LastEdited.Format('dd-MM-y HH:mm') $ID</td>
             <td class="center">$Status</td>
             <td class="center">$PaymentMethod.XML</td>
-            <td class="left"><% if $Message.NoHTML.XML %>$Message.NoHTML.XML<% else %>&nbsp;<% end_if %></td>
+            <td class="left"><% if $Message.Plain %>$Message.Plain.RAW<% else %>&nbsp;<% end_if %></td>
             <td class="right">$Amount.NiceDefaultFormat</td>
         </tr>
     <% end_loop %>
