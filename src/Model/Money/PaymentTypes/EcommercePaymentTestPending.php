@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -42,11 +43,11 @@ class EcommercePaymentTestPending extends EcommercePaymentTest
 
     /**
      * @param array     $data The form request data - see OrderForm
-     * @param OrderForm $form The form object submitted on
+     * @param Form $form The form object submitted on
      *
      * @return EcommercePaymentProcessing
      */
-    public function processPayment($data, OrderForm $form)
+    public function processPayment($data, Form $form)
     {
         $this->Status = 'Pending';
         $this->Message = '<div>PAYMENT TEST: PENDING</div>';

@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\OptionsetField;
@@ -570,10 +571,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * By default it returns true, because lots of payments gatewawys
      * do not have any fields required here.
      *
+     * This function can be called from either an OrderForm (standard checkout) or OrderFormPayment (order confirmation page, eg first payment failed)
+     *
      * @param array     $data The form request data - see OrderForm
-     * @param OrderForm $form The form object submitted on
+     * @param Form $form The form object submitted on
      */
-    public function validatePayment($data, OrderForm $form)
+    public function validatePayment($data, Form $form)
     {
         return true;
     }
@@ -585,13 +588,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * off to the payment gateway on this function for
      * your payment subclass.
      *
-     * This is used by {@link OrderForm} when it is
-     * submitted.
+     * * This function can be called from either an OrderForm (standard checkout) or OrderFormPayment (order confirmation page, eg first payment failed)
      *
      * @param array     $data The form request data - see OrderForm
-     * @param OrderForm $form The form object submitted on
+     * @param Form $form The form object submitted on
      */
-    public function processPayment($data, OrderForm $form)
+    public function processPayment($data, Form $form)
     {
         user_error("Please implement processPayment() on {$this->ClassName}", E_USER_ERROR);
     }

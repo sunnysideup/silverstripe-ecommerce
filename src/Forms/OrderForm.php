@@ -251,7 +251,7 @@ class OrderForm extends Form
         }
         //there is an error with payment
         if (! Controller::curr()->redirectedTo()) {
-            $this->controller->redirect($order->getRequestHandler()->getRequestHandler()->getRequestHandler()->getRequestHandler()->Link());
+            $this->controller->redirect($order->Link());
         }
 
         return false;
