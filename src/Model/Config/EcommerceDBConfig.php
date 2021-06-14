@@ -486,6 +486,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $self = $this;
         $self->beforeUpdateCMSFields(
             function ($fields) use ($self) {
+                //important - first remove fields with custom labels before adding them again,
+                //otherwise there will be a server error when attempting to save
+                foreach ($self->customFieldLabels() as $name => $label) {
+                    $fields->removeByName($name);
+                }
+
                 //new section
                 $fieldDescriptions = $self->customDescriptionsForFields();
                 $fieldLabels = $self->fieldLabels();
