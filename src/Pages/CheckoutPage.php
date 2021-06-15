@@ -390,7 +390,7 @@ class CheckoutPage extends CartPage
         $title = _t('CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES', 'Messages relating to order form extras (e.g. tax or shipping)');
         $source = OrderModifierDescriptor::get();
 
-        return new GridField(OrderModifierDescriptor::class, $title, $source, $gridFieldConfig);
+        return new GridField('OrderModifierDescriptor', $title, $source, $gridFieldConfig);
     }
 
     /**
@@ -408,6 +408,6 @@ class CheckoutPage extends CartPage
         $title = _t('CheckoutPage.CHECKOUTSTEPESCRIPTIONS', 'Checkout Step Descriptions');
         $source = CheckoutPageStepDescription::get();
 
-        return new GridField(CheckoutPageStepDescription::class, $title, $source, $gridFieldConfig);
+        return new GridField('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
     }
 }
