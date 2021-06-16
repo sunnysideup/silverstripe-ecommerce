@@ -25,9 +25,9 @@ class EcommerceCMSButtonField extends LiteralField
                         <label class="form__field-label"></label>
                         <div class="form__field-holder">
                             <p class="form-control-static readonly">
-                                <a href="' . {$link} . '" ' . {$target} . ' class="btn action btn-outline-primary">
+                                <a href="{$link}" {$target} class="btn action btn-outline-primary">
                                     <span class="ui-button-text">
-                                        ' . {$title} . '
+                                        {$title}
                                     </span>
                                 </a>
                             </p>
