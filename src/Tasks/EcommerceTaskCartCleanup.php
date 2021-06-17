@@ -245,7 +245,7 @@ class EcommerceTaskCartCleanup extends BuildTask
 
         $oldCarts = Order::get()
             ->where($where . $this->withoutMemberWhere)
-            ->this->sort($this->sort)
+            ->sort($this->sort)
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
