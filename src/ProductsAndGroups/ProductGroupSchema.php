@@ -184,7 +184,7 @@ class ProductGroupSchema
             return true;
         }
         if ($showError) {
-            user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY');
+            user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY / SEARCHFILTER');
         }
 
         return false;

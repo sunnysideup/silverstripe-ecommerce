@@ -50,6 +50,11 @@ class ProductSearchForm extends Form
      * @var array
      */
     protected $rawData = [];
+    /**
+     *
+     * @var array
+     */
+    protected $cleanedData = [];
 
     /**
      * a product group that creates the base list.
@@ -216,6 +221,7 @@ class ProductSearchForm extends Form
 
     public function doProductSearchForm($data, $form)
     {
+        $this->rawData = $data;
         $this->rawData['Keyword'] = $data['Keyword'] ?? '';
         $this->rawData['Keyword'] = ProductSearchFilter::keyword_sanitised($this->rawData['Keyword']);
         SearchHistory::add_entry($this->rawData['Keyword']);
@@ -227,6 +233,12 @@ class ProductSearchForm extends Form
     {
         $this->saveDataToSession();
         $this->rawData = array_filter($this->rawData);
+        foreach($this->Fields()->dataFields() as $field) {
+            $name = $field->getName();
+            if (! empty($this->rawData[$name])) {
+                $this->cleanedData[$name] = $this->rawData[$name];
+            }
+        }
     }
 
 
@@ -237,15 +249,19 @@ class ProductSearchForm extends Form
     {
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
-        $redirectToPage = $this->getResultsPage();
-        $link = $redirectToPage->Link();
-        $this->rawData = array_filter($this->rawData);
-        $link .= '?' . $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->rawData);
+        $link = $this->getResultsPageLink();
+        if(!strpos('?', $link)) {
+            $link .= '?';
+        } else {
+            $link .= '&';
+        }
+        $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
         $this->controller->redirect($link);
     }
+
 
     //#######################################
     // get-ers
@@ -285,6 +301,13 @@ class ProductSearchForm extends Form
         return $this->controller->dataRecord;
     }
 
+
+    protected function getResultsPageLink() : string
+    {
+        $redirectToPage = $this->getResultsPage();
+
+        return $redirectToPage->Link();
+    }
 
 
 }

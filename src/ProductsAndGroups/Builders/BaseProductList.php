@@ -47,7 +47,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * @var string
      */
-    protected $buyableClassName = Product::class;
+    protected $buyableClassName = '';
 
     /**
      * @var RelatedProductGroups
