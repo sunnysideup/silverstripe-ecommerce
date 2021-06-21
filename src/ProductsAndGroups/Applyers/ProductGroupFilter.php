@@ -4,6 +4,8 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
+
 /**
  * provides data on the user.
  */
@@ -64,11 +66,11 @@ class ProductGroupFilter extends BaseApplyer
                 $group->getBaseProductList()->getProductIds(),
                 $this->products->columnUnique()
             );
-            $filter = ['ID' => $newIDs];
+            $filter = ['ID' => ArrayMethods::filter_array($newIDs)];
         }
 
         if ($filter) {
-            if (! empty($filter)) {
+            if ($this->products->count() && ! empty($filter)) {
                 $this->products = $this->products->filter($filter);
             }
         }

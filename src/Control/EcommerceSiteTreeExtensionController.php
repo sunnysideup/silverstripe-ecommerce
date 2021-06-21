@@ -27,19 +27,19 @@ class EcommerceSiteTreeExtensionController extends Extension
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
-        if ($this->owner->dataRecord) {
-            if (is_a(
-                $this->owner->dataRecord,
-                EcommerceConfigClassNames::getName(Product::class)
-            ) ||
-                is_a(
-                    $this->owner->dataRecord,
-                    EcommerceConfigClassNames::getName(ProductGroup::class)
-                )
-            ) {
-                Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
-            }
-        }
+        // if ($this->owner->dataRecord) {
+        //     if (is_a(
+        //         $this->owner->dataRecord,
+        //         EcommerceConfigClassNames::getName(Product::class)
+        //     ) ||
+        //         is_a(
+        //             $this->owner->dataRecord,
+        //             EcommerceConfigClassNames::getName(ProductGroup::class)
+        //         )
+        //     ) {
+        //         Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
+        //     }
+        // }
     }
 
     /**

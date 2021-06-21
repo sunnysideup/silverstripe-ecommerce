@@ -70,23 +70,25 @@ class GetVariables
         $array = explode(Config::inst()->get(static::class, 'ampersand_alternative'), $string);
         $newArray = [];
         foreach($array as $subString) {
-            $string = str_replace(
-                Config::inst()->get(static::class, 'exception_for_comma'),
-                Config::inst()->get(static::class, 'ampersand_alternative'),
-                $subString
-            );
-            $items = list($key, $value) = explode(Config::inst()->get(static::class, 'equal_alternative'), $subString);
-            $key = str_replace(Config::inst()->get(
-                static::class, 'exception_for_tilde'),
-                Config::inst()->get(static::class, 'equal_alternative'),
-                $key
-            );
-            $value = str_replace(
-                Config::inst()->get(static::class, 'exception_for_tilde'),
-                Config::inst()->get(static::class, 'equal_alternative'),
-                $value
-            );
-            $newArray[$key] = $value;
+            if($subString) {
+                $string = str_replace(
+                    Config::inst()->get(static::class, 'exception_for_comma'),
+                    Config::inst()->get(static::class, 'ampersand_alternative'),
+                    $subString
+                );
+                $items = list($key, $value) = explode(Config::inst()->get(static::class, 'equal_alternative'), $subString);
+                $key = str_replace(
+                    Config::inst()->get(static::class, 'exception_for_tilde'),
+                    Config::inst()->get(static::class, 'equal_alternative'),
+                    $key
+                );
+                $value = str_replace(
+                    Config::inst()->get(static::class, 'exception_for_tilde'),
+                    Config::inst()->get(static::class, 'equal_alternative'),
+                    $value
+                );
+                $newArray[$key] = $value;
+            }
         }
         return $newArray;
     }

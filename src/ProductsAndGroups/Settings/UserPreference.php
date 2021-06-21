@@ -224,7 +224,7 @@ class UserPreference
                         }
                     }
                 }
-                if ($type === 'SEARCHFILTER') {
+                elseif ($type === 'SEARCHFILTER') {
                     $isSearch = true;
                     $newPreference = [
                         'key' => BaseApplyer::DEFAULT_NAME,
@@ -320,7 +320,8 @@ class UserPreference
             $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
         $pageId = 0;
-        if ($this->getUseSessionPerPageKey('FILTER') || $this->getCurrentUserPreferencesKey('SORT') || $this->getCurrentUserPreferencesKey('DISPLAY')) {
+        // todo: what does this do???
+        if ($this->getUseSessionPerPageKey('FILTER') || $this->getCurrentUserPreferencesKey('SORT') || $this->getCurrentUserPreferencesKey('DISPLAY') || $this->getCurrentUserPreferencesKey('SEARCHFILTER')) {
             $pageId = $this->rootGroup->ID;
         }
 
@@ -499,6 +500,8 @@ class UserPreference
         return $list;
     }
 
+    protected static $linkTemplateCache = [];
+
     /**
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'.
@@ -509,23 +512,35 @@ class UserPreference
      */
     public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
-        $base = $this->rootGroup->Link($action);
-        $getVars = [];
-        foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
-            if ($type && $myType === $type) {
-                $value = $replacementForType ? $replacementForType : self::GET_VAR_VALUE_PLACE_HOLDER;
-            } else {
-                $value = $this->getCurrentUserPreferencesKey($myType);
+        $cacheKey = ($action ?:'').($type?:'').($replacementForType?:'');
+        if(! isset(self::$linkTemplateCache[$cacheKey])) {
+            $base = $this->rootGroup->Link($action);
+            $getVars = [];
+            foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
+                if ($type && $myType === $type) {
+                    $value = $replacementForType ? $replacementForType : self::GET_VAR_VALUE_PLACE_HOLDER;
+                } else {
+                    $value = $this->getCurrentUserPreferencesKey($myType);
+                }
+                if (BaseApplyer::DEFAULT_NAME !== $value) {
+                    $getVars[$values['getVariable']] = $value;
+                } else {
+                    $params = $this->getCurrentUserPreferencesParams($myType);
+                    if(! empty($params)) {
+                        if(is_array($params)) {
+                            $params = implode(',',$params);
+                        }
+                        $getVars[$values['getVariable']] = $params;
+                    }
+                }
             }
-            if (BaseApplyer::DEFAULT_NAME !== $value) {
-                $getVars[$values['getVariable']] = $value;
+            if (count($getVars)) {
+                return $base . '?' . http_build_query($getVars);
             }
-        }
-        if (count($getVars)) {
-            return $base . '?' . http_build_query($getVars);
-        }
 
-        return $base;
+            self::$linkTemplateCache[$cacheKey] = $base;
+        }
+        return self::$linkTemplateCache[$cacheKey];
     }
 
     /**

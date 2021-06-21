@@ -80,7 +80,7 @@ class ProductSorter extends BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
-        if( BaseApplyer::DEFAULT_NAME && self::$defaultSortOrderFromFilter) {
+        if( BaseApplyer::DEFAULT_NAME === $key && self::$defaultSortOrderFromFilter) {
             return self::$defaultSortOrderFromFilter;
         }
         // @todo: make smarter...
