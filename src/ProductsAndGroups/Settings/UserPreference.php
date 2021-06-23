@@ -363,10 +363,10 @@ class UserPreference
 
                 $count = $this->getFinalProductList()->getRawCount();
 
-                $productString = $string = _t('ProductGroup.PRODUCTS_FOUND', 'Products Found');
+                $productString = $string = _t('ProductGroup.PRODUCTS_FOUND', 'Search Results');
                 if ($count) {
                     if($count === 1) {
-                        $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Product Found');
+                        $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Search Result');
                     }
                     $toAdd = $count . ' ' . $productString;
                     $secondaryTitle .= $this->addToTitle($toAdd);
@@ -385,7 +385,11 @@ class UserPreference
             }
 
             if ($this->rootGroupController->HasSort()) {
-                $secondaryTitle .= $this->addToTitle(_t('Sunnysideup\\Ecommerce\\ProductsAndGroups\\Settings.SORTED_BY', 'sorted by') . ' ' . $this->rootGroupController->getCurrentSortTitle());
+                $secondaryTitle .= $this->addToTitle(
+                    _t('Sunnysideup\\Ecommerce\\ProductsAndGroups\\Settings.SORTED_BY', 'by') .
+                    ' ' .
+                    $this->rootGroupController->getCurrentSortTitle()
+                );
             }
 
             $currentPageNumber = $this->rootGroupController->getCurrentPageNumber();

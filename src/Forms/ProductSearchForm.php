@@ -120,9 +120,9 @@ class ProductSearchForm extends Form
                 CompositeField::create(
                     LiteralField::create('PriceHeader', '<label class="left">'._t('ProductSearchForm.PRICE_RANGE', 'Price Range').'</label>'),
                     CompositeField::create(
-                        NumericField::create('MinimumPrice', '$', $defaults['MinimumPrice'])->setScale(2)->setAttribute('placeholder', 'Min'),
+                        NumericField::create('MinimumPrice', '$', $defaults['MinimumPrice']?:'')->setScale(2)->setAttribute('placeholder', 'Min'),
                         LiteralField::create('PriceSeparator', '<label class="separator">'._t('ProductSearchForm.TO', 'To').'</label>'),
-                        NumericField::create('MaximumPrice', '$', $defaults['MaximumPrice'])->setScale(2)->setAttribute('placeholder', 'Max')
+                        NumericField::create('MaximumPrice', '$', $defaults['MaximumPrice']?:'')->setScale(2)->setAttribute('placeholder', 'Max')
                     )
                         ->setName('PriceRangeInner')
                         ->addExtraClass('min-max-inner')

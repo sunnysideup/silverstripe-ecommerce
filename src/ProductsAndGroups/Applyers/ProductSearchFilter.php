@@ -411,9 +411,11 @@ class ProductSearchFilter extends BaseApplyer
 
         $this->rawData['OnlyThisSection'] = (bool) (int) ($this->rawData['OnlyThisSection'] ?? 0);
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
-            $oldMin = $this->rawData['MinimumPrice'];
-            $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
-            $this->rawData['MaximumPrice'] = $oldMin;
+            if ($this->rawData['MaximumPrice'] > 0) {
+                $oldMin = $this->rawData['MinimumPrice'];
+                $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
+                $this->rawData['MaximumPrice'] = $oldMin;
+            }
         }
     }
 
@@ -726,7 +728,7 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function hasMinMaxSearch(): bool
     {
-        return $this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice'];
+        return ($this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice']) || $this->rawData['MinimumPrice'] > 0 && ! $this->rawData['MaximumPrice'];
     }
 
     protected function getSearchApi()

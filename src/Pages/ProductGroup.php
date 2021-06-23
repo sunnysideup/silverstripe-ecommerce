@@ -253,6 +253,11 @@ class ProductGroup extends Page
         return $this->URLSegment . '.' . $this->ID;
     }
 
+    public function getFilterForCandidateCategories()
+    {
+        return $this->getBaseProductList()->getFilterForCandidateCategories();
+    }
+
     /**
      * used if you install lumberjack.
      */
