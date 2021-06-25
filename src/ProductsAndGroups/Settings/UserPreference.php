@@ -239,9 +239,9 @@ class UserPreference
             //save preference to session
             $this->savePreferenceToSession($type, $newPreference);
         }
-        // irrespective of preference for page, use default for SORT in case of SEARCH.
-        if ($isSearch && ! $this->userPreferences['SORT']) {
-            $this->userPreferences['SORT'] = BaseApplyer::DEFAULT_NAME;
+        // there is always a search ...
+        if (! $this->userPreferences['SORT']) {
+            $this->userPreferences['SORT'] = $this->rootGroup->getListConfigCalculated('SORT');
         }
         return $this;
     }
@@ -280,6 +280,9 @@ class UserPreference
         }
         if (! $key) {
             $key = $this->rootGroup->getListConfigCalculated($type);
+            if($type === 'SORT') {
+                die($key);
+            }
         }
 
         return $this->standardiseCurrentUserPreferences($type, $key);
@@ -526,7 +529,7 @@ class UserPreference
                 } else {
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
-                if (BaseApplyer::DEFAULT_NAME !== $value) {
+                if (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
                     $getVars[$values['getVariable']] = $value;
                 } else {
                     $params = $this->getCurrentUserPreferencesParams($myType);
@@ -539,10 +542,10 @@ class UserPreference
                 }
             }
             if (count($getVars)) {
-                return $base . '?' . http_build_query($getVars);
+                self::$linkTemplateCache[$cacheKey] =  $base . '?' . http_build_query($getVars);
+            } else {
+                self::$linkTemplateCache[$cacheKey] = $base;
             }
-
-            self::$linkTemplateCache[$cacheKey] = $base;
         }
         return self::$linkTemplateCache[$cacheKey];
     }
