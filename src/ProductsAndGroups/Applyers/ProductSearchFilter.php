@@ -58,7 +58,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var bool
      */
-    protected $debug = false;
+    protected $debug = true;
 
     /**
      * set to TRUE to show the search logic.
@@ -250,13 +250,18 @@ class ProductSearchFilter extends BaseApplyer
         if(is_array($params) && count($params)) {
             $this->rawData = $params;
             $this->runFullProcess();
-            $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
-            ProductSorter::setDefaultSortOrderFromFilter(
-                ArrayMethods::create_sort_statement_from_id_array(
-                    $this->getProductIds(),
-                    Product::class
-                )
-            );
+            if($this->immediateRedirectPage) {
+                Controller::curr()->redirect($this->immediateRedirectPage->Link());
+                return $this;
+            } else {
+                $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
+                ProductSorter::setDefaultSortOrderFromFilter(
+                    ArrayMethods::create_sort_statement_from_id_array(
+                        $this->getProductIds(),
+                        Product::class
+                    )
+                );
+            }
         }
         $this->applyEnd($key, $params);
 
@@ -382,7 +387,9 @@ class ProductSearchFilter extends BaseApplyer
                 $this->addToResults($this->products, true);
             }
         }
-
+        if($this->debug) {
+            echo $this->debugOutputString;
+        }
     }
 
     /**
@@ -397,7 +404,7 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->baseClassNameForBuyables) {
             $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
-        $this->debug = isset($_GET['showdebug']) && Director::isDev();
+        $this->debug ?: isset($_GET['showdebug']) && Director::isDev();
 
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results in '.get_class($this).'</h2>');
