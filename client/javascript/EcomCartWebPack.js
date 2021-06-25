@@ -259,6 +259,11 @@ EcomCart = {
      */
   addLinkSelector: '.ajaxBuyableAdd',
   set_addLinkSelector: function (s) { this.addLinkSelector = s },
+    /**
+     * the selector used to identify links that add buyables to the cart
+     */
+  excludedPagesSelector: '.no-ajax-buttons',
+  set_excludedPagesSelector: function (s) { this.excludedPagesSelector = s },
 
     /**
      * the selector used to identify links that remove buyables from the cart
@@ -514,7 +519,7 @@ EcomCart = {
      * @param String withinSelector: area where these links can be found, the more specific the better (faster)
      */
   addAddLinks: function (withinSelector) {
-    jQuery(withinSelector).on(
+    jQuery(withinSelector).not(EcomCart.excludedPagesSelector).on(
             'click',
             EcomCart.addLinkSelector,
             function () {
@@ -534,7 +539,7 @@ EcomCart = {
      * @param String withinSelector: area where these links can be found, the more specific the better (faster)
      */
   addRemoveLinks: function (withinSelector) {
-    jQuery(withinSelector).on(
+    jQuery(withinSelector).not(EcomCart.excludedPagesSelector).on(
             'click',
             EcomCart.removeLinkSelector,
             function () {
