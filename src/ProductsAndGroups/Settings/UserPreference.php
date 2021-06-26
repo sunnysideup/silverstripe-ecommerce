@@ -18,6 +18,8 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
 
+use Sunnysideup\EcommerceSecondHandProduct\SecondHandProductGroup;
+
 /**
  * keeps track of the  settings for FILTER / SORT / DISPLAY for user
  * the associated links and all that sort of stuff.

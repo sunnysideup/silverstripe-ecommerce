@@ -56,6 +56,14 @@ class EcommerceSearchHistoryFormField extends LiteralField
      */
     protected $showMoreLink = false;
 
+    /**
+     * @param string $name
+     */
+    public function __construct($name)
+    {
+        parent::__construct($name, '');
+    }
+
     public function setNumberOfDays(int $days): self
     {
         $this->numberOfDays = (int) $days;
