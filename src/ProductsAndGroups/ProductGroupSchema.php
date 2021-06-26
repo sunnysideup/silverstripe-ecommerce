@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -249,6 +250,8 @@ class ProductGroupSchema
         return '';
     }
 
+    protected static $applyerCache = [];
+
     /**
      * you can provide type or class name.
      *
@@ -263,10 +266,12 @@ class ProductGroupSchema
         if ($betterClassName) {
             $className = $betterClassName;
         }
-        $obj = new $className($finalProductList);
-        ClassHelpers::check_for_instance_of($obj, BaseApplyer::class);
+        if(empty(self::$applyerCache[$className])) {
+            self::$applyerCache[$className] = new $className($finalProductList);
+        }
+        ClassHelpers::check_for_instance_of(self::$applyerCache[$className], BaseApplyer::class);
 
-        return $obj;
+        return self::$applyerCache[$className];
     }
 
     /**

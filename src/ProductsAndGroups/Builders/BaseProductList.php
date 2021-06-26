@@ -489,6 +489,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->rootGroup->ID,
                 $this->rootGroup->ClassName,
                 $this->buyableClassName,
+                $this->rootGroup->LastEdited,
                 $this->getLevelOfProductsToShow(),
                 $add,
             ]

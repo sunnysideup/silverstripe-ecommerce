@@ -508,7 +508,8 @@ class ProductGroup extends Page
 
     public function ChildCategories(): DataList
     {
-        return ProductGroup::get()->filter(['ParentID' => $this->ID]);
+        return ProductGroup::get()
+            ->filter(['ParentID' => $this->ID, 'ShowInSearch' => true]);
     }
 
     public function getShowProductLevelsArray(): array

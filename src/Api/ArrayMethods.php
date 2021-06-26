@@ -30,7 +30,7 @@ class ArrayMethods
      *
      * @param array $ids - list of product IDs
      */
-    public static function create_sort_statement_from_id_array(array $ids, ?string $className = ''): string
+    public static function create_sort_statement_from_id_array(array $ids, ?string $className = '', ?bool $includeElse = false): string
     {
         $ids = ArrayMethods::filter_array($ids);
         $ifStatement = 'CASE ';
@@ -42,7 +42,9 @@ class ArrayMethods
             $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
-
+        if($includeElse) {
+            $ifStatement .= ' ELSE 999999999 ';
+        }
         return $ifStatement . ' END';
     }
 

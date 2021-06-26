@@ -58,7 +58,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var bool
      */
-    protected $debug = true;
+    protected $debug = false;
 
     /**
      * set to TRUE to show the search logic.
@@ -161,6 +161,8 @@ class ProductSearchFilter extends BaseApplyer
 
 
     protected $productsForGroups = null;
+
+    protected static $groupCache = null;
 
     /**
      * make sure that these do not exist as a URLSegment.
@@ -292,7 +294,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function getProductGroupIds(): array
     {
-        return ArrayMethods::filter_array($this->productGroupIds);
+        return ArrayMethods::filter_array(self::$groupCache);
     }
 
     public function getHasResults(): bool
@@ -375,7 +377,7 @@ class ProductSearchFilter extends BaseApplyer
         //defining some variables
 
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
-        if ($this->products->count()) {
+        if ($this->products->limit(1)->count()) {
             if (! empty($this->rawData['Keyword']) && strlen($this->rawData['Keyword']) > 1) {
                 $this->keywordPhrase = $this->rawData['Keyword'];
                 $this->doKeywordCleanup();
@@ -553,7 +555,7 @@ class ProductSearchFilter extends BaseApplyer
 
             foreach ($searches as $search) {
                 $tempGroups = $this->productsForGroups->where($search);
-                $count = $tempGroups->count();
+                $count = $tempGroups->limit(2)->count();
                 //redirect if we find exactly one match and we have no matches so far...
                 if (1 === $count && ! $this->resultArrayPos) {
                     $this->immediateRedirectPage = $tempGroups->First();
@@ -564,12 +566,15 @@ class ProductSearchFilter extends BaseApplyer
                     }
                 }
                 if ($this->debug) {
-                    $this->debugOutput('result: ' . $count);
+                    $this->debugOutput('<h4>'.$search.': ' . $count.'</h4>');
                 }
             }
             if ($this->debug) {
-                $this->debugOutput("<h3>PRODUCT GROUP SEARCH: {$count}</h3>");
+                $this->debugOutput('<h3>PRODUCT GROUP SEARCH: '.count($this->productGroupIds).'</h3>');
             }
+        }
+        foreach($this->productGroupIds as $id) {
+            self::$groupCache[$id] = $id;
         }
     }
 
@@ -590,7 +595,7 @@ class ProductSearchFilter extends BaseApplyer
         if ($this->weHaveEnoughResults()) {
             return true;
         }
-        $count = $listToAdd->count();
+        $count = $listToAdd->limit(2)->count();
         if ($allowOneAnswer && 1 === $count && 0 === $this->resultArrayPos) {
             // $this->immediateRedirectPage = $list1->First()->getRequestHandler()->Link();
             $this->immediateRedirectPage = $listToAdd->First();

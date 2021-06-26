@@ -32,14 +32,14 @@ class ProductGroupController extends PageController
      *
      * @var DataList
      */
-    protected $productList;
+    protected $productList = null;
 
     /**
      * the final product list that we use to collect products.
      *
      * @var FinalProductList
      */
-    protected $finalProductList;
+    protected $finalProductList = null;
 
     /**
      * The original Title of this page before filters, etc...
@@ -48,7 +48,7 @@ class ProductGroupController extends PageController
      */
     protected $originalTitle = '';
 
-    protected $userPreferencesObject;
+    protected $userPreferencesObject = null;
 
     /**
      * form for searching.
@@ -139,7 +139,7 @@ class ProductGroupController extends PageController
      */
     public function getProductList()
     {
-        if (null === $this->productList) {
+        if (! $this->productList) {
             $this->productList = $this->getCachedProductList();
             if (! $this->productList) {
                 $this->productList = $this->getFinalProductList()
@@ -573,7 +573,6 @@ class ProductGroupController extends PageController
     {
         $groupArray = $this->searchResultsProductGroupsArray();
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
-
         return ProductGroup::get()
             ->filter(['ID' => $groupArray])
             ->sort($sortStatement)
@@ -685,7 +684,7 @@ class ProductGroupController extends PageController
      */
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
-        if (null === $this->finalProductList) {
+        if (! $this->finalProductList) {
             $className = $this->getProductGroupSchema()->getFinalProductListClassName();
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
