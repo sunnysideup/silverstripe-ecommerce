@@ -280,9 +280,6 @@ class UserPreference
         }
         if (! $key) {
             $key = $this->rootGroup->getListConfigCalculated($type);
-            if($type === 'SORT') {
-                die($key);
-            }
         }
 
         return $this->standardiseCurrentUserPreferences($type, $key);
