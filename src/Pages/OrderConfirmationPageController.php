@@ -380,7 +380,7 @@ class OrderConfirmationPageController extends CartPageController
                 }
                 if ($request->getVar('send')) {
                     $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
-                    if (!$email) {
+                    if (! $email) {
                         $email = true;
                     }
                     $this->currentOrder->sendEmail(

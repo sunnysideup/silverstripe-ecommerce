@@ -897,7 +897,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $this->getShowAsSummary();
     }
 
-    public function getShowAsSummary() : DBHTMLText
+    public function getShowAsSummary(): DBHTMLText
     {
         $v = '<strong>';
         if ($this->ShowAsUncompletedOrder) {
@@ -928,7 +928,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $v .= '<br />' . $this->humanReadeableDeferTimeInSeconds();
         }
 
-        /** @return DBHTMLText */
+        // @return DBHTMLText
         return DBField::create_field('HTMLText', $v);
     }
 

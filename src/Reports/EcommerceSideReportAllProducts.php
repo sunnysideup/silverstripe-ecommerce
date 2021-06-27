@@ -26,7 +26,7 @@ class EcommerceSideReportAllProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: All products') ;
+        return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: All products');
     }
 
     /**

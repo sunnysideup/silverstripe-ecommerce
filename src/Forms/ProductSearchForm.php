@@ -2,11 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use Sunnysideup\Ecommerce\Api\GetVariables;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
@@ -15,43 +12,32 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
-use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
+use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController;
-use Sunnysideup\Vardump\Vardump;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
+
 /**
  * Product search form.
  */
 class ProductSearchForm extends Form
 {
-
     /**
-     *
      * @var array
      */
     protected $rawData = [];
     /**
-     *
      * @var array
      */
     protected $cleanedData = [];
@@ -62,7 +48,6 @@ class ProductSearchForm extends Form
      * @var ProductGroup
      */
     protected $baseListOwner;
-
 
     /**
      * get parameters added to the link
@@ -80,7 +65,6 @@ class ProductSearchForm extends Form
     private static $include_price_filters = true;
 
     /**
-     *
      * @param Controller $controller - associated controller
      * @param string     $name       - name of form
      */
@@ -118,11 +102,11 @@ class ProductSearchForm extends Form
         if ($this->config()->get('include_price_filters')) {
             $fields->push(
                 CompositeField::create(
-                    LiteralField::create('PriceHeader', '<label class="left">'._t('ProductSearchForm.PRICE_RANGE', 'Price Range').'</label>'),
+                    LiteralField::create('PriceHeader', '<label class="left">' . _t('ProductSearchForm.PRICE_RANGE', 'Price Range') . '</label>'),
                     CompositeField::create(
-                        NumericField::create('MinimumPrice', '$', $defaults['MinimumPrice']?:'')->setScale(2)->setAttribute('placeholder', 'Min'),
-                        LiteralField::create('PriceSeparator', '<label class="separator">'._t('ProductSearchForm.TO', 'To').'</label>'),
-                        NumericField::create('MaximumPrice', '$', $defaults['MaximumPrice']?:'')->setScale(2)->setAttribute('placeholder', 'Max')
+                        NumericField::create('MinimumPrice', '$', $defaults['MinimumPrice'] ?: '')->setScale(2)->setAttribute('placeholder', 'Min'),
+                        LiteralField::create('PriceSeparator', '<label class="separator">' . _t('ProductSearchForm.TO', 'To') . '</label>'),
+                        NumericField::create('MaximumPrice', '$', $defaults['MaximumPrice'] ?: '')->setScale(2)->setAttribute('placeholder', 'Max')
                     )
                         ->setName('PriceRangeInner')
                         ->addExtraClass('min-max-inner')
@@ -130,7 +114,6 @@ class ProductSearchForm extends Form
                     ->setName('PriceRange')
                     ->addExtraClass('min-max-holder')
             );
-
         }
         $fields->push(
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
@@ -183,7 +166,6 @@ class ProductSearchForm extends Form
         return parent::forTemplate();
     }
 
-
     //#######################################
     // set-ers
     //#######################################
@@ -233,14 +215,13 @@ class ProductSearchForm extends Form
     {
         $this->saveDataToSession();
         $this->rawData = array_filter($this->rawData);
-        foreach($this->Fields()->dataFields() as $field) {
+        foreach ($this->Fields()->dataFields() as $field) {
             $name = $field->getName();
             if (! empty($this->rawData[$name])) {
                 $this->cleanedData[$name] = $this->rawData[$name];
             }
         }
     }
-
 
     /**
      * finalise results.
@@ -250,7 +231,7 @@ class ProductSearchForm extends Form
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
         $link = $this->getResultsPageLink();
-        if(!strpos('?', $link)) {
+        if (! strpos('?', $link)) {
             $link .= '?';
         } else {
             $link .= '&';
@@ -262,15 +243,13 @@ class ProductSearchForm extends Form
         $this->controller->redirect($link);
     }
 
-
     //#######################################
     // get-ers
     //#######################################
 
-    protected function getVariableContainingSearchParams() : string
+    protected function getVariableContainingSearchParams(): string
     {
         return Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable');
-
     }
 
     protected function hasOnlyThisSection(): bool
@@ -289,7 +268,6 @@ class ProductSearchForm extends Form
     }
 
     /**
-     *
      * @return ProductGroup
      */
     protected function getResultsPage()
@@ -301,13 +279,10 @@ class ProductSearchForm extends Form
         return $this->controller->dataRecord;
     }
 
-
-    protected function getResultsPageLink() : string
+    protected function getResultsPageLink(): string
     {
         $redirectToPage = $this->getResultsPage();
 
         return $redirectToPage->Link();
     }
-
-
 }

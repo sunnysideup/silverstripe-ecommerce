@@ -46,16 +46,16 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * save edit status for speed's sake.
      *
-     * @var bool|null
+     * @var null|bool
      */
-    protected $_canEdit = null;
+    protected $_canEdit;
 
     /**
      * save view status for speed's sake.
      *
-     * @var bool|null
+     * @var null|bool
      */
-    protected $_canView = null;
+    protected $_canView;
 
     /**
      * @var bool

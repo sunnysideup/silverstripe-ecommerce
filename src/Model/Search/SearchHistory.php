@@ -10,15 +10,14 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class SearchHistory extends DataObject
 {
-    private static $table_name = 'SearchHistory';
-
     public const KEYWORD_LENGTH_LIMIT = 80;
+    private static $table_name = 'SearchHistory';
 
     /**
      * we limit keyword searchres to 80 characters ...
      */
     private static $db = [
-        'Title' => 'Varchar('.self::KEYWORD_LENGTH_LIMIT.')',
+        'Title' => 'Varchar(' . self::KEYWORD_LENGTH_LIMIT . ')',
         'ProductCount' => 'Int',
         'GroupCount' => 'Int',
     ];

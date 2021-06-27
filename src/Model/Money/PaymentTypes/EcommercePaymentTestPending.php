@@ -42,8 +42,8 @@ class EcommercePaymentTestPending extends EcommercePaymentTest
     }
 
     /**
-     * @param array     $data The form request data - see OrderForm
-     * @param Form $form The form object submitted on
+     * @param array $data The form request data - see OrderForm
+     * @param Form  $form The form object submitted on
      *
      * @return EcommercePaymentProcessing
      */

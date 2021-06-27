@@ -178,26 +178,26 @@ abstract class OrderEmail extends Email
     /**
      * converts an Email to A Varchar.
      *
-     * @param string|array $email - email address
+     * @param array|string $email - email address
      *
      * @return string - returns email address without &gt; and &lt;
      */
     public function emailToVarchar($email)
     {
         $emailString = '';
-        if(is_string($email)){
+        if (is_string($email)) {
             $emailString = $email;
-        }
-        else if(is_array($email)){
+        } elseif (is_array($email)) {
             $count = 0;
             foreach ($email as $address) {
-                if($count){
+                if ($count) {
                     $emailString .= ', ';
                 }
                 $emailString .= $address;
-                $count++;
+                ++$count;
             }
         }
+
         return str_replace(['<', '>', '"', "'"], ' - ', $emailString);
     }
 
@@ -212,6 +212,22 @@ abstract class OrderEmail extends Email
         }
 
         return false;
+    }
+
+    /**
+     * Render the email.
+     *
+     * @param bool $plainOnly Only render the message as plain text
+     *
+     * @return $this
+     */
+    public function render($plainOnly = false)
+    {
+        parent::render($plainOnly);
+        //moves CSS to inline CSS in email.
+        if (! $plainOnly) {
+            $this->body = $this->body ? self::emogrify_html($this->body) : '';
+        }
     }
 
     /**
@@ -253,20 +269,4 @@ abstract class OrderEmail extends Email
 
         return $orderEmailRecord;
     }
-
-    /**
-
-     * Render the email
-     * @param bool $plainOnly Only render the message as plain text
-     * @return $this
-     */
-    public function render($plainOnly = false)
-    {
-        parent::render($plainOnly);
-        //moves CSS to inline CSS in email.
-        if (!$plainOnly) {
-            $this->body = $this->body ? self::emogrify_html($this->body) : '';
-        }
-    }
-
 }

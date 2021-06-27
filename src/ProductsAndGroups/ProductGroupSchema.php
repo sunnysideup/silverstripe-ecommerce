@@ -4,17 +4,15 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductDisplayer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductFilter;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
@@ -76,6 +74,8 @@ class ProductGroupSchema
      * @var array<null|string, mixed>|mixed
      */
     public $sortFilterDisplayNames;
+
+    protected static $applyerCache = [];
 
     /**
      * @var string
@@ -250,8 +250,6 @@ class ProductGroupSchema
         return '';
     }
 
-    protected static $applyerCache = [];
-
     /**
      * you can provide type or class name.
      *
@@ -266,7 +264,7 @@ class ProductGroupSchema
         if ($betterClassName) {
             $className = $betterClassName;
         }
-        if(empty(self::$applyerCache[$className])) {
+        if (empty(self::$applyerCache[$className])) {
             self::$applyerCache[$className] = new $className($finalProductList);
         }
         ClassHelpers::check_for_instance_of(self::$applyerCache[$className], BaseApplyer::class);

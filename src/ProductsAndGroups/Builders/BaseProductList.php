@@ -13,7 +13,6 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Vardump\Vardump;
 
 /**
  * The starting base of the Products.
@@ -136,9 +135,8 @@ class BaseProductList extends AbstractProductsAndGroupsList
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
             $filter['AllowPurchase'] = 1;
         }
-        $list = $list->filter($filter);
 
-        return $list;
+        return $list->filter($filter);
     }
 
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)

@@ -18,8 +18,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
 
-use Sunnysideup\EcommerceSecondHandProduct\SecondHandProductGroup;
-
 /**
  * keeps track of the  settings for FILTER / SORT / DISPLAY for user
  * the associated links and all that sort of stuff.
@@ -82,6 +80,8 @@ class UserPreference
      * @var array
      */
     protected $userPreferences = [];
+
+    protected static $linkTemplateCache = [];
 
     /**
      * keep a store for every page setting?
@@ -214,7 +214,7 @@ class UserPreference
                 $newPreference = $overrideArray[$type];
             } elseif (! isset($this->userPreferences[$type])) {
                 $newPreference = $this->request->getVar($getVariableName);
-                if ($type === 'GROUPFILTER') {
+                if ('GROUPFILTER' === $type) {
                     if ($newPreference) {
                         $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
                         if ($otherProductGroup) {
@@ -225,8 +225,7 @@ class UserPreference
                             ];
                         }
                     }
-                }
-                elseif ($type === 'SEARCHFILTER') {
+                } elseif ('SEARCHFILTER' === $type) {
                     $isSearch = true;
                     $newPreference = [
                         'key' => BaseApplyer::DEFAULT_NAME,
@@ -245,6 +244,7 @@ class UserPreference
         if (! $this->userPreferences['SORT']) {
             $this->userPreferences['SORT'] = $this->rootGroup->getListConfigCalculated('SORT');
         }
+
         return $this;
     }
 
@@ -362,12 +362,11 @@ class UserPreference
             }
 
             if ($this->rootGroupController->HasSearchFilter()) {
-
                 $count = $this->getFinalProductList()->getRawCount();
 
                 $productString = $string = _t('ProductGroup.PRODUCTS_FOUND', 'Search Results');
                 if ($count) {
-                    if($count === 1) {
+                    if (1 === $count) {
                         $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Search Result');
                     }
                     $toAdd = $count . ' ' . $productString;
@@ -416,10 +415,10 @@ class UserPreference
     public function standardiseCurrentUserPreferences(string $type, $keyOrArray)
     {
         if (is_array($keyOrArray)) {
-            if($keyOrArray['params'] === null) {
+            if (null === $keyOrArray['params']) {
                 $keyOrArray['params'] = [];
             }
-            if (isset($keyOrArray['key']) && isset($keyOrArray['params']) &&  isset($keyOrArray['title'])) {
+            if (isset($keyOrArray['key'], $keyOrArray['params'], $keyOrArray['title'])) {
                 return $keyOrArray;
             }
             user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
@@ -506,8 +505,6 @@ class UserPreference
         return $list;
     }
 
-    protected static $linkTemplateCache = [];
-
     /**
      * returns the current page with get variables. If a type is specified then
      * instead of the value for that type, we add: '[[INSERT_HERE]]'.
@@ -518,8 +515,8 @@ class UserPreference
      */
     public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
-        $cacheKey = ($action ?:'').($type?:'').($replacementForType?:'');
-        if(! isset(self::$linkTemplateCache[$cacheKey])) {
+        $cacheKey = ($action ?: '') . ($type ?: '') . ($replacementForType ?: '');
+        if (! isset(self::$linkTemplateCache[$cacheKey])) {
             $base = $this->rootGroup->Link($action);
             $getVars = [];
             foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
@@ -532,20 +529,21 @@ class UserPreference
                     $getVars[$values['getVariable']] = $value;
                 } else {
                     $params = $this->getCurrentUserPreferencesParams($myType);
-                    if(! empty($params)) {
-                        if(is_array($params)) {
-                            $params = implode(',',$params);
+                    if (! empty($params)) {
+                        if (is_array($params)) {
+                            $params = implode(',', $params);
                         }
                         $getVars[$values['getVariable']] = $params;
                     }
                 }
             }
             if (count($getVars)) {
-                self::$linkTemplateCache[$cacheKey] =  $base . '?' . http_build_query($getVars);
+                self::$linkTemplateCache[$cacheKey] = $base . '?' . http_build_query($getVars);
             } else {
                 self::$linkTemplateCache[$cacheKey] = $base;
             }
         }
+
         return self::$linkTemplateCache[$cacheKey];
     }
 

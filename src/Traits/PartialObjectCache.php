@@ -5,11 +5,9 @@ namespace Sunnysideup\Ecommerce\Traits;
 /**
  * To make this trait work, you will need to add a method `getFieldsToCache` to
  * any object that you are adding this to.
- *
  */
 trait PartialObjectCache
 {
-
     /**
      * @var bool
      */
@@ -30,7 +28,7 @@ trait PartialObjectCache
         foreach ($this->getFieldsToCache() as $variable) {
             $value = $this->{$variable};
             if (is_object($value) && is_a($value, DataObject::class)) {
-                if (! ( empty($value->ClassName) || empty($value->ID) ) ) {
+                if (! (empty($value->ClassName) || empty($value->ID))) {
                     $variables[$variable]['ClassName'] = $value->ClassName;
                     $variables[$variable]['ID'] = $value->ID;
                 }
@@ -96,8 +94,10 @@ trait PartialObjectCache
     }
 
     /**
-     * turns an array of ClassName and ID into objects
-     * @param  array $value['ID' => , 'ClassName']
+     * turns an array of ClassName and ID into objects.
+     *
+     * @param array $value['ID' => , 'ClassName']
+     *
      * @return DataObject
      */
     protected function arrayToObject($value)
@@ -112,5 +112,4 @@ trait PartialObjectCache
 
         return $value;
     }
-
 }

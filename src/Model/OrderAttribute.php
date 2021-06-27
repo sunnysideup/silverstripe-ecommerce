@@ -32,16 +32,16 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * save edit status for speed's sake.
      *
-     * @var bool|null
+     * @var null|bool
      */
-    protected $_canEdit = null;
+    protected $_canEdit;
 
     /**
      * save view status for speed's sake.
      *
-     * @var bool|null
+     * @var null|bool
      */
-    protected $_canView = null;
+    protected $_canView;
 
     /**
      * we use this variable to make sure that the parent::runUpdate() is called in all child classes

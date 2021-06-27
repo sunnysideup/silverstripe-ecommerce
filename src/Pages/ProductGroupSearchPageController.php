@@ -31,10 +31,9 @@ class ProductGroupSearchPageController extends ProductGroupController
 
         return null;
     }
-    public function getSearchFilterHeader() : string
+
+    public function getSearchFilterHeader(): string
     {
         return _t('Ecommerce.SEARCH_ALL_PRODUCTS', 'Search all produts');
     }
-
-
 }

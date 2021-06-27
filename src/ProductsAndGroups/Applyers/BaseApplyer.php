@@ -2,9 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -124,42 +124,21 @@ abstract class BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
-        if(empty($params)) {
+        if (empty($params)) {
             $params = null;
         }
         $sql = $this->checkOption($key);
-        if(is_array($sql)) {
+        if (is_array($sql)) {
             if (count($sql)) {
-                foreach($sql as $key => $item) {
+                foreach ($sql as $key => $item) {
                     $sql[$key] = $this->sqlPlaceholderReplacer($item, $params);
                 }
             }
         } else {
             $sql = $this->sqlPlaceholderReplacer($sql, $params);
         }
-        return $sql;
-    }
 
-    /**
-     * get the sql for an option.
-     *
-     * @param string       $key    string, e.g. default.
-     * @param array|string $params additional param for sql
-     *
-     * @return array|string
-     */
-    protected function sqlPlaceholderReplacer(string $sql, $params = null)
-    {
-        if (! empty ($params)) {
-            if(! is_array($params)) {
-                $params = [$params];
-            }
-            foreach($params as $param) {
-                $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);
-            }
-        }
         return $sql;
-
     }
 
     /**
@@ -209,6 +188,28 @@ abstract class BaseApplyer
         }
 
         return $key;
+    }
+
+    /**
+     * get the sql for an option.
+     *
+     * @param string       $sql    string, e.g. default.
+     * @param array|string $params additional param for sql
+     *
+     * @return array|string
+     */
+    protected function sqlPlaceholderReplacer(string $sql, $params = null)
+    {
+        if (! empty($params)) {
+            if (! is_array($params)) {
+                $params = [$params];
+            }
+            foreach ($params as $param) {
+                $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);
+            }
+        }
+
+        return $sql;
     }
 
     protected function applyStart(?string $key = null, $params = null)

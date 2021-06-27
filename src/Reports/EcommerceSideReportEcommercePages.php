@@ -9,7 +9,6 @@ use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 /**
@@ -41,7 +40,7 @@ class EcommerceSideReportEcommercePages extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages') ;
+        return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages');
     }
 
     /**
@@ -76,11 +75,11 @@ class EcommerceSideReportEcommercePages extends Report
             AccountPage::class,
             ProductGroupSearchPage::class,
             CheckoutPage::class,
-            OrderConfirmationPage::class
+            OrderConfirmationPage::class,
         ] +
         (array) $this->Config()->get('additional_classnames');
 
-        return SiteTree::get()->filter(['ClassName' =>  $array]);
+        return SiteTree::get()->filter(['ClassName' => $array]);
     }
 
     /**

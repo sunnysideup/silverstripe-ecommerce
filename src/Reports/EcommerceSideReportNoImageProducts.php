@@ -26,7 +26,7 @@ class EcommerceSideReportNoImageProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products without image') ;
+        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products without image');
     }
 
     /**

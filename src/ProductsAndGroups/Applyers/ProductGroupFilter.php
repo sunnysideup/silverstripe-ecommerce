@@ -2,9 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * provides data on the user.
@@ -30,7 +29,7 @@ class ProductGroupFilter extends BaseApplyer
     ];
 
     /**
-     * @param string|null $getVar expected format: my-product-category.123 (URLSegment.ID)
+     * @param null|string $getVar expected format: my-product-category.123 (URLSegment.ID)
      */
     public static function get_group_from_get_variable(?string $getVar = null): ?ProductGroup
     {
@@ -98,18 +97,19 @@ class ProductGroupFilter extends BaseApplyer
     }
 
     /**
-     * @param string|array|null $filter
+     * @param null|array|string $filter
      *
      * @return ProductGroup
      */
     protected function findGroup($filter)
     {
-        if(empty($filter)) {
+        if (empty($filter)) {
             $filter = '';
         }
-        if(is_array($filter)) {
-                $filter = array_flush($filter);
+        if (is_array($filter)) {
+            $filter = array_flush($filter);
         }
+
         return self::get_group_from_get_variable($filter);
     }
 }

@@ -253,7 +253,7 @@ class ProductGroup extends Page
         return $fields;
     }
 
-    public function FilterForGroupSegment() : string
+    public function FilterForGroupSegment(): string
     {
         return $this->URLSegment . '.' . $this->ID;
     }
@@ -500,7 +500,6 @@ class ProductGroup extends Page
         return EcommerceConfig::inst()->ProductsAlsoInOtherGroups;
     }
 
-
     /**
      * Returns children ProductGroup pages of this group.
      *
@@ -514,7 +513,8 @@ class ProductGroup extends Page
     public function ChildCategories(): DataList
     {
         return ProductGroup::get()
-            ->filter(['ParentID' => $this->ID, 'ShowInSearch' => true]);
+            ->filter(['ParentID' => $this->ID, 'ShowInSearch' => true])
+        ;
     }
 
     public function getShowProductLevelsArray(): array

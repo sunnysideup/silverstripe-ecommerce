@@ -23,7 +23,7 @@ class EcommerceSideReportFeaturedProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products') ;
+        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products');
     }
 
     /**

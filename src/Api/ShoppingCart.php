@@ -545,8 +545,6 @@ class ShoppingCart
 
         $item = null;
 
-       
-
         if ($mustBeExistingItem) {
             $item = $this->getExistingItem($buyable, $parametersArray);
         } else {
@@ -619,10 +617,10 @@ class ShoppingCart
             if (! $item) {
                 $item = OrderItem::create();
             }
+
             return $item;
-        } else {
-            $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
         }
+        $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
     }

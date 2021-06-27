@@ -19,11 +19,10 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Vardump\Vardump;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
 class ProductGroupController extends PageController
 {
@@ -32,14 +31,14 @@ class ProductGroupController extends PageController
      *
      * @var DataList
      */
-    protected $productList = null;
+    protected $productList;
 
     /**
      * the final product list that we use to collect products.
      *
      * @var FinalProductList
      */
-    protected $finalProductList = null;
+    protected $finalProductList;
 
     /**
      * The original Title of this page before filters, etc...
@@ -48,7 +47,7 @@ class ProductGroupController extends PageController
      */
     protected $originalTitle = '';
 
-    protected $userPreferencesObject = null;
+    protected $userPreferencesObject;
 
     /**
      * form for searching.
@@ -79,7 +78,6 @@ class ProductGroupController extends PageController
     {
         return $this->defaultReturn();
     }
-
 
     //##################################
     // template methods
@@ -250,6 +248,7 @@ class ProductGroupController extends PageController
     {
         return $this->HasManyProducts() && $this->HasGroupFilters();
     }
+
     public function ShowSearchFilterLinks(): bool
     {
         return $this->HasManyProducts() && $this->HasSearchFilters();
@@ -298,8 +297,9 @@ class ProductGroupController extends PageController
     public function HasSort(): bool
     {
         if ($this->IsSearchResults()) {
-            return $this->getCurrentUserPreferencesKey('SORT') !== BaseApplyer::DEFAULT_NAME;
+            return BaseApplyer::DEFAULT_NAME !== $this->getCurrentUserPreferencesKey('SORT');
         }
+
         return $this->getCurrentUserPreferencesKey('SORT') !== $this->getListConfigCalculated('SORT');
     }
 
@@ -314,7 +314,7 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * we can use this for pre-set search filters
+     * we can use this for pre-set search filters.
      */
     public function HasSearchFilters(): bool
     {
@@ -402,6 +402,7 @@ class ProductGroupController extends PageController
 
         return '';
     }
+
     /**
      * returns the current filter applied to the list
      * in a human readable string.
@@ -450,27 +451,27 @@ class ProductGroupController extends PageController
         return '';
     }
 
-    public function getSearchFilterHeader() : string
+    public function getSearchFilterHeader(): string
     {
         return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ' . $this->originalTitle);
     }
 
-    public function getGroupFilterHeader() : string
+    public function getGroupFilterHeader(): string
     {
         return _t('Ecommerce.FILTER_BY_CATEGORY', 'Filter by Category');
     }
 
-    public function getFilterHeader() : string
+    public function getFilterHeader(): string
     {
         return _t('Ecommerce.FILTER', 'Filter');
     }
 
-    public function getSortHeader() : string
+    public function getSortHeader(): string
     {
         return _t('Ecommerce.SORT', 'SORT');
     }
 
-    public function getDisplayHeader() : string
+    public function getDisplayHeader(): string
     {
         return _t('Ecommerce.DISPLAY', 'Presentation');
     }
@@ -573,6 +574,7 @@ class ProductGroupController extends PageController
     {
         $groupArray = $this->searchResultsProductGroupsArray();
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
+
         return ProductGroup::get()
             ->filter(['ID' => $groupArray])
             ->sort($sortStatement)
@@ -699,7 +701,7 @@ class ProductGroupController extends PageController
         return $this->finalProductList;
     }
 
-    public function DebugSearchString() : string
+    public function DebugSearchString(): string
     {
         return $this->getSearchApplyer()->getDebugOutputString();
     }
@@ -822,7 +824,6 @@ class ProductGroupController extends PageController
     }
 
     /**
-     *
      * @return ProductSearchFilter
      */
     protected function getSearchApplyer()
@@ -834,11 +835,10 @@ class ProductGroupController extends PageController
     {
         if ($this->returnAjaxifiedProductList()) {
             return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
-        } else {
-            // important - because we want to get all the details loaded before we start with
-            // building template
-            $this->Products();
         }
+        // important - because we want to get all the details loaded before we start with
+        // building template
+        $this->Products();
 
         return [];
     }

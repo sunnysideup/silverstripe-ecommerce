@@ -6,9 +6,9 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -18,14 +18,12 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -41,8 +39,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
-use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -527,7 +523,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                                 'Offline',
                                 _t('EcommerceDBConfig.OFFLINE', 'Offline'),
                                 LiteralField::create('XXX', 'hello')
-                            )
+                            ),
                         ]
                     );
                 }
@@ -560,7 +556,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             [
                 new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
                 new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
-                new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation'])
+                new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation']),
             ]
         );
         $fields->addFieldsToTab(
@@ -578,7 +574,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 new HTMLEditorField('NotForSaleMessage', $fieldLabels['NotForSaleMessage']),
                 new CheckboxField('ProductsHaveWeight', $fieldLabels['ProductsHaveWeight']),
                 new CheckboxField('ProductsHaveModelNames', $fieldLabels['ProductsHaveModelNames']),
-                new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers'])
+                new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers']),
                 //new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
             ]
         );
@@ -595,13 +591,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
                 new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
                 new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
-                new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote'])
+                new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote']),
             ]
         );
         $fields->addFieldsToTab(
             'Root.Payments',
             [
-
             ]
         );
         $fields->addFieldsToTab(
@@ -610,7 +605,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
                 new UploadField('EmailLogo', $fieldLabels['EmailLogo']),
                 new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
-                $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage'])
+                $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage']),
             ]
         );
         $fields->addFieldsToTab(
@@ -774,13 +769,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function DefaultImageLink(): string
     {
-
         if ($this->DefaultProductImageID) {
             $defaultImage = $this->DefaultProductImage();
             if ($defaultImage && $defaultImage->exists()) {
                 return $defaultImage->Link();
             }
         }
+
         return ModuleResourceLoader::resourceURL('sunnysideup/ecommerce: client/images/productPlaceHolderThumbnail.gif');
     }
 

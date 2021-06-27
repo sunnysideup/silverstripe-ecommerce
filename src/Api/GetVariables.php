@@ -7,35 +7,29 @@ use SilverStripe\Core\Config\Configurable;
 
 class GetVariables
 {
-
     use Configurable;
 
     /**
-     *
      * @var string
      */
     private static $equal_alternative = '~';
 
     /**
-    *
-    * @var string
-    */
+     * @var string
+     */
     private static $exception_for_tilde = '_____';
 
     /**
-     *
      * @var string
      */
     private static $ampersand_alternative = '...';
 
     /**
-    *
-    * @var string
-    */
+     * @var string
+     */
     private static $exception_for_comma = '-----';
 
-
-    public static function array_to_url_string(array $array) :string
+    public static function array_to_url_string(array $array): string
     {
         // build query
         $string = http_build_query($array);
@@ -65,12 +59,12 @@ class GetVariables
         );
     }
 
-    public static function url_string_to_array(string $string) :array
+    public static function url_string_to_array(string $string): array
     {
         $array = explode(Config::inst()->get(static::class, 'ampersand_alternative'), $string);
         $newArray = [];
-        foreach($array as $subString) {
-            if($subString) {
+        foreach ($array as $subString) {
+            if ($subString) {
                 $string = str_replace(
                     Config::inst()->get(static::class, 'exception_for_comma'),
                     Config::inst()->get(static::class, 'ampersand_alternative'),
@@ -90,7 +84,7 @@ class GetVariables
                 $newArray[$key] = $value;
             }
         }
+
         return $newArray;
     }
-
 }

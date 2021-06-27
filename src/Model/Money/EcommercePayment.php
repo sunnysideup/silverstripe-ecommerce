@@ -225,7 +225,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -241,7 +241,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     public function canView($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -269,7 +269,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         if ('Pending' === $this->Status || 'Incomplete' === $this->Status) {
@@ -402,7 +402,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public static function site_currency()
     {
         $currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
-        if (!$currency) {
+        if (! $currency) {
             user_error('It is highly recommended that you set a default currency using the config files (EcommerceCurrency.default_currency)', E_USER_NOTICE);
         }
 
@@ -544,6 +544,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * payment type. Example: for {@link DPSPayment},
      * this would be a set of fields to enter your
      * credit card details.
+     *
+     * @param mixed $amount
      */
     public function getPaymentFormFields($amount = 0, ?Order $order = null): FieldList
     {
@@ -573,8 +575,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * This function can be called from either an OrderForm (standard checkout) or OrderFormPayment (order confirmation page, eg first payment failed)
      *
-     * @param array     $data The form request data - see OrderForm
-     * @param Form $form The form object submitted on
+     * @param array $data The form request data - see OrderForm
+     * @param Form  $form The form object submitted on
      */
     public function validatePayment($data, Form $form)
     {
@@ -590,8 +592,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * * This function can be called from either an OrderForm (standard checkout) or OrderFormPayment (order confirmation page, eg first payment failed)
      *
-     * @param array     $data The form request data - see OrderForm
-     * @param Form $form The form object submitted on
+     * @param array $data The form request data - see OrderForm
+     * @param Form  $form The form object submitted on
      */
     public function processPayment($data, Form $form)
     {
@@ -671,10 +673,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         // Only set the IP and ProxyIP if none currently set
-        if (!$this->IP) {
+        if (! $this->IP) {
             $this->IP = $ip;
         }
-        if (!$this->ProxyIP) {
+        if (! $this->ProxyIP) {
             $this->ProxyIP = $proxy;
         }
     }
@@ -690,7 +692,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     protected function ecommercePaymentFormSetupAndValidationObject()
     {
-        if (!$this->ecommercePaymentFormSetupAndValidationObject) {
+        if (! $this->ecommercePaymentFormSetupAndValidationObject) {
             $this->ecommercePaymentFormSetupAndValidationObject = Injector::inst()->create(EcommercePaymentFormSetupAndValidation::class);
         }
 

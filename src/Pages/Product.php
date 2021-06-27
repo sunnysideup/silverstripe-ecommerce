@@ -46,8 +46,7 @@ use Sunnysideup\Ecommerce\Model\ProductOrderItem;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
-use Sunnysideup\Ecommerce\Search\Filters\ProductMinimumPriceFilter;
-use Sunnysideup\Ecommerce\Search\Filters\ProductMaximumPriceFilter;
+
 /**
  * This is a standard Product page-type with fields like
  * Price, Weight, Model and basic management of
@@ -181,16 +180,6 @@ class Product extends Page implements BuyableModel
     private static $summary_fields = [
     ];
 
-    public function SummaryFields()
-    {
-        return [
-            'Image.CMSThumbnail' => 'Image',
-            'FullName' => 'Description',
-            'Price.Nice' => 'Price',
-            'AllowPurchaseNice' => 'For Sale',
-        ];
-    }
-
     /**
      * Standard SS variable.
      */
@@ -260,6 +249,16 @@ class Product extends Page implements BuyableModel
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
     private static $_calculated_price_cache = [];
+
+    public function SummaryFields()
+    {
+        return [
+            'Image.CMSThumbnail' => 'Image',
+            'FullName' => 'Description',
+            'Price.Nice' => 'Price',
+            'AllowPurchaseNice' => 'For Sale',
+        ];
+    }
 
     public static function is_product_variation($buyable): bool
     {

@@ -5,20 +5,12 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 
-use Sunnysideup\Vardump\Vardump;
-
 /**
  * provides data on the user.
  */
 class ProductSorter extends BaseApplyer
 {
-
     protected static $defaultSortOrderFromFilter = null;
-
-    public static function setDefaultSortOrderFromFilter($mixed)
-    {
-        self::$defaultSortOrderFromFilter = $mixed;
-    }
 
     /**
      * @var array
@@ -56,6 +48,11 @@ class ProductSorter extends BaseApplyer
         ],
     ];
 
+    public static function setDefaultSortOrderFromFilter($mixed)
+    {
+        self::$defaultSortOrderFromFilter = $mixed;
+    }
+
     /**
      * @param string       $key    optional key
      * @param array|string $params optional params to go with key
@@ -86,11 +83,11 @@ class ProductSorter extends BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
-        if( BaseApplyer::DEFAULT_NAME === $key && self::$defaultSortOrderFromFilter) {
+        if (BaseApplyer::DEFAULT_NAME === $key && self::$defaultSortOrderFromFilter) {
             return self::$defaultSortOrderFromFilter;
         }
         // @todo: make smarter...
-        if (is_array($params) && count ($params)) {
+        if (is_array($params) && count($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
 

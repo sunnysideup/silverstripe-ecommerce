@@ -26,7 +26,7 @@ class EcommerceSideReportNoPriceProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOPRICE', 'E-commerce: Products without Price') ;
+        return _t('EcommerceSideReport.NOPRICE', 'E-commerce: Products without Price');
     }
 
     /**

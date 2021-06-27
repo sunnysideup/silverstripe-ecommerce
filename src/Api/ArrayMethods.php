@@ -42,9 +42,10 @@ class ArrayMethods
             $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
-        if($includeElse) {
+        if ($includeElse) {
             $ifStatement .= ' ELSE 999999999 ';
         }
+
         return $ifStatement . ' END';
     }
 
