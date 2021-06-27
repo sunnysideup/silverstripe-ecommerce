@@ -26,8 +26,7 @@ class EcommerceSideReportNoInternalIDProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products without Internal ID / SKU ') .
-        ' (' . $this->sourceRecords()->count() . ')';
+        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products without Internal ID / SKU ');
     }
 
     /**
@@ -58,7 +57,7 @@ class EcommerceSideReportNoInternalIDProducts extends Report
     public function sourceRecords($params = null)
     {
         return Product::get()
-            ->where("\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' ")
+            ->where("\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' OR \"Product\".\"InternalItemID\" = '0' ")
             ->sort('FullSiteTreeSort', 'ASC')
         ;
     }
@@ -70,7 +69,7 @@ class EcommerceSideReportNoInternalIDProducts extends Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
             ],
         ];

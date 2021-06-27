@@ -18,6 +18,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -141,6 +142,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     private static $summary_fields = [
         'NameAndDescription' => 'Step',
         'ShowAsSummary' => 'Phase',
+        'Orders.Count' => 'Orders',
     ];
 
     /**
@@ -890,12 +892,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Formatted answer for "hasCustomerMessage".
      */
-    public function ShowAsSummary(): string
+    public function ShowAsSummary()
     {
         return $this->getShowAsSummary();
     }
 
-    public function getShowAsSummary(): string
+    public function getShowAsSummary() : DBHTMLText
     {
         $v = '<strong>';
         if ($this->ShowAsUncompletedOrder) {
@@ -926,6 +928,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $v .= '<br />' . $this->humanReadeableDeferTimeInSeconds();
         }
 
+        /** @return DBHTMLText */
         return DBField::create_field('HTMLText', $v);
     }
 

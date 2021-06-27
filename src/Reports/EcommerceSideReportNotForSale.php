@@ -26,8 +26,7 @@ class EcommerceSideReportNotForSale extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOTFORSALE', 'E-commerce: Products not for sale') .
-        ' (' . $this->sourceRecords()->count() . ')';
+        return _t('EcommerceSideReport.NOTFORSALE', 'E-commerce: Products not for sale');
     }
 
     /**
@@ -70,7 +69,7 @@ class EcommerceSideReportNotForSale extends Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
             ],
         ];

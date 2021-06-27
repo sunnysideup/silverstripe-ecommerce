@@ -41,8 +41,7 @@ class EcommerceSideReportEcommercePages extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages') .
-        ' (' . $this->sourceRecords()->count() . ')';
+        return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages') ;
     }
 
     /**
@@ -72,7 +71,16 @@ class EcommerceSideReportEcommercePages extends Report
      */
     public function sourceRecords($params = null)
     {
-        return SiteTree::get()->filter('ClassName', [CartPage::class, AccountPage::class, ProductGroupSearchPage::class, CheckoutPage::class, OrderConfirmationPage::class] + (array) $this->Config()->get('additional_classnames'));
+        $array = [
+            CartPage::class,
+            AccountPage::class,
+            ProductGroupSearchPage::class,
+            CheckoutPage::class,
+            OrderConfirmationPage::class
+        ] +
+        (array) $this->Config()->get('additional_classnames');
+
+        return SiteTree::get()->filter(['ClassName' =>  $array]);
     }
 
     /**
@@ -82,7 +90,7 @@ class EcommerceSideReportEcommercePages extends Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
             ],
         ];

@@ -8,6 +8,8 @@ use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 
+use SilverStripe\Versioned\GridFieldArchiveAction;
+
 /**
  * @author nicolaas <github@sunnysideup.co.nz>
  */
@@ -20,10 +22,10 @@ class GridFieldBasicPageRelationConfigNoAddExisting extends GridFieldConfig_Rela
     {
         parent::__construct($itemsPerPage);
         $this
-            ->removeComponentsByType(GridFieldEditButton::class)
             ->removeComponentsByType(GridFieldAddNewButton::class)
             ->removeComponentsByType(GridFieldAddExistingAutocompleter::class)
-            ->removeComponentsByType(GridFieldDeleteAction::class)
+            // ->removeComponentsByType(GridFieldDeleteAction::class)
+            ->removeComponentsByType(GridFieldArchiveAction::class)
         ;
     }
 }

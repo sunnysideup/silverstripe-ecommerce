@@ -222,7 +222,12 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var array
      */
-    private static $fields_to_search_full_text_default = ['Title', 'MenuTitle', 'Content', 'MetaDescription'];
+    private static $fields_to_search_full_text_default = [
+        'Title',
+        'MenuTitle',
+        'Content',
+        'MetaDescription'
+    ];
 
     public static function keyword_sanitised(?string $string = '') : string
     {
@@ -524,9 +529,10 @@ class ProductSearchFilter extends BaseApplyer
     protected function workOutFieldsToSearch(string $classNameToSearch) : array
     {
         $fieldArrayAll = $this->Config()->get('fields_to_search_full_text_default_per_class');
-        $fieldsArray = $fieldArrayAll[$classNameToSearch] ?? $this->Config()->get('fields_to_search_full_text_default');
-        $extraFields = $this->extraBuyableFieldsToSearchFullText[$classNameToSearch] ?? [];
-        return array_merge($fieldsArray, $extraFields);
+        $fieldsArray = $this->Config()->get('fields_to_search_full_text_default');
+        $extraFields1 = $this->extraBuyableFieldsToSearchFullText[$classNameToSearch] ?? [];
+        $extraFields2 = $fieldArrayAll[$classNameToSearch] ?? [];
+        return array_merge($fieldsArray, $extraFields1, $extraFields2);
     }
 
     /**

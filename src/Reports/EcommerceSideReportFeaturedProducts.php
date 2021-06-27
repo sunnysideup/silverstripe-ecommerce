@@ -23,8 +23,7 @@ class EcommerceSideReportFeaturedProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products') .
-        ' (' . $this->sourceRecords()->count() . ')';
+        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products') ;
     }
 
     /**
@@ -67,7 +66,7 @@ class EcommerceSideReportFeaturedProducts extends Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
             ],
         ];

@@ -101,6 +101,11 @@ class ProductGroup extends Page
         'Children.Count' => 'Child Categories',
     ];
 
+    private static $searchable_fields = [
+        'ShowInMenus' => 'ExactMatchFilter',
+        'ShowInSearch' => 'ExactMatchFilter',
+    ];
+
     private static $casting = [
         'NumberOfProducts' => 'Int',
     ];

@@ -26,8 +26,7 @@ class EcommerceSideReportNoImageProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products without image') .
-        ' (' . $this->sourceRecords()->count() . ')';
+        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products without image') ;
     }
 
     /**
@@ -70,7 +69,7 @@ class EcommerceSideReportNoImageProducts extends Report
     {
         return [
             'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', Product::class),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
             ],
         ];
