@@ -25,6 +25,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -482,139 +483,164 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public function getCMSFields()
     {
-        $fields = parent::getCMSFields();
-        $self = $this;
-        $self->beforeUpdateCMSFields(
-            function ($fields) use ($self) {
-                //important - first remove fields with custom labels before adding them again,
-                //otherwise there will be a server error when attempting to save
-                foreach ($self->customFieldLabels() as $name => $label) {
-                    $fields->removeByName($name);
+        $this->beforeUpdateCMSFields(
+            (
+                function (FieldList $fields) {
+                    //important - first remove fields with custom labels before adding them again,
+                    //otherwise there will be a server error when attempting to save
+                    $fields->addFieldsToTab(
+                        'Root',
+                        [
+                            Tab::create(
+                                'Pricing',
+                                _t('EcommerceDBConfig.PRICING', 'Pricing')
+                            ),
+                            Tab::create(
+                                'Products',
+                                _t('EcommerceDBConfig.PRODUCTS', 'Products')
+                            ),
+                            Tab::create(
+                                'ProductImages',
+                                _t('EcommerceDBConfig.PRODUCT_IMAGES', 'Product Images')
+                            ),
+                            Tab::create(
+                                'AddressAndDelivery',
+                                _t('EcommerceDBConfig.ADDRESS_AND_DELIVERY', 'Address and Delivery')
+                            ),
+                            Tab::create(
+                                'Payments',
+                                _t('EcommerceDBConfig.PAYMENT_TAB', 'Payments')
+                            ),
+                            Tab::create(
+                                'Emails',
+                                _t('EcommerceDBConfig.EMAILS', 'Emails')
+                            ),
+                            Tab::create(
+                                'Process',
+                                _t('EcommerceDBConfig.PROCESS', 'Process')
+                            ),
+                            Tab::create(
+                                'Advanced',
+                                _t('EcommerceDBConfig.ADVANCED', 'Advanced')
+                            ),
+                            Tab::create(
+                                'Offline',
+                                _t('EcommerceDBConfig.OFFLINE', 'Offline'),
+                                LiteralField::create('XXX', 'hello')
+                            )
+                        ]
+                    );
                 }
-
-                //new section
-                $fieldDescriptions = $self->customDescriptionsForFields();
-                $fieldLabels = $self->fieldLabels();
-                $fields->addFieldToTab('Root.Main', new TextField('Title', $fieldLabels['Title']));
-                $fields->InsertAfter(
-                    'Root.Main',
-                    LiteralField::create(
-                        'RefreshWebsite',
-                        '<h2><a href="/shoppingcart/clear/?flush=all">Refresh website, clear caches, and your cart</a></h2>'
-                    ),
-                    'Root.Main.ShopClosed'
-                );
-                $fields->addFieldsToTab('Root', [
-                    Tab::create(
-                        'Root.Pricing',
-                        _t('EcommerceDBConfig.PRICING', 'Pricing'),
-                        new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
-                        new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
-                        $htmlEditorField1 = new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation'])
-                    ),
-                    Tab::create(
-                        'Products',
-                        _t('EcommerceDBConfig.PRODUCTS', 'Products'),
-                        new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
-                        new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
-                        new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
-                        $htmlEditorField2 = new HTMLEditorField('NotForSaleMessage', $fieldLabels['NotForSaleMessage']),
-                        new CheckboxField('ProductsHaveWeight', $fieldLabels['ProductsHaveWeight']),
-                        new CheckboxField('ProductsHaveModelNames', $fieldLabels['ProductsHaveModelNames']),
-                        new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers'])
-                        //new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
-                    ),
-                    Tab::create(
-                        'AddressAndDelivery',
-                        _t('EcommerceDBConfig.ADDRESS_AND_DELIVERY', 'Address and Delivery'),
-                        new TextField('PostalCodeURL', $fieldLabels['PostalCodeURL']),
-                        new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
-                        $htmlEditorField3 = new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
-                        new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
-                        $htmlEditorField4 = new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote'])
-                    ),
-                    Tab::create(
-                        'Emails',
-                        _t('EcommerceDBConfig.EMAILS', 'Emails'),
-                        new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
-                        new UploadField('EmailLogo', $fieldLabels['EmailLogo']),
-                        new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
-                        $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage'])
-                    ),
-                    Tab::create(
-                        'Process',
-                        _t('EcommerceDBConfig.PROCESS', 'Process'),
-                        $self->getOrderStepsField()
-                    ),
-                    Tab::create(
-                        'Advanced',
-                        _t('EcommerceDBConfig.ADVANCED', 'Advanced'),
-                        new LiteralField(
-                            'ReviewHardcodedSettings',
-                            '<p>
-                                Your developer has pre-set some configurations for you.
-                                You can
-                                <a href="/dev/ecommerce/ecommercetaskcheckconfiguration" data-popup="true">review these settings</a>
-                                but you will need to ask your developer to change them if they are not right.
-                                The reason they can not be set is that changing them can break your application.
-                            </p>'
-                        )
-                    ),
-                ]);
-                $mappingArray = Config::inst()->get(BillingAddress::class, 'fields_to_google_geocode_conversion');
-                if (is_array($mappingArray) && count($mappingArray)) {
-                    $mappingArray = Config::inst()->get(ShippingAddress::class, 'fields_to_google_geocode_conversion');
-                    if (is_array($mappingArray) && count($mappingArray)) {
-                        $fields->removeByName('PostalCodeURL');
-                        $fields->removeByName('PostalCodeLabel');
-                    }
-                }
-                $htmlEditorField1->setRows(3);
-                $htmlEditorField2->setRows(3);
-                $htmlEditorField3->setRows(3);
-                $htmlEditorField4->setRows(3);
-                $htmlEditorField5->setRows(3);
-                $fields->addFieldsToTab(
-                    'Root.Main',
-                    [
-                        new CheckboxField('UseThisOne', $fieldLabels['UseThisOne']),
-                        new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
-                        HTMLReadonlyField::create(
-                            'RefreshWebsite',
-                            'Update site',
-                            '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
-                        ),
-                    ]
-                );
-
-                //set cols
-                if ($f = $fields->dataFieldByName('CurrenciesExplanation')) {
-                    $f->setRows(2);
-                }
-                if ($f = $fields->dataFieldByName('NotForSaleMessage')) {
-                    $f->setRows(2);
-                }
-                if ($f = $fields->dataFieldByName('ShopPhysicalAddress')) {
-                    $f->setRows(2);
-                }
-                foreach ($fields->dataFields() as $field) {
-                    if (isset($fieldDescriptions[$field->getName()])) {
-                        $field->setDescription($fieldDescriptions[$field->Name]);
-                    }
-                }
-                Requirements::block('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
-                if (strnatcmp(PHP_VERSION, '5.5.1') >= 0) {
-                    $fields->addFieldToTab('Root.ProductImages', new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage']));
-                }
-                $fields->replaceField(
-                    'UseThisOne',
-                    HiddenField::create(
-                        'UseThisOne',
-                        'UseThisOne'
-                    )
-                );
-            }
+            )
         );
+        // foreach ($self->customFieldLabels() as $name => $label) {
+        //     $fields->removeByName($name);
+        // }
+        $fields = parent::getCMSFields();
+        //new section
+        $fieldDescriptions = $this->customDescriptionsForFields();
+        $fieldLabels = $this->fieldLabels();
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                new TextField('Title', $fieldLabels['Title']),
+                CheckboxField::create(
+                    'UseThisOne',
+                    $fieldLabels['UseThisOne']
+                ),
+                HTMLReadonlyField::create(
+                    'RefreshWebsite',
+                    'Update site',
+                    '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
+                ),
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Pricing',
+            [
+                new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
+                new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
+                new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation'])
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Offline',
+            [
+                new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Products',
+            [
+                new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
+                new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
+                new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
+                new HTMLEditorField('NotForSaleMessage', $fieldLabels['NotForSaleMessage']),
+                new CheckboxField('ProductsHaveWeight', $fieldLabels['ProductsHaveWeight']),
+                new CheckboxField('ProductsHaveModelNames', $fieldLabels['ProductsHaveModelNames']),
+                new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers'])
+                //new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.ProductImages',
+            [
+                new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage']),
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.AddressAndDelivery',
+            [
+                new TextField('PostalCodeURL', $fieldLabels['PostalCodeURL']),
+                new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
+                new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
+                new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
+                new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote'])
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Payments',
+            [
+
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Emails',
+            [
+                new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
+                new UploadField('EmailLogo', $fieldLabels['EmailLogo']),
+                new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
+                $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage'])
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Process',
+            [
+                $this->getOrderStepsField(),
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Advanced',
+            [
+                new LiteralField(
+                    'ReviewHardcodedSettings',
+                    '<p>
+                        Your developer has pre-set some configurations for you.
+                        You can
+                        <a href="/dev/ecommerce/ecommercetaskcheckconfiguration" data-popup="true">review these settings</a>
+                        but you will need to ask your developer to change them if they are not right.
+                        The reason they can not be set is that changing them can break your application.
+                    </p>'
+                ),
+            ]
+        );
+
+        foreach ($fields->dataFields() as $field) {
+            if (isset($fieldDescriptions[$field->getName()])) {
+                $field->setDescription($fieldDescriptions[$field->Name]);
+            }
+        }
+        Requirements::block('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
 
         return $fields;
     }

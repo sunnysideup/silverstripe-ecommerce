@@ -1,6 +1,14 @@
 ---
 Name: ecommerce
 ---
+
+SilverStripe\Control\Controller:
+  extensions:
+    - Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension
+SilverStripe\Forms\Form:
+  extensions:
+    - Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension
+
 SilverStripe\Dev\DevelopmentAdmin:
   extensions:
     - Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator

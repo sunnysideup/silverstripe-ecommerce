@@ -37,7 +37,11 @@ class ProductFilter extends BaseApplyer
         $this->applyStart($key, $params);
         $filter = $this->getSql($key, $params);
         if (! empty($filter)) {
-            $this->products = $this->products->filter($filter);
+            if(is_string($filter)) {
+                $this->products = $this->products->where($filter);
+            } else {
+                $this->products = $this->products->filter($filter);
+            }
         }
         $this->applyEnd($key, $params);
 
