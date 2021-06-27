@@ -31,7 +31,7 @@ class EcommerceTaskDeleteProducts extends BuildTask
         $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
         foreach ($arrayOfBuyables as $buyable) {
             $allproducts = $buyable::get();
-            if ($allproducts->count()) {
+            if ($allproducts->exists()) {
                 foreach ($allproducts as $product) {
                     DB::alteration_message('Deleting ' . $product->ClassName . ' ID = ' . $product->ID, 'deleted');
                     if (is_a($product, EcommerceConfigClassNames::getName(SiteTree::class))) {

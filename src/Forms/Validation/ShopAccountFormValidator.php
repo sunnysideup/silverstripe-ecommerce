@@ -49,7 +49,7 @@ class ShopAccountFormValidator extends RequiredFields
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
                     ->exclude(['ID' => $loggedInMemberID])
                 ;
-                if ($otherMembersWithSameEmail->count()) {
+                if ($otherMembersWithSameEmail->exists()) {
                     //we allow existing email
                     // if we are currently NOT logged in
                     // in case we place an order!

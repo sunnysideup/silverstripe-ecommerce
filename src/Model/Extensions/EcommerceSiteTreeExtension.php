@@ -67,7 +67,7 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
                 ->filter(['URLSegment' => $this->owner->URLSegment])
                 ->exclude(['ID' => $this->owner->ID])
             ;
-            if ($checkForDuplicatesURLSegments->count() > 0) {
+            if ($checkForDuplicatesURLSegments->exists()) {
                 return false;
             }
         }

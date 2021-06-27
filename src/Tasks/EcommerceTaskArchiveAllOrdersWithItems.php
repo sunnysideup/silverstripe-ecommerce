@@ -99,7 +99,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $offset = 0;
         $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogTableName, $offset);
-        while ($orders->count()) {
+        while ($orders->exists()) {
             foreach ($orders as $order) {
                 $isSubmitted = $submissionLogClassName::get()
                     ->Filter(['OrderID' => $order->ID])

@@ -436,7 +436,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function canDelete($member = null)
     {
-        if ($this->getOrders()->count()) {
+        if ($this->getOrders()->exists()) {
             return false;
         }
 
@@ -845,7 +845,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
                 ->limit($limit)
                 ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"')
             ;
-            if ($addresses->count()) {
+            if ($addresses->exists()) {
                 if ($keepDoubles) {
                     foreach ($addresses as $address) {
                         $returnArrayList->push($address);
@@ -877,7 +877,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function previousOrderAddress($type = BillingAddress::class, $excludeID = 0)
     {
         $addresses = $this->previousOrderAddresses($type, $excludeID, true);
-        if ($addresses->count()) {
+        if ($addresses->exists()) {
             return $addresses->First();
         }
     }

@@ -1146,7 +1146,7 @@ class Product extends Page implements BuyableModel
 
         $html .= '<li><hr />Location<hr /></li>';
         $html .= '<li><b>Main Parent Group:</b> ' . $this->ParentGroup()->Title . '</li>';
-        $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->count() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
+        $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->exists() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';
         $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';

@@ -38,7 +38,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
             \"Phone\" LIKE '%{$value}%'
         ");
 
-        if ($billingAddresses->count()) {
+        if ($billingAddresses->exists()) {
             $billingAddressesIDs = $billingAddresses->columnUnique();
         }
         $billingAddressesIDs = ArrayMethods::filter_array($billingAddressesIDs);
@@ -53,7 +53,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
             \"ShippingPostalCode\" LIKE '%{$value}%' OR
             \"ShippingPhone\" LIKE '%{$value}%'
         ");
-        if ($shippingAddresses->count()) {
+        if ($shippingAddresses->exists()) {
             $shippingAddressesIDs = $shippingAddresses->columnUnique();
         }
         $shippingAddressesIDs = ArrayMethods::filter_array($shippingAddressesIDs);
@@ -64,7 +64,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
             \"Surname\" LIKE '%{$value}%' OR
             \"Email\" LIKE '%{$value}%'
         ");
-        if ($members->count()) {
+        if ($members->exists()) {
             $memberIDs = $members->columnUnique();
         }
         $memberIDs = ArrayMethods::filter_array($memberIDs);

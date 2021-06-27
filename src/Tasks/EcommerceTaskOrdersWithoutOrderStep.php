@@ -51,7 +51,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                         "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
                     )
                 ;
-                if ($orders->count()) {
+                if ($orders->exists()) {
                     foreach ($orders as $order) {
                         $archivingNow = 'Open order to rectify.';
                         if ($doCancel) {

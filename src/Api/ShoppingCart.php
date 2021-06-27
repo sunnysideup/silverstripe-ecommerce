@@ -686,7 +686,7 @@ class ShoppingCart
         $memberID = (int) Member::currentUserID();
         if ($memberID) {
             $orders = Order::get()->filter(['MemberID' => $memberID]);
-            if ($orders && $orders->count()) {
+            if ($orders->exists()) {
                 foreach ($orders as $order) {
                     if (! $order->IsSubmitted()) {
                         $order->delete();
@@ -1014,7 +1014,7 @@ class ShoppingCart
             $items = $this->currentOrder()->Items();
             echo $items->sql();
             echo '<hr />';
-            if ($items->count()) {
+            if ($items->exists()) {
                 foreach ($items as $item) {
                     print_r($item);
                 }
@@ -1023,7 +1023,7 @@ class ShoppingCart
             }
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Modifiers</h1>';
             $modifiers = $this->currentOrder()->Modifiers();
-            if ($modifiers->count()) {
+            if ($modifiers->exists()) {
                 foreach ($modifiers as $modifier) {
                     print_r($modifier);
                 }
@@ -1054,21 +1054,21 @@ class ShoppingCart
                 print_r($cancelledBy);
             }
             $logs = $this->currentOrder()->OrderStatusLogs();
-            if ($logs && $logs->count()) {
+            if ($logs->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Logs</h1>';
                 foreach ($logs as $log) {
                     print_r($log);
                 }
             }
             $payments = $this->currentOrder()->Payments();
-            if ($payments && $payments->count()) {
+            if ($payments->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Payments</h1>';
                 foreach ($payments as $payment) {
                     print_r($payment);
                 }
             }
             $emails = $this->currentOrder()->Emails();
-            if ($emails && $emails->count()) {
+            if ($emails->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Emails</h1>';
                 foreach ($emails as $email) {
                     print_r($email);

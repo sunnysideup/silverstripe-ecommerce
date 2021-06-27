@@ -49,7 +49,7 @@ class OrderStepField extends DatalessField
         $html = '
         <div class="orderStepField">
             <ol>';
-        if ($orderSteps->count()) {
+        if ($orderSteps->exists()) {
             foreach ($orderSteps as $orderStep) {
                 if ($orderStep->HideFromEveryone()) {
                     continue;

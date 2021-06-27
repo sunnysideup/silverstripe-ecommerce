@@ -47,7 +47,7 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
                 ->innerJoin('Order', '"Order"."MemberID" = "Member"."ID"')
             ;
             //add combos
-            if ($unlistedMembers->count()) {
+            if ($unlistedMembers->exists()) {
                 $existingMembers = $customerGroup->Members();
                 foreach ($unlistedMembers as $member) {
                     $existingMembers->add($member);

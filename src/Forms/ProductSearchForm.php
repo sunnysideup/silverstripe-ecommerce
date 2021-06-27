@@ -261,7 +261,7 @@ class ProductSearchForm extends Form
             return false;
         }
         if ($this->baseListOwner) {
-            return $this->baseListOwner->getProducts()->count() > 0;
+            return $this->baseListOwner->getProducts()->exists();
         }
 
         return true;

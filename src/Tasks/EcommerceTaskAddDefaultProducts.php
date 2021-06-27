@@ -22,8 +22,8 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
 
     public function run($request)
     {
-        if (0 === Product::get()->Count()) {
-            if (0 === ProductGroup::get()->Count()) {
+        if (! Product::get()->exists()) {
+            if (! ProductGroup::get()->exists()) {
                 $productGroup1 = new ProductGroup();
                 $productGroup1->Title = 'Products';
                 $productGroup1->Content = "

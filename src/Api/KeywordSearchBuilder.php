@@ -103,7 +103,7 @@ class KeywordSearchBuilder
         if ($this->keywordPhrase !== $word) {
             $replacements = $replacements->exclude(['ReplaceWholePhrase' => 1]);
         }
-        if ($replacements->count()) {
+        if ($replacements->exists()) {
             $replacementsArray = $replacements->map('ID', 'Replace')->toArray();
             foreach ($replacementsArray as $replacementWord) {
                 $this->keywordPhrase = str_replace($word, $replacementWord, $this->keywordPhrase);

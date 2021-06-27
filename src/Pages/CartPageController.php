@@ -254,7 +254,7 @@ class CartPageController extends PageController
     public function ActionLinks()
     {
         $this->workOutMessagesAndActions();
-        if ($this->actionLinks && $this->actionLinks->count()) {
+        if ($this->actionLinks->exists()) {
             return $this->actionLinks;
         }
 
@@ -600,7 +600,7 @@ class CartPageController extends PageController
             //actions from modifiers
             if ($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
                 $modifiers = $this->currentOrder->Modifiers();
-                if ($modifiers->count()) {
+                if ($modifiers->exists()) {
                     foreach ($modifiers as $modifier) {
                         $array = $modifier->PostSubmitAction();
                         if (is_array($array) && count($array)) {

@@ -414,7 +414,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if ($defaultRegion) {
             $regions = $regions->Filter(['CountryID' => EcommerceCountry::get_country_id()]);
         }
-        if ($regions && $regions->count()) {
+        if ($regions && $regions->exists()) {
             foreach ($regions as $region) {
                 $defaultArray[$region->ID] = $region->Name;
             }

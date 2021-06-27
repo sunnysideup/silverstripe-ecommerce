@@ -121,7 +121,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     protected function tryToFinaliseOrders($orders, $limit, $startAt)
     {
         $orders = $orders->limit($limit, $startAt);
-        if ($orders->count()) {
+        if ($orders->exists()) {
             DB::alteration_message("<h1>Moving {$limit} Orders (starting from {$startAt})</h1>");
             foreach ($orders as $order) {
                 ++$startAt;

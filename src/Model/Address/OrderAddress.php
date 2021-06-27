@@ -469,7 +469,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = true);
         $comparisonString = $this->comparisonString();
-        if ($addresses->count()) {
+        if ($addresses->exists()) {
             foreach ($addresses as $address) {
                 if ($address->comparisonString() === $comparisonString) {
                     $address->Obsolete = 1;

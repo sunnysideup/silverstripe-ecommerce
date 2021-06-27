@@ -509,7 +509,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $formsDone = [];
             $arrayList = new ArrayList();
             $modifiers = $this->Modifiers();
-            if ($modifiers->count()) {
+            if ($modifiers->exists()) {
                 foreach ($modifiers as $modifier) {
                     if ($modifier->ShowForm()) {
                         if (! isset($formsDone[$modifier->ClassName])) {
@@ -624,7 +624,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $statusOptions = OrderStep::get();
         }
-        if ($statusOptions && $statusOptions->count()) {
+        if ($statusOptions->exists()) {
             $preSelected = [];
             // $createdOrderStatus = $statusOptions->First();
             $arrayOfStatusOptions = clone $statusOptions->map('ID', 'Title');
@@ -798,7 +798,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 'ClassName' => OrderStatusLog::class,
             ]
         );
-        if ($keyNotes->count()) {
+        if ($keyNotes->exists()) {
             $notesSummaryConfig = GridFieldConfig_RecordViewer::create();
             $notesSummaryConfig->removeComponentsByType(GridFieldToolbarHeader::class);
             $notesSummaryConfig->removeComponentsByType(GridFieldFilterHeader::class);
@@ -1052,7 +1052,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
         $currencies = EcommerceCurrency::get_list();
-        if ($currencies && $currencies->count()) {
+        if ($currencies->exists()) {
             $currencies = $currencies->map()->toArray();
             $fields->addFieldToTab('Root.Currency', new ReadonlyField('ExchangeRate ', _t('Order.EXCHANGERATE', 'Exchange Rate'), $this->ExchangeRate));
             $fields->addFieldToTab('Root.Currency', $currencyField = new DropdownField('CurrencyUsedID', _t('Order.CurrencyUsed', 'Currency Used'), $currencies));
@@ -1177,12 +1177,12 @@ class Order extends DataObject implements EditableEcommerceObject
             $createdModifiersClassNames = [];
             $modifiersAsArrayList = new ArrayList();
             $modifiers = $this->modifiersFromDatabase($includingRemoved = true);
-            if ($modifiers->count()) {
+            if ($modifiers->exists()) {
                 foreach ($modifiers as $modifier) {
                     $modifiersAsArrayList->push($modifier);
                 }
             }
-            if ($modifiersAsArrayList->count()) {
+            if ($modifiersAsArrayList->exists()) {
                 foreach ($modifiersAsArrayList as $modifier) {
                     $createdModifiersClassNames[$modifier->ID] = $modifier->ClassName;
                 }
@@ -1542,7 +1542,8 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             if ($this->IsPaid()) {
                 //do nothing;
-            } elseif (($payments = $this->Payments()) && $payments->count()) {
+            } elseif ($this->Payments()->exists()) {
+                $payments = $this->Payments();
                 foreach ($payments as $payment) {
                     if ('Pending' === $payment->Status) {
                         return true;
@@ -2040,7 +2041,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $total = 0;
         $modifiers = $this->Modifiers();
-        if ($modifiers->count()) {
+        if ($modifiers->exists()) {
             foreach ($modifiers as $modifier) {
                 if (! $modifier->IsRemoved()) { //we just double-check this...
                     if (is_array($excluded) && in_array($modifier->ClassName, $excluded, true)) {
@@ -2076,7 +2077,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function RetrieveModifier($className)
     {
         $modifiers = $this->Modifiers();
-        if ($modifiers->count()) {
+        if ($modifiers->exists()) {
             foreach ($modifiers as $modifier) {
                 if (is_a($modifier, EcommerceConfigClassNames::getName($className))) {
                     return $modifier;
@@ -2738,7 +2739,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $result = 0;
         $items = $this->Items();
-        if ($items->count()) {
+        if ($items->exists()) {
             foreach ($items as $item) {
                 if (is_a($item, EcommerceConfigClassNames::getName(OrderAttribute::class))) {
                     $result += $item->Total();
@@ -3947,7 +3948,7 @@ class Order extends DataObject implements EditableEcommerceObject
         //check /re-add all non-removable ones
         //$start = microtime();
         $orderItems = $this->itemsFromDatabase();
-        if ($orderItems->count()) {
+        if ($orderItems->exists()) {
             foreach ($orderItems as $orderItem) {
                 if ($orderItem) {
                     $orderItem->runUpdate($recalculate);
@@ -3965,7 +3966,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function calculateModifiers($recalculate = false)
     {
         $createdModifiers = $this->modifiersFromDatabase();
-        if ($createdModifiers->count()) {
+        if ($createdModifiers->exists()) {
             foreach ($createdModifiers as $modifier) {
                 if ($modifier) {
                     $modifier->runUpdate($recalculate);

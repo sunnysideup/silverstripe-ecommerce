@@ -60,7 +60,7 @@ class EcommerceCodeFilter
         if ($s) {
             $count = 2;
             $code = $s;
-            while ($isObject && $obj::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->Count()) {
+            while ($isObject && $obj::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->exists()) {
                 $s = $code . '_' . $count;
                 ++$count;
             }

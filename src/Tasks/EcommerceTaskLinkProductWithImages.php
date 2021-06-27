@@ -74,7 +74,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
             if ($this->productID) {
                 $products = $products->filter(['ID' => $this->productID]);
             }
-            if ($products->count()) {
+            if ($products->exists()) {
                 foreach ($products as $product) {
                     if ($product->InternalItemID) {
                         if ($product->hasMethod($this->productManyManyField)) {
@@ -88,7 +88,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                             $images = File::get()
                                 ->filter(['Name:PartialMatch' => $whereStringArray])
                             ;
-                            if ($images->count()) {
+                            if ($images->exists()) {
                                 $method = $this->productManyManyField;
                                 $collection = $product->{$method}();
                                 foreach ($images as $image) {

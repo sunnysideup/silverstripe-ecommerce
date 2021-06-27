@@ -114,7 +114,7 @@ class BuyableSelectFieldDataList extends Controller
                                 $useVariationsInstead = false;
                                 if ($obj->hasExtension('ProductWithVariationDecorator')) {
                                     $variations = $obj->Variations();
-                                    if ($variations->count()) {
+                                    if ($variations->exists()) {
                                         $useVariationsInstead = true;
                                     }
                                 }

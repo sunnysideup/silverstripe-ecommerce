@@ -111,7 +111,7 @@ class CartResponse extends EcommerceResponse
 
         $inCartArray = [];
         $items = $currentOrder->Items();
-        if ($items->count()) {
+        if ($items->exists()) {
             foreach ($items as $item) {
                 $js = $item->updateForAjax($js);
                 $buyable = $item->Buyable(true);
@@ -135,7 +135,7 @@ class CartResponse extends EcommerceResponse
 
         //order modifiers
         $modifiers = $currentOrder->Modifiers();
-        if ($modifiers->count()) {
+        if ($modifiers->exists()) {
             foreach ($modifiers as $modifier) {
                 $js = $modifier->updateForAjax($js);
             }

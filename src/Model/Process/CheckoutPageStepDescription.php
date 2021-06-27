@@ -271,7 +271,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
             ;
 
             $stepsToAdd = $steps;
-            if ($addCodeSteps->count()) {
+            if ($addCodeSteps->exists()) {
                 foreach ($addCodeSteps as $addCodeStep) {
                     DB::alteration_message('Adding Code to Step ...' . $addCodeStep->Code, 'created');
                     $addCodeStep->Code = array_shift($stepsToAdd);
@@ -292,7 +292,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                 $idArray[$obj->ID] = $obj->ID;
             }
             $toDeleteObjects = CheckoutPageStepDescription::get()->exclude(['ID' => $idArray]);
-            if ($toDeleteObjects->count()) {
+            if ($toDeleteObjects->exists()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
                     DB::alteration_message('Deleting CheckoutPageStepDescription ' . $toDeleteObject->Code, 'deleted');
                     $toDeleteObject->delete();

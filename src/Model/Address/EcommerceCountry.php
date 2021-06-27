@@ -314,10 +314,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
-        if (ShippingAddress::get()->filter(['ShippingCountry' => $this->Code])->count()) {
+        if (ShippingAddress::get()->filter(['ShippingCountry' => $this->Code])->exists()) {
             return false;
         }
-        if (BillingAddress::get()->filter(['Country' => $this->Code])->count()) {
+        if (BillingAddress::get()->filter(['Country' => $this->Code])->exists()) {
             return false;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -387,7 +387,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             } else {
                 $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
-            if ($objects && $objects->count()) {
+            if ($objects->exists()) {
                 $idField = $useIDNotCode ? 'ID' : 'Code';
                 $array = $objects->map($idField, 'Name')->toArray();
             }
@@ -651,7 +651,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                         'Code' => $countryCode,
                     ])
                 ;
-                if ($countries->count()) {
+                if ($countries->exists()) {
                     self::$_allow_sales_cache[$orderID] = false;
                 }
             }
@@ -835,7 +835,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             return $defaultArray;
         }
         $countries = EcommerceCountry::get()->exclude(['DoNotAllowSales' => 1]);
-        if ($countries && $countries->count()) {
+        if ($countries && $countries->exists()) {
             foreach ($countries as $country) {
                 $defaultArray[$country->Code] = $country->Name;
             }

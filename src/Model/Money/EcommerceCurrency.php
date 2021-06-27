@@ -733,7 +733,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $this->Code = strtoupper($this->Code);
             // Check that there are no 2 same code currencies in use
             if ($this->isChanged('Code')) {
-                if (EcommerceCurrency::get()->where("UPPER(\"Code\") = '" . $this->Code . "'")->exclude('ID', (int) $this->ID - 0)->count()) {
+                if (EcommerceCurrency::get()->where("UPPER(\"Code\") = '" . $this->Code . "'")->exclude('ID', (int) $this->ID - 0)->exists()) {
                     $errors[] = "There is alreay another currency in use which code is '{$this->Code}'.";
                 }
             }

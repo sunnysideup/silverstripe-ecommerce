@@ -255,7 +255,7 @@ class CheckoutPage extends CartPage
      */
     public function canCreate($member = null, $context = [])
     {
-        return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->Count() ? false : $this->canEdit($member);
+        return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->exists() ? false : $this->canEdit($member);
     }
 
     /**
@@ -349,10 +349,10 @@ class CheckoutPage extends CartPage
                 )->setRows(5),
             ]
         );
-        if (OrderModifierDescriptor::get()->count()) {
+        if (OrderModifierDescriptor::get()->exists()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
-        if (CheckoutPageStepDescription::get()->count()) {
+        if (CheckoutPageStepDescription::get()->exists()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }
 

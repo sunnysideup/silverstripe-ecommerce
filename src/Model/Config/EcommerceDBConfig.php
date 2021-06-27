@@ -255,7 +255,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
-        if (EcommerceDBConfig::get()->count() > 0) {
+        if (EcommerceDBConfig::get()->exists()) {
             return false;
         }
 
@@ -884,7 +884,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 ->Filter(['UseThisOne' => 1])
                 ->Exclude(['ID' => $this->ID])
             ;
-            if ($configs->count()) {
+            if ($configs->exists()) {
                 foreach ($configs as $config) {
                     $config->UseThisOne = 0;
                     $config->write();
@@ -895,7 +895,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             ->Filter(['Title' => $this->Title])
             ->Exclude(['ID' => $this->ID])
         ;
-        if ($configs->count()) {
+        if ($configs->exists()) {
             foreach ($configs as $config) {
                 $config->Title .= '_' . $config->ID;
                 $config->write();

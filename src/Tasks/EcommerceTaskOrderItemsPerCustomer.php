@@ -62,7 +62,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                     }
                     if ($memberIsOK) {
                         $items = OrderItem::get()->filter(['OrderID' => $order->ID]);
-                        if ($items && $items->count()) {
+                        if ($items->exists()) {
                             $fileData .= $this->generateExportFileData($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
                         }
                     }

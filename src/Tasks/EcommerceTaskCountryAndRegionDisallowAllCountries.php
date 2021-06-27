@@ -24,7 +24,7 @@ class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
         $allowedArray = EcommerceCountry::get()
             ->filter(['DoNotAllowSales' => 0])
         ;
-        if ($allowedArray->count()) {
+        if ($allowedArray->exists()) {
             foreach ($allowedArray as $obj) {
                 $obj->DoNotAllowSales = 1;
                 $obj->write();

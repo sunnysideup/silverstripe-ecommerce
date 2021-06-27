@@ -83,7 +83,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
                 'PaymentConfirmed' => 1,
             ])
         ;
-        if ($orderStatusLog_PaymentChecks->Count()) {
+        if ($orderStatusLog_PaymentChecks->exists()) {
             return parent::nextStep($order);
         }
 

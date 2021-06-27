@@ -238,7 +238,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         }
         //delete the ones that are not relevant
         $orderModifierDescriptors = OrderModifierDescriptor::get();
-        if ($orderModifierDescriptors && $orderModifierDescriptors->count()) {
+        if ($orderModifierDescriptors->exists()) {
             foreach ($orderModifierDescriptors as $orderModifierDescriptor) {
                 if (! in_array($orderModifierDescriptor->ModifierClassName, $arrayOfModifiers, true)) {
                     $orderModifierDescriptor->delete();

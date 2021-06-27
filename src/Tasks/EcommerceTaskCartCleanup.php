@@ -249,7 +249,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
-        if ($oldCarts->count()) {
+        if ($oldCarts->exists()) {
             $count = 0;
             if ($this->verbose) {
                 $this->flush();
@@ -319,7 +319,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
-        if ($oldCarts->count()) {
+        if ($oldCarts->exists()) {
             $count = 0;
             if ($this->verbose) {
                 $this->flush();
@@ -413,7 +413,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         $unlinkedObjects = $className::get()
                             ->filter(['ID' => $this->oneToOneIDArray])
                         ;
-                        if ($unlinkedObjects->count()) {
+                        if ($unlinkedObjects->exists()) {
                             foreach ($unlinkedObjects as $unlinkedObject) {
                                 if ($this->verbose) {
                                     $this->flush();
@@ -474,7 +474,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         $unlinkedObjects = $classWithLastEdited::get()
                             ->filter(['ID' => $this->oneToManyIDArray])
                         ;
-                        if ($unlinkedObjects->count()) {
+                        if ($unlinkedObjects->exists()) {
                             foreach ($unlinkedObjects as $unlinkedObject) {
                                 if ($this->verbose) {
                                     DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');

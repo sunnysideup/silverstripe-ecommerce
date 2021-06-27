@@ -129,7 +129,7 @@ class OrderConfirmationPageController extends CartPageController
         if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
             $dos = CheckoutPageStepDescription::get()->where($where)->sort('ID', 'ASC');
             if ($number) {
-                if ($dos && $dos->count()) {
+                if ($dos->exists()) {
                     return $dos->First();
                 }
             }

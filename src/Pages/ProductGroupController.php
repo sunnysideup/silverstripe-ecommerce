@@ -801,7 +801,7 @@ class ProductGroupController extends PageController
     protected function paginateList($list): ?PaginatedList
     {
         $obj = null;
-        if ($list && $list->count()) {
+        if ($list->exists()) {
             $obj = PaginatedList::create($list, $this->request);
             if ($this->IsShowFullList()) {
                 $obj->setPageLength($this->MaxNumberOfProductsPerPageAbsolute());

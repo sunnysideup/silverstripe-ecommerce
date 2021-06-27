@@ -43,7 +43,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $id = (int) $request->getVar('id') - 0;
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
-        if (0 === $ordersinQueue->count()) {
+        if (! $ordersinQueue->exists()) {
             echo 'No orders in queue';
 
             return;

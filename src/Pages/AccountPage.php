@@ -95,7 +95,7 @@ class AccountPage extends Page
      */
     public function canCreate($member = null, $context = [])
     {
-        return AccountPage::get()->filter(['ClassName' => AccountPage::class])->Count() ? false : $this->canEdit($member);
+        return AccountPage::get()->filter(['ClassName' => AccountPage::class])->exists() ? false : $this->canEdit($member);
     }
 
     /**
@@ -253,7 +253,7 @@ class AccountPage extends Page
             $this->calculatedTotal = 0;
             $this->calculatedPaid = 0;
             $this->calculatedOutstanding = 0;
-            if ($this->pastOrders->count()) {
+            if ($this->pastOrders->exists()) {
                 foreach ($this->pastOrders as $order) {
                     $this->calculatedTotal += $order->Total();
                     $this->calculatedPaid += $order->TotalPaid();

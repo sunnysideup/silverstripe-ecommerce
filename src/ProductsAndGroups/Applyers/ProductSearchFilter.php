@@ -363,7 +363,7 @@ class ProductSearchFilter extends BaseApplyer
         //defining some variables
 
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
-        if ($this->products->limit(1)->count()) {
+        if ($this->products->exists()) {
             if (! empty($this->rawData['Keyword']) && strlen($this->rawData['Keyword']) > 1) {
                 $this->keywordPhrase = $this->rawData['Keyword'];
                 $this->doKeywordCleanup();

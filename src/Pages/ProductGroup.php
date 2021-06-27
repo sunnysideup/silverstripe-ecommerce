@@ -286,7 +286,7 @@ class ProductGroup extends Page
                     ->filter(['URLSegment' => $urlSegment])
                 ;
 
-                if ($checkForDuplicatesURLSegments->count()) {
+                if ($checkForDuplicatesURLSegments->exists()) {
                     $count = 0;
                     foreach ($checkForDuplicatesURLSegments as $productGroup) {
                         if ($count > 0) {
@@ -395,7 +395,7 @@ class ProductGroup extends Page
     public function getProductsToBeIncludedFromOtherGroupsArray(): array
     {
         $array = [];
-        if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->count()) {
+        if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->exists()) {
             $array = $this->AlsoShowProducts()->columnUnique();
         }
 

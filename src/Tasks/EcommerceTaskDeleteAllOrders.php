@@ -79,7 +79,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
             }
             $oldCarts = Order::get();
             $count = 0;
-            if ($oldCarts->count()) {
+            if ($oldCarts->exists()) {
                 if ($this->verbose) {
                     $totalToDeleteSQLObject = DB::query('SELECT COUNT(*) FROM "Order"');
                     $totalToDelete = $totalToDeleteSQLObject->value();
@@ -135,7 +135,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                     ->leftJoin('Order', "\"Order\".\"ID\" = \"{$classWithOrderID}\".\"OrderID\"")
                 ;
 
-                if ($unlinkedObjects->count()) {
+                if ($unlinkedObjects->exists()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {
                         if ($this->verbose) {
                             DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');

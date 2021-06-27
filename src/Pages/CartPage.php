@@ -148,7 +148,7 @@ class CartPage extends Page
      */
     public function canCreate($member = null, $context = [])
     {
-        return CartPage::get()->Filter(['ClassName' => CartPage::class])->Count() ? false : $this->canEdit($member);
+        return CartPage::get()->Filter(['ClassName' => CartPage::class])->exists() ? false : $this->canEdit($member);
     }
 
     /**

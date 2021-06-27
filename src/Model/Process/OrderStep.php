@@ -1181,7 +1181,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function onBeforeDelete()
     {
         $ordersWithThisStatus = Order::get()->filter(['StatusID' => $this->ID]);
-        if ($ordersWithThisStatus->count()) {
+        if ($ordersWithThisStatus->exists()) {
             $bestOrderStep = $this->NextOrderStep();
             //backup
             if ($bestOrderStep && $bestOrderStep->exists()) {

@@ -132,7 +132,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $count = 50;
         $orders = $this->getMyOrders($idArray, $count, $offset);
 
-        while ($orders->count()) {
+        while ($orders->exists()) {
             $offset += $count;
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
@@ -149,7 +149,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                     }
                     if ($memberIsOK) {
                         $items = OrderItem::get()->filter(['OrderID' => $order->ID]);
-                        if ($items && $items->count()) {
+                        if ($items->exists()) {
                             $fileData .= $this->generateExportFileDataDetails($order->getOrderEmail(), $order->SubmissionLog()->Created, $items);
                         }
                     }

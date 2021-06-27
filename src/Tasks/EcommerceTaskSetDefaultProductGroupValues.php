@@ -44,7 +44,7 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
         $faultyProductGroups = ProductGroup::get()
             ->exclude([$fieldName => $acceptableValuesArray])
         ;
-        if ($faultyProductGroups->count()) {
+        if ($faultyProductGroups->exists()) {
             foreach ($faultyProductGroups as $faultyProductGroup) {
                 $faultyProductGroup->{$fieldName} = $resetValue;
                 $faultyProductGroup->writeToStage('Stage');

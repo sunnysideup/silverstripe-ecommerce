@@ -57,7 +57,7 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public function canCreate($member = null, $context = [])
     {
-        return ProductGroupSearchPage::get()->count() ? false : $this->canEdit($member);
+        return ProductGroupSearchPage::get()->exists() ? false : $this->canEdit($member);
     }
 
     /**

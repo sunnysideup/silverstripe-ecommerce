@@ -316,7 +316,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         $fieldList->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
 
         $statusOptions = OrderStep::get();
-        if ($statusOptions && $statusOptions->count()) {
+        if ($statusOptions->exists()) {
             $preSelected = [];
             // $createdOrderStatus = $statusOptions->First();
             $arrayOfStatusOptions = clone $statusOptions->map('ID', 'Title');

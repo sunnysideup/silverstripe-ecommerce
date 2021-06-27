@@ -133,7 +133,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function canCreate($member = null, $context = [])
     {
-        return OrderConfirmationPage::get()->filter(['ClassName' => OrderConfirmationPage::class])->Count() ? false : $this->canEdit($member);
+        return OrderConfirmationPage::get()->filter(['ClassName' => OrderConfirmationPage::class])->exists() ? false : $this->canEdit($member);
     }
 
     /**

@@ -352,7 +352,7 @@ class ProductListBackup extends ViewableData
     //             ]);
     //         }
     //
-    //         if ($children->count()) {
+    //         if ($children->exists()) {
     //             foreach ($children as $child) {
     //                 $arrayList->push($child);
     //                 $arrayList->merge($child->ChildGroups($maxRecursiveLevel, $filter, $numberOfRecursions));
@@ -419,7 +419,7 @@ class ProductListBackup extends ViewableData
     //             $productFilterTemp = $this->getProductsToBeIncludedFromOtherGroups();
     //             $productFilterArray[$productFilterTemp] = $productFilterTemp;
     //             $childGroups = $this->ChildGroups($levelToShow);
-    //             if ($childGroups && $childGroups->count()) {
+    //             if ($childGroups->exists()) {
     //                 foreach ($childGroups as $childGroup) {
     //                     $groupIDs[$childGroup->ID] = $childGroup->ID;
     //                     $productFilterTemp = $childGroup->getProductsToBeIncludedFromOtherGroups();
