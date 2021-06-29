@@ -453,7 +453,7 @@ class ProductGroupController extends PageController
 
     public function getSearchFilterHeader(): string
     {
-        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ' . $this->originalTitle);
+        return _t('Ecommerce.SEARCH_PRODUCTS', 'Search in ') . $this->originalTitle;
     }
 
     public function getGroupFilterHeader(): string
