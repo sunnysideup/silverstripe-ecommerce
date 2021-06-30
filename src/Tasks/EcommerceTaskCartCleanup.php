@@ -26,6 +26,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class EcommerceTaskCartCleanup extends BuildTask
 {
+
+    private static $segment = 'EcommerceTaskCartCleanup';
     /**
      * @var string
      */
@@ -315,7 +317,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
         $oldCarts = Order::get()
             ->where($where)
-            ->this->sort($this->sort)
+            ->sort($this->sort)
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
