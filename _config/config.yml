@@ -46,6 +46,7 @@ SilverStripe\Admin\LeftAndMain:
         - Sunnysideup-Ecommerce-Cms-StoreAdmin
         - Sunnysideup-Ecommerce-Cms-ProductsAndGroupsModelAdmin
         - Sunnysideup-Ecommerce-Cms-ProductConfigModelAdmin
+        - Sunnysideup-Ecommerce-Cms-SalesAdminLowCost
         - Sunnysideup-Ecommerce-Cms-SalesAdmin
         - Sunnysideup-Ecommerce-Cms-SalesAdminExtras
         - refresh

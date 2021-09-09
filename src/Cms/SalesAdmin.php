@@ -14,9 +14,12 @@ use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
+
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -111,32 +114,37 @@ class SalesAdmin extends ModelAdmin
     {
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
+            $parentCount = $list->count();
+            $ids = null;
+            if($parentCount > 0 && $parentCount < 500) {
+                $ids = $list->column('ID');
+            }
+
+
+            $list = Order::get_datalist_of_orders_with_submit_record();
+            if (! empty($ids)) {
+                $list = $list->filter(['ID' => $ids]);
+            }
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
             $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
+            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
+            $list = $list->Sort('OrderStatusLog.ID DESC');
             $list = $list
-                ->filter(
-                    [
-                        'CancelledByID' => 0,
-                        'StatusID:GreaterThan' => 0,
-                    ]
-                )
-            ;
-            $ids = $ordersinQueue->columnUnique();
-            if (! empty($ids)) {
-                $list = $list->exclude(
-                    [
-                        'ID' => $ids,
-                    ]
+                ->exclude(
+                    array(
+                        'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
+                    )
                 );
-            }
             //you can only do one exclude at the same time.
             $list = $list
                 ->exclude(
-                    [
-                        'StatusID' => ArrayMethods::filter_array(OrderStep::non_admin_manageable_steps()->columnUnique()),
-                    ]
+                    array(
+                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID')
+                    )
                 )
             ;
+
         }
 
         $newLists = $this->extend('updateGetList', $list);
