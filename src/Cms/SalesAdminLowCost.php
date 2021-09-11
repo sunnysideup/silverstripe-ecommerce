@@ -25,7 +25,15 @@ class SalesAdminLowCost extends SalesAdmin
     /**
      * @var float
      */
-    private static $max_sales_total = 200;
+    private static $brackets = [
+        100,
+        200,
+        500,
+        1000,
+        2500,
+        5000,
+
+    ];
 
     /**
      * @return DataList
