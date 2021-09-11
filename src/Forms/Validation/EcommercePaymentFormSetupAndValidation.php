@@ -322,7 +322,7 @@ class EcommercePaymentFormSetupAndValidation
      *
      * @reference: http://en.wikipedia.org/wiki/Luhn_algorithm
      *
-     * @param string | Int $cardNumber
+     * @param int|string $cardNumber
      *
      * @return bool
      */

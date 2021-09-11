@@ -363,8 +363,9 @@ class UserPreference
 
             if ($this->rootGroupController->HasSearchFilter()) {
                 $count = $this->getFinalProductList()->getRawCount();
+                $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Search Results');
 
-                $productString = $string = _t('ProductGroup.PRODUCTS_FOUND', 'Search Results');
+                $string = $productString;
                 if ($count) {
                     if (1 === $count) {
                         $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Search Result');
@@ -537,11 +538,7 @@ class UserPreference
                     }
                 }
             }
-            if (count($getVars)) {
-                self::$linkTemplateCache[$cacheKey] = $base . '?' . http_build_query($getVars);
-            } else {
-                self::$linkTemplateCache[$cacheKey] = $base;
-            }
+            self::$linkTemplateCache[$cacheKey] = count($getVars) ? $base . '?' . http_build_query($getVars) : $base;
         }
 
         return self::$linkTemplateCache[$cacheKey];

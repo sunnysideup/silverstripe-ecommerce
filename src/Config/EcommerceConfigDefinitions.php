@@ -260,7 +260,7 @@ class EcommerceConfigDefinitions
      * @param string $className - only return for this class name
      * @param string $variable  #variable - only return this variable (must define class name as well)
      *
-     * @return array | String
+     * @return array|string
      */
     public function Definitions($className = '', $variable = '')
     {

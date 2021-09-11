@@ -675,7 +675,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * makes selected fields into read only using the $this->readOnlyFields array.
      *
-     * @param FieldList | \SilverStripe\Forms\CompositeField $fields
+     * @param FieldList|\SilverStripe\Forms\CompositeField $fields
      *
      * @return \SilverStripe\Forms\FieldList
      */

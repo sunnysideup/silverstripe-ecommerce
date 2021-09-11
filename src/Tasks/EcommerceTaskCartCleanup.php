@@ -26,8 +26,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class EcommerceTaskCartCleanup extends BuildTask
 {
-
-    private static $segment = 'EcommerceTaskCartCleanup';
     /**
      * @var string
      */
@@ -113,6 +111,8 @@ class EcommerceTaskCartCleanup extends BuildTask
     protected $title = 'Clear old carts';
 
     protected $description = 'Deletes abandonned carts (add ?limit=xxxx to the end of the URL to set the number of records (xxx = number of records) to be deleted in one load).';
+
+    private static $segment = 'EcommerceTaskCartCleanup';
 
     /**
      * @var int

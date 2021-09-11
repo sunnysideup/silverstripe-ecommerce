@@ -70,7 +70,8 @@ class GetVariables
                     Config::inst()->get(static::class, 'ampersand_alternative'),
                     $subString
                 );
-                $items = list($key, $value) = explode(Config::inst()->get(static::class, 'equal_alternative'), $subString);
+                $items = explode(Config::inst()->get(static::class, 'equal_alternative'), $subString);
+                list($key, $value) = $items;
                 $key = str_replace(
                     Config::inst()->get(static::class, 'exception_for_tilde'),
                     Config::inst()->get(static::class, 'equal_alternative'),

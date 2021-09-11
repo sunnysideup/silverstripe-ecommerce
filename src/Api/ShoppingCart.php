@@ -522,7 +522,7 @@ class ShoppingCart
      * @param BuyableModel $buyable            - the buyable (generally a product) being added to the cart
      * @param array        $parameters
      * @param bool         $mustBeExistingItem - if false, the Order Item gets created if it does not exist - if TRUE the order item is searched for and an error shows if there is no Order item
-     * @param array | Form $parameters         - array of parameters to target a specific order item. eg: group=1, length=5*
+     * @param array|Form   $parameters         - array of parameters to target a specific order item. eg: group=1, length=5*
      *                                         - form saved into item...
      *
      * @return DataObject
@@ -781,7 +781,7 @@ class ShoppingCart
     /**
      * Sets an order as the current order.
      *
-     * @param int | Order $order
+     * @param int|Order $order
      *
      * @return bool
      */
@@ -826,9 +826,9 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param int | Order $oldOrder
+     * @param int|Order $oldOrder
      *
-     * @return Order | false|null
+     * @return null|false|Order
      */
     public function copyOrder($oldOrder)
     {
@@ -953,7 +953,7 @@ class ShoppingCart
     /**
      * sets region in order so that modifiers can be recalculated, etc...
      *
-     * @param int | String $regionID you can use the ID or the code
+     * @param int|string $regionID you can use the ID or the code
      *
      * @return bool
      */

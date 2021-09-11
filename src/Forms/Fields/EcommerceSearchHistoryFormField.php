@@ -52,7 +52,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     /**
      * minimum number of searches for the data to show up.
      *
-     * @var bool | int
+     * @var bool|int
      */
     protected $showMoreLink = false;
 

@@ -177,7 +177,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * CRUCIAL
      * makes sure all the relevant payment methods are available ...
      *
-     * @return $this | EcommercePayment
+     * @return $this|EcommercePayment
      */
     public function init()
     {

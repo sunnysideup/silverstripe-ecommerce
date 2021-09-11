@@ -8,18 +8,17 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintInvoiceButton;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
  * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
@@ -116,10 +115,9 @@ class SalesAdmin extends ModelAdmin
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $parentCount = $list->count();
             $ids = null;
-            if($parentCount > 0 && $parentCount < 500) {
+            if ($parentCount > 0 && $parentCount < 500) {
                 $ids = $list->column('ID');
             }
-
 
             $list = Order::get_datalist_of_orders_with_submit_record();
             if (! empty($ids)) {
@@ -132,19 +130,19 @@ class SalesAdmin extends ModelAdmin
             $list = $list->Sort('OrderStatusLog.ID DESC');
             $list = $list
                 ->exclude(
-                    array(
+                    [
                         'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
-                    )
-                );
+                    ]
+                )
+            ;
             //you can only do one exclude at the same time.
             $list = $list
                 ->exclude(
-                    array(
-                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID')
-                    )
+                    [
+                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
+                    ]
                 )
             ;
-
         }
 
         $newLists = $this->extend('updateGetList', $list);

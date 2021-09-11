@@ -484,7 +484,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @param string $currencyCode - the code of the currency, e.g. nzd
      *
-     * @return EcommerceCurrency | DataObject null
+     * @return DataObject|EcommerceCurrency null
      */
     public static function get_one_from_code($currencyCode)
     {

@@ -10,6 +10,9 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 class SearchHistory extends DataObject
 {
+    /**
+     * @var int
+     */
     public const KEYWORD_LENGTH_LIMIT = 80;
     private static $table_name = 'SearchHistory';
 

@@ -1847,11 +1847,11 @@ class Order extends DataObject implements EditableEcommerceObject
      * Sends a message to the shop admin ONLY and not to the customer
      * This can be used by ordersteps and orderlogs to notify the admin of any potential problems.
      *
-     * @param string        $emailClassName     - (optional) template to be used ...
-     * @param string        $subject            - (optional) subject for the email
-     * @param string        $message            - (optional) message to be added with the email
-     * @param bool          $resend             - (optional) can it be sent twice?
-     * @param bool | string $adminOnlyOrToEmail - (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+     * @param string      $emailClassName     - (optional) template to be used ...
+     * @param string      $subject            - (optional) subject for the email
+     * @param string      $message            - (optional) message to be added with the email
+     * @param bool        $resend             - (optional) can it be sent twice?
+     * @param bool|string $adminOnlyOrToEmail - (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
      * @return bool TRUE for success, FALSE for failure (not tested)
      */
@@ -1899,7 +1899,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns a list of Order Attributes by type.
      *
-     * @param array | String $types
+     * @param array|string $types
      *
      * @return \SilverStripe\ORM\ArrayList
      */
@@ -3768,11 +3768,11 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Send a mail of the order to the client (and another to the admin).
      *
-     * @param string        $emailClassName     - (optional) template to be used ...
-     * @param string        $subject            - (optional) subject for the email
-     * @param string        $message            - (optional) message to be added with the email
-     * @param bool          $resend             - (optional) can it be sent twice?
-     * @param bool | string $adminOnlyOrToEmail - (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+     * @param string      $emailClassName     - (optional) template to be used ...
+     * @param string      $subject            - (optional) subject for the email
+     * @param string      $message            - (optional) message to be added with the email
+     * @param bool        $resend             - (optional) can it be sent twice?
+     * @param bool|string $adminOnlyOrToEmail - (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
      * @return bool TRUE for success, FALSE for failure (not tested)
      */

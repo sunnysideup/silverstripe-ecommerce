@@ -209,7 +209,7 @@ class OrderProcessQueue extends DataObject
      *
      * @param Order $order optional
      *
-     * @return bool | string
+     * @return bool|string
      */
     public function process(?Order $order = null)
     {
@@ -388,7 +388,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
      */
     public function ToBeProcessedAt()
     {
@@ -398,7 +398,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
      */
     public function getToBeProcessedAt()
     {
@@ -408,7 +408,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
      */
     public function HasBeenInQueueForSince()
     {
@@ -418,7 +418,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime | \SilverStripe\ORM\FieldType\DBField
+     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
      */
     public function getHasBeenInQueueForSince()
     {

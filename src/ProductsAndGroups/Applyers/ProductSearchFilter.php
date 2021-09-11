@@ -37,6 +37,8 @@ class ProductSearchFilter extends BaseApplyer
         'productGroupIds',
         'baseListOwner',
     ];
+    public $getProductIds;
+    public $getProductGroupIds;
 
     /**
      * set to TRUE to show the search logic.
@@ -147,7 +149,7 @@ class ProductSearchFilter extends BaseApplyer
 
     protected $productsForGroups;
 
-    protected static $groupCache = null;
+    protected static $groupCache;
 
     /**
      * make sure that these do not exist as a URLSegment.
@@ -247,9 +249,9 @@ class ProductSearchFilter extends BaseApplyer
             $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
             ProductSorter::setDefaultSortOrderFromFilter(
                 ArrayMethods::create_sort_statement_from_id_array(
-                        $this->getProductIds(),
-                        Product::class
-                    )
+                    $this->getProductIds(),
+                    Product::class
+                )
             );
         }
         $this->applyEnd($key, $params);

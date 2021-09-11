@@ -28,7 +28,7 @@ trait PartialObjectCache
         foreach ($this->getFieldsToCache() as $variable) {
             $value = $this->{$variable};
             if (is_object($value) && is_a($value, DataObject::class)) {
-                if (! (empty($value->ClassName) || empty($value->ID))) {
+                if (! empty($value->ClassName) && ! empty($value->ID)) {
                     $variables[$variable]['ClassName'] = $value->ClassName;
                     $variables[$variable]['ID'] = $value->ID;
                 }

@@ -35,8 +35,8 @@ class EcommerceCodeFilter
      * makes sure that code is unique and gets rid of special characters
      * should be run in onBeforeWrite.
      *
-     * @param DataObject | String $obj
-     * @param mixed               $fieldName
+     * @param DataObject|string $obj
+     * @param mixed             $fieldName
      */
     public function checkCode($obj, $fieldName = 'Code')
     {

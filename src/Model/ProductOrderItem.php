@@ -46,7 +46,7 @@ class ProductOrderItem extends OrderItem
      *                      If set to FALSE, returns the set version number of the Product
      *                      (instead of the latest published version)
      *
-     * @return Product | DataObject object
+     * @return DataObject|Product object
      */
     public function Product($current = false)
     {

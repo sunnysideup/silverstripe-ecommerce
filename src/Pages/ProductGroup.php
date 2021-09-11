@@ -477,7 +477,7 @@ class ProductGroup extends Page
      *
      * @param string $typeOrVariable optional SEARCHFILTER|SEARCHFILTER|GROUPFILTER|FILTER|SORT|DISPLAY OR variable
      *
-     * @return array | String
+     * @return array|string
      */
     public function getSortFilterDisplayValues(?string $typeOrVariable = '', ?string $variable = '')
     {

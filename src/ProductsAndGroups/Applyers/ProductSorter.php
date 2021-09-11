@@ -10,7 +10,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class ProductSorter extends BaseApplyer
 {
-    protected static $defaultSortOrderFromFilter = null;
+    protected static $defaultSortOrderFromFilter;
 
     /**
      * @var array

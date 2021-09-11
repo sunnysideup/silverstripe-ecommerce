@@ -3,13 +3,10 @@
 namespace Sunnysideup\Ecommerce\Cms;
 
 use SilverStripe\ORM\DataList;
-
-use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 use Sunnysideup\Ecommerce\Model\Order;
 
 class SalesAdminLowCost extends SalesAdmin
 {
-
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminLowCost';
     /**
      * standard SS variable.
@@ -26,11 +23,9 @@ class SalesAdminLowCost extends SalesAdmin
     private static $menu_title = 'Low Cost Sales';
 
     /**
-     *
      * @var float
      */
     private static $max_sales_total = 200;
-
 
     /**
      * @return DataList
@@ -41,13 +36,14 @@ class SalesAdminLowCost extends SalesAdmin
         $ids = [0 => 0];
         $max = $this->Config()->get('max_sales_total');
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
-            foreach($list as $order) {
-                if($order->getTotal() < $max) {
+            foreach ($list as $order) {
+                if ($order->getTotal() < $max) {
                     $ids[$order->ID] = $order->ID;
                 }
             }
             $list = Order::get()->filter(['ID' => $ids]);
         }
+
         return $list;
     }
 

@@ -48,7 +48,7 @@ class EcommercePaymentController extends Controller
     ];
 
     /**
-     * @param string | Int $orderID
+     * @param int|string $orderID
      *
      * @return string (Link)
      */
@@ -103,7 +103,7 @@ class EcommercePaymentController extends Controller
     }
 
     /**
-     * @return Form | Array (OrderFormPayment)
+     * @return array|Form (OrderFormPayment)
      */
     public function PaymentForm()
     {

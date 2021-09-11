@@ -99,7 +99,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      *
      * @param int|Order $orderOrOrderId (optional)
      *
-     * @return Order | DataObject
+     * @return DataObject|Order
      */
     protected function orderToUse($orderOrOrderId = null)
     {

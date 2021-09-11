@@ -219,7 +219,7 @@ abstract class OrderStepController extends Controller
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject | OrderStep|null
+     * @return null|OrderStep|\SilverStripe\ORM\DataObject
      */
     protected function orderStep()
     {

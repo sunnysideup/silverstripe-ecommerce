@@ -364,7 +364,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * implements singleton pattern.
      * Gets the current USE THIS ONE e-commerce option.
      *
-     * @return EcommerceDBConfig | Object
+     * @return EcommerceDBConfig|object
      */
     public static function current_ecommerce_db_config()
     {

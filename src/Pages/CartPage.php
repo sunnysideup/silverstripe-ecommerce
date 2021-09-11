@@ -250,7 +250,7 @@ class CartPage extends Page
     /**
      * Returns the "new order" link.
      *
-     * @param int | String $orderID - not used in CartPage
+     * @param int|string $orderID - not used in CartPage
      *
      * @return string (URLSegment)
      */
@@ -262,7 +262,7 @@ class CartPage extends Page
     /**
      * Returns the "copy order" link.
      *
-     * @param int | String $orderID - not used in CartPage
+     * @param int|string $orderID - not used in CartPage
      *
      * @return string (URLSegment)
      */
@@ -276,7 +276,7 @@ class CartPage extends Page
      *
      * @param int|string $orderID ID of the order
      *
-     * @return int | String (URLSegment)
+     * @return int|string (URLSegment)
      */
     public static function get_order_link($orderID)
     {

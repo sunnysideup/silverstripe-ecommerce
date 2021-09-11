@@ -1219,12 +1219,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * return true if done already or mailed successfully now.
      *
-     * @param order         $order
-     * @param string        $subject
-     * @param string        $message
-     * @param bool          $resend
-     * @param bool | string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
-     * @param string        $emailClassName
+     * @param order       $order
+     * @param string      $subject
+     * @param string      $message
+     * @param bool        $resend
+     * @param bool|string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
+     * @param string      $emailClassName
      *
      * @return bool;
      */

@@ -138,7 +138,7 @@ class ExpiryDateField extends TextField
     /**
      * Makes a read only field with some stars in it to replace the password.
      *
-     * @return ReadonlyField | FormField
+     * @return FormField|ReadonlyField
      */
     public function performReadonlyTransformation()
     {
