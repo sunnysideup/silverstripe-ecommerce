@@ -87,16 +87,4 @@ class SalesAdminByOrderSize extends SalesAdmin
         return $form;
     }
 
-    public function getManagedModels()
-    {
-        $models = parent::getManagedModels();
-        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
-        if ($orderModelManagement) {
-            unset($models[Order::class]);
-
-            return [Order::class => $orderModelManagement] + $models;
-        }
-
-        return $models;
-    }
 }
