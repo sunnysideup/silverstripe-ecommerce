@@ -115,9 +115,6 @@ class SalesAdmin extends ModelAdmin
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $parentCount = $list->count();
             $ids = null;
-            if ($parentCount > 0 && $parentCount < 500) {
-                $ids = $list->column('ID');
-            }
 
             $list = Order::get_datalist_of_orders_with_submit_record();
             if (! empty($ids)) {

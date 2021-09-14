@@ -584,7 +584,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
             ;
-            $where = ' ("OrderStatusLog"."ClassName" = \'' . $submittedOrderStatusLogClassName . "') ";
+            $where = ' ("OrderStatusLog"."ClassName" = \'' . addslashes($submittedOrderStatusLogClassName) . "') ";
         } else {
             $list = Order::get();
             $where = ' ("StatusID" > 0) ';
