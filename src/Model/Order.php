@@ -577,25 +577,28 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
     {
+        $list = Order::get();
         if ($onlySubmittedOrders) {
-            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
-            $list = Order::get()
-                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-            ;
-            $where = ' ("OrderStatusLog"."ClassName" = \'' . addslashes($submittedOrderStatusLogClassName) . "') ";
+            $list = self::get_datalist_of_orders_with_joined_submission_record($list);
         } else {
-            $list = Order::get();
-            $where = ' ("StatusID" > 0) ';
+            $list = $list->filter(['StatusID:greaterThan' => 0]);
         }
-        if ($includeCancelledOrders) {
-            //do nothing...
-        } else {
-            $where .= ' AND ("CancelledByID" = 0 OR "CancelledByID" IS NULL)';
+        if (!$includeCancelledOrders) {
+            $list = $list->filter(['CancelledByID' => 0]);
         }
 
-        return $list->where($where);
+        return $list;
+    }
+
+    public static function get_datalist_of_orders_with_joined_submission_record($list) : DataList
+    {
+        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogTableName = DataObject::getSchema()->tableName($submittedOrderStatusLogClassName);
+        $list = $list
+            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+            ->innerJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
+        ;
+        return $list;
     }
 
     /**

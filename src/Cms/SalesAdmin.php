@@ -106,6 +106,8 @@ class SalesAdmin extends ModelAdmin
         return $models;
     }
 
+    protected static $_list_cache_orders = null;
+
     /**
      * @return \SilverStripe\ORM\DataList
      */
@@ -113,35 +115,43 @@ class SalesAdmin extends ModelAdmin
     {
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
-            $parentCount = $list->count();
-            $ids = null;
+            if(self::$_list_cache_orders === null) {
+                $parentCount = $list->count();
+                $ids = null;
+                if($parentCount < 500) {
+                    $ids = $list->column('ID');
+                }
+                $tmpList = Order::get_datalist_of_orders_with_submit_record();
+                if (! empty($ids)) {
+                    $tmpList = $tmpList->filter(['ID' => $ids]);
+                }
+                $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+                $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
 
-            $list = Order::get_datalist_of_orders_with_submit_record();
-            if (! empty($ids)) {
-                $list = $list->filter(['ID' => $ids]);
+                $tmpList = $tmpList
+                    ->exclude(
+                        [
+                            'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
+                        ]
+                    )
+                ;
+                //you can only do one exclude at the same time.
+                $tmpList = $tmpList
+                    ->exclude(
+                        [
+                            'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
+                        ]
+                    )
+                ;
+
+                $tmpList = Order::get_datalist_of_orders_with_joined_submission_record($tmpList);
+                $tmpList = $tmpList->Sort('OrderStatusLog.ID DESC');
+
+                self::$_list_cache_orders = $tmpList;
             }
-            $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
-            $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
-            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
-            $list = $list->Sort('OrderStatusLog.ID DESC');
-            $list = $list
-                ->exclude(
-                    [
-                        'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
-                    ]
-                )
-            ;
-            //you can only do one exclude at the same time.
-            $list = $list
-                ->exclude(
-                    [
-                        'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
-                    ]
-                )
-            ;
-        }
+            $list = self::$_list_cache_orders;
 
+        }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {
@@ -150,7 +160,6 @@ class SalesAdmin extends ModelAdmin
                 }
             }
         }
-
         return $list;
     }
 

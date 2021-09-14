@@ -43,29 +43,39 @@ class SalesAdminByOrderSize extends SalesAdmin
     {
         $form = parent::getEditForm($id, $fields);
         $fields = $form->Fields();
-        $baseList = $this->getList()->limit(1000);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
             $brackets = $this->Config()->get('brackets');
-            $array = array_fill_keys($brackets, ['IDs' => []]);
+            $arrayOfTabs = array_fill_keys($brackets, ['IDs' => []]);
+            $baseList = $this->getList();
             foreach($baseList as $order) {
                 $total = $order->getTotal();
                 $prevBracket = 0;
-                foreach($brackets as $bracket) {
-                    if($total >= $prevBracket && $total < $bracket) {
-                        $arrayOfTabs[$bracket]['IDs'][$order->ID] = $order->ID;
+                foreach($brackets as $key => $bracket) {
+                    if($key) {
+                        if($total >= $prevBracket && $total < $bracket) {
+                            $arrayOfTabs[$bracket]['IDs'][$order->ID] = $order->ID;
+                        }
                     }
                     $prevBracket = $bracket;
                 }
             }
             $prevBracket = 0;
-            foreach($brackets as $bracket) {
-                $arrayOfTabs[$bracket] = [
-                    'TabName' => 'From'.$prevBracket.'To'.$bracket,
-                    'Title' => '$'.$prevBracket.' - $'.$bracket,
-                    'List' => Order::get()->filter(['ID' => $array[$bracket]['IDs']+ [0 => 0]]),
-                ];
-                unset($arrayOfTabs['IDs']);
+            foreach($brackets as $key => $bracket) {
+                if(empty($arrayOfTabs[$bracket]['IDs'])) {
+                    $arrayOfTabs[$bracket]['IDs'] = [0 => 0];
+                }
+                $ids = $arrayOfTabs[$bracket]['IDs'];
+                if($key) {
+                    $arrayOfTabs[$bracket] = [
+                        'TabName' => 'From'.$prevBracket.'To'.$bracket,
+                        'Title' => '$'.$prevBracket.' - $'.$bracket,
+                        'List' => Order::get()->filter(['ID' => $ids]),
+                    ];
+                    unset($arrayOfTabs['IDs']);
+                } else {
+                    unset($arrayOfTabs[$bracket]);
+                }
                 $prevBracket = $bracket;
             }
             TabsBuilder::add_many_tabs(
