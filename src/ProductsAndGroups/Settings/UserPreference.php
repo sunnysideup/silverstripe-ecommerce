@@ -83,6 +83,7 @@ class UserPreference
 
     protected static $linkTemplateCache = [];
 
+
     /**
      * keep a store for every page setting?
      * For example, do we store in session how a particular page is filtered / sorted.
@@ -97,6 +98,17 @@ class UserPreference
      * @var arrayn setUser
      */
     private static $use_session = [];
+
+    /**
+     * list of fields that we add the secondary title to...
+     * @var array
+     */
+    private static $secondary_title_fields = [
+        'secondaryTitle',
+        'Title',
+        'MetaTitle',
+        'MetaDescription',
+    ];
 
     /**
      * @param bool $useSession
@@ -400,7 +412,7 @@ class UserPreference
             }
 
             if ($secondaryTitle) {
-                foreach (['Title', 'MetaTitle', 'MetaDescription'] as $field) {
+                foreach ($this->Config()->get('secondary_title_fields') as $field) {
                     $this->addTitleToField($field, $secondaryTitle);
                 }
             }
@@ -661,8 +673,13 @@ class UserPreference
 
     protected function addTitleToField(string $field, string $secondaryTitle): self
     {
-        if (! empty($this->rootGroupController->{$field})) {
-            $this->rootGroupController->{$field} .= $secondaryTitle;
+        $method = 'set'.$field;
+        if($this->rootGroupController->hasMethod($method)) {
+            $this->rootGroupController->$method($secondaryTitle);
+        } else {
+            if (! empty($this->rootGroupController->{$field})) {
+                $this->rootGroupController->{$field} .= $secondaryTitle;
+            }
         }
 
         return $this;

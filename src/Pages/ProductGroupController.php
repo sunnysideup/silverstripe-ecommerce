@@ -861,4 +861,20 @@ class ProductGroupController extends PageController
     {
         $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
     }
+
+
+
+    protected $secondaryTitle = '';
+
+    public function setSecondaryTitle(string $v)
+    {
+        $this->secondaryTitle = $v;
+    }
+
+
+    public function getSecondaryTitle() : string
+    {
+        return $this->secondaryTitle;
+    }
+
 }

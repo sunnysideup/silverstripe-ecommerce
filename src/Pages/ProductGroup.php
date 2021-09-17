@@ -484,6 +484,8 @@ class ProductGroup extends Page
         return $this->getProductGroupSchema()->getSortFilterDisplayValues($typeOrVariable, $variable);
     }
 
+
+
     /**
      * Returns the class we are working with.
      */
