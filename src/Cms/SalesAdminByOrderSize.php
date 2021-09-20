@@ -39,6 +39,16 @@ class SalesAdminByOrderSize extends SalesAdmin
     ];
 
 
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $managed_models = [
+        Order::class,
+    ];
+
+
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -69,7 +79,7 @@ class SalesAdminByOrderSize extends SalesAdmin
                 if($key) {
                     $arrayOfTabs[$bracket] = [
                         'TabName' => 'From'.$prevBracket.'To'.$bracket,
-                        'Title' => '$'.$prevBracket.' - $'.$bracket,
+                        'Title' => '... $'.$prevBracket.' - $'.$bracket,
                         'List' => Order::get()->filter(['ID' => $ids]),
                     ];
                     unset($arrayOfTabs['IDs']);
@@ -86,5 +96,6 @@ class SalesAdminByOrderSize extends SalesAdmin
         }
         return $form;
     }
+
 
 }

@@ -26,6 +26,16 @@ class SalesAdminByOrderStep extends SalesAdmin
      */
     private static $menu_title = 'Sales by Step';
 
+
+    /**
+     * standard SS variable.
+     *
+     * @var array
+     */
+    private static $managed_models = [
+        Order::class,
+    ];
+
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -65,4 +75,16 @@ class SalesAdminByOrderStep extends SalesAdmin
         return $form;
     }
 
+
+    /**
+     * @return array Map of class name to an array of 'title' (see {@link $managed_models})
+     *               we make sure that the Order Admin is FIRST
+     */
+    public function getManagedModels()
+    {
+        return parent::getManagedModels();
+        return [
+            Order::class,
+        ];
+    }
 }

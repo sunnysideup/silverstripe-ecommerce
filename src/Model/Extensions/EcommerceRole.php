@@ -134,6 +134,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         'CMS_ACCESS_ProductsAndGroupsModelAdmin',
         'CMS_ACCESS_ProductConfigModelAdmin',
         'CMS_ACCESS_SalesAdmin',
+        'CMS_ACCESS_SalesAdminByOrderSize',
+        'CMS_ACCESS_SalesAdminByOrderStep',
+        'CMS_ACCESS_SalesSalesAdminProcess',
         'CMS_ACCESS_SalesAdminExtras',
         'CMS_ACCESS_StoreAdmin',
         'CMS_ACCESS_AssetAdmin',
@@ -181,7 +184,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     private static $assistant_role_permission_codes = [
         'CMS_ACCESS_SalesAdmin',
+        'CMS_ACCESS_SalesAdminByOrderSize',
+        'CMS_ACCESS_SalesAdminByOrderStep',
+        'CMS_ACCESS_SalesSalesAdminProcess',
         'CMS_ACCESS_SalesAdminExtras',
+
     ];
 
     /**

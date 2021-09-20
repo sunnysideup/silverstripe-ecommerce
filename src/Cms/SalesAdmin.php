@@ -59,8 +59,6 @@ class SalesAdmin extends ModelAdmin
      */
     private static $managed_models = [
         Order::class,
-        OrderProcessQueue::class,
-        OrderFeedback::class,
     ];
 
     /**
