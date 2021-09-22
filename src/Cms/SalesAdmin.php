@@ -66,7 +66,7 @@ class SalesAdmin extends ModelAdmin
      *
      * @var float
      */
-    private static $menu_priority = 3.1;
+    private static $menu_priority = 3.12;
 
     /**
      * standard SS variable.

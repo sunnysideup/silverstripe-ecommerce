@@ -22,7 +22,9 @@ class SalesAdminByOrderSize extends SalesAdmin
      *
      * @var string
      */
-    private static $menu_title = 'Sales by Totals';
+    private static $menu_title = '... by Totals';
+
+    private static $menu_priority = 3.112;
 
     /**
      * @var float

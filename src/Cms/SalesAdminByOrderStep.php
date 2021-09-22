@@ -24,9 +24,9 @@ class SalesAdminByOrderStep extends SalesAdmin
      *
      * @var string
      */
-    private static $menu_title = 'Sales by Step';
+    private static $menu_title = '... by Step';
 
-
+    private static $menu_priority = 3.113;
     /**
      * standard SS variable.
      *

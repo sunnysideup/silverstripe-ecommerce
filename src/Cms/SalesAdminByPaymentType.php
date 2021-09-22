@@ -5,6 +5,8 @@ namespace Sunnysideup\Ecommerce\Cms;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Model\Order;
 
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
+
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
@@ -30,8 +32,9 @@ class SalesAdminByPaymentType extends SalesAdmin
      *
      * @var string
      */
-    private static $menu_title = 'Sales by Payment Type';
+    private static $menu_title = '... by Payment';
 
+    private static $menu_priority = 3.114;
     /**
      * standard SS variable.
      *
@@ -52,7 +55,7 @@ class SalesAdminByPaymentType extends SalesAdmin
             $baseList = $this->getList();
             $optionPerOrder = $this->getOptionPerOrder($baseList);
             foreach($baseList as $order) {
-                $option = $optionPerOrder[$order->ID] ?? 0;
+                $option = $optionPerOrder[$order->ID] ?? 'ERROR';
                 foreach($brackets as $key => $bracket) {
                     if($option === $key) {
                         $arrayOfTabs[$bracket]['IDs'][$order->ID] = $order->ID;
@@ -86,20 +89,16 @@ class SalesAdminByPaymentType extends SalesAdmin
 
     protected function getBrackets() : array
     {
-        $list = EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
-        foreach($list as $item) {
-
-        }
-        return $list;
+        return EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
     }
 
     protected function getOptionPerOrder($baseList) : array
     {
         if($baseList->exists()) {
-            $list = PickUpOrDeliveryModifier::get()->
+            $list = EcommercePayment::get()->
                 filter(['OrderID' => $baseList->columnUnique('ID')]);
             if($list->exists()) {
-                return $list->map('OrderID', 'OptionID')->toArray();
+                return $list->map('OrderID', 'ClassName')->toArray();
             }
         }
         return [];
