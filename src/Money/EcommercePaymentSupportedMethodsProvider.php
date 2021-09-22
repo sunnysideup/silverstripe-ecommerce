@@ -45,6 +45,11 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
      */
     public function SupportedMethods(?Order $order = null): array
     {
+        return self::supported_methods_basic_list();
+    }
+
+    public static function supported_methods_basic_list() : array
+    {
         $hideTestPaymentMethods = false;
         if (Director::isLive()) {
             $hideTestPaymentMethods = true;
@@ -68,6 +73,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
 
         return $supportedMethods;
     }
+
 
     public static function assign_payment_gateway(?string $gateway = '')
     {
