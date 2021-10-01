@@ -161,7 +161,7 @@ class ShopAccountForm extends Form
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {
                 $member->changePassword($password);
-                if ($member->validate()->valid()) {
+                if ($member->validate()->isValid()) {
                     $member->write();
                     if ($member->exists()) {
                         if (! $order->MemberID) {
