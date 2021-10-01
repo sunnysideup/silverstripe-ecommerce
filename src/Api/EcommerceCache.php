@@ -9,6 +9,9 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
 
+use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+
 /**
  * Provides a standard interface for caching product and group information.
  *
@@ -63,6 +66,30 @@ class EcommerceCache implements Flushable
         }
 
         return false;
+    }
+
+    protected static $productCacheKey = [
+        'ProductCount' => 0,
+        'ProductMaxLastEdited' => 0,
+        'ProductGroupCount' => 0,
+        'ProductGroupMaxLastEdited' => 0,
+    ];
+
+    public function productCacheKey()
+    {
+        if (! self::$productCacheKey['ProductCount']) {
+            self::$productCacheKey['ProductCount'] = Product::get()->count();
+        }
+        if (! self::$productCacheKey['ProductMaxLastEdited']) {
+            self::$productCacheKey['ProductMaxLastEdited'] = strtotime(Product::get()->max('LastEdited'));
+        }
+        if (! self::$productCacheKey['ProductGroupCount']) {
+            self::$productCacheKey['ProductGroupCount'] = ProductGroup::get()->count();
+        }
+        if (! self::$productCacheKey['ProductGroupMaxLastEdited']) {
+            self::$productCacheKey['ProductGroupMaxLastEdited'] = strtotime(ProductGroup::get()->max('LastEdited'));
+        }
+        return implode('_', self::$productCacheKey);
     }
 
     /**
@@ -126,12 +153,18 @@ class EcommerceCache implements Flushable
         EcommerceCache::inst()->clear();
     }
 
+
     /**
      * @param string $cacheKey
      */
-    protected function cacheKeyRefiner($cacheKey): string
+    public function cacheKeyRefiner($cacheKey): string
     {
-        $cacheKey .= '_' . Versioned::get_reading_mode() . '_' . Director::get_environment_type();
+        if(is_array($cacheKey)) {
+            $cacheKey = implode('_', $cacheKey);
+        }
+        $cacheKey .=
+            '_' . Versioned::get_reading_mode() .
+            '_' . Director::get_environment_type();
         $arrayOfReservedChars = [
             '{',
             '}',
@@ -143,7 +176,6 @@ class EcommerceCache implements Flushable
             ':',
             '.',
         ];
-
         return str_replace($arrayOfReservedChars, '_', $cacheKey);
     }
 }

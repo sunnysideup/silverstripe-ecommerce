@@ -183,8 +183,15 @@ class ProductGroupController extends PageController
         if ($this->ProductGroupListAreCacheable()) {
             return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber);
         }
-
         return '';
+    }
+
+    /**
+     * Unique caching key for the product list...
+     */
+    public function ProductGroupListCachingKeyForTemplate(?bool $withPageNumber = false): string
+    {
+        return EcommerceCache::inst()->cacheKeyRefiner($this->ProductGroupListCachingKey($withPageNumber));
     }
 
     /**

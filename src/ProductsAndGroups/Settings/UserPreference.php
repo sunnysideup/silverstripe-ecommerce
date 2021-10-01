@@ -11,12 +11,15 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
+
+use Sunnysideup\SimpleTemplateCaching\Extensions\SimpleTemplateCachingSiteConfigExtension;
 
 /**
  * keeps track of the  settings for FILTER / SORT / DISPLAY for user
@@ -282,7 +285,7 @@ class UserPreference
         }
         $key = '';
         if ($this->getUseSession($type)) {
-            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+            $sessionName = $this->rootGroupController->getSortFilterDisplayValues($type, 'sessionName');
             if ($this->getUseSessionPerPage($type)) {
                 $sessionName .= '_' . $this->rootGroup->ID;
             }
@@ -327,7 +330,7 @@ class UserPreference
     /**
      * Unique caching key for the product list...
      */
-    public function ProductGroupListCachingKey(?bool $withPageNumber = false): string
+    public function ProductGroupListCachingKey(?bool $withPageNumber = false, ?string $additionalKey = ''): string
     {
         $pageStart = '';
         if ($withPageNumber) {
@@ -335,11 +338,11 @@ class UserPreference
         }
         $pageId = 0;
         // todo: what does this do???
-        if ($this->getUseSessionPerPageKey('FILTER') || $this->getCurrentUserPreferencesKey('SORT') || $this->getCurrentUserPreferencesKey('DISPLAY') || $this->getCurrentUserPreferencesKey('SEARCHFILTER')) {
+        if ($this->rootGroup) {
             $pageId = $this->rootGroup->ID;
         }
 
-        return $this->cacheKey(
+        return
             implode(
                 '_',
                 [
@@ -353,10 +356,11 @@ class UserPreference
                     $pageStart,
                     $additionalKey,
                     $pageId,
+                    EcommerceCache::inst()->productCacheKey()
                 ]
-            )
-        );
+            );
     }
+
 
     /**
      * Add a secondary title to the main title in case there is, for example, a
@@ -626,7 +630,7 @@ class UserPreference
     protected function savePreferenceToSession($type, $newPreference)
     {
         if ($this->getUseSession($type)) {
-            $sessionName = $this->getSortFilterDisplayValues($type, 'sessionName');
+            $sessionName = $this->rootGroupController->getSortFilterDisplayValues($type, 'sessionName');
             if ($this->getUseSessionPerPage($type)) {
                 $sessionName .= '_' . $this->rootGroup->ID;
             }

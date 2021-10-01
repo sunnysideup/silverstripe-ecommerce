@@ -1,5 +1,5 @@
 <% if ProductGroupListAreCacheable %>...
-    <% cached ProductGroupListCachingKey %>
+    <% cached $ProductGroupListCachingKey %>
         <% include Sunnysideup\Ecommerce\Includes\LayoutProductGroupInner %>
     <% end_cached %>
 <% else %>
