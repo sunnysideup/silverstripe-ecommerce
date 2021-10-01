@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
-use GuzzleHttp\Exception\RequestException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
@@ -201,7 +200,7 @@ class ShopAccountForm extends Form
      *
      * @return HTTPResponse
      */
-    protected function processForm(array $data, $form, RequestException $request, ?string $link = '')
+    protected function processForm(array $data, $form, $request, ?string $link = '')
     {
         $member = Security::getCurrentUser();
         if (! $member) {
