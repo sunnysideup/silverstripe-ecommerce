@@ -703,6 +703,10 @@ class Order extends DataObject implements EditableEcommerceObject
                     _t('Order.ITEMS_TAB', 'Items')
                 ),
                 Tab::create(
+                    'Process',
+                    _t('Order.ITEMS_PROCESS', 'Process')
+                ),
+                Tab::create(
                     'Extras',
                     _t('Order.MODIFIERS_TAB', 'Adjustments')
                 ),
@@ -755,9 +759,9 @@ class Order extends DataObject implements EditableEcommerceObject
             //Or something similar.
             //why not check if the URL == $this->CMSEditLink()
             //and only tryToFinaliseOrder if this is true....
-            if ($_SERVER['REQUEST_URI'] === $this->CMSEditLink() || $_SERVER['REQUEST_URI'] === $this->CMSEditLink('edit')) {
-                $this->tryToFinaliseOrder();
-            }
+            // if ($_SERVER['REQUEST_URI'] === $this->CMSEditLink() || $_SERVER['REQUEST_URI'] === $this->CMSEditLink('edit')) {
+            $this->tryToFinaliseOrder();
+            // }
         } else {
             $this->init(true);
             $this->calculateOrderAttributes(true);
@@ -768,32 +772,20 @@ class Order extends DataObject implements EditableEcommerceObject
             $fields->removeByName($field);
         }
         $summaryFields = [];
-        foreach ($this->summaryFields() as $fieldName => $label) {
-            if ('AssignedAdminNice' !== $fieldName) {
-                $value = '(error)';
-                if ($this->hasMethod('relField')) {
-                    $value = $this->relField($fieldName);
-                } elseif ($this->hasMethod($fieldName)) {
-                    $value = $this->{$fieldName}();
-                } elseif ($this->hasMethod('get' . $fieldName)) {
-                    $fieldName = 'get' . $fieldName;
-                    $value = $this->{$fieldName}();
-                }
-                $summaryFields[] = ReadonlyField::create($fieldName . '_Summary', $label, $value);
-            }
-        }
+        // 'OrderItemsSummaryNice' => 'Order Items',
+        // 'Status.Title' => 'Next Step',
+        // 'Member.CustomerDetails' => 'Customer',
+        // 'TotalAsMoney.Nice' => 'Total',
+        // 'IsPaidNice' => 'Paid',
+        // 'CustomerOrderNote' => 'Note',
+        $summaryFields[] = ReadonlyField::create('OrderItemsSummaryNice', 'Items');
+        $summaryFields[] = ReadonlyField::create('TotalNice', 'Total', $this->TotalAsMoney()->Nice());
+        $summaryFields[] = ReadonlyField::create('IsPaidNice', 'Paid?');
+        $summaryFields[] = ReadonlyField::create('Customer', 'Customer', $this->Member()->getCustomerDetails());
+        $summaryFields[] = ReadonlyField::create('NextStep', 'Next Step', $this->Status()->getTitle());
+        $summaryFields[] = ReadonlyField::create('CustomerOrderNote', 'Note');
         $nextFieldArray = array_merge(
             $summaryFields,
-            [
-                LiteralField::create(
-                    'CssFix',
-                    '<style>
-                        #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
-                    </style>'
-                ),
-                HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
-                $this->OrderStepField(),
-            ]
         );
         $keyNotes = OrderStatusLog::get()->filter(
             [
@@ -821,16 +813,6 @@ class Order extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
-        $nextFieldArray = array_merge(
-            $nextFieldArray,
-            [
-                EcommerceCMSButtonField::create(
-                    'AddNoteButton',
-                    '/admin/sales-advanced/Sunnysideup-Ecommerce-Model-Order/EditForm/field/Sunnysideup-Ecommerce-Model-Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
-                    _t('Order.ADD_NOTE', 'Add Note')
-                ),
-            ]
-        );
 
         //is the member is a shop admin they can always view it
 
@@ -851,8 +833,30 @@ class Order extends DataObject implements EditableEcommerceObject
                 $nextFieldArray = array_merge(
                     $nextFieldArray,
                     [
+                        LiteralField::create(
+                            'CssFix',
+                            '<style>
+                                #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
+                            </style>'
+                        ),
+
                         HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
                         $myQueueObjectField,
+                    ]
+                );
+                $fields->addFieldsToTab(
+                    'Root.Process',
+                    [
+                        // current status
+                        HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
+                        $this->OrderStepField(),
+                        EcommerceCMSButtonField::create(
+                            'AddNoteButton',
+                            '/admin/sales-advanced/Sunnysideup-Ecommerce-Model-Order/EditForm/field/Sunnysideup-Ecommerce-Model-Order/item/' . $this->ID . '/ItemEditForm/field/OrderStatusLog/item/new',
+                            _t('Order.ADD_NOTE', 'Add Note')
+                        ),
+
+                        // move it along ...
                         HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along'))->addExtraClass('section-heading-for-order'),
                         LiteralField::create('OrderStepNextStepHeaderExtra', '<p>' . _t('Order.NEEDTOREFRESH', 'Once you have made any changes to the order then you will have to refresh below or save it to move it along.') . '</p>'),
                         EcommerceCMSButtonField::create(

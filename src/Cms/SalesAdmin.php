@@ -144,7 +144,6 @@ class SalesAdmin extends ModelAdmin
 
                 $tmpList = Order::get_datalist_of_orders_with_joined_submission_record($tmpList);
                 $tmpList = $tmpList->Sort('OrderStatusLog.ID DESC');
-
                 self::$_list_cache_orders = $tmpList;
             }
             $list = self::$_list_cache_orders;
