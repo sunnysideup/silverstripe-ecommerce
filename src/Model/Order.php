@@ -839,14 +839,17 @@ class Order extends DataObject implements EditableEcommerceObject
                                 #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
                             </style>'
                         ),
-
                         HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
-                        $myQueueObjectField,
+
                     ]
                 );
                 $fields->addFieldsToTab(
                     'Root.Process',
                     [
+
+                        HeaderField::create('OrderQueueFor', _t('Order.ORDER_QUEUED_FOR', 'Queued for ...'))->addExtraClass('section-heading-for-order'),
+                        $myQueueObjectField,
+
                         // current status
                         HeaderField::create('MyOrderStepHeader', _t('Order.CURRENT_STATUS', 'Current Status, Notes, and Actions'))->addExtraClass('section-heading-for-order'),
                         $this->OrderStepField(),
@@ -873,7 +876,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $nextFieldArray
         );
 
-        $this->MyStep()->addOrderStepFields($fields, $this);
+        $this->MyStep()->addOrderStepFields($fields, $this, true);
 
         if ($submitted) {
             $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');
@@ -2709,11 +2712,11 @@ class Order extends DataObject implements EditableEcommerceObject
         $x = 0;
         $count = $this->owner->OrderItems()->count();
         if ($count > 0) {
-            $html .= '<ul class="order-items-summary">';
+            $html .= '<div><ul class="order-items-summary">';
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;
                 $buyable = $orderItem->Buyable();
-                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433;">' . $orderItem->Quantity . 'x ';
+                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . 'x ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
                 } else {
@@ -2726,7 +2729,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     break;
                 }
             }
-            $html .= '</ul>';
+            $html .= '</ul></div>';
         }
 
         return $html;

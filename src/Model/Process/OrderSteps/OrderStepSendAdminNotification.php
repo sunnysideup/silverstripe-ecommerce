@@ -78,7 +78,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function addOrderStepFields(FieldList $fields, Order $order)
+    public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.CANADDGENERALLOG', ' ... if you want to make some notes about this step then do this here...');

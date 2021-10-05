@@ -95,7 +95,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function addOrderStepFields(FieldList $fields, Order $order)
+    public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.MUSTDOPAYMENTCHECK', ' ... To move this order to the next step you must carry out a payment check (is the money in the bank?) by creating a record here (click me)');

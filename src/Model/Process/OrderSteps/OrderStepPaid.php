@@ -80,7 +80,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function addOrderStepFields(FieldList $fields, Order $order)
+    public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
         if (! $order->IsPaid()) {

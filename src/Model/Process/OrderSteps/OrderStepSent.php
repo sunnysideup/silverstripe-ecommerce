@@ -156,7 +156,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function addOrderStepFields(FieldList $fields, Order $order)
+    public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
         $title = _t('OrderStep.MUSTENTERDISPATCHRECORD', ' ... To move this order to the next step please enter dispatch details.');
@@ -175,7 +175,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
             $v = $this->EmailSubject;
         }
 
-        return $v;
+        return (string) $v;
     }
 
     public function CalculatedCustomerMessage(Order $order = null): string
@@ -188,7 +188,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
             $v = $this->CustomerMessage;
         }
 
-        return $v;
+        return (string) $v;
     }
 
     /**

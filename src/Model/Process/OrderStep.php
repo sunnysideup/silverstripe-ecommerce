@@ -14,6 +14,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -651,8 +652,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function addOrderStepFields(FieldList $fields, Order $order)
+    public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
+        if($nothingToDo) {
+            $text = _t(
+                'OrderStep.NOTHING_TO_DO',
+                ' ... Orders should not be stuck in this step and an order being here indicates an error.
+                The only way to move this order along is to manually change its status.
+                This is not recommended.
+            ');
+            $fields->addFieldToTab(
+                'Root.Next',
+                ReadonlyField::create('StatusIDNotice', $text),
+                DropdownField::create(
+                    'StatusID',
+                    'Select Status - CAREFUL',
+                    OrderStep::get()-map()
+                )
+            );
+        }
         return $fields;
     }
 

@@ -62,14 +62,16 @@ class SalesAdminByPaymentType extends SalesAdmin
                     }
                 }
             }
+            $count = 0;
             foreach($brackets as $key => $bracket) {
+                $count++;
                 if(empty($arrayOfTabs[$bracket]['IDs'])) {
                     $arrayOfTabs[$bracket]['IDs'] = [0 => 0];
                 }
                 $ids = $arrayOfTabs[$bracket]['IDs'];
                 if($key) {
                     $arrayOfTabs[$bracket] = [
-                        'TabName' => 'OptionID'.$key,
+                        'TabName' => 'OptionID'.$count,
                         'Title' => $bracket,
                         'List' => Order::get()->filter(['ID' => $ids]),
                     ];
@@ -89,7 +91,7 @@ class SalesAdminByPaymentType extends SalesAdmin
 
     protected function getBrackets() : array
     {
-        return EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
+        return (array) EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
     }
 
     protected function getOptionPerOrder($baseList) : array
