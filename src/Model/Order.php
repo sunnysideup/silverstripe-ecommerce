@@ -839,8 +839,7 @@ class Order extends DataObject implements EditableEcommerceObject
                                 #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
                             </style>'
                         ),
-                        HeaderField::create('OrderStepNextStepHeader', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
-
+                        HeaderField::create('ActionNextStepManually', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
                     ]
                 );
                 $fields->addFieldsToTab(
@@ -860,7 +859,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         ),
 
                         // move it along ...
-                        HeaderField::create('ActionNextStepManually', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along'))->addExtraClass('section-heading-for-order'),
+                        HeaderField::create('ActionNextStepManuallyMore', _t('Order.MANUAL_STATUS_CHANGE', 'Move Order Along'))->addExtraClass('section-heading-for-order'),
                         LiteralField::create('OrderStepNextStepHeaderExtra', '<p>' . _t('Order.NEEDTOREFRESH', 'Once you have made any changes to the order then you will have to refresh below or save it to move it along.') . '</p>'),
                         EcommerceCMSButtonField::create(
                             'StatusIDExplanation',
@@ -1111,7 +1110,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
         $title ?: $title = _t('OrderStatusLog.PLURALNAME', 'Order Status Logs');
         $source = $this->OrderStatusLogs()->Filter(['ClassName' => $sourceClass]);
-        $fieldName = ClassInfo::shortName($sourceClass);
+        $fieldName = 'GridFieldFor'.ClassInfo::shortName($sourceClass);
         $gf = new GridField($fieldName, $title, $source, $gridFieldConfig);
         $gf->setModelClass($sourceClass);
 

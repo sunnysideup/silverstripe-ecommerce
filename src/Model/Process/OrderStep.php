@@ -657,18 +657,21 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if($nothingToDo) {
             $text = _t(
                 'OrderStep.NOTHING_TO_DO',
-                ' ... Orders should not be stuck in this step and an order being here indicates an error.
-                The only way to move this order along is to manually change its status.
-                This is not recommended.
-            ');
-            $fields->addFieldToTab(
+                'Orders should not be stuck in this step and an order being here may indicate an error.
+                Please check the Process Tab and see if the order is being queued for the next step.
+                In case it is stuck here for a long time, you can move it along using the field below.
+                This is not recommended.'
+            );
+            $fields->addFieldsToTab(
                 'Root.Next',
-                ReadonlyField::create('StatusIDNotice', $text),
-                DropdownField::create(
-                    'StatusID',
-                    'Select Status - CAREFUL',
-                    OrderStep::get()-map()
-                )
+                [
+                    ReadonlyField::create('StatusIDNotice', 'Info', $text),
+                    DropdownField::create(
+                        'StatusID',
+                        'Select Status - NOT RECOMMENDED',
+                        OrderStep::get()->map()
+                    )
+                ]
             );
         }
         return $fields;
