@@ -12,11 +12,19 @@ use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
+
 /**
  * Provides a standard interface for caching product and group information.
  *
  * Can be used in conjuction with the standard Silverstripe Partial caching
  * functionality.
+ *
+ * usage:
+ * ```php
+ *     $myCachedData = EcommerceCache::inst()->retrieve($key);
+ *     EcommerceCache::inst()->save($key, $myUncachedData);
+ * ```
  */
 class EcommerceCache implements Flushable
 {

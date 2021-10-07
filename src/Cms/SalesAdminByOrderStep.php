@@ -42,35 +42,17 @@ class SalesAdminByOrderStep extends SalesAdmin
         $fields = $form->Fields();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
-            $ids = OrderStep::admin_manageable_steps()->map('ID', 'Title')->toArray();
-            foreach($ids as $id => $title) {
-                $arrayOfTabs[$id] = [];
-            }
+            $brackets = OrderStep::admin_manageable_steps()->map('ID', 'Title')->toArray();
+            $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
             foreach($baseList as $order) {
-                foreach(array_keys($ids) as $id) {
-                    if($order->StatusID === $id) {
-                        $arrayOfTabs[$id]['IDs'][$order->ID] = $order->ID;
+                foreach(array_keys($brackets) as $key) {
+                    if($order->StatusID === $key) {
+                        $arrayOfTabs[$key]['IDs'][$order->ID] = $order->ID;
                     }
                 }
             }
-            foreach($ids as $id => $title) {
-                if(empty($arrayOfTabs[$id]['IDs'])) {
-                    $arrayOfTabs[$id]['IDs'] = [0 => 0];
-                }
-                $ids = $arrayOfTabs[$id]['IDs'];
-                $arrayOfTabs[$id] = [
-                    'TabName' => 'step'.$id,
-                    'Title' => $title,
-                    'List' => Order::get()->filter(['ID' => $ids]),
-                ];
-                unset($arrayOfTabs['IDs']);
-            }
-            TabsBuilder::add_many_tabs(
-                $arrayOfTabs,
-                $form,
-                $this->modelClass
-            );
+            $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
         return $form;
     }

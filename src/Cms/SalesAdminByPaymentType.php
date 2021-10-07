@@ -51,40 +51,18 @@ class SalesAdminByPaymentType extends SalesAdmin
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
             $brackets = $this->getBrackets();
-            $arrayOfTabs = array_fill_keys($brackets, ['IDs' => []]);
+            $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
             $optionPerOrder = $this->getOptionPerOrder($baseList);
             foreach($baseList as $order) {
                 $option = $optionPerOrder[$order->ID] ?? 'ERROR';
-                foreach($brackets as $key => $bracket) {
+                foreach(array_keys($brackets) as $key) {
                     if($option === $key) {
-                        $arrayOfTabs[$bracket]['IDs'][$order->ID] = $order->ID;
+                        $arrayOfTabs[$key]['IDs'][$order->ID] = $order->ID;
                     }
                 }
             }
-            $count = 0;
-            foreach($brackets as $key => $bracket) {
-                $count++;
-                if(empty($arrayOfTabs[$bracket]['IDs'])) {
-                    $arrayOfTabs[$bracket]['IDs'] = [0 => 0];
-                }
-                $ids = $arrayOfTabs[$bracket]['IDs'];
-                if($key) {
-                    $arrayOfTabs[$bracket] = [
-                        'TabName' => 'OptionID'.$count,
-                        'Title' => $bracket,
-                        'List' => Order::get()->filter(['ID' => $ids]),
-                    ];
-                    unset($arrayOfTabs['IDs']);
-                } else {
-                    unset($arrayOfTabs[$bracket]);
-                }
-            }
-            TabsBuilder::add_many_tabs(
-                $arrayOfTabs,
-                $form,
-                $this->modelClass
-            );
+            $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
         return $form;
     }

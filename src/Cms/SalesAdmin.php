@@ -8,6 +8,9 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
+
+use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
@@ -51,6 +54,12 @@ class SalesAdmin extends ModelAdmin
      * @var string
      */
     private static $menu_title = 'Sales to Action';
+
+    /**
+     *
+     * @var int
+     */
+    private static $cache_seconds = 300;
 
     /**
      * standard SS variable.
@@ -114,40 +123,45 @@ class SalesAdmin extends ModelAdmin
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             if(self::$_list_cache_orders === null) {
-                $parentCount = $list->count();
-                $ids = null;
-                if($parentCount < 500) {
-                    $ids = $list->column('ID');
-                }
-                $tmpList = Order::get_datalist_of_orders_with_submit_record();
-                if (! empty($ids)) {
-                    $tmpList = $tmpList->filter(['ID' => $ids]);
-                }
-                $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
-                $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
+                $ids = EcommerceCache::inst()->retrieve($this->getTimeBasedCacheKey());
+                if(! empty($ids) && count($ids)) {
+                    self::$_list_cache_orders = Order::get()->filter(['ID' => $ids]);
+                } else {
+                    $parentCount = $list->count();
+                    $ids = null;
+                    if($parentCount < 500) {
+                        $ids = $list->column('ID');
+                    }
+                    $tmpList = Order::get_datalist_of_orders_with_submit_record();
+                    if (! empty($ids)) {
+                        $tmpList = $tmpList->filter(['ID' => $ids]);
+                    }
+                    $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
+                    $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
 
-                $tmpList = $tmpList
-                    ->exclude(
-                        [
-                            'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
-                        ]
-                    )
-                ;
-                //you can only do one exclude at the same time.
-                $tmpList = $tmpList
-                    ->exclude(
-                        [
-                            'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
-                        ]
-                    )
-                ;
+                    $tmpList = $tmpList
+                        ->exclude(
+                            [
+                                'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
+                            ]
+                        )
+                    ;
+                    //you can only do one exclude at the same time.
+                    $tmpList = $tmpList
+                        ->exclude(
+                            [
+                                'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
+                            ]
+                        )
+                    ;
 
-                $tmpList = Order::get_datalist_of_orders_with_joined_submission_record($tmpList);
-                $tmpList = $tmpList->Sort('OrderStatusLog.ID DESC');
-                self::$_list_cache_orders = $tmpList;
+                    $tmpList = Order::get_datalist_of_orders_with_joined_submission_record($tmpList);
+                    $tmpList = $tmpList->Sort('OrderStatusLog.ID DESC');
+                    self::$_list_cache_orders = $tmpList;
+                    EcommerceCache::inst()->save($this->getTimeBasedCacheKey(), $tmpList->columnUnique());
+                }
             }
             $list = self::$_list_cache_orders;
-
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
@@ -195,4 +209,36 @@ class SalesAdmin extends ModelAdmin
 
         //Requirements::javascript("ecommerce/javascript/EcomModelAdminExtensions.js"); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
     }
+
+    protected function getTimeBasedCacheKey()
+    {
+        $seconds = $this->Config()->get('cache_seconds');
+        return 'order_cache_'.round(time() / ($seconds + 1));
+    }
+
+    protected function buildTabs(array $brackets, array $arrayOfTabs, $form)
+    {
+        foreach($brackets as $key => $bracket) {
+            if($key) {
+                $ids = $arrayOfTabs[$key]['IDs'] ?? [];
+                if(count($ids)) {
+                    $arrayOfTabs[$key] = [
+                        'TabName' => 'tab'.$key,
+                        'Title' => $bracket,
+                        'List' => Order::get()->filter(['ID' => $ids]),
+                    ];
+                } else {
+                    unset($arrayOfTabs[$key]);
+                }
+            } else {
+                unset($arrayOfTabs[$key]);
+            }
+        }
+        TabsBuilder::add_many_tabs(
+            $arrayOfTabs,
+            $form,
+            $this->modelClass
+        );
+    }
+
 }

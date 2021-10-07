@@ -30,14 +30,14 @@ class SalesAdminByOrderSize extends SalesAdmin
      * @var float
      */
     private static $brackets = [
-        0,
-        100,
-        200,
-        500,
-        1000,
-        2500,
-        5000,
-        100000,
+        0 => 'n/a',
+        100 => 'up to $100',
+        200 => '$100 - $200',
+        500 => '$200 - $500',
+        1000 => '$500 - $1000',
+        2500 => '$2,500 - $5,000',
+        5000 => '$5,000 - $10,000',
+        100000 => '$10,000+',
     ];
 
 
@@ -58,43 +58,21 @@ class SalesAdminByOrderSize extends SalesAdmin
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
             $brackets = $this->Config()->get('brackets');
-            $arrayOfTabs = array_fill_keys($brackets, ['IDs' => []]);
+            $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
             foreach($baseList as $order) {
                 $total = $order->getTotal();
-                $prevBracket = 0;
-                foreach($brackets as $key => $bracket) {
-                    if($key) {
-                        if($total >= $prevBracket && $total < $bracket) {
-                            $arrayOfTabs[$bracket]['IDs'][$order->ID] = $order->ID;
+                $prevValue = 0;
+                foreach($brackets as $value => $bracket) {
+                    if($value) {
+                        if($total >= $prevValue && $total < $value) {
+                            $arrayOfTabs[$value]['IDs'][$order->ID] = $order->ID;
                         }
                     }
-                    $prevBracket = $bracket;
+                    $prevValue = $value;
                 }
             }
-            $prevBracket = 0;
-            foreach($brackets as $key => $bracket) {
-                if(empty($arrayOfTabs[$bracket]['IDs'])) {
-                    $arrayOfTabs[$bracket]['IDs'] = [0 => 0];
-                }
-                $ids = $arrayOfTabs[$bracket]['IDs'];
-                if($key) {
-                    $arrayOfTabs[$bracket] = [
-                        'TabName' => 'From'.$prevBracket.'To'.$bracket,
-                        'Title' => '... $'.$prevBracket.' - $'.$bracket,
-                        'List' => Order::get()->filter(['ID' => $ids]),
-                    ];
-                    unset($arrayOfTabs['IDs']);
-                } else {
-                    unset($arrayOfTabs[$bracket]);
-                }
-                $prevBracket = $bracket;
-            }
-            TabsBuilder::add_many_tabs(
-                $arrayOfTabs,
-                $form,
-                $this->modelClass
-            );
+            $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
         return $form;
     }
