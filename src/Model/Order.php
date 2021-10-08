@@ -826,6 +826,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         _t('Order.QUEUE_DETAILS', 'Queue Details'),
                         $this->OrderProcessQueue(),
                         GridFieldConfig_RecordEditor::create()
+                            ->removeComponentsByType(GridFieldFilterHeader::class)
                     );
                 } else {
                     $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>' . _t('Order.NOT_QUEUED', 'This order is not queued for future processing.') . '</p>');

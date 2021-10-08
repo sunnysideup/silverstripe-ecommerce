@@ -57,7 +57,7 @@ class SalesAdminByPaymentType extends SalesAdmin
             foreach($baseList as $order) {
                 $option = $optionPerOrder[$order->ID] ?? 'ERROR';
                 foreach(array_keys($brackets) as $key) {
-                    if($option === $key) {
+                    if($this->classNameConverter($option) === $key) {
                         $arrayOfTabs[$key]['IDs'][$order->ID] = $order->ID;
                     }
                 }
@@ -69,7 +69,17 @@ class SalesAdminByPaymentType extends SalesAdmin
 
     protected function getBrackets() : array
     {
-        return (array) EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
+        $list = (array) EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
+        $newArray = [];
+        foreach($list as $key => $value) {
+            $newArray[$this->classNameConverter($key)] = $value;
+        }
+        return $newArray;
+    }
+
+    protected function classNameConverter(string $className) : string
+    {
+        return str_replace('\\', '-', $className);
     }
 
     protected function getOptionPerOrder($baseList) : array

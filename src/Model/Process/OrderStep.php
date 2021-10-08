@@ -5,6 +5,8 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -34,6 +36,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+
+use Sunnysideup\DataobjectSorter\DataObjectOneRecordUpdateController;
 
 /**
  * @description: see OrderStep.md
@@ -674,7 +678,34 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
+        $this->addQuickLogEntryButton($fields, $order);
         return $fields;
+    }
+
+    public function addQuickLogEntryButton($fields, $order)
+    {
+        if($this->relevantLogEntryClassName) {
+            $log = $this->relevantLogEntryClassName::get()->filter(['OrderID' => $order->ID])->Last();
+            if($log) {
+                $link = DataObjectOneRecordUpdateController::popup_link_only($this->relevantLogEntryClassName, $log->ID);
+                $link2 = $log->CMSEditLink();
+                $title = _t('Order.EDIT', 'Edit').' '.$log->i18n_singular_name();
+            } else {
+                $log = Injector::inst()->get($this->relevantLogEntryClassName);
+                $link = $log->CMSAddLink();
+                $title = _t('Order.ADD', 'Add').' '.$log->i18n_singular_name();
+            }
+            $fields->addFieldsToTab(
+                'Root.Next',
+                [
+                    EcommerceCMSButtonField::create(
+                        'AddEditNoteButton',
+                        $link,
+                        $title
+                    ),
+                ]
+            );
+        }
     }
 
     /**
