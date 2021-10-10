@@ -4004,6 +4004,11 @@ class Order extends DataObject implements EditableEcommerceObject
         return $member;
     }
 
+    public function getCustomer() :?Member
+    {
+        return $this->Member();
+    }
+
     /**
      * returns itself wtih more data added as variables.
      * We add has_one and has_many as variables like this: $this->MyHasOne_serialized = serialize($this->MyHasOne()).
