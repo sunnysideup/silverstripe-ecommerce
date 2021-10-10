@@ -687,8 +687,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if($this->relevantLogEntryClassName) {
             $log = $this->relevantLogEntryClassName::get()->filter(['OrderID' => $order->ID])->Last();
             if($log) {
-                $link = DataObjectOneRecordUpdateController::popup_link_only($this->relevantLogEntryClassName, $log->ID);
-                $link2 = $log->CMSEditLink();
+                $link = $log->CMSEditLink();
                 $title = _t('Order.EDIT', 'Edit').' '.$log->i18n_singular_name();
             } else {
                 $log = Injector::inst()->get($this->relevantLogEntryClassName);
