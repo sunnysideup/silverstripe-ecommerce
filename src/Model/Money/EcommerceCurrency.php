@@ -45,6 +45,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     private static $exchange_provider_class = ExchangeRateProvider::class;
 
+    private static $show_currency_at_all = true;
+
     /**
      * @var string
      */
@@ -408,22 +410,24 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if (! $order) {
             $order = ShoppingCart::current_order();
         }
-        $currency = $order->CurrencyUsed();
-        $currencyCode = $currency->Code;
-        if ($order) {
-            if ($order->HasAlternativeCurrency()) {
-                $exchangeRate = $order->ExchangeRate;
-                if ($exchangeRate && 1 !== $exchangeRate) {
-                    $price = $exchangeRate * $price;
+        $currencyCode = '';
+        if(Config::inst()->get('show_currency_at_all')) {
+            $currency = $order->CurrencyUsed();
+            $currencyCode = $currency->Code;
+            if ($order) {
+                if ($order->HasAlternativeCurrency()) {
+                    $exchangeRate = $order->ExchangeRate;
+                    if ($exchangeRate && 1 !== $exchangeRate) {
+                        $price = $exchangeRate * $price;
+                    }
                 }
             }
-        }
 
-        $updatedCurrencyCode = Injector::inst()->get(EcommerceCurrency::class)->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
-        if (null !== $updatedCurrencyCode && is_array($updatedCurrencyCode) && count($updatedCurrencyCode)) {
-            $currencyCode = $updatedCurrencyCode[0];
+            $updatedCurrencyCode = Injector::inst()->get(EcommerceCurrency::class)->extend('updateCurrencyCodeForMoneyObect', $currencyCode);
+            if (null !== $updatedCurrencyCode && is_array($updatedCurrencyCode) && count($updatedCurrencyCode)) {
+                $currencyCode = $updatedCurrencyCode[0];
+            }
         }
-
         return DBField::create_field(
             'Money',
             [
