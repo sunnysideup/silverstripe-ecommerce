@@ -224,11 +224,15 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         'CustomerDetails' => 'Varchar',
     ];
 
-    public function getCustomerDetails()
+    public function getCustomerDetails() : string
     {
-        return $this->owner->FirstName . ' ' . $this->owner->Surname .
-            ', ' . $this->owner->Email .
-            ' (' . $this->owner->Orders()->count() . ')';
+        if($this->getOwner()->exists()) {
+            return $this->getOwner()->FirstName . ' ' . $this->getOwner()->Surname .
+                ', ' . $this->getOwner()->Email .
+                ' (' . $this->getOwner()->Orders()->count() . ' orders)';
+        } else {
+            return 'no customer';
+        }
     }
 
     /**
@@ -466,7 +470,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     public function getOrders()
     {
-        return Order::get()->filter(['MemberID' => $this->owner->ID]);
+        return Order::get()->filter(['MemberID' => $this->getOwner()->ID]);
     }
 
     public function CancelledOrders()
@@ -476,7 +480,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
 
     public function getCancelledOrders()
     {
-        return Order::get()->filter(['CancelledByID' => $this->owner->ID]);
+        return Order::get()->filter(['CancelledByID' => $this->getOwner()->ID]);
     }
 
     /**
@@ -556,11 +560,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $notesFields = $fields->dataFieldByName('Notes');
         $loginAsField = new LiteralField(
             'LoginAsThisCustomer',
-            '<p class="actionInCMS"><a href="' . $this->owner->LoginAsLink() . '" target="_blank">Login as this customer</a></p>'
+            '<p class="actionInCMS"><a href="' . $this->getOwner()->LoginAsLink() . '" target="_blank">Login as this customer</a></p>'
         );
         $link = Controller::join_links(
             Director::baseURL(),
-            Config::inst()->get(ShoppingCartController::class, 'url_segment') . '/placeorderformember/' . $this->owner->ID . '/'
+            Config::inst()->get(ShoppingCartController::class, 'url_segment') . '/placeorderformember/' . $this->getOwner()->ID . '/'
         );
         $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"{$link}\" target=\"_blank\">Place order for customer</a></p>");
         $fields->addFieldsToTab(
@@ -582,10 +586,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function SetPreferredCurrency(EcommerceCurrency $currency)
     {
-        if ($this->owner->exists()) {
+        if ($this->getOwner()->exists()) {
             if ($currency && $currency->exists()) {
-                $this->owner->PreferredCurrencyID = $currency->ID;
-                $this->owner->write();
+                $this->getOwner()->PreferredCurrencyID = $currency->ID;
+                $this->getOwner()->write();
             }
         }
     }
@@ -598,11 +602,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function getEcommerceFieldsForCMS()
     {
         $fields = new CompositeField();
-        $memberTitle = HTMLReadonlyField::create('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . $this->owner->getTitle() . '</p>');
+        $memberTitle = HTMLReadonlyField::create('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . $this->getOwner()->getTitle() . '</p>');
         $fields->push($memberTitle);
-        $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p><a href="mailto:' . $this->owner->Email . '">' . $this->owner->Email . '</a></p>');
+        $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p><a href="mailto:' . $this->getOwner()->Email . '">' . $this->getOwner()->Email . '</a></p>');
         $fields->push($memberEmail);
-        $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . $this->owner->dbObject('LastVisited') . '</p>');
+        $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . $this->getOwner()->dbObject('LastVisited') . '</p>');
         $fields->push($lastLogin);
         $group = self::get_customer_group();
         if (! $group) {
@@ -611,8 +615,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         $headerField = HeaderField::create('MemberLinkFieldHeader', _t('Member.EDIT_CUSTOMER', 'Edit Customer'));
         $linkField1 = EcommerceCMSButtonField::create(
             'MemberLinkFieldEditThisCustomer',
-            $this->owner->CMSEditLink(),
-            _t('Member.EDIT', 'Edit') . ' <i>' . $this->owner->getTitle() . '</i>'
+            $this->getOwner()->CMSEditLink(),
+            _t('Member.EDIT', 'Edit') . ' <i>' . $this->getOwner()->getTitle() . '</i>'
         );
         $fields->push($headerField);
         $fields->push($linkField1);
@@ -646,8 +650,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         } else {
             Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPasswordField.js');
 
-            if ($this->owner->exists()) {
-                if ($this->owner->Password) {
+            if ($this->getOwner()->exists()) {
+                if ($this->getOwner()->Password) {
                     $passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD', 'New Password'));
                     $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD', 'Confirm New Password'));
                     $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password"  datano="' . Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')) . '"  class="updatePasswordLink passwordToggleLink secondary-button" rel="Password">' . _t('Account.UPDATE_PASSWORD', 'Update Password') . '</a>');
@@ -713,7 +717,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             }
         }
 
-        $this->owner->extend('augmentEcommerceFields', $fields);
+        $this->getOwner()->extend('augmentEcommerceFields', $fields);
 
         return $fields;
     }
@@ -733,8 +737,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         ];
         if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
             $passwordFieldIsRequired = true;
-            if ($this->owner->exists()) {
-                if ($this->owner->Password) {
+            if ($this->getOwner()->exists()) {
+                if ($this->getOwner()->Password) {
                     $passwordFieldIsRequired = false;
                 }
             }
@@ -745,7 +749,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             $fields[] = 'PasswordCheck1';
             $fields[] = 'PasswordCheck2';
         }
-        $this->owner->extend('augmentEcommerceRequiredFields', $fields);
+        $this->getOwner()->extend('augmentEcommerceRequiredFields', $fields);
 
         return $fields;
     }
@@ -771,7 +775,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function IsShopAssistant()
     {
-        if ($this->owner->IsShopAdmin()) {
+        if ($this->getOwner()->IsShopAdmin()) {
             return true;
         }
 
@@ -785,7 +789,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public function CanProcessOrders()
     {
-        if ($this->owner->IsShopAdmin()) {
+        if ($this->getOwner()->IsShopAdmin()) {
             return true;
         }
 
@@ -807,7 +811,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         }
 
         return $orders
-            ->Filter(['MemberID' => $this->owner->ID])
+            ->Filter(['MemberID' => $this->getOwner()->ID])
             ->First()
         ;
     }
@@ -840,7 +844,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
     {
         $returnArrayList = new ArrayList();
-        if ($this->owner->exists()) {
+        if ($this->getOwner()->exists()) {
             $fieldName = Config::inst()->get($type, 'table_name') . 'ID';
             $limit = 999;
             if ($onlyLastRecord) {
@@ -848,7 +852,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             }
             $addresses = $type::get()
                 ->where(
-                    '"Obsolete" = 0 AND "Order"."MemberID" = ' . $this->owner->ID
+                    '"Obsolete" = 0 AND "Order"."MemberID" = ' . $this->getOwner()->ID
                 )
                 ->sort('LastEdited', 'DESC')
                 ->exclude(['ID' => $excludeID])
@@ -897,7 +901,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         return Controller::join_links(
             Director::baseURL(),
             Config::inst()->get(ShoppingCartController::class, 'url_segment') .
-            '/loginas/' . $this->owner->ID . '/'
+            '/loginas/' . $this->getOwner()->ID . '/'
         );
     }
 

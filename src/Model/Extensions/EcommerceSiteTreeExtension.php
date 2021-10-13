@@ -48,8 +48,8 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
      */
     public function EcommerceLogInLink()
     {
-        if ($this->owner->IsEcommercePage()) {
-            $link = $this->owner->Link();
+        if ($this->getOwner()->IsEcommercePage()) {
+            $link = $this->getOwner()->Link();
         } else {
             $link = EcommerceConfig::inst()->AccountPageLink();
         }
@@ -64,8 +64,8 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
     {
         if ($this->owner instanceof ProductGroup) {
             $checkForDuplicatesURLSegments = ProductGroup::get()
-                ->filter(['URLSegment' => $this->owner->URLSegment])
-                ->exclude(['ID' => $this->owner->ID])
+                ->filter(['URLSegment' => $this->getOwner()->URLSegment])
+                ->exclude(['ID' => $this->getOwner()->ID])
             ;
             if ($checkForDuplicatesURLSegments->exists()) {
                 return false;

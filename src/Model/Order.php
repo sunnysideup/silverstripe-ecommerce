@@ -781,7 +781,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $summaryFields[] = ReadonlyField::create('OrderItemsSummaryNice', 'Items');
         $summaryFields[] = ReadonlyField::create('TotalNice', 'Total', $this->TotalAsMoney()->Nice());
         $summaryFields[] = ReadonlyField::create('IsPaidNice', 'Paid?');
-        $summaryFields[] = ReadonlyField::create('Customer', 'Customer', $this->Member()->getCustomerDetails());
+        $summaryFields[] = ReadonlyField::create('MyCustomerNice', 'Customer', $this->Member()->getCustomerDetails());
         $summaryFields[] = ReadonlyField::create('NextStep', 'Next Step', $this->Status()->getTitle());
         $summaryFields[] = ReadonlyField::create('CustomerOrderNote', 'Note');
         $nextFieldArray = array_merge(
@@ -943,8 +943,16 @@ class Order extends DataObject implements EditableEcommerceObject
                 'Root.Payments',
                 [
                     $this->getPaymentsField(),
-                    new ReadonlyField('TotalPaidNice', _t('Order.TOTALPAID', 'Total Paid'), $this->TotalPaidAsCurrencyObject()->Nice()),
-                    new ReadonlyField('TotalOutstandingNice', _t('Order.TOTALOUTSTANDING', 'Total Outstanding'), $this->getTotalOutstandingAsMoney()->Nice()),
+                    new ReadonlyField(
+                        'TotalPaidNice',
+                        _t('Order.TOTALPAID', 'Total Paid'),
+                        $this->TotalPaidAsCurrencyObject()->Nice()
+                    ),
+                    new ReadonlyField(
+                        'TotalOutstandingNice',
+                        _t('Order.TOTALOUTSTANDING', 'Total Outstanding'),
+                        $this->getTotalOutstandingAsMoney()->Nice()
+                    ),
                 ]
             );
             if ($this->canPay()) {
@@ -1064,17 +1072,33 @@ class Order extends DataObject implements EditableEcommerceObject
         $currencies = EcommerceCurrency::get_list();
         if ($currencies->exists()) {
             $currencies = $currencies->map()->toArray();
-            $fields->addFieldToTab('Root.Currency', new ReadonlyField('ExchangeRate ', _t('Order.EXCHANGERATE', 'Exchange Rate'), $this->ExchangeRate));
-            $fields->addFieldToTab('Root.Currency', $currencyField = new DropdownField('CurrencyUsedID', _t('Order.CurrencyUsed', 'Currency Used'), $currencies));
+            $fields->addFieldsToTab(
+                'Root.Currency',
+                [
+                    new ReadonlyField('ExchangeRate ', _t('Order.EXCHANGERATE', 'Exchange Rate'), $this->ExchangeRate),
+                    $currencyField = new DropdownField('CurrencyUsedID', _t('Order.CurrencyUsed', 'Currency Used'), $currencies),
+                ]
+            );
             if ($this->IsSubmitted()) {
                 $fields->replaceField('CurrencyUsedID', $fields->dataFieldByName('CurrencyUsedID')->performReadonlyTransformation());
             }
         } else {
-            $fields->addFieldToTab('Root.Currency', new LiteralField('CurrencyInfo', '<p>You can not change currencies, because no currencies have been created.</p>'));
+            $fields->addFieldToTab(
+                'Root.Currency',
+                new LiteralField(
+                    'CurrencyInfo',
+                    '<p>You can not change currencies, because no currencies have been created.</p>'
+                )
+            );
             $fields->replaceField('CurrencyUsedID', $fields->dataFieldByName('CurrencyUsedID')->performReadonlyTransformation());
         }
-        $fields->addFieldToTab('Root.Log', new ReadonlyField('Created', _t('Root.CREATED', 'Created')));
-        $fields->addFieldToTab('Root.Log', new ReadonlyField('LastEdited', _t('Root.LASTEDITED', 'Last saved')));
+        $fields->addFieldsToTab(
+            'Root.Log',
+            [
+                new ReadonlyField('Created', _t('Root.CREATED', 'Created')),
+                new ReadonlyField('LastEdited', _t('Root.LASTEDITED', 'Last saved')),
+            ]
+        );
         $this->extend('updateCMSFields', $fields);
 
         return $fields;

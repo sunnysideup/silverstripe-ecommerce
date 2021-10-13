@@ -27,17 +27,17 @@ class EcommerceSiteTreeExtensionController extends Extension
         Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
-        // if ($this->owner->dataRecord) {
+        // if ($this->getOwner()->dataRecord) {
         //     if (is_a(
-        //         $this->owner->dataRecord,
+        //         $this->getOwner()->dataRecord,
         //         EcommerceConfigClassNames::getName(Product::class)
         //     ) ||
         //         is_a(
-        //             $this->owner->dataRecord,
+        //             $this->getOwner()->dataRecord,
         //             EcommerceConfigClassNames::getName(ProductGroup::class)
         //         )
         //     ) {
-        //         Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->owner->Link());
+        //         Controller::curr()->getRequest()->getSession()->set('ContinueShoppingLink', $this->getOwner()->Link());
         //     }
         // }
     }
@@ -106,7 +106,7 @@ class EcommerceSiteTreeExtensionController extends Extension
      */
     public function isSecurePage()
     {
-        return $this->owner->dataRecord instanceof CartPage;
+        return $this->getOwner()->dataRecord instanceof CartPage;
     }
 
     /*
@@ -139,15 +139,15 @@ class EcommerceSiteTreeExtensionController extends Extension
      *        $currentUrlWithoutHost .= $sessionPartOfURL;
      *    }
      *
-     *        $isSecure = $this->owner->isSecurePage();
+     *        $isSecure = $this->getOwner()->isSecurePage();
      *
      *    if ($isSecure && !preg_match('/^'.preg_quote(_SECURE_URL, '/').'/', $currentUrlFull)) {
-     *        return $this->owner->redirect(_SECURE_URL.$currentUrlWithoutHost);
+     *        return $this->getOwner()->redirect(_SECURE_URL.$currentUrlWithoutHost);
      *    } elseif (!$isSecure && !preg_match('/^'.preg_quote(_STANDARD_URL, '/').'/', $currentUrlFull)) {
-     *        return $this->owner->redirect(_STANDARD_URL.$currentUrlWithoutHost);
+     *        return $this->getOwner()->redirect(_STANDARD_URL.$currentUrlWithoutHost);
      *    }
      *
-     *    if ($sessionID = $this->owner->request->getVar('session')) {
+     *    if ($sessionID = $this->getOwner()->request->getVar('session')) {
      *        $currentUrlFull = str_replace('?session='.$sessionID, '', $currentUrlFull);
      *        $currentUrlFull = str_replace('&session='.$sessionID, '', $currentUrlFull);
      *        // force hard-coded session setting

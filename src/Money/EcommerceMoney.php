@@ -79,7 +79,7 @@ class EcommerceMoney extends Extension
      */
     public function NiceDefaultSymbol($html = true)
     {
-        return self::get_default_symbol($this->owner->currency) === self::get_short_symbol($this->owner->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
+        return self::get_default_symbol($this->getOwner()->currency) === self::get_short_symbol($this->getOwner()->currency) ? $this->NiceShortSymbol($html) : $this->NiceLongSymbol($html);
     }
 
     /**
@@ -92,13 +92,13 @@ class EcommerceMoney extends Extension
      */
     public function NiceShortSymbol($html = true)
     {
-        $symbol = self::get_short_symbol($this->owner->currency);
+        $symbol = self::get_short_symbol($this->getOwner()->currency);
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->owner->currency}\"><span class=\"currencySymbol\">{$symbol}</span></span>";
+            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->getOwner()->currency}\"><span class=\"currencySymbol\">{$symbol}</span></span>";
         }
-        $amount = $this->owner->getAmount();
+        $amount = $this->getOwner()->getAmount();
 
-        $formatter = $this->owner->getFormatter();
+        $formatter = $this->getOwner()->getFormatter();
         $data = $formatter->format($amount);
 
         return DBField::create_field('HTMLText', $data);
@@ -114,18 +114,18 @@ class EcommerceMoney extends Extension
      */
     public function NiceLongSymbol($html = true)
     {
-        $symbol = self::get_long_symbol($this->owner->currency);
-        $short = self::get_short_symbol($this->owner->currency);
+        $symbol = self::get_long_symbol($this->getOwner()->currency);
+        $short = self::get_short_symbol($this->getOwner()->currency);
         $pre = substr($symbol, 0, mb_strlen($symbol) - mb_strlen($short));
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->owner->currency}\"><span class=\"currencyPreSymbol\">{$pre}</span><span class=\"currencySymbol\">{$short}</span></span>";
+            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->getOwner()->currency}\"><span class=\"currencyPreSymbol\">{$pre}</span><span class=\"currencySymbol\">{$short}</span></span>";
         } else {
             $symbol = $pre . $short;
         }
-        $amount = $this->owner->getAmount();
-        $currency = $this->owner->getCurrency();
+        $amount = $this->getOwner()->getAmount();
+        $currency = $this->getOwner()->getCurrency();
 
-        $formatter = $this->owner->getFormatter();
+        $formatter = $this->getOwner()->getFormatter();
         $data = $currency ? $symbol . $formatter->formatCurrency($amount, $currency) : $symbol . $formatter->format($amount);
 
         return DBField::create_field('HTMLText', $data);
@@ -140,17 +140,17 @@ class EcommerceMoney extends Extension
      */
     public function SymbolNumberAndCode($html = true)
     {
-        $symbol = self::get_short_symbol($this->owner->currency);
+        $symbol = self::get_short_symbol($this->getOwner()->currency);
         if ($html) {
             $symbol = "<span class=\"currencySymbol\">{$symbol}</span>";
         }
-        $code = strtolower($this->owner->currency);
+        $code = strtolower($this->getOwner()->currency);
         if ($html) {
             $code = "<span class=\"currencyHolder\">{$code}</span>";
         }
-        $amount = $this->owner->getAmount();
+        $amount = $this->getOwner()->getAmount();
 
-        $data = is_numeric($amount) ? $symbol . $this->owner->currencyLib->toCurrency($amount, [
+        $data = is_numeric($amount) ? $symbol . $this->getOwner()->currencyLib->toCurrency($amount, [
             'symbol' => '',
             'precision' => 0,
         ]) . ' ' . $code : '';
@@ -169,6 +169,6 @@ class EcommerceMoney extends Extension
     {
         $function = EcommerceConfig::get(EcommerceMoney::class, 'default_format');
 
-        return $this->owner->{$function}($html);
+        return $this->getOwner()->{$function}($html);
     }
 }
