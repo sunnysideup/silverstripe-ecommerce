@@ -227,9 +227,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function getCustomerDetails() : string
     {
         if($this->getOwner()->exists()) {
+            $count = $this->getOwner()->Orders()->count();
             return $this->getOwner()->FirstName . ' ' . $this->getOwner()->Surname .
                 ', ' . $this->getOwner()->Email .
-                ' (' . $this->getOwner()->Orders()->count() . ' orders)';
+                ' (lifetime order count: '.$count.')';
         } else {
             return 'no customer';
         }
