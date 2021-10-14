@@ -113,10 +113,10 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
             if (count($problems)) {
                 $msg = '<p>You can not submit this order because:</p> <ul><li>' . implode('</li><li>', $problems) . '</li></ul>';
             }
-            $fields->addFieldToTab('Root.Next', new HeaderField('CreateSubmitRecordHeader', $header, 3), 'ActionNextStepManually');
-            $fields->addFieldToTab('Root.Next', new LiteralField('CreateSubmitRecordMessage', $msg), 'ActionNextStepManually');
+            $fields->addFieldToTab('Root.Next', new HeaderField('CreateSubmitRecordHeader', $header, 3));
+            $fields->addFieldToTab('Root.Next', new LiteralField('CreateSubmitRecordMessage', $msg));
             if (! $problems) {
-                $fields->addFieldToTab('Root.Next', new CheckboxField('SubmitOrderViaCMS', $label), 'ActionNextStepManually');
+                $fields->addFieldToTab('Root.Next', new CheckboxField('SubmitOrderViaCMS', $label));
             }
         }
 

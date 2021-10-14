@@ -742,7 +742,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
         //as we are no longer using the parent:;getCMSFields
         // we had to add the updateCMSFields hook.
-        $this->extend('updateCMSFields', $fields);
+        $this->extend('updateCMSFieldsBefore', $fields);
         $currentMember = Security::getCurrentUser();
         if (! $this->exists() || ! $this->StatusID) {
             $firstStep = DataObject::get_one(OrderStep::class);
@@ -840,7 +840,10 @@ class Order extends DataObject implements EditableEcommerceObject
                                 #Root_Next h2.section-heading-for-order {padding: 0!important; margin: 0!important; padding-top: 3em!important; color: #0071c4;}
                             </style>'
                         ),
-                        HeaderField::create('ActionNextStepManually', _t('Order.ACTION_NEXT_STEP', 'Action Next Step'))->addExtraClass('section-heading-for-order'),
+                        HeaderField::create(
+                            'ActionNextStepManually',
+                            _t('Order.ACTION_NEXT_STEP', 'Action Next Step')
+                        )->addExtraClass('section-heading-for-order'),
                     ]
                 );
                 $fields->addFieldsToTab(
@@ -876,7 +879,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $nextFieldArray
         );
 
-        $this->MyStep()->addOrderStepFields($fields, $this, true);
+
 
         if ($submitted) {
             $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');
@@ -1099,6 +1102,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 new ReadonlyField('LastEdited', _t('Root.LASTEDITED', 'Last saved')),
             ]
         );
+        $this->MyStep()->addOrderStepFields($fields, $this, true);
         $this->extend('updateCMSFields', $fields);
 
         return $fields;
@@ -2740,7 +2744,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;
                 $buyable = $orderItem->Buyable();
-                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . 'x ';
+                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . '× ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
                 } else {

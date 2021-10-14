@@ -99,6 +99,13 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      */
     public function initStep(Order $order): bool
     {
+        if (false === $this->RelevantLogEntries($order)->exists()) {
+            $className = $this->getRelevantLogEntryClassName();
+            $log = $className::create();
+            $log->OrderID = $order->ID;
+            $log->write();
+        }
+
         return true;
     }
 
@@ -144,8 +151,10 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     public function nextStep(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
-        if (! $this->SendDetailsToCustomer || $log->InternalUseOnly || $this->hasBeenSent($order, false)) {
-            return parent::nextStep($order);
+        if($log) {
+            if($log->Sent) {
+                return parent::nextStep($order);
+            }
         }
 
         return null;

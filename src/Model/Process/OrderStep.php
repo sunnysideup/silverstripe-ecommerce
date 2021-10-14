@@ -652,7 +652,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
-     * Usually this is added before ActionNextStepManually.
      *
      * @return \SilverStripe\Forms\FieldList
      */
@@ -689,21 +688,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if($log) {
                 $link = $log->CMSEditLink();
                 $title = _t('Order.EDIT', 'Edit').' '.$log->i18n_singular_name();
-            } else {
-                $log = Injector::inst()->get($this->relevantLogEntryClassName);
-                $link = $log->CMSAddLink();
-                $title = _t('Order.ADD', 'Add').' '.$log->i18n_singular_name();
+
+                $fields->addFieldsToTab(
+                    'Root.Next',
+                    [
+                        EcommerceCMSButtonField::create(
+                            'AddEditNoteButton',
+                            $link,
+                            $title
+                        ),
+                    ]
+                );
             }
-            $fields->addFieldsToTab(
-                'Root.Next',
-                [
-                    EcommerceCMSButtonField::create(
-                        'AddEditNoteButton',
-                        $link,
-                        $title
-                    ),
-                ]
-            );
         }
     }
 

@@ -8,6 +8,8 @@ use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
+
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -92,9 +94,30 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
                     See Payments tab for more details.
                 '
             );
-            $fields->addFieldToTab('Root.Next', new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'), 'ActionNextStepManually');
-        }
 
+            $fields->addFieldsToTab(
+                'Root.Next',
+                [
+                    new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'),
+                    EcommerceCMSButtonField::create(
+                        'EditPayment',
+                        $order->Payments()->first()->CMSEditLink(),
+                        'Edit Payment'
+                    ),
+
+                ]
+            );
+        }
+        $paymentField = $fields->fieldByName('Root.Payments.Payments');
+        if($paymentField) {
+            $fields->addFieldsToTab(
+                'Root.Next',
+                [
+                    $paymentField
+
+                ]
+            );
+        }
         return $fields;
     }
 

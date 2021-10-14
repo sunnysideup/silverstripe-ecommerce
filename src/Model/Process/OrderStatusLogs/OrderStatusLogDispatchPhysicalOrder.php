@@ -4,7 +4,10 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
@@ -24,6 +27,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         'DispatchedOn' => 'Date',
         'DispatchTicket' => 'Varchar(100)',
         'DispatchLink' => 'Varchar(255)',
+        'Sent' => 'Boolean',
     ];
 
     private static $indexes = [
@@ -126,5 +130,20 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         if (! $this->DispatchedOn) {
             $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
         }
+    }
+
+    public function DosFields()
+    {
+        return FieldList::create(
+            [
+                ReadonlyField::create('CustomerInfo', 'Customer', $this->Order()->Member()->getCustomerDetails()),
+                ReadonlyField::create('OrderInfo', 'Order', $this->Order()->getTitle()),
+                ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItems')),
+                TextField::create('DispatchedBy'),
+                TextField::create('DispatchTicket'),
+                TextField::create('DispatchLink'),
+                CheckboxField::create('Sent'),
+            ]
+        );
     }
 }

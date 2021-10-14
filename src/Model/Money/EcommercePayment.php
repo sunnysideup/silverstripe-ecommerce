@@ -77,6 +77,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         'supportedMethodsProvider' => '%$' . EcommercePaymentSupportedMethodsProvider::class,
     ];
 
+    private static $editable_fields = [
+        'Status',
+        'Message',
+    ];
+
     /**
      * Incomplete (default): Payment created but nothing confirmed as successful
      * Success: Payment successful
@@ -199,6 +204,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         );
         $fields->replaceField('PaidByID', new ReadonlyField('PaidByID', 'Payment made by'));
         $fields->removeByName('AlternativeEndPoint');
+        foreach($fields->dataFields() as $field) {
+            $name = $field->ID();
+            if(! in_array($name, $this->Config()->get('editable_fields'))) {
+                $fields->replaceField(
+                    $field->ID(),
+                    $field->performReadonlyTransformation()
+                );
+            }
+        }
 
         return $fields;
     }
