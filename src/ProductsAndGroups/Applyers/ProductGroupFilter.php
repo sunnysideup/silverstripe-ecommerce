@@ -107,7 +107,7 @@ class ProductGroupFilter extends BaseApplyer
             $filter = '';
         }
         if (is_array($filter)) {
-            $filter = array_flush($filter);
+            $filter = implode('.', $filter);
         }
 
         return self::get_group_from_get_variable($filter);

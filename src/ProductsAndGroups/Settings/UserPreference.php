@@ -455,7 +455,10 @@ class UserPreference
 
     public function getActions(string $classNameOrType)
     {
+
         if ('GROUPFILTER' === $classNameOrType || $classNameOrType instanceof ProductGroupFilter) {
+            if($this->rootGroupController->HasSearchFilter()) {
+            }
             return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
 
@@ -473,7 +476,7 @@ class UserPreference
     {
         $options = $this->getOptions($type);
         $actions = $this->getActions($type);
-        $isGroupSegmentStyle = $actions && $options && ($actions->count() * count($options) > 1);
+        $isGroupSegmentStyle = $actions->count() > 0;
         $isNonGroupSegmentStyle = count($options) > 1;
         $list = new ArrayList();
         if ($isGroupSegmentStyle) {
