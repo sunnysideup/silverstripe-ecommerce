@@ -3,7 +3,9 @@
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
@@ -29,6 +31,21 @@ class FinalProductList extends AbstractProductsAndGroupsList
      * @var ProductGroupController
      */
     protected $rootGroupController;
+
+    /**
+     * @var int[]
+     */
+    protected $filterForCandidateCategoryIdsFiltered;
+
+    /**
+     * @var int[]
+     */
+    protected $alsoShowParentIdsFiltered = [];
+
+    /**
+     * @var int[]
+     */
+    protected $alsoShowProductsIdsFiltered = [];
 
     /**
      * singleton_cache.
@@ -178,15 +195,27 @@ class FinalProductList extends AbstractProductsAndGroupsList
     // PRODUCTS: Also show
     //#########################################
 
+
     public function getAlsoShowProductsIds(): array
     {
-        return $this->baseProductList->getAlsoShowProductsIds();
+        return ArrayMethods::filter_array($this->alsoShowProductsIdsFiltered);
+    }
+
+    public function getAlsoShowProductsIdsFiltered(): array
+    {
+        return ArrayMethods::filter_array($this->alsoShowProductsIdsFiltered);
     }
 
     public function getAlsoShowProducts(): DataList
     {
         return $this->baseProductList->getAlsoShowProducts();
     }
+
+    public function getAlsoShowProductsFiltered(): DataList
+    {
+        return $this->products->filter(['ID' => $this->getAlsoShowProductsIdsFiltered()]);
+    }
+
 
     //#########################################
     // GROUPS - smart
@@ -197,9 +226,51 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getFilterForCandidateCategoryIds();
     }
 
+    public function getFilterForCandidateCategoryIdsFiltered(): array
+    {
+        return ArrayMethods::filter_array($this->filterForCandidateCategoryIdsFiltered);
+    }
+
     public function getFilterForCandidateCategories(): DataList
     {
         return $this->baseProductList->getFilterForCandidateCategories();
+    }
+
+    public function getFilterForCandidateCategoriesFiltered()
+    {
+        if (empty($this->filterForCandidateCategoryIdsFiltered)) {
+            $ids1 = $this->getAlsoShowParentsFiltered()->columnUnique();
+            $ids2 = $this->getAlsoShowProductsProductGroupInclusiveFiltered()->columnUnique();
+            $ids3 = $this->getParentGroupsBasedOnProductsFiltered()->columnUnique();
+            $this->filterForCandidateCategoryIdsFiltered = array_merge($ids1, $ids2, $ids3);
+        }
+        $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered());
+
+        return $list->exclude(['ID' => $this->getParentGroupIds()])->Sort(['ClassName' => 'DESC', 'Title' => 'ASC']);
+    }
+
+    public function getAlsoShowParentIdsFiltered(): array
+    {
+        if (! count($this->alsoShowParentIdsFiltered)) {
+            $rows = DB::query('
+                SELECT "ProductGroupID"
+                FROM "Product_ProductGroups"
+                WHERE "ProductID" IN (' . implode(', ', $this->getProductIds()) . ');')->column();
+
+            $this->alsoShowParentIdsFiltered = ArrayMethods::filter_array($rows);
+        }
+
+        return $this->alsoShowParentIdsFiltered;
+    }
+
+    public function getAlsoShowProductsProductGroupInclusiveFiltered(): DataList
+    {
+        return $this->turnIdListIntoProductGroups($this->getAlsoShowProductsFiltered()->columnUnique('ParentID'));
+    }
+
+    public function getParentGroupsBasedOnProductsFiltered(): DataList
+    {
+        return $this->turnIdListIntoProductGroups($this->getProducts()->columnUnique('ParentID'));
     }
 
     //#################################################
@@ -231,6 +302,14 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public function getAlsoShowParents(): DataList
     {
         return $this->baseProductList->getAlsoShowParents();
+    }
+
+    public function getAlsoShowParentsFiltered(): DataList
+    {
+        $list = ProductGroup::get()->filter(['ID' => $this->getAlsoShowParentIdsFiltered()]);
+
+        return RelatedProductGroups::apply_default_filter_to_groups($list);
+
     }
 
     //#################################################

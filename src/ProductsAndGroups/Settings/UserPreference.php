@@ -458,8 +458,10 @@ class UserPreference
 
         if ('GROUPFILTER' === $classNameOrType || $classNameOrType instanceof ProductGroupFilter) {
             if($this->rootGroupController->HasSearchFilter()) {
+                return $this->getFinalProductList()->getFilterForCandidateCategoriesFiltered();
+            } else {
+                return $this->getBaseProductList()->getFilterForCandidateCategories();
             }
-            return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
 
         return null;
@@ -476,16 +478,31 @@ class UserPreference
     {
         $options = $this->getOptions($type);
         $actions = $this->getActions($type);
-        $isGroupSegmentStyle = $actions->count() > 0;
+        $actionCount = $actions ? $actions->count() : 0;
+        $isGroupSegmentStyle = $actionCount > 0;
         $isNonGroupSegmentStyle = count($options) > 1;
         $list = new ArrayList();
         if ($isGroupSegmentStyle) {
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesParams($type);
             }
+            $isCurrent = $currentKey ? false : true;
+            $obj = new ArrayData(
+                [
+                    'Title' => 'All',
+                    'Current' => $isCurrent,
+                    //todo: fix this!!!!
+                    'Link' => $this->getLinkTemplate('', $type, '', true),
+                    'LinkingMode' => $isCurrent ? 'current' : 'link',
+                    'Ajaxify' => $ajaxify,
+                    'Object' => null,
+                    'Key' => '',
+                ]
+            );
+            $list->push($obj);
             foreach ($actions as $group) {
+                $isCurrent = $currentKey === $group->FilterForGroupSegment();
                 foreach (array_keys($options) as $key) {
-                    $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $obj = new ArrayData(
                         [
                             'Title' => $group->MenuTitle,
@@ -533,7 +550,7 @@ class UserPreference
      * @param string $type               optional
      * @param string $replacementForType optional - what you would like the type be instead! - e.g. for FILTER I'd like it to be "somethingelse"
      */
-    public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
+    public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = '', ?bool $hideCurrentValue = false): string
     {
         $cacheKey = ($action ?: '') . ($type ?: '') . ($replacementForType ?: '');
         if (! isset(self::$linkTemplateCache[$cacheKey])) {
@@ -541,19 +558,25 @@ class UserPreference
             $getVars = [];
             foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
                 if ($type && $myType === $type) {
+                    // if it is mytype, then we have a replacement
                     $value = $replacementForType ? $replacementForType : self::GET_VAR_VALUE_PLACE_HOLDER;
                 } else {
+                    //keep current value
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
-                if (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
-                    $getVars[$values['getVariable']] = $value;
+                if($hideCurrentValue && $type && $myType === $type) {
+
                 } else {
-                    $params = $this->getCurrentUserPreferencesParams($myType);
-                    if (! empty($params)) {
-                        if (is_array($params)) {
-                            $params = implode(',', $params);
+                    if (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
+                        $getVars[$values['getVariable']] = $value;
+                    } else {
+                        $params = $this->getCurrentUserPreferencesParams($myType);
+                        if (! empty($params)) {
+                            if (is_array($params)) {
+                                $params = implode(',', $params);
+                            }
+                            $getVars[$values['getVariable']] = $params;
                         }
-                        $getVars[$values['getVariable']] = $params;
                     }
                 }
             }

@@ -34,8 +34,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class BaseProductList extends AbstractProductsAndGroupsList
 {
-    public $getAlsoShowParentIds;
-    public $getfilterForCandidateCategoryIds;
+
     /**
      * keep the lists in memory.
      *
@@ -223,7 +222,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
 
-        return $list->exclude(['ID' => $this->getParentGroupIds()]);
+        return $list->exclude(['ID' => $this->getParentGroupIds()])->Sort(['ClassName' => 'DESC', 'Title' => 'ASC']);
     }
 
     //#################################################
@@ -450,8 +449,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $this->blockedProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('blockedProductsIds'));
         $this->alsoShowProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowProductsIds'));
         $this->parentGroupIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('parentGroupIds'));
-        $this->getAlsoShowParentIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowParentIds'));
-        $this->getfilterForCandidateCategoryIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('filterForCandidateCategoryIds'));
+        $this->alsoShowParentIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowParentIds'));
 
         return $this;
     }
@@ -471,7 +469,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
         EcommerceCache::inst()->save($this->getCachekey('alsoShowParentIds'), $this->getAlsoShowParentIds());
-        EcommerceCache::inst()->save($this->getCachekey('filterForCandidateCategoryIds'), $this->getfilterForCandidateCategoryIds());
 
         return $this;
     }
