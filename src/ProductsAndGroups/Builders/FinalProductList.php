@@ -54,7 +54,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     protected static $singleton_cache;
 
-    private static $candidates_sort = [
+    private static $group_filter_candidates_sort = [
         'ClassName' => 'DESC',
         'Title' => 'ASC',
     ];
@@ -251,7 +251,8 @@ class FinalProductList extends AbstractProductsAndGroupsList
         }
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered());
 
-        return $list->exclude(['ID' => $this->getParentGroupIds()])->Sort($this->Config()->get('candidates_sort'));
+        return $list->exclude(['ID' => $this->getParentGroupIds()])
+            ->Sort($this->Config()->get('group_filter_candidates_sort'));
     }
 
     public function getAlsoShowParentIdsFiltered(): array
