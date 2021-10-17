@@ -99,6 +99,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         'ShowInSearch' => 1,
     ];
 
+    private static $candidates_sort = [
+        'ClassName' => 'DESC',
+        'Title' => 'ASC',
+    ];
+
     /**
      * @param ProductGroup $rootGroup
      */
@@ -222,7 +227,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
 
-        return $list->exclude(['ID' => $this->getParentGroupIds()])->Sort(['ClassName' => 'DESC', 'Title' => 'ASC']);
+        return $list->exclude(['ID' => $this->getParentGroupIds()])->Sort($this->Config()->get('candidates_sort'));
     }
 
     //#################################################
