@@ -227,7 +227,8 @@ class BaseProductList extends AbstractProductsAndGroupsList
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
 
-        return $list->exclude(['ID' => $this->getParentGroupIds()])->Sort($this->Config()->get('group_filter_candidates_sort'));
+        return $list->exclude(['ID' => $this->getParentGroupIds()])
+            ->Sort($this->Config()->get('group_filter_candidates_sort'));
     }
 
     //#################################################

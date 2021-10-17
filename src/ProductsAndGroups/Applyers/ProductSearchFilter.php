@@ -493,8 +493,8 @@ class ProductSearchFilter extends BaseApplyer
             //we search exact matches first then other matches ...
             foreach ($searches as $search) {
                 $list2 = $this->products->where($search);
-                $count += $list2->count();
                 if ($this->debug) {
+                    $count += $list2->count();
                     $this->debugOutput("<p>{$search} from (" . $this->products->count() . '): ' . $list2->count() . '</p>');
                 }
                 $this->addToResults($list2);
@@ -594,8 +594,7 @@ class ProductSearchFilter extends BaseApplyer
             }
 
             return true;
-        }
-        if ($count > 0) {
+        } elseif ($count > 0) {
             $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
             $sort = $this->Config()->get('in_group_sort_sql');
             $listToAdd = $listToAdd->sort($sort);
