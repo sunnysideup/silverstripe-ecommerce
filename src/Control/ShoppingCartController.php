@@ -57,6 +57,7 @@ class ShoppingCartController extends Controller
         'copyorder',
         'deleteorder',
         'save',
+        'json',
     ];
 
     /**
