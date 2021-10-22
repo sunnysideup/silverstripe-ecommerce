@@ -391,6 +391,14 @@ class ProductGroup extends Page
     }
 
     /**
+     * @return bool
+     */
+    public function hasProducts() : bool
+    {
+        return $this->getProducts()->exists();
+    }
+
+    /**
      * returns the parent Product Group that is the same type.
      * So that filters can be set as parent groups
      */
