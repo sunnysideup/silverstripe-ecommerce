@@ -360,11 +360,21 @@ abstract class AbstractProductsAndGroupsList
         return $stage;
     }
 
-    protected function turnIdListIntoProductGroups(array $ids): DataList
+    protected function turnIdListIntoProductGroups(array $ids, ?bool $useFilterParent = false): DataList
     {
         $ids = ArrayMethods::filter_array($ids);
 
         $groups = ProductGroup::get()->filter(['ID' => $ids]);
+        // we need a way to find the FilterParent, which may be the parent of the
+        // group listed.
+        if($useFilterParent) {
+            $newArray = [];
+            foreach($groups as $group) {
+                $filterParent = $group->MyFilterParent();
+                $newArray[$filterParent->ID] = $filterParent->ID;
+            }
+            $groups = ProductGroup::get()->filter(['ID' => $newArray]);
+        }
 
         return RelatedProductGroups::apply_default_filter_to_groups($groups);
     }

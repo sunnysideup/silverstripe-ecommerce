@@ -65,10 +65,12 @@ class EcommerceCache implements Flushable
         return $this->cacheBackend;
     }
 
-    public function hasCache(string $cacheKey): bool
+    public function hasCache(string $cacheKey, $cacheKeyAlreadyRefined = false): bool
     {
         if ($this->AllowCaching()) {
-            $cacheKey = $this->cacheKeyRefiner($cacheKey);
+            if(! $cacheKeyAlreadyRefined) {
+                $cacheKey = $this->cacheKeyRefiner($cacheKey);
+            }
 
             return $this->getCacheBackend()->has($cacheKey);
         }
@@ -107,13 +109,12 @@ class EcommerceCache implements Flushable
      */
     public function retrieve(string $cacheKey, ?bool $alreadyUnserialized = false)
     {
-        if ($this->hasCache($cacheKey)) {
-            $cacheKey = $this->cacheKeyRefiner($cacheKey);
-            $data = $this->getCacheBackend()->get($cacheKey);
+        $cacheKey = $this->cacheKeyRefiner($cacheKey);
+        $data = $this->getCacheBackend()->get($cacheKey);
+        if($data) {
             if (false === $alreadyUnserialized) {
                 $data = unserialize($data);
             }
-
             return $data;
         }
 
