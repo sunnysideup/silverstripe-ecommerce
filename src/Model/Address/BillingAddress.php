@@ -70,7 +70,7 @@ class BillingAddress extends OrderAddress
         'Country' => 'Varchar(4)',
         'RegionCode' => 'Varchar(100)',
         'Phone' => 'Varchar(50)',
-        'Email' => 'Varchar(250)',
+        'Email' => 'EmailAddress',
         'Obsolete' => 'Boolean',
         'OrderID' => 'Int', //NOTE: we have this here for faster look-ups and to make addresses behave similar to has_many dataobjects
     ];
