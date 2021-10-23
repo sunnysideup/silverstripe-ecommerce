@@ -886,7 +886,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 return true;
             }
         }
-        $count = OrderEmailRecord::get()
+        $exists = OrderEmailRecord::get()
             ->filter(
                 [
                     'OrderID' => $order->ID,
@@ -894,9 +894,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'Result' => 1,
                 ]
             )
-            ->count()
+            ->exists()
         ;
-        if ($count) {
+        if ($exists) {
             return true;
         }
 
@@ -1150,11 +1150,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($nextOrderStepObject) {
             //do nothing
         } else {
-            $orderCount = Order::get()
-                ->filter(['StatusID' => (int) $this->ID - 0])
-                ->count()
+            $exists = Order::get()
+                ->filter(['StatusID' => (int) $this->ID])
+                ->exists()
             ;
-            if ($orderCount) {
+            if ($exists) {
                 return false;
             }
         }
@@ -1432,8 +1432,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $code = strtoupper($code);
                     $filter = ['ClassName' => $className];
                     $indexNumber += 10;
-                    $itemCount = OrderStep::get()->filter($filter)->Count();
-                    if ($itemCount > 0) {
+                    $itemCountExists = OrderStep::get()->filter($filter)->exists();
+                    if ($itemCountExists) {
                         //always reset code
                         $obj = DataObject::get_one(
                             OrderStep::class,

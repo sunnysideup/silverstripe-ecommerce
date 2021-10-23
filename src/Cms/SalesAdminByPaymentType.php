@@ -86,7 +86,7 @@ class SalesAdminByPaymentType extends SalesAdmin
     {
         if($baseList->exists()) {
             $list = EcommercePayment::get()->
-                filter(['OrderID' => $baseList->columnUnique('ID')]);
+                filter(['OrderID' => $baseList->columnUnique()]);
             if($list->exists()) {
                 return $list->map('OrderID', 'ClassName')->toArray();
             }

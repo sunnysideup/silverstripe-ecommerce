@@ -56,6 +56,11 @@ class SalesAdmin extends ModelAdmin
     private static $menu_title = 'Sales to Action';
 
     /**
+    * @var int
+    */
+    private static $max_entries_for_processing = 500;
+
+    /**
      *
      * @var int
      */
@@ -129,8 +134,8 @@ class SalesAdmin extends ModelAdmin
                 } else {
                     $parentCount = $list->count();
                     $ids = null;
-                    if($parentCount < 500) {
-                        $ids = $list->column('ID');
+                    if($parentCount < $this->Config()->get('max_entries_for_processing')) {
+                        $ids = $list->columnUnique();
                     }
                     $tmpList = Order::get_datalist_of_orders_with_submit_record();
                     if (! empty($ids)) {
@@ -142,7 +147,7 @@ class SalesAdmin extends ModelAdmin
                     $tmpList = $tmpList
                         ->exclude(
                             [
-                                'ID' => ArrayMethods::filter_array($ordersinQueue->column('ID')),
+                                'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),
                             ]
                         )
                     ;
@@ -150,7 +155,7 @@ class SalesAdmin extends ModelAdmin
                     $tmpList = $tmpList
                         ->exclude(
                             [
-                                'StatusID' => OrderStep::non_admin_manageable_steps()->column('ID'),
+                                'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique(),
                             ]
                         )
                     ;

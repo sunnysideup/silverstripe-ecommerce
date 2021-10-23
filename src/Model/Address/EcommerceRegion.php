@@ -174,7 +174,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
             return true;
         }
 
-        return (bool) EcommerceRegion::get()->count();
+        return (bool) EcommerceRegion::get()->exists();
     }
 
     /**

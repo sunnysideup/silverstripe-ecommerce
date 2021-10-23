@@ -2312,7 +2312,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         $submitErrors = $this->SubmitErrors();
 
-        return ! ($submitErrors && $submitErrors->count());
+        return $submitErrors && $submitErrors->exists() ? false : true;
     }
 
     /**
@@ -2738,8 +2738,8 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $html = '';
         $x = 0;
-        $count = $this->owner->OrderItems()->count();
-        if ($count > 0) {
+        $exists = $this->owner->OrderItems()->exists();
+        if ($exists) {
             $html .= '<div><ul class="order-items-summary">';
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;

@@ -239,6 +239,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+        // only allow countries to be created if not all of them are there.
         if (EcommerceCountry::get()->count() < 220) {
             $can = parent::canCreate($member);
         }
@@ -698,7 +699,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        if ((! EcommerceCountry::get()->count()) || isset($_REQUEST['resetecommercecountries'])) {
+        if ((! EcommerceCountry::get()->exists()) || isset($_REQUEST['resetecommercecountries'])) {
             $task = new EcommerceTaskCountryAndRegion();
             $task->run(null);
         }

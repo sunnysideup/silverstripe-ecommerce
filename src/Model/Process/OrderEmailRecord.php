@@ -330,9 +330,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                         ->Filter(['OrderStepID' => (int) $key])
                         ->count()
                     ;
-                    if ($count < 1) {
-                        //do nothing
-                    } else {
+                    if ($count > 0) {
                         $arrayOfStatusOptionsFinal[$key] = $value . " ({$count})";
                     }
                 }

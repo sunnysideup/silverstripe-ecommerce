@@ -107,8 +107,8 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                         DB::alteration_message('No InternalItemID set for <i>' . $product->Title . '</i>: no images could be added.');
                     }
                 }
-                $productCount = Product::get()->count();
-                if ($this->limit < $productCount) {
+                $productCountExists = Product::get()->exists();
+                if ($this->limit < $productCountExists) {
                     $controller = Controller::curr();
                     $controller->redirect($this->nextBatchLink());
                 }

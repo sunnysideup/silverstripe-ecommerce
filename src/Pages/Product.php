@@ -742,7 +742,7 @@ class Product extends Page implements BuyableModel
             ]
         );
 
-        return (bool) $dataList->count();
+        return (bool) $dataList->exists();
     }
 
     //LINKS
