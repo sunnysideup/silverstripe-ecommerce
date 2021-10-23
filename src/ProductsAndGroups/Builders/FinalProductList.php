@@ -249,7 +249,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
             $ids3 = $this->getParentGroupsBasedOnProductsFiltered()->columnUnique();
             $this->filterForCandidateCategoryIdsFiltered = array_merge($ids1, $ids2, $ids3);
         }
-        $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered());
+        $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered(), true);
 
         return $list->exclude(['ID' => $this->getParentGroupIds()])
             ->Sort($this->Config()->get('group_filter_candidates_sort'));

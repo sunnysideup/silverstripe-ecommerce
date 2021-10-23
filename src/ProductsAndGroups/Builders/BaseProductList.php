@@ -225,7 +225,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $this->filterForCandidateCategoryIds = array_merge($ids1, $ids2);
         }
         // print_r($idsAll);
-        $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds());
+        $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
 
         return $list->exclude(['ID' => $this->getParentGroupIds()])
             ->Sort($this->Config()->get('group_filter_candidates_sort'));
