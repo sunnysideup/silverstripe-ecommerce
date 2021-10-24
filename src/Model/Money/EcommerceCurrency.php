@@ -411,7 +411,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $order = ShoppingCart::current_order();
         }
         $currencyCode = '';
-        if(Config::inst()->get('show_currency_at_all')) {
+        if (Config::inst()->get('show_currency_at_all')) {
             $currency = $order->CurrencyUsed();
             $currencyCode = $currency->Code;
             if ($order) {
@@ -428,6 +428,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                 $currencyCode = $updatedCurrencyCode[0];
             }
         }
+
         return DBField::create_field(
             'Money',
             [
@@ -740,7 +741,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                 $exists = EcommerceCurrency::get()
                     ->where("UPPER(\"Code\") = '" . $this->Code . "'")
                     ->exclude('ID', (int) $this->ID)
-                    ->exists();
+                    ->exists()
+                ;
                 if ($exists) {
                     $errors[] = "There is alreay another currency in use with code: '{$this->Code}'.";
                 }

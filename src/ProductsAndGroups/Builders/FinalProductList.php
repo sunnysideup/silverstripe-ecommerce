@@ -4,8 +4,8 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
@@ -35,7 +35,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     /**
      * @var int[]
      */
-    protected $filterForCandidateCategoryIdsFiltered;
+    protected $filterForCandidateCategoryIdsFiltered = [];
 
     /**
      * @var int[]
@@ -200,7 +200,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     // PRODUCTS: Also show
     //#########################################
 
-
     public function getAlsoShowProductsIds(): array
     {
         return ArrayMethods::filter_array($this->alsoShowProductsIdsFiltered);
@@ -220,7 +219,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     {
         return $this->products->filter(['ID' => $this->getAlsoShowProductsIdsFiltered()]);
     }
-
 
     //#########################################
     // GROUPS - smart
@@ -252,7 +250,8 @@ class FinalProductList extends AbstractProductsAndGroupsList
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered(), true);
 
         return $list->exclude(['ID' => $this->getParentGroupIds()])
-            ->Sort($this->Config()->get('group_filter_candidates_sort'));
+            ->Sort($this->Config()->get('group_filter_candidates_sort'))
+        ;
     }
 
     public function getAlsoShowParentIdsFiltered(): array
@@ -315,7 +314,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
         $list = ProductGroup::get()->filter(['ID' => $this->getAlsoShowParentIdsFiltered()]);
 
         return RelatedProductGroups::apply_default_filter_to_groups($list);
-
     }
 
     //#################################################

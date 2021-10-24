@@ -151,8 +151,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     public function nextStep(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
-        if($log) {
-            if($log->Sent) {
+        if ($log) {
+            if ($log->Sent) {
                 return parent::nextStep($order);
             }
         }
@@ -175,6 +175,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
                 $order->getOrderStatusLogsTableField(OrderStatusLogDispatchPhysicalOrder::class, $title),
             ]
         );
+
         return $fields;
     }
 

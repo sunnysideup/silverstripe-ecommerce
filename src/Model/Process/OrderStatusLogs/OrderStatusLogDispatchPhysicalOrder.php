@@ -3,11 +3,11 @@
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
@@ -124,14 +124,6 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         return $html;
     }
 
-    protected function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        if (! $this->DispatchedOn) {
-            $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
-        }
-    }
-
     public function DosFields()
     {
         return FieldList::create(
@@ -145,5 +137,13 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
                 CheckboxField::create('Sent'),
             ]
         );
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        if (! $this->DispatchedOn) {
+            $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
+        }
     }
 }

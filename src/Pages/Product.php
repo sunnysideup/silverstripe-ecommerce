@@ -71,6 +71,8 @@ class Product extends Page implements BuyableModel
      */
     protected $defaultClassNameForOrderItem = ProductOrderItem::class;
 
+    protected static $parent_cache = [];
+
     private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
 
     /**
@@ -555,8 +557,6 @@ class Product extends Page implements BuyableModel
         return null;
     }
 
-    protected static $parent_cache = [];
-
     /**
      * Returns the direct parent group for the product.
      *
@@ -564,9 +564,10 @@ class Product extends Page implements BuyableModel
      */
     public function ParentGroup()
     {
-        if(! isset(self::$parent_cache[$this->ID])) {
+        if (! isset(self::$parent_cache[$this->ID])) {
             self::$parent_cache[$this->ID] = ProductGroup::get()->byID($this->ParentID);
         }
+
         return self::$parent_cache[$this->ID];
     }
 

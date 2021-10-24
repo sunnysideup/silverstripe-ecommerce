@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Model\Order;
-
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-
-use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
 
 class SalesAdminByOrderStep extends SalesAdmin
 {
@@ -45,18 +41,18 @@ class SalesAdminByOrderStep extends SalesAdmin
             $brackets = OrderStep::admin_manageable_steps()->map('ID', 'Title')->toArray();
             $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
-            foreach($baseList as $order) {
-                foreach(array_keys($brackets) as $key) {
-                    if($order->StatusID === $key) {
+            foreach ($baseList as $order) {
+                foreach (array_keys($brackets) as $key) {
+                    if ($order->StatusID === $key) {
                         $arrayOfTabs[$key]['IDs'][$order->ID] = $order->ID;
                     }
                 }
             }
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
+
         return $form;
     }
-
 
     /**
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
@@ -65,6 +61,7 @@ class SalesAdminByOrderStep extends SalesAdmin
     public function getManagedModels()
     {
         return parent::getManagedModels();
+
         return [
             Order::class,
         ];

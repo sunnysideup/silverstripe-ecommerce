@@ -8,11 +8,8 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Versioned\Versioned;
-
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
 
 /**
  * Provides a standard interface for caching product and group information.
@@ -34,6 +31,13 @@ class EcommerceCache implements Flushable
      * @var CacheInterface
      */
     protected $cacheBackend;
+
+    protected static $productCacheKey = [
+        'ProductCount' => 0,
+        'ProductMaxLastEdited' => 0,
+        'ProductGroupCount' => 0,
+        'ProductGroupMaxLastEdited' => 0,
+    ];
 
     public static function inst(): EcommerceCache
     {
@@ -68,7 +72,7 @@ class EcommerceCache implements Flushable
     public function hasCache(string $cacheKey, $cacheKeyAlreadyRefined = false): bool
     {
         if ($this->AllowCaching()) {
-            if(! $cacheKeyAlreadyRefined) {
+            if (! $cacheKeyAlreadyRefined) {
                 $cacheKey = $this->cacheKeyRefiner($cacheKey);
             }
 
@@ -77,13 +81,6 @@ class EcommerceCache implements Flushable
 
         return false;
     }
-
-    protected static $productCacheKey = [
-        'ProductCount' => 0,
-        'ProductMaxLastEdited' => 0,
-        'ProductGroupCount' => 0,
-        'ProductGroupMaxLastEdited' => 0,
-    ];
 
     public function productCacheKey()
     {
@@ -99,6 +96,7 @@ class EcommerceCache implements Flushable
         if (! self::$productCacheKey['ProductGroupMaxLastEdited']) {
             self::$productCacheKey['ProductGroupMaxLastEdited'] = strtotime(ProductGroup::get()->max('LastEdited'));
         }
+
         return implode('_', self::$productCacheKey);
     }
 
@@ -111,10 +109,11 @@ class EcommerceCache implements Flushable
     {
         $cacheKey = $this->cacheKeyRefiner($cacheKey);
         $data = $this->getCacheBackend()->get($cacheKey);
-        if($data) {
+        if ($data) {
             if (false === $alreadyUnserialized) {
                 $data = unserialize($data);
             }
+
             return $data;
         }
 
@@ -162,13 +161,12 @@ class EcommerceCache implements Flushable
         EcommerceCache::inst()->clear();
     }
 
-
     /**
      * @param string $cacheKey
      */
     public function cacheKeyRefiner($cacheKey): string
     {
-        if(is_array($cacheKey)) {
+        if (is_array($cacheKey)) {
             $cacheKey = implode('_', $cacheKey);
         }
         $cacheKey .=
@@ -185,6 +183,7 @@ class EcommerceCache implements Flushable
             ':',
             '.',
         ];
+
         return str_replace($arrayOfReservedChars, '_', $cacheKey);
     }
 }

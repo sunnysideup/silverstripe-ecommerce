@@ -2,10 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Model\Order;
-
-use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
 
 class SalesAdminByOrderSize extends SalesAdmin
 {
@@ -40,7 +37,6 @@ class SalesAdminByOrderSize extends SalesAdmin
         100000 => '$10,000+',
     ];
 
-
     /**
      * standard SS variable.
      *
@@ -49,7 +45,6 @@ class SalesAdminByOrderSize extends SalesAdmin
     private static $managed_models = [
         Order::class,
     ];
-
 
     public function getEditForm($id = null, $fields = null)
     {
@@ -60,12 +55,12 @@ class SalesAdminByOrderSize extends SalesAdmin
             $brackets = $this->Config()->get('brackets');
             $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
-            foreach($baseList as $order) {
+            foreach ($baseList as $order) {
                 $total = $order->getTotal();
                 $prevValue = 0;
-                foreach($brackets as $value => $bracket) {
-                    if($value) {
-                        if($total >= $prevValue && $total < $value) {
+                foreach (array_keys($brackets) as $value) {
+                    if ($value) {
+                        if ($total >= $prevValue && $total < $value) {
                             $arrayOfTabs[$value]['IDs'][$order->ID] = $order->ID;
                         }
                     }
@@ -74,8 +69,7 @@ class SalesAdminByOrderSize extends SalesAdmin
             }
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
+
         return $form;
     }
-
-
 }

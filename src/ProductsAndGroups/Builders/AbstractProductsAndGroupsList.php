@@ -367,9 +367,9 @@ abstract class AbstractProductsAndGroupsList
         $groups = ProductGroup::get()->filter(['ID' => $ids]);
         // we need a way to find the FilterParent, which may be the parent of the
         // group listed.
-        if($useFilterParent) {
+        if ($useFilterParent) {
             $newArray = [0 => 0];
-            foreach($groups as $group) {
+            foreach ($groups as $group) {
                 $filterParent = $group->MyFilterParent();
                 $newArray[$filterParent->ID] = $filterParent->ID;
             }

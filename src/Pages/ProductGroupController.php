@@ -63,6 +63,8 @@ class ProductGroupController extends PageController
      */
     protected $isSearchResults = false;
 
+    protected $secondaryTitle = '';
+
     private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
 
     private static $allowed_actions = [
@@ -183,6 +185,7 @@ class ProductGroupController extends PageController
         if ($this->ProductGroupListAreCacheable()) {
             return $this->getUserPreferencesClass()->ProductGroupListCachingKey($withPageNumber);
         }
+
         return '';
     }
 
@@ -639,7 +642,7 @@ class ProductGroupController extends PageController
                 return true;
             }
 
-            return $this->getProductList()->exists() ? false : true;
+            return ! (bool) $this->getProductList()->exists();
         }
 
         return false;
@@ -716,6 +719,16 @@ class ProductGroupController extends PageController
     public function VardumpMe(string $method)
     {
         return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
+    }
+
+    public function setSecondaryTitle(string $v)
+    {
+        $this->secondaryTitle = $v;
+    }
+
+    public function getSecondaryTitle(): string
+    {
+        return $this->secondaryTitle;
     }
 
     protected function afterHandleRequest()
@@ -868,20 +881,4 @@ class ProductGroupController extends PageController
     {
         $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
     }
-
-
-
-    protected $secondaryTitle = '';
-
-    public function setSecondaryTitle(string $v)
-    {
-        $this->secondaryTitle = $v;
-    }
-
-
-    public function getSecondaryTitle() : string
-    {
-        return $this->secondaryTitle;
-    }
-
 }

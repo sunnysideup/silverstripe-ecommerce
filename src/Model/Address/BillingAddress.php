@@ -275,7 +275,8 @@ class BillingAddress extends OrderAddress
                         $this->baseClassLinkingToOrder(),
                         $this->ID,
                         $onlyLastRecord = false,
-                        $keepDoubles = false);
+                        $keepDoubles = false
+                    );
                     //we want MORE than one here not just one.
                     if ($addresses->count() > 1) {
                         $fields->push(
