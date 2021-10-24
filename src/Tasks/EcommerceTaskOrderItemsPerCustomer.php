@@ -45,7 +45,9 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             ->limit($count, $offset)
         ;
         $ordersCountExists = $orders->exists();
-        while ($ordersCountExists) {
+        $sanityCheck = 0;
+        while ($ordersCountExists && $sanityCheck < 1000) {
+            $sanityCheck++;
             $offset += $count;
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {

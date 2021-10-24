@@ -334,7 +334,7 @@ class ProductGroupController extends PageController
      */
     public function HasGroupFilters(): bool
     {
-        return $this->GroupFilterLinks()->exists() > 1;
+        return $this->GroupFilterLinks()->count() > 1;
     }
 
     /**
@@ -352,7 +352,7 @@ class ProductGroupController extends PageController
      */
     public function HasSorts(): bool
     {
-        return $this->SortLinks()->exists() > 1;
+        return $this->SortLinks()->count() > 1;
     }
 
     /**
