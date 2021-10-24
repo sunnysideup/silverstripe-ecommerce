@@ -95,7 +95,7 @@ class UserPreference
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      *
-     * @var arrayn setUser
+     * @var array setUser
      */
     private static $use_session = [];
 
