@@ -103,9 +103,10 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
             'Root.Next',
             [
                 $order->getOrderStatusLogsTableField(OrderStatusLogPaymentCheck::class, $title),
-                new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get(OrderStepConfirmed::class, 'list_of_things_to_check')) . '</li></ul>')
+                new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get(OrderStepConfirmed::class, 'list_of_things_to_check')) . '</li></ul>'),
             ]
         );
+
         return $fields;
     }
 

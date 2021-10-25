@@ -191,7 +191,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         'CMS_ACCESS_SalesAdminByDeliveryOption',
         'CMS_ACCESS_SalesSalesAdminProcess',
         'CMS_ACCESS_SalesAdminExtras',
-
     ];
 
     /**
@@ -224,16 +223,17 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         'CustomerDetails' => 'Varchar',
     ];
 
-    public function getCustomerDetails() : string
+    public function getCustomerDetails(): string
     {
-        if($this->getOwner()->exists()) {
+        if ($this->getOwner()->exists()) {
             $count = $this->getOwner()->Orders()->count();
+
             return $this->getOwner()->FirstName . ' ' . $this->getOwner()->Surname .
                 ', ' . $this->getOwner()->Email .
-                ' ('._t('Member.PREVIOUS_ORDER_COUNT', 'previous orders').': '.$count.')';
-        } else {
-            return 'no customer';
+                ' (' . _t('Member.PREVIOUS_ORDER_COUNT', 'previous orders') . ': ' . $count . ')';
         }
+
+        return 'no customer';
     }
 
     /**

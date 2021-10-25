@@ -583,22 +583,22 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $list = $list->filter(['StatusID:greaterThan' => 0]);
         }
-        if (!$includeCancelledOrders) {
+        if (! $includeCancelledOrders) {
             $list = $list->filter(['CancelledByID' => 0]);
         }
 
         return $list;
     }
 
-    public static function get_datalist_of_orders_with_joined_submission_record($list) : DataList
+    public static function get_datalist_of_orders_with_joined_submission_record($list): DataList
     {
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $submittedOrderStatusLogTableName = DataObject::getSchema()->tableName($submittedOrderStatusLogClassName);
-        $list = $list
+
+        return $list
             ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
             ->innerJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
         ;
-        return $list;
     }
 
     /**
@@ -761,7 +761,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //and only tryToFinaliseOrder if this is true....
             // if ($_SERVER['REQUEST_URI'] === $this->CMSEditLink() || $_SERVER['REQUEST_URI'] === $this->CMSEditLink('edit')) {
             $this->tryToFinaliseOrder();
-            // }
+        // }
         } else {
             $this->init(true);
             $this->calculateOrderAttributes(true);
@@ -849,7 +849,6 @@ class Order extends DataObject implements EditableEcommerceObject
                 $fields->addFieldsToTab(
                     'Root.Process',
                     [
-
                         HeaderField::create('OrderQueueFor', _t('Order.ORDER_QUEUED_FOR', 'Queued for ...'))->addExtraClass('section-heading-for-order'),
                         $myQueueObjectField,
 
@@ -878,8 +877,6 @@ class Order extends DataObject implements EditableEcommerceObject
             'Root.Next',
             $nextFieldArray
         );
-
-
 
         if ($submitted) {
             $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');
@@ -1139,7 +1136,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
         $title ?: $title = _t('OrderStatusLog.PLURALNAME', 'Order Status Logs');
         $source = $this->OrderStatusLogs()->Filter(['ClassName' => $sourceClass]);
-        $fieldName = 'GridFieldFor'.ClassInfo::shortName($sourceClass);
+        $fieldName = 'GridFieldFor' . ClassInfo::shortName($sourceClass);
         $gf = new GridField($fieldName, $title, $source, $gridFieldConfig);
         $gf->setModelClass($sourceClass);
 
@@ -2312,7 +2309,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         $submitErrors = $this->SubmitErrors();
 
-        return ! ($submitErrors && $submitErrors->count());
+        return $submitErrors && $submitErrors->exists() ? false : true;
     }
 
     /**
@@ -2738,8 +2735,8 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $html = '';
         $x = 0;
-        $count = $this->owner->OrderItems()->count();
-        if ($count > 0) {
+        $exists = $this->owner->OrderItems()->exists();
+        if ($exists) {
             $html .= '<div><ul class="order-items-summary">';
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;
@@ -3615,6 +3612,11 @@ class Order extends DataObject implements EditableEcommerceObject
         return EcommerceTaskDebugCart::debug_object($this);
     }
 
+    public function getCustomer(): ?Member
+    {
+        return $this->Member();
+    }
+
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -4030,11 +4032,6 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $member;
-    }
-
-    public function getCustomer() :?Member
-    {
-        return $this->Member();
     }
 
     /**

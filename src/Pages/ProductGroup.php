@@ -30,8 +30,6 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Vardump\Vardump;
 
 /**
@@ -390,24 +388,21 @@ class ProductGroup extends Page
         return $this->getBaseProductList()->getProducts();
     }
 
-    /**
-     * @return bool
-     */
-    public function hasProducts() : bool
+    public function hasProducts(): bool
     {
         return $this->getProducts()->exists();
     }
 
     /**
      * returns the parent Product Group that is the same type.
-     * So that filters can be set as parent groups
+     * So that filters can be set as parent groups.
      */
     public function MyFilterParent()
     {
         $newParent = $this;
-        while($newParent) {
+        while ($newParent) {
             $nextParent = $newParent->Parent();
-            if($nextParent && $nextParent->ClassName === $this->ClassName) {
+            if ($nextParent && $nextParent->ClassName === $this->ClassName) {
                 $newParent = $nextParent;
             } else {
                 return $newParent;
@@ -510,8 +505,6 @@ class ProductGroup extends Page
     {
         return $this->getProductGroupSchema()->getSortFilterDisplayValues($typeOrVariable, $variable);
     }
-
-
 
     /**
      * Returns the class we are working with.

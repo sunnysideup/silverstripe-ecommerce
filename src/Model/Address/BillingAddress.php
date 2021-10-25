@@ -70,7 +70,7 @@ class BillingAddress extends OrderAddress
         'Country' => 'Varchar(4)',
         'RegionCode' => 'Varchar(100)',
         'Phone' => 'Varchar(50)',
-        'Email' => 'Varchar(250)',
+        'Email' => 'EmailAddress',
         'Obsolete' => 'Boolean',
         'OrderID' => 'Int', //NOTE: we have this here for faster look-ups and to make addresses behave similar to has_many dataobjects
     ];
@@ -271,7 +271,12 @@ class BillingAddress extends OrderAddress
             if ($member->exists() && ! $member->IsShopAdmin()) {
                 $this->FillWithLastAddressFromMember($member, true);
                 if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
-                    $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+                    $addresses = $member->previousOrderAddresses(
+                        $this->baseClassLinkingToOrder(),
+                        $this->ID,
+                        $onlyLastRecord = false,
+                        $keepDoubles = false
+                    );
                     //we want MORE than one here not just one.
                     if ($addresses->count() > 1) {
                         $fields->push(

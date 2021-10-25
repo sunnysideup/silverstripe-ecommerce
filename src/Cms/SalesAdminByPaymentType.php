@@ -2,20 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use SilverStripe\ORM\DataList;
-use Sunnysideup\Ecommerce\Model\Order;
-
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
-
-use Sunnysideup\Ecommerce\Cms\SalesAdmin;
-
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
-
-use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
-
-use Sunnysideup\EcommerceDelivery\Modifiers\PickUpOrDeliveryModifier;
-
-use Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions;
 
 class SalesAdminByPaymentType extends SalesAdmin
 {
@@ -54,44 +43,46 @@ class SalesAdminByPaymentType extends SalesAdmin
             $arrayOfTabs = array_fill_keys(array_keys($brackets), ['IDs' => []]);
             $baseList = $this->getList();
             $optionPerOrder = $this->getOptionPerOrder($baseList);
-            foreach($baseList as $order) {
+            foreach ($baseList as $order) {
                 $option = $optionPerOrder[$order->ID] ?? 'ERROR';
-                foreach(array_keys($brackets) as $key) {
-                    if($this->classNameConverter($option) === $key) {
+                foreach (array_keys($brackets) as $key) {
+                    if ($this->classNameConverter($option) === $key) {
                         $arrayOfTabs[$key]['IDs'][$order->ID] = $order->ID;
                     }
                 }
             }
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
+
         return $form;
     }
 
-    protected function getBrackets() : array
+    protected function getBrackets(): array
     {
         $list = (array) EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
         $newArray = [];
-        foreach($list as $key => $value) {
+        foreach ($list as $key => $value) {
             $newArray[$this->classNameConverter($key)] = $value;
         }
+
         return $newArray;
     }
 
-    protected function classNameConverter(string $className) : string
+    protected function classNameConverter(string $className): string
     {
         return str_replace('\\', '-', $className);
     }
 
-    protected function getOptionPerOrder($baseList) : array
+    protected function getOptionPerOrder($baseList): array
     {
-        if($baseList->exists()) {
+        if ($baseList->exists()) {
             $list = EcommercePayment::get()->
-                filter(['OrderID' => $baseList->columnUnique('ID')]);
-            if($list->exists()) {
+                filter(['OrderID' => $baseList->columnUnique()]);
+            if ($list->exists()) {
                 return $list->map('OrderID', 'ClassName')->toArray();
             }
         }
+
         return [];
     }
-
 }

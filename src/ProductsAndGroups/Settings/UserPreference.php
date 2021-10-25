@@ -19,8 +19,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
 
-use Sunnysideup\SimpleTemplateCaching\Extensions\SimpleTemplateCachingSiteConfigExtension;
-
 /**
  * keeps track of the  settings for FILTER / SORT / DISPLAY for user
  * the associated links and all that sort of stuff.
@@ -86,7 +84,6 @@ class UserPreference
 
     protected static $linkTemplateCache = [];
 
-
     /**
      * keep a store for every page setting?
      * For example, do we store in session how a particular page is filtered / sorted.
@@ -98,12 +95,13 @@ class UserPreference
     /**
      * keep a store for every FILTER|SORT|DISPLAY setting?
      *
-     * @var arrayn setUser
+     * @var array setUser
      */
     private static $use_session = [];
 
     /**
      * list of fields that we add the secondary title to...
+     *
      * @var array
      */
     private static $secondary_title_fields = [
@@ -356,11 +354,10 @@ class UserPreference
                     $pageStart,
                     $additionalKey,
                     $pageId,
-                    EcommerceCache::inst()->productCacheKey()
+                    EcommerceCache::inst()->productCacheKey(),
                 ]
             );
     }
-
 
     /**
      * Add a secondary title to the main title in case there is, for example, a
@@ -455,13 +452,12 @@ class UserPreference
 
     public function getActions(string $classNameOrType)
     {
-
         if ('GROUPFILTER' === $classNameOrType || $classNameOrType instanceof ProductGroupFilter) {
-            if($this->rootGroupController->HasSearchFilter()) {
+            if ($this->rootGroupController->HasSearchFilter()) {
                 return $this->getFinalProductList()->getFilterForCandidateCategoriesFiltered();
-            } else {
-                return $this->getBaseProductList()->getFilterForCandidateCategories();
             }
+
+            return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
 
         return null;
@@ -486,7 +482,7 @@ class UserPreference
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesParams($type);
             }
-            $isCurrent = $currentKey ? false : true;
+            $isCurrent = ! (bool) $currentKey;
             $obj = new ArrayData(
                 [
                     'Title' => 'All',
@@ -564,19 +560,16 @@ class UserPreference
                     //keep current value
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
-                if($hideCurrentValue && $type && $myType === $type) {
-
+                if ($hideCurrentValue && $type && $myType === $type) {
+                } elseif (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
+                    $getVars[$values['getVariable']] = $value;
                 } else {
-                    if (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
-                        $getVars[$values['getVariable']] = $value;
-                    } else {
-                        $params = $this->getCurrentUserPreferencesParams($myType);
-                        if (! empty($params)) {
-                            if (is_array($params)) {
-                                $params = implode(',', $params);
-                            }
-                            $getVars[$values['getVariable']] = $params;
+                    $params = $this->getCurrentUserPreferencesParams($myType);
+                    if (! empty($params)) {
+                        if (is_array($params)) {
+                            $params = implode(',', $params);
                         }
+                        $getVars[$values['getVariable']] = $params;
                     }
                 }
             }
@@ -703,13 +696,11 @@ class UserPreference
 
     protected function addTitleToField(string $field, string $secondaryTitle): self
     {
-        $method = 'set'.$field;
-        if($this->rootGroupController->hasMethod($method)) {
-            $this->rootGroupController->$method($secondaryTitle);
-        } else {
-            if (! empty($this->rootGroupController->{$field})) {
-                $this->rootGroupController->{$field} .= $secondaryTitle;
-            }
+        $method = 'set' . $field;
+        if ($this->rootGroupController->hasMethod($method)) {
+            $this->rootGroupController->{$method}($secondaryTitle);
+        } elseif (! empty($this->rootGroupController->{$field})) {
+            $this->rootGroupController->{$field} .= $secondaryTitle;
         }
 
         return $this;

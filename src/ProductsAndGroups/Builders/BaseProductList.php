@@ -34,7 +34,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class BaseProductList extends AbstractProductsAndGroupsList
 {
-
     /**
      * keep the lists in memory.
      *
@@ -228,7 +227,8 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
 
         return $list->exclude(['ID' => $this->getParentGroupIds()])
-            ->Sort($this->Config()->get('group_filter_candidates_sort'));
+            ->Sort($this->Config()->get('group_filter_candidates_sort'))
+        ;
     }
 
     //#################################################

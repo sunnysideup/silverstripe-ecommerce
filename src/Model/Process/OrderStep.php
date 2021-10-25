@@ -5,8 +5,6 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -15,8 +13,8 @@ use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -29,6 +27,7 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\OrderErrorEmail;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -36,8 +35,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-
-use Sunnysideup\DataobjectSorter\DataObjectOneRecordUpdateController;
 
 /**
  * @description: see OrderStep.md
@@ -651,13 +648,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
+     * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
      * @return \SilverStripe\Forms\FieldList
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
-        if($nothingToDo) {
+        if ($nothingToDo) {
             $text = _t(
                 'OrderStep.NOTHING_TO_DO',
                 'Orders should not be stuck in this step and an order being here may indicate an error.
@@ -673,21 +670,22 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         'StatusID',
                         'Select Status - NOT RECOMMENDED',
                         OrderStep::get()->map()
-                    )
+                    ),
                 ]
             );
         }
         $this->addQuickLogEntryButton($fields, $order);
+
         return $fields;
     }
 
     public function addQuickLogEntryButton($fields, $order)
     {
-        if($this->relevantLogEntryClassName) {
+        if ($this->relevantLogEntryClassName) {
             $log = $this->relevantLogEntryClassName::get()->filter(['OrderID' => $order->ID])->Last();
-            if($log) {
+            if ($log) {
                 $link = $log->CMSEditLink();
-                $title = _t('Order.EDIT', 'Edit').' '.$log->i18n_singular_name();
+                $title = _t('Order.EDIT', 'Edit') . ' ' . $log->i18n_singular_name();
 
                 $fields->addFieldsToTab(
                     'Root.Next',
@@ -886,7 +884,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 return true;
             }
         }
-        $count = OrderEmailRecord::get()
+        $exists = OrderEmailRecord::get()
             ->filter(
                 [
                     'OrderID' => $order->ID,
@@ -894,9 +892,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'Result' => 1,
                 ]
             )
-            ->count()
+            ->exists()
         ;
-        if ($count) {
+        if ($exists) {
             return true;
         }
 
@@ -1150,11 +1148,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($nextOrderStepObject) {
             //do nothing
         } else {
-            $orderCount = Order::get()
-                ->filter(['StatusID' => (int) $this->ID - 0])
-                ->count()
+            $exists = Order::get()
+                ->filter(['StatusID' => (int) $this->ID])
+                ->exists()
             ;
-            if ($orderCount) {
+            if ($exists) {
                 return false;
             }
         }
@@ -1432,8 +1430,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $code = strtoupper($code);
                     $filter = ['ClassName' => $className];
                     $indexNumber += 10;
-                    $itemCount = OrderStep::get()->filter($filter)->Count();
-                    if ($itemCount > 0) {
+                    $itemCountExists = OrderStep::get()->filter($filter)->exists();
+                    if ($itemCountExists) {
                         //always reset code
                         $obj = DataObject::get_one(
                             OrderStep::class,

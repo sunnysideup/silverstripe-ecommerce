@@ -44,8 +44,10 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset)
         ;
-        $ordersCount = $orders->count();
-        while ($orders && $ordersCount) {
+        $ordersCountExists = $orders->exists();
+        $sanityCheck = 0;
+        while ($ordersCountExists && $sanityCheck < 1000) {
+            ++$sanityCheck;
             $offset += $count;
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
@@ -75,7 +77,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
                 ->limit($count, $offset)
             ;
-            $ordersCount = $orders->count();
+            $ordersCountExists = $orders->exists();
         }
         unset($orders);
         if ($fileData) {

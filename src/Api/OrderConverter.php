@@ -7,8 +7,6 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Model\Order;
 
-use Sunnysideup\Ecommerce\Api\ClassHelpers;
-
 abstract class OrderConverter
 {
     use Configurable;

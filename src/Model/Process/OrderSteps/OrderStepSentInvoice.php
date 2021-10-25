@@ -7,7 +7,6 @@ use SilverStripe\Forms\HeaderField;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
@@ -108,9 +107,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
-        $fields = parent::addOrderStepFields($fields, $order, true);
-
-        return $fields;
+        return parent::addOrderStepFields($fields, $order, true);
     }
 
     /**

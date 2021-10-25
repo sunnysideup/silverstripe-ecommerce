@@ -181,7 +181,7 @@ class EcommerceTaskCartCleanup extends BuildTask
     {
         $this->verbose = false;
 
-        return $this->run(null);
+        $this->run(null);
     }
 
     public function run($request)

@@ -594,7 +594,8 @@ class ProductSearchFilter extends BaseApplyer
             }
 
             return true;
-        } elseif ($count > 0) {
+        }
+        if ($count > 0) {
             $listToAdd = $listToAdd->limit($this->maximumNumberOfResults - $this->resultArrayPos);
             $sort = $this->Config()->get('in_group_sort_sql');
             $listToAdd = $listToAdd->sort($sort);

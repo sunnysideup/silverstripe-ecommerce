@@ -69,7 +69,7 @@ class ProductGroupFilter extends BaseApplyer
         }
 
         if ($filter) {
-            if ($this->products->count() && ! empty($filter)) {
+            if ($this->products->exists() && ! empty($filter)) {
                 $this->products = $this->products->filter($filter);
             }
         }
@@ -93,7 +93,7 @@ class ProductGroupFilter extends BaseApplyer
     {
         $group = $this->findGroup($filter);
 
-        return  $group && $group->exits() ? $group->ID : 0;
+        return  $group && $group->exists() ? $group->ID : 0;
     }
 
     /**
