@@ -776,7 +776,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return ModuleResourceLoader::resourceURL('sunnysideup/ecommerce: client/images/productPlaceHolderThumbnail.gif');
+        return ModuleResourceLoader::resourceURL('sunnysideup/ecommerce: client/images/productPlaceHolderSmaller.jpg');
     }
 
     /**
