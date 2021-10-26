@@ -258,9 +258,15 @@ class ProductGroup extends Page
         return $this->URLSegment . '.' . $this->ID;
     }
 
-    public function getFilterForCandidateCategories()
+    protected static $filterForCandidateCategoriesCache = [];
+
+    public function getFilterForCandidateCategories() : DataList
     {
-        return $this->getBaseProductList()->getFilterForCandidateCategories();
+        if(! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
+            self::$filterForCandidateCategoriesCache[$this->ID] =
+                $this->getBaseProductList()->getFilterForCandidateCategories();
+        }
+        return self::$filterForCandidateCategoriesCache[$this->ID];
     }
 
     /**

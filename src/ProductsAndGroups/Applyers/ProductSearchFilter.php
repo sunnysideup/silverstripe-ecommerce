@@ -36,9 +36,8 @@ class ProductSearchFilter extends BaseApplyer
         'productIds',
         'productGroupIds',
         'baseListOwner',
+        'immediateRedirectPage',
     ];
-    public $getProductIds;
-    public $getProductGroupIds;
 
     /**
      * set to TRUE to show the search logic.
@@ -145,11 +144,15 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var int
      */
-    protected $maximumNumberOfResults = 1000;
+    protected $maximumNumberOfResults = 200;
 
     protected $productsForGroups;
 
-    protected static $groupCache;
+    /**
+     * results for groups
+     * @var array
+     */
+    protected static $groupCache = [];
 
     /**
      * make sure that these do not exist as a URLSegment.
@@ -169,6 +172,7 @@ class ProductSearchFilter extends BaseApplyer
 
     /**
      * do we use the cache at all.
+     * we put this here, even though it is used in the cache!
      *
      * @var bool
      */
@@ -228,6 +232,7 @@ class ProductSearchFilter extends BaseApplyer
     // key methods
     //#######################################
 
+
     /**
      * @param string       $key    optional key
      * @param array|string $params optional params to go with key
@@ -240,7 +245,19 @@ class ProductSearchFilter extends BaseApplyer
         $this->applyStart($key, $params);
         if (is_array($params) && count($params)) {
             $this->rawData = $params;
-            $this->runFullProcess();
+            $this->setCacheFromHash($this->getHash());
+            if(true === $this->hasCache) {
+                // products
+                $tmpVar = $this->baseClassNameForBuyables;
+                $filter = ['ID' => ArrayMethods::filter_array($this->productIds)];
+                $this->products = $tmpVar::get()->filter($filter);
+                //product groups
+                $tmpVar = $this->baseClassNameForGroups;
+                $filter = ['ID' => ArrayMethods::filter_array($this->productGroupIds)];
+                $this->productsForGroups = $tmpVar::get()->filter($filter);
+            } else {
+                $this->runFullProcess();
+            }
             if ($this->immediateRedirectPage) {
                 Controller::curr()->redirect($this->immediateRedirectPage->Link());
 
@@ -288,7 +305,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function getHasResults(): bool
     {
-        return count($this->getProductIds) > 1 || count($this->getProductGroupIds) > 1;
+        return count($this->productIds) > 1 || count($this->productGroupIds) > 1;
     }
 
     public function getDebugOutputString()
@@ -299,6 +316,16 @@ class ProductSearchFilter extends BaseApplyer
     //#######################################
     // setters
     //#######################################
+
+    /**
+     * @param ProductGroup
+     */
+    public function setBaseListOwner($baseListOwner): self
+    {
+        $this->baseListOwner = $baseListOwner;
+
+        return $this;
+    }
 
     /**
      * @param DataList $baseListForGroups
@@ -432,9 +459,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function doInternalItemSearch()
     {
-        if (true === $this->hasCache) {
-            return;
-        }
         if ($this->debug) {
             $this->debugOutput('<hr />');
             $this->debugOutput('<h2>SEARCH BY CODE</h2>');
@@ -452,9 +476,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function doKeywordReplacements()
     {
-        if (true === $this->hasCache) {
-            return;
-        }
         if (! $this->weHaveEnoughResults()) {
             $this->keywordPhrase = $this->getSearchApi()->processKeyword($this->keywordPhrase);
             if ($this->debug) {
@@ -470,9 +491,6 @@ class ProductSearchFilter extends BaseApplyer
     {
         // @todo: consider using
         // DB::get_conn()->searchEngine(SiteTre::get(), $keywords, $start, $pageLength, "\"Relevance\" DESC", "", $booleanSearch);
-        if (true === $this->hasCache) {
-            return;
-        }
         if (! $this->weHaveEnoughResults()) {
             $count = 0;
             if ($this->debug) {
@@ -523,9 +541,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function doGroupSearch()
     {
-        if (true === $this->hasCache) {
-            return;
-        }
         if (null === $this->immediateRedirectPage) {
             if ($this->debug) {
                 $this->debugOutput('<hr />');
@@ -562,9 +577,7 @@ class ProductSearchFilter extends BaseApplyer
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
             }
         }
-        foreach ($this->productGroupIds as $id) {
-            self::$groupCache[$id] = $id;
-        }
+        self::$groupCache[$id] = $this->productGroupIds;
     }
 
     //###########################################
@@ -639,37 +652,31 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function createBaseList()
     {
-        if (true === $this->hasCache) {
-            $tmpVar = $this->baseClassNameForBuyables;
-            $filter = ['ID' => ArrayMethods::filter_array($this->productIds)];
-            $this->products = $tmpVar::get()->filter($filter);
-        } else {
-            if (! $this->products instanceof DataList) {
-                if ($this->rawData['OnlyThisSection']) {
-                    // do nothing!
-                } else {
-                    $tmpVar = $this->baseClassNameForBuyables;
-                    $defaultProductFilter = $this->Config()->get('default_product_filter');
-                    $this->products = $tmpVar::get()->filter($defaultProductFilter);
-                    if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
-                        $this->products = $this->products->filter(['AllowPurchase' => 1]);
-                    }
+        if (! $this->products instanceof DataList) {
+            if ($this->rawData['OnlyThisSection']) {
+                // do nothing!
+            } else {
+                $tmpVar = $this->baseClassNameForBuyables;
+                $defaultProductFilter = $this->Config()->get('default_product_filter');
+                $this->products = $tmpVar::get()->filter($defaultProductFilter);
+                if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
+                    $this->products = $this->products->filter(['AllowPurchase' => 1]);
                 }
             }
-            if (! $this->productsForGroups instanceof DataList) {
-                if ($this->rawData['OnlyThisSection']) {
-                    $this->productsForGroups = $this->finalProductList->getParentGroups();
-                } else {
-                    $tmpVar = $this->baseClassNameForGroups;
-                    $defaultGroupFilter = Config::inst()->get(RelatedProductGroups::class, 'default_product_group_filter');
-                    $this->productsForGroups = $tmpVar::get()->filter($defaultGroupFilter);
-                }
+        }
+        if (! $this->productsForGroups instanceof DataList) {
+            if ($this->rawData['OnlyThisSection']) {
+                $this->productsForGroups = $this->finalProductList->getParentGroups();
+            } else {
+                $tmpVar = $this->baseClassNameForGroups;
+                $defaultGroupFilter = Config::inst()->get(RelatedProductGroups::class, 'default_product_group_filter');
+                $this->productsForGroups = $tmpVar::get()->filter($defaultGroupFilter);
             }
-            if ($this->debug) {
-                $this->debugOutput('<hr />');
-                $this->debugOutput('<h3>BASE LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->products) . '</pre>');
-                $this->debugOutput('<h3>BASE GROUP LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->productsForGroups) . '</pre>');
-            }
+        }
+        if ($this->debug) {
+            $this->debugOutput('<hr />');
+            $this->debugOutput('<h3>BASE LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->products) . '</pre>');
+            $this->debugOutput('<h3>BASE GROUP LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->productsForGroups) . '</pre>');
         }
     }
 
@@ -678,9 +685,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function doPriceSearch()
     {
-        if (true === $this->hasCache) {
-            return;
-        }
         if ($this->hasMinMaxSearch()) {
             $min = $this->rawData['MinimumPrice'];
             if ($min) {

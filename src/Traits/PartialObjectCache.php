@@ -8,12 +8,18 @@ namespace Sunnysideup\Ecommerce\Traits;
  */
 trait PartialObjectCache
 {
+
     /**
      * @var bool
      */
     protected $hasCache = false;
 
-    public function setCacheHash(?string $hash = ''): self
+    /**
+     * apply any available cache.
+     * @param  string $hash
+     * @return self
+     */
+    protected function setCacheHash(?string $hash = ''): self
     {
         if ($hash) {
             $this->applyCacheFromHash($hash);
@@ -21,6 +27,7 @@ trait PartialObjectCache
 
         return $this;
     }
+
 
     protected function getSerializedObject(?array $data = [])
     {
@@ -33,7 +40,7 @@ trait PartialObjectCache
                     $variables[$variable]['ID'] = $value->ID;
                 }
             } elseif (is_object($value)) {
-                //do nothing
+                //do nothing - dont cache
             } else {
                 $variables[$variable] = $value;
             }
@@ -45,16 +52,16 @@ trait PartialObjectCache
     /**
      * @param string $data optional
      */
-    protected function getHash(?string $data = ''): int
+    protected function getHash(?string $data = ''): string
     {
         if (! $data) {
             $data = $this->getSerializedObject();
         }
 
-        return crc32($data);
+        return 'search' . crc32($data);
     }
 
-    protected function setCacheForHash(): float
+    protected function setCacheForHash(): string
     {
         $data = $this->getSerializedObject();
         $hash = $this->getHash($data);
@@ -64,6 +71,9 @@ trait PartialObjectCache
         return $hash;
     }
 
+    /**
+     * return array of values from hash
+     */
     protected function getCacheForHash(string $hash): array
     {
         $array = [];
@@ -78,27 +88,30 @@ trait PartialObjectCache
         return $array;
     }
 
-    protected function applyCacheFromHash(string $hash): array
+    /**
+     * apply to objects
+     */
+    protected function applyCacheFromHash(string $hash)
     {
-        $array = $this->getCacheForHash($hash);
-        if ($array && count($array) && $this->config()->get('use_cache')) {
-            $this->hasCache = true;
-            foreach ($array as $variable => $value) {
-                if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
-                    $this->{$variable} = $this->arrayToObject($value);
+        if($this->config()->get('use_cache')) {
+            $array = $this->getCacheForHash($hash);
+            if ($array && count($array)) {
+                $this->hasCache = true;
+                foreach ($array as $variable => $value) {
+                    if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
+                        $this->{$variable} = $this->arrayToObject($value);
+                    }
                 }
             }
         }
-
-        return $array;
     }
 
     /**
      * turns an array of ClassName and ID into objects.
-     *
+     * and if this pattern does not match then the original value
      * @param array $value['ID' => , 'ClassName']
      *
-     * @return DataObject
+     * @return mixed
      */
     protected function arrayToObject($value)
     {
