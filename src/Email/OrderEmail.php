@@ -216,7 +216,9 @@ abstract class OrderEmail extends Email
 
     /**
      * Render the email.
-     * $plainOnly: Only render the message as plain tex
+     * $plainOnly: Only render the message as plain tex.
+     *
+     * @param mixed $plainOnly
      *
      * @return $this
      */
