@@ -150,6 +150,8 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
+        'AllowPurchase' => true,
+        'Price' => true,
         'SearchFields' => [
             'type' => 'fulltext',
             'columns' => [

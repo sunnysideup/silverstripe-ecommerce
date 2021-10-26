@@ -319,9 +319,12 @@ class ProductGroup extends Page
      */
     public function getProductGroupSchema()
     {
-        $className = $this->Config()->get('template_for_selection_of_products');
+        return Injector::inst()->get($this->getTemplateForSelectionOfProducts());
+    }
 
-        return Injector::inst()->get($className);
+    protected function getTemplateForSelectionOfProducts() : string
+    {
+        return $this->Config()->get('template_for_selection_of_products');
     }
 
     public function getProductsPerPage(?int $default = 10): int

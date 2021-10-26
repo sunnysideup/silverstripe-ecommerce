@@ -14,12 +14,12 @@ class KeywordSearchBuilder
     /**
      * creates three levels of searches that
      * can be executed one after the other, each
-     * being less specific than the last...
+     * being less specific than the one before...
      *
      * @param string $phrase - keywordphrase
      * @param array  $fields - fields being searched
      */
-    public function getSearchArrays(string $phrase, $fields = ['Title', 'MenuTitle']): array
+    public function getSearchArrays(string $phrase, $fields = ['Title', 'Content']): array
     {
         //make three levels of search
         $searches = [];
