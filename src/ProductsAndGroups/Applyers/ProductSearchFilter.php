@@ -169,7 +169,13 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var bool
      */
-    private static $use_cache = true;
+    private static $use_partial_cache = true;
+
+    /**
+     * e.g. IDForSearchResults
+     * @var string
+     */
+    private static $custom_id_method_to_retrieve_products = '';
 
     /**
      * Default selection criteria for products.
@@ -183,7 +189,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var array
      */
-    private static $in_group_sort_sql = ['Price' => 'DESC'];
+    private static $in_group_sort_sql = ['Price' => 'DESC', 'ID' => 'DESC'];
 
     /**
      * List of additional fields that should be searched full text.
@@ -208,7 +214,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     private static $fields_to_search_full_text_default = [
         'Title',
-        'Content',
         'MetaDescription',
     ];
 
@@ -619,15 +624,22 @@ class ProductSearchFilter extends BaseApplyer
             }
         }
         if ($count > 0) {
-            $listToAdd = $listToAdd->limit($this->maxToAdd());
             $sort = $this->Config()->get('in_group_sort_sql');
-            $listToAdd = $listToAdd->sort($sort);
-            $listToAdd->exclude(['ID' => ArrayMethods::filter_array($this->productIds)]);
+            $listToAdd = $listToAdd
+                ->limit($this->maxToAdd())
+                ->sort($sort)
+                ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)]);
+            $customMethod = $this->Config()->get('custom_id_method_to_retrieve_products');
+            if(! $customMethod) {
+                //check that this is the right order!
+                $listToAdd = $listToAdd->columnUnique('ID');
+            }
             foreach ($listToAdd as $page) {
-                $id = $page->IDForSearchResults();
-                // if ($this->debug) {
-                //     $internalItemID = $page->InternalItemIDForSearchResults();
-                // }
+                if($customMethod) {
+                    $id = $page->{$customMethod}();
+                } elseif(is_int($page)) {
+                    $id = $page;
+                }
                 if ($id) {
                     if (! in_array($id, $this->productIds, true)) {
                         ++$this->resultArrayPos;

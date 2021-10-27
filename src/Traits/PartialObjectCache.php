@@ -80,7 +80,7 @@ trait PartialObjectCache
      */
     protected function partialCacheApplyCacheFromHash(string $hash) : bool
     {
-        if($this->config()->get('use_cache')) {
+        if($this->config()->get('use_partial_cache')) {
             $array = $this->partialCacheGetCacheForHash($hash);
             if ($array && count($array)) {
                 $this->hasCache = true;

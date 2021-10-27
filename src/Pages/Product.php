@@ -451,8 +451,6 @@ class Product extends Page implements BuyableModel
         //setting fields with new values!
         $this->FullName = $fullName . $parentTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
-
-        return ($this->dbObject('FullName') !== $this->FullName) || ($this->dbObject('FullSiteTreeSort') !== $this->FullSiteTreeSort);
     }
 
     /**
