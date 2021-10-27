@@ -29,7 +29,8 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
             if ($products) {
                 foreach ($products as $product) {
                     if ($this->hasExtension('ProductWithVariationDecorator')) {
-                        if ($product->cleaningUpVariationData($verbose = true)) {
+                        $product->cleaningUpVariationData($verbose = true);
+                        if ($product) {
                             ++$count;
                         }
                     }

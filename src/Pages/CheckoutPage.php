@@ -197,7 +197,8 @@ class CheckoutPage extends CartPage
     public static function find_next_step_link($currentStep, $doPreviousInstead = false): string
     {
         $nextStep = null;
-        if ($link = self::find_link()) {
+        $link = self::find_link();
+        if ($link) {
             $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
             if (in_array($currentStep, $steps, true)) {
                 $key = array_search($currentStep, $steps, true);

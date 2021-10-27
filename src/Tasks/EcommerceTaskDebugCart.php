@@ -55,7 +55,8 @@ class EcommerceTaskDebugCart extends BuildTask
             foreach ($fields as $key => $type) {
                 $value = '';
                 $field = $key . 'ID';
-                if ($object = $obj->{$key}()) {
+                $object = $obj->{$key}();
+                if ($object) {
                     if ($object && $object->exists()) {
                         $value = ', ' . $object->getTitle();
                     }

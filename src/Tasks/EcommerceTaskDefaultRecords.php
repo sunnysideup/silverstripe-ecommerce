@@ -62,6 +62,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         //CHECKOUT PAGE
 
         $checkoutPage = DataObject::get_one(CheckoutPage::class, null, $cacheDataObjectGetOne = false);
+        $termsPage = DataObject::get_one;
         if (! $checkoutPage) {
             $checkoutPage = new CheckoutPage();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
@@ -72,16 +73,17 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $checkoutPage->URLSegment = 'checkout';
             $update[] = "Checkout page 'Checkout' created";
             $checkoutPage->ShowInMenus = false;
+            $cacheDataObjectGetOne = false;
             DB::alteration_message('new checkout page created.', 'created');
         } else {
             DB::alteration_message('No need to create an checkout page, it already exists.');
         }
         if ($checkoutPage) {
             if (0 === $checkoutPage->TermsPageID &&
-                $termsPage = DataObject::get_one(
+                $termsPage(
                     'Page',
                     ['URLSegment' => 'terms-and-conditions'],
-                    $cacheDataObjectGetOne = false
+                    $cacheDataObjectGetOne
                 )
             ) {
                 $checkoutPage->TermsPageID = $termsPage->ID;

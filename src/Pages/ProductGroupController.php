@@ -389,7 +389,8 @@ class ProductGroupController extends PageController
 
     public function getCurrentPageNumber(): int
     {
-        if ($pageStart = (int) $this->request->getVar('start')) {
+        $pageStart = (int) $this->request->getVar('start');
+        if ($pageStart) {
             return ($pageStart / $this->getProductsPerPage()) + 1;
         }
 

@@ -45,7 +45,8 @@ class ProductController extends PageController
         $version = (int) $request->param('ID') - 0;
         $currentVersion = $this->Version;
         if ($currentVersion !== $version) {
-            if ($record = $this->getVersionOfBuyable($this->ID, $version)) {
+            $record = $this->getVersionOfBuyable($this->ID, $version);
+            if ($record) {
                 //we check again, because we may actually get the same version back...
                 if ($record->Version !== $this->Version) {
                     $this->record = $record;

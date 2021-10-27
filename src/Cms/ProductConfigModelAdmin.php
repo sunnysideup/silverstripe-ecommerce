@@ -66,7 +66,8 @@ class ProductConfigModelAdmin extends ModelAdmin
     {
         $form = parent::getEditForm();
         if (SearchHistory::class === $this->modelClass) {
-            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+            $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
+            if ($gridField) {
                 $form->Fields()->replaceField(
                     $gridField->getName(),
                     EcommerceSearchHistoryFormField::create('SearchHistoryTable')

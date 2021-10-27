@@ -76,7 +76,8 @@ class OrderForm extends Form
         $finalFields->addExtraClass('finalFields');
         $finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER', 'Complete Order'), 3));
         // If a terms and conditions page exists, we need to create a field to confirm the user has read it
-        if ($termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page()) {
+        $termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page();
+        if ($termsAndConditionsPage) {
             $checkoutPage = DataObject::get_one(CheckoutPage::class);
             if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
                 $alreadyTicked = false;
@@ -156,6 +157,7 @@ class OrderForm extends Form
         $this->saveDataToSession(); //save for later if necessary
         $order = ShoppingCart::current_order();
         $this->extend('onRawSubmit', $data, $form, $order);
+        $order && $order->TotalItems($recalculate = true) < 1;
         //check for cart items
         if (! $order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
@@ -163,7 +165,7 @@ class OrderForm extends Form
 
             return false;
         }
-        if ($order && $order->TotalItems($recalculate = true) < 1) {
+        if ($order && $order) {
             // WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
             $form->sessionMessage(_t('Order.NOITEMSINCART', 'Please add some items to your cart.'), 'bad');
             $this->controller->redirectBack();
@@ -203,7 +205,8 @@ class OrderForm extends Form
         $order->write();
         //saving into member, in case we add additional fields for the member
         //e.g. newslettersignup
-        if ($member = Security::getCurrentUser()) {
+        $member = Security::getCurrentUser();
+        if ($member) {
             $form->saveInto($member);
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {

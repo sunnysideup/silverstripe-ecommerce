@@ -71,7 +71,8 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      */
     public function nextStep(Order $order)
     {
-        if ($order->TotalItems($recalculate = true)) {
+        $order->TotalItems($recalculate = true);
+        if ($order) {
             return parent::nextStep($order);
         }
 
@@ -86,6 +87,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
+        $billingAddress = $order->BillingAddress();
         if (! $order->IsSubmitted()) {
             //LINE BELOW IS NOT REQUIRED
             $header = _t('OrderStep.SUBMITORDER', 'Submit Order');
@@ -100,7 +102,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
             }
             if (! $order->BillingAddressID) {
                 $problems[] = 'There is no --- Billing Address --- associated with this order.';
-            } elseif ($billingAddress = $order->BillingAddress()) {
+            } elseif ($billingAddress) {
                 $requiredBillingFields = $billingAddress->getRequiredFields();
                 if ($requiredBillingFields && is_array($requiredBillingFields) && count($requiredBillingFields)) {
                     foreach ($requiredBillingFields as $requiredBillingField) {

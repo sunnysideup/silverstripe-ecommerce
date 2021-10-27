@@ -71,7 +71,8 @@ class OrderStatusLogFormController extends Controller
     protected function initVirtualMethods()
     {
         if ($this->currentOrder) {
-            if ($forms = $this->currentOrder->getLogForms($this)) {
+            $forms = $this->currentOrder->getLogForms($this);
+            if ($forms) {
                 foreach ($forms as $form) {
                     $this->addWrapperMethod($form->getName(), 'getOrderStatusLogForm');
                     self::$allowed_actions[] = $form->getName(); // add all these forms to the list of allowed actions also
@@ -90,7 +91,8 @@ class OrderStatusLogFormController extends Controller
     protected function getOrderStatusLogForm(string $name)
     {
         if ($this->currentOrder) {
-            if ($forms = $this->currentOrder->getLogForms($this)) {
+            $forms = $this->currentOrder->getLogForms($this);
+            if ($forms) {
                 foreach ($forms as $form) {
                     if ($form->getName() === $name) {
                         return $form;

@@ -224,7 +224,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if (null === $this->_canView) {
             $this->_canView = false;
             if ($this->OrderID) {
-                if ($o = $this->Order()) {
+                $o = $this->Order();
+                if ($o) {
                     if ($o->exists()) {
                         if ($o->canView($member)) {
                             $this->_canView = true;
@@ -516,7 +517,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         parent::onBeforeWrite();
         if ($this->OrderAttributeGroupID) {
-            if ($group = $this->OrderAttributeGroup()) {
+            $group = $this->OrderAttributeGroup();
+            if ($group) {
                 $this->GroupSort = $group->Sort;
             }
         }
@@ -550,7 +552,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate) {
             self::$_price_has_been_fixed[$this->OrderID] = false;
-            if ($order = $this->Order()) {
+            $order = $this->Order();
+            if ($order) {
                 if ($order->IsSubmitted()) {
                     self::$_price_has_been_fixed[$this->OrderID] = true;
                     if ($recalculate) {

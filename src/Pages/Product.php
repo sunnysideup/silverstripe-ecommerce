@@ -597,7 +597,8 @@ class Product extends Page implements BuyableModel
      */
     public function CMSThumbnail()
     {
-        if ($image = $this->Image()) {
+        $image = $this->Image();
+        if ($image) {
             if ($image->exists()) {
                 return $image->Thumbnail();
             }

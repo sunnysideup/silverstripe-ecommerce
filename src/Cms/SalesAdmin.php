@@ -179,7 +179,8 @@ class SalesAdmin extends ModelAdmin
     {
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
-            if ($gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass))) {
+            $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
+            if ($gridField) {
                 if ($gridField instanceof GridField) {
                     $config = $gridField->getConfig();
                     $exportButton = new GridFieldExportSalesButton('buttons-before-left');

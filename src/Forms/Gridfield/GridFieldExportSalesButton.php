@@ -72,7 +72,8 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      */
     public function handleSales($gridField, $request = null)
     {
-        if ($fileData = $this->generateExportFileData($gridField)) {
+        $fileData = $this->generateExportFileData($gridField);
+        if ($fileData) {
             $now = date('d-m-Y-H-i');
             $fileName = "sales-{$now}.csv";
 
@@ -137,11 +138,12 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
+                    $member = $order->Member();
                     if (! $order->MemberID) {
                         $memberIsOK = true;
                     } elseif (! $order->Member()) {
                         $memberIsOK = true;
-                    } elseif ($member = $order->Member()) {
+                    } elseif ($member) {
                         $memberIsOK = true;
                         if ($member->IsShopAdmin()) {
                             $memberIsOK = false;

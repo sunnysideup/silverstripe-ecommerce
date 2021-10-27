@@ -339,8 +339,10 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     public static function get_region_id()
     {
         $regionID = 0;
-        if ($order = ShoppingCart::current_order()) {
-            if ($region = $order->Region()) {
+        $order = ShoppingCart::current_order();
+        if ($order) {
+            $region = $order->Region();
+            if ($region) {
                 $regionID = $region->ID;
             }
         }

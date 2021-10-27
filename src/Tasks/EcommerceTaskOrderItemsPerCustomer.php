@@ -52,11 +52,12 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
+                    $member = $order->Member();
                     if (! $order->MemberID) {
                         $memberIsOK = true;
                     } elseif (! $order->Member()) {
                         $memberIsOK = true;
-                    } elseif ($member = $order->Member()) {
+                    } elseif ($member) {
                         $memberIsOK = true;
                         if ($member->IsShopAssistant()) {
                             $memberIsOK = false;

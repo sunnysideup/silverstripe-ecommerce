@@ -97,7 +97,8 @@ class OrderFormFeedback extends Form
 
     protected function getValueFromOrderConfirmationPage($value)
     {
-        if ($page = $this->getOrderConfirmationPage()) {
+        $page = $this->getOrderConfirmationPage();
+        if ($page) {
             return $page->{$value};
         }
         $defaults = Config::inst()->get(OrderConfirmationPage::class, 'defaults');

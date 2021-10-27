@@ -39,7 +39,8 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         }
 
         $getSegment = '';
-        if ($page = $this->BestParentPage()) {
+        $page = $this->BestParentPage();
+        if ($page) {
             $getSegment = '?ParentID=' . $page->ID;
         }
 
