@@ -42,7 +42,8 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
                         OR \"OrderAsHTML\" LIKE '%Order #" . $orderID . "%'
 
                     LIMIT 1";
-                    if ($innerInners = DB::query($sql)) {
+                    $innerInners = DB::query($sql);
+                    if ($innerInners) {
                         foreach ($innerInners as $innerInnerRow) {
                             DB::alteration_message('FOUND ' . $innerInnerRow['ID'], 'created');
                             DB::query("UPDATE \"OrderStatusLog\" SET \"OrderID\" = {$orderID} WHERE \"OrderStatusLog\".\"ID\" = " . $innerInnerRow['ID'] . ' AND "OrderID" < 1');

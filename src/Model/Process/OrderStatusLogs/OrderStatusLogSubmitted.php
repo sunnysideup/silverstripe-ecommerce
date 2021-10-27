@@ -131,7 +131,8 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             if (! $this->Total) {
                 $this->Total = $order->Total();
                 $this->SubTotal = $order->SubTotal();

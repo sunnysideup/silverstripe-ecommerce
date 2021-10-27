@@ -83,8 +83,9 @@ class CheckoutPageController extends CartPageController
     {
         $form = OrderFormAddress::create($this, 'OrderFormAddress');
         $this->data()->extend('updateOrderFormAddress', $form);
+        $data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data");
         //load session data
-        if ($data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
+        if ($data) {
             $form->loadDataFrom($data);
         }
 
@@ -102,7 +103,8 @@ class CheckoutPageController extends CartPageController
         $form = OrderForm::create($this, 'OrderForm');
         $this->data()->extend('updateOrderForm', $form);
         //load session data
-        if ($data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data")) {
+        $data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data");
+        if ($data) {
             $form->loadDataFrom($data);
         }
 
@@ -345,8 +347,8 @@ class CheckoutPageController extends CartPageController
         //redirect to current order -
         // this is only applicable when people submit order (start to pay)
         // and then return back
-
-        if ($checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
+        $checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
+        if ($checkoutPageCurrentOrderID) {
             if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
                 $this->clearRetrievalOrderID();
             }

@@ -123,7 +123,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order): bool
     {
-        if ($log = $this->RelevantLogEntry($order)) {
+        $log = $this->RelevantLogEntry($order);
+        if ($log) {
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
             }

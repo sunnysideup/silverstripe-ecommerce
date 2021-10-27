@@ -213,7 +213,8 @@ abstract class OrderStepController extends Controller
      */
     protected function getOrderGetParams()
     {
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             return '?OrderID=' . $order->ID . '&OrderSessionID=' . self::secure_hash($order);
         }
     }

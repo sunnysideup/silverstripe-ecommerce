@@ -590,7 +590,8 @@ class ShoppingCart
     public function findOrMakeItem(BuyableModel $buyable, array $parameters = [])
     {
         if ($this->allowWrites()) {
-            if ($item = $this->getExistingItem($buyable, $parameters)) {
+            $item = $this->getExistingItem($buyable, $parameters);
+            if ($item) {
                 //do nothing
             } else {
                 //otherwise create a new item
@@ -602,7 +603,8 @@ class ShoppingCart
                 $className = $buyable->classNameForOrderItem();
 
                 $item = new $className();
-                if ($order = $this->currentOrder()) {
+                $order = $this->currentOrder();
+                if ($order) {
                     $item->OrderID = $order->ID;
                     $item->BuyableID = $buyable->ID;
                     $item->BuyableClassName = $buyable->ClassName;
@@ -1198,7 +1200,8 @@ class ShoppingCart
     protected function getExistingItem(BuyableModel $buyable, array $parameters = [])
     {
         $filterString = $this->parametersToSQL($parameters);
-        if ($order = $this->currentOrder()) {
+        $order = $this->currentOrder();
+        if ($order) {
             $orderID = $order->ID;
 
             return DataObject::get_one(

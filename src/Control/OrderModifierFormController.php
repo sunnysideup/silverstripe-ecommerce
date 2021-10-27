@@ -76,7 +76,8 @@ class OrderModifierFormController extends Controller
     protected function initVirtualMethods()
     {
         if ($this->currentOrder) {
-            if ($forms = $this->currentOrder->getModifierForms($this)) {
+            $forms = $this->currentOrder->getModifierForms($this);
+            if ($forms) {
                 foreach ($forms as $form) {
                     if (! ($form instanceof Form)) {
                         $form = $form->Form;
@@ -98,7 +99,8 @@ class OrderModifierFormController extends Controller
     protected function getOrderModifierForm($name)
     {
         if ($this->currentOrder) {
-            if ($forms = $this->currentOrder->getModifierForms($this)) {
+            $forms = $this->currentOrder->getModifierForms($this);
+            if ($forms) {
                 foreach ($forms as $form) {
                     if (! ($form instanceof Form)) {
                         $form = $form->Form;

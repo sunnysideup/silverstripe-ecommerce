@@ -142,9 +142,11 @@ abstract class OrderEmail extends Email
         $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
         if (! $this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
-                if ($memberEmail = self::get_from_email()) {
+                $memberEmail = self::get_from_email();
+                if ($memberEmail) {
                     $array = [$memberEmail];
-                    if ($bcc = $this->getBcc()) {
+                    $bcc = $this->getBcc();
+                    if ($bcc) {
                         $array[] = $bcc;
                     }
                     $this->setBcc(implode(', ', $array));
@@ -262,7 +264,8 @@ abstract class OrderEmail extends Email
         $orderEmailRecord->Result = $result ? 1 : 0;
         $orderEmailRecord->OrderID = $this->order->ID;
         $orderEmailRecord->OrderStepID = $this->order->StatusID;
-        if ($sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to')) {
+        $sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to');
+        if ($sendAllEmailsTo) {
             $orderEmailRecord->To .=
                 _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
                 . $sendAllEmailsTo

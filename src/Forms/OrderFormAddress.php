@@ -148,7 +148,8 @@ class OrderFormAddress extends Form
         //HACK: move phone to member fields ..
         if ($addressFieldsMember) {
             if ($addressFieldsBilling) {
-                if ($phoneField = $addressFieldsBilling->dataFieldByName('Phone')) {
+                $phoneField = $addressFieldsBilling->dataFieldByName('Phone');
+                if ($phoneField) {
                     $addressFieldsBilling->removeByName('Phone');
                     $addressFieldsMember->insertAfter('Email', $phoneField);
                 }
@@ -391,7 +392,8 @@ class OrderFormAddress extends Form
 
             return false;
         }
-        if ($this->order && ($this->order->TotalItems($recalculate = true) < 1)) {
+        $this->order && ($this->order->TotalItems($recalculate = true) < 1);
+        if ($this) {
             // WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
             $form->sessionMessage(_t('OrderForm.NOITEMSINCART', 'Please add some items to your cart.'), 'bad');
             $this->controller->redirectBack();
@@ -428,7 +430,8 @@ class OrderFormAddress extends Form
         }
 
         //BILLING ADDRESS
-        if ($billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class)) {
+        $billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
+        if ($billingAddress) {
             $form->saveInto($billingAddress);
             // NOTE: write should return the new ID of the object
             $this->order->BillingAddressID = $billingAddress->write();
@@ -437,7 +440,8 @@ class OrderFormAddress extends Form
         // SHIPPING ADDRESS
         if (isset($data['UseShippingAddress'])) {
             if ($data['UseShippingAddress']) {
-                if ($shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class)) {
+                $shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class);
+                if ($shippingAddress) {
                     $form->saveInto($shippingAddress);
                     // NOTE: write should return the new ID of the object
                     $this->order->ShippingAddressID = $shippingAddress->write();
@@ -579,7 +583,8 @@ class OrderFormAddress extends Form
                 $this->debugArray[] = 'A1. shop admin places order ';
             }
             //2. does email match shopadmin email
-            if ($newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
+            $newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data);
+            if ($newEmail) {
                 $this->orderMember = null;
                 if ($this->debug) {
                     $this->debugArray[] = 'A2. email does not match shopadmin email - reset orderMember';

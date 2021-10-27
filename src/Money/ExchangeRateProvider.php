@@ -74,10 +74,11 @@ class ExchangeRateProvider
         $fromCode = strtoupper($fromCode);
         $toCode = strtoupper($toCode);
         $cacheCode = $fromCode . '_' . $toCode;
+        $value = Controller::curr()->getRequest()->getSession()->get($cacheCode);
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
         }
-        if ($value = Controller::curr()->getRequest()->getSession()->get($cacheCode)) {
+        if ($value) {
             self::$_memory_cache[$cacheCode] = $value;
         } else {
             $value = $this->getRate($fromCode, $toCode);
@@ -105,7 +106,8 @@ class ExchangeRateProvider
         $rate = 1;
         $reference = $fromCode . '_' . $toCode;
         $url = 'http://free.currencyconverterapi.com/api/v5/convert?q=' . $reference . '&compact=y';
-        if ($ch = @curl_init()) {
+        $ch = @curl_init();
+        if ($ch) {
             $timeout = 5;
             // set to zero for no timeout
             curl_setopt($ch, CURLOPT_URL, "{$url}");

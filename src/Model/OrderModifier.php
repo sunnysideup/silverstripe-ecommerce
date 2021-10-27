@@ -466,7 +466,8 @@ class OrderModifier extends OrderAttribute
      */
     public function Heading()
     {
-        if ($obj = $this->getOrderModifierDescriptor()) {
+        $obj = $this->getOrderModifierDescriptor();
+        if ($obj) {
             return $obj->Heading;
         }
 
@@ -480,7 +481,8 @@ class OrderModifier extends OrderAttribute
      */
     public function Description()
     {
-        if ($obj = $this->getOrderModifierDescriptor()) {
+        $obj = $this->getOrderModifierDescriptor();
+        if ($obj) {
             return $obj->Description;
         }
 
@@ -494,7 +496,8 @@ class OrderModifier extends OrderAttribute
      */
     public function MoreInfoPage()
     {
-        if ($obj = $this->getOrderModifierDescriptor()) {
+        $obj = $this->getOrderModifierDescriptor();
+        if ($obj) {
             return $obj->Link();
         }
 

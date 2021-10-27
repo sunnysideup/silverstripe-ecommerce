@@ -74,7 +74,8 @@ class ProductOrderItem extends OrderItem
     public function getTableTitle()
     {
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
-        if ($product = $this->Product()) {
+        $product = $this->Product();
+        if ($product) {
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
             $tableTitle = strip_tags($product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
@@ -99,7 +100,8 @@ class ProductOrderItem extends OrderItem
     public function getTableSubTitle()
     {
         $tableSubTitle = '';
-        if ($product = $this->Product()) {
+        $product = $this->Product();
+        if ($product) {
             $tableSubTitle = $product->Quantifier;
         }
         $updatedSubTableTitle = $this->extend('updateSubTableTitle', $tableSubTitle);

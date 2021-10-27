@@ -553,7 +553,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 TextField::create('EmailSubject', _t('OrderStep.EMAILSUBJECT', 'Email Subject'))
                     ->setDescription($rightTitle)
             );
-            if ($testEmailLink = $this->testEmailLink()) {
+            $testEmailLink = $this->testEmailLink();
+            if ($testEmailLink) {
                 $fields->addFieldToTab(
                     'Root.CustomerMessage',
                     new LiteralField(
@@ -1042,7 +1043,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function RelevantLogEntries(Order $order)
     {
-        if ($className = $this->getRelevantLogEntryClassName()) {
+        $className = $this->getRelevantLogEntryClassName();
+        if ($className) {
             return $className::get()->filter(
                 [
                     'OrderID' => $order->ID,

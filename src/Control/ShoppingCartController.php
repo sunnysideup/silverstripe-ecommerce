@@ -542,7 +542,8 @@ class ShoppingCartController extends Controller
     public function deleteorder(HTTPRequest $request)
     {
         $orderID = (int) $request->param('ID');
-        if ($order = Order::get_by_id_if_can_view($orderID)) {
+        $order = Order::get_by_id_if_can_view($orderID);
+        if ($order) {
             if ($order->canDelete()) {
                 $order->delete();
             }
@@ -554,7 +555,8 @@ class ShoppingCartController extends Controller
     public function copyorder(HTTPRequest $request)
     {
         $orderID = (int) $request->param('ID');
-        if ($order = Order::get_by_id_if_can_view($orderID)) {
+        $order = Order::get_by_id_if_can_view($orderID);
+        if ($order) {
             $this->cart->copyOrder($order);
         }
         $link = CheckoutPage::find_link();

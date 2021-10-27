@@ -3646,7 +3646,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsCancelled() && ! $this->IsArchived()) {
             $this->Archive($avoidWrites = true);
         }
-        if ($this->IsSubmitted($recalculate = true)) {
+        if ($this->IsSubmitted($recalculate = true) {
             //do nothing
         } elseif ($this->StatusID) {
             $this->calculateOrderAttributes($recalculate = false);
@@ -3669,7 +3669,8 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
-        if ($attributes = $this->Attributes()) {
+        $attributes = $this->Attributes();
+        if ($attributes) {
             foreach ($attributes as $attribute) {
                 $attribute->delete();
                 $attribute->destroy();
@@ -3838,6 +3839,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $to = $this->getOrderEmail();
         }
         if ($from && $to) {
+            $cc = $arrayData->getField('CC');
+            $bcc = $arrayData->getField('BCC');
             if (! class_exists($emailClassName)) {
                 user_error('Invalid Email ClassName provided: ' . $emailClassName, E_USER_ERROR);
             }
@@ -3851,10 +3854,10 @@ class Order extends DataObject implements EditableEcommerceObject
             $email->setSubject($arrayData->getField('Subject'));
             //we also see if a CC and a BCC have been added
 
-            if ($cc = $arrayData->getField('CC')) {
+            if ($cc) {
                 $email->setCc($cc);
             }
-            if ($bcc = $arrayData->getField('BCC')) {
+            if ($bcc) {
                 $email->setBcc($bcc);
             }
 

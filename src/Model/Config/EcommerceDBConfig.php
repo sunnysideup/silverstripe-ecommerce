@@ -787,7 +787,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function DefaultImage()
     {
         if ($this->DefaultProductImageID) {
-            if ($defaultImage = $this->DefaultProductImage()) {
+            $defaultImage = $this->DefaultProductImage();
+            if ($defaultImage) {
                 if ($defaultImage->exists()) {
                     return $defaultImage;
                 }

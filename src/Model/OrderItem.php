@@ -288,10 +288,12 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('CalculatedTotal');
         $fields->removeByName('GroupSort');
         $fields->removeByName('OrderAttributeGroupID');
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             if ($order->IsSubmitted()) {
                 $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
-                if ($buyable = $this->Buyable()) {
+                $buyable = $this->Buyable();
+                if ($buyable) {
                     if ($this->BuyableExists()) {
                         $buyableLink .= '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
                     } else {
@@ -500,6 +502,7 @@ class OrderItem extends OrderAttribute
 
     public function getUnitPrice($recalculate = false)
     {
+        $buyable = $this->Buyable();
         if ($this->priceHasBeenFixed($recalculate) && ! $recalculate) {
             if (! $this->Quantity) {
                 $this->Quantity = 1;
@@ -507,7 +510,7 @@ class OrderItem extends OrderAttribute
 
             return $this->CalculatedTotal / $this->Quantity;
         }
-        if ($buyable = $this->Buyable()) {
+        if ($buyable) {
             if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
             }
@@ -580,7 +583,8 @@ class OrderItem extends OrderAttribute
 
     public function getInternalItemID()
     {
-        if ($buyable = $this->Buyable()) {
+        $buyable = $this->Buyable();
+        if ($buyable) {
             return $buyable->InternalItemID;
         }
     }
@@ -717,8 +721,10 @@ class OrderItem extends OrderAttribute
 
     public function getTitle()
     {
-        if ($buyable = $this->Buyable()) {
-            if ($title = $buyable->Title) {
+        $buyable = $this->Buyable();
+        if ($buyable) {
+            $title = $buyable->Title;
+            if ($title) {
                 return $title;
             }
             //This should work in all cases, because ultimately, it will return #ID - see DataObject
@@ -772,7 +778,8 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableExists()
     {
-        if ($buyable = $this->Buyable(true)) {
+        $buyable = $this->Buyable(true);
+        if ($buyable) {
             $className = $buyable->ClassName;
             $id = $buyable->ID;
 
@@ -820,7 +827,8 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableMoreDetails()
     {
-        if ($subtitle = $this->TableSubTitleNOHTML) {
+        $subtitle = $this->TableSubTitleNOHTML;
+        if ($subtitle) {
             return $subtitle;
         }
         $buyable = $this->Buyable();
@@ -962,11 +970,13 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
+        ! $this->Version && $buyable = $this->Buyable(true);
         if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
         }
         if (! $this->exists()) {
-            if ($buyable = $this->Buyable(true)) {
+            $buyable = $this->Buyable(true);
+            if ($buyable) {
                 if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
                     $this->setClassName($buyable->classNameForOrderItem());
                 }
@@ -978,7 +988,7 @@ class OrderItem extends OrderAttribute
         if (0 === floatval($this->Quantity)) {
             $this->Quantity = 1;
         }
-        if (! $this->Version && $buyable = $this->Buyable(true)) {
+        if (! $this->Version && $buyable) {
             $this->Version = $buyable->Version;
         }
     }

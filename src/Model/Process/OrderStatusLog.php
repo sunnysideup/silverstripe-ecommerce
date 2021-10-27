@@ -252,7 +252,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             return $extended;
         }
 
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             //Order Status Logs are so basic, anyone can edit them
             if (OrderStatusLog::class === $this->ClassName) {
                 return $order->canView($member);

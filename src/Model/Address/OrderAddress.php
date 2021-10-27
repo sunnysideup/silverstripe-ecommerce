@@ -450,7 +450,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function getMemberFromOrder()
     {
         if ($this->exists()) {
-            if ($order = $this->Order()) {
+            $order = $this->Order();
+            if ($order) {
                 if ($order->exists()) {
                     if ($order->MemberID) {
                         return Member::get()->byID($order->MemberID);
@@ -684,7 +685,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $this->extend('augmentMakeSelectedFieldsReadOnly', $fields);
         if (is_array($this->readOnlyFields) && count($this->readOnlyFields)) {
             foreach ($this->readOnlyFields as $readOnlyField) {
-                if ($oldField = $fields->fieldByName($readOnlyField)) {
+                $oldField = $fields->fieldByName($readOnlyField);
+                if ($oldField) {
                     $fields->replaceField($readOnlyField, $oldField->performReadonlyTransformation());
                 }
             }

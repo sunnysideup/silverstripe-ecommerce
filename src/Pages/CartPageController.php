@@ -269,7 +269,8 @@ class CartPageController extends PageController
         $this->workOutMessagesAndActions();
         if (! $this->message) {
             $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
-            if ($sessionMessage = $this->getRequest()->getSession()->get($sessionCode)) {
+            $sessionMessage = $this->getRequest()->getSession()->get($sessionCode);
+            if ($sessionMessage) {
                 $this->message = $sessionMessage;
                 Controller::curr()->getRequest()->getSession()->set($sessionCode, '');
                 Controller::curr()->getRequest()->getSession()->clear($sessionCode);

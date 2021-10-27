@@ -231,7 +231,8 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function OrderIsCancelled()
     {
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             return $order->getIsCancelled();
         }
 
@@ -246,7 +247,8 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function IsPaid()
     {
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             return $order->IsPaid();
         }
 
@@ -261,7 +263,8 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function PaymentIsPending()
     {
-        if ($order = $this->Order()) {
+        $order = $this->Order();
+        if ($order) {
             return $order->PaymentIsPending();
         }
 
@@ -366,12 +369,14 @@ class OrderConfirmationPageController extends CartPageController
             $subject = '';
             $message = '';
             $emailClassName = OrderReceiptEmail::class;
+            $statusID = $request->getVar('send');
+            $statusID = (int) $request->getVar('test');
             if (class_exists($request->param('OtherID'))) {
                 if (is_a(singleton($request->param('OtherID')), EcommerceConfigClassNames::getName(OrderEmail::class))) {
                     $emailClassName = $request->param('OtherID');
                 }
             }
-            if ($statusID = (int) $request->getVar('test')) {
+            if ($statusID) {
                 $step = OrderStep::get()->byID($statusID);
                 $subject = $step->CalculatedEmailSubject($this->currentOrder);
                 $message = $step->CalculatedCustomerMessage($this->currentOrder);
@@ -391,18 +396,21 @@ class OrderConfirmationPageController extends CartPageController
                         $adminOnlyOrToEmail = $email
                     );
                 }
-            } elseif ($statusID = $request->getVar('send')) {
-                if ($email = $this->currentOrder->getOrderEmail()) {
+            } elseif ($statusID) {
+                $email = $this->currentOrder->getOrderEmail();
+                if ($email) {
                     $step = OrderStep::get()->byID($statusID);
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
                     $emailClassName = OrderInvoiceEmail::class;
+                    $adminOnlyOrToEmail = false;
+                    $resend = true;
                     if ($this->currentOrder->sendEmail(
                         $emailClassName,
                         $subject,
                         $message,
-                        $resend = true,
-                        $adminOnlyOrToEmail = false
+                        $resend,
+                        $adminOnlyOrToEmail
                     )) {
                         $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ') . $email . '.';
                     } else {
@@ -432,8 +440,8 @@ class OrderConfirmationPageController extends CartPageController
     {
         //we retrieve the order in the parent page
         //the parent page also takes care of the security
-
-        if ($sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID')) {
+        $sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
+        if ($sessionOrderID) {
             $this->currentOrder = Order::get()->byID($sessionOrderID);
             if ($this->currentOrder) {
                 $this->overrideCanView = true;

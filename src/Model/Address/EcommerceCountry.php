@@ -830,7 +830,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     protected static function get_default_array()
     {
         $defaultArray = [];
-        if ($code = self::get_fixed_country_code()) {
+        $code = self::get_fixed_country_code();
+        if ($code) {
             $defaultArray[$code] = self::find_title($code);
 
             return $defaultArray;
