@@ -240,6 +240,8 @@ class ProductSearchForm extends Form
         if ($this->additionalGetParameters) {
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
+        //important - sort by relevancy
+        $link .= '&'.$this->getVariableContainingSortParam().'='.ProductSearchFilter::KEY_FOR_SORTER;
         $this->controller->redirect($link);
     }
 
@@ -250,6 +252,11 @@ class ProductSearchForm extends Form
     protected function getVariableContainingSearchParams(): string
     {
         return Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SEARCHFILTER', 'getVariable');
+    }
+
+    protected function getVariableContainingSortParam(): string
+    {
+        return Injector::inst()->get(ProductGroupSchema::class)->getSortFilterDisplayValues('SORT', 'getVariable');
     }
 
     protected function hasOnlyThisSection(): bool

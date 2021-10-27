@@ -18,6 +18,8 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
+
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSorter;
 use Sunnysideup\Ecommerce\Traits\PartialObjectCache;
 use Sunnysideup\Vardump\Vardump;
 
@@ -137,7 +139,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var int
      */
-    protected $maximumNumberOfResults = 1000;
+    protected $maximumNumberOfResults = 400;
 
     protected $productsForGroups;
 
@@ -147,13 +149,26 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected static $groupCache = [];
 
+    public const KEY_FOR_SORTER = 'relevant';
+
+    private const OPTIONS_FOR_SORT = [
+        self::KEY_FOR_SORTER => [
+            'Title' => 'Most Relevant',
+            'SQL' => [
+                'ShowInSearch' => 1,
+            ],
+            'UsesParamData' => true,
+            'IsShowFullList' => false,
+        ],
+    ];
+
     /**
      * make sure that these do not exist as a URLSegment.
      *
      * @var array
      */
     private static $options = [
-        'most_relevant' => [
+        self::KEY_FOR_SORTER => [
             'Title' => 'Most Relevant',
             'SQL' => [
                 'ShowInSearch' => 1,
@@ -246,6 +261,7 @@ class ProductSearchFilter extends BaseApplyer
             $hash = $this->getHashBasedOnRawData();
             $outcome = $this->partialCacheApplyVariablesFromCache($hash);
             if($outcome) {
+                die('asdf');
                 $this->runFullProcessFromCache();
             } else {
                 $this->runFullProcess();
@@ -259,12 +275,14 @@ class ProductSearchFilter extends BaseApplyer
                 return $this;
             }
             $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
-            ProductSorter::setDefaultSortOrderFromFilter(
-                ArrayMethods::create_sort_statement_from_id_array(
-                    $this->getProductIds(),
-                    Product::class
-                )
+            $sorter = ArrayMethods::create_sort_statement_from_id_array(
+                $this->getProductIds(),
+                Product::class
             );
+            $additionalSortOption = self::OPTIONS_FOR_SORT;
+            $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
+            ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
+
         }
         $this->applyEnd($key, $params);
 

@@ -83,17 +83,20 @@ class ProductSorter extends BaseApplyer
      */
     public function getSql(?string $key = null, $params = null)
     {
-        if (BaseApplyer::DEFAULT_NAME === $key && self::$defaultSortOrderFromFilter) {
-            return self::$defaultSortOrderFromFilter;
-        }
+        // if (BaseApplyer::DEFAULT_NAME === $key && self::$defaultSortOrderFromFilter) {
+        //     return self::$defaultSortOrderFromFilter;
+        // }
         // @todo: make smarter...
         if (is_array($params) && count($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
-
         return parent::getSql($key, $params);
     }
 
+    /**
+     * you can add an extra sort (or two), based on filters (or other stuff.)
+     * @return array
+     */
     public function getOptions(): array
     {
         return self::$defaultSortOrderFromFilter + parent::getOptions();
