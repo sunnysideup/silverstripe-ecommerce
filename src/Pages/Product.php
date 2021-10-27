@@ -147,6 +147,7 @@ class Product extends Page implements BuyableModel
     ];
 
     private static $indexes = [
+        'Title' => true,
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
@@ -155,11 +156,6 @@ class Product extends Page implements BuyableModel
         'SearchFields' => [
             'type' => 'fulltext',
             'columns' => [
-                //TODO : columns don't exist on product, migrate to yml?
-                //     'Title',
-                //     'MenuTitle',
-                //     'Content',
-                //     'MetaDescription',
                 'SearchData',
             ],
         ],
@@ -1196,11 +1192,9 @@ class Product extends Page implements BuyableModel
             $this->SearchData = '';
             $indexes = $this->Config()->get('indexes');
             $fieldsToExclude = $indexes['SearchFields']['columns'];
-            foreach (array_keys($this->Config()->get('db')) as $fieldName) {
+            foreach (array_keys($this->getSearchFields()) as $fieldName) {
                 if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
-                    if (! in_array($fieldName, $fieldsToExclude, true)) {
-                        $this->SearchData .= strip_tags($this->{$fieldName});
-                    }
+                    $this->SearchData .= strip_tags($this->{$fieldName});
                 }
             }
 
@@ -1216,6 +1210,13 @@ class Product extends Page implements BuyableModel
                 }
             }
         }
+    }
+
+    protected function getSearchFields()
+    {
+        return [
+            'Content',
+        ];
     }
 
     /**

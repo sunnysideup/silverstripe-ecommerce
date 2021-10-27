@@ -153,8 +153,8 @@ class ProductSearchFilter extends BaseApplyer
      * @var array
      */
     private static $options = [
-        BaseApplyer::DEFAULT_NAME => [
-            'Title' => 'Search Results',
+        'most_relevant' => [
+            'Title' => 'Most Relevant',
             'SQL' => [
                 'ShowInSearch' => 1,
             ],
