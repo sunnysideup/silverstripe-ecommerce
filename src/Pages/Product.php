@@ -150,6 +150,8 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
+        'AllowPurchase' => true,
+        'Price' => true,
         'SearchFields' => [
             'type' => 'fulltext',
             'columns' => [
@@ -449,8 +451,6 @@ class Product extends Page implements BuyableModel
         //setting fields with new values!
         $this->FullName = $fullName . $parentTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
-
-        return ($this->dbObject('FullName') !== $this->FullName) || ($this->dbObject('FullSiteTreeSort') !== $this->FullSiteTreeSort);
     }
 
     /**

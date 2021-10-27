@@ -84,16 +84,16 @@ class EcommerceCache implements Flushable
 
     public function productCacheKey()
     {
-        if (! self::$productCacheKey['ProductCount']) {
+        if (0 === self::$productCacheKey['ProductCount']) {
             self::$productCacheKey['ProductCount'] = Product::get()->count();
         }
-        if (! self::$productCacheKey['ProductMaxLastEdited']) {
+        if (0 === self::$productCacheKey['ProductMaxLastEdited']) {
             self::$productCacheKey['ProductMaxLastEdited'] = strtotime(Product::get()->max('LastEdited'));
         }
-        if (! self::$productCacheKey['ProductGroupCount']) {
+        if (0 === self::$productCacheKey['ProductGroupCount']) {
             self::$productCacheKey['ProductGroupCount'] = ProductGroup::get()->count();
         }
-        if (! self::$productCacheKey['ProductGroupMaxLastEdited']) {
+        if (0 === self::$productCacheKey['ProductGroupMaxLastEdited']) {
             self::$productCacheKey['ProductGroupMaxLastEdited'] = strtotime(ProductGroup::get()->max('LastEdited'));
         }
 
@@ -131,7 +131,7 @@ class EcommerceCache implements Flushable
      * @param string $cacheKey - key under which the data is saved...
      * @param mixed  $data
      */
-    public function save($cacheKey, $data, ?bool $alreadySerialized = false): bool
+    public function save(string $cacheKey, $data, ?bool $alreadySerialized = false): bool
     {
         if ($this->AllowCaching()) {
             $cacheKey = $this->cacheKeyRefiner($cacheKey);

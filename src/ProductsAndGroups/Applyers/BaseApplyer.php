@@ -29,6 +29,14 @@ abstract class BaseApplyer
      */
     private const SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
 
+
+    /**
+     * a product group that creates the base list.
+     *
+     * @var ProductGroup
+     */
+    protected $baseListOwner;
+
     /**
      * final product list object, always present.
      *
@@ -55,6 +63,7 @@ abstract class BaseApplyer
         if ($finalProductList) {
             ClassHelpers::check_for_instance_of($finalProductList, FinalProductList::class, true);
             $this->finalProductList = $finalProductList;
+            $this->baseListOwner = $finalProductList->getRootGroup();
             $this->products = $this->finalProductList->getProducts();
         }
     }

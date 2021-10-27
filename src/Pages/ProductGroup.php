@@ -258,9 +258,15 @@ class ProductGroup extends Page
         return $this->URLSegment . '.' . $this->ID;
     }
 
-    public function getFilterForCandidateCategories()
+    protected static $filterForCandidateCategoriesCache = [];
+
+    public function getFilterForCandidateCategories() : DataList
     {
-        return $this->getBaseProductList()->getFilterForCandidateCategories();
+        if(! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
+            self::$filterForCandidateCategoriesCache[$this->ID] =
+                $this->getBaseProductList()->getFilterForCandidateCategories();
+        }
+        return self::$filterForCandidateCategoriesCache[$this->ID];
     }
 
     /**
@@ -313,9 +319,12 @@ class ProductGroup extends Page
      */
     public function getProductGroupSchema()
     {
-        $className = $this->Config()->get('template_for_selection_of_products');
+        return Injector::inst()->get($this->getTemplateForSelectionOfProducts());
+    }
 
-        return Injector::inst()->get($className);
+    protected function getTemplateForSelectionOfProducts() : string
+    {
+        return $this->Config()->get('template_for_selection_of_products');
     }
 
     public function getProductsPerPage(?int $default = 10): int

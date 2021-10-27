@@ -330,6 +330,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     public function getApplyer(string $classNameOrType)
     {
-        return $this->getProductGroupSchema()->getApplyer($classNameOrType, $this);
+        return $this->getProductGroupSchema()
+            ->getApplyer($classNameOrType, $this);
     }
 }

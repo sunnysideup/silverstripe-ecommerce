@@ -2,30 +2,34 @@
 
 namespace Sunnysideup\Ecommerce\Traits;
 
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
+
 /**
  * To make this trait work, you will need to add a method `getFieldsToCache` to
  * any object that you are adding this to.
  */
 trait PartialObjectCache
 {
+
     /**
      * @var bool
      */
     protected $hasCache = false;
 
-    public function setCacheHash(?string $hash = ''): self
+    /**
+     * apply any available cache.
+     * returns TRUE if applied and false if not applied.
+     */
+    protected function partialCacheApplyVariablesFromCache(string $hash): bool
     {
-        if ($hash) {
-            $this->applyCacheFromHash($hash);
-        }
-
-        return $this;
+        return $this->partialCacheApplyCacheFromHash($hash);
     }
 
-    protected function getSerializedObject(?array $data = [])
+
+    protected function partialCacheGetSerializedObject(?array $data = [])
     {
         $variables = [];
-        foreach ($this->getFieldsToCache() as $variable) {
+        foreach ($this->partialCacheGetFieldsToCache() as $variable) {
             $value = $this->{$variable};
             if (is_object($value) && is_a($value, DataObject::class)) {
                 if (! empty($value->ClassName) && ! empty($value->ID)) {
@@ -33,7 +37,7 @@ trait PartialObjectCache
                     $variables[$variable]['ID'] = $value->ID;
                 }
             } elseif (is_object($value)) {
-                //do nothing
+                // can't cache
             } else {
                 $variables[$variable] = $value;
             }
@@ -43,28 +47,21 @@ trait PartialObjectCache
     }
 
     /**
-     * @param string $data optional
+     * return true on successful caching
+     * @param  string $hash
+     * @return bool
      */
-    protected function getHash(?string $data = ''): int
+    protected function partialCacheSetCacheForHash(string $hash): bool
     {
-        if (! $data) {
-            $data = $this->getSerializedObject();
-        }
-
-        return crc32($data);
+        $data = $this->partialCacheGetSerializedObject();
+        // data is already serialized, hence the TRUE as third param.
+        return EcommerceCache::inst()->save($hash, $data, true);
     }
 
-    protected function setCacheForHash(): float
-    {
-        $data = $this->getSerializedObject();
-        $hash = $this->getHash($data);
-
-        EcommerceCache::inst()->save($hash, $data, true);
-
-        return $hash;
-    }
-
-    protected function getCacheForHash(string $hash): array
+    /**
+     * return array of values from hash
+     */
+    protected function partialCacheGetCacheForHash(string $hash): array
     {
         $array = [];
         $cache = EcommerceCache::inst();
@@ -78,29 +75,33 @@ trait PartialObjectCache
         return $array;
     }
 
-    protected function applyCacheFromHash(string $hash): array
+    /**
+     * apply to objects
+     */
+    protected function partialCacheApplyCacheFromHash(string $hash) : bool
     {
-        $array = $this->getCacheForHash($hash);
-        if ($array && count($array) && $this->config()->get('use_cache')) {
-            $this->hasCache = true;
-            foreach ($array as $variable => $value) {
-                if (in_array($variable, self::FIELDS_TO_CACHE, true)) {
-                    $this->{$variable} = $this->arrayToObject($value);
+        if($this->config()->get('use_partial_cache')) {
+            $array = $this->partialCacheGetCacheForHash($hash);
+            if ($array && count($array)) {
+                $this->hasCache = true;
+                foreach ($array as $variable => $value) {
+                    if (in_array($variable, $this->partialCacheGetFieldsToCache(), true)) {
+                        $this->{$variable} = $this->partialCacheArrayToObject($value);
+                    }
                 }
             }
         }
-
-        return $array;
+        return $this->hasCache;
     }
 
     /**
      * turns an array of ClassName and ID into objects.
-     *
+     * and if this pattern does not match then the original value
      * @param array $value['ID' => , 'ClassName']
      *
-     * @return DataObject
+     * @return mixed
      */
-    protected function arrayToObject($value)
+    protected function partialCacheArrayToObject($value)
     {
         if (is_array($value) && 2 === count($value) && isset($value['ID'], $value['ClassName'])) {
             $className = $value['ClassName'];
@@ -112,4 +113,15 @@ trait PartialObjectCache
 
         return $value;
     }
+
+    protected function partialCacheGetFieldsToCache() : array
+    {
+        if (method_exists($this, 'hasMethod')) {
+            if($this->hasMethod('partialCacheGetFieldsToCacheCustom')) {
+                return $this->partialCacheGetFieldsToCacheCustom();
+            }
+        }
+        return self::PARTIAL_CACHE_FIELDS_TO_CACHE;
+    }
+
 }
