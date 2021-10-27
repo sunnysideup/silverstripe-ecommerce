@@ -261,7 +261,6 @@ class ProductSearchFilter extends BaseApplyer
             $hash = $this->getHashBasedOnRawData();
             $outcome = $this->partialCacheApplyVariablesFromCache($hash);
             if($outcome) {
-                die('asdf');
                 $this->runFullProcessFromCache();
             } else {
                 $this->runFullProcess();
