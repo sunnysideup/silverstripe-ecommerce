@@ -369,13 +369,6 @@ class Product extends Page implements BuyableModel
         return $this->Link('ajaxview');
     }
 
-    public function onAfterDelete()
-    {
-        parent::onAfterDelete();
-        $obj = new EcommerceTaskRemoveSuperfluousLinksInProductProductGroups();
-        $obj->setVerbose(false);
-        $obj->run(null);
-    }
 
     /**
      * sets the FullName and FullSiteTreeField to the latest values
@@ -1141,8 +1134,6 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     * Adds keywords to the MetaKeyword
-     * Standard SS Method.
      */
     protected function onBeforeWrite()
     {
@@ -1152,6 +1143,14 @@ class Product extends Page implements BuyableModel
         $filter->checkCode($this, 'InternalItemID');
 
         $this->prepareFullFields();
+    }
+    /**
+     * add data to search table if the
+     */
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+
         if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
             ProductSearchTable::add_product(
                 $this,
@@ -1161,10 +1160,23 @@ class Product extends Page implements BuyableModel
         }
     }
 
+    public function onAfterDelete()
+    {
+        parent::onAfterDelete();
+        $obj = new EcommerceTaskRemoveSuperfluousLinksInProductProductGroups();
+        $obj->setVerbose(false);
+        $obj->run(null);
+        if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
+            ProductSearchTable::remove_product(
+                $this,
+            );
+        }
+    }
+
     protected function getProductSearchTableDataValues() : array
     {
         return [
-            $this->InterItemID,
+            $this->InternalItemID,
             $this->Title,
             $this->FullName,
             $this->ShortDescription,

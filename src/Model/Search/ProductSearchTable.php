@@ -27,36 +27,6 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject
 {
     private static $table_name = 'ProductSearchTable';
 
-    public static function get_results($keywords, ?array $preIdFilter = [], ?int $limit = 9999) : array
-    {
-        $listA = self::get_results_inner('Title', $keywords, $preIdFilter, $limit);
-        $count = count($listA);
-        if($count >= $limit) {
-            return $listA;
-        }
-        $limit = $limit - $count;
-        $listB = self::get_results_inner('Data', $keywords, $preIdFilter, $limit);
-        return $listA + $listB;
-    }
-
-
-    protected static function get_results_inner(string $field, $keywords, ?array $preIdFilter = [], ?int $limit = 9999) : array
-    {
-        $where = '';
-        if(count($preIdFilter)) {
-            $where = 'WHERE "ProductID" IN ('.implode(',', $preIdFilter).')';
-        }
-        //NATURAL LANGUAGE gave too many results
-        $sql = '
-            SELECT "ProductID",
-            MATCH ("'.$field.'") AGAINST (\''.Convert::raw2sql($keywords).'\' IN BOOLEAN MODE) AS score
-            FROM "ProductSearchTable"
-            '.$where.'
-            ORDER BY score DESC
-            LIMIT '.$limit.';';
-        return DB::query($sql)->keyedColumn();
-    }
-
     public static function add_product($product, array $dataAsArray, ?bool $onlyShowProductsThatCanBePurchased = true) {
         $dataAsString = strtolower(trim(preg_replace('/\s+/',' ', strip_tags(
             implode(
@@ -74,13 +44,17 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject
             $obj->Data = $dataAsString;
             $obj->write();
         } else {
-            $obj = ProductSearchTable::get()->byId($product->ID);
-            if($obj) {
-                $obj->delete();
-            }
+            self::remove_product($product);
         }
     }
 
+    public static function remove_product($product)
+    {
+        $obj = ProductSearchTable::get()->byId($product->ID);
+        if($obj) {
+            $obj->delete();
+        }
+    }
 
 
     private static $db = [
@@ -112,7 +86,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject
     ];
 
     private static $summary_fields = [
-        'Product.Title' => 'Search Alias (e.g. nz)',
+        'Title' => 'Name',
     ];
 
     /**

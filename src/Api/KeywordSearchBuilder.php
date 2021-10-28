@@ -4,12 +4,44 @@ namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Injector\Injectable;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
+use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+
+use Sunnysideup\Ecommerce\Pages\Product;
+
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 
 class KeywordSearchBuilder
 {
     use Injectable;
 
     protected $keywordPhrase = '';
+
+    public function getProductResults($phrase, string $where, ?int $limit = 9999) : array
+    {
+        $this->createIfStatements($phrase, 'Title', 'Data');
+        $sql = $this->createSql('ProductSearchTable', 'ProductID', 'Data', $phrase, $where, $limit);
+        $list = DB::query($sql)->keyedColumn();
+        return $list;
+    }
+
+    public function getProductGroupResults($phrase, string $where, ?int $limit = 9999) : array
+    {
+        return [0 => 0];
+        $this->createIfStatements($phrase, 'Title', 'Content');
+        $sql = $this->createSql('SiteTree', 'ID', 'Title', $phrase, $where, $limit);
+        return DB::query($sql)->keyedColumn();
+    }
+
 
     /**
      * creates three levels of searches that
@@ -19,53 +51,66 @@ class KeywordSearchBuilder
      * @param string $phrase - keywordphrase
      * @param array  $fields - fields being searched
      */
-    public function getSearchArrays(string $phrase, $fields = ['Title', 'Content']): array
+    protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data')
     {
+        $this->ifStatement = '';
         //make three levels of search
-        $searches = [];
-        $wordsAsString = preg_replace('#\s+#', ' ', $phrase);
-        $wordAsArray = explode(' ', $wordsAsString);
-        $hasWordArray = false;
+        $fullPhrase = preg_replace('#\s+#', ' ', $phrase);
+        $wordAsArray = explode(' ', $fullPhrase);
+
+        // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
+        $hasWordArray = false;
         if (count($wordAsArray) > 1) {
             $hasWordArray = true;
             $searchStringArray = [];
             foreach ($wordAsArray as $word) {
-                $searchStringArray[] = "LOWER(\"_FF_FIELD_GOES_HERE\") LIKE '%{$word}%'";
+                $searchStringArray[] = "\"_FF_FIELD_GOES_HERE_\" LIKE '%{$word}%'";
             }
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
-            // $searchStringOR = '('.implode(' OR ', $searchStringArray).')';
-        }
-        // $wordsAsLikeString = trim(implode('%', $wordAsArray));
-        $completed = [];
-        $count = -1;
-        foreach ($fields as $field) {
-            $searches[++$count][] = "LOWER(\"{$field}\") = '{$wordsAsString}'"; // a) Exact match
-        }
-        foreach ($fields as $field) {
-            $searches[++$count][] = "LOWER(\"{$field}\") LIKE '%{$wordsAsString}%'"; // a) Exact match
-        }
-        foreach ($fields as $field) {
-            if ($hasWordArray) {
-                $searches[++$count][] = str_replace('_FF_FIELD_GOES_HERE', $field, $searchStringAND); // d) Words matched individually
-                // $searches[++$count + 100][] = str_replace('FFFFFF', $field, $searchStringOR); // d) Words matched individually
-            }
-            /*
-             * OR WORD SEARCH
-             * OFTEN leads to too many results, so we keep it simple...
-            foreach($wordArray as $word) {
-                $searches[6][] = "LOWER(\"$field\") LIKE '%$word%'"; // d) One word match within a bigger string
-            }
-            */
-        }
-        //$searches[3][] = DB::getconn()->fullTextSearchSQL($fields, $wordsAsString, true);
-        ksort($searches);
-        $returnArray = [];
-        foreach ($searches as $key => $search) {
-            $returnArray[$key] = implode(' OR ', $search);
         }
 
-        return $returnArray;
+        $count = 0;
+        // Title: exact match with Field
+        $this->addIfStatement(++$count, '"'.$primaryField."\" = '{$fullPhrase}'");
+        // Title: contains full string
+        $this->addIfStatement(++$count, '"'.$primaryField."\" LIKE '%{$fullPhrase}%'");
+        // Data: contains full string
+        $this->addIfStatement(++$count, '"'.$secondaryField."\" LIKE '%{$fullPhrase}%'");
+        if ($hasWordArray) {
+            foreach ([$primaryField, $secondaryField] as $field) {
+                $this->addIfStatement(
+                    ++$count,
+                    str_replace('_FF_FIELD_GOES_HERE_', $field, $searchStringAND),
+                );
+            }
+        }
+        $this->addEndIfStatement($count);
+    }
+
+    protected $ifStatement = '';
+
+    protected function addIfStatement( int $count, string $where)
+    {
+        $this->ifStatement .= ' IF('.$where . ', '.$count.', ';
+    }
+
+    protected function addEndIfStatement($count)
+    {
+        $this->ifStatement .= ($count + 1) . str_repeat(')', $count) . ' AS gp';
+    }
+
+    protected function createSql(string $table, string $idField, string $matchField, string $phrase, string $where, $limit) : string
+    {
+        return '
+            SELECT
+                "'.$idField.'",
+                '.$this->ifStatement.',
+                MATCH ("'.$matchField.'") AGAINST (\''.Convert::raw2sql($phrase).'\' IN NATURAL LANGUAGE MODE) AS score
+            FROM "'.$table.'"
+            '.$where.'
+            ORDER BY gp ASC, score DESC
+            LIMIT '.$limit.';';
     }
 
     public function processKeyword(string $keywordPhrase)

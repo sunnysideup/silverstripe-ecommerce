@@ -531,36 +531,35 @@ class ProductSearchFilter extends BaseApplyer
                 $this->debugOutput('<pre>FIELD ARRAY: ' . print_r($fieldArray, 1) . '</pre>');
             }
 
-            if($this->Config()->get('use_product_search_table')) {
-                $ids = ProductSearchTable::get_results(
-                    $this->keywordPhrase,
-                    $this->products->columnUnique(),
-                    $this->maxToAdd()
-                );
-                foreach($ids as $id) {
-                    if($this->addToResultsInner($id)) {
-                        break;
-                    }
-                }
-            } else {
-                //work out searches
-                $searches = $this->getSearchApi()->getSearchArrays($this->keywordPhrase, $fieldArray);
-                //if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
-
-                //we search exact matches first then other matches ...
-                foreach ($searches as $search) {
-                    $list2 = $this->products
-                        ->where($search);
-                    if ($this->debug) {
-                        $count += $list2->count();
-                        $this->debugOutput("<p>{$search} from (" . $this->products->count() . '): ' . $list2->count() . '</p>');
-                    }
-                    $this->addToResults($list2, false);
-                    if ($this->weHaveEnoughResults()) {
-                        break;
-                    }
+            $ids = $this->getSearchApi()->getProductResults(
+                $this->keywordPhrase,
+                'WHERE ProductID IN ('.implode(', ', $this->products->columnUnique()) .')',
+                $this->maxToAdd()
+            );
+            foreach($ids as $id) {
+                if($this->addToResultsInner($id)) {
+                    break;
                 }
             }
+            // } else {
+            //     //work out searches
+            //     $searches = $this->getSearchApi()->getSearchArrays($this->keywordPhrase, $fieldArray);
+            //     //if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
+            //
+            //     //we search exact matches first then other matches ...
+            //     foreach ($searches as $search) {
+            //         $list2 = $this->products
+            //             ->where($search);
+            //         if ($this->debug) {
+            //             $count += $list2->count();
+            //             $this->debugOutput("<p>{$search} from (" . $this->products->count() . '): ' . $list2->count() . '</p>');
+            //         }
+            //         $this->addToResults($list2, false);
+            //         if ($this->weHaveEnoughResults()) {
+            //             break;
+            //         }
+            //     }
+            // }
             if ($this->debug) {
                 $this->debugOutput("<h3>FULL KEYWORD SEARCH: {$count}</h3>");
             }
@@ -602,27 +601,14 @@ class ProductSearchFilter extends BaseApplyer
             $fieldArray = $this->workOutFieldsToSearch($this->baseClassNameForGroups);
 
             // work out searches
-            $searches = $this->getSearchApi()->getSearchArrays($this->keywordPhrase, $fieldArray);
+            $ids = $this->getSearchApi()->getProductGroupResults(
+                $this->keywordPhrase,
+                'WHERE ID IN ('.implode(', ', $this->productsForGroups->columnUnique()) .')'
+            );
             if ($this->debug) {
-                $this->debugOutput('<pre>SEARCH ARRAY: ' . print_r($searches, 1) . '</pre>');
+                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . '</pre>');
             }
-
-            foreach ($searches as $search) {
-                $tempGroups = $this->productsForGroups->where($search);
-                $count = $tempGroups->limit(2)->count();
-                //redirect if we find exactly one match and we have no matches so far...
-                if (1 === $count && ! $this->resultArrayPos) {
-                    $this->immediateRedirectPage = $tempGroups->First();
-                } elseif ($count > 0) {
-                    foreach ($tempGroups as $productGroup) {
-                        //we add them like this because we like to keep them in order!
-                        $this->productGroupIds[$productGroup->ID] = $productGroup->ID;
-                    }
-                }
-                if ($this->debug) {
-                    $this->debugOutput('<h4>' . $search . ': ' . $count . '</h4>');
-                }
-            }
+            $this->productsForGroups = $this->productsForGroups->filter(['ID' => $ids]);
             if ($this->debug) {
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
             }
