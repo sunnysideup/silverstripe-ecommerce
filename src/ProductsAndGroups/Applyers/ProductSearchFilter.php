@@ -14,6 +14,7 @@ use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
+use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
@@ -161,6 +162,12 @@ class ProductSearchFilter extends BaseApplyer
             'IsShowFullList' => false,
         ],
     ];
+
+    /**
+     *
+     * @var bool
+     */
+    private static $use_product_search_table = true;
 
     /**
      * make sure that these do not exist as a URLSegment.
@@ -524,21 +531,34 @@ class ProductSearchFilter extends BaseApplyer
                 $this->debugOutput('<pre>FIELD ARRAY: ' . print_r($fieldArray, 1) . '</pre>');
             }
 
-            //work out searches
-            $searches = $this->getSearchApi()->getSearchArrays($this->keywordPhrase, $fieldArray);
-            //if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
-
-            //we search exact matches first then other matches ...
-            foreach ($searches as $search) {
-                $list2 = $this->products
-                    ->where($search);
-                if ($this->debug) {
-                    $count += $list2->count();
-                    $this->debugOutput("<p>{$search} from (" . $this->products->count() . '): ' . $list2->count() . '</p>');
+            if($this->Config()->get('use_product_search_table')) {
+                $ids = ProductSearchTable::get_results(
+                    $this->keywordPhrase,
+                    $this->products->columnUnique(),
+                    $this->maxToAdd()
+                );
+                foreach($ids as $id) {
+                    if($this->addToResultsInner($id)) {
+                        break;
+                    }
                 }
-                $this->addToResults($list2, false);
-                if ($this->weHaveEnoughResults()) {
-                    break;
+            } else {
+                //work out searches
+                $searches = $this->getSearchApi()->getSearchArrays($this->keywordPhrase, $fieldArray);
+                //if($this->debug) { $this->debugOutput("<pre>SEARCH ARRAY: ".print_r($searches, 1)."</pre>");}
+
+                //we search exact matches first then other matches ...
+                foreach ($searches as $search) {
+                    $list2 = $this->products
+                        ->where($search);
+                    if ($this->debug) {
+                        $count += $list2->count();
+                        $this->debugOutput("<p>{$search} from (" . $this->products->count() . '): ' . $list2->count() . '</p>');
+                    }
+                    $this->addToResults($list2, false);
+                    if ($this->weHaveEnoughResults()) {
+                        break;
+                    }
                 }
             }
             if ($this->debug) {
@@ -626,6 +646,7 @@ class ProductSearchFilter extends BaseApplyer
             return true;
         }
         $count = 9999;
+        // immediate redirect?
         if ($allowOneAnswer && 0 === $this->resultArrayPos) {
             $count = $listToAdd->limit(2)->count();
             if(1 === $count) {
@@ -657,19 +678,33 @@ class ProductSearchFilter extends BaseApplyer
                 } elseif(is_int($page)) {
                     $id = $page;
                 }
-                if ($id) {
-                    if (! in_array($id, $this->productIds, true)) {
-                        ++$this->resultArrayPos;
-                        $this->productIds[$this->resultArrayPos] = $id;
-                        if ($this->weHaveEnoughResults()) {
-                            return true;
-                        }
-                    }
+                if($this->addToListInner($id)) {
+                    return true;
                 }
             }
         }
 
         return false;
+    }
+
+    /**
+     * returns false if we can add more
+     * @param  int  $id
+     * @return bool
+     */
+    protected function addToResultsInner(int $id) : bool
+    {
+        if ($id) {
+            if (! in_array($id, $this->productIds, true)) {
+                ++$this->resultArrayPos;
+                $this->productIds[$this->resultArrayPos] = $id;
+                if ($this->weHaveEnoughResults()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 
     /**

@@ -3,11 +3,25 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\ClassInfo;
+
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 
 class ArrayMethods
 {
+
+    public static function avoid_empty_id_filters(DataList $list, array $idList)
+    {
+        $filter = self::filter_array($filter);
+        if($filter[0] < 1 && count($filter) === 1) {
+            return Injector::inst()->get(ArrayList::class);
+        }
+        return $list->filter($filter);
+    }
+
     /**
      * return an array of ids that can be ued for ORM filters...
      *

@@ -43,9 +43,13 @@ use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
+
+use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
+
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 
 /**
  * This is a standard Product page-type with fields like
@@ -75,39 +79,13 @@ class Product extends Page implements BuyableModel
 
     private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
 
-    /**
-     * Standard SS variable.
-     */
-    private static $api_access = [
-        'view' => [
-            'Title',
-            'Price',
-            'Weight',
-            'Model',
-            'Quantifier',
-            'FeaturedProduct',
-            'AllowPurchase',
-            'InternalItemID', //ie SKU, ProductID etc (internal / existing recognition of product)
-            'NumberSold', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
-            'Version',
-        ],
-    ];
 
     /**
      * @var string
      */
     private static $folder_name_for_images = 'ProductImages';
 
-    /**
-     * @var bool
-     */
-    private static $use_search_data_field = false;
-
     private static $table_name = 'Product';
-
-    private static $create_table_options = [
-        MySQLSchemaManager::ID => 'ENGINE=MyISAM',
-    ];
 
     private static $db = [
         'Price' => 'Currency',
@@ -117,11 +95,9 @@ class Product extends Page implements BuyableModel
         'FeaturedProduct' => 'Boolean',
         'AllowPurchase' => 'Boolean',
         'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
-        'NumberSold' => 'Int', //store number sold, so it doesn't have to be computed on the fly. Used for determining popularity.
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
-        'SearchData' => 'Text', //For use in lists.
     ];
 
     private static $has_one = [
@@ -147,18 +123,11 @@ class Product extends Page implements BuyableModel
     ];
 
     private static $indexes = [
-        'Title' => true,
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
         'AllowPurchase' => true,
         'Price' => true,
-        'SearchFields' => [
-            'type' => 'fulltext',
-            'columns' => [
-                'SearchData',
-            ],
-        ],
     ];
 
     /**
@@ -302,9 +271,6 @@ class Product extends Page implements BuyableModel
         //$siteTreeFieldExtensions = $this->get_static('SiteTree','runCMSFieldsExtensions');
         //$this->disableCMSFieldsExtensions();
         $fields = parent::getCMSFields();
-        if (! $this->Config()->get('use_search_data_field')) {
-            $fields->removeByName('SearchData');
-        }
         //if($siteTreeFieldExtensions) {
         //$this->enableCMSFieldsExtensions();
         //}
@@ -1186,37 +1152,24 @@ class Product extends Page implements BuyableModel
         $filter->checkCode($this, 'InternalItemID');
 
         $this->prepareFullFields();
-
-        //we are adding all the fields to the keyword fields here for searching purposes.
-        //because the MetaKeywords Field is being searched.
-        if ($this->Config()->get('use_search_data_field')) {
-            $this->SearchData = '';
-            $indexes = $this->Config()->get('indexes');
-            $fieldsToExclude = $indexes['SearchFields']['columns'];
-            foreach (array_keys($this->getSearchFields()) as $fieldName) {
-                if (is_string($this->{$fieldName}) && strlen($this->{$fieldName}) > 2) {
-                    $this->SearchData .= strip_tags($this->{$fieldName});
-                }
-            }
-
-            if ($this->hasExtension('ProductWithVariationDecorator')) {
-                $variations = $this->Variations();
-                if ($variations) {
-                    $variationCount = $variations->count();
-                    if ($variationCount > 0 && $variationCount < 8) {
-                        foreach ($variations as $variation) {
-                            $this->SearchData .= ' - ' . $variation->FullName;
-                        }
-                    }
-                }
-            }
+        if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
+            ProductSearchTable::add_product(
+                $this,
+                $this->getProductSearchTableDataValues(),
+                EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased
+            );
         }
     }
 
-    protected function getSearchFields()
+    protected function getProductSearchTableDataValues() : array
     {
         return [
-            'Content',
+            $this->InterItemID,
+            $this->Title,
+            $this->FullName,
+            $this->ShortDescription,
+            $this->Content,
+            $this->FullName,
         ];
     }
 
