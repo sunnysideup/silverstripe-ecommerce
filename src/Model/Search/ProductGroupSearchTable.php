@@ -29,7 +29,10 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
 
     public static function flush()
     {
-        DB::query('DELETE FROM ProductGroupSearchTable WHERE ProductGroupID = 0');
+        $tables = DB::table_list();
+        if(array_key_exists(strtolower('ProductGroupSearchTable'), $tables)) {
+            DB::query('DELETE FROM ProductGroupSearchTable WHERE ProductGroupID = 0');
+        }
     }
 
     public static function add_product_group($productGroup, array $dataAsArray) {
@@ -127,5 +130,21 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
+
+
+    public function canEdit($member = null)
+    {
+        return false;
+    }
+
+    public function canCreate($member = null, $context = [])
+    {
+        return false;
+    }
+
+    public function canDelete($member = null)
+    {
+        return false;
+    }
 
 }

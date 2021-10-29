@@ -6,7 +6,10 @@ use SilverStripe\Admin\ModelAdmin;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
+use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
+use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
+
 
 /**
  * @description: Manages stuff related to products,
@@ -46,6 +49,8 @@ class ProductConfigModelAdmin extends ModelAdmin
     private static $managed_models = [
         SearchReplacement::class,
         SearchHistory::class,
+        ProductGroupSearchTable::class,
+        ProductSearchTable::class,
     ];
 
     /**

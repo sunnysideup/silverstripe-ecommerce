@@ -1147,7 +1147,7 @@ class Product extends Page implements BuyableModel
     /**
      * add data to search table if the
      */
-    protected function onAfterPublish()
+    public function onAfterPublish()
     {
         parent::onAfterPublish();
 

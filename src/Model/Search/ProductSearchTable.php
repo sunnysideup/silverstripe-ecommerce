@@ -30,7 +30,10 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
     public static function flush()
     {
-        DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
+        $tables = DB::table_list();
+        if(array_key_exists(strtolower('ProductGroupSearchTable'), $tables)) {
+            DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
+        }
     }
 
 
@@ -114,7 +117,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
      *
      * @var string
      */
-    private static $plural_name = 'Product Search Data Entries';
+    private static $plural_name = 'Product Search List';
 
 
     /**
@@ -129,5 +132,19 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
+    public function canEdit($member = null)
+    {
+        return false;
+    }
+
+    public function canCreate($member = null, $context = [])
+    {
+        return false;
+    }
+
+    public function canDelete($member = null)
+    {
+        return false;
+    }
 
 }
