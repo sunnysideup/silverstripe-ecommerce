@@ -25,6 +25,6 @@ class ProductGroupSearchPageController extends ProductGroupController
 
     public function getSearchFilterHeader(): string
     {
-        return _t('Ecommerce.SEARCH_ALL_PRODUCTS', 'Search all produts');
+        return _t('Ecommerce.SEARCH_ALL_PRODUCTS', 'Search all products');
     }
 }
