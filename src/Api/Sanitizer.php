@@ -21,13 +21,14 @@ class Sanitizer
     {
         return self::html_to_text(implode('; ', $array));
     }
+
     public static function html_to_text($html)
     {
         return
             strtolower(
                 trim(
                     preg_replace(
-                        '/\s+/',
+                        '#\s+#',
                         ' ',
                         strip_tags(
                             str_replace(
@@ -37,9 +38,7 @@ class Sanitizer
                             )
                         )
                     )
-
                 )
             );
     }
-
 }

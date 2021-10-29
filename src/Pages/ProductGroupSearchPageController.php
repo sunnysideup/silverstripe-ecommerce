@@ -6,7 +6,6 @@ use SilverStripe\ORM\PaginatedList;
 
 class ProductGroupSearchPageController extends ProductGroupController
 {
-
     /**
      * Return the products for this group.
      *

@@ -2,23 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use SilverStripe\Core\Injector\Injectable;
-use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
-
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\Security\Permission;
-use SilverStripe\Security\Security;
-use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
-use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-
-use Sunnysideup\Ecommerce\Pages\Product;
-
-use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 
 class KeywordSearchBuilder
 {
@@ -26,30 +13,48 @@ class KeywordSearchBuilder
 
     protected $keywordPhrase = '';
 
-    public function getProductResults($phrase, string $where, ?int $limit = 9999) : array
+    protected $ifStatement = '';
+
+    public function getProductResults($phrase, string $where, ?int $limit = 9999): array
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductSearchTable', 'ProductID', 'Data', $phrase, $where, $limit);
-        $list = DB::query($sql)->keyedColumn();
-        return $list;
+
+        return DB::query($sql)->keyedColumn();
     }
 
-    public function getProductGroupResults($phrase, string $where, ?int $limit = 9999) : array
+    public function getProductGroupResults($phrase, string $where, ?int $limit = 9999): array
     {
         return [0 => 0];
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', 'Data', $phrase, $where, 100);
+
         return DB::query($sql)->keyedColumn();
     }
 
+    public function processKeyword(string $keywordPhrase)
+    {
+        $this->keywordPhrase = $keywordPhrase;
+        $this->replaceSearchPhraseOrWord();
+        //now we are going to look for synonyms
+        $words = explode(' ', trim(preg_replace('#\s+#', ' ', $this->keywordPhrase)));
+        foreach ($words as $word) {
+            //todo: why are we looping through words?
+            $this->replaceSearchPhraseOrWord($word);
+        }
+
+        return $this->keywordPhrase;
+    }
 
     /**
      * creates three levels of searches that
      * can be executed one after the other, each
      * being less specific than the one before...
      *
-     * @param string $phrase - keywordphrase
-     * @param array  $fields - fields being searched
+     * @param string $phrase         - keywordphrase
+     * @param array  $fields         - fields being searched
+     * @param mixed  $primaryField
+     * @param mixed  $secondaryField
      */
     protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data')
     {
@@ -72,11 +77,11 @@ class KeywordSearchBuilder
 
         $count = 0;
         // Title: exact match with Field
-        $this->addIfStatement(++$count, '"'.$primaryField."\" = '{$fullPhrase}'");
+        $this->addIfStatement(++$count, '"' . $primaryField . "\" = '{$fullPhrase}'");
         // Title: contains full string
-        $this->addIfStatement(++$count, '"'.$primaryField."\" LIKE '%{$fullPhrase}%'");
+        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase}%'");
         // Data: contains full string
-        $this->addIfStatement(++$count, '"'.$secondaryField."\" LIKE '%{$fullPhrase}%'");
+        $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase}%'");
         if ($hasWordArray) {
             foreach ([$primaryField, $secondaryField] as $field) {
                 $this->addIfStatement(
@@ -88,11 +93,9 @@ class KeywordSearchBuilder
         $this->addEndIfStatement($count);
     }
 
-    protected $ifStatement = '';
-
-    protected function addIfStatement( int $count, string $where)
+    protected function addIfStatement(int $count, string $where)
     {
-        $this->ifStatement .= ' IF('.$where . ', '.$count.', ';
+        $this->ifStatement .= ' IF(' . $where . ', ' . $count . ', ';
     }
 
     protected function addEndIfStatement($count)
@@ -100,31 +103,17 @@ class KeywordSearchBuilder
         $this->ifStatement .= ($count + 1) . str_repeat(')', $count) . ' AS gp';
     }
 
-    protected function createSql(string $table, string $idField, string $matchField, string $phrase, string $where, $limit) : string
+    protected function createSql(string $table, string $idField, string $matchField, string $phrase, string $where, $limit): string
     {
         return '
             SELECT
-                "'.$idField.'",
-                '.$this->ifStatement.',
-                MATCH ("'.$matchField.'") AGAINST (\''.Convert::raw2sql($phrase).'\' IN NATURAL LANGUAGE MODE) AS score
-            FROM "'.$table.'"
-            '.$where.'
+                "' . $idField . '",
+                ' . $this->ifStatement . ',
+                MATCH ("' . $matchField . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS score
+            FROM "' . $table . '"
+            ' . $where . '
             ORDER BY gp ASC, score DESC
-            LIMIT '.$limit.';';
-    }
-
-    public function processKeyword(string $keywordPhrase)
-    {
-        $this->keywordPhrase = $keywordPhrase;
-        $this->replaceSearchPhraseOrWord();
-        //now we are going to look for synonyms
-        $words = explode(' ', trim(preg_replace('#\s+#', ' ', $this->keywordPhrase)));
-        foreach ($words as $word) {
-            //todo: why are we looping through words?
-            $this->replaceSearchPhraseOrWord($word);
-        }
-
-        return $this->keywordPhrase;
+            LIMIT ' . $limit . ';';
     }
 
     /**

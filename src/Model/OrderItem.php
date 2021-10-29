@@ -288,6 +288,7 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('CalculatedTotal');
         $fields->removeByName('GroupSort');
         $fields->removeByName('OrderAttributeGroupID');
+
         $order = $this->Order();
         if ($order) {
             if ($order->IsSubmitted()) {
@@ -970,7 +971,9 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        ! $this->Version && $buyable = $this->Buyable(true);
+        if (! $this->Version) {
+            $buyable = $this->Buyable(true);
+        }
         if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
         }

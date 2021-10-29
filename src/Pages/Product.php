@@ -18,7 +18,6 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -43,13 +42,11 @@ use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\ProductOrderItem;
-
 use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
-
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 
 /**
  * This is a standard Product page-type with fields like
@@ -78,7 +75,6 @@ class Product extends Page implements BuyableModel
     protected static $parent_cache = [];
 
     private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
-
 
     /**
      * @var string
@@ -275,6 +271,7 @@ class Product extends Page implements BuyableModel
         //$this->enableCMSFieldsExtensions();
         //}
         $fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
+
         $htmlEditorField->setRows(3);
         $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
         //dirty hack to show images!
@@ -287,6 +284,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
+
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
 
         $config = EcommerceConfig::inst();
@@ -368,7 +366,6 @@ class Product extends Page implements BuyableModel
     {
         return $this->Link('ajaxview');
     }
-
 
     /**
      * sets the FullName and FullSiteTreeField to the latest values
@@ -702,14 +699,13 @@ class Product extends Page implements BuyableModel
         $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
         $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
-        $dataList = $dataList->filter(
+
+        return $dataList->filter(
             [
                 'BuyableID' => $this->ID,
                 'buyableClassName' => $this->ClassName,
             ]
         );
-
-        return $dataList;
     }
 
     //LINKS
@@ -1139,24 +1135,13 @@ class Product extends Page implements BuyableModel
     }
 
     /**
-     */
-    protected function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-
-        $filter = EcommerceCodeFilter::create();
-        $filter->checkCode($this, 'InternalItemID');
-
-        $this->prepareFullFields();
-    }
-    /**
-     * add data to search table if the
+     * add data to search table if the.
      */
     public function onAfterPublish()
     {
         parent::onAfterPublish();
 
-        if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
+        if (Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
             ProductSearchTable::add_product(
                 $this,
                 $this->getProductSearchTableDataValues(),
@@ -1184,7 +1169,17 @@ class Product extends Page implements BuyableModel
         $obj->run(null);
     }
 
-    protected function getProductSearchTableDataValues() : array
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+
+        $filter = EcommerceCodeFilter::create();
+        $filter->checkCode($this, 'InternalItemID');
+
+        $this->prepareFullFields();
+    }
+
+    protected function getProductSearchTableDataValues(): array
     {
         return [
             $this->InternalItemID,

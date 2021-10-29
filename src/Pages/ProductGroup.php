@@ -27,7 +27,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-
 use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
@@ -50,6 +49,8 @@ class ProductGroup extends Page
     protected $recursiveValues = [];
 
     protected $baseProductList;
+
+    protected static $filterForCandidateCategoriesCache = [];
 
     private static $template_for_selection_of_products = ProductGroupSchema::class;
 
@@ -261,14 +262,13 @@ class ProductGroup extends Page
         return $this->URLSegment . '.' . $this->ID;
     }
 
-    protected static $filterForCandidateCategoriesCache = [];
-
-    public function getFilterForCandidateCategories() : DataList
+    public function getFilterForCandidateCategories(): DataList
     {
-        if(! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
+        if (! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
             self::$filterForCandidateCategoriesCache[$this->ID] =
                 $this->getBaseProductList()->getFilterForCandidateCategories();
         }
+
         return self::$filterForCandidateCategoriesCache[$this->ID];
     }
 
@@ -323,11 +323,6 @@ class ProductGroup extends Page
     public function getProductGroupSchema()
     {
         return Injector::inst()->get($this->getTemplateForSelectionOfProducts());
-    }
-
-    protected function getTemplateForSelectionOfProducts() : string
-    {
-        return $this->Config()->get('template_for_selection_of_products');
     }
 
     public function getProductsPerPage(?int $default = 10): int
@@ -564,7 +559,7 @@ class ProductGroup extends Page
     public function onAfterPublish()
     {
         parent::onAfterPublish();
-        if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
+        if (Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
             ProductGroupSearchTable::add_product_group(
                 $this,
                 $this->getProductSearchTableDataValues()
@@ -581,6 +576,11 @@ class ProductGroup extends Page
     {
         parent::onBeforeDelete();
         ProductGroupSearchTable::remove_product_group($this);
+    }
+
+    protected function getTemplateForSelectionOfProducts(): string
+    {
+        return $this->Config()->get('template_for_selection_of_products');
     }
 
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
@@ -706,7 +706,8 @@ class ProductGroup extends Page
 
         return $this->recursiveValues[$fieldNameOrMethod];
     }
-    protected function getProductSearchTableDataValues() : array
+
+    protected function getProductSearchTableDataValues(): array
     {
         return [
             $this->Title,

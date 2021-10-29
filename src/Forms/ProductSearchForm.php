@@ -241,7 +241,7 @@ class ProductSearchForm extends Form
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
         //important - sort by relevancy
-        $link .= '&'.$this->getVariableContainingSortParam().'='.ProductSearchFilter::KEY_FOR_SORTER;
+        $link .= '&' . $this->getVariableContainingSortParam() . '=' . ProductSearchFilter::KEY_FOR_SORTER;
         $this->controller->redirect($link);
     }
 

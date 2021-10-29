@@ -90,16 +90,15 @@ class ProductSorter extends BaseApplyer
         if (is_array($params) && count($params)) {
             return ArrayMethods::create_sort_statement_from_id_array($params, Product::class);
         }
+
         return parent::getSql($key, $params);
     }
 
     /**
-     * you can add an extra sort (or two), based on filters (or other stuff.)
-     * @return array
+     * you can add an extra sort (or two), based on filters (or other stuff.).
      */
     public function getOptions(): array
     {
         return self::$defaultSortOrderFromFilter + parent::getOptions();
     }
-
 }

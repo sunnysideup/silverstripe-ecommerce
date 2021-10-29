@@ -29,7 +29,6 @@ abstract class BaseApplyer
      */
     private const SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
 
-
     /**
      * a product group that creates the base list.
      *

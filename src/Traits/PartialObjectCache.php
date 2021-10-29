@@ -10,7 +10,6 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
  */
 trait PartialObjectCache
 {
-
     /**
      * @var bool
      */
@@ -24,7 +23,6 @@ trait PartialObjectCache
     {
         return $this->partialCacheApplyCacheFromHash($hash);
     }
-
 
     protected function partialCacheGetSerializedObject(?array $data = [])
     {
@@ -47,9 +45,7 @@ trait PartialObjectCache
     }
 
     /**
-     * return true on successful caching
-     * @param  string $hash
-     * @return bool
+     * return true on successful caching.
      */
     protected function partialCacheSetCacheForHash(string $hash): bool
     {
@@ -59,7 +55,7 @@ trait PartialObjectCache
     }
 
     /**
-     * return array of values from hash
+     * return array of values from hash.
      */
     protected function partialCacheGetCacheForHash(string $hash): array
     {
@@ -76,11 +72,11 @@ trait PartialObjectCache
     }
 
     /**
-     * apply to objects
+     * apply to objects.
      */
-    protected function partialCacheApplyCacheFromHash(string $hash) : bool
+    protected function partialCacheApplyCacheFromHash(string $hash): bool
     {
-        if($this->config()->get('use_partial_cache')) {
+        if ($this->config()->get('use_partial_cache')) {
             $array = $this->partialCacheGetCacheForHash($hash);
             if ($array && count($array)) {
                 $this->hasCache = true;
@@ -91,12 +87,14 @@ trait PartialObjectCache
                 }
             }
         }
+
         return $this->hasCache;
     }
 
     /**
      * turns an array of ClassName and ID into objects.
-     * and if this pattern does not match then the original value
+     * and if this pattern does not match then the original value.
+     *
      * @param array $value['ID' => , 'ClassName']
      *
      * @return mixed
@@ -114,14 +112,14 @@ trait PartialObjectCache
         return $value;
     }
 
-    protected function partialCacheGetFieldsToCache() : array
+    protected function partialCacheGetFieldsToCache(): array
     {
         if (method_exists($this, 'hasMethod')) {
-            if($this->hasMethod('partialCacheGetFieldsToCacheCustom')) {
+            if ($this->hasMethod('partialCacheGetFieldsToCacheCustom')) {
                 return $this->partialCacheGetFieldsToCacheCustom();
             }
         }
+
         return self::PARTIAL_CACHE_FIELDS_TO_CACHE;
     }
-
 }
