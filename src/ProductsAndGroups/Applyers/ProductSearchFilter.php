@@ -109,9 +109,10 @@ class ProductSearchFilter extends BaseApplyer
      * at this stage, you can only search one type of buyable at any one time
      * e.g. only products or only mydataobject.
      *
+     * leave blank to use the default
      * @var string
      */
-    protected $baseClassNameForBuyables = Product::class;
+    protected $baseClassNameForBuyables = '';
 
     /**
      * class name of the buyables to search
@@ -250,6 +251,14 @@ class ProductSearchFilter extends BaseApplyer
     // key methods
     //#######################################
 
+    public function applyStart(?string $key = null, $params = null): self
+    {
+        parent::applyStart($key, $params);
+        if (! $this->baseClassNameForBuyables) {
+            $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+        }
+        return $this;
+    }
 
     /**
      * @param string       $key    optional key
@@ -260,6 +269,7 @@ class ProductSearchFilter extends BaseApplyer
         if (! is_array($params)) {
             $params = GetVariables::url_string_to_array((string) $params);
         }
+
         $this->applyStart($key, $params);
         if (is_array($params) && count($params)) {
             $this->rawData = $params;
@@ -282,7 +292,7 @@ class ProductSearchFilter extends BaseApplyer
             $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
             $sorter = ArrayMethods::create_sort_statement_from_id_array(
                 $this->getProductIds(),
-                Product::class
+                $this->finalProductList->getBuyableClassName()
             );
             $additionalSortOption = self::OPTIONS_FOR_SORT;
             $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
@@ -444,9 +454,6 @@ class ProductSearchFilter extends BaseApplyer
             $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
         }
 
-        if (! $this->baseClassNameForBuyables) {
-            $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
-        }
         $this->debug ?: isset($_GET['showdebug']) && Director::isDev();
 
         if ($this->debug) {

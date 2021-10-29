@@ -110,6 +110,11 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
+    public function getBuyableClassName()
+    {
+        return $this->getBaseProductList()->getBuyableClassName();
+    }
+
     public function setExtraFilter($filter): self
     {
         if ($filter) {
