@@ -11,6 +11,8 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 use Sunnysideup\Ecommerce\Pages\Product;
 
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
+
 /**
  * Adds all members, who have bought something, to the customer group.
  *
@@ -30,6 +32,19 @@ class DeleteOldProducts extends BuildTask
     {
         $cutOfTs = strtotime('-'.$this->Config()->get('last_sold_days_ago').' days');
         DB::alteration_message('<h1>Deleting products that are not for sale, last sold since: '.date('Y-m-d', $cutOfTs).'</h1>');
+
+        $products = Product::get()->filter(['ID' => $this->getListOfCandidates()]);
+        foreach($products as $product) {
+            DB::alteration_message('Deleting '.$product->FullName, 'deleted');
+            $product->DeleteFromStage(Versioned::LIVE);
+            $product->DeleteFromStage(Versioned::DRAFT);
+        }
+    }
+
+    public function getListOfCandidates() : array
+    {
+        $ids = [];
+        $cutOfTs = strtotime('-'.$this->Config()->get('last_sold_days_ago').' days');
         $products = Product::get()->filter(['AllowPurchase' => false]);
         foreach($products as $product) {
             $markForDeletion = false;
@@ -42,12 +57,9 @@ class DeleteOldProducts extends BuildTask
                 $markForDeletion = true;
             }
             if($markForDeletion) {
-                $product->DeleteFromStage(Versioned::LIVE);
-                $product->DeleteFromStage(Versioned::DRAFT);
-                DB::alteration_message('Deleting '.$product->FullName, 'deleted');
-            } else {
-                DB::alteration_message('Keeping '.$product->FullName, 'deleted');
+                $ids[$product->ID] = $product->ID;
             }
         }
+        return ArrayMethods::filter_array($ids);
     }
 }
