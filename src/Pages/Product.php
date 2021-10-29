@@ -1147,9 +1147,9 @@ class Product extends Page implements BuyableModel
     /**
      * add data to search table if the
      */
-    protected function onAfterWrite()
+    protected function onAfterPublish()
     {
-        parent::onAfterWrite();
+        parent::onAfterPublish();
 
         if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
             ProductSearchTable::add_product(
@@ -1160,17 +1160,24 @@ class Product extends Page implements BuyableModel
         }
     }
 
+    public function onBeforeUnpublish()
+    {
+        parent::onBeforeUnpublish();
+        ProductSearchTable::remove_product($this);
+    }
+
+    public function onBeforeDelete()
+    {
+        parent::onBeforeDelete();
+        ProductSearchTable::remove_product($this);
+    }
+
     public function onAfterDelete()
     {
         parent::onAfterDelete();
         $obj = new EcommerceTaskRemoveSuperfluousLinksInProductProductGroups();
         $obj->setVerbose(false);
         $obj->run(null);
-        if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
-            ProductSearchTable::remove_product(
-                $this,
-            );
-        }
     }
 
     protected function getProductSearchTableDataValues() : array

@@ -14,50 +14,48 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
-use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Core\Flushable;
-
 /**
  * This dataobject
  * saves search replacements
  * as in Smoogle will be replaced by Google.
  */
-class ProductSearchTable extends DataObject implements EditableEcommerceObject, Flushable
+class ProductGroupSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
-    private static $table_name = 'ProductSearchTable';
+    private static $table_name = 'ProductGroupSearchTable';
 
     public static function flush()
     {
-        DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
+        DB::query('DELETE FROM ProductGroupSearchTable WHERE ProductGroupID = 0');
     }
 
-
-    public static function add_product($product, array $dataAsArray, ?bool $onlyShowProductsThatCanBePurchased = true) {
+    public static function add_product_group($productGroup, array $dataAsArray) {
         $dataAsString = strtolower(trim(preg_replace('/\s+/',' ', strip_tags(
             implode(
                 ' ',
                 $dataAsArray
                 )
         ))));
-        if($product->ID && $product->ShowInSearch &&  (!$onlyShowProductsThatCanBePurchased || $product->AllowPurchase)) {
-            $filter = ['ProductID' => $product->ID];
-            $obj = ProductSearchTable::get()->filter($filter)->first();
+        if($productGroup->ID && $productGroup->ShowInSearch) {
+            $filter = ['ProductGroupID' => $productGroup->ID];
+            $obj = ProductGroupSearchTable::get()->filter($filter)->first();
             if(! $obj) {
-                $obj = ProductSearchTable::create($filter);
+                $obj = ProductGroupSearchTable::create($filter);
             }
-            $obj->Title = strtolower($product->Title);
+            $obj->Title = strtolower($productGroup->Title);
             $obj->Data = $dataAsString;
             $obj->write();
         } else {
-            self::remove_product($product);
+            self::remove_product_group($productGroup);
         }
     }
 
-    public static function remove_product($product)
+    public static function remove_product_group($productGroup)
     {
-        $obj = ProductSearchTable::get()->byId($product->ID);
+        $obj = ProductGroupSearchTable::get()->byId($productGroup->ID);
         if($obj) {
             $obj->delete();
         }
@@ -70,7 +68,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
     ];
 
     private static $has_one = [
-        'Product' => Product::class,
+        'ProductGroup' => ProductGroup::class,
     ];
 
     private static $create_table_options = [
@@ -81,7 +79,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
         'UniqueProduct' => [
             'type' => 'unique',
             'columns' => [
-                'ProductID',
+                'ProductGroupID',
             ],
         ],
         'SearchFields1' => [
@@ -107,14 +105,14 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
      *
      * @var string
      */
-    private static $singular_name = 'Product Search Data';
+    private static $singular_name = 'Product Group Search Data';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $plural_name = 'Product Search Data Entries';
+    private static $plural_name = 'Product Group Search Data Entries';
 
 
     /**

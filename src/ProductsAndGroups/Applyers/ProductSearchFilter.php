@@ -14,7 +14,6 @@ use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
-use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
@@ -530,12 +529,13 @@ class ProductSearchFilter extends BaseApplyer
             if ($this->debug) {
                 $this->debugOutput('<pre>FIELD ARRAY: ' . print_r($fieldArray, 1) . '</pre>');
             }
-
+            $where = 'WHERE ProductID IN ('.implode(', ', $this->products->columnUnique()) .')';
             $ids = $this->getSearchApi()->getProductResults(
                 $this->keywordPhrase,
-                'WHERE ProductID IN ('.implode(', ', $this->products->columnUnique()) .')',
+                $where,
                 $this->maxToAdd()
             );
+
             foreach($ids as $id) {
                 if($this->addToResultsInner($id)) {
                     break;

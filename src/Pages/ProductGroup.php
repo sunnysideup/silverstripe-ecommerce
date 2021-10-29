@@ -27,7 +27,10 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+
+use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\BaseProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\Vardump;
@@ -558,6 +561,29 @@ class ProductGroup extends Page
         return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
     }
 
+    public function onAfterPublish()
+    {
+        parent::onAfterPublish();
+        if(Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
+            ProductGroupSearchTable::add_product_group(
+                $this,
+                $this->getProductSearchTableDataValues()
+            );
+        }
+    }
+
+    public function onBeforeUnpublish()
+    {
+        parent::onBeforeUnpublish();
+        ProductGroupSearchTable::remove_product($this);
+    }
+
+    public function onBeforeDelete()
+    {
+        parent::onBeforeDelete();
+        ProductGroupSearchTable::remove_product_group($this);
+    }
+
     protected function addDropDownForListConfig(FieldList $fields, string $type, string $title)
     {
         // display style
@@ -680,5 +706,12 @@ class ProductGroup extends Page
         }
 
         return $this->recursiveValues[$fieldNameOrMethod];
+    }
+    protected function getProductSearchTableDataValues() : array
+    {
+        return [
+            $this->Title,
+            $this->Content,
+        ];
     }
 }

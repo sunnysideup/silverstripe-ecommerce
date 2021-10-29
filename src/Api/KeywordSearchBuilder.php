@@ -37,8 +37,8 @@ class KeywordSearchBuilder
     public function getProductGroupResults($phrase, string $where, ?int $limit = 9999) : array
     {
         return [0 => 0];
-        $this->createIfStatements($phrase, 'Title', 'Content');
-        $sql = $this->createSql('SiteTree', 'ID', 'Title', $phrase, $where, $limit);
+        $this->createIfStatements($phrase, 'Title', 'Data');
+        $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', 'Data', $phrase, $where, 100);
         return DB::query($sql)->keyedColumn();
     }
 
