@@ -140,7 +140,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var int
      */
-    protected $maximumNumberOfResults = 400;
+    protected $maximumNumberOfResults = 1000;
 
     protected $productsForGroups;
 

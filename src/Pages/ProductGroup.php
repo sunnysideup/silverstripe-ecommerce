@@ -574,8 +574,7 @@ class ProductGroup extends Page
 
     public function onBeforeUnpublish()
     {
-        parent::onBeforeUnpublish();
-        ProductGroupSearchTable::remove_product($this);
+        ProductGroupSearchTable::remove_product_group($this);
     }
 
     public function onBeforeDelete()

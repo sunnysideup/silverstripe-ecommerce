@@ -1167,7 +1167,6 @@ class Product extends Page implements BuyableModel
 
     public function onBeforeUnpublish()
     {
-        parent::onBeforeUnpublish();
         ProductSearchTable::remove_product($this);
     }
 

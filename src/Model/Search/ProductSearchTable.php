@@ -16,6 +16,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 use Sunnysideup\Ecommerce\Pages\Product;
 
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Core\Flushable;
 
@@ -38,19 +39,14 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
 
     public static function add_product($product, array $dataAsArray, ?bool $onlyShowProductsThatCanBePurchased = true) {
-        $dataAsString = strtolower(trim(preg_replace('/\s+/',' ', strip_tags(
-            implode(
-                ' ',
-                $dataAsArray
-                )
-        ))));
+        $dataAsString = Sanitizer::html_array_to_text($dataAsArray);
         if($product->ID && $product->ShowInSearch &&  (!$onlyShowProductsThatCanBePurchased || $product->AllowPurchase)) {
             $filter = ['ProductID' => $product->ID];
             $obj = ProductSearchTable::get()->filter($filter)->first();
             if(! $obj) {
                 $obj = ProductSearchTable::create($filter);
             }
-            $obj->Title = strtolower($product->Title);
+            $obj->Title = Sanitizer::html_to_text($product->Title);
             $obj->Data = $dataAsString;
             $obj->write();
         } else {

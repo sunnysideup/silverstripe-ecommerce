@@ -16,6 +16,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use SilverStripe\Core\Flushable;
 /**
@@ -36,19 +37,14 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
     }
 
     public static function add_product_group($productGroup, array $dataAsArray) {
-        $dataAsString = strtolower(trim(preg_replace('/\s+/',' ', strip_tags(
-            implode(
-                ' ',
-                $dataAsArray
-                )
-        ))));
+        $dataAsString = Sanitizer::html_array_to_text($dataAsArray);
         if($productGroup->ID && $productGroup->ShowInSearch) {
             $filter = ['ProductGroupID' => $productGroup->ID];
             $obj = ProductGroupSearchTable::get()->filter($filter)->first();
             if(! $obj) {
                 $obj = ProductGroupSearchTable::create($filter);
             }
-            $obj->Title = strtolower($productGroup->Title);
+            $obj->Title = Sanitizer::html_to_text($productGroup->Title);
             $obj->Data = $dataAsString;
             $obj->write();
         } else {
