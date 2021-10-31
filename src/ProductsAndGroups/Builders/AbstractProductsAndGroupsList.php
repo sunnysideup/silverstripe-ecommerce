@@ -119,7 +119,11 @@ abstract class AbstractProductsAndGroupsList
      */
     final public function hasMoreThanOne(?int $greaterThan = 1): bool
     {
-        return $this->getRawCount() > $greaterThan;
+        if($this->hasMethod('getRawCountCached')) {
+            return $this->getRawCountCached() > $greaterThan;
+        } else {
+            return $this->getRawCount() > $greaterThan;
+        }
     }
 
     //#########################################

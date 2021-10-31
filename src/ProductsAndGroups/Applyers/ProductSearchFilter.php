@@ -433,7 +433,7 @@ class ProductSearchFilter extends BaseApplyer
     protected function doProcessSetup()
     {
         if (! $this->maximumNumberOfResults) {
-            $this->maximumNumberOfResults = EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
+            $this->maximumNumberOfResults = (int) EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
         }
 
         $this->debug ?: isset($_GET['showdebug']) && Director::isDev();
