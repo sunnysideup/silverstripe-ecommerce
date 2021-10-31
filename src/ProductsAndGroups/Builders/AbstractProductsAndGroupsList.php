@@ -12,9 +12,11 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
+use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Vardump\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList
@@ -66,6 +68,10 @@ abstract class AbstractProductsAndGroupsList
     // PRODUCTS: basics
     //#########################################
 
+    /**
+     *
+     * @return ProductGroup
+     */
     final public function getRootGroup()
     {
         return $this->rootGroup;
@@ -84,6 +90,8 @@ abstract class AbstractProductsAndGroupsList
 
     /**
      * IDs of all the products.
+     * count how many times this is called.
+     * @todo: EcommerceCache candidate
      */
     final public function getProductIds(): array
     {
@@ -97,6 +105,7 @@ abstract class AbstractProductsAndGroupsList
     /**
      * Returns the total number of products available before pagination is
      * applied.
+     * @todo: EcommerceCache candidate
      */
     final public function getRawCount(): int
     {
@@ -171,6 +180,10 @@ abstract class AbstractProductsAndGroupsList
     // PRODUCTS: Also show
     //#########################################
 
+    /**
+     *
+     * @todo: EcommerceCache candidate
+     */
     abstract public function getAlsoShowProductsIds(): array;
 
     abstract public function getAlsoShowProducts(): DataList;
@@ -190,6 +203,10 @@ abstract class AbstractProductsAndGroupsList
     // GROUPS - smart
     //#########################################
 
+    /**
+     *
+     * @todo: EcommerceCache candidate
+     */
     abstract public function getFilterForCandidateCategoryIds(): array;
 
     abstract public function getFilterForCandidateCategories(): DataList;
@@ -198,6 +215,10 @@ abstract class AbstractProductsAndGroupsList
     // GROUPS - ALL - based on products
     //#########################################
 
+    /**
+     *
+     * @todo: EcommerceCache candidate
+     */
     final public function getParentGroupIdsBasedOnProducts(): array
     {
         return ArrayMethods::filter_array($this->getParentGroupsBasedOnProducts()->columnUnique());
@@ -258,6 +279,7 @@ abstract class AbstractProductsAndGroupsList
     /**
      * ids for getParentGroups.
      *
+     * @todo: EcommerceCache candidate
      * @var array
      */
     abstract public function getParentGroupIds(): array;
@@ -288,6 +310,10 @@ abstract class AbstractProductsAndGroupsList
     // NOTE: difference with below
     //#################################################
 
+    /**
+     *
+     * @todo: EcommerceCache candidate
+     */
     abstract public function getAlsoShowParentIds(): array;
 
     abstract public function getAlsoShowParents(): DataList;
@@ -336,6 +362,22 @@ abstract class AbstractProductsAndGroupsList
         return $obj;
     }
 
+
+    public function getApplyerClassName(string $type): string
+    {
+        return $this->getProductGroupSchema()->getApplyerClassName($type);
+    }
+
+    /**
+     * @return BaseApplyer
+     */
+    public function getApplyer(string $classNameOrType)
+    {
+        return $this->getProductGroupSchema()
+            ->getApplyer($classNameOrType, $this)
+        ;
+    }
+
     final protected function getBuyableTableNameName(?string $baseClass = SiteTree::class): string
     {
         $obj = Injector::inst()->get($baseClass);
@@ -360,6 +402,7 @@ abstract class AbstractProductsAndGroupsList
         return $stage;
     }
 
+
     protected function turnIdListIntoProductGroups(array $ids, ?bool $useFilterParent = false): DataList
     {
         $ids = ArrayMethods::filter_array($ids);
@@ -368,12 +411,14 @@ abstract class AbstractProductsAndGroupsList
         // we need a way to find the FilterParent, which may be the parent of the
         // group listed.
         if ($useFilterParent) {
-            $newArray = [0 => 0];
+            $newArray = [];
             foreach ($groups as $group) {
                 $filterParent = $group->MyFilterParent();
-                $newArray[$filterParent->ID] = $filterParent->ID;
+                if($filterParent) {
+                    $newArray[$filterParent->ID] = $filterParent->ID;
+                }
             }
-            $newGroups = ProductGroup::get()->filter(['ID' => $newArray]);
+            $newGroups = ProductGroup::get()->filter(['ID' => ArrayMethods::filter_array($newArray)]);
         }
 
         return RelatedProductGroups::apply_default_filter_to_groups($groups);

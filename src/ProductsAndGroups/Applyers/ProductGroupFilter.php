@@ -56,24 +56,25 @@ class ProductGroupFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $this->applyStart($key, $params);
-        $group = $params instanceof ProductGroup ? $params : $this->findGroup($params);
+        if(! $this->applyStart($key, $params)) {
+            $group = $params instanceof ProductGroup ? $params : $this->findGroup($params);
 
-        $filter = null;
-        if ($group && $group->exists()) {
-            $newIDs = array_intersect(
-                $group->getBaseProductList()->getProductIds(),
-                $this->products->columnUnique()
-            );
-            $filter = ['ID' => ArrayMethods::filter_array($newIDs)];
-        }
-
-        if ($filter) {
-            if ($this->products->exists()) {
-                $this->products = $this->products->filter($filter);
+            $filter = null;
+            if ($group && $group->exists()) {
+                $newIDs = array_intersect(
+                    $group->getBaseProductList()->getProductIds(),
+                    $this->products->columnUnique()
+                );
+                $filter = ['ID' => ArrayMethods::filter_array($newIDs)];
             }
+
+            if ($filter) {
+                if ($this->products->exists()) {
+                    $this->products = $this->products->filter($filter);
+                }
+            }
+            $this->applyEnd($key, $params);
         }
-        $this->applyEnd($key, $params);
 
         return $this;
     }

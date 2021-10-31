@@ -422,26 +422,35 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
     }
 
+    protected static $adminMemberCache;
     /**
      * @return \SilverStripe\ORM\DataObject (Member)|null
      */
     public static function get_default_shop_admin_user()
     {
-        $group = self::get_admin_group();
-        if ($group) {
-            return $group->Members()->First();
+        if(null === self::$adminMemberCache) {
+            $group = self::get_admin_group();
+            if ($group) {
+                self::$adminMemberCache = $group->Members()->First();
+            }
         }
+        return self::$adminMemberCache;
     }
 
+    protected static $shopAssistantMemberCache;
     /**
      * @return \SilverStripe\ORM\DataObject (Member)|null
      */
     public static function get_default_shop_assistant_user()
     {
-        $group = self::get_assistant_group();
-        if ($group) {
-            return $group->Members()->First();
+        self::$shopAssistantMemberCache;
+        if(null === self::$shopAssistantMemberCache) {
+            $group = self::get_assistant_group();
+            if ($group) {
+                self::$shopAssistantMemberCache = $group->Members()->First();
+            }
         }
+        return self::$shopAssistantMemberCache;
     }
 
     /**

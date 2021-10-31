@@ -32,12 +32,7 @@ class EcommerceCache implements Flushable
      */
     protected $cacheBackend;
 
-    protected static $productCacheKey = [
-        'ProductCount' => 0,
-        'ProductMaxLastEdited' => 0,
-        'ProductGroupCount' => 0,
-        'ProductGroupMaxLastEdited' => 0,
-    ];
+    protected $productCacheKey = '';
 
     public static function inst(): EcommerceCache
     {
@@ -82,22 +77,17 @@ class EcommerceCache implements Flushable
         return false;
     }
 
-    public function productCacheKey()
+    public function productCacheKey() :string
     {
-        if (0 === self::$productCacheKey['ProductCount']) {
-            self::$productCacheKey['ProductCount'] = Product::get()->count();
+        if(! $this->productCacheKey) {
+            $this->productCacheKey .= '_'.Product::get()->count();
+            $this->productCacheKey .= '_'.strtotime(Product::get()->max('LastEdited'));
+            $this->productCacheKey .= '_'.ProductGroup::get()->count();
+            $this->productCacheKey .= '_'.strtotime(ProductGroup::get()->max('LastEdited'));
+            $this->productCacheKey .= '_'.Versioned::get_reading_mode();
+            $this->productCacheKey .= '_'.Director::get_environment_type();
         }
-        if (0 === self::$productCacheKey['ProductMaxLastEdited']) {
-            self::$productCacheKey['ProductMaxLastEdited'] = strtotime(Product::get()->max('LastEdited'));
-        }
-        if (0 === self::$productCacheKey['ProductGroupCount']) {
-            self::$productCacheKey['ProductGroupCount'] = ProductGroup::get()->count();
-        }
-        if (0 === self::$productCacheKey['ProductGroupMaxLastEdited']) {
-            self::$productCacheKey['ProductGroupMaxLastEdited'] = strtotime(ProductGroup::get()->max('LastEdited'));
-        }
-
-        return implode('_', self::$productCacheKey);
+        return $this->productCacheKey;
     }
 
     /**
@@ -148,7 +138,7 @@ class EcommerceCache implements Flushable
 
     public function AllowCaching(): bool
     {
-        return true;
+        return isset($_GET['no-cache']) || Director::get_environment_type() === 'dev' ? false : true;
     }
 
     public function clear()
@@ -162,6 +152,7 @@ class EcommerceCache implements Flushable
     }
 
     /**
+     * Most importantly, adds Product Last Changed + Count!
      * @param string $cacheKey
      */
     public function cacheKeyRefiner($cacheKey): string
@@ -169,9 +160,6 @@ class EcommerceCache implements Flushable
         if (is_array($cacheKey)) {
             $cacheKey = implode('_', $cacheKey);
         }
-        $cacheKey .=
-            '_' . Versioned::get_reading_mode() .
-            '_' . Director::get_environment_type();
         $arrayOfReservedChars = [
             '{',
             '}',
@@ -184,6 +172,7 @@ class EcommerceCache implements Flushable
             '.',
         ];
 
-        return str_replace($arrayOfReservedChars, '_', $cacheKey);
+        return
+        str_replace($arrayOfReservedChars, '_', $cacheKey).$this->productCacheKey();
     }
 }

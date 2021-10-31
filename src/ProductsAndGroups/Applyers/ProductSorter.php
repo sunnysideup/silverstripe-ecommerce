@@ -59,16 +59,17 @@ class ProductSorter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $this->applyStart($key, $params);
+        if(! $this->applyStart($key, $params)) {
 
-        $sort = $this->getSql($key, $params);
-        if (is_array($sort) && count($sort)) {
-            $this->products = $this->products->sort($sort);
-        } elseif ($sort) {
-            $this->products = $this->products->sort($sort);
+            $sort = $this->getSql($key, $params);
+            if (is_array($sort) && count($sort)) {
+                $this->products = $this->products->sort($sort);
+            } elseif ($sort) {
+                $this->products = $this->products->sort($sort);
+            }
+            // @todo
+            $this->applyEnd($key, $params);
         }
-        // @todo
-        $this->applyEnd($key, $params);
 
         return $this;
     }

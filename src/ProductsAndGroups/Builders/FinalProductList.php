@@ -110,11 +110,16 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    public function getBuyableClassName()
+    public function getBuyableClassName() : string
     {
         return $this->getBaseProductList()->getBuyableClassName();
     }
 
+    /**
+     *
+     * @param  array|string $filter
+     * @return self
+     */
     public function setExtraFilter($filter): self
     {
         if ($filter) {
@@ -124,6 +129,11 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
+    /**
+     *
+     * @param  array|string $sort
+     * @return self
+     */
     public function setAlternativeSort($sort): self
     {
         if ($sort) {
@@ -149,10 +159,10 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
     public function apply(string $classNameOrType, string $key, $params = null): self
     {
-        $obj = $this->getApplyer($classNameOrType);
+        $applyer = $this->getApplyer($classNameOrType);
         //Vardump::now(get_class($obj));
 
-        $this->products = $obj
+        $this->products = $applyer
             ->apply($key, $params)
             ->getProducts()
         ;
@@ -244,6 +254,10 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this->baseProductList->getFilterForCandidateCategories();
     }
 
+    /**
+     *
+     * @todo use EcommerceCache
+     */
     public function getFilterForCandidateCategoriesFiltered()
     {
         if (empty($this->filterForCandidateCategoryIdsFiltered)) {
@@ -259,6 +273,10 @@ class FinalProductList extends AbstractProductsAndGroupsList
         ;
     }
 
+    /**
+     *
+     * @todo use EcommerceCache
+     */
     public function getAlsoShowParentIdsFiltered(): array
     {
         if (! count($this->alsoShowParentIdsFiltered)) {
@@ -321,22 +339,16 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return RelatedProductGroups::apply_default_filter_to_groups($list);
     }
 
-    //#################################################
-    // HELPERS
-    //#################################################
+    protected $rawCountCachedCache = null;
 
-    public function getApplyerClassName(string $type): string
+    public function getRawCountCached(): int
     {
-        return $this->getProductGroupSchema()->getApplyerClassName($type);
+        if(null === $this->rawCountCachedCache) {
+            $this->rawCountCachedCache = $this->products->count();
+        }
+        return $this->rawCountCachedCache;
+
     }
 
-    /**
-     * @return BaseApplyer
-     */
-    public function getApplyer(string $classNameOrType)
-    {
-        return $this->getProductGroupSchema()
-            ->getApplyer($classNameOrType, $this)
-        ;
-    }
+
 }

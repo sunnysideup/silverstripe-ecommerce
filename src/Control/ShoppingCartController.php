@@ -721,7 +721,7 @@ class ShoppingCartController extends Controller
                 Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
-                $accountPage = AccountPage::get()->first();
+                $accountPage = DataObject::get_one(AccountPage::class);
 
                 if ($accountPage) {
                     return $this->redirect($accountPage->Link());

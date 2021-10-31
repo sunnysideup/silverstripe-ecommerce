@@ -14,6 +14,8 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+
 /**
  * The starting base of the Products.
  *
@@ -45,6 +47,16 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * @var string
      */
     protected $buyableClassName = '';
+
+    /**
+     * @var string
+     */
+    protected $searchString = '';
+
+    /**
+     * @var string
+     */
+    protected $cacheKey = '';
 
     /**
      * @var RelatedProductGroups
@@ -106,7 +118,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * @param ProductGroup $rootGroup
      */
-    public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString)
     {
         if (! $buyableClassName) {
             $buyableClassName = $rootGroup->getBuyableClassName();
@@ -119,13 +131,14 @@ class BaseProductList extends AbstractProductsAndGroupsList
             ->setRootGroup($rootGroup)
             ->setBuyableClassName($buyableClassName)
             ->setLevelOfProductsToShow($levelOfProductsToShow)
+            ->setSearchString($searchString)
         ;
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
             $this->buildDefaultList()
                 ->applyDefaultFilters()
-                ->applyGroupFilter()
+                ->applyGroupOrSearchFilter()
                 ->removeExcludedProducts()
                 ->storeInCache()
             ;
@@ -142,12 +155,14 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $list->filter($filter);
     }
 
-    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0)
+    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString)
     {
-        $cacheKey = implode('_', array_filter([$rootGroup->ID, $rootGroup->ClassName, $buyableClassName, $levelOfProductsToShow]));
+        $cacheKey = implode('_', array_filter([$rootGroup->ID, $rootGroup->ClassName, $buyableClassName, $levelOfProductsToShow, $searchString]));
         if (! isset(self::$singleton_caches[$cacheKey])) {
             $className = static::class;
-            self::$singleton_caches[$cacheKey] = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow);
+            self::$singleton_caches[$cacheKey] = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
+            //super important we have a unique key.
+            self::$singleton_caches[$cacheKey]->setCacheKey($cacheKey);
         }
 
         return self::$singleton_caches[$cacheKey];
@@ -181,6 +196,13 @@ class BaseProductList extends AbstractProductsAndGroupsList
     public function setLevelOfProductsToShow(int $levelOfProductsToShow): self
     {
         $this->getProductGroupListProvider()->setLevelOfProductsToShow($levelOfProductsToShow);
+
+        return $this;
+    }
+
+    public function setSearchString(string $searchString): self
+    {
+        $this->searchString = $searchString;
 
         return $this;
     }
@@ -349,16 +371,40 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * apply group filters to products.
      */
-    protected function applyGroupFilter(): self
+    protected function applyGroupOrSearchFilter(): self
+    {
+        if($this->searchString) {
+            $this->applySearchFilter();
+        } else {
+            $this->applyGroupFilterInner();
+        }
+
+        return $this;
+    }
+
+    protected function applySearchFilter()
+    {
+        $applyer = $this->getApplyer('SEARCHFILTER');
+        //Vardump::now(get_class($obj));
+        $this->products = $applyer
+            ->apply(BaseApplyer::DEFAULT_NAME, $this->searchString)
+            ->getProducts()
+        ;
+        //Vardump::now($this->products);
+
+        return $this;
+    }
+
+    protected function applyGroupFilterInner()
     {
         $levelToShow = $this->getLevelOfProductsToShow();
         $groupFilter = '';
-        $this->alsoShowProductsIds = [];
-        $this->parentGroupIds = [];
         //special cases
         if ($levelToShow < 0) {
             //no produts but if LevelOfProductsToShow = -1 then show all
-            //note the smartness here -1 == 1 || -1 == -2, i.e. minus 1 is include all and minus -2 is include none.
+            //note the smartness here when creating filters:
+            // -1 == -1: show all -1 == -2: show none,
+            // i.e. minus 1 is include all and minus -2 is include none.
             // ignore AlsoShow.
             $groupFilter = ' ' . $levelToShow . ' = -1 ';
         } elseif (0 === $levelToShow) {
@@ -389,8 +435,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $alsoShowFilter = '"' . $this->getBuyableTableNameName() . '"."ID" IN (' . implode(',', $this->getAlsoShowProductsIds()) . ')';
         $fullFilter = '((' . $groupFilter . ') OR (' . $alsoShowFilter . '))';
         $this->products = $this->products->where($fullFilter);
-
-        return $this;
     }
 
     /**
@@ -450,8 +494,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     protected function loadCache(): self
     {
         $this->buildDefaultList();
-        $productIds = EcommerceCache::inst()->retrieve($this->getCachekey());
-        $this->products = $this->products->filter(['ID' => ArrayMethods::filter_array($productIds)]);
+        $this->products = $this->products->filter(['ID' => EcommerceCache::inst()->retrieve($this->getCachekey('productids'))]);
         $this->blockedProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('blockedProductsIds'));
         $this->alsoShowProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowProductsIds'));
         $this->parentGroupIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('parentGroupIds'));
@@ -464,13 +507,12 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * sets the following variables:
      * - products
      * - blockedProductsIds
-     * - blockedProductsIds
      * - alsoShowProductsIds
      * - parentGroupIds.
      */
     protected function storeInCache(): self
     {
-        EcommerceCache::inst()->save($this->getCachekey(), ArrayMethods::filter_array($this->products->columnUnique()));
+        EcommerceCache::inst()->save($this->getCachekey('productids'), ArrayMethods::filter_array($this->products->columnUnique()));
         EcommerceCache::inst()->save($this->getCachekey('blockedProductsIds'), ArrayMethods::filter_array($this->blockedProductsIds));
         EcommerceCache::inst()->save($this->getCachekey('alsoShowProductsIds'), $this->getAlsoShowProductsIds());
         EcommerceCache::inst()->save($this->getCachekey('parentGroupIds'), $this->getParentGroupIds());
@@ -479,21 +521,17 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
+    public function setCacheKey(string $key) : self
+    {
+        $this->cacheKey = $key;
+        return $this;
+    }
+
     /**
      * @param string $add key to add
      */
     protected function getCachekey(?string $add = ''): string
     {
-        return implode(
-            '_',
-            [
-                $this->rootGroup->ID,
-                $this->rootGroup->ClassName,
-                $this->buyableClassName,
-                $this->rootGroup->LastEdited,
-                $this->getLevelOfProductsToShow(),
-                $add,
-            ]
-        );
+        return $this->cacheKey.$add;
     }
 }

@@ -253,7 +253,7 @@ class UserPreference
             //save preference to session
             $this->savePreferenceToSession($type, $newPreference);
         }
-        // there is always a search ...
+        // there is always a sort ...
         if (! $this->userPreferences['SORT']) {
             $this->userPreferences['SORT'] = $this->rootGroup->getListConfigCalculated('SORT');
         }
@@ -334,10 +334,9 @@ class UserPreference
         if ($withPageNumber) {
             $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
-        $pageId = 0;
-        // todo: what does this do???
-        if ($this->rootGroup) {
-            $pageId = $this->rootGroup->ID;
+        $pageId = $this->rootGroup->ID;
+        if(! $pageId) {
+            user_error('Must have page ID');
         }
 
         return
@@ -346,15 +345,14 @@ class UserPreference
                 [
                     serialize($this->request->param('Action')),
                     serialize($this->request->param('ID')),
-                    serialize($this->getCurrentUserPreferences('GROUPFILTER')),
+                    serialize($this->getCurrentUserPreferencesParams('GROUPFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('SORT')),
                     serialize($this->getCurrentUserPreferencesKey('FILTER')),
-                    serialize($this->getCurrentUserPreferencesKey('SEARCHFILTER')),
+                    serialize($this->getCurrentUserPreferencesParams('SEARCHFILTER')),
                     serialize($this->getCurrentUserPreferencesKey('DISPLAY')),
                     $pageStart,
                     $additionalKey,
                     $pageId,
-                    EcommerceCache::inst()->productCacheKey(),
                 ]
             );
     }
@@ -453,10 +451,6 @@ class UserPreference
     public function getActions(string $classNameOrType)
     {
         if ('GROUPFILTER' === $classNameOrType || $classNameOrType instanceof ProductGroupFilter) {
-            if ($this->rootGroupController->HasSearchFilter()) {
-                return $this->getFinalProductList()->getFilterForCandidateCategoriesFiltered();
-            }
-
             return $this->getBaseProductList()->getFilterForCandidateCategories();
         }
 
@@ -618,21 +612,21 @@ class UserPreference
         ;
     }
 
-    public function getCurrentUserPreferencesKey($type)
+    public function getCurrentUserPreferencesKey(string $type)
     {
         $val = $this->getCurrentUserPreferences($type);
 
         return $val['key'];
     }
 
-    public function getCurrentUserPreferencesParams($type)
+    public function getCurrentUserPreferencesParams(string $type)
     {
         $val = $this->getCurrentUserPreferences($type);
 
         return $val['params'];
     }
 
-    public function getCurrentUserPreferencesTitle($type)
+    public function getCurrentUserPreferencesTitle(string $type)
     {
         $val = $this->getCurrentUserPreferences($type);
 

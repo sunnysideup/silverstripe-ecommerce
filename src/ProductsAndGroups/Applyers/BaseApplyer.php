@@ -9,6 +9,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\AbstractProductsAndGroupsList;
 
 /**
  * provides data on the user.
@@ -48,7 +49,13 @@ abstract class BaseApplyer
      */
     protected $products;
 
+    /**
+     *
+     * @var string
+     */
     protected $selectedOption = '';
+
+    protected $applied = false;
 
     /**
      * @var array|string
@@ -60,7 +67,7 @@ abstract class BaseApplyer
     public function __construct($finalProductList = null)
     {
         if ($finalProductList) {
-            ClassHelpers::check_for_instance_of($finalProductList, FinalProductList::class, true);
+            ClassHelpers::check_for_instance_of($finalProductList, AbstractProductsAndGroupsList::class, true);
             $this->finalProductList = $finalProductList;
             $this->baseListOwner = $finalProductList->getRootGroup();
             $this->products = $this->finalProductList->getProducts();
@@ -220,13 +227,18 @@ abstract class BaseApplyer
         return $sql;
     }
 
-    protected function applyStart(?string $key = null, $params = null)
+    protected function applyStart(?string $key = null, $params = null) : bool
     {
-        $this->selectedOption = $key;
-        $this->selectedOptionParams = $params;
+        if(false === $this->applied) {
+            $this->selectedOption = $key;
+            $this->selectedOptionParams = $params;
+        }
+
+        return $this->applied;
     }
 
     protected function applyEnd(?string $key = null, $params = null)
     {
+        $this->applied = true;
     }
 }

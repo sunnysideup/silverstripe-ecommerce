@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * This page manages searching for products.
  *
@@ -14,7 +16,7 @@ class ProductGroupSearchPage extends ProductGroup
     /**
      * @var int
      */
-    private static $maximum_number_of_products_to_list_for_search = 100;
+    private static $maximum_number_of_products_to_list_for_search = 500;
 
     /**
      * @var string
@@ -34,7 +36,7 @@ class ProductGroupSearchPage extends ProductGroup
     /**
      * @var ProductGroupSearchPage
      */
-    private static $_main_search_page;
+    protected static $mainSearchPageCache;
 
     public function i18n_singular_name()
     {
@@ -65,11 +67,7 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public static function main_search_page()
     {
-        if (! self::$main_search_page) {
-            self::$_main_search_page = ProductGroupSearchPage::get()->first();
-        }
-
-        return self::$_main_search_page;
+        return DataObject::get_one(ProductGroupSearchPage::class);
     }
 
     /**
@@ -77,6 +75,12 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public static function main_search_page_id(): int
     {
-        return self::main_search_page() ? self::main_search_page()->ID : 0;
+        $page = self::main_search_page();
+        return $page ? $page->ID : 0;
+    }
+
+    public function getMyLevelOfProductsToShow(?int $defauult = 99): int
+    {
+        return -2;
     }
 }

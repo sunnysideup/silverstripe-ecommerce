@@ -19,15 +19,13 @@ class KeywordSearchBuilder
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductSearchTable', 'ProductID', 'Data', $phrase, $where, $limit);
-
         return DB::query($sql)->keyedColumn();
     }
 
-    public function getProductGroupResults($phrase, string $where, ?int $limit = 9999): array
+    public function getProductGroupResults($phrase, string $where, ?int $limit = 99): array
     {
-        return [0 => 0];
         $this->createIfStatements($phrase, 'Title', 'Data');
-        $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', 'Data', $phrase, $where, 100);
+        $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', 'Data', $phrase, $where, $limit);
 
         return DB::query($sql)->keyedColumn();
     }
@@ -100,11 +98,14 @@ class KeywordSearchBuilder
 
     protected function addEndIfStatement($count)
     {
-        $this->ifStatement .= ($count + 1) . str_repeat(')', $count) . ' AS gp';
+        $this->ifStatement .= '999' . str_repeat(')', $count) . ' AS gp';
     }
 
     protected function createSql(string $table, string $idField, string $matchField, string $phrase, string $where, $limit): string
     {
+        if ($where) {
+            $where = 'WHERE '.$where;
+        }
         return '
             SELECT
                 "' . $idField . '",
@@ -112,7 +113,10 @@ class KeywordSearchBuilder
                 MATCH ("' . $matchField . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS score
             FROM "' . $table . '"
             ' . $where . '
-            ORDER BY gp ASC, score DESC
+            HAVING gp < 99 AND score > 0
+            ORDER BY
+                gp ASC,
+                score DESC
             LIMIT ' . $limit . ';';
     }
 

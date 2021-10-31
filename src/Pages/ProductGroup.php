@@ -21,6 +21,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -43,10 +44,6 @@ use Sunnysideup\Vardump\Vardump;
  */
 class ProductGroup extends Page
 {
-    /**
-     * @var array
-     */
-    protected $recursiveValues = [];
 
     protected $baseProductList;
 
@@ -262,6 +259,10 @@ class ProductGroup extends Page
         return $this->URLSegment . '.' . $this->ID;
     }
 
+    /**
+     * @EcommerCache Candidate
+     * @return DataList
+     */
     public function getFilterForCandidateCategories(): DataList
     {
         if (! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
@@ -369,7 +370,24 @@ class ProductGroup extends Page
     }
 
     /**
+     * set by ID of RootGroup
+     * @var array
+     */
+    protected static $searchStringCache = [];
+
+    /**
+     * This can be set from the controller
+     * to create a filtered baselist.
+     *
+     */
+    public static function set_search_string_for_base_list(int $id, string $string)
+    {
+        self::$searchStringCache[$id] = $string;
+    }
+
+    /**
      * Retrieve the base list of products for this group.
+     * @EcommerceCache candidate?
      *
      * @return BaseProductList
      */
@@ -380,7 +398,8 @@ class ProductGroup extends Page
             $this->baseProductList = $className::inst(
                 $this,
                 $this->getBuyableClassName(),
-                $this->getMyLevelOfProductsToShow()
+                $this->getMyLevelOfProductsToShow(),
+                self::$searchStringCache[$this->ID] ?? ''
             );
         }
 
@@ -388,6 +407,7 @@ class ProductGroup extends Page
     }
 
     /**
+     * @EcommerceCache candidate?
      * @return DataList
      */
     public function getProducts()
@@ -400,34 +420,46 @@ class ProductGroup extends Page
         return $this->getProducts()->exists();
     }
 
+    protected static $parentGroupCache = null;
+
     /**
      * returns the parent Product Group that is the same type.
      * So that filters can be set as parent groups.
+     * @return ProductGroup
      */
     public function MyFilterParent()
     {
-        $newParent = $this;
-        while ($newParent) {
-            $nextParent = $newParent->Parent();
-            if ($nextParent && $nextParent->ClassName === $this->ClassName) {
-                $newParent = $nextParent;
-            } else {
-                return $newParent;
+        if(empty(self::$parentGroupCache[$this->ID])) {
+            self::$parentGroupCache[$this->ID] = $this;
+            while (self::$parentGroupCache[$this->ID]) {
+                $obj = self::$parentGroupCache[$this->ID];
+                $nextParent = $obj->ParentGroup();
+                if ($nextParent && $nextParent->ClassName === $this->ClassName) {
+                    self::$parentGroupCache[$this->ID] = $nextParent;
+                } else {
+                    //important to return here...
+                    return self::$parentGroupCache[$this->ID];
+                }
             }
         }
     }
 
     /**
-     * If products are show in more than one group then this returns an array for any products that are linked to this
+     * If products are shown in more than one group then this returns an array
+     * for any products that are linked to this
      * product group.
+     * @EcommerceCache candidate?
      */
     public function getProductsToBeIncludedFromOtherGroupsArray(): array
     {
-        $array = [];
-        if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->exists()) {
-            $array = $this->AlsoShowProducts()->columnUnique();
+        $array = EcommerceCache::inst()->retrieve('AlsoShowProducts_'.$this->ID);
+        if(null ===  $array) {
+            $array = [];
+            if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->exists()) {
+                $array = $this->AlsoShowProducts()->columnUnique();
+            }
+            EcommerceCache::inst()->save('AlsoShowProducts_'.$this->ID, $array);
         }
-
         return ArrayMethods::filter_array($array);
     }
 
@@ -444,13 +476,20 @@ class ProductGroup extends Page
         return $this->ParentGroup();
     }
 
+    protected static $parentPageCache = [];
+
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
      */
     public function ParentGroup(): ?ProductGroup
     {
-        return ProductGroup::get()->byID($this->ParentID);
+        if(! isset(self::$parentPageCache[$this->ID])) {
+            self::$parentPageCache[$this->ID] = ProductGroup::get()->byID($this->ParentID);
+        }
+        return self::$parentPageCache[$this->ID];
     }
+
+    protected static $topParentGroupCache = [];
 
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
@@ -459,10 +498,11 @@ class ProductGroup extends Page
     {
         $parent = $this->ParentGroup();
         if ($parent && $parent->exists()) {
-            return $parent->TopParentGroup();
+            self::$topParentGroupCache[$this->ID] = $parent->TopParentGroup();
+        } else {
+            self::$topParentGroupCache[$this->ID] = $this;
         }
-
-        return $this;
+        return self::$topParentGroupCache[$this->ID];
     }
 
     /**
@@ -491,12 +531,17 @@ class ProductGroup extends Page
         return true;
     }
 
+    protected static $getProductCountCache = [];
+
     /**
      * the number of direct descendants.
      */
     public function getNumberOfProducts(): int
     {
-        return Product::get()->filter(['ParentID' => $this->ID])->count();
+        if(! isset(self::$getProductCountCache[$this->ID])) {
+            self::$getProductCountCache[$this->ID] = Product::get()->filter(['ParentID' => $this->ID])->count();
+        }
+        return self::$getProductCountCache[$this->ID];
     }
 
     /**
@@ -661,6 +706,12 @@ class ProductGroup extends Page
     }
 
     /**
+     *
+     * @var array
+     */
+    protected static $recursiveValuesCache = [];
+
+    /**
      * get recursive value for Product Group and check EcommerceConfig as last resort.
      *
      * @param mixed $default
@@ -669,7 +720,8 @@ class ProductGroup extends Page
      */
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
-        if (! isset($this->recursiveValues[$fieldNameOrMethod])) {
+        $key = $fieldNameOrMethod.'_'.$this->ID;
+        if (! isset(self::$recursiveValuesCache[$key])) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
             $methodWorks = false;
@@ -701,10 +753,10 @@ class ProductGroup extends Page
             if (! $value) {
                 $value = $default;
             }
-            $this->recursiveValues[$fieldNameOrMethod] = $value;
+            self::$recursiveValuesCache[$key] = $value;
         }
 
-        return $this->recursiveValues[$fieldNameOrMethod];
+        return self::$recursiveValuesCache[$key];
     }
 
     protected function getProductSearchTableDataValues(): array

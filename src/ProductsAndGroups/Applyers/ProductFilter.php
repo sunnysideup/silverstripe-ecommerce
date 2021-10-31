@@ -34,12 +34,13 @@ class ProductFilter extends BaseApplyer
 
     public function apply(?string $key = null, $params = null)
     {
-        $this->applyStart($key, $params);
-        $filter = $this->getSql($key, $params);
-        if (! empty($filter)) {
-            $this->products = is_string($filter) ? $this->products->where($filter) : $this->products->filter($filter);
+        if(! $this->applyStart($key, $params)) {
+            $filter = $this->getSql($key, $params);
+            if (! empty($filter)) {
+                $this->products = is_string($filter) ? $this->products->where($filter) : $this->products->filter($filter);
+            }
+            $this->applyEnd($key, $params);
         }
-        $this->applyEnd($key, $params);
 
         return $this;
     }

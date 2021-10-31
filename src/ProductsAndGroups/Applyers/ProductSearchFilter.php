@@ -158,7 +158,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var int
      */
-    protected $maximumNumberOfResults = 1000;
+    protected $maximumNumberOfResults = 0;
 
     protected $productsForGroups;
 
@@ -219,31 +219,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     private static $in_group_sort_sql = ['Price' => 'DESC', 'ID' => 'DESC'];
 
-    /**
-     * List of additional fields that should be searched full text.
-     * We are matching this against the buyable class name.
-     *
-     * Order matters!
-     *
-     * @var array
-     */
-    private static $fields_to_search_full_text_default_per_class = [
-        // Product::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
-        // ProductGroup::class => ['Title', 'MenuTitle', 'Content', 'MetaDescription'],
-    ];
-
-    /**
-     * List of additional fields that should be searched full text.
-     * We are matching this against the buyable class name.
-     *
-     * Order matters!
-     *
-     * @var array
-     */
-    private static $fields_to_search_full_text_default = [
-        'Title',
-        'MetaDescription',
-    ];
 
     public static function keyword_sanitised(?string $string = ''): string
     {
@@ -259,46 +234,42 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        if (! is_array($params)) {
-            $params = GetVariables::url_string_to_array((string) $params);
-        }
+        if(! $this->applyStart($key, $params)) {
+            if (is_array($this->rawData) && count($this->rawData)) {
+                // we need to keep this hash
+                $hash = $this->getHashBasedOnRawData();
+                $outcome = $this->partialCacheApplyVariablesFromCache($hash);
+                if ($outcome) {
+                    $this->runFullProcessFromCache();
+                } else {
+                    $this->runFullProcess();
+                    $this->partialCacheSetCacheForHash($hash);
+                }
+                //not sure why we need this, but keeping for now.
+                self::$groupCache = $this->productGroupIds;
+                if ($this->immediateRedirectPage) {
+                    Controller::curr()->redirect($this->immediateRedirectPage->Link());
 
-        $this->applyStart($key, $params);
-        if (is_array($params) && count($params)) {
-            $this->rawData = $params;
-            // we need to keep this hash
-            $hash = $this->getHashBasedOnRawData();
-            $outcome = $this->partialCacheApplyVariablesFromCache($hash);
-            if ($outcome) {
-                $this->runFullProcessFromCache();
-            } else {
-                $this->runFullProcess();
-                $this->partialCacheSetCacheForHash($hash);
+                    return $this;
+                }
+                $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
+                $sorter = ArrayMethods::create_sort_statement_from_id_array(
+                    $this->getProductIds(),
+                    $this->finalProductList->getBuyableClassName()
+                );
+                $additionalSortOption = self::OPTIONS_FOR_SORT;
+                $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
+                ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
             }
-            //not sure why we need this, but keeping for now.
-            self::$groupCache = $this->productGroupIds;
-            if ($this->immediateRedirectPage) {
-                Controller::curr()->redirect($this->immediateRedirectPage->Link());
-
-                return $this;
-            }
-            $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
-            $sorter = ArrayMethods::create_sort_statement_from_id_array(
-                $this->getProductIds(),
-                $this->finalProductList->getBuyableClassName()
-            );
-            $additionalSortOption = self::OPTIONS_FOR_SORT;
-            $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
-            ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
+            $this->applyEnd($key, $this->rawData);
         }
-        $this->applyEnd($key, $params);
 
         return $this;
     }
 
     public function getTitle(?string $key = '', $params = null): string
     {
-        return 'to be completed';
+        return 'Search Results Title (to be completed)';
     }
 
     //#######################################
@@ -386,14 +357,19 @@ class ProductSearchFilter extends BaseApplyer
     // key methods
     //#######################################
 
-    protected function applyStart(?string $key = null, $params = null): self
+    protected function applyStart(?string $key = null, $params = null): bool
     {
-        parent::applyStart($key, $params);
+
+        if (! is_array($params)) {
+            $this->rawData = GetVariables::url_string_to_array((string) $params);
+        } else {
+            $this->rawData = $params;
+        }
         if (! $this->baseClassNameForBuyables) {
             $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
 
-        return $this;
+        return parent::applyStart($key, $this->rawData);
     }
 
     protected function runFullProcessFromCache()
@@ -538,11 +514,7 @@ class ProductSearchFilter extends BaseApplyer
             }
 
             // work out fields to search
-            $fieldArray = $this->workOutFieldsToSearch($this->baseClassNameForBuyables);
-            if ($this->debug) {
-                $this->debugOutput('<pre>FIELD ARRAY: ' . print_r($fieldArray, 1) . '</pre>');
-            }
-            $where = 'WHERE ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
+            $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
             $ids = $this->getSearchApi()->getProductResults(
                 $this->keywordPhrase,
                 $where,
@@ -587,16 +559,6 @@ class ProductSearchFilter extends BaseApplyer
         return $this->maximumNumberOfResults - $this->resultArrayPos;
     }
 
-    protected function workOutFieldsToSearch(string $classNameToSearch): array
-    {
-        $fieldArrayAll = $this->Config()->get('fields_to_search_full_text_default_per_class');
-        $fieldsArray = $this->Config()->get('fields_to_search_full_text_default');
-        $extraFields1 = $this->extraBuyableFieldsToSearchFullText[$classNameToSearch] ?? [];
-        $extraFields2 = $fieldArrayAll[$classNameToSearch] ?? [];
-
-        return array_merge($fieldsArray, $extraFields1, $extraFields2);
-    }
-
     /**
      * search for groups.
      */
@@ -610,17 +572,21 @@ class ProductSearchFilter extends BaseApplyer
 
             $count = 0;
             // work out fields to search
-            $fieldArray = $this->workOutFieldsToSearch($this->baseClassNameForGroups);
 
             // work out searches
+            $filterIds = $this->productsForGroups->columnUnique();
+            $where = '';
+            if(!empty($filterIds)) {
+                $where = 'ID IN (' . implode(', ', $filterIds) . ')';
+            }
             $ids = $this->getSearchApi()->getProductGroupResults(
                 $this->keywordPhrase,
-                'WHERE ID IN (' . implode(', ', $this->productsForGroups->columnUnique()) . ')'
+                $where
             );
             if ($this->debug) {
-                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . '</pre>');
+                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of '.$where.'</pre>');
             }
-            $this->productsForGroups = $this->productsForGroups->filter(['ID' => $ids]);
+            $this->productsForGroups = $this->productsForGroups->filter(['ID' => ArrayMethods::filter_array($ids)]);
             if ($this->debug) {
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
             }
@@ -724,24 +690,8 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function createBaseList()
     {
-        if (! $this->products instanceof DataList) {
-            if (false === $this->rawData['OnlyThisSection']) {
-                $tmpVar = $this->baseClassNameForBuyables;
-                $defaultProductFilter = $this->Config()->get('default_product_filter');
-                $this->products = $tmpVar::get()->filter($defaultProductFilter);
-                if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
-                    $this->products = $this->products->filter(['AllowPurchase' => 1]);
-                }
-            }
-        }
         if (! $this->productsForGroups instanceof DataList) {
-            if (true === $this->rawData['OnlyThisSection']) {
-                $this->productsForGroups = $this->finalProductList->getParentGroups();
-            } else {
-                $tmpVar = $this->baseClassNameForGroups;
-                $defaultGroupFilter = Config::inst()->get(RelatedProductGroups::class, 'default_product_group_filter');
-                $this->productsForGroups = $tmpVar::get()->filter($defaultGroupFilter);
-            }
+            $this->productsForGroups = $this->finalProductList->getParentGroups();
         }
         if ($this->debug) {
             $this->debugOutput('<hr />');

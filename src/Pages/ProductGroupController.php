@@ -22,6 +22,8 @@ use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
+
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Vardump\Vardump;
 
 class ProductGroupController extends PageController
@@ -191,6 +193,7 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * Important
      * Unique caching key for the product list...
      */
     public function ProductGroupListCachingKeyForTemplate(?bool $withPageNumber = false): string
@@ -204,9 +207,6 @@ class ProductGroupController extends PageController
     public function ProductGroupListAreCacheable(): bool
     {
         if ($this->productListsHTMLCanBeCached()) {
-            if ($this->IsSearchResults()) {
-                return false;
-            }
 
             $currentOrder = ShoppingCart::current_order();
 
@@ -221,7 +221,7 @@ class ProductGroupController extends PageController
      */
     public function ProductGroupListAreAjaxified(): bool
     {
-        return ! $this->IsSearchResults();
+        return true;
     }
 
     /**
@@ -285,9 +285,15 @@ class ProductGroupController extends PageController
         return $this->ShowSearchFilterLinks() || $this->ShowGroupFilterLinks() || $this->ShowFilterLinks() || $this->ShowSortLinks() || $this->ShowDisplayLinks();
     }
 
+    protected $hasManyProductsCache = null;
+
     public function HasManyProducts(): bool
     {
-        return $this->getBaseProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
+        if(null === $this->hasManyProductsCache) {
+            $this->hasManyProductsCache = $this->getBaseProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
+        }
+        return $this->hasManyProductsCache;
+
     }
 
     public function HasSearchFilter(): bool
@@ -382,9 +388,14 @@ class ProductGroupController extends PageController
         return $perPage > $total ? $total : $perPage;
     }
 
+    protected $totalRawCountCache;
+    /**
+     *
+     * @return int
+     */
     public function TotalCount(): int
     {
-        return $this->getFinalProductList()->getRawCount();
+        return $this->getFinalProductList()->getRawCountCached();
     }
 
     public function getCurrentPageNumber(): int
@@ -570,7 +581,7 @@ class ProductGroupController extends PageController
         return $this->getLinkTemplate('', 'DISPLAY', 'default');
     }
 
-    public function searchResultsProductGroupsArray(): array
+    public function SearchResultsProductGroupsArray(): array
     {
         return $this->getSearchApplyer()->getProductGroupIds();
     }
@@ -584,7 +595,7 @@ class ProductGroupController extends PageController
      */
     public function SearchResultsChildGroups(): ?DataList
     {
-        $groupArray = $this->searchResultsProductGroupsArray();
+        $groupArray = $this->SearchResultsProductGroupsArray();
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
 
         return ProductGroup::get()
@@ -666,9 +677,14 @@ class ProductGroupController extends PageController
         return $this->HasSearchFilter();
     }
 
-    public function saveUserPreferences(?array $data = [])
+    protected function saveUserPreferences(?array $data = [])
     {
         return $this->getUserPreferencesClass()->saveUserPreferences($data);
+    }
+
+    protected function setSearchString()
+    {
+        //do nothing here, but on ProductGroupSearchPage, we set it as the baselist....
     }
 
     public function getCurrentUserPreferencesKey(?string $type = '')
@@ -790,6 +806,7 @@ class ProductGroupController extends PageController
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');
         //we save data from get variables...
         $this->saveUserPreferences();
+        $this->setSearchString();
         //makes sure best match only applies to search -i.e. reset otherwise.
     }
 

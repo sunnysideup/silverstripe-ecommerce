@@ -146,7 +146,7 @@ class CheckoutPageController extends CartPageController
         if ($number) {
             $code = $steps[$number - 1];
 
-            return CheckoutPageStepDescription::get()->filter(['Code' => $code])->first();
+            return DataObject::get_one(CheckoutPageStepDescription::class, ['Code' => $code]);
         }
         $returnData = ArrayList::create();
         $completed = 1;
