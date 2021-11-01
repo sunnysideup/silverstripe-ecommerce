@@ -33,6 +33,9 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
  */
 class ProductSearchForm extends Form
 {
+
+    private static $default_sort = ProductSearchFilter::KEY_FOR_SORTER;
+
     /**
      * @var array
      */
@@ -241,7 +244,7 @@ class ProductSearchForm extends Form
             $link .= '&' . trim($this->additionalGetParameters, '&');
         }
         //important - sort by relevancy
-        $link .= '&' . $this->getVariableContainingSortParam() . '=' . ProductSearchFilter::KEY_FOR_SORTER;
+        $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
         $this->controller->redirect($link);
     }
 
@@ -284,6 +287,11 @@ class ProductSearchForm extends Form
         }
         //if no specific section is being searched then we redirect to search page:
         return $this->controller->dataRecord;
+    }
+
+    protected function defaultSort() : string
+    {
+        return $this->Config()->get('default_sort');
     }
 
     protected function getResultsPageLink(): string

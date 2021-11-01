@@ -170,6 +170,12 @@ class ProductSearchFilter extends BaseApplyer
     protected static $groupCache = [];
 
     /**
+     *
+     * @var DataList
+     */
+    protected static $groupListCache;
+
+    /**
      * @var bool
      */
     private static $use_product_search_table = true;
@@ -247,6 +253,7 @@ class ProductSearchFilter extends BaseApplyer
                 }
                 //not sure why we need this, but keeping for now.
                 self::$groupCache = $this->productGroupIds;
+                self::$groupListCache = $this->productsForGroups;
                 if ($this->immediateRedirectPage) {
                     Controller::curr()->redirect($this->immediateRedirectPage->Link());
 
@@ -287,6 +294,14 @@ class ProductSearchFilter extends BaseApplyer
     public function getProductIds(): array
     {
         return ArrayMethods::filter_array($this->productIds);
+    }
+
+    /**
+     * @return DataList
+     */
+    public function getProductGroupAsList()
+    {
+        return self::$groupListCache;
     }
 
     public function getProductGroupIds(): array
@@ -378,6 +393,7 @@ class ProductSearchFilter extends BaseApplyer
         $tmpVar = $this->baseClassNameForBuyables;
         $filter = ['ID' => ArrayMethods::filter_array($this->productIds)];
         $this->products = $tmpVar::get()->filter($filter);
+
         //product groups
         $tmpVar = $this->baseClassNameForGroups;
         $filter = ['ID' => ArrayMethods::filter_array($this->productGroupIds)];
@@ -577,7 +593,7 @@ class ProductSearchFilter extends BaseApplyer
             $filterIds = $this->productsForGroups->columnUnique();
             $where = '';
             if(!empty($filterIds)) {
-                $where = 'ID IN (' . implode(', ', $filterIds) . ')';
+                $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
             }
             $ids = $this->getSearchApi()->getProductGroupResults(
                 $this->keywordPhrase,
@@ -586,7 +602,11 @@ class ProductSearchFilter extends BaseApplyer
             if ($this->debug) {
                 $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of '.$where.'</pre>');
             }
-            $this->productsForGroups = $this->productsForGroups->filter(['ID' => ArrayMethods::filter_array($ids)]);
+            $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
+            $this->productsForGroups = $this->productsForGroups
+                ->filter(['ID' => ArrayMethods::filter_array($ids)])
+                ->sort($sortStatement);
+
             if ($this->debug) {
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
             }
@@ -692,6 +712,10 @@ class ProductSearchFilter extends BaseApplyer
     {
         if (! $this->productsForGroups instanceof DataList) {
             $this->productsForGroups = $this->finalProductList->getParentGroups();
+        }
+        if(! $this->productsForGroups->exists()) {
+            $tmpVar = $this->baseClassNameForGroups;
+            $this->productsForGroups = $tmpVar::get();
         }
         if ($this->debug) {
             $this->debugOutput('<hr />');

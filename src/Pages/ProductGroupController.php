@@ -249,7 +249,7 @@ class ProductGroupController extends PageController
     public function MenuChildGroups(?int $levels = 2): ?DataList
     {
         if ($this->IsSearchResults()) {
-            return $this->SearchResultsChildGroups();
+            return null;
         }
 
         return $this->ChildCategories($levels);
@@ -581,11 +581,6 @@ class ProductGroupController extends PageController
         return $this->getLinkTemplate('', 'DISPLAY', 'default');
     }
 
-    public function SearchResultsProductGroupsArray(): array
-    {
-        return $this->getSearchApplyer()->getProductGroupIds();
-    }
-
     /**
      * After a search is conducted you may end up with a bunch
      * of recommended product groups. They will be returned here...
@@ -595,13 +590,7 @@ class ProductGroupController extends PageController
      */
     public function SearchResultsChildGroups(): ?DataList
     {
-        $groupArray = $this->SearchResultsProductGroupsArray();
-        $sortStatement = ArrayMethods::create_sort_statement_from_id_array($groupArray, ProductGroup::class);
-
-        return ProductGroup::get()
-            ->filter(['ID' => $groupArray])
-            ->sort($sortStatement)
-        ;
+        return $this->getSearchApplyer()->getProductGroupAsList();
     }
 
     /**
