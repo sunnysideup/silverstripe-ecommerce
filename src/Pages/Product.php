@@ -426,7 +426,7 @@ class Product extends Page implements BuyableModel
 
     /**
      * Returns all the parent groups for the product,
-     * including the parents and parents and so on.
+     * including the parent-parents, and so on.
      *
      * @return \SilverStripe\ORM\DataList (ProductGroups)
      */
@@ -681,12 +681,9 @@ class Product extends Page implements BuyableModel
         return 0;
     }
 
-    /**
-     * has it been sold.
-     */
     public function HasBeenSold(): bool
     {
-        return $this->getHasBeenSold();
+        return (bool) $this->getHasBeenSold();
     }
 
     public function getHasBeenSold(): bool
@@ -1124,14 +1121,6 @@ class Product extends Page implements BuyableModel
         $html .= '</ul>';
 
         return $html;
-    }
-
-    /**
-     * @string
-     */
-    public function InternalItemIDForSearchResults()
-    {
-        return $this->InternalItemID;
     }
 
     /**
