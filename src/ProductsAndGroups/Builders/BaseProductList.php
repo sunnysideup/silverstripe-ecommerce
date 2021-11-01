@@ -118,7 +118,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * @param ProductGroup $rootGroup
      */
-    public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString)
+    public function __construct($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString = '')
     {
         if (! $buyableClassName) {
             $buyableClassName = $rootGroup->getBuyableClassName();
@@ -133,6 +133,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
             ->setLevelOfProductsToShow($levelOfProductsToShow)
             ->setSearchString($searchString)
         ;
+    }
+
+    public function init()
+    {
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
@@ -143,6 +147,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 ->storeInCache()
             ;
         }
+
     }
 
     public static function apply_default_filter_to_products($list): SS_List
@@ -163,6 +168,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             self::$singleton_caches[$cacheKey] = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
             //super important we have a unique key.
             self::$singleton_caches[$cacheKey]->setCacheKey($cacheKey);
+            self::$singleton_caches[$cacheKey]->init();
         }
 
         return self::$singleton_caches[$cacheKey];
@@ -480,7 +486,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     protected function hasCache(): bool
     {
-        return EcommerceCache::inst()->hasCache($this->getCachekey());
+        return EcommerceCache::inst()->hasCache($this->getCachekey('productids'));
     }
 
     /**
@@ -524,6 +530,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     public function setCacheKey(string $key) : self
     {
         $this->cacheKey = $key;
+        $this->cacheKey;
         return $this;
     }
 
