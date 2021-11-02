@@ -63,7 +63,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var bool
      */
-    protected $debug = true;
+    protected $debug = false;
 
     /**
      * set to TRUE to show the search logic.
@@ -465,6 +465,7 @@ class ProductSearchFilter extends BaseApplyer
         $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', $this->rawData['MaximumPrice']));
 
         $this->rawData['OnlyThisSection'] = (bool) (int) ($this->rawData['OnlyThisSection'] ?? 0);
+        //swapsies!
         if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
             if ($this->rawData['MaximumPrice'] > 0) {
                 $oldMin = $this->rawData['MinimumPrice'];
@@ -772,7 +773,7 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function hasMinMaxSearch(): bool
     {
-        return ($this->rawData['MinimumPrice'] < $this->rawData['MaximumPrice']) || $this->rawData['MinimumPrice'] > 0 && ! $this->rawData['MaximumPrice'];
+        return ($this->rawData['MinimumPrice'] <= $this->rawData['MaximumPrice']) || $this->rawData['MinimumPrice'] > 0 && ! $this->rawData['MaximumPrice'];
     }
 
     protected function getSearchApi()
