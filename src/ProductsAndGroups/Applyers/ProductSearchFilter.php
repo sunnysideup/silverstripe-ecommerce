@@ -63,7 +63,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var bool
      */
-    protected $debug = false;
+    protected $debug = true;
 
     /**
      * set to TRUE to show the search logic.
