@@ -244,7 +244,6 @@ class ProductGroupController extends PageController
      * Returns child product groups for use in 'in this section'. For example
      * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
      *
-     * @return \SilverStripe\ORM\DataList
      */
     public function MenuChildGroups(?int $levels = 2): ?DataList
     {
