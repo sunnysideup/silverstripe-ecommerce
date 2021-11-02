@@ -33,10 +33,10 @@ class OrderFormPayment extends Form
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
             $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
-            $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }
+            $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
             if ($paymentRequiredFields) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }

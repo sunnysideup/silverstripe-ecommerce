@@ -138,15 +138,17 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
-                    $member = $order->Member();
                     if (! $order->MemberID) {
                         $memberIsOK = true;
-                    } elseif (! $order->Member()) {
-                        $memberIsOK = true;
-                    } elseif ($member) {
-                        $memberIsOK = true;
-                        if ($member->IsShopAdmin()) {
-                            $memberIsOK = false;
+                    } else {
+                        $member = $order->Member();
+                        if ($member && $member->exists()) {
+                            $memberIsOK = true;
+                            if ($member->IsShopAdmin()) {
+                                $memberIsOK = false;
+                            }
+                        } else {
+                            $memberIsOK = true;
                         }
                     }
                     if ($memberIsOK) {

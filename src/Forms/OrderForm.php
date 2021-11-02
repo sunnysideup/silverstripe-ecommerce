@@ -157,7 +157,6 @@ class OrderForm extends Form
         $this->saveDataToSession(); //save for later if necessary
         $order = ShoppingCart::current_order();
         $this->extend('onRawSubmit', $data, $form, $order);
-        $order && $order->TotalItems($recalculate = true) < 1;
         //check for cart items
         if (! $order) {
             $form->sessionMessage(_t('OrderForm.ORDERNOTFOUND', 'Your order could not be found.'), 'bad');
@@ -165,7 +164,7 @@ class OrderForm extends Form
 
             return false;
         }
-        if ($order && 0 === (int) $order->TotalItems($recalculate = true)) {
+        if ($order && (float) $order->TotalItems($recalculate = true) === 0) {
             // WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
             $form->sessionMessage(_t('Order.NOITEMSINCART', 'Please add some items to your cart.'), 'bad');
             $this->controller->redirectBack();
