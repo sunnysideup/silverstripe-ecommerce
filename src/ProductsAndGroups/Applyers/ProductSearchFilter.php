@@ -606,7 +606,7 @@ class ProductSearchFilter extends BaseApplyer
             $this->productsForGroups = $this->productsForGroups
                 ->filter(['ID' => ArrayMethods::filter_array($ids)])
                 ->sort($sortStatement);
-
+            $this->productGroupIds = $ids;
             if ($this->debug) {
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
             }
