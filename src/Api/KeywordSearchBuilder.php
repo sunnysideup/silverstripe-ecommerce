@@ -113,7 +113,7 @@ class KeywordSearchBuilder
                 MATCH ("' . $matchField . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS score
             FROM "' . $table . '"
             ' . $where . '
-            HAVING gp < 99 AND score > 0
+            HAVING gp < 99
             ORDER BY
                 gp ASC,
                 score DESC
