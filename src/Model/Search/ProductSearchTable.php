@@ -77,7 +77,8 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
         $tables = DB::table_list();
         if (array_key_exists(strtolower('ProductGroupSearchTable'), $tables)) {
             DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
-            DB::query('
+            DB::query(
+                '
                 DELETE ProductSearchTable FROM ProductSearchTable
                 LEFT JOIN Product_Live ON Product_Live.ID = ProductSearchTable.ProductID
                 WHERE Product_Live.ID IS NULL'

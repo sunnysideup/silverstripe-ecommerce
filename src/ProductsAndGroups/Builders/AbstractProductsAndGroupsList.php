@@ -16,7 +16,6 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
-use Sunnysideup\Vardump\Vardump;
 use Sunnysideup\Vardump\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList
@@ -69,7 +68,6 @@ abstract class AbstractProductsAndGroupsList
     //#########################################
 
     /**
-     *
      * @return ProductGroup
      */
     final public function getRootGroup()
@@ -91,6 +89,7 @@ abstract class AbstractProductsAndGroupsList
     /**
      * IDs of all the products.
      * count how many times this is called.
+     *
      * @todo: EcommerceCache candidate
      */
     final public function getProductIds(): array
@@ -105,6 +104,7 @@ abstract class AbstractProductsAndGroupsList
     /**
      * Returns the total number of products available before pagination is
      * applied.
+     *
      * @todo: EcommerceCache candidate
      */
     final public function getRawCount(): int
@@ -119,11 +119,11 @@ abstract class AbstractProductsAndGroupsList
      */
     final public function hasMoreThanOne(?int $greaterThan = 1): bool
     {
-        if($this->hasMethod('getRawCountCached')) {
+        if ($this->hasMethod('getRawCountCached')) {
             return $this->getRawCountCached() > $greaterThan;
-        } else {
-            return $this->getRawCount() > $greaterThan;
         }
+
+        return $this->getRawCount() > $greaterThan;
     }
 
     //#########################################
@@ -185,7 +185,6 @@ abstract class AbstractProductsAndGroupsList
     //#########################################
 
     /**
-     *
      * @todo: EcommerceCache candidate
      */
     abstract public function getAlsoShowProductsIds(): array;
@@ -208,7 +207,6 @@ abstract class AbstractProductsAndGroupsList
     //#########################################
 
     /**
-     *
      * @todo: EcommerceCache candidate
      */
     abstract public function getFilterForCandidateCategoryIds(): array;
@@ -220,7 +218,6 @@ abstract class AbstractProductsAndGroupsList
     //#########################################
 
     /**
-     *
      * @todo: EcommerceCache candidate
      */
     final public function getParentGroupIdsBasedOnProducts(): array
@@ -284,6 +281,7 @@ abstract class AbstractProductsAndGroupsList
      * ids for getParentGroups.
      *
      * @todo: EcommerceCache candidate
+     *
      * @var array
      */
     abstract public function getParentGroupIds(): array;
@@ -315,7 +313,6 @@ abstract class AbstractProductsAndGroupsList
     //#################################################
 
     /**
-     *
      * @todo: EcommerceCache candidate
      */
     abstract public function getAlsoShowParentIds(): array;
@@ -351,22 +348,6 @@ abstract class AbstractProductsAndGroupsList
         ;
     }
 
-    //#################################################
-    // HELPERS
-    //#################################################
-
-    /**
-     * @return ProductGroupSchema
-     */
-    protected function getProductGroupSchema()
-    {
-        $obj = $this->rootGroup->getProductGroupSchema();
-        ClassHelpers::check_for_instance_of($obj, ProductGroupSchema::class, true);
-
-        return $obj;
-    }
-
-
     public function getApplyerClassName(string $type): string
     {
         return $this->getProductGroupSchema()->getApplyerClassName($type);
@@ -380,6 +361,21 @@ abstract class AbstractProductsAndGroupsList
         return $this->getProductGroupSchema()
             ->getApplyer($classNameOrType, $this)
         ;
+    }
+
+    //#################################################
+    // HELPERS
+    //#################################################
+
+    /**
+     * @return ProductGroupSchema
+     */
+    protected function getProductGroupSchema()
+    {
+        $obj = $this->rootGroup->getProductGroupSchema();
+        ClassHelpers::check_for_instance_of($obj, ProductGroupSchema::class, true);
+
+        return $obj;
     }
 
     final protected function getBuyableTableNameName(?string $baseClass = SiteTree::class): string
@@ -406,7 +402,6 @@ abstract class AbstractProductsAndGroupsList
         return $stage;
     }
 
-
     protected function turnIdListIntoProductGroups(array $ids, ?bool $useFilterParent = false): DataList
     {
         $ids = ArrayMethods::filter_array($ids);
@@ -418,7 +413,7 @@ abstract class AbstractProductsAndGroupsList
             $newArray = [];
             foreach ($groups as $group) {
                 $filterParent = $group->MyFilterParent();
-                if($filterParent) {
+                if ($filterParent) {
                     $newArray[$filterParent->ID] = $filterParent->ID;
                 }
             }

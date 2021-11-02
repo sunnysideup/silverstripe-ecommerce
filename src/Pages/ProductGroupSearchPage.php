@@ -14,6 +14,11 @@ class ProductGroupSearchPage extends ProductGroup
     protected static $main_search_page;
 
     /**
+     * @var ProductGroupSearchPage
+     */
+    protected static $mainSearchPageCache;
+
+    /**
      * @var int
      */
     private static $maximum_number_of_products_to_list_for_search = 500;
@@ -32,11 +37,6 @@ class ProductGroupSearchPage extends ProductGroup
     private static $singular_name = 'Product Search Page';
 
     private static $plural_name = 'Product Search Pages';
-
-    /**
-     * @var ProductGroupSearchPage
-     */
-    protected static $mainSearchPageCache;
 
     public function i18n_singular_name()
     {
@@ -76,6 +76,7 @@ class ProductGroupSearchPage extends ProductGroup
     public static function main_search_page_id(): int
     {
         $page = self::main_search_page();
+
         return $page ? $page->ID : 0;
     }
 

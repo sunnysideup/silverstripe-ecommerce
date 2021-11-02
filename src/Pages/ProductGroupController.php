@@ -22,8 +22,6 @@ use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Vardump\Vardump;
 
 class ProductGroupController extends PageController
@@ -66,6 +64,10 @@ class ProductGroupController extends PageController
     protected $isSearchResults = false;
 
     protected $secondaryTitle = '';
+
+    protected $hasManyProductsCache;
+
+    protected $totalRawCountCache;
 
     private static $minimum_number_of_pages_to_show_filters_and_sort = 3;
 
@@ -207,7 +209,6 @@ class ProductGroupController extends PageController
     public function ProductGroupListAreCacheable(): bool
     {
         if ($this->productListsHTMLCanBeCached()) {
-
             $currentOrder = ShoppingCart::current_order();
 
             return ! $currentOrder->getHasAlternativeCurrency();
@@ -243,7 +244,6 @@ class ProductGroupController extends PageController
     /**
      * Returns child product groups for use in 'in this section'. For example
      * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
-     *
      */
     public function MenuChildGroups(?int $levels = 2): ?DataList
     {
@@ -284,15 +284,13 @@ class ProductGroupController extends PageController
         return $this->ShowSearchFilterLinks() || $this->ShowGroupFilterLinks() || $this->ShowFilterLinks() || $this->ShowSortLinks() || $this->ShowDisplayLinks();
     }
 
-    protected $hasManyProductsCache = null;
-
     public function HasManyProducts(): bool
     {
-        if(null === $this->hasManyProductsCache) {
+        if (null === $this->hasManyProductsCache) {
             $this->hasManyProductsCache = $this->getBaseProductList()->hasMoreThanOne($this->Config()->get('minimum_number_of_pages_to_show_filters_and_sort'));
         }
-        return $this->hasManyProductsCache;
 
+        return $this->hasManyProductsCache;
     }
 
     public function HasSearchFilter(): bool
@@ -387,11 +385,6 @@ class ProductGroupController extends PageController
         return $perPage > $total ? $total : $perPage;
     }
 
-    protected $totalRawCountCache;
-    /**
-     *
-     * @return int
-     */
     public function TotalCount(): int
     {
         return $this->getFinalProductList()->getRawCountCached();
@@ -665,16 +658,6 @@ class ProductGroupController extends PageController
         return $this->HasSearchFilter();
     }
 
-    protected function saveUserPreferences(?array $data = [])
-    {
-        return $this->getUserPreferencesClass()->saveUserPreferences($data);
-    }
-
-    protected function setSearchString()
-    {
-        //do nothing here, but on ProductGroupSearchPage, we set it as the baselist....
-    }
-
     public function getCurrentUserPreferencesKey(?string $type = '')
     {
         return $this->getUserPreferencesClass()->getCurrentUserPreferencesKey($type);
@@ -735,6 +718,16 @@ class ProductGroupController extends PageController
     public function getSecondaryTitle(): string
     {
         return $this->secondaryTitle;
+    }
+
+    protected function saveUserPreferences(?array $data = [])
+    {
+        return $this->getUserPreferencesClass()->saveUserPreferences($data);
+    }
+
+    protected function setSearchString()
+    {
+        //do nothing here, but on ProductGroupSearchPage, we set it as the baselist....
     }
 
     protected function afterHandleRequest()

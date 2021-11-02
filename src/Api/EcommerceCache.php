@@ -77,16 +77,17 @@ class EcommerceCache implements Flushable
         return false;
     }
 
-    public function productCacheKey() :string
+    public function productCacheKey(): string
     {
-        if(! $this->productCacheKey) {
-            $this->productCacheKey .= '_'.Product::get()->count();
-            $this->productCacheKey .= '_'.strtotime(Product::get()->max('LastEdited'));
-            $this->productCacheKey .= '_'.ProductGroup::get()->count();
-            $this->productCacheKey .= '_'.strtotime(ProductGroup::get()->max('LastEdited'));
-            $this->productCacheKey .= '_'.Versioned::get_reading_mode();
-            $this->productCacheKey .= '_'.Director::get_environment_type();
+        if (! $this->productCacheKey) {
+            $this->productCacheKey .= '_' . Product::get()->count();
+            $this->productCacheKey .= '_' . strtotime(Product::get()->max('LastEdited'));
+            $this->productCacheKey .= '_' . ProductGroup::get()->count();
+            $this->productCacheKey .= '_' . strtotime(ProductGroup::get()->max('LastEdited'));
+            $this->productCacheKey .= '_' . Versioned::get_reading_mode();
+            $this->productCacheKey .= '_' . Director::get_environment_type();
         }
+
         return $this->productCacheKey;
     }
 
@@ -138,7 +139,7 @@ class EcommerceCache implements Flushable
 
     public function AllowCaching(): bool
     {
-        return isset($_GET['no-cache']) ? false : true;
+        return ! isset($_GET['no-cache']);
     }
 
     public function clear()
@@ -153,6 +154,7 @@ class EcommerceCache implements Flushable
 
     /**
      * Most importantly, adds Product Last Changed + Count!
+     *
      * @param string $cacheKey
      */
     public function cacheKeyRefiner($cacheKey): string
@@ -173,6 +175,6 @@ class EcommerceCache implements Flushable
         ];
 
         return
-        str_replace($arrayOfReservedChars, '_', $cacheKey).$this->productCacheKey();
+        str_replace($arrayOfReservedChars, '_', $cacheKey) . $this->productCacheKey();
     }
 }

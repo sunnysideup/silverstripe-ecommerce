@@ -8,7 +8,6 @@ use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Vardump\Vardump;
 
 /**
@@ -53,6 +52,8 @@ class FinalProductList extends AbstractProductsAndGroupsList
      * @var self
      */
     protected static $singleton_cache;
+
+    protected $rawCountCachedCache;
 
     private static $group_filter_candidates_sort = [
         'ClassName' => 'DESC',
@@ -110,15 +111,13 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    public function getBuyableClassName() : string
+    public function getBuyableClassName(): string
     {
         return $this->getBaseProductList()->getBuyableClassName();
     }
 
     /**
-     *
-     * @param  array|string $filter
-     * @return self
+     * @param array|string $filter
      */
     public function setExtraFilter($filter): self
     {
@@ -130,9 +129,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     *
-     * @param  array|string $sort
-     * @return self
+     * @param array|string $sort
      */
     public function setAlternativeSort($sort): self
     {
@@ -255,7 +252,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     *
      * @todo use EcommerceCache
      */
     public function getFilterForCandidateCategoriesFiltered()
@@ -274,7 +270,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
     }
 
     /**
-     *
      * @todo use EcommerceCache
      */
     public function getAlsoShowParentIdsFiltered(): array
@@ -339,16 +334,12 @@ class FinalProductList extends AbstractProductsAndGroupsList
         return RelatedProductGroups::apply_default_filter_to_groups($list);
     }
 
-    protected $rawCountCachedCache = null;
-
     public function getRawCountCached(): int
     {
-        if(null === $this->rawCountCachedCache) {
+        if (null === $this->rawCountCachedCache) {
             $this->rawCountCachedCache = $this->getRawCount();
         }
+
         return $this->rawCountCachedCache;
-
     }
-
-
 }

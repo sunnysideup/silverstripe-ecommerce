@@ -2,11 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use SilverStripe\ORM\PaginatedList;
-
 class ProductGroupSearchPageController extends ProductGroupController
 {
-
     public function getSearchFilterHeader(): string
     {
         return _t('Ecommerce.SEARCH_ALL_PRODUCTS', 'Search all products');
@@ -15,7 +12,7 @@ class ProductGroupSearchPageController extends ProductGroupController
     protected function setSearchString()
     {
         $params = $this->getUserPreferencesClass()->getCurrentUserPreferencesParams('SEARCHFILTER');
-        if(! empty($params)) {
+        if (! empty($params)) {
             ProductGroup::set_search_string_for_base_list(
                 $this->ID,
                 $this->getUserPreferencesClass()->getCurrentUserPreferencesParams('SEARCHFILTER')

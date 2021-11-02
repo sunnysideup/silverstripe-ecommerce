@@ -19,6 +19,7 @@ class KeywordSearchBuilder
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductSearchTable', 'ProductID', 'Data', $phrase, $where, $limit);
+
         return DB::query($sql)->keyedColumn();
     }
 
@@ -104,8 +105,9 @@ class KeywordSearchBuilder
     protected function createSql(string $table, string $idField, string $matchField, string $phrase, string $where, $limit): string
     {
         if ($where) {
-            $where = 'WHERE '.$where;
+            $where = 'WHERE ' . $where;
         }
+
         return '
             SELECT
                 "' . $idField . '",

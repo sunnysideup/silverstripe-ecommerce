@@ -33,7 +33,7 @@ class ProductDisplayer extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        if(! $this->applyStart($key, $params)) {
+        if (! $this->applyStart($key, $params)) {
             $this->applyEnd($key, $params);
         }
 

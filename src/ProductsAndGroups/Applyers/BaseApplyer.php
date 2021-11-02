@@ -8,8 +8,8 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\AbstractProductsAndGroupsList;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
 /**
  * provides data on the user.
@@ -50,7 +50,6 @@ abstract class BaseApplyer
     protected $products;
 
     /**
-     *
      * @var string
      */
     protected $selectedOption = '';
@@ -227,9 +226,9 @@ abstract class BaseApplyer
         return $sql;
     }
 
-    protected function applyStart(?string $key = null, $params = null) : bool
+    protected function applyStart(?string $key = null, $params = null): bool
     {
-        if(false === $this->applied) {
+        if (false === $this->applied) {
             $this->selectedOption = $key;
             $this->selectedOptionParams = $params;
         }

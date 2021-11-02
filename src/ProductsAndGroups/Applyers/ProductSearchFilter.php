@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
@@ -17,7 +16,6 @@ use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\RelatedProductGroups;
 use Sunnysideup\Ecommerce\Traits\PartialObjectCache;
 use Sunnysideup\Vardump\Vardump;
 
@@ -170,7 +168,6 @@ class ProductSearchFilter extends BaseApplyer
     protected static $groupCache = [];
 
     /**
-     *
      * @var DataList
      */
     protected static $groupListCache;
@@ -225,7 +222,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     private static $in_group_sort_sql = ['Price' => 'DESC', 'ID' => 'DESC'];
 
-
     public static function keyword_sanitised(?string $string = ''): string
     {
         $string = Convert::raw2sql($string);
@@ -240,7 +236,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        if(! $this->applyStart($key, $params)) {
+        if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
                 $hash = $this->getHashBasedOnRawData();
@@ -374,7 +370,6 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function applyStart(?string $key = null, $params = null): bool
     {
-
         if (! is_array($params)) {
             $this->rawData = GetVariables::url_string_to_array((string) $params);
         } else {
@@ -593,7 +588,7 @@ class ProductSearchFilter extends BaseApplyer
             // work out searches
             $filterIds = $this->productsForGroups->columnUnique();
             $where = '';
-            if(!empty($filterIds)) {
+            if (! empty($filterIds)) {
                 $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
             }
             $ids = $this->getSearchApi()->getProductGroupResults(
@@ -601,12 +596,13 @@ class ProductSearchFilter extends BaseApplyer
                 $where
             );
             if ($this->debug) {
-                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of '.$where.'</pre>');
+                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of ' . $where . '</pre>');
             }
             $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
             $this->productsForGroups = $this->productsForGroups
                 ->filter(['ID' => ArrayMethods::filter_array($ids)])
-                ->sort($sortStatement);
+                ->sort($sortStatement)
+            ;
             $this->productGroupIds = $ids;
             if ($this->debug) {
                 $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
@@ -714,7 +710,7 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->productsForGroups instanceof DataList) {
             $this->productsForGroups = $this->finalProductList->getParentGroups();
         }
-        if(! $this->productsForGroups->exists()) {
+        if (! $this->productsForGroups->exists()) {
             $tmpVar = $this->baseClassNameForGroups;
             $this->productsForGroups = $tmpVar::get();
         }

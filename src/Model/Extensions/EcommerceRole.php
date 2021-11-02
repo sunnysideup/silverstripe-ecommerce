@@ -47,6 +47,9 @@ use Sunnysideup\Ecommerce\Model\Order;
  */
 class EcommerceRole extends DataExtension implements PermissionProvider
 {
+    protected static $adminMemberCache;
+
+    protected static $shopAssistantMemberCache;
     private static $max_count_of_members_in_array = 1500;
 
     private static $api_access = [
@@ -422,34 +425,34 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
     }
 
-    protected static $adminMemberCache;
     /**
      * @return \SilverStripe\ORM\DataObject (Member)|null
      */
     public static function get_default_shop_admin_user()
     {
-        if(null === self::$adminMemberCache) {
+        if (null === self::$adminMemberCache) {
             $group = self::get_admin_group();
             if ($group) {
                 self::$adminMemberCache = $group->Members()->First();
             }
         }
+
         return self::$adminMemberCache;
     }
 
-    protected static $shopAssistantMemberCache;
     /**
      * @return \SilverStripe\ORM\DataObject (Member)|null
      */
     public static function get_default_shop_assistant_user()
     {
         self::$shopAssistantMemberCache;
-        if(null === self::$shopAssistantMemberCache) {
+        if (null === self::$shopAssistantMemberCache) {
             $group = self::get_assistant_group();
             if ($group) {
                 self::$shopAssistantMemberCache = $group->Members()->First();
             }
         }
+
         return self::$shopAssistantMemberCache;
     }
 

@@ -33,9 +33,6 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
  */
 class ProductSearchForm extends Form
 {
-
-    private static $default_sort = ProductSearchFilter::KEY_FOR_SORTER;
-
     /**
      * @var array
      */
@@ -61,6 +58,8 @@ class ProductSearchForm extends Form
      * @var string
      */
     protected $additionalGetParameters = '';
+
+    private static $default_sort = ProductSearchFilter::KEY_FOR_SORTER;
 
     /**
      * @var bool
@@ -289,7 +288,7 @@ class ProductSearchForm extends Form
         return $this->controller->dataRecord;
     }
 
-    protected function defaultSort() : string
+    protected function defaultSort(): string
     {
         return $this->Config()->get('default_sort');
     }

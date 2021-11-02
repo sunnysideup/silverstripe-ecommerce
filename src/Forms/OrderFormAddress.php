@@ -358,9 +358,10 @@ class OrderFormAddress extends Form
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
         $outcome = $this->saveAddressDetails($data, $form, $request);
-        if($outcome) {
+        if ($outcome) {
             $nextStepLink = CheckoutPage::find_next_step_link('orderformaddress');
             $this->controller->redirect($nextStepLink);
+
             return true;
         }
     }

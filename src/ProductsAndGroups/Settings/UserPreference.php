@@ -11,15 +11,13 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
-
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Vardump\DebugTrait;
 
 /**
@@ -338,7 +336,7 @@ class UserPreference
             $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
         $pageId = $this->rootGroup->ID;
-        if(! $pageId) {
+        if (! $pageId) {
             user_error('Must have page ID');
         }
 
@@ -384,7 +382,7 @@ class UserPreference
                 if ($count) {
                     if (1 === $count) {
                         $productString = _t('ProductGroup.ONE_PRODUCT_FOUND', 'Search Result');
-                    } elseif((int) $count === (int) EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search')) {
+                    } elseif ((int) $count === (int) EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search')) {
                         $count = _t('ProductGroup.BEST', 'Best');
                     }
                     $toAdd = $count . ' ' . $productString;

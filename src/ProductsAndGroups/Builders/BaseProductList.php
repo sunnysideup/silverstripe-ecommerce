@@ -13,7 +13,6 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
 /**
@@ -147,7 +146,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 ->storeInCache()
             ;
         }
-
     }
 
     public static function apply_default_filter_to_products($list): SS_List
@@ -349,6 +347,14 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->blockedProductsIds;
     }
 
+    public function setCacheKey(string $key): self
+    {
+        $this->cacheKey = $key;
+        $this->cacheKey;
+
+        return $this;
+    }
+
     //#################################################
     // BUILDERS
     //#################################################
@@ -379,7 +385,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     protected function applyGroupOrSearchFilter(): self
     {
-        if($this->searchString) {
+        if ($this->searchString) {
             $this->applySearchFilter();
         } else {
             $this->applyGroupFilterInner();
@@ -527,18 +533,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    public function setCacheKey(string $key) : self
-    {
-        $this->cacheKey = $key;
-        $this->cacheKey;
-        return $this;
-    }
-
     /**
      * @param string $add key to add
      */
     protected function getCachekey(?string $add = ''): string
     {
-        return $this->cacheKey.$add;
+        return $this->cacheKey . $add;
     }
 }
