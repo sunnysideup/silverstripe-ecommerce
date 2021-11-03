@@ -317,7 +317,7 @@ class ProductSearchForm extends Form
 
     protected function checkForOneProductTitleMatch()
     {
-        $productGroup = Product::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+        $productGroup = Product::get()->filter(['Title' => $this->rawData['Keyword'], 'ShowInSearch' => true])->first();
         if($productGroup) {
             return $this->controller->redirect($productGroup->Link());
         }
@@ -326,7 +326,7 @@ class ProductSearchForm extends Form
 
     protected function checkForOneCategoryTitleMatch()
     {
-        $productGroup = ProductGroup::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+        $productGroup = ProductGroup::get()->filter(['Title' => $this->rawData['Keyword'], 'ShowInSearch' => true])->first();
         if($productGroup) {
             return $this->controller->redirect($productGroup->Link());
         }

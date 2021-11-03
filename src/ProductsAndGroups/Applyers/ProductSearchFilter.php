@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use SilverStripe\Security\Permission;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -39,7 +40,6 @@ class ProductSearchFilter extends BaseApplyer
         'productIds',
         'productGroupIds',
         'baseListOwner',
-        'immediateRedirectPage',
     ];
 
     /**
@@ -62,13 +62,6 @@ class ProductSearchFilter extends BaseApplyer
      * @var bool
      */
     protected $debug = false;
-
-    /**
-     * set to TRUE to show the search logic.
-     *
-     * @var string
-     */
-    protected $debugOutputString = '';
 
     /**
      * Fields are:
@@ -166,6 +159,10 @@ class ProductSearchFilter extends BaseApplyer
      * @var DataList
      */
     protected static $groupListCache;
+    /**
+     * @var DataList
+     */
+    protected static $debugString = '';
 
     /**
      * @var bool
@@ -231,12 +228,13 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
+        $this->debug = $this->debug ?: !empty($_GET['showdebug']) && (Director::isDev() || Permission::check('ADMIN'));
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
                 $hash = $this->getHashBasedOnRawData();
                 $outcome = $this->partialCacheApplyVariablesFromCache($hash);
-                if ($outcome) {
+                if ($outcome && ! $this->debug) {
                     $this->runFullProcessFromCache();
                 } else {
                     $this->runFullProcess();
@@ -300,9 +298,9 @@ class ProductSearchFilter extends BaseApplyer
         return count($this->productIds) > 1 || count($this->productGroupIds) > 1;
     }
 
-    public function getDebugOutputString()
+    public function getDebugOutputString() : string
     {
-        return $this->debugOutputString;
+        return self::$debugString;
     }
 
     //#######################################
@@ -413,9 +411,6 @@ class ProductSearchFilter extends BaseApplyer
                 $this->addToResults($this->products);
             }
         }
-        if ($this->debug) {
-            echo $this->debugOutputString;
-        }
     }
 
     protected function runKeywordSearch()
@@ -435,8 +430,6 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->maximumNumberOfResults) {
             $this->maximumNumberOfResults = (int) EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search');
         }
-
-        $this->debug ?: isset($_GET['showdebug']) && Director::isDev();
 
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results in ' . static::class . '</h2>');
@@ -650,10 +643,6 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function weHaveEnoughResults(): bool
     {
-        if ($this->immediateRedirectPage) {
-            return true;
-        }
-
         return $this->resultArrayPos >= $this->maximumNumberOfResults;
     }
 
@@ -719,7 +708,7 @@ class ProductSearchFilter extends BaseApplyer
     protected function debugOutput($mixed)
     {
         if ($this->debug) {
-            $this->debugOutputString .= Vardump::inst()->mixedToUl($mixed);
+            self::$debugString .= Vardump::inst()->mixedToUl($mixed);
         }
     }
 
