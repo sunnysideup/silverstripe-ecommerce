@@ -232,19 +232,21 @@ class ProductSearchForm extends Form
     {
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
-        $link = $this->getResultsPageLink();
-        if (! strpos('?', $link)) {
-            $link .= '?';
-        } else {
-            $link .= '&';
+        if(! $this->checkForInternalItemID()) {
+            $link = $this->getResultsPageLink();
+            if (! strpos('?', $link)) {
+                $link .= '?';
+            } else {
+                $link .= '&';
+            }
+            $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
+            if ($this->additionalGetParameters) {
+                $link .= '&' . trim($this->additionalGetParameters, '&');
+            }
+            //important - sort by relevancy
+            $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
+            $this->controller->redirect($link);
         }
-        $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
-        if ($this->additionalGetParameters) {
-            $link .= '&' . trim($this->additionalGetParameters, '&');
-        }
-        //important - sort by relevancy
-        $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
-        $this->controller->redirect($link);
     }
 
     //#######################################
@@ -298,5 +300,14 @@ class ProductSearchForm extends Form
         $redirectToPage = $this->getResultsPage();
 
         return $redirectToPage->Link();
+    }
+
+    protected function checkForInternalItemID()
+    {
+        $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
+        if($product) {
+            return $this->controller->redirect($product->Link());
+        }
+        return false;
     }
 }
