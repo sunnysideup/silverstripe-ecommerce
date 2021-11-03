@@ -115,11 +115,6 @@ class ProductSearchFilter extends BaseApplyer
     protected $resultArrayPos = 0;
 
     /**
-     * @var SiteTree
-     */
-    protected $immediateRedirectPage;
-
-    /**
      * class name of the buyables to search
      * at this stage, you can only search one type of buyable at any one time
      * e.g. only products or only mydataobject.
@@ -250,11 +245,6 @@ class ProductSearchFilter extends BaseApplyer
                 //not sure why we need this, but keeping for now.
                 self::$groupCache = $this->productGroupIds;
                 self::$groupListCache = $this->productsForGroups;
-                if ($this->immediateRedirectPage) {
-                    Controller::curr()->redirect($this->immediateRedirectPage->AbsoluteLink());
-
-                    return $this;
-                }
                 $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
                 $sorter = ArrayMethods::create_sort_statement_from_id_array(
                     $this->getProductIds(),
@@ -420,7 +410,7 @@ class ProductSearchFilter extends BaseApplyer
                 $this->runKeywordSearch();
             } else {
                 // add directly to results
-                $this->addToResults($this->products, true);
+                $this->addToResults($this->products);
             }
         }
         if ($this->debug) {
@@ -432,7 +422,6 @@ class ProductSearchFilter extends BaseApplyer
     {
         $this->keywordPhrase = $this->rawData['Keyword'];
         $this->doKeywordCleanup();
-        $this->doInternalItemSearch();
         $this->doKeywordReplacements();
         $this->doProductSearch();
         $this->doGroupSearch();
@@ -479,22 +468,6 @@ class ProductSearchFilter extends BaseApplyer
             $this->debugOutput('<h3>RAW KEYWORD</h3><p>' . $this->keywordPhrase . '</p>');
         }
         $this->keywordPhrase = self::keyword_sanitised($this->keywordPhrase);
-    }
-
-    /**
-     * look for internalItemID.
-     */
-    protected function doInternalItemSearch()
-    {
-        if ($this->debug) {
-            $this->debugOutput('<hr />');
-            $this->debugOutput('<h2>SEARCH BY CODE</h2>');
-        }
-        $list1 = $this->products->filter(['InternalItemID' => $this->keywordPhrase]);
-        $this->addToResults($list1, true);
-        if ($this->debug) {
-            $this->debugOutput('<h3>SEARCH BY CODE RESULT: ' . $list1->count() . '</h3>');
-        }
     }
 
     /**
@@ -576,37 +549,35 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function doGroupSearch()
     {
-        if (null === $this->immediateRedirectPage) {
-            if ($this->debug) {
-                $this->debugOutput('<hr />');
-                $this->debugOutput('<h3>PRODUCT GROUP SEARCH ' . $this->productsForGroups->count() . '</h3>');
-            }
+        if ($this->debug) {
+            $this->debugOutput('<hr />');
+            $this->debugOutput('<h3>PRODUCT GROUP SEARCH ' . $this->productsForGroups->count() . '</h3>');
+        }
 
-            $count = 0;
-            // work out fields to search
+        $count = 0;
+        // work out fields to search
 
-            // work out searches
-            $filterIds = $this->productsForGroups->columnUnique();
-            $where = '';
-            if (! empty($filterIds)) {
-                $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
-            }
-            $ids = $this->getSearchApi()->getProductGroupResults(
-                $this->keywordPhrase,
-                $where
-            );
-            if ($this->debug) {
-                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of ' . $where . '</pre>');
-            }
-            $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
-            $this->productsForGroups = $this->productsForGroups
-                ->filter(['ID' => ArrayMethods::filter_array($ids)])
-                ->sort($sortStatement)
-            ;
-            $this->productGroupIds = $ids;
-            if ($this->debug) {
-                $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
-            }
+        // work out searches
+        $filterIds = $this->productsForGroups->columnUnique();
+        $where = '';
+        if (! empty($filterIds)) {
+            $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
+        }
+        $ids = $this->getSearchApi()->getProductGroupResults(
+            $this->keywordPhrase,
+            $where
+        );
+        if ($this->debug) {
+            $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of ' . $where . '</pre>');
+        }
+        $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
+        $this->productsForGroups = $this->productsForGroups
+            ->filter(['ID' => ArrayMethods::filter_array($ids)])
+            ->sort($sortStatement)
+        ;
+        $this->productGroupIds = $ids;
+        if ($this->debug) {
+            $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
         }
     }
 
@@ -626,23 +597,8 @@ class ProductSearchFilter extends BaseApplyer
         if ($this->weHaveEnoughResults()) {
             return true;
         }
-        $count = 9999;
         // immediate redirect?
-        if ($allowOneAnswer && 0 === $this->resultArrayPos) {
-            $count = $listToAdd->limit(2)->count();
-            if (1 === $count) {
-                // $this->immediateRedirectPage = $list1->First()->getRequestHandler()->Link();
-                $this->immediateRedirectPage = $listToAdd->First();
-                if ($this->debug) {
-                    $this->debugOutput(
-                        '<p style="color: red">Found one answer for potential immediate redirect: ' . $this->immediateRedirectPage->Link() . '</p>'
-                    );
-                }
-
-                return true;
-            }
-        }
-        if ($count > 0) {
+        if ($listToAdd->exists()) {
             $sort = $this->Config()->get('in_group_sort_sql');
             $listToAdd = $listToAdd
                 ->limit($this->maxToAdd())
@@ -654,11 +610,11 @@ class ProductSearchFilter extends BaseApplyer
                 //check that this is the right order!
                 $listToAdd = $listToAdd->columnUnique('ID');
             }
-            foreach ($listToAdd as $page) {
+            foreach ($listToAdd as $pageIdOrObject) {
                 if ($customMethod) {
-                    $id = $page->{$customMethod}();
-                } elseif (is_int($page)) {
-                    $id = $page;
+                    $id = $pageIdOrObject->{$customMethod}();
+                } elseif (is_int($pageIdOrObject)) {
+                    $id = $pageIdOrObject;
                 }
                 if ($this->addToListInner($id)) {
                     return true;
