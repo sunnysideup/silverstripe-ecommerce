@@ -233,19 +233,23 @@ class ProductSearchForm extends Form
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
         if(! $this->checkForInternalItemID()) {
-            $link = $this->getResultsPageLink();
-            if (! strpos('?', $link)) {
-                $link .= '?';
-            } else {
-                $link .= '&';
+            if(! $this->checkForOneProductTitleMatch()) {
+                if(! $this->checkForOneCategoryTitleMatch()) {
+                    $link = $this->getResultsPageLink();
+                    if (! strpos('?', $link)) {
+                        $link .= '?';
+                    } else {
+                        $link .= '&';
+                    }
+                    $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
+                    if ($this->additionalGetParameters) {
+                        $link .= '&' . trim($this->additionalGetParameters, '&');
+                    }
+                    //important - sort by relevancy
+                    $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
+                    $this->controller->redirect($link);
+                }
             }
-            $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
-            if ($this->additionalGetParameters) {
-                $link .= '&' . trim($this->additionalGetParameters, '&');
-            }
-            //important - sort by relevancy
-            $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
-            $this->controller->redirect($link);
         }
     }
 
@@ -310,4 +314,23 @@ class ProductSearchForm extends Form
         }
         return false;
     }
+
+    protected function checkForOneProductTitleMatch()
+    {
+        $productGroup = Product::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+        if($productGroup) {
+            return $this->controller->redirect($productGroup->Link());
+        }
+        return false;
+    }
+
+    protected function checkForOneCategoryTitleMatch()
+    {
+        $productGroup = ProductGroup::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+        if($productGroup) {
+            return $this->controller->redirect($productGroup->Link());
+        }
+        return false;
+    }
+
 }
