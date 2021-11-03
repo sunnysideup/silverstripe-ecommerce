@@ -4,6 +4,10 @@ namespace Sunnysideup\Ecommerce\Traits;
 
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 
+use Sunnysideup\Vardump\Vardump;
+
+use SilverStripe\ORM\DataObject;
+
 /**
  * To make this trait work, you will need to add a method `getFieldsToCache` to
  * any object that you are adding this to.
@@ -29,7 +33,7 @@ trait PartialObjectCache
         $variables = [];
         foreach ($this->partialCacheGetFieldsToCache() as $variable) {
             $value = $this->{$variable};
-            if (is_object($value) && is_a($value, DataObject::class)) {
+            if (is_object($value) && $value instanceof DataObject) {
                 if (! empty($value->ClassName) && ! empty($value->ID)) {
                     $variables[$variable]['ClassName'] = $value->ClassName;
                     $variables[$variable]['ID'] = $value->ID;

@@ -251,7 +251,7 @@ class ProductSearchFilter extends BaseApplyer
                 self::$groupCache = $this->productGroupIds;
                 self::$groupListCache = $this->productsForGroups;
                 if ($this->immediateRedirectPage) {
-                    Controller::curr()->redirect($this->immediateRedirectPage->Link());
+                    Controller::curr()->redirect($this->immediateRedirectPage->AbsoluteLink());
 
                     return $this;
                 }
