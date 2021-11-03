@@ -2969,12 +2969,12 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return int
      */
-    public function TotalItems($recalculate = false)
+    public function TotalItems($recalculate = false) : int
     {
-        return $this->getTotalItems($recalculate);
+        return (int) $this->getTotalItems($recalculate);
     }
 
-    public function getTotalItems($recalculate = false)
+    public function getTotalItems($recalculate = false) : int
     {
         if (null === $this->totalItems || $recalculate) {
             $this->totalItems = OrderItem::get()
@@ -2983,7 +2983,7 @@ class Order extends DataObject implements EditableEcommerceObject
             ;
         }
 
-        return $this->totalItems;
+        return (int) $this->totalItems;
     }
 
     /**
@@ -3646,7 +3646,8 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsCancelled() && ! $this->IsArchived()) {
             $this->Archive($avoidWrites = true);
         }
-        if ($this->IsSubmitted($recalculate = true)) {
+        $isSubmitted = $this->IsSubmitted($recalculate = true);
+        if ($isSubmitted) {
             //do nothing
         } elseif ($this->StatusID) {
             $this->calculateOrderAttributes($recalculate = false);

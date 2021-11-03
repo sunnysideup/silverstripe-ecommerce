@@ -53,15 +53,13 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
                     $member = $order->Member();
-                    if (! $order->MemberID) {
-                        $memberIsOK = true;
-                    } elseif (! $order->Member()) {
-                        $memberIsOK = true;
-                    } elseif ($member) {
+                    if($member && $member->exists()) {
                         $memberIsOK = true;
                         if ($member->IsShopAssistant()) {
                             $memberIsOK = false;
                         }
+                    } else {
+                        $memberIsOK = true;
                     }
                     if ($memberIsOK) {
                         $items = OrderItem::get()->filter(['OrderID' => $order->ID]);

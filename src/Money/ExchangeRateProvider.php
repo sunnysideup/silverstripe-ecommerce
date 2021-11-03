@@ -74,10 +74,10 @@ class ExchangeRateProvider
         $fromCode = strtoupper($fromCode);
         $toCode = strtoupper($toCode);
         $cacheCode = $fromCode . '_' . $toCode;
-        $value = Controller::curr()->getRequest()->getSession()->get($cacheCode);
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
         }
+        $value = Controller::curr()->getRequest()->getSession()->get($cacheCode);
         if ($value) {
             self::$_memory_cache[$cacheCode] = $value;
         } else {

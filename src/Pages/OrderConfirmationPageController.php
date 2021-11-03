@@ -369,37 +369,43 @@ class OrderConfirmationPageController extends CartPageController
             $subject = '';
             $message = '';
             $emailClassName = OrderReceiptEmail::class;
-            $statusID = $request->getVar('send');
-            $statusID = (int) $request->getVar('test');
-            if (class_exists($request->param('OtherID'))) {
-                if (is_a(singleton($request->param('OtherID')), EcommerceConfigClassNames::getName(OrderEmail::class))) {
-                    $emailClassName = $request->param('OtherID');
+
+            // different classname
+            $otherId = str_replace('\\', '-', $request->param('OtherID'));
+            if (class_exists($otherId)) {
+                if (is_a(singleton($otherId), EcommerceConfigClassNames::getName(OrderEmail::class))) {
+                    $emailClassName = $otherId;
                 }
             }
-            if ($statusID) {
-                $step = OrderStep::get()->byID($statusID);
+
+            //
+            $statusIDSend = (int) $request->getVar('send');
+            if ($statusIDSend) {
+                $step = OrderStep::get()->byID($statusIDSend);
                 $subject = $step->CalculatedEmailSubject($this->currentOrder);
                 $message = $step->CalculatedCustomerMessage($this->currentOrder);
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
                 }
-                if ($request->getVar('send')) {
-                    $email = filter_var($request->getVar('send'), FILTER_SANITIZE_EMAIL);
-                    if (! $email) {
-                        $email = true;
-                    }
-                    $this->currentOrder->sendEmail(
-                        $emailClassName,
-                        _t('Account.TEST_ONLY', '--- TEST ONLY ---') . ' ' . $subject,
-                        $message,
-                        $resend = true,
-                        $adminOnlyOrToEmail = $email
-                    );
+                $email = filter_var($statusIDSend, FILTER_SANITIZE_EMAIL);
+                if (! $email) {
+                    $email = true;
                 }
-            } elseif ($statusID) {
+                $this->currentOrder->sendEmail(
+                    $emailClassName,
+                    _t('Account.TEST_ONLY', '--- TEST ONLY ---') . ' ' . $subject,
+                    $message,
+                    $resend = true,
+                    $adminOnlyOrToEmail = $email
+                );
+            }
+
+            //test
+            $statusIDTest = (int) $request->getVar('test');
+            if ($statusIDTest) {
                 $email = $this->currentOrder->getOrderEmail();
                 if ($email) {
-                    $step = OrderStep::get()->byID($statusID);
+                    $step = OrderStep::get()->byID($statusIDTest);
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
                     $emailClassName = OrderInvoiceEmail::class;

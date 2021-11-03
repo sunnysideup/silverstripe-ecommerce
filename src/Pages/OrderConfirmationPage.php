@@ -294,10 +294,10 @@ class OrderConfirmationPage extends CartPage
     public static function find_link($action = null)
     {
         $page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class]);
-        $page = DataObject::get_one(OrderConfirmationPage::class);
         if ($page) {
             return $page->Link($action);
         }
+        $page = DataObject::get_one(OrderConfirmationPage::class);
         if ($page) {
             return $page->Link($action);
         }

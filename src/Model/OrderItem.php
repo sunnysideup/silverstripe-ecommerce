@@ -503,7 +503,7 @@ class OrderItem extends OrderAttribute
 
     public function getUnitPrice($recalculate = false)
     {
-        $buyable = $this->Buyable();
+        // price is fixed
         if ($this->priceHasBeenFixed($recalculate) && ! $recalculate) {
             if (! $this->Quantity) {
                 $this->Quantity = 1;
@@ -511,6 +511,8 @@ class OrderItem extends OrderAttribute
 
             return $this->CalculatedTotal / $this->Quantity;
         }
+        // calculate price
+        $buyable = $this->Buyable();
         if ($buyable) {
             if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
@@ -971,14 +973,12 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        if (! $this->Version) {
-            $buyable = $this->Buyable(true);
-        }
+        $buyable = $this->Buyable(true);
         if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
         }
         if (! $this->exists()) {
-            $buyable = $this->Buyable(true);
+
             if ($buyable) {
                 if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
                     $this->setClassName($buyable->classNameForOrderItem());

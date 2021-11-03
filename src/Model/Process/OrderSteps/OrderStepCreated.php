@@ -100,6 +100,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
                 $billingAddress = null;
                 $problems[] = 'There is no --- Customer --- associated with this order.';
             }
+            $billingAddress = null;
             if ($order->BillingAddressID) {
                 $billingAddress = $order->BillingAddress();
             } else {
