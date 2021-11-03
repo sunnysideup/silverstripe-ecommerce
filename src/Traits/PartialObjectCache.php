@@ -2,11 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Traits;
 
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
-
-use Sunnysideup\Vardump\Vardump;
-
 use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 
 /**
  * To make this trait work, you will need to add a method `getFieldsToCache` to

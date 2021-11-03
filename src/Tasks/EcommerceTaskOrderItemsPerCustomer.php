@@ -53,7 +53,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 if ($order->IsSubmitted()) {
                     $memberIsOK = false;
                     $member = $order->Member();
-                    if($member && $member->exists()) {
+                    if ($member && $member->exists()) {
                         $memberIsOK = true;
                         if ($member->IsShopAssistant()) {
                             $memberIsOK = false;

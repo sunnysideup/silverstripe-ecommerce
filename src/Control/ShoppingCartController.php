@@ -569,12 +569,13 @@ class ShoppingCartController extends Controller
      *
      * @return int
      */
-    public function numberofitemsincart(HTTPRequest $request) : float
+    public function numberofitemsincart(HTTPRequest $request): float
     {
         $order = $this->cart->CurrentOrder();
-        if($order) {
+        if ($order) {
             return (int) $order->TotalItems($recalculate = true);
         }
+
         return 0;
     }
 

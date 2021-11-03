@@ -978,7 +978,6 @@ class OrderItem extends OrderAttribute
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
         }
         if (! $this->exists()) {
-
             if ($buyable) {
                 if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
                     $this->setClassName($buyable->classNameForOrderItem());

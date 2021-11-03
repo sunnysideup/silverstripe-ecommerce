@@ -378,7 +378,6 @@ class OrderConfirmationPageController extends CartPageController
                 }
             }
 
-            //
             $statusIDSend = (int) $request->getVar('send');
             if ($statusIDSend) {
                 $step = OrderStep::get()->byID($statusIDSend);
