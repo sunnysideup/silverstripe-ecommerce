@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Traits;
 
+use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 
 /**
@@ -29,7 +30,7 @@ trait PartialObjectCache
         $variables = [];
         foreach ($this->partialCacheGetFieldsToCache() as $variable) {
             $value = $this->{$variable};
-            if (is_object($value) && is_a($value, DataObject::class)) {
+            if (is_object($value) && $value instanceof DataObject) {
                 if (! empty($value->ClassName) && ! empty($value->ID)) {
                     $variables[$variable]['ClassName'] = $value->ClassName;
                     $variables[$variable]['ID'] = $value->ID;

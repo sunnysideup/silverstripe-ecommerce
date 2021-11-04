@@ -49,6 +49,7 @@ class OrderFormFeedback extends Form
             FormAction::create('dofeedback', $this->getValueFromOrderConfirmationPage('FeedbackFormSubmitLabel'))
         );
         $requiredFields = [
+            'Rating',
             'FeedbackValue',
         ];
         $validator = OrderFormFeedbackValidator::create($requiredFields);
@@ -63,9 +64,11 @@ class OrderFormFeedback extends Form
     public function dofeedback(array $data, Form $form, HTTPRequest $request)
     {
         if ($this->order) {
+            $note = $data['Note'] ?? 'no note';
+            $rating = $data['Rating'] ?? 'Not sure';
             $object = OrderFeedback::create();
-            $object->Note = Convert::raw2sql($data['Note']);
-            $object->Rating = Convert::raw2sql($data['Rating']);
+            $object->Note = $note;
+            $object->Rating = $rating;
             $object->OrderID = $this->order->ID;
             $object->write();
             $form->sessionMessage(

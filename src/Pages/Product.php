@@ -119,6 +119,7 @@ class Product extends Page implements BuyableModel
     ];
 
     private static $indexes = [
+        'Title' => true,
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,

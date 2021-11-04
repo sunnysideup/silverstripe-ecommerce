@@ -222,7 +222,7 @@ Accessed by: <strong>ProductGroup.getBaseProductList()</strong>.
 
 <hr /><hr /><h2 id="FinalList" style="color: red; padding-top: 2rem">Search</h2><hr />
 <ul>
-<li><strong>Debug:</strong> <div class="answer">$DebugSearchString</div></li>
+<li><strong>Debug:</strong> <div class="answer">$DebugSearchString.RAW</div></li>
 </ul>
 
 <% end_with %>

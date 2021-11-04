@@ -2966,15 +2966,13 @@ class Order extends DataObject implements EditableEcommerceObject
      * if there is anything in the cart.
      *
      * @param bool $recalculate - do we need to recalculate (value is retained during lifetime of Object)
-     *
-     * @return int
      */
-    public function TotalItems($recalculate = false) : int
+    public function TotalItems($recalculate = false): int
     {
         return (int) $this->getTotalItems($recalculate);
     }
 
-    public function getTotalItems($recalculate = false) : int
+    public function getTotalItems($recalculate = false): int
     {
         if (null === $this->totalItems || $recalculate) {
             $this->totalItems = OrderItem::get()

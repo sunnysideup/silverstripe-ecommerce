@@ -20,6 +20,8 @@ use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
+use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
+use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -232,19 +234,31 @@ class ProductSearchForm extends Form
     {
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
-        $link = $this->getResultsPageLink();
-        if (! strpos('?', $link)) {
-            $link .= '?';
-        } else {
-            $link .= '&';
+        $doSearchAtAll = false;
+        if (! empty($this->rawData['OnlyThisSection'])) {
+            $doSearchAtAll = true;
+        } elseif (! $this->checkForInternalItemID()) {
+            if (! $this->checkForOneProductTitleMatch()) {
+                if (! $this->checkForOneCategoryTitleMatch()) {
+                    $doSearchAtAll = true;
+                }
+            }
         }
-        $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
-        if ($this->additionalGetParameters) {
-            $link .= '&' . trim($this->additionalGetParameters, '&');
+        if ($doSearchAtAll) {
+            $link = $this->getResultsPageLink();
+            if (! strpos('?', $link)) {
+                $link .= '?';
+            } else {
+                $link .= '&';
+            }
+            $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
+            if ($this->additionalGetParameters) {
+                $link .= '&' . trim($this->additionalGetParameters, '&');
+            }
+            //important - sort by relevancy
+            $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
+            $this->controller->redirect($link);
         }
-        //important - sort by relevancy
-        $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
-        $this->controller->redirect($link);
     }
 
     //#######################################
@@ -298,5 +312,41 @@ class ProductSearchForm extends Form
         $redirectToPage = $this->getResultsPage();
 
         return $redirectToPage->Link();
+    }
+
+    protected function checkForInternalItemID()
+    {
+        $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
+        if ($product) {
+            return $this->controller->redirect($product->Link());
+        }
+
+        return false;
+    }
+
+    protected function checkForOneProductTitleMatch()
+    {
+        $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+        if ($test) {
+            $product = Product::get()->byID($test->ProductID);
+            if ($product) {
+                return $this->controller->redirect($product->Link());
+            }
+        }
+
+        return false;
+    }
+
+    protected function checkForOneCategoryTitleMatch()
+    {
+        $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+        if ($test) {
+            $product = ProductGroup::get()->byID($test->ProductGroupID);
+            if ($product) {
+                return $this->controller->redirect($product->Link());
+            }
+        }
+
+        return false;
     }
 }
