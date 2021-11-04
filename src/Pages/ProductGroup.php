@@ -107,6 +107,7 @@ class ProductGroup extends Page
     ];
 
     private static $indexes = [
+        'Title' => true,
         'LevelOfProductsToShow' => true,
         'DefaultSortOrder' => true,
         'DefaultFilter' => true,

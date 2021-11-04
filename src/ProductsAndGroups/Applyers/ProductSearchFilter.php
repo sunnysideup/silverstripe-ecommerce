@@ -228,7 +228,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $this->debug = $this->debug ?: !empty($_GET['showdebug']) && (Director::isDev() || Permission::check('ADMIN'));
+        $this->debug = !empty($_GET['showdebug']) && (Director::isDev() || Permission::check('ADMIN'));
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
