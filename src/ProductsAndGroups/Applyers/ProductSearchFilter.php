@@ -2,13 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
-use SilverStripe\Security\Permission;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
@@ -228,7 +226,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $this->debug = !empty($_GET['showdebug']) && (Director::isDev() || Permission::check('ADMIN'));
+        $this->debug = ! empty($_GET['showdebug']) && (Director::isDev() || Permission::check('ADMIN'));
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
@@ -298,7 +296,7 @@ class ProductSearchFilter extends BaseApplyer
         return count($this->productIds) > 1 || count($this->productGroupIds) > 1;
     }
 
-    public function getDebugOutputString() : string
+    public function getDebugOutputString(): string
     {
         return self::$debugString;
     }

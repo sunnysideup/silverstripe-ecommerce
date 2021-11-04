@@ -20,9 +20,9 @@ use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
-use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
-use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
 use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
+use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
+use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
@@ -235,18 +235,16 @@ class ProductSearchForm extends Form
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
         $doSearchAtAll = false;
-        if(! empty($this->rawData['OnlyThisSection'])) {
+        if (! empty($this->rawData['OnlyThisSection'])) {
             $doSearchAtAll = true;
-        } else {
-            if(! $this->checkForInternalItemID()) {
-                if(! $this->checkForOneProductTitleMatch()) {
-                    if(! $this->checkForOneCategoryTitleMatch()) {
-                        $doSearchAtAll = true;
-                    }
+        } elseif (! $this->checkForInternalItemID()) {
+            if (! $this->checkForOneProductTitleMatch()) {
+                if (! $this->checkForOneCategoryTitleMatch()) {
+                    $doSearchAtAll = true;
                 }
             }
         }
-        if($doSearchAtAll) {
+        if ($doSearchAtAll) {
             $link = $this->getResultsPageLink();
             if (! strpos('?', $link)) {
                 $link .= '?';
@@ -319,34 +317,36 @@ class ProductSearchForm extends Form
     protected function checkForInternalItemID()
     {
         $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
-        if($product) {
+        if ($product) {
             return $this->controller->redirect($product->Link());
         }
+
         return false;
     }
 
     protected function checkForOneProductTitleMatch()
     {
         $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
-        if($test) {
+        if ($test) {
             $product = Product::get()->byID($test->ProductID);
-            if($product) {
+            if ($product) {
                 return $this->controller->redirect($product->Link());
             }
         }
+
         return false;
     }
 
     protected function checkForOneCategoryTitleMatch()
     {
         $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
-        if($test) {
+        if ($test) {
             $product = ProductGroup::get()->byID($test->ProductGroupID);
-            if($product) {
+            if ($product) {
                 return $this->controller->redirect($product->Link());
             }
         }
+
         return false;
     }
-
 }
