@@ -126,7 +126,7 @@ class EcommerceMoney extends Extension
         $currency = $this->getOwner()->getCurrency();
 
         $formatter = $this->getOwner()->getFormatter();
-        $data = $currency ? $symbol . $formatter->formatCurrency($amount, $currency) : $symbol . $formatter->format($amount);
+        $data = $currency ? $symbol . $formatter->formatCurrency($amount, $currency) :  $formatter->format($amount);
 
         return DBField::create_field('HTMLText', $data);
     }
