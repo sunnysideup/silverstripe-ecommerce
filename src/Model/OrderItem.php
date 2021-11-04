@@ -657,11 +657,6 @@ class OrderItem extends OrderAttribute
             $turnTranslatableBackOn = false;
 
             $className = $this->BuyableClassName;
-
-            if ($className::has_extension($this->ClassName, 'Translatable')) {
-                Translatable::disable_locale_filter();
-                $turnTranslatableBackOn = true;
-            }
             //end hack!
             $obj = null;
             if ('current' === $currentOrVersion) {
