@@ -117,9 +117,7 @@ class Product extends Page implements BuyableModel
         'CalculatedPriceAsMoney' => 'Money',
         'AllowPurchaseNice' => 'Varchar',
     ];
-
     private static $indexes = [
-        'Title' => true,
         'FullSiteTreeSort' => true,
         'FullName' => true,
         'InternalItemID' => true,
