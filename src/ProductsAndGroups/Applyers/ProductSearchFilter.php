@@ -740,7 +740,7 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function getProductListIsFiltered() : bool
     {
-        return $this->hasMinMaxSearch() || $this->;
+        return $this->hasMinMaxSearch() || $this->productListIsFiltered;
     }
 
 }
