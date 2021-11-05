@@ -62,6 +62,12 @@ class ProductSearchFilter extends BaseApplyer
     protected $debug = false;
 
     /**
+     * Is this product list filtered or can we rely on Product::get()->filter(['ShowInSearch'])
+     * @var bool
+     */
+    protected $productListIsFiltered = false;
+
+    /**
      * Fields are:
      * - Keyword
      * - MinimumPrice
@@ -490,7 +496,10 @@ class ProductSearchFilter extends BaseApplyer
             }
 
             // work out fields to search
-            $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
+            $where = '';
+            if($this->getProductListIsFiltered()) {
+                $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
+            }
             $ids = $this->getSearchApi()->getProductResults(
                 $this->keywordPhrase,
                 $where,
@@ -551,8 +560,11 @@ class ProductSearchFilter extends BaseApplyer
         // work out searches
         $filterIds = $this->productsForGroups->columnUnique();
         $where = '';
-        if (! empty($filterIds)) {
-            $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
+        if($this->getProductListIsFiltered()) {
+            $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
+            if (! empty($filterIds)) {
+                $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
+            }
         }
         $ids = $this->getSearchApi()->getProductGroupResults(
             $this->keywordPhrase,
@@ -725,4 +737,10 @@ class ProductSearchFilter extends BaseApplyer
         //important we add this so that we can add it to hash
         return serialize($this->rawData + ['baseListOwnerID' => $this->baseListOwner->ID]);
     }
+
+    protected function getProductListIsFiltered() : bool
+    {
+        return $this->hasMinMaxSearch() || $this->;
+    }
+
 }
