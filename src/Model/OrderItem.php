@@ -225,9 +225,12 @@ class OrderItem extends OrderAttribute
     {
         $oldMode = Versioned::get_reading_mode();
         Versioned::set_reading_mode('');
-        $versionedObject = Versioned::get_version($class, $id, $version);
+        if(class_exists($class)) {
+            $versionedObject = Versioned::get_version($class, $id, $version);
+        } else {
+            $versionedObject = null;
+        }
         Versioned::set_reading_mode($oldMode);
-
         return $versionedObject;
     }
 
@@ -657,11 +660,6 @@ class OrderItem extends OrderAttribute
             $turnTranslatableBackOn = false;
 
             $className = $this->BuyableClassName;
-
-            if ($className::has_extension($this->ClassName, 'Translatable')) {
-                Translatable::disable_locale_filter();
-                $turnTranslatableBackOn = true;
-            }
             //end hack!
             $obj = null;
             if ('current' === $currentOrVersion) {
