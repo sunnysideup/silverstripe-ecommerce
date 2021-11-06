@@ -48,6 +48,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
     protected $buyableClassName = '';
 
     /**
+     * @var int
+     */
+    protected $levelOfProductsToShow = 0;
+
+    /**
      * @var string
      */
     protected $searchString = '';
@@ -136,6 +141,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function init()
     {
+        $this->getProductGroupListProvider()->setLevelOfProductsToShow($this->levelOfProductsToShow);
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
@@ -160,16 +166,33 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString)
     {
-        $cacheKey = implode('_', array_filter([$rootGroup->ID, $rootGroup->ClassName, $buyableClassName, $levelOfProductsToShow, $searchString]));
-        if (! isset(self::$singleton_caches[$cacheKey])) {
-            $className = static::class;
-            self::$singleton_caches[$cacheKey] = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
-            //super important we have a unique key.
-            self::$singleton_caches[$cacheKey]->setCacheKey($cacheKey);
+        $className = static::class;
+        $item = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
+        $cacheKey = $item->generateCachekey();
+        if (isset(self::$singleton_caches[$cacheKey])) {
+            $item = self::$singleton_caches[$cacheKey];
+        } else {
+            self::$singleton_caches[$cacheKey] = $item;
             self::$singleton_caches[$cacheKey]->init();
         }
 
         return self::$singleton_caches[$cacheKey];
+    }
+
+    public function generateCacheKey() :string
+    {
+        return implode(
+            '_',
+            array_filter(
+                [
+                    $this->rootGroup->ID,
+                    $this->rootGroup->ClassName,
+                    $this->buyableClassName,
+                    $this->levelOfProductsToShow,
+                    $this->searchString
+                ]
+            )
+        );
     }
 
     //#########################################
@@ -199,7 +222,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function setLevelOfProductsToShow(int $levelOfProductsToShow): self
     {
-        $this->getProductGroupListProvider()->setLevelOfProductsToShow($levelOfProductsToShow);
+        $this->levelOfProductsToShow = $levelOfProductsToShow;
 
         return $this;
     }
@@ -216,7 +239,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      */
     public function getLevelOfProductsToShow(): int
     {
-        return $this->getProductGroupListProvider()->getLevelOfProductsToShow();
+        return $this->levelOfProductsToShow;
     }
 
     //#########################################
