@@ -170,8 +170,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
         $item = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
         $cacheKey = $item->generateCachekey();
         if (isset(self::$singleton_caches[$cacheKey])) {
+            self::$singleton_caches[$cacheKey]->setCacheKey($cacheKey);
             $item = self::$singleton_caches[$cacheKey];
         } else {
+            $item->setCacheKey($cacheKey);
             self::$singleton_caches[$cacheKey] = $item;
             self::$singleton_caches[$cacheKey]->init();
         }
