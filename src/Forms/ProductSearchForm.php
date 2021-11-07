@@ -218,7 +218,6 @@ class ProductSearchForm extends Form
     protected function runFullProcessInner($data)
     {
         $this->saveDataToSession();
-        $this->rawData = array_filter($this->rawData);
         foreach ($this->Fields()->dataFields() as $field) {
             $name = $field->getName();
             if (! empty($this->rawData[$name])) {
