@@ -316,37 +316,40 @@ class ProductSearchForm extends Form
 
     protected function checkForInternalItemID()
     {
-        $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
-        if ($product) {
-            return $this->controller->redirect($product->Link());
+        if($this->rawData['Keyword']) {
+            $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
+            if ($product) {
+                return $this->controller->redirect($product->Link());
+            }
         }
-
         return false;
     }
 
     protected function checkForOneProductTitleMatch()
     {
-        $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
-        if ($test) {
-            $product = Product::get()->byID($test->ProductID);
-            if ($product) {
-                return $this->controller->redirect($product->Link());
+        if($this->rawData['Keyword']) {
+            $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+            if ($test) {
+                $product = Product::get()->byID($test->ProductID);
+                if ($product) {
+                    return $this->controller->redirect($product->Link());
+                }
             }
         }
-
         return false;
     }
 
     protected function checkForOneCategoryTitleMatch()
     {
-        $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
-        if ($test) {
-            $product = ProductGroup::get()->byID($test->ProductGroupID);
-            if ($product) {
-                return $this->controller->redirect($product->Link());
+        if($this->rawData['Keyword']) {
+            $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
+            if ($test) {
+                $product = ProductGroup::get()->byID($test->ProductGroupID);
+                if ($product) {
+                    return $this->controller->redirect($product->Link());
+                }
             }
         }
-
         return false;
     }
 }
