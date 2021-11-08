@@ -619,7 +619,7 @@ class ProductSearchFilter extends BaseApplyer
                 } elseif (is_int($pageIdOrObject)) {
                     $id = $pageIdOrObject;
                 }
-                if ($this->addToListInner($id)) {
+                if ($this->addToResultsInner($id)) {
                     return true;
                 }
             }
