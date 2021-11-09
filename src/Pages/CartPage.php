@@ -110,34 +110,6 @@ class CartPage extends Page
     }
 
     /**
-     * Get the value of a field on this object, automatically inserting the value into any available casting objects
-     * that have been specified.
-     * inherited from ViewableData.
-     *
-     * @see ViewableData
-     *
-     * @param string $fieldName
-     * @param array  $arguments
-     * @param bool   $cache     Cache this object
-     * @param string $cacheName a custom cache name
-     *
-     * @return DBField|object
-     */
-    public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
-    {
-        if ('MenuTitle' === $fieldName && ! ($this instanceof OrderConfirmationPage)) {
-            return DBField::create_field(
-                'HTMLVarchar',
-                strip_tags($this->EcommerceMenuTitle()),
-                'MenuTitle',
-                $this
-            );
-        }
-
-        return parent::obj($fieldName, $arguments, $cache, $cacheName);
-    }
-
-    /**
      * Standard SS function, we only allow for one CartPage page to exist
      * but we do allow for extensions to exist at the same time.
      *
