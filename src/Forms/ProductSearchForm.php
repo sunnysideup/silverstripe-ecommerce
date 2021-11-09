@@ -315,18 +315,19 @@ class ProductSearchForm extends Form
 
     protected function checkForInternalItemID()
     {
-        if($this->rawData['Keyword']) {
+        if ($this->rawData['Keyword']) {
             $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
             if ($product) {
                 return $this->controller->redirect($product->Link());
             }
         }
+
         return false;
     }
 
     protected function checkForOneProductTitleMatch()
     {
-        if($this->rawData['Keyword']) {
+        if ($this->rawData['Keyword']) {
             $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
             if ($test) {
                 $product = Product::get()->byID($test->ProductID);
@@ -335,12 +336,13 @@ class ProductSearchForm extends Form
                 }
             }
         }
+
         return false;
     }
 
     protected function checkForOneCategoryTitleMatch()
     {
-        if($this->rawData['Keyword']) {
+        if ($this->rawData['Keyword']) {
             $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
             if ($test) {
                 $product = ProductGroup::get()->byID($test->ProductGroupID);
@@ -349,6 +351,7 @@ class ProductSearchForm extends Form
                 }
             }
         }
+
         return false;
     }
 }

@@ -225,12 +225,9 @@ class OrderItem extends OrderAttribute
     {
         $oldMode = Versioned::get_reading_mode();
         Versioned::set_reading_mode('');
-        if(class_exists($class)) {
-            $versionedObject = Versioned::get_version($class, $id, $version);
-        } else {
-            $versionedObject = null;
-        }
+        $versionedObject = class_exists($class) ? Versioned::get_version($class, $id, $version) : null;
         Versioned::set_reading_mode($oldMode);
+
         return $versionedObject;
     }
 

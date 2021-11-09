@@ -181,7 +181,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return self::$singleton_caches[$cacheKey];
     }
 
-    public function generateCacheKey() :string
+    public function generateCacheKey(): string
     {
         return implode(
             '_',
@@ -191,7 +191,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                     $this->rootGroup->ClassName,
                     $this->buyableClassName,
                     $this->levelOfProductsToShow,
-                    $this->searchString
+                    $this->searchString,
                 ]
             )
         );

@@ -62,7 +62,8 @@ class ProductSearchFilter extends BaseApplyer
     protected $debug = false;
 
     /**
-     * Is this product list filtered or can we rely on Product::get()->filter(['ShowInSearch'])
+     * Is this product list filtered or can we rely on Product::get()->filter(['ShowInSearch']).
+     *
      * @var bool
      */
     protected $productListIsFiltered = false;
@@ -497,7 +498,7 @@ class ProductSearchFilter extends BaseApplyer
 
             // work out fields to search
             $where = '';
-            if($this->getProductListIsFiltered()) {
+            if ($this->getProductListIsFiltered()) {
                 $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
             }
             $ids = $this->getSearchApi()->getProductResults(
@@ -560,7 +561,7 @@ class ProductSearchFilter extends BaseApplyer
         // work out searches
         $filterIds = $this->productsForGroups->columnUnique();
         $where = '';
-        if($this->getProductListIsFiltered()) {
+        if ($this->getProductListIsFiltered()) {
             $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
             if (! empty($filterIds)) {
                 $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
@@ -738,9 +739,8 @@ class ProductSearchFilter extends BaseApplyer
         return serialize($this->rawData + ['baseListOwnerID' => $this->baseListOwner->ID]);
     }
 
-    protected function getProductListIsFiltered() : bool
+    protected function getProductListIsFiltered(): bool
     {
         return $this->hasMinMaxSearch() || $this->productListIsFiltered;
     }
-
 }
