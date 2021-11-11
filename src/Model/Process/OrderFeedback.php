@@ -81,7 +81,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $default_sorting = [
-        'Created' => 'DESC',
+        'ID' => 'DESC',
     ];
 
     /**

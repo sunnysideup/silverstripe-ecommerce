@@ -27,7 +27,7 @@ class SearchHistory extends DataObject
     ];
 
     private static $default_sort = [
-        'Created' => 'DESC',
+        'ID' => 'DESC',
     ];
 
     private static $searchable_fields = [
