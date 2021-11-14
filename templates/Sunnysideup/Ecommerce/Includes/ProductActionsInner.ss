@@ -1,4 +1,4 @@
-<% if HasVariations %>
+<% if $HasVariations %>
 <ul class="$AJAXDefinitions.ProductListItemClassName <% if VariationIsInCart %>$AjaxDefinitons.ProductListItemInCartClassName<% else %>$AjaxDefinitons.ProductListItemNotInCartClassName<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
     <li class="variationsLink">
         <a class="selectVariation btn action ajaxAddToCartLink" href="{$AddVariationsLink}" rel="VariationsTable{$ID}" title="<% _t("Product.UPDATECART","update cart for") %> $Title.ATT">
