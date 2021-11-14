@@ -16,7 +16,6 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
-
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {
     /**
