@@ -97,7 +97,7 @@ class OrderItem extends OrderAttribute
     private static $db = [
         'Quantity' => 'Double',
         'BuyableID' => 'Int',
-        'BuyableClassName' => 'Varchar(60)',
+        'BuyableClassName' => 'DBClassName(\'SilverStripe\\ORM\\DataObject\')',
         'Version' => 'Int',
     ];
 

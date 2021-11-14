@@ -16,6 +16,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
+
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {
     /**
@@ -26,7 +27,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     private static $table_name = 'OrderModifierDescriptor';
 
     private static $db = [
-        'ModifierClassName' => 'Varchar(100)',
+        'ModifierClassName' => 'DBClassName(\'Sunnysideup\\Ecommerce\\Model\\OrderModifier\')',
         'Heading' => 'Varchar',
         'Description' => 'Text',
     ];
