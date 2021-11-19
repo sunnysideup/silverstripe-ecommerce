@@ -82,7 +82,7 @@ class EcommerceSideReportNoImageProducts extends Report
         $field = parent::getReportField();
         $config = $field->getConfig();
         $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-        $exportButton->setExportColumns($field->getColumns());
+        $exportButton->setExportColumns($this->columns());
 
         return $field;
     }
