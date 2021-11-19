@@ -116,7 +116,9 @@ class Product extends Page implements BuyableModel
         'CalculatedPrice' => 'Currency',
         'CalculatedPriceAsMoney' => 'Money',
         'AllowPurchaseNice' => 'Varchar',
+        'ProductType' =>  'Varchar',
     ];
+
     private static $indexes = [
         'FullSiteTreeSort' => true,
         'FullName' => true,
@@ -882,6 +884,11 @@ class Product extends Page implements BuyableModel
     public function IsEcommercePage()
     {
         return true;
+    }
+
+    public function ProductType()
+    {
+        return $this->singular_name();
     }
 
     public function AllowPurchaseNice()

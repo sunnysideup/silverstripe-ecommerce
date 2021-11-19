@@ -68,6 +68,8 @@ class EcommerceSideReportNoImageProducts extends Report
     public function columns()
     {
         return [
+            'InternalItemID' => 'Product Code',
+            'ProductType' => 'Product Type',
             'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
