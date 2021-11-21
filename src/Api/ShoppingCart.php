@@ -908,7 +908,7 @@ class ShoppingCart
     public function CopyBuyablesToNewOrder($newOrder, $items, $parameters = [])
     {
         foreach ($items as $item) {
-            $buyable = $item->Buyable(true);
+            $buyable = $item->getBuyableCached(true);
 
             if ($buyable && $buyable->canPurchase()) {
                 $orderItem = $this->prepareOrderItem($buyable, $parameters, false);

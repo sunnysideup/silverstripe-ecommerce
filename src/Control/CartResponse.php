@@ -114,7 +114,7 @@ class CartResponse extends EcommerceResponse
         if ($items->exists()) {
             foreach ($items as $item) {
                 $js = $item->updateForAjax($js);
-                $buyable = $item->Buyable(true);
+                $buyable = $item->getBuyableCached(true);
                 if ($buyable) {
                     //products in cart
                     $inCartArray[] = $buyable->AJAXDefinitions()->UniqueIdentifier();

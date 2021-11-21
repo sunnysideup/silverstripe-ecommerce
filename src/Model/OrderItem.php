@@ -293,7 +293,7 @@ class OrderItem extends OrderAttribute
         if ($order) {
             if ($order->IsSubmitted()) {
                 $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
-                $buyable = $this->Buyable();
+                $buyable = $this->getBuyableCached();
                 if ($buyable) {
                     if ($this->BuyableExists()) {
                         $buyableLink .= '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
@@ -321,10 +321,10 @@ class OrderItem extends OrderAttribute
                     'Quantity'
                 );
             } else {
-                $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->Buyable()));
+                $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->getBuyableCached()));
             }
         } else {
-            $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->Buyable()));
+            $fields->addFieldToTab('Root.Main', BuyableSelectField::create('FindBuyable', _t('OrderItem.SELECITEM', 'Select Item'), $this->getBuyableCached()));
         }
 
         return $fields;
@@ -454,7 +454,7 @@ class OrderItem extends OrderAttribute
      */
     public function runUpdate($recalculate = false)
     {
-        $buyable = $this->Buyable(true);
+        $buyable = $this->getBuyableCached(true);
         if ($buyable && $buyable->canPurchase()) {
             if (property_exists($buyable, 'Version') && null !== $buyable->Version) {
                 if ($this->Version !== $buyable->Version) {
@@ -512,7 +512,7 @@ class OrderItem extends OrderAttribute
             return $this->CalculatedTotal / $this->Quantity;
         }
         // calculate price
-        $buyable = $this->Buyable();
+        $buyable = $this->getBuyableCached();
         if ($buyable) {
             if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
@@ -586,7 +586,7 @@ class OrderItem extends OrderAttribute
 
     public function getInternalItemID()
     {
-        $buyable = $this->Buyable();
+        $buyable = $this->getBuyableCached();
         if ($buyable) {
             return $buyable->InternalItemID;
         }
@@ -620,6 +620,24 @@ class OrderItem extends OrderAttribute
         self::set_price_has_been_fixed($orderID);
     }
 
+    protected static $buyableCached = [];
+
+    public function getBuyableCached($current = false)
+    {
+        $cacheKey = $this->buyableCacheKey();
+        if(! isset(self::$buyableCached[$cacheKey])) {
+            self::$buyableCached[$cacheKey] = $this->getBuyable($current);
+        }
+        return self::$buyableCached[$cacheKey];
+    }
+
+    protected function buyableCacheKey() : string
+    {
+        return ($current ? 'true' : 'false') .'_' .
+            $this->BuyableID . '_' .
+            $this->BuyableClassName . '_';
+    }
+
     /**
      * @param bool $current - is this a current one, or an older VERSION ?
      *
@@ -629,6 +647,7 @@ class OrderItem extends OrderAttribute
     {
         return $this->getBuyable($current);
     }
+
 
     /**
      * @param string $current - is this a current one, or an older VERSION ?
@@ -719,7 +738,7 @@ class OrderItem extends OrderAttribute
 
     public function getTitle()
     {
-        $buyable = $this->Buyable();
+        $buyable = $this->getBuyableCached();
         if ($buyable) {
             $title = $buyable->Title;
             if ($title) {
@@ -748,7 +767,7 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableLink()
     {
-        $buyable = $this->Buyable();
+        $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
             $order = $this->Order();
             if ($order && $order->IsSubmitted()) {
@@ -776,7 +795,7 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableExists()
     {
-        $buyable = $this->Buyable(true);
+        $buyable = $this->getBuyableCached(true);
         if ($buyable) {
             $className = $buyable->ClassName;
             $id = $buyable->ID;
@@ -802,7 +821,7 @@ class OrderItem extends OrderAttribute
      */
     public function getBuyableFullName()
     {
-        $buyable = $this->Buyable();
+        $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
             return $buyable->FullName;
         }
@@ -829,7 +848,7 @@ class OrderItem extends OrderAttribute
         if ($subtitle) {
             return $subtitle;
         }
-        $buyable = $this->Buyable();
+        $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
             if ($buyable->ShortDescription) {
                 return $buyable->ShortDescription;
@@ -954,8 +973,8 @@ class OrderItem extends OrderAttribute
     {
         $html = EcommerceTaskDebugCart::debug_object($this);
         $html .= '<ul>';
-        $html .= '<li><b>Buyable Price:</b> ' . $this->Buyable()->Price . ' </li>';
-        $html .= '<li><b>Buyable Calculated Price:</b> ' . $this->Buyable()->CalculatedPrice() . ' </li>';
+        $html .= '<li><b>Buyable Price:</b> ' . $this->getBuyableCached()->Price . ' </li>';
+        $html .= '<li><b>Buyable Calculated Price:</b> ' . $this->getBuyableCached()->CalculatedPrice() . ' </li>';
         $html .= '</ul>';
 
         return $html;
@@ -968,7 +987,9 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        $buyable = $this->Buyable(true);
+        $cacheKey = $this->buyableCacheKey();
+        unset(self::$buyableCached[$cacheKey]);
+        $buyable = $this->getBuyableCached(true);
         if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
         }

@@ -2013,7 +2013,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $items = $this->Items($filterOrClassName);
         $arrayList = new ArrayList();
         foreach ($items as $item) {
-            $arrayList->push($item->Buyable());
+            $arrayList->push($item->getBuyableCached());
         }
 
         return $arrayList;
@@ -2740,7 +2740,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $html .= '<div><ul class="order-items-summary">';
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;
-                $buyable = $orderItem->Buyable();
+                $buyable = $orderItem->getBuyableCached();
                 $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . '× ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
