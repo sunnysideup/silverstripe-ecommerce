@@ -50,7 +50,7 @@ class ProductOrderItem extends OrderItem
      */
     public function Product($current = false)
     {
-        return $this->buyableCacheKey($current);
+        return $this->getBuyableCached($current);
     }
 
     /**
