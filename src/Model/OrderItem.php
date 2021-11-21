@@ -794,7 +794,7 @@ class OrderItem extends OrderAttribute
             $className = $buyable->ClassName;
             $id = $buyable->ID;
 
-            return (bool) $className::get()->byID($id);
+            return (bool) $className::get()->filter(['ID' => $id])->exists();
         }
 
         return false;
