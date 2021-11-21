@@ -24,7 +24,6 @@ use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-use Translatable;
 
 /**
  * @description: An order item is a product which has been added to an order.
@@ -631,9 +630,10 @@ class OrderItem extends OrderAttribute
         return self::$buyableCached[$cacheKey];
     }
 
-    protected function buyableCacheKey() : string
+    protected function buyableCacheKey($current = false) : string
     {
         return ($current ? 'true' : 'false') .'_' .
+            $this->Version . '_' .
             $this->BuyableID . '_' .
             $this->BuyableClassName . '_';
     }
@@ -650,19 +650,17 @@ class OrderItem extends OrderAttribute
 
 
     /**
-     * @param string $current - is this a current one, or an older VERSION ?
+     * @param bool $current - is this a current one, or an older VERSION ?
      *
      * @return DataObject (\Sunnysideup\Ecommerce\Model\Sunnysideup\Ecommerce\Interfaces\BuyableModel)
      */
-    public function getBuyable($current = '')
+    public function getBuyable($current = false)
     {
         $currentOrVersion = $current ? 'current' : 'version';
         if (null !== $this->Order() && ! $current) {
             if (! $this->Order()->IsSubmitted()) {
                 $currentOrVersion = 'current';
             }
-        } elseif ('version' === $current) {
-            $currentOrVersion = 'version';
         }
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
             if (! $this->BuyableID) {
@@ -671,9 +669,8 @@ class OrderItem extends OrderAttribute
             }
             //start hack
             if (! $this->BuyableClassName) {
-                $this->BuyableClassName = str_replace('_OrderItem', '', $this->ClassName);
+                $this->BuyableClassName = str_replace('OrderItem', '', $this->ClassName);
             }
-            $turnTranslatableBackOn = false;
 
             $className = $this->BuyableClassName;
             //end hack!
@@ -708,9 +705,6 @@ class OrderItem extends OrderAttribute
             //our final backup
             if (! $obj || (! $obj->exists())) {
                 $obj = $className::get()->byID($this->BuyableID);
-            }
-            if ($turnTranslatableBackOn) {
-                Translatable::enable_locale_filter();
             }
             $this->tempBuyableStore[$currentOrVersion] = $obj;
         }
