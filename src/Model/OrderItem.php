@@ -974,6 +974,13 @@ class OrderItem extends OrderAttribute
         return $html;
     }
 
+    public function resetCache()
+    {
+        $cacheKey = $this->buyableCacheKey();
+        unset(self::$buyableCached[$cacheKey]);
+        $this->tempBuyableStore = [];
+    }
+
     /**
      * Standard SS method.
      * If the quantity is zero then we set it to 1.
@@ -981,8 +988,7 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        $cacheKey = $this->buyableCacheKey();
-        unset(self::$buyableCached[$cacheKey]);
+        $this->resetCache();
         $buyable = $this->getBuyableCached(true);
         if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
