@@ -517,7 +517,7 @@ class ProductGroupController extends PageController
      *
      * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
      */
-    public function GroupFilterLinks(): ArrayList
+    public function GroupFilterLinks() : SS_List
     {
         return $this->getUserPreferencesClass()->getLinksPerType('GROUPFILTER');
     }
