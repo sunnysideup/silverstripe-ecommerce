@@ -68,6 +68,8 @@ class EcommerceSideReportNoImageProducts extends Report
     public function columns()
     {
         return [
+            'InternalItemID' => 'Product Code',
+            'ProductType' => 'Product Type',
             'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
@@ -80,7 +82,7 @@ class EcommerceSideReportNoImageProducts extends Report
         $field = parent::getReportField();
         $config = $field->getConfig();
         $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-        $exportButton->setExportColumns($field->getColumns());
+        $exportButton->setExportColumns($this->columns());
 
         return $field;
     }
