@@ -775,26 +775,26 @@ class OrderItem extends OrderAttribute
     }
 
     /**
+     * Is there a current version of the buyable in the database
      * @alias for getBuyableExists
-     *
      * @return bool
      */
-    public function BuyableExists()
+    public function BuyableExists(): bool
     {
         return $this->getBuyableExists();
     }
 
     /**
+     * Is there a current version of the buyable in the database
      * @return bool
      */
-    public function getBuyableExists()
+    public function getBuyableExists() : bool
     {
         $buyable = $this->getBuyableCached(true);
         if ($buyable) {
-            $className = $buyable->ClassName;
-            $id = $buyable->ID;
-
-            return (bool) $className::get()->filter(['ID' => $id])->exists();
+            return
+                $this->BuyableClassName === $buyable->ClassName &&
+                $this->BuyableID == $buyable->ID;
         }
 
         return false;
