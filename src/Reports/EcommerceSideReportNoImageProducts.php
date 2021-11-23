@@ -18,6 +18,7 @@ class EcommerceSideReportNoImageProducts extends Report
 
     use EcommerceProductReportTrait;
 
+    protected $dataClass = Product::class;
 
     /**
      * @return string

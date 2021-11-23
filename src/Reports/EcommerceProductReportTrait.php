@@ -36,7 +36,8 @@ trait EcommerceProductReportTrait
      */
     public function sourceRecords($params = null)
     {
-        $list = Product::get();
+        $className = $this->dataClass;
+        $list = $className::get();
         if($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
             if(!empty($filter)) {
@@ -76,13 +77,4 @@ trait EcommerceProductReportTrait
         ];
     }
 
-    public function getReportField()
-    {
-        $field = parent::getReportField();
-        $config = $field->getConfig();
-        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-        $exportButton->setExportColumns($field->getColumns());
-
-        return $field;
-    }
 }

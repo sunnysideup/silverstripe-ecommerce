@@ -17,6 +17,7 @@ class EcommerceSideReportAllProducts extends Report
 {
     use EcommerceProductReportTrait;
 
+    protected $dataClass = Product::class;
 
     /**
      * @return string
