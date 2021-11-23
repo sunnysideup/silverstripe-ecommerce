@@ -17,9 +17,6 @@ class GridFieldBasicPageRelationConfig extends GridFieldConfig_RelationEditor
     public function __construct($itemsPerPage = null)
     {
         parent::__construct($itemsPerPage);
-        $this
-            ->removeComponentsByType(GridFieldEditButton::class)
-            ->removeComponentsByType(GridFieldAddNewButton::class)
-        ;
+        $this->removeComponentsByType(GridFieldAddNewButton::class);
     }
 }

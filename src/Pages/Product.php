@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProductGroups;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -1194,20 +1195,12 @@ class Product extends Page implements BuyableModel
      */
     protected function getProductGroupsTableField()
     {
-        $field = new GridField(
+        return new GridField(
             'ProductGroups',
             _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
             $this->ProductGroups(),
-            $config = GridFieldBasicPageRelationConfig::create()
-
+            GridFieldConfigForProductGroups::create()
         );
-        $ac = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
-        if($ac) {
-            $ac->setSearchFields(['Title']);
-            $ac->setResultsFormat('$Breadcrumbs');
-            $ac->setSearchList(ProductGroup::get()->filter(['ShowInSearch' => 1]));
-        }
-        return $field;
     }
 
     /**
