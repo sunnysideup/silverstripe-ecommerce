@@ -10,6 +10,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -707,12 +708,20 @@ class ProductGroup extends Page
      */
     protected function getProductGroupsTable()
     {
-        return GridField::create(
+        $field = GridField::create(
             'AlsoShowProducts',
             _t('ProductGroup.OTHER_PRODUCTS_SHOWN_IN_THIS_GROUP', 'Other products shown in this group ...'),
             $this->AlsoShowProducts(),
-            GridFieldBasicPageRelationConfig::create()
+            $config = GridFieldBasicPageRelationConfig::create()
         );
+        $ac = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
+        if($ac) {
+            $ac->setSearchFields(['Title']);
+            $ac->setResultsFormat('$Breadcrumbs');
+            $ac->setSearchList(Product::get()->filter(['AllowPurchase' => 1]));
+        }
+
+        return $field;
     }
 
     /**

@@ -12,6 +12,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
@@ -1193,12 +1194,20 @@ class Product extends Page implements BuyableModel
      */
     protected function getProductGroupsTableField()
     {
-        return new GridField(
+        $field = new GridField(
             'ProductGroups',
             _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
             $this->ProductGroups(),
-            GridFieldBasicPageRelationConfig::create()
+            $config = GridFieldBasicPageRelationConfig::create()
+
         );
+        $ac = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
+        if($ac) {
+            $ac->setSearchFields(['Title']);
+            $ac->setResultsFormat('$Breadcrumbs');
+            $ac->setSearchList(ProductGroup::get()->filter(['ShowInSearch' => 1]));
+        }
+        return $field;
     }
 
     /**
