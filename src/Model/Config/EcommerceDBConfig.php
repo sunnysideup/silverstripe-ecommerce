@@ -521,8 +521,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                             ),
                             Tab::create(
                                 'Offline',
-                                _t('EcommerceDBConfig.OFFLINE', 'Offline'),
-                                LiteralField::create('XXX', 'hello')
+                                _t('EcommerceDBConfig.OFFLINE', 'Offline')
                             ),
                         ]
                     );
