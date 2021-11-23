@@ -12,11 +12,8 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceSideReportFeaturedProducts extends Report
 {
-    /**
-     * The class of object being managed by this report.
-     * Set by overriding in your subclass.
-     */
-    protected $dataClass = Product::class;
+
+    use EcommerceProductReportTrait;
 
     /**
      * @return string
@@ -26,23 +23,6 @@ class EcommerceSideReportFeaturedProducts extends Report
         return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products');
     }
 
-    /**
-     * not sure if this is used in SS3.
-     *
-     * @return string
-     */
-    public function group()
-    {
-        return _t('EcommerceSideReport.ECOMMERCEGROUP', 'Ecommerce');
-    }
-
-    /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7000;
-    }
 
     /**
      * working out the items.
@@ -51,34 +31,17 @@ class EcommerceSideReportFeaturedProducts extends Report
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function sourceRecords($params = null)
+    protected function getEcommerceFilter($params = null) : array
     {
-        return Product::get()
-            ->filter(['FeaturedProduct' => 1])
-            ->sort('FullSiteTreeSort', 'ASC')
-        ;
+        return ['FeaturedProduct' => 1];
     }
 
     /**
-     * @return array
+     * @param null|mixed $params
      */
-    public function columns()
+    protected function getEcommerceSort($params = null) : array
     {
-        return [
-            'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
-                'link' => true,
-            ],
-        ];
+        return ['FullSiteTreeSort' =>  'ASC'];
     }
 
-    public function getReportField()
-    {
-        $field = parent::getReportField();
-        $config = $field->getConfig();
-        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-        $exportButton->setExportColumns($field->getColumns());
-
-        return $field;
-    }
 }

@@ -15,11 +15,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceSideReportNoImageProducts extends Report
 {
-    /**
-     * The class of object being managed by this report.
-     * Set by overriding in your subclass.
-     */
-    protected $dataClass = Product::class;
+
+    use EcommerceProductReportTrait;
+
 
     /**
      * @return string
@@ -30,60 +28,11 @@ class EcommerceSideReportNoImageProducts extends Report
     }
 
     /**
-     * not sure if this is used in SS3.
      *
-     * @return string
+     * @param  mixed $params
      */
-    public function group()
+    protected function getEcommerceWhere($params = null) : string
     {
-        return _t('EcommerceSideReport.ECOMMERCEGROUP', 'Ecommerce');
-    }
-
-    /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7000;
-    }
-
-    /**
-     * working out the items.
-     *
-     * @param null|mixed $params
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    public function sourceRecords($params = null)
-    {
-        return Product::get()
-            ->where('"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0')
-            ->sort('FullSiteTreeSort', 'ASC')
-        ;
-    }
-
-    /**
-     * @return array
-     */
-    public function columns()
-    {
-        return [
-            'InternalItemID' => 'Product Code',
-            'ProductType' => 'Product Type',
-            'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
-                'link' => true,
-            ],
-        ];
-    }
-
-    public function getReportField()
-    {
-        $field = parent::getReportField();
-        $config = $field->getConfig();
-        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-        $exportButton->setExportColumns($this->columns());
-
-        return $field;
+        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
     }
 }
