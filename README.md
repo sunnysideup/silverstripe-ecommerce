@@ -67,8 +67,6 @@ You can pay us to create an improved / adapted version of this module for your o
 
 ## Author
 
-
-
 Sunny Side Up Ltd.
 
 
