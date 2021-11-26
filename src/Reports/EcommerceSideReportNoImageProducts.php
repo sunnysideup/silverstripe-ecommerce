@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -15,7 +14,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceSideReportNoImageProducts extends Report
 {
-
     use EcommerceProductReportTrait;
 
     protected $dataClass = Product::class;
@@ -29,10 +27,9 @@ class EcommerceSideReportNoImageProducts extends Report
     }
 
     /**
-     *
-     * @param  mixed $params
+     * @param mixed $params
      */
-    protected function getEcommerceWhere($params = null) : string
+    protected function getEcommerceWhere($params = null): string
     {
         return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
     }

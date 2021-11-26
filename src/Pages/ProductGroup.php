@@ -715,7 +715,7 @@ class ProductGroup extends Page
             $config = GridFieldBasicPageRelationConfig::create()
         );
         $ac = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
-        if($ac) {
+        if ($ac) {
             $ac->setSearchFields(['Title']);
             $ac->setResultsFormat('$Breadcrumbs');
             $ac->setSearchList(Product::get()->filter(['AllowPurchase' => 1]));

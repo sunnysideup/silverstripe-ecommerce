@@ -3,10 +3,8 @@
 namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -25,12 +23,11 @@ class GridFieldConfigForProducts extends GridFieldConfig_RelationEditor
         }
         parent::__construct($itemsPerPage);
         $ac = $this->getComponentByType(GridFieldAddExistingAutocompleter::class);
-        if($ac) {
+        if ($ac) {
             $ac->setSearchFields(['InternalItemID', 'Title']);
             $ac->setResultsFormat('$Breadcrumbs');
             $ac->setSearchList(Product::get()->filter(['AllowPurchase' => 1]));
         }
         $this->removeComponentsByType(GridFieldAddNewButton::class);
     }
-
 }

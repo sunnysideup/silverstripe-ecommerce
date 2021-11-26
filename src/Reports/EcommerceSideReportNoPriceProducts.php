@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -15,7 +14,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceSideReportNoPriceProducts extends Report
 {
-
     use EcommerceProductReportTrait;
 
     protected $dataClass = Product::class;
@@ -30,7 +28,6 @@ class EcommerceSideReportNoPriceProducts extends Report
 
     /**
      * @param null|mixed $params
-     *
      */
     protected function getEcommerceWhere($params = null): string
     {
@@ -39,11 +36,9 @@ class EcommerceSideReportNoPriceProducts extends Report
 
     /**
      * @param null|mixed $params
-     *
      */
-    protected function getEcommerceSort($params = null) : array
+    protected function getEcommerceSort($params = null): array
     {
         return ['FullSiteTreeSort' => 'ASC'];
     }
-
 }

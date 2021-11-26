@@ -55,6 +55,8 @@ class OrderItem extends OrderAttribute
      */
     protected $tempBuyableStore = [];
 
+    protected static $buyableCached = [];
+
     /**
      * what variables are accessible through  http://mysite.com/api/ecommerce/v1/OrderItem/.
      *
@@ -619,23 +621,14 @@ class OrderItem extends OrderAttribute
         self::set_price_has_been_fixed($orderID);
     }
 
-    protected static $buyableCached = [];
-
     public function getBuyableCached($current = false)
     {
         $cacheKey = $this->buyableCacheKey();
-        if(! isset(self::$buyableCached[$cacheKey])) {
+        if (! isset(self::$buyableCached[$cacheKey])) {
             self::$buyableCached[$cacheKey] = $this->getBuyable($current);
         }
-        return self::$buyableCached[$cacheKey];
-    }
 
-    protected function buyableCacheKey($current = false) : string
-    {
-        return ($current ? 'true' : 'false') .'_' .
-            $this->Version . '_' .
-            $this->BuyableID . '_' .
-            $this->BuyableClassName . '_';
+        return self::$buyableCached[$cacheKey];
     }
 
     /**
@@ -647,7 +640,6 @@ class OrderItem extends OrderAttribute
     {
         return $this->getBuyable($current);
     }
-
 
     /**
      * @param bool $current - is this a current one, or an older VERSION ?
@@ -775,9 +767,9 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * Is there a current version of the buyable in the database
+     * Is there a current version of the buyable in the database.
+     *
      * @alias for getBuyableExists
-     * @return bool
      */
     public function BuyableExists(): bool
     {
@@ -785,16 +777,15 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * Is there a current version of the buyable in the database
-     * @return bool
+     * Is there a current version of the buyable in the database.
      */
-    public function getBuyableExists() : bool
+    public function getBuyableExists(): bool
     {
         $buyable = $this->getBuyableCached(true);
         if ($buyable) {
             return
                 $this->BuyableClassName === $buyable->ClassName &&
-                $this->BuyableID == $buyable->ID;
+                $this->BuyableID === $buyable->ID;
         }
 
         return false;
@@ -979,6 +970,14 @@ class OrderItem extends OrderAttribute
         $cacheKey = $this->buyableCacheKey();
         unset(self::$buyableCached[$cacheKey]);
         $this->tempBuyableStore = [];
+    }
+
+    protected function buyableCacheKey($current = false): string
+    {
+        return ($current ? 'true' : 'false') . '_' .
+            $this->Version . '_' .
+            $this->BuyableID . '_' .
+            $this->BuyableClassName . '_';
     }
 
     /**

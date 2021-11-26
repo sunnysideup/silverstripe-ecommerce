@@ -2,13 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use Sunnysideup\Ecommerce\Pages\Product;
-
-use SilverStripe\Forms\GridField\GridFieldExportButton;
-
 trait EcommerceProductReportTrait
 {
-
     /**
      * not sure if this is used in SS3.
      *
@@ -38,27 +33,28 @@ trait EcommerceProductReportTrait
     {
         $className = $this->dataClass;
         $list = $className::get();
-        if($this->hasMethod('getEcommerceFilter')) {
+        if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
-            if(!empty($filter)) {
+            if (! empty($filter)) {
                 $list = $list->filter($filter);
             }
         }
-        if($this->hasMethod('getEcommerceSort')) {
+        if ($this->hasMethod('getEcommerceSort')) {
             $sort = $this->getEcommerceSort();
-            if(!empty($sort)) {
+            if (! empty($sort)) {
                 $list = $list->sort($sort);
             }
         }
-        if($this->hasMethod('getEcommerceWhere')) {
+        if ($this->hasMethod('getEcommerceWhere')) {
             $where = $this->getEcommerceWhere();
-            if(!empty($where)) {
+            if (! empty($where)) {
                 $list = $list->where($where);
             }
         }
-        if($this->hasMethod('updateEcommerceList')) {
+        if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
+
         return $list;
     }
 
@@ -76,5 +72,4 @@ trait EcommerceProductReportTrait
             ],
         ];
     }
-
 }

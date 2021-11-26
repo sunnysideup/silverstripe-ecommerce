@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProductGroups;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
@@ -13,7 +12,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
@@ -36,7 +34,7 @@ use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductGroupDropdown;
 use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProductGroups;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -118,7 +116,7 @@ class Product extends Page implements BuyableModel
         'CalculatedPrice' => 'Currency',
         'CalculatedPriceAsMoney' => 'Money',
         'AllowPurchaseNice' => 'Varchar',
-        'ProductType' =>  'Varchar',
+        'ProductType' => 'Varchar',
     ];
 
     private static $indexes = [

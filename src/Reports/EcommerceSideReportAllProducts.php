@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -35,9 +34,8 @@ class EcommerceSideReportAllProducts extends Report
         return 7000;
     }
 
-    protected function getEcommerceSort($params = null) : array
+    protected function getEcommerceSort($params = null): array
     {
         return ['FullSiteTreeSort' => 'ASC'];
     }
-
 }

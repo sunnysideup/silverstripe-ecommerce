@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -15,7 +14,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceSideReportNoInternalIDProducts extends Report
 {
-
     use EcommerceProductReportTrait;
 
     protected $dataClass = Product::class;
@@ -29,22 +27,18 @@ class EcommerceSideReportNoInternalIDProducts extends Report
     }
 
     /**
-     *
      * @param null|mixed $params
-     *
      */
-    protected function getEcommerceWhere($params = null) : string
+    protected function getEcommerceWhere($params = null): string
     {
         return "\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' OR \"Product\".\"InternalItemID\" = '0' ";
     }
 
     /**
-     *
      * @param null|mixed $params
      */
-    protected function getEcommerceSort($params = null) : array
+    protected function getEcommerceSort($params = null): array
     {
         return ['FullSiteTreeSort' => 'ASC'];
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -12,7 +11,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceSideReportFeaturedProducts extends Report
 {
-
     use EcommerceProductReportTrait;
 
     protected $dataClass = Product::class;
@@ -25,7 +23,6 @@ class EcommerceSideReportFeaturedProducts extends Report
         return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products');
     }
 
-
     /**
      * working out the items.
      *
@@ -33,7 +30,7 @@ class EcommerceSideReportFeaturedProducts extends Report
      *
      * @return \SilverStripe\ORM\DataList
      */
-    protected function getEcommerceFilter($params = null) : array
+    protected function getEcommerceFilter($params = null): array
     {
         return ['FeaturedProduct' => 1];
     }
@@ -41,9 +38,8 @@ class EcommerceSideReportFeaturedProducts extends Report
     /**
      * @param null|mixed $params
      */
-    protected function getEcommerceSort($params = null) : array
+    protected function getEcommerceSort($params = null): array
     {
-        return ['FullSiteTreeSort' =>  'ASC'];
+        return ['FullSiteTreeSort' => 'ASC'];
     }
-
 }
