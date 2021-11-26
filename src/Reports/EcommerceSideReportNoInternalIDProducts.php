@@ -25,7 +25,7 @@ class EcommerceSideReportNoInternalIDProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products without Internal ID / SKU ');
+        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products without Internal ID');
     }
 
     /**
