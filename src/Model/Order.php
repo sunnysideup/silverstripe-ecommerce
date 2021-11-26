@@ -992,7 +992,8 @@ class Order extends DataObject implements EditableEcommerceObject
                 $shopAdminAndCurrentCustomerArray[$member->ID] = $member->getName();
             }
             if ($this->CancelledByID) {
-                if ($cancellingMember = $this->CancelledBy()) {
+                $cancellingMember = $this->CancelledBy();
+                if ($cancellingMember && $cancellingMember->exists()) {
                     $shopAdminAndCurrentCustomerArray[$this->CancelledByID] = $cancellingMember->getName();
                 }
             }
@@ -1274,7 +1275,8 @@ class Order extends DataObject implements EditableEcommerceObject
             // if it is in the queue it has to run from the queue tasks
             // if it ruins from the queue tasks then it has to be one currently processing.
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
-            if ($myQueueObject = $queueObjectSingleton->getQueueObject($this)) {
+            $myQueueObject = $queueObjectSingleton->getQueueObject($this);
+            if ($myQueueObject) {
                 if ($fromOrderQueue) {
                     if (! $myQueueObject->InProcess) {
                         return;
@@ -1700,14 +1702,19 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         if ($this->MemberID) {
             $member = $this->Member();
-        } elseif ($member = Security::getCurrentUser()) {
-            if (! $member->IsShopAdmin()) {
-                $this->MemberID = $member->ID;
-                $this->write();
+        } else {
+            $member = Security::getCurrentUser();
+            if($member && $member->exists()) {
+                if (! $member->IsShopAdmin()) {
+                    $this->MemberID = $member->ID;
+                    $this->write();
+                }
             }
         }
-        $member = $this->Member();
-        if (! $member) {
+        if (!($member && $member->exists())) {
+            $member = $this->Member();
+        }
+        if (!($member && $member->exists())) {
             $member = new Member();
         }
         if ($member && $forceCreation) {
@@ -1744,10 +1751,9 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             if (! $address) {
                 $address = new $className();
-                if ($member = $this->CreateOrReturnExistingMember()) {
-                    if ($member->exists()) {
-                        $address->FillWithLastAddressFromMember($member, $write = false);
-                    }
+                $member = $this->CreateOrReturnExistingMember();
+                if ($member && $member->exists()) {
+                    $address->FillWithLastAddressFromMember($member, $write = false);
                 }
             }
             if ($address) {
@@ -1783,13 +1789,15 @@ class Order extends DataObject implements EditableEcommerceObject
             user_error('Can not change country in submitted order', E_USER_NOTICE);
         } else {
             if ($includeBillingAddress) {
-                if ($billingAddress = $this->CreateOrReturnExistingAddress()) {
+                $billingAddress = $this->CreateOrReturnExistingAddress();
+                if ($billingAddress && $billingAddress->exists()) {
                     $billingAddress->SetCountryFields($countryCode);
                 }
             }
             if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
                 if ($includeShippingAddress) {
-                    if ($shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class)) {
+                    $shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class);
+                    if ($shippingAddress && $shippingAddress->exists()) {
                         $shippingAddress->SetCountryFields($countryCode);
                     }
                 }
@@ -1807,11 +1815,13 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             user_error('Can not change country in submitted order', E_USER_NOTICE);
         } else {
-            if ($billingAddress = $this->CreateOrReturnExistingAddress()) {
+            $billingAddress = $this->CreateOrReturnExistingAddress();
+            if ($billingAddress && $billingAddress->exists()) {
                 $billingAddress->SetRegionFields($regionID);
             }
             if ($this->CanHaveShippingAddress()) {
-                if ($shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class)) {
+                $shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class);
+                if ($shippingAddress && $shippingAddress->exists()) {
                     $shippingAddress->SetRegionFields($regionID);
                 }
             }
@@ -2215,7 +2225,8 @@ class Order extends DataObject implements EditableEcommerceObject
             //has the order been edited recently?
             return true;
         }
-        if ($orderStep = $this->MyStep()) {
+        $orderStep = $this->MyStep();
+        if ($orderStep && $orderStep->exists()) {
             // order is being processed ...
             return $orderStep->canOverrideCanViewForOrder($this, $member);
         }
@@ -2672,7 +2683,8 @@ class Order extends DataObject implements EditableEcommerceObject
             }
             $title = $this->i18n_singular_name() . ' #' . number_format($this->ID);
             if ($dateFormat) {
-                if ($submissionLog = $this->SubmissionLog()) {
+                $submissionLog = $this->SubmissionLog();
+                if ($submissionLog && $submissionLog->exists()) {
                     $dateObject = $submissionLog->dbObject('Created');
                     $placed = _t('Order.PLACED', 'placed');
                 } else {
@@ -2689,7 +2701,8 @@ class Order extends DataObject implements EditableEcommerceObject
                 $by = _t('Order.BY', 'by');
                 if (! $name) {
                     if ($this->BillingAddressID) {
-                        if ($billingAddress = $this->BillingAddress()) {
+                        $billingAddress = $this->BillingAddress();
+                        if ($billingAddress && $billingAddress->exists()) {
                             $name = ' - ' . $by . ' ' . $billingAddress->Prefix . ' ' . $billingAddress->FirstName . ' ' . $billingAddress->Surname;
                         }
                     }
@@ -2698,7 +2711,8 @@ class Order extends DataObject implements EditableEcommerceObject
                     if ($this->MemberID) {
                         if ($member = $this->Member()) {
                             if ($member->exists()) {
-                                if ($memberName = $member->getName()) {
+                                $memberName = $member->getName();
+                                if ($memberName) {
                                     if (! trim($memberName)) {
                                         $memberName = _t('Order.ANONYMOUS', 'anonymous');
                                     }
@@ -2924,7 +2938,8 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getTotalPaid()
     {
         $paid = 0;
-        if ($payments = $this->Payments()) {
+        $payments = $this->Payments();
+        if ($payments && $payments->exists()) {
             foreach ($payments as $payment) {
                 if ('Success' === $payment->Status) {
                     $paid += $payment->Amount->getAmount();
@@ -3170,7 +3185,8 @@ class Order extends DataObject implements EditableEcommerceObject
             'Shipping' => 0,
         ];
         if ($this->BillingAddressID) {
-            if ($billingAddress = $this->BillingAddress()) {
+            $billingAddress = $this->BillingAddress();
+            if ($billingAddress && $billingAddress->exists()) {
                 if ($billingAddress->RegionID) {
                     $regionIDs['Billing'] = $billingAddress->RegionID;
                 }
@@ -3178,7 +3194,8 @@ class Order extends DataObject implements EditableEcommerceObject
         }
         if ($this->CanHaveShippingAddress()) {
             if ($this->ShippingAddressID) {
-                if ($shippingAddress = $this->ShippingAddress()) {
+                $shippingAddress = $this->ShippingAddress();
+                if ($shippingAddress && $shippingAddress->exists()) {
                     if ($shippingAddress->ShippingRegionID) {
                         $regionIDs['Shipping'] = $shippingAddress->ShippingRegionID;
                     }
@@ -3210,7 +3227,8 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function getHasAlternativeCurrency()
     {
-        if ($currency = $this->CurrencyUsed()) {
+        $currency = $this->CurrencyUsed();
+        if ($currency && $currency->exists()) {
             return ! $currency->IsDefault();
         }
 
@@ -3225,7 +3243,8 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if (! $this->IsSubmitted()) {
             $oldExchangeRate = $this->ExchangeRate;
-            if ($currency = $this->CurrencyUsed()) {
+            $currency = $this->CurrencyUsed();
+            if ($currency && $currency->exists()) {
                 $this->ExchangeRate = $currency->IsDefault() ? 0 : $currency->getExchangeRate();
             } else {
                 $this->ExchangeRate = 0;
@@ -3318,7 +3337,8 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function SecondsSinceBeingSubmitted()
     {
-        if ($submissionLog = $this->SubmissionLog()) {
+        $submissionLog = $this->SubmissionLog();
+        if ($submissionLog) {
             return time() - strtotime($submissionLog->Created);
         }
 
