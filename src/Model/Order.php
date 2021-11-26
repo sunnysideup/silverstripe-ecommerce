@@ -1704,17 +1704,17 @@ class Order extends DataObject implements EditableEcommerceObject
             $member = $this->Member();
         } else {
             $member = Security::getCurrentUser();
-            if($member && $member->exists()) {
+            if ($member && $member->exists()) {
                 if (! $member->IsShopAdmin()) {
                     $this->MemberID = $member->ID;
                     $this->write();
                 }
             }
         }
-        if (!($member && $member->exists())) {
+        if (! ($member && $member->exists())) {
             $member = $this->Member();
         }
-        if (!($member && $member->exists())) {
+        if (! ($member && $member->exists())) {
             $member = new Member();
         }
         if ($member && $forceCreation) {
@@ -2561,8 +2561,8 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function getRetrieveLink()
     {
-        //important to recalculate!
-        if ($this->IsSubmitted($recalculate = true)) {
+        //important to recalculate! - recalculate = true
+        if ($this->IsSubmitted(true)) {
             //add session ID if not added yet...
             if (! $this->SessionID) {
                 $this->write();
@@ -2709,15 +2709,14 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
                 if (! $name) {
                     if ($this->MemberID) {
-                        if ($member = $this->Member()) {
-                            if ($member->exists()) {
-                                $memberName = $member->getName();
-                                if ($memberName) {
-                                    if (! trim($memberName)) {
-                                        $memberName = _t('Order.ANONYMOUS', 'anonymous');
-                                    }
-                                    $name = ' - ' . $by . ' ' . $memberName;
+                        $member = $this->Member();
+                        if ($member && $member->exists()) {
+                            $memberName = $member->getName();
+                            if ($memberName) {
+                                if (! trim($memberName)) {
+                                    $memberName = _t('Order.ANONYMOUS', 'anonymous');
                                 }
+                                $name = ' - ' . $by . ' ' . $memberName;
                             }
                         }
                     }

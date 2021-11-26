@@ -393,7 +393,8 @@ class OrderFormAddress extends Form
 
             return false;
         }
-        if ($this->order && 0 === (int) $this->order->TotalItems($recalculate = true)) {
+        //recalculated = true... in TotalItems
+        if ($this->order && 0 === (int) $this->order->TotalItems(true)) {
             // WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
             $form->sessionMessage(_t('OrderForm.NOITEMSINCART', 'Please add some items to your cart.'), 'bad');
             $this->controller->redirectBack();
