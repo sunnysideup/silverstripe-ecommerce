@@ -8,6 +8,21 @@ use Sunnysideup\Ecommerce\Model\Order;
 trait OrderCached
 {
 
+    public static function set_order_cached(?Order $order)
+    {
+        if($order && $order->ID) {
+            self::$order_cache[$order->ID] = $order;
+        }
+    }
+
+    public static function get_order_cached(?int $orderId = 0) : ?Order
+    {
+        $order = Order::get()->byID($orderId);
+        if($order && $order->ID) {
+            self::set_order_cached($order);
+        }
+        return $order;
+    }
     /**
      *
      * @var array[Order]
@@ -19,50 +34,62 @@ trait OrderCached
      *
      * @var Order
      */
-    protected $orderCached = [];
+    protected $orderCached = null;
 
     /**
      *
      * @var int
      */
-    protected $orderCachedStatusID = 0;
+    protected $orderCachedStatusID = -1;
 
-    public function setOrderCached(Order $order)
+    public function setOrderCached(?Order $order = null)
     {
-        $this->orderCached = $order;
+        if($order) {
+            $this->orderCached = $order;
+            $this->orderCachedStatusID = $order->StatusID;
+            $this->setOrderCachedStatically();
+        }
         return $this;
     }
 
     /**
-     * @return Order;
+     * @return Order|null;
      */
-    public function OrderCached()
+    public function getOrderCached() :?Order
     {
-        $this->orderCached = $this->getStoreOrderStatically();
+        $this->getOrderCachedStaticallyIfNeeded();
         if(
             !($this->orderCached && $this->orderCached->exists())
-            || ($this->orderCached && $this->orderCachedStatusID !== $this->orderCached->StatusID)
+            ||
+            ($this->orderCached && $this->orderCachedStatusID !== $this->orderCached->StatusID)
         ) {
-            $this->orderCached = $this->Order();
-            $this->orderCachedStatusID = $this->orderCached->StatusID;
+            $this->setOrderCached($this->Order());
         }
-        $this->setStoreOrderStatically();
         return $this->orderCached;
     }
 
-    private function setStoreOrderStatically()
+    private function setOrderCachedStatically()
     {
-        if($this->orderCached && $this->orderCached->StatusID) {
-            self::$order_cache[$order->ID] = $this->orderCached;
-        } else {
-            self::$order_cache[$order->ID] = null;
+        if($this->orderCached && $this->orderCached->exists()) {
+            self::$order_cache[$this->orderCached->ID] = $this->orderCached;
         }
     }
 
-    private function getStoreOrderStatically()
+    /**
+     * retrieve from static cache if we dont have it
+     */
+    private function getOrderCachedStaticallyIfNeeded()
     {
         if(! $this->orderCached) {
-            $this->orderCached = self::$order_cache[$this->OrderID] ?? null;
+            // we need to have an order ID
+            if(! empty($this->OrderID)) {
+                $this->orderCached = self::$order_cache[$this->OrderID] ?? null;
+                // if we have not set it before then we can set statusID
+                if($this->orderCached && $this->orderCached->exists() && $this->orderCachedStatusID === -1 ) {
+                    $this->orderCachedStatusID  = $this->orderCached->StatusID;
+                }
+            }
         }
     }
+
 }

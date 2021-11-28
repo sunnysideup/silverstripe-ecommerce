@@ -217,7 +217,7 @@ class ShippingAddress extends OrderAddress
             CMSEditLinkField::create(
                 'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
-                $this->Order()
+                $this->getOrderCached()
             )
         );
 

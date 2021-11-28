@@ -213,9 +213,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         if (null === $this->_canView) {
             $this->_canView = false;
-            if ($this->Order()) {
-                if ($this->Order()->exists()) {
-                    if ($this->Order()->canView($member)) {
+            if ($this->getOrderCached()) {
+                if ($this->getOrderCached()->exists()) {
+                    if ($this->getOrderCached()->canView($member)) {
                         $this->_canView = true;
                     }
                 }
@@ -247,10 +247,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         if (null === $this->_canEdit) {
             $this->_canEdit = false;
-            if ($this->Order()) {
-                if ($this->Order()->exists()) {
-                    if ($this->Order()->canEdit($member)) {
-                        if (! $this->Order()->IsSubmitted()) {
+            if ($this->getOrderCached()) {
+                if ($this->getOrderCached()->exists()) {
+                    if ($this->getOrderCached()->canEdit($member)) {
+                        if (! $this->getOrderCached()->IsSubmitted()) {
                             $this->_canEdit = true;
                         }
                     }
@@ -298,7 +298,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             CMSEditLinkField::create(
                 'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
-                $this->Order()
+                $this->getOrderCached()
             )
         );
 
@@ -446,14 +446,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * find the member associated with the current Order and address.
      *
      * @Note: this needs to be public to give DODS (extensions access to this)
-     * @todo: can wre write $this->Order() instead????
+     * @todo: can wre write $this->getOrderCached() instead????
      *
      * @return null|Member
      */
     public function getMemberFromOrder()
     {
         if ($this->exists()) {
-            $order = $this->Order();
+            $order = $this->getOrderCached();
             if ($order) {
                 if ($order->exists()) {
                     if ($order->MemberID) {
@@ -647,7 +647,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
         $title = _t('OrderAddress.' . strtoupper($name), 'Country');
-        $order = $this->Order();
+        $order = $this->getOrderCached();
 
         $countryCode = null;
         if ($order && $order->exists()) {

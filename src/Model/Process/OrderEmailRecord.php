@@ -215,7 +215,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order && $order->exists()) {
             return $order->canView();
         }
@@ -277,7 +277,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             CMSEditLinkField::create(
                 'OrderID',
                 'Order',
-                $this->Order()
+                $this->getOrderCached()
             )
         );
         $fields->replaceField('OrderStepID', new ReadonlyField('OrderStepNice', 'Order Step', $this->OrderStepNice()));
@@ -363,8 +363,8 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     public function getTitle()
     {
         $str = 'TO: ' . $this->To;
-        if ($this->Order()) {
-            $str .= ' - ' . $this->Order()->getTitle();
+        if ($this->getOrderCached()) {
+            $str .= ' - ' . $this->getOrderCached()->getTitle();
             $str .= ' - ' . $this->OrderStepNice();
         }
 

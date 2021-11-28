@@ -256,7 +256,7 @@ class OrderModifier extends OrderAttribute
                 CMSEditLinkField::create(
                     'OrderID',
                     'Order',
-                    $this->Order()
+                    $this->getOrderCached()
                 )
             );
         } else {
@@ -531,7 +531,7 @@ class OrderModifier extends OrderAttribute
 
     public function getTableValueAsMoney()
     {
-        return EcommerceCurrency::get_money_object_from_order_currency($this->TableValue, $this->Order());
+        return EcommerceCurrency::get_money_object_from_order_currency($this->TableValue, $this->getOrderCached());
     }
 
     /**

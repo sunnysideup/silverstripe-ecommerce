@@ -34,7 +34,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * to fill out their shipping details, confirming their order
  * and making a payment.
  *
- * @see CheckoutPage_Controller->Order()
+ * @see CheckoutPage_Controller->getOrderCached()
  * @see OrderForm
  * @see CheckoutPage_Controller->OrderForm()
  *

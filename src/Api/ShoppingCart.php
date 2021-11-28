@@ -24,6 +24,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -193,15 +194,14 @@ class ShoppingCart
     /**
      * Allows access to the current order from anywhere in the code..
      *
-     * @return Order
      */
-    public static function session_order()
+    public static function session_order() : ?Order
     {
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
         $orderIDFromSession = (int) Controller::curr()->getRequest()->getSession()->get($sessionVariableName) - 0;
 
         // @var Order|null
-        return Order::get()->byID($orderIDFromSession);
+        return OrderCached::get_order_cached($orderIDFromSession);
     }
 
     /**

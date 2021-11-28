@@ -249,7 +249,7 @@ class OrderItem extends OrderAttribute
                 CMSEditLinkField::create(
                     'OrderID',
                     'Order',
-                    $this->Order()
+                    $this->getOrderCached()
                 )
             );
             $fields->addFieldsToTab(
@@ -290,7 +290,7 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('GroupSort');
         $fields->removeByName('OrderAttributeGroupID');
 
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order) {
             if ($order->IsSubmitted()) {
                 $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
@@ -537,7 +537,7 @@ class OrderItem extends OrderAttribute
 
     public function getUnitPriceAsMoney($recalculate = false)
     {
-        return EcommerceCurrency::get_money_object_from_order_currency($this->getUnitPrice($recalculate), $this->Order());
+        return EcommerceCurrency::get_money_object_from_order_currency($this->getUnitPrice($recalculate), $this->getOrderCached());
     }
 
     /**
@@ -573,7 +573,7 @@ class OrderItem extends OrderAttribute
 
     public function getTotalAsMoney($recalculate = false)
     {
-        return EcommerceCurrency::get_money_object_from_order_currency($this->getTotal($recalculate), $this->Order());
+        return EcommerceCurrency::get_money_object_from_order_currency($this->getTotal($recalculate), $this->getOrderCached());
     }
 
     /**
@@ -649,8 +649,8 @@ class OrderItem extends OrderAttribute
     public function getBuyable($current = false)
     {
         $currentOrVersion = $current ? 'current' : 'version';
-        if (null !== $this->Order() && ! $current) {
-            if (! $this->Order()->IsSubmitted()) {
+        if (null !== $this->getOrderCached() && ! $current) {
+            if (! $this->getOrderCached()->IsSubmitted()) {
                 $currentOrVersion = 'current';
             }
         }
@@ -755,7 +755,7 @@ class OrderItem extends OrderAttribute
     {
         $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
-            $order = $this->Order();
+            $order = $this->getOrderCached();
             if ($order && $order->IsSubmitted()) {
                 return Director::absoluteURL($buyable->VersionedLink());
             }
@@ -860,7 +860,7 @@ class OrderItem extends OrderAttribute
      */
     public function getLink()
     {
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order) {
             return $order->Link();
         }
@@ -1018,7 +1018,7 @@ class OrderItem extends OrderAttribute
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order) {
             if (! $order->StatusID) {
                 //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!

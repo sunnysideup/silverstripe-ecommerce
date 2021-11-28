@@ -128,8 +128,8 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     {
         return FieldList::create(
             [
-                ReadonlyField::create('CustomerInfo', 'Customer', $this->Order()->Member()->getCustomerDetails()),
-                ReadonlyField::create('OrderInfo', 'Order', $this->Order()->getTitle()),
+                ReadonlyField::create('CustomerInfo', 'Customer', $this->getOrderCached()->Member()->getCustomerDetails()),
+                ReadonlyField::create('OrderInfo', 'Order', $this->getOrderCached()->getTitle()),
                 ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItems')),
                 TextField::create('DispatchedBy'),
                 TextField::create('DispatchTicket'),

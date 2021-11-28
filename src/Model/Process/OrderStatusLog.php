@@ -228,7 +228,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             //only Shop Administrators can see it ...
             return false;
         }
-        $order = $this->orderCached();
+        $order = $this->getOrderCached();
         if ($order && $order->canView($member)) {
             return true;
         }
@@ -254,7 +254,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             return $extended;
         }
 
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order) {
             //Order Status Logs are so basic, anyone can edit them
             if (OrderStatusLog::class === $this->ClassName) {
@@ -339,7 +339,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
 
         //OrderID Field
         if ($this->exists() && $this->OrderID) {
-            $order = $this->Order();
+            $order = $this->getOrderCached();
             if ($order && $order->exists()) {
                 $fields->removeByName('OrderID');
                 $fields->addFieldToTab(
@@ -395,7 +395,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             CMSEditLinkField::create(
                 'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
-                $this->Order()
+                $this->getOrderCached()
             )
         );
 

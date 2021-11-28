@@ -190,7 +190,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function init()
     {
-        self::get_supported_methods($this->Order());
+        self::get_supported_methods($this->getOrderCached());
 
         return $this;
     }
@@ -203,7 +203,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             CMSEditLinkField::create(
                 'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
-                $this->Order()
+                $this->getOrderCached()
             )
         );
         $fields->replaceField('PaidByID', new ReadonlyField('PaidByID', 'Payment made by'));
@@ -266,7 +266,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order && $order->exists()) {
             return $order->canView();
         }
@@ -340,7 +340,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if ($this->AlternativeEndPoint) {
             return Controller::curr()->redirect(Director::absoluteBaseURL() . $this->AlternativeEndPoint);
         }
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order) {
             return Controller::curr()->redirect($order->Link());
         }
@@ -444,7 +444,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function PaymentMethod(): ?string
     {
-        $supportedMethods = self::get_supported_methods($this->Order());
+        $supportedMethods = self::get_supported_methods($this->getOrderCached());
         if (isset($supportedMethods[$this->ClassName])) {
             return $supportedMethods[$this->ClassName];
         }
@@ -620,7 +620,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     public function PaidObject()
     {
-        return $this->Order();
+        return $this->getOrderCached();
     }
 
     /**
@@ -667,7 +667,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
-        $order = $this->Order();
+        $order = $this->getOrderCached();
         if ($order && is_a($order, EcommerceConfigClassNames::getName(Order::class)) && $order->IsSubmitted()) {
             $order->tryToFinaliseOrder();
         }

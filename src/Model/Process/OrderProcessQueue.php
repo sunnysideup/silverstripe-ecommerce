@@ -218,7 +218,7 @@ class OrderProcessQueue extends DataObject
     {
         //find variables
         if (! $order) {
-            $order = $this->Order();
+            $order = $this->getOrderCached();
             $myQueueObject = $this;
         } else {
             $myQueueObject = $this->getQueueObject($order);
@@ -471,7 +471,7 @@ class OrderProcessQueue extends DataObject
                 CMSEditLinkField::create(
                     'OrderID',
                     'Order',
-                    $this->Order()
+                    $this->getOrderCached()
                 )
             );
         }

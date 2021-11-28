@@ -227,7 +227,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if (null === $this->_canView) {
             $this->_canView = false;
             if ($this->OrderID) {
-                $o = $this->Order();
+                $o = $this->getOrderCached();
                 if ($o) {
                     if ($o->exists()) {
                         if ($o->canView($member)) {
@@ -338,7 +338,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * returns the order - for some unknown reason it seems we need this.
      *
-     * @return null|DataObject|Order
+     * @return null|Order
      */
     public function Order()
     {
@@ -495,7 +495,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getCalculatedTotalAsMoney()
     {
-        return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedTotal, $this->Order());
+        return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedTotal, $this->getOrderCached());
     }
 
     public function runUpdate($force = false)
@@ -555,7 +555,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate) {
             self::$_price_has_been_fixed[$this->OrderID] = false;
-            $order = $this->Order();
+            $order = $this->getOrderCached();
             if ($order) {
                 if ($order->IsSubmitted()) {
                     self::$_price_has_been_fixed[$this->OrderID] = true;

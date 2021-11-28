@@ -235,7 +235,7 @@ class BillingAddress extends OrderAddress
             CMSEditLinkField::create(
                 'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
-                $this->Order()
+                $this->getOrderCached()
             )
         );
         $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));

@@ -201,7 +201,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
             CMSEditLinkField::create(
                 'OrderID',
                 Injector::inst()->get(Order::class)->singular_name(),
-                $this->Order()
+                $this->getOrderCached()
             )
         );
 
@@ -233,8 +233,8 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     public function getTitle()
     {
         $string = $this->Created;
-        if ($this->Order()) {
-            $string .= ' (' . $this->Order()->getTitle() . ')';
+        if ($this->getOrderCached()) {
+            $string .= ' (' . $this->getOrderCached()->getTitle() . ')';
         }
         $string .= ' - ' . $this->Rating;
         if ($this->Note) {
