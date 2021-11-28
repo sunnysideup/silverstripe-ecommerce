@@ -51,7 +51,6 @@ class KeywordSearchBuilder
      * being less specific than the one before...
      *
      * @param string $phrase         - keywordphrase
-     * @param array  $fields         - fields being searched
      * @param mixed  $primaryField
      * @param mixed  $secondaryField
      */

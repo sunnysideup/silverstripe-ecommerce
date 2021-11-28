@@ -567,7 +567,7 @@ class ShoppingCartController extends Controller
     /**
      * return number of items in cart.
      *
-     * @return int
+     * @return float
      */
     public function numberofitemsincart(HTTPRequest $request): float
     {

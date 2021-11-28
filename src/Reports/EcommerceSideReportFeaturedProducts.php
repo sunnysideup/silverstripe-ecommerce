@@ -28,7 +28,6 @@ class EcommerceSideReportFeaturedProducts extends Report
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
      */
     protected function getEcommerceFilter($params = null): array
     {

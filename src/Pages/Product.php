@@ -373,7 +373,6 @@ class Product extends Page implements BuyableModel
      * This can be useful as you can compare it to the ones saved in the database.
      * Returns true if the value is different from the one in the database.
      *
-     * @return bool
      */
     public function prepareFullFields()
     {

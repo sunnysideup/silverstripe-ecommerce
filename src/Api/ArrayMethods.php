@@ -11,14 +11,14 @@ use SilverStripe\Versioned\Versioned;
 
 class ArrayMethods
 {
-    public static function avoid_empty_id_filters(DataList $list, array $idList)
+    public static function avoid_empty_id_filters(DataList $list, array $idList, ?string $fieldName = 'ID')
     {
-        $filter = self::filter_array($filter);
-        if ($filter[0] < 1 && 1 === count($filter)) {
+        $idList = self::filter_array($idList);
+        if ($idList[0] < 1 && 1 === count($idList)) {
             return Injector::inst()->get(ArrayList::class);
         }
 
-        return $list->filter($filter);
+        return $list->filter([$fieldName => $idList]);
     }
 
     /**

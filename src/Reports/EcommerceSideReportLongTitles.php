@@ -38,6 +38,6 @@ class EcommerceSideReportLongTitles extends Report
 
     protected function getEcommerceWhere($params = null): string
     {
-        return 'CHAR_LENGTH("Title") > '.$this->Config('min_length');
+        return 'CHAR_LENGTH("Title") > '.$this->Config()->get('min_length');
     }
 }

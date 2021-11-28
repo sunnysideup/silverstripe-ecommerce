@@ -11,6 +11,8 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\AbstractProductsAndGroupsList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+
 /**
  * provides data on the user.
  */
