@@ -13,11 +13,14 @@ use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 // Class used to describe the steps in the checkout
 
 class OrderFeedback extends DataObject implements EditableEcommerceObject
 {
+    use OrderCached;
+
     /**
      * standard SS variable.
      *

@@ -17,6 +17,7 @@ use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
  * This class provides a bunch of Meta Objects
@@ -24,6 +25,8 @@ use Sunnysideup\Ecommerce\Model\Order;
  */
 class OrderProcessQueue extends DataObject
 {
+    use OrderCached;
+
     private static $table_name = 'OrderProcessQueue';
 
     private static $db = [

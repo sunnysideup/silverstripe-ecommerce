@@ -1264,6 +1264,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
+            $previousTime = microtime(true);
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
 
             //if the order has been cancelled then we do not process it ...
@@ -1272,8 +1273,9 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return;
             }
+
             // if it is in the queue it has to run from the queue tasks
-            // if it ruins from the queue tasks then it has to be one currently processing.
+            // if it runs from the queue tasks then it has to be one currently processing.
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
             $myQueueObject = $queueObjectSingleton->getQueueObject($this);
             if ($myQueueObject) {
@@ -1290,6 +1292,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->_isSubmittedTempVar = -1;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
+            $timeTaken = microtime(true) - $previousTime;
+            DB::alteration_message($nextStatusID.' took '.$timeTaken);
             if ($nextStatusID) {
                 $nextStatusObject = OrderStep::get()->byID($nextStatusID);
                 if ($nextStatusObject) {

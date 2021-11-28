@@ -23,6 +23,7 @@ use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
@@ -35,6 +36,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class OrderAddress extends DataObject implements EditableEcommerceObject
 {
+    use OrderCached;
+
     /**
      * There might be times when a modifier needs to make an address field read-only.
      * In that case, this is done here.

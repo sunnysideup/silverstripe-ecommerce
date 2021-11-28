@@ -176,7 +176,7 @@ abstract class OrderStepController extends Controller
      *
      * @return Order
      */
-    protected function Order($dataOrRequest = null)
+    protected function myOrder($dataOrRequest = null)
     {
         if (! self::$_order) {
             if (is_array($dataOrRequest) &&
@@ -213,7 +213,7 @@ abstract class OrderStepController extends Controller
      */
     protected function getOrderGetParams()
     {
-        $order = $this->Order();
+        $order = $this->myOrder();
         if ($order) {
             return '?OrderID=' . $order->ID . '&OrderSessionID=' . self::secure_hash($order);
         }

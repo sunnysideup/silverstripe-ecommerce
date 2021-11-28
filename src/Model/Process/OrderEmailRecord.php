@@ -17,6 +17,7 @@ use Sunnysideup\Ecommerce\Control\OrderEmailRecordReview;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Search\Filters\OrderEmailRecordFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
@@ -31,6 +32,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class OrderEmailRecord extends DataObject implements EditableEcommerceObject
 {
+    use OrderCached;
+
     /**
      * standard SS variable.
      *

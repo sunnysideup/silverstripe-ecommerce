@@ -16,6 +16,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
  * @description: base class for OrderItem (item in cart) and OrderModifier (extra - e.g. Tax)
@@ -29,6 +30,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class OrderAttribute extends DataObject implements EditableEcommerceObject
 {
+    use OrderCached;
+
     /**
      * save edit status for speed's sake.
      *

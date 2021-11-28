@@ -189,7 +189,7 @@ class OrderForm extends Form
 
         //RUN UPDATES TO CHECK NOTHING HAS CHANGED
         $oldTotal = $order->Total();
-        //if the extend line below does not return null then we know there
+        // if the extend line below does not return null then we know there
         // is an error in the form (e.g. Payment Option not entered)
         $order->calculateOrderAttributes($force = true);
         $newTotal = $order->Total();
@@ -238,6 +238,7 @@ class OrderForm extends Form
         $this->extend('OrderFormBeforeSubmit', $order);
         // this should be done before paying, as only submitted orders can be paid!
         ShoppingCart::singleton()->submit();
+        die('asdf');
         $this->extend('OrderFormAfterSubmit', $order);
 
         //-------------- ACTION PAYMENT -------------

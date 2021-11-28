@@ -28,6 +28,7 @@ use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidatio
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
 use Sunnysideup\Ecommerce\Search\Filters\EcommercePaymentFiltersAroundDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
@@ -41,6 +42,9 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
+
+    use OrderCached;
+
     /**
      * @var string
      */
