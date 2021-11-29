@@ -112,7 +112,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
             return $orderOrOrderId;
         }
         if ((int) $orderOrOrderId) {
-            return Order::get()->byID((int) $orderOrOrderId);
+            return Order::get_order_cached((int) $orderOrOrderId);
         }
 
         return ShoppingCart::current_order();

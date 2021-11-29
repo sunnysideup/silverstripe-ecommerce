@@ -197,7 +197,7 @@ abstract class OrderStepController extends Controller
                 $id = (int) $this->request->param('ID');
                 $sessionID = Convert::raw2sql($this->request->param('OtherID'));
             }
-            self::$_order = Order::get()->byID($id);
+            self::$_order = Order::get_order_cached((int) $id);
             if (self::$_order) {
                 if ($this->secureHash(self::$_order) !== $sessionID) {
                     self::$_order = null;

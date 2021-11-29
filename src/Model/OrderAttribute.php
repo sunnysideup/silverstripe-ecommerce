@@ -342,7 +342,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function Order()
     {
-        return Order::get()->byID($this->OrderID);
+        return Order::get_order_cached((int) $this->OrderID);
     }
 
     /**

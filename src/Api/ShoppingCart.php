@@ -24,7 +24,6 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceRegion;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -198,10 +197,10 @@ class ShoppingCart
     public static function session_order() : ?Order
     {
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
-        $orderIDFromSession = (int) Controller::curr()->getRequest()->getSession()->get($sessionVariableName) - 0;
+        $orderIDFromSession = Controller::curr()->getRequest()->getSession()->get($sessionVariableName) - 0;
 
         // @var Order|null
-        return OrderCached::get_order_cached($orderIDFromSession);
+        return Order::get_order_cached((int) $orderIDFromSession);
     }
 
     /**
@@ -793,7 +792,7 @@ class ShoppingCart
             //TODO: how to handle existing order
             //TODO: permission check - does this belong to another member? ...or should permission be assumed already?
             if (is_numeric($order)) {
-                $this->order = Order::get()->byID($order);
+                $this->order = Order::get_order_cached((int) $order);
             } elseif (is_a($order, EcommerceConfigClassNames::getName(Order::class))) {
                 $this->order = $order;
             } else {
@@ -836,7 +835,7 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             if (is_numeric($oldOrder)) {
-                $oldOrder = Order::get()->byID((int) $oldOrder);
+                $oldOrder = Order::get_order_cached((int) $oldOrder);
             } elseif (is_a($oldOrder, EcommerceConfigClassNames::getName(Order::class))) {
                 //$oldOrder = $oldOrder;
             } else {

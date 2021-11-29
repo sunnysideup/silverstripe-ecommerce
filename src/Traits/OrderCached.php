@@ -7,29 +7,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 
 trait OrderCached
 {
-
-    public static function set_order_cached(?Order $order)
-    {
-        if($order && $order->ID) {
-            self::$order_cache[$order->ID] = $order;
-        }
-    }
-
-    public static function get_order_cached(?int $orderId = 0) : ?Order
-    {
-        $order = Order::get()->byID($orderId);
-        if($order && $order->ID) {
-            self::set_order_cached($order);
-        }
-        return $order;
-    }
-    /**
-     *
-     * @var array[Order]
-     */
-    private static $order_cache = [];
-
-
     /**
      *
      * @var Order

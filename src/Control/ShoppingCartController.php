@@ -268,7 +268,7 @@ class ShoppingCartController extends Controller
      */
     public static function copy_order_link(int $orderID, $parameters = []): string
     {
-        $order = Order::get()->byID($orderID);
+        $order = Order::get_order_cached($orderID);
         if ($order && $order->IsSubmitted()) {
             return self::create_link('copyorder/' . $orderID . '/' . self::params_to_get_string($parameters));
         }

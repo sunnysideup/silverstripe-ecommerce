@@ -471,6 +471,35 @@ class Order extends DataObject implements EditableEcommerceObject
     private static $_try_to_finalise_order_is_running = [];
 
     /**
+     *
+     * @var array[Order]
+     */
+    protected static $order_cache = [];
+
+    public static function set_order_cached(?Order $order)
+    {
+        if($order && $order->exists()) {
+            self::$order_cache[$order->ID] = $order;
+        }
+    }
+
+    public static function get_order_cached(?int $orderId = 0) : ?Order
+    {
+        if($orderId) {
+            $order = self::$order_cache[$orderId] ?? null;
+            if($order && $order->exists()) {
+                return $order;
+            }
+            $order = Order::get()->byID($orderId);
+            self::set_order_cached($order);
+            return $order;
+        }
+        return null;
+    }
+
+
+
+    /**
      * fields contains in CSV export for ModelAdmin GridField.
      *
      * @return array
@@ -546,13 +575,14 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Like the standard byID, but it checks whether we are allowed to view the order.
      *
-     * @param mixed $id
+     * @param int $id
      *
      * @return null|Order
      */
     public static function get_by_id_if_can_view($id)
     {
-        $order = Order::get()->byID($id);
+        $id = intval($id);
+        $order = Order::get_order_cached((int) $id);
         if ($order && $order->canView()) {
             if ($order->IsSubmitted()) {
                 // LITTLE HACK TO MAKE SURE WE SHOW THE LATEST INFORMATION!

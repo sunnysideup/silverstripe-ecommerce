@@ -447,7 +447,7 @@ class OrderConfirmationPageController extends CartPageController
         //the parent page also takes care of the security
         $sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
         if ($sessionOrderID) {
-            $this->currentOrder = Order::get()->byID($sessionOrderID);
+            $this->currentOrder = Order::get_order_cached((int) $sessionOrderID);
             if ($this->currentOrder) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...

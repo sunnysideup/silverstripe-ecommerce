@@ -79,7 +79,7 @@ class OrderFormPayment extends Form
         if (isset($SQLData['OrderID'])) {
             $orderID = (int) $SQLData['OrderID'];
             if ($orderID) {
-                $order = Order::get()->byID($orderID);
+                $order = Order::get_order_cached((int) $orderID);
                 if ($order && $order->canPay()) {
                     $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
                     if ($formHelper->validatePayment($order, $data, $form)) {

@@ -366,7 +366,7 @@ class CartPageController extends PageController
         if (isset($_REQUEST['OrderID'])) {
             $orderID = (int) $_REQUEST['OrderID'];
             if ($orderID) {
-                $this->currentOrder = Order::get()->byID($orderID);
+                $this->currentOrder = Order::get_order_cached((int) $orderID);
             }
         } elseif ($this->request && $this->request->param('ID') && $this->request->param('Action')) {
             //we can not do intval here!
@@ -389,7 +389,7 @@ class CartPageController extends PageController
                     $this->setRetrievalOrderID($this->currentOrder->ID);
                 }
             } elseif ((int) $id && in_array($action, $this->stat('allowed_actions'), true)) {
-                $this->currentOrder = Order::get()->byID((int) $id);
+                $this->currentOrder = Order::get_order_cached((int) $id);
             }
         }
         if (! $this->currentOrder) {
