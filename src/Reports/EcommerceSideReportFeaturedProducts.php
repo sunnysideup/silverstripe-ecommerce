@@ -27,7 +27,6 @@ class EcommerceSideReportFeaturedProducts extends Report
      * working out the items.
      *
      * @param null|mixed $params
-     *
      */
     protected function getEcommerceFilter($params = null): array
     {

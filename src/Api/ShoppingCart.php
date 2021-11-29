@@ -192,9 +192,8 @@ class ShoppingCart
 
     /**
      * Allows access to the current order from anywhere in the code..
-     *
      */
-    public static function session_order() : ?Order
+    public static function session_order(): ?Order
     {
         $sessionVariableName = self::singleton()->sessionVariableName('OrderID');
         $orderIDFromSession = Controller::curr()->getRequest()->getSession()->get($sessionVariableName) - 0;

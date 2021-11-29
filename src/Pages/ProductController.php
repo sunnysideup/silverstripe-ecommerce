@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Pages;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -14,11 +13,10 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
-use Sunnysideup\Ecommerce\Api\SetThemed;
 
 class ProductController extends PageController
 {

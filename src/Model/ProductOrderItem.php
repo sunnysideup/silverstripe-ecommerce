@@ -2,11 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\SSViewer;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Api\SetThemed;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 class ProductOrderItem extends OrderItem
 {

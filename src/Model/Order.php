@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use Sunnysideup\Ecommerce\Api\SetThemed;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -48,9 +47,9 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -143,7 +142,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * the editable table... Forms within it can be called
      * from through the modifier itself.
      *
-     * @param Controller $optionalController
+     * @param Controller $order
      * @param Validator  $optionalValidator
      *
      * @return \SilverStripe\ORM\ArrayList (ArrayData)|null
@@ -181,6 +180,11 @@ class Order extends DataObject implements EditableEcommerceObject
      * @var bool
      */
     protected $_isSubmittedTempVar = -1;
+
+    /**
+     * @var array[Order]
+     */
+    protected static $order_cache = [];
 
     /**
      * API Control.
@@ -471,40 +475,34 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     private static $_try_to_finalise_order_is_running = [];
 
-    /**
-     *
-     * @var array[Order]
-     */
-    protected static $order_cache = [];
-
     public static function set_order_cached(?Order $order)
     {
-        if($order && $order->exists()) {
+        if ($order && $order->exists()) {
             self::$order_cache[$order->ID] = $order;
         }
     }
 
-    public static function get_order_cached(?int $orderId = 0, ?bool $forceNew = false) : ?Order
+    public static function get_order_cached(?int $orderId = 0, ?bool $forceNew = false): ?Order
     {
-        if($forceNew) {
+        if ($forceNew) {
             $order = Order::get()->byID($orderId);
             self::set_order_cached($order);
+
             return $order;
-        } else {
-            if($orderId) {
-                $order = self::$order_cache[$orderId] ?? null;
-                if($order && $order->exists()) {
-                    return $order;
-                }
-                $order = Order::get()->byID($orderId);
-                self::set_order_cached($order);
+        }
+        if ($orderId) {
+            $order = self::$order_cache[$orderId] ?? null;
+            if ($order && $order->exists()) {
                 return $order;
             }
+            $order = Order::get()->byID($orderId);
+            self::set_order_cached($order);
+
+            return $order;
         }
+
         return null;
     }
-
-
 
     /**
      * fields contains in CSV export for ModelAdmin GridField.
@@ -588,7 +586,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public static function get_by_id_if_can_view($id)
     {
-        $id = intval($id);
+        $id = (int) $id;
         $order = Order::get_order_cached((int) $id);
         if ($order && $order->canView()) {
             if ($order->IsSubmitted()) {
@@ -3541,7 +3539,8 @@ class Order extends DataObject implements EditableEcommerceObject
         SetThemed::start();
         $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\OrderBasics');
         SetThemed::end();
-        return preg_replace('/\s+/', ' ',$html);
+
+        return preg_replace('#\s+#', ' ', $html);
     }
 
     /**

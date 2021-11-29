@@ -1,14 +1,13 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Pages;
-use Sunnysideup\Ecommerce\Api\SetThemed;
+
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;

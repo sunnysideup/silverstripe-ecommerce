@@ -7,7 +7,6 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
@@ -120,13 +119,15 @@ class EcommerceTaskCartCleanup extends BuildTask
     private static $clear_minutes_empty_carts = 120;
 
     /**
-     * one week
+     * one week.
+     *
      * @var int
      */
     private static $clear_minutes = 10080;
 
     /**
-     * two weeks
+     * two weeks.
+     *
      * @var int
      */
     private static $clear_minutes_with_member = 20160;
@@ -208,7 +209,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             if ($request->getVar('limit')) {
                 $this->maximumNumberOfObjectsDeleted = (int) $request->getVar('limit');
             }
-            if($request->getVar('purge')) {
+            if ($request->getVar('purge')) {
                 $this->neverDeleteIfLinkedToMember = false;
             }
         }
@@ -253,13 +254,13 @@ class EcommerceTaskCartCleanup extends BuildTask
 
         $clearMinutesWithoutMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
         $timeWithoutMember = strtotime('-' . $clearMinutesWithoutMember . ' minutes');
-        $whereWithoutMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithoutMember} ".$this->withoutMemberWhere;
+        $whereWithoutMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithoutMember} " . $this->withoutMemberWhere;
 
         $clearMinutesWithMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_with_member');
         $timeWithMember = strtotime('-' . $clearMinutesWithMember . ' minutes');
         $whereWithMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithMember} ";
 
-        $where = '('.$whereWithoutMember .') OR ('.$whereWithMember .')';
+        $where = '(' . $whereWithoutMember . ') OR (' . $whereWithMember . ')';
         $oldCarts = Order::get()
             ->where($where)
             ->sort($this->sort)
@@ -306,7 +307,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
                 WHERE
-                    "StatusID" = ' . $createdStepID . ' AND '.'
+                    "StatusID" = ' . $createdStepID . ' AND ' . '
                     UNIX_TIMESTAMP("Order"."LastEdited") >= ' . $timeWithoutMember . ';
             ')->value();
             DB::alteration_message(

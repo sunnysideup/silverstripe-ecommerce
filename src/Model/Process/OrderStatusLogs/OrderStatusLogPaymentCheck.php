@@ -2,12 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\View\SSViewer;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Api\SetThemed;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * @Description: We use this payment check class to double check that payment has arrived against
