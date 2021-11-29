@@ -120,9 +120,16 @@ class EcommerceTaskCartCleanup extends BuildTask
     private static $clear_minutes_empty_carts = 120;
 
     /**
+     * one week
      * @var int
      */
     private static $clear_minutes = 10080;
+
+    /**
+     * two weeks
+     * @var int
+     */
+    private static $clear_minutes_with_member = 20160;
 
     /**
      * @var int
@@ -242,13 +249,19 @@ class EcommerceTaskCartCleanup extends BuildTask
     protected function abandonnedCarts()
     {
         //ABANDONNED CARTS
-        $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
         $createdStepID = OrderStep::get_status_id_from_code('CREATED');
-        $time = strtotime('-' . $clearMinutes . ' minutes');
-        $where = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
 
+        $clearMinutesWithoutMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
+        $timeWithoutMember = strtotime('-' . $clearMinutesWithoutMember . ' minutes');
+        $whereWithoutMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithoutMember} ".$this->withoutMemberWhere;
+
+        $clearMinutesWithMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_with_member');
+        $timeWithMember = strtotime('-' . $clearMinutesWithMember . ' minutes');
+        $whereWithMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithMember} ";
+
+        $where = '('.$whereWithoutMember .') OR ('.$whereWithMember .')';
         $oldCarts = Order::get()
-            ->where($where . $this->withoutMemberWhere)
+            ->where($where)
             ->sort($this->sort)
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
@@ -264,7 +277,6 @@ class EcommerceTaskCartCleanup extends BuildTask
                         ' . $this->leftMemberJoin . '
                     WHERE '
                         . $where
-                        . $this->withoutMemberWhere
                     . ';'
                 );
                 $totalToDelete = $totalToDeleteSQLObject->value();
@@ -288,18 +300,14 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
         if ($this->verbose) {
             $this->flush();
-            $timeLegible = date('Y-m-d H:i:s', $time);
+            $timeLegible = date('Y-m-d H:i:s', $timeWithoutMember);
             $countCart = DB::query('SELECT COUNT("ID") FROM "Order" WHERE "StatusID" = ' . $createdStepID . ' ')->value();
             $countCartWithinTimeLimit = DB::query('
                 SELECT COUNT("Order"."ID")
                 FROM "Order"
-                    ' . $this->leftMemberJoin . '
-                WHERE "StatusID" = ' . $createdStepID . '
-                AND
-                (
-                    UNIX_TIMESTAMP("Order"."LastEdited") >= ' . $time . '
-                    ' . $this->withMemberWhere . '
-                );
+                WHERE
+                    "StatusID" = ' . $createdStepID . ' AND '.'
+                    UNIX_TIMESTAMP("Order"."LastEdited") >= ' . $timeWithoutMember . ';
             ')->value();
             DB::alteration_message(
                 "

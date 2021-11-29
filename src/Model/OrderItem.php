@@ -700,12 +700,13 @@ class OrderItem extends OrderAttribute
             }
             if($obj && ! ($obj instanceof BuyableModel)) {
                 $obj = null;
-                // user_error(
-                //     'Tried to create: '.$className.' in OrderItem '.$this->ID.
-                //     ' with BuyableClassName' . $this->BuyableClassName. ' AND ' .
-                //     ' with BuyableID' . $this->BuyableID.'
-                //     ClassName = '.$obj->ClassName.' and ID '.$obj->ID
-                // );
+                user_error(
+                    'Tried to create: '.$className.' in OrderItem '.$this->ID.
+                    ' with BuyableClassName' . $this->BuyableClassName. ' AND ' .
+                    ' with BuyableID' . $this->BuyableID.'
+                    ClassName = '.$obj->ClassName.' and ID '.$obj->ID,
+                    E_USER_NOTICE
+                );
             }
             $this->tempBuyableStore[$currentOrVersion] = $obj;
         }
