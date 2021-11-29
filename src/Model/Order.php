@@ -483,16 +483,22 @@ class Order extends DataObject implements EditableEcommerceObject
         }
     }
 
-    public static function get_order_cached(?int $orderId = 0) : ?Order
+    public static function get_order_cached(?int $orderId = 0, ?bool $forceNew = false) : ?Order
     {
-        if($orderId) {
-            $order = self::$order_cache[$orderId] ?? null;
-            if($order && $order->exists()) {
-                return $order;
-            }
+        if($forceNew) {
             $order = Order::get()->byID($orderId);
             self::set_order_cached($order);
             return $order;
+        } else {
+            if($orderId) {
+                $order = self::$order_cache[$orderId] ?? null;
+                if($order && $order->exists()) {
+                    return $order;
+                }
+                $order = Order::get()->byID($orderId);
+                self::set_order_cached($order);
+                return $order;
+            }
         }
         return null;
     }
