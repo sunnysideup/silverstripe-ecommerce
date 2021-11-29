@@ -699,11 +699,13 @@ class OrderItem extends OrderAttribute
                 $obj = $className::get()->byID($this->BuyableID);
             }
             if($obj && ! ($obj instanceof BuyableModel)) {
-                user_error(
-                    'Tried to create: '.$className.' in OrderItem '.$this->ID.
-                    ' with BuyableClassName' . $this->BuyableClassName. ' AND ' .
-                    ' with BuyableID' . $this->BuyableID
-                );
+                $obj = null;
+                // user_error(
+                //     'Tried to create: '.$className.' in OrderItem '.$this->ID.
+                //     ' with BuyableClassName' . $this->BuyableClassName. ' AND ' .
+                //     ' with BuyableID' . $this->BuyableID.'
+                //     ClassName = '.$obj->ClassName.' and ID '.$obj->ID
+                // );
             }
             $this->tempBuyableStore[$currentOrVersion] = $obj;
         }
