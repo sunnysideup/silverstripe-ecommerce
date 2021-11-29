@@ -48,7 +48,7 @@ trait OrderCached
     private function setOrderCachedStatically()
     {
         if($this->orderCached && $this->orderCached->exists()) {
-            self::$order_cache[$this->orderCached->ID] = $this->orderCached;
+            Order::set_order_cached($this->orderCached);
         }
     }
 
@@ -60,7 +60,7 @@ trait OrderCached
         if(! $this->orderCached) {
             // we need to have an order ID
             if(! empty($this->OrderID)) {
-                $this->orderCached = self::$order_cache[$this->OrderID] ?? null;
+                $this->orderCached = Order::get_order_cached($this->OrderID);
                 // if we have not set it before then we can set statusID
                 if($this->orderCached && $this->orderCached->exists() && $this->orderCachedStatusID === -1 ) {
                     $this->orderCachedStatusID  = $this->orderCached->StatusID;
