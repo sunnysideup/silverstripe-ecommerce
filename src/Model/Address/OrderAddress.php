@@ -25,6 +25,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 
 /**
  * @description: each order has an address: a Shipping and a Billing address
@@ -365,10 +366,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     public function getFullString()
     {
-        Config::nest();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        SetThemed::start();
         $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\Order_Address' . str_replace('Address', '', $this->ClassName) . 'FullString');
-        Config::unnest();
+        SetThemed::end();
 
         return $html;
     }

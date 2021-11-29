@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Pages;
-
+use Sunnysideup\Ecommerce\Api\SetThemed;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
@@ -63,10 +63,9 @@ class OrderConfirmationPageController extends CartPageController
             Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/Order_Invoice'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/Order_Invoice_Print_Only', 'print'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Config::nest();
-            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+            SetThemed::start();
             $html = $this->renderWith('Sunnysideup\\Ecommerce\\Invoice');
-            Config::unnest();
+            SetThemed::end();
 
             return $html;
         }
@@ -74,10 +73,9 @@ class OrderConfirmationPageController extends CartPageController
             Requirements::clear();
             Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
             Requirements::themedCSS('client/css/Order_PackingSlip'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
-            Config::nest();
-            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+            SetThemed::start();
             $html = $this->renderWith('Sunnysideup\Ecommerce\PackingSlip');
-            Config::unnest();
+            SetThemed::end();
 
             return $html;
         }

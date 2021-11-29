@@ -7,6 +7,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 
 /**
  * @Description: We use this payment check class to double check that payment has arrived against
@@ -117,10 +118,9 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     public function getCustomerNote()
     {
         if ($this->Author()) {
-            Config::nest();
-            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+            SetThemed::start();
             $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\Order_CustomerNote_PaymentCheck');
-            Config::unnest();
+            SetThemed::end();
 
             return $html;
         }

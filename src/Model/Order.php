@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Sunnysideup\Ecommerce\Api\SetThemed;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -1971,10 +1972,9 @@ class Order extends DataObject implements EditableEcommerceObject
         $message = ''
     ) {
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
-        Config::nest();
-        Config::modify()->set(SSViewer::class, 'theme_enabled', true);
+        SetThemed::start();
         $html = $arrayData->RenderWith($emailClassName);
-        Config::unnest();
+        SetThemed::end();
 
         return OrderEmail::emogrify_html($html);
     }
@@ -3534,17 +3534,14 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Converts the Order into HTML, based on the Order ProductGroupSchema.
      *
-     * @return \SilverStripe\ORM\FieldType\DBHTMLText
+     * @return string
      */
     public function ConvertToHTML()
     {
-        Config::nest();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        SetThemed::start();
         $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\Order');
-        Config::unnest();
-        $html = preg_replace('#(\s)+#', ' ', $html);
-
-        return DBField::create_field('HTMLText', $html);
+        SetThemed::end();
+        return preg_replace('/\s+/', ' ',$html);
     }
 
     /**
@@ -3924,12 +3921,11 @@ class Order extends DataObject implements EditableEcommerceObject
             // This might be called from within the CMS,
             // so we need to restore the theme, just in case
             // templates within the theme exist
-            Config::nest();
-            Config::modify()->set(SSViewer::class, 'theme_enabled', true);
+            SetThemed::start();
             $email->setOrder($this);
             $email->setResend($resend);
             $result = $email->send(null);
-            Config::unnest();
+            SetThemed::end();
             //todo: we are experiencing issues with emails, so we always return true!
             // return true;
             return $result;

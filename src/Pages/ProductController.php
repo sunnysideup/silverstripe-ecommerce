@@ -18,6 +18,7 @@ use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 
 class ProductController extends PageController
 {
@@ -70,10 +71,9 @@ class ProductController extends PageController
      */
     public function ajaxview(HTTPRequest $request)
     {
-        Config::nest();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        SetThemed::start();
         $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\ProductGroupItemMoreDetail');
-        Config::unnest();
+        SetThemed::end();
 
         return $html;
     }

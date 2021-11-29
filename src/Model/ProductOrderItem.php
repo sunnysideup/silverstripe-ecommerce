@@ -6,6 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 
 class ProductOrderItem extends OrderItem
 {
@@ -76,10 +77,9 @@ class ProductOrderItem extends OrderItem
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         $product = $this->Product();
         if ($product) {
-            Config::nest();
-            Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+            SetThemed::start();
             $tableTitle = strip_tags($product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
-            Config::unnest();
+            SetThemed::end();
         }
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);
         if (null !== $updatedTableTitle && is_array($updatedTableTitle) && count($updatedTableTitle)) {

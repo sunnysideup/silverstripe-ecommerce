@@ -12,6 +12,7 @@ use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 
 /**
  * @authors: Nicolaas [at] Sunny Side Up .co.nz
@@ -116,10 +117,9 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 
     public function getCustomerNote()
     {
-        Config::nest();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        SetThemed::start();
         $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\LogDispatchPhysicalOrderCustomerNote');
-        Config::unnest();
+        SetThemed::end();
 
         return $html;
     }
