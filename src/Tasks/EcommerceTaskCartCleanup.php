@@ -186,7 +186,7 @@ class EcommerceTaskCartCleanup extends BuildTask
 
     public function run($request)
     {
-        if ($this->verbose || (isset($_GET['verbose']) && Permission::check('ADMIN'))) {
+        if ($this->verbose || (isset($_GET['verbose']))) {
             $this->verbose = true;
             $this->flush();
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
@@ -198,9 +198,11 @@ class EcommerceTaskCartCleanup extends BuildTask
 
         //LIMITS ...
         if ($request) {
-            $this->limitFromGetVar = $request->getVar('limit');
-            if ($this->limitFromGetVar && Permission::check('ADMIN')) {
-                $this->maximumNumberOfObjectsDeleted = (int) $this->limitFromGetVar;
+            if ($request->getVar('limit')) {
+                $this->maximumNumberOfObjectsDeleted = (int) $request->getVar('limit');
+            }
+            if($request->getVar('purge')) {
+                $this->neverDeleteIfLinkedToMember = false;
             }
         }
 
