@@ -523,6 +523,7 @@ class Product extends Page implements BuyableModel
         return self::$parent_cache[$this->ID];
     }
 
+
     /**
      * Returns the parent page, but only if it is an instance of Product Group.
      */

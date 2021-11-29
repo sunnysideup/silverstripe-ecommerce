@@ -93,13 +93,13 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 class SetThemed
 {
-    protected static $enabled = true;
+    protected static $changed = true;
 
     public static function start()
     {
         $themed = Config::inst()->get(SSViewer::class, 'theme_enabled');
         if(! $themed) {
-            self::$enabled = true;
+            self::$changed = true;
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
         }
@@ -107,9 +107,10 @@ class SetThemed
     }
 
     public static function end(){
-        if(self::$enabled ) {
+        if(self::$changed ) {
             Config::unnest();
-            self::$enabled = false;
+            // Config::modify()->update(SSViewer::class, 'theme_enabled', false);
+            self::$changed = false;
         }
 
     }

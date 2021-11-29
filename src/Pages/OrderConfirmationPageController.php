@@ -163,7 +163,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function PaymentHeader()
     {
-        if ($this->getOrderCached()) {
+        if ($this->Order()) {
             if ($this->OrderIsCancelled()) {
                 return $this->OrderCancelledHeader;
             }
@@ -185,7 +185,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function PaymentMessage()
     {
-        if ($this->getOrderCached()) {
+        if ($this->Order()) {
             if ($this->OrderIsCancelled()) {
                 return $this->OrderCancelledMessage;
             }
@@ -207,7 +207,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function PaymentMessageType()
     {
-        if ($this->getOrderCached()) {
+        if ($this->Order()) {
             if ($this->OrderIsCancelled()) {
                 return 'bad';
             }
@@ -229,7 +229,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function OrderIsCancelled()
     {
-        $order = $this->getOrderCached();
+        $order = $this->Order();
         if ($order) {
             return $order->getIsCancelled();
         }
@@ -245,7 +245,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function IsPaid()
     {
-        $order = $this->getOrderCached();
+        $order = $this->Order();
         if ($order) {
             return $order->IsPaid();
         }
@@ -261,7 +261,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function PaymentIsPending()
     {
-        $order = $this->getOrderCached();
+        $order = $this->Order();
         if ($order) {
             return $order->PaymentIsPending();
         }
@@ -278,7 +278,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function CancelForm()
     {
-        if ($this->getOrderCached()) {
+        if ($this->Order()) {
             if ($this->currentOrder->canCancel()) {
                 return OrderFormCancel::create($this, 'CancelForm', $this->currentOrder);
             }
@@ -300,7 +300,7 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function FeedbackForm()
     {
-        if ($this->getOrderCached()) {
+        if ($this->Order()) {
             if ($this->IsFeedbackEnabled) {
                 return OrderFormFeedback::create($this, 'FeedbackForm', $this->currentOrder);
             }

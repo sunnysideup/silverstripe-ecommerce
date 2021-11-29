@@ -1301,7 +1301,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
     {
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
-            $previousTime = microtime(true);
+            // $previousTime = microtime(true);
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
 
             //if the order has been cancelled then we do not process it ...
@@ -1329,8 +1329,8 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->_isSubmittedTempVar = -1;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
-            $timeTaken = microtime(true) - $previousTime;
-            DB::alteration_message($nextStatusID.' took '.$timeTaken);
+            // $timeTaken = microtime(true) - $previousTime;
+            // DB::alteration_message($nextStatusID.' took '.$timeTaken);
             if ($nextStatusID) {
                 $nextStatusObject = OrderStep::get()->byID($nextStatusID);
                 if ($nextStatusObject) {
@@ -3539,7 +3539,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function ConvertToHTML()
     {
         SetThemed::start();
-        $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\Order');
+        $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\OrderBasics');
         SetThemed::end();
         return preg_replace('/\s+/', ' ',$html);
     }
