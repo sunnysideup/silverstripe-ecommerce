@@ -15,9 +15,8 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
-use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
-
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
+use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
 use Sunnysideup\Vardump\DebugTrait;
 
 abstract class AbstractProductsAndGroupsList

@@ -8,10 +8,9 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\AbstractProductsAndGroupsList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
-
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * provides data on the user.

@@ -698,13 +698,13 @@ class OrderItem extends OrderAttribute
             if (! $obj || (! $obj->exists())) {
                 $obj = $className::get_by_id($this->BuyableID);
             }
-            if($obj && ! ($obj instanceof BuyableModel)) {
+            if ($obj && ! ($obj instanceof BuyableModel)) {
                 $obj = null;
                 user_error(
-                    'Tried to create: '.$className.' in OrderItem '.$this->ID.
-                    ' with BuyableClassName' . $this->BuyableClassName. ' AND ' .
-                    ' with BuyableID' . $this->BuyableID.'
-                    ClassName = '.$obj->ClassName.' and ID '.$obj->ID,
+                    'Tried to create: ' . $className . ' in OrderItem ' . $this->ID .
+                    ' with BuyableClassName' . $this->BuyableClassName . ' AND ' .
+                    ' with BuyableID' . $this->BuyableID . '
+                    ClassName = ' . $obj->ClassName . ' and ID ' . $obj->ID,
                     E_USER_NOTICE
                 );
             }

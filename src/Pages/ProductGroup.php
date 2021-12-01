@@ -458,6 +458,7 @@ class ProductGroup extends Page
                 }
             }
         }
+
         return self::$parentGroupCache[$this->ID];
     }
 

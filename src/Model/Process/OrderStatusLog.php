@@ -19,9 +19,9 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Traits\OrderCached;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
+use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
  * @description: see OrderStep.md
@@ -490,15 +490,15 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-       //START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS....
-       // THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER...
-       if ($this->exists()) {
-           $orderID = $this->getField('OrderID');
-           if ($orderID) {
-               $this->OrderID = $orderID;
-           }
-       }
-       //END HACK TO PREVENT LOSS
+        //START HACK TO PREVENT LOSS OF ORDERID CAUSED BY COMPLEX TABLE FIELDS....
+        // THIS MEANS THAT A LOG CAN NEVER SWITCH FROM ONE ORDER TO ANOTHER...
+        if ($this->exists()) {
+            $orderID = $this->getField('OrderID');
+            if ($orderID) {
+                $this->OrderID = $orderID;
+            }
+        }
+        //END HACK TO PREVENT LOSS
         if (! $this->AuthorID) {
             $member = Security::getCurrentUser();
             if ($member) {
@@ -519,6 +519,4 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     {
         return OrderStatusLog::class !== $this->ClassName;
     }
-
-
 }

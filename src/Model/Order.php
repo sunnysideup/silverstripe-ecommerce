@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use Sunnysideup\Ecommerce\Api\SetThemed;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -48,9 +47,9 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\SSViewer;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -143,7 +142,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * the editable table... Forms within it can be called
      * from through the modifier itself.
      *
-     * @param Controller $optionalController
+     * @param Controller $order
      * @param Validator  $optionalValidator
      *
      * @return \SilverStripe\ORM\ArrayList (ArrayData)|null
@@ -181,6 +180,11 @@ class Order extends DataObject implements EditableEcommerceObject
      * @var bool
      */
     protected $_isSubmittedTempVar = -1;
+
+    /**
+     * @var array[Order]
+     */
+    protected static $order_cache = [];
 
     /**
      * API Control.
@@ -471,40 +475,34 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     private static $_try_to_finalise_order_is_running = [];
 
-    /**
-     *
-     * @var array[Order]
-     */
-    protected static $order_cache = [];
-
     public static function set_order_cached(?Order $order)
     {
-        if($order && $order->exists()) {
+        if ($order && $order->exists()) {
             self::$order_cache[$order->ID] = $order;
         }
     }
 
-    public static function get_order_cached(?int $orderId = 0, ?bool $forceNew = false) : ?Order
+    public static function get_order_cached(?int $orderId = 0, ?bool $forceNew = false): ?Order
     {
-        if($forceNew) {
-            $order = Order::get_by_id($orderId);
+        if ($forceNew) {
+            $order = Order::get()->byID($orderId);
             self::set_order_cached($order);
+
             return $order;
-        } else {
-            if($orderId) {
-                $order = self::$order_cache[$orderId] ?? null;
-                if($order && $order->exists()) {
-                    return $order;
-                }
-                $order = Order::get_by_id($orderId);
-                self::set_order_cached($order);
+        }
+        if ($orderId) {
+            $order = self::$order_cache[$orderId] ?? null;
+            if ($order && $order->exists()) {
                 return $order;
             }
+            $order = Order::get_by_id($orderId);
+            self::set_order_cached($order);
+
+            return $order;
         }
+
         return null;
     }
-
-
 
     /**
      * fields contains in CSV export for ModelAdmin GridField.
@@ -588,7 +586,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public static function get_by_id_if_can_view($id)
     {
-        $id = intval($id);
+        $id = (int) $id;
         $order = Order::get_order_cached((int) $id);
         if ($order && $order->canView()) {
             if ($order->IsSubmitted()) {
@@ -1332,7 +1330,7 @@ class Order extends DataObject implements EditableEcommerceObject
             // $timeTaken = microtime(true) - $previousTime;
             // DB::alteration_message($nextStatusID.' took '.$timeTaken);
             if ($nextStatusID) {
-                $nextStatusObject = OrderStep::get_by_id($nextStatusID);
+                $nextStatusObject = OrderStep::get()->byID($nextStatusID);
                 if ($nextStatusObject) {
                     $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
                     if ($delay > 0) {
@@ -1466,7 +1464,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $step = null;
         if ($this->StatusID) {
-            $step = OrderStep::get_by_id($this->StatusID);
+            $step = OrderStep::get()->byID($this->StatusID);
         }
         if (! $step) {
             $step = DataObject::get_one(
@@ -1697,7 +1695,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsCancelled()) {
             if (! $this->IsCustomerCancelled()) {
-                $admin = Member::get_by_id($this->CancelledByID);
+                $admin = Member::get()->byID($this->CancelledByID);
                 if ($admin) {
                     if ($admin->IsShopAdmin()) {
                         return true;
@@ -3103,7 +3101,7 @@ class Order extends DataObject implements EditableEcommerceObject
         ];
         $code = null;
         if ($this->BillingAddressID) {
-            $billingAddress = BillingAddress::get_by_id($this->BillingAddressID);
+            $billingAddress = BillingAddress::get()->byID($this->BillingAddressID);
             if ($billingAddress) {
                 if ($billingAddress->Country) {
                     $countryCodes['Billing'] = $billingAddress->Country;
@@ -3111,7 +3109,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
         if ($this->IsSeparateShippingAddress()) {
-            $shippingAddress = ShippingAddress::get_by_id($this->ShippingAddressID);
+            $shippingAddress = ShippingAddress::get()->byID($this->ShippingAddressID);
             if ($shippingAddress) {
                 if ($shippingAddress->ShippingCountry) {
                     $countryCodes['Shipping'] = $shippingAddress->ShippingCountry;
@@ -3244,13 +3242,13 @@ class Order extends DataObject implements EditableEcommerceObject
         if (count($regionIDs)) {
             //note the double-check with $this->CanHaveShippingAddress() and get_use_....
             if ($this->CanHaveShippingAddress() && EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $regionIDs['Shipping']) {
-                return EcommerceRegion::get_by_id($regionIDs['Shipping']);
+                return EcommerceRegion::get()->byID($regionIDs['Shipping']);
             }
 
-            return EcommerceRegion::get_by_id($regionIDs['Billing']);
+            return EcommerceRegion::get()->byID($regionIDs['Billing']);
         }
 
-        return EcommerceRegion::get_by_id(EcommerceRegion::get_region_from_ip());
+        return EcommerceRegion::get()->byID(EcommerceRegion::get_region_from_ip());
     }
 
     /**
@@ -3541,7 +3539,8 @@ class Order extends DataObject implements EditableEcommerceObject
         SetThemed::start();
         $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\OrderBasics');
         SetThemed::end();
-        return preg_replace('/\s+/', ' ',$html);
+
+        return preg_replace('#\s+#', ' ', $html);
     }
 
     /**

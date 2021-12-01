@@ -16,9 +16,9 @@ class EcommerceSideReportLongTitles extends Report
 {
     use EcommerceProductReportTrait;
 
-    private static $min_length = 100;
-
     protected $dataClass = Product::class;
+
+    private static $min_length = 100;
 
     /**
      * @return string
@@ -38,6 +38,6 @@ class EcommerceSideReportLongTitles extends Report
 
     protected function getEcommerceWhere($params = null): string
     {
-        return 'CHAR_LENGTH("Title") > '.$this->Config()->get('min_length');
+        return 'CHAR_LENGTH("Title") > ' . $this->Config()->get('min_length');
     }
 }
