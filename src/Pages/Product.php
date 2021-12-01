@@ -387,7 +387,7 @@ class Product extends Page implements BuyableModel
         $obj = $this;
         $parentTitleArray = [];
         while ($obj && $obj->ParentID) {
-            $obj = SiteTree::get()->byID((int) $obj->ParentID - 0);
+            $obj = SiteTree::get_by_id((int) $obj->ParentID - 0);
             if ($obj) {
                 $parentSortArray[] = sprintf('%03d', $obj->Sort);
                 if (is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))) {
@@ -496,7 +496,7 @@ class Product extends Page implements BuyableModel
     public function BestAvailableImage(): ?Image
     {
         if ($this->ImageID) {
-            $image = Image::get()->byID($this->ImageID);
+            $image = Image::get_by_id($this->ImageID);
             if ($image && $image->exists()) {
                 return $image;
             }
@@ -517,7 +517,7 @@ class Product extends Page implements BuyableModel
     public function ParentGroup()
     {
         if (! isset(self::$parent_cache[$this->ID])) {
-            self::$parent_cache[$this->ID] = ProductGroup::get()->byID($this->ParentID);
+            self::$parent_cache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 
         return self::$parent_cache[$this->ID];
@@ -611,7 +611,7 @@ class Product extends Page implements BuyableModel
         $obj = OrderItem::get_version($this->ClassName, $id, $version);
         if (! $obj) {
             $className = $this->ClassName;
-            $obj = $className::get()->byID($id);
+            $obj = $className::get_by_id($id);
         }
 
         return $obj;
@@ -1116,7 +1116,7 @@ class Product extends Page implements BuyableModel
 
         $html .= '<li><hr />Image<hr /></li>';
         $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
-        $productGroup = ProductGroup::get()->byID($this->ParentID);
+        $productGroup = ProductGroup::get_by_id($this->ParentID);
         if ($productGroup) {
             $html .= '<li><hr />Product Example<hr /></li>';
             $html .= '<li><b>Product Group View:</b> <a href="' . $productGroup->Link() . '">' . $productGroup->Title . '</a> </li>';

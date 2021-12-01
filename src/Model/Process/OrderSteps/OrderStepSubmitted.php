@@ -107,7 +107,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                     //this is particular important for the Order Item Links.
                     //order write will also update all the OrderAttributes!
                     $obj->write();
-                    $obj = OrderStatusLog::get()->byID($obj->ID);
+                    $obj = OrderStatusLog::get_by_id($obj->ID);
                     $saved = false;
                     if ($this->SaveOrderAsSerializedObject) {
                         $obj->OrderAsString = $order->ConvertToString();

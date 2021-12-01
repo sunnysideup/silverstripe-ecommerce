@@ -487,7 +487,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public static function get_order_cached(?int $orderId = 0, ?bool $forceNew = false) : ?Order
     {
         if($forceNew) {
-            $order = Order::get()->byID($orderId);
+            $order = Order::get_by_id($orderId);
             self::set_order_cached($order);
             return $order;
         } else {
@@ -496,7 +496,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 if($order && $order->exists()) {
                     return $order;
                 }
-                $order = Order::get()->byID($orderId);
+                $order = Order::get_by_id($orderId);
                 self::set_order_cached($order);
                 return $order;
             }
@@ -1332,7 +1332,7 @@ class Order extends DataObject implements EditableEcommerceObject
             // $timeTaken = microtime(true) - $previousTime;
             // DB::alteration_message($nextStatusID.' took '.$timeTaken);
             if ($nextStatusID) {
-                $nextStatusObject = OrderStep::get()->byID($nextStatusID);
+                $nextStatusObject = OrderStep::get_by_id($nextStatusID);
                 if ($nextStatusObject) {
                     $delay = $nextStatusObject->CalculatedDeferTimeInSeconds($this);
                     if ($delay > 0) {
@@ -1466,7 +1466,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $step = null;
         if ($this->StatusID) {
-            $step = OrderStep::get()->byID($this->StatusID);
+            $step = OrderStep::get_by_id($this->StatusID);
         }
         if (! $step) {
             $step = DataObject::get_one(
@@ -1697,7 +1697,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsCancelled()) {
             if (! $this->IsCustomerCancelled()) {
-                $admin = Member::get()->byID($this->CancelledByID);
+                $admin = Member::get_by_id($this->CancelledByID);
                 if ($admin) {
                     if ($admin->IsShopAdmin()) {
                         return true;
@@ -3103,7 +3103,7 @@ class Order extends DataObject implements EditableEcommerceObject
         ];
         $code = null;
         if ($this->BillingAddressID) {
-            $billingAddress = BillingAddress::get()->byID($this->BillingAddressID);
+            $billingAddress = BillingAddress::get_by_id($this->BillingAddressID);
             if ($billingAddress) {
                 if ($billingAddress->Country) {
                     $countryCodes['Billing'] = $billingAddress->Country;
@@ -3111,7 +3111,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
         if ($this->IsSeparateShippingAddress()) {
-            $shippingAddress = ShippingAddress::get()->byID($this->ShippingAddressID);
+            $shippingAddress = ShippingAddress::get_by_id($this->ShippingAddressID);
             if ($shippingAddress) {
                 if ($shippingAddress->ShippingCountry) {
                     $countryCodes['Shipping'] = $shippingAddress->ShippingCountry;
@@ -3244,13 +3244,13 @@ class Order extends DataObject implements EditableEcommerceObject
         if (count($regionIDs)) {
             //note the double-check with $this->CanHaveShippingAddress() and get_use_....
             if ($this->CanHaveShippingAddress() && EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $regionIDs['Shipping']) {
-                return EcommerceRegion::get()->byID($regionIDs['Shipping']);
+                return EcommerceRegion::get_by_id($regionIDs['Shipping']);
             }
 
-            return EcommerceRegion::get()->byID($regionIDs['Billing']);
+            return EcommerceRegion::get_by_id($regionIDs['Billing']);
         }
 
-        return EcommerceRegion::get()->byID(EcommerceRegion::get_region_from_ip());
+        return EcommerceRegion::get_by_id(EcommerceRegion::get_region_from_ip());
     }
 
     /**

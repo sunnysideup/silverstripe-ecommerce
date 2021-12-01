@@ -105,7 +105,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
     public static function remove_product($product)
     {
-        $obj = ProductSearchTable::get()->byId($product->ID);
+        $obj = ProductSearchTable::get_by_id($product->ID);
         if ($obj) {
             $obj->delete();
         }

@@ -563,7 +563,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             $var = strtoupper($var);
             $var = DataObject::get_one(EcommerceCountry::class, ['Code' => $var]);
         } elseif (is_numeric($var) && is_int($var)) {
-            $var = EcommerceCountry::get()->byID($var);
+            $var = EcommerceCountry::get_by_id($var);
         }
         if ($var instanceof EcommerceCountry) {
             if ($asCode) {

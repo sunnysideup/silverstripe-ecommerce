@@ -483,7 +483,7 @@ class ShoppingCartController extends Controller
             $className = Convert::raw2sql($request->param('ID'));
             $id = (int) $request->param('OtherID');
             if (class_exists($className)) {
-                $obj = $className::get()->byID($id);
+                $obj = $className::get_by_id($id);
                 $obj->AllowPurchase = 0;
                 if ($obj instanceof SiteTree) {
                     $obj->writeToStage('Stage');
@@ -618,7 +618,7 @@ class ShoppingCartController extends Controller
         $className = Convert::raw2sql($request->param('OtherID'));
 
         if (class_exists($className)) {
-            $address = $className::get()->byID($id);
+            $address = $className::get_by_id($id);
             if ($address && $address->canView()) {
                 $member = Security::getCurrentUser();
                 if ($member) {
@@ -654,7 +654,7 @@ class ShoppingCartController extends Controller
         $version = (int) $this->getRequest()->param('Version');
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
-                $bestBuyable = $buyableClassName::get()->byID($buyableID);
+                $bestBuyable = $buyableClassName::get_by_id($buyableID);
                 if (Product::is_product_variation($bestBuyable)) {
                     //todo: make this part of ProductVariation.
                     $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
@@ -689,7 +689,7 @@ class ShoppingCartController extends Controller
     public function placeorderformember(HTTPRequest $request)
     {
         if (EcommerceRole::current_member_is_shop_admin()) {
-            $member = Member::get()->byID((int) $request->param('ID'));
+            $member = Member::get_by_id((int) $request->param('ID'));
             if ($member) {
                 $newOrder = Order::create();
                 //copying fields.
@@ -718,7 +718,7 @@ class ShoppingCartController extends Controller
     public function loginas(HTTPRequest $request)
     {
         if (Permission::check('ADMIN')) {
-            $newMember = Member::get()->byID((int) $request->param('ID'));
+            $newMember = Member::get_by_id((int) $request->param('ID'));
 
             if ($newMember) {
                 Security::setCurrentUser($newMember);
@@ -855,7 +855,7 @@ class ShoppingCartController extends Controller
         $buyableID = (int) $this->getRequest()->param('ID');
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
-                $obj = $buyableClassName::get()->byID((int) $buyableID);
+                $obj = $buyableClassName::get_by_id((int) $buyableID);
                 if ($obj) {
                     if ($obj->ClassName === $buyableClassName) {
                         return $obj;

@@ -42,7 +42,7 @@ class ProductGroupFilter extends BaseApplyer
                 $parts = explode('.', $getVar);
                 $groupId = (int) $parts[1];
                 if ($groupId) {
-                    self::$get_group_from_get_variable_store[$getVar] = ProductGroup::get()->byId($groupId);
+                    self::$get_group_from_get_variable_store[$getVar] = ProductGroup::get_by_id($groupId);
                 }
             }
         }
@@ -82,7 +82,7 @@ class ProductGroupFilter extends BaseApplyer
     public function getTitle(?string $key = '', $params = null): string
     {
         $groupId = $this->findGroupId($params);
-        $group = ProductGroup::get()->byID((int) $groupId - 0);
+        $group = ProductGroup::get_by_id((int) $groupId - 0);
         if ($group) {
             return $group->MenuTitle;
         }

@@ -50,7 +50,7 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
-        $billingAddress = BillingAddress::get()->byID($order->BillingAddressID);
+        $billingAddress = BillingAddress::get_by_id($order->BillingAddressID);
         if (! $billingAddress) {
             $this->validationError(
                 BillingAddress::class,

@@ -330,7 +330,7 @@ class ProductSearchForm extends Form
         if ($this->rawData['Keyword']) {
             $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
             if ($test) {
-                $product = Product::get()->byID($test->ProductID);
+                $product = Product::get_by_id($test->ProductID);
                 if ($product) {
                     return $this->controller->redirect($product->Link());
                 }
@@ -345,7 +345,7 @@ class ProductSearchForm extends Form
         if ($this->rawData['Keyword']) {
             $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
             if ($test) {
-                $product = ProductGroup::get()->byID($test->ProductGroupID);
+                $product = ProductGroup::get_by_id($test->ProductGroupID);
                 if ($product) {
                     return $this->controller->redirect($product->Link());
                 }

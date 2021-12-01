@@ -378,7 +378,7 @@ class OrderConfirmationPageController extends CartPageController
 
             $statusIDSend = (int) $request->getVar('send');
             if ($statusIDSend) {
-                $step = OrderStep::get()->byID($statusIDSend);
+                $step = OrderStep::get_by_id($statusIDSend);
                 $subject = $step->CalculatedEmailSubject($this->currentOrder);
                 $message = $step->CalculatedCustomerMessage($this->currentOrder);
                 if ($step) {
@@ -402,7 +402,7 @@ class OrderConfirmationPageController extends CartPageController
             if ($statusIDTest) {
                 $email = $this->currentOrder->getOrderEmail();
                 if ($email) {
-                    $step = OrderStep::get()->byID($statusIDTest);
+                    $step = OrderStep::get_by_id($statusIDTest);
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
                     $emailClassName = OrderInvoiceEmail::class;

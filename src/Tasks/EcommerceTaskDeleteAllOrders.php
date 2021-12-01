@@ -173,7 +173,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
             if ($unlinkedObject->ClassName) {
                 if (class_exists($unlinkedObject->ClassName) && ClassHelpers::check_for_instance_of($unlinkedObject, DataObject::class, false)) {
                     $unlinkedObjectClassName = $unlinkedObject->ClassName;
-                    $objectToDelete = $unlinkedObjectClassName::get()->byID($unlinkedObject->ID);
+                    $objectToDelete = $unlinkedObjectClassName::get_by_id($unlinkedObject->ID);
                     if ($objectToDelete) {
                         $objectToDelete->delete();
                         $objectToDelete->destroy();

@@ -722,7 +722,7 @@ class ShoppingCart
     public function removeModifier($modifier)
     {
         if ($this->allowWrites()) {
-            $modifier = is_numeric($modifier) ? OrderModifier::get()->byID($modifier) : $modifier;
+            $modifier = is_numeric($modifier) ? OrderModifier::get_by_id($modifier) : $modifier;
             if (! $modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
 
@@ -759,7 +759,7 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             if (is_numeric($modifier)) {
-                $modifier = OrderModifier::get()->byID($modifier);
+                $modifier = OrderModifier::get_by_id($modifier);
             } elseif (! is_a($modifier, EcommerceConfigClassNames::getName(OrderModifier::class))) {
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
             }

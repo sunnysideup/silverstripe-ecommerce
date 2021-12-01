@@ -105,7 +105,7 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
 
     public static function remove_product_group($productGroup)
     {
-        $obj = ProductGroupSearchTable::get()->byId($productGroup->ID);
+        $obj = ProductGroupSearchTable::get_by_id($productGroup->ID);
         if ($obj) {
             $obj->delete();
         }

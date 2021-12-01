@@ -501,7 +501,7 @@ class ProductGroup extends Page
     public function ParentGroup(): ?ProductGroup
     {
         if (! isset(self::$parentPageCache[$this->ID])) {
-            self::$parentPageCache[$this->ID] = ProductGroup::get()->byID($this->ParentID);
+            self::$parentPageCache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 
         return self::$parentPageCache[$this->ID];

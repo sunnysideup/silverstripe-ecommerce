@@ -668,7 +668,7 @@ class OrderItem extends OrderAttribute
             //end hack!
             $obj = null;
             if ('current' === $currentOrVersion) {
-                $obj = $className::get()->byID($this->BuyableID);
+                $obj = $className::get_by_id($this->BuyableID);
             }
 
             //run if current not available or current = false
@@ -696,7 +696,7 @@ class OrderItem extends OrderAttribute
             }
             //our final backup
             if (! $obj || (! $obj->exists())) {
-                $obj = $className::get()->byID($this->BuyableID);
+                $obj = $className::get_by_id($this->BuyableID);
             }
             if($obj && ! ($obj instanceof BuyableModel)) {
                 $obj = null;

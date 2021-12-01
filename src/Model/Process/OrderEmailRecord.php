@@ -384,7 +384,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     public function getOrderStepNice()
     {
         if ($this->OrderStepID) {
-            $orderStep = OrderStep::get()->byID($this->OrderStepID);
+            $orderStep = OrderStep::get_by_id($this->OrderStepID);
             if ($orderStep) {
                 return $orderStep->Name;
             }

@@ -457,7 +457,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             if ($order) {
                 if ($order->exists()) {
                     if ($order->MemberID) {
-                        return Member::get()->byID($order->MemberID);
+                        return Member::get_by_id($order->MemberID);
                     }
                 }
             }
@@ -556,7 +556,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $fieldPrefix = $this->fieldPrefix();
         $idField = $fieldPrefix . 'RegionID';
         if ($this->{$idField}) {
-            $region = EcommerceRegion::get()->byID($this->{$idField});
+            $region = EcommerceRegion::get_by_id($this->{$idField});
             if ($region) {
                 $codeField = $fieldPrefix . 'RegionCode';
                 $this->{$codeField} = $region->Code;

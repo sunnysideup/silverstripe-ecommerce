@@ -111,7 +111,7 @@ class ProductController extends PageController
             if (! $quantity) {
                 $quantity = 1;
             }
-            $product = Product::get()->byID($this->ID);
+            $product = Product::get_by_id($this->ID);
             if ($product) {
                 ShoppingCart::singleton()->addBuyable($product, $quantity);
             }
@@ -160,7 +160,7 @@ class ProductController extends PageController
             $id = (int) $id;
             if ($id === $this->ID) {
                 if (isset($array[$key + 1])) {
-                    return Product::get()->byID((int) $array[$key + 1]);
+                    return Product::get_by_id((int) $array[$key + 1]);
                 }
             }
         }
@@ -180,7 +180,7 @@ class ProductController extends PageController
         foreach ($array as $id) {
             $id = (int) $id;
             if ($id === $this->ID) {
-                return Product::get()->byID($previousID);
+                return Product::get_by_id($previousID);
             }
             $previousID = $id;
         }

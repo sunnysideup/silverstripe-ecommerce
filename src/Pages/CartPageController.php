@@ -145,7 +145,7 @@ class CartPageController extends PageController
                     $id = (int) $details[1];
                     $quantity = floatval($details[2]);
                     if ($className && $id && $quantity) {
-                        $buyable = $className::get()->byID($id);
+                        $buyable = $className::get_by_id($id);
                         if ($buyable && $buyable->canPurchase()) {
                             $sc->addBuyable($buyable, $quantity);
                             $sc->setQuantity($buyable, $quantity);

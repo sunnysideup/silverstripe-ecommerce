@@ -139,7 +139,7 @@ class CheckoutPage extends CartPage
     {
         $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if ($checkoutPage && $checkoutPage->TermsPageID) {
-            return Page::get()->byID($checkoutPage->TermsPageID);
+            return Page::get_by_id($checkoutPage->TermsPageID);
         }
 
         return null;

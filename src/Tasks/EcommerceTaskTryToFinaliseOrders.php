@@ -127,14 +127,14 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 ++$startAt;
 
                 Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
-                $stepBefore = OrderStep::get()->byID($order->StatusID);
+                $stepBefore = OrderStep::get_by_id($order->StatusID);
 
                 try {
                     $order->tryToFinaliseOrder();
                 } catch (Exception $exception) {
                     DB::alteration_message($exception, 'deleted');
                 }
-                $stepAfter = OrderStep::get()->byID($order->StatusID);
+                $stepAfter = OrderStep::get_by_id($order->StatusID);
                 if ($stepBefore) {
                     if ($stepAfter) {
                         if ($stepBefore->ID === $stepAfter->ID) {

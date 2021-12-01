@@ -106,7 +106,7 @@ trait PartialObjectCache
             $className = $value['ClassName'];
             $id = (int) $value['ID'];
             if (class_exists($className) && $id) {
-                return $className::get()->byId($id);
+                return $className::get_by_id($id);
             }
         }
 
