@@ -18,7 +18,6 @@ class EcommerceSideReportLongTitles extends Report
 
     protected $dataClass = Product::class;
 
-
     private static $min_length = 100;
 
     /**

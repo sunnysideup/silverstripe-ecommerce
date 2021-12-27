@@ -2,12 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Forms\DropdownField;
-use SilverStripe\Forms\OptionsetField;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\NumericField;
 
 trait EcommerceProductReportTrait
 {
@@ -48,11 +46,7 @@ trait EcommerceProductReportTrait
         }
         if ($this->hasMethod('getEcommerceSort')) {
             $sort = $this->getEcommerceSort();
-            if (! empty($sort)) {
-                $list = $list->sort($sort);
-            } else {
-                $list = $list->sort(['FullSiteTreeSort' => 'ASC']);
-            }
+            $list = empty($sort) ? $list->sort(['FullSiteTreeSort' => 'ASC']) : $list->sort($sort);
         }
         if ($this->hasMethod('getEcommerceWhere')) {
             $where = $this->getEcommerceWhere();
@@ -63,22 +57,22 @@ trait EcommerceProductReportTrait
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
-        $minPrice = (float)($params['MinimumPrice'] ?? 0);
-        if($minPrice) {
+        $minPrice = (float) ($params['MinimumPrice'] ?? 0);
+        if ($minPrice) {
             $list = $list->filter(['Price:GreaterThan' => $minPrice]);
         }
         $forSale = $params['ForSale'] ?? '';
-        if($forSale) {
-            if($forSale === 'Yes') {
+        if ($forSale) {
+            if ('Yes' === $forSale) {
                 $filter = 1;
-            } elseif('No') {
+            } elseif ('No') {
                 $filter = 0;
             }
             $list = $list->filter(['AllowPurchase' => $filter]);
         }
         $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
-        if($changedInTheLastXDays) {
-            $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -'.(int) $changedInTheLastXDays.' DAY)']);
+        if ($changedInTheLastXDays) {
+            $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
         }
 
         return $list;

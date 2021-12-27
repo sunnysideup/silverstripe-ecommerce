@@ -18,7 +18,6 @@ class EcommerceSideReportNoInternalIDProducts extends Report
 
     protected $dataClass = Product::class;
 
-
     /**
      * @return string
      */
@@ -34,5 +33,4 @@ class EcommerceSideReportNoInternalIDProducts extends Report
     {
         return "\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' OR \"Product\".\"InternalItemID\" = '0' ";
     }
-
 }

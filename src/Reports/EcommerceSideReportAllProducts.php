@@ -33,5 +33,4 @@ class EcommerceSideReportAllProducts extends Report
     {
         return 7000;
     }
-
 }

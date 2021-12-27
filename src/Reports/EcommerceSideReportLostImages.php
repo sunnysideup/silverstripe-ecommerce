@@ -18,7 +18,6 @@ class EcommerceSideReportLostImages extends Report
 
     protected $dataClass = Product::class;
 
-
     /**
      * @return string
      */
@@ -27,9 +26,9 @@ class EcommerceSideReportLostImages extends Report
         return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products: missing images');
     }
 
-     public function updateEcommerceList($list)
-     {
-         return $list
+    public function updateEcommerceList($list)
+    {
+        return $list
             ->leftJoin('File', '"File"."ID" = "Product"."ImageID"')
             ->where('"File"."ID" IS NULL AND "ImageID" > 0')
             ->sort('Title', 'ASC')

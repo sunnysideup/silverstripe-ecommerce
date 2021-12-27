@@ -15,7 +15,6 @@ class EcommerceSideReportFeaturedProducts extends Report
 
     protected $dataClass = Product::class;
 
-
     /**
      * @return string
      */

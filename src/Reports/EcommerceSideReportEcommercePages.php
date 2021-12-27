@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CartPage;
@@ -27,7 +26,13 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
  */
 class EcommerceSideReportEcommercePages extends Report
 {
+    /**
+     * The class of object being managed by this report.
+     * Set by overriding in your subclass.
+     */
+    protected $dataClass = SiteTree::class;
 
+    private static $additional_classnames = [];
 
     /**
      * @return int - for sorting reports
@@ -36,14 +41,6 @@ class EcommerceSideReportEcommercePages extends Report
     {
         return 6999;
     }
-
-    /**
-     * The class of object being managed by this report.
-     * Set by overriding in your subclass.
-     */
-    protected $dataClass = SiteTree::class;
-
-    private static $additional_classnames = [];
 
     /**
      * @return string
@@ -83,6 +80,4 @@ class EcommerceSideReportEcommercePages extends Report
 
         return SiteTree::get()->filter(['ClassName' => $array]);
     }
-
-
 }
