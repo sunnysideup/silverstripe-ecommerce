@@ -18,12 +18,13 @@ class EcommerceSideReportNoInternalIDProducts extends Report
 
     protected $dataClass = Product::class;
 
+
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products without Internal ID');
+        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products: without Internal ID');
     }
 
     /**
@@ -34,11 +35,4 @@ class EcommerceSideReportNoInternalIDProducts extends Report
         return "\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' OR \"Product\".\"InternalItemID\" = '0' ";
     }
 
-    /**
-     * @param null|mixed $params
-     */
-    protected function getEcommerceSort($params = null): array
-    {
-        return ['FullSiteTreeSort' => 'ASC'];
-    }
 }

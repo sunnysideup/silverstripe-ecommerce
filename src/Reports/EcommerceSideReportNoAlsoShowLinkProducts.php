@@ -18,18 +18,19 @@ class EcommerceSideReportNoAlsoShowLinkProducts extends Report
 
     protected $dataClass = Product::class;
 
+
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NO_ALSO_SHOW', 'E-commerce: Products without Also Show Parent (Brand)');
+        return _t('EcommerceSideReport.NO_ALSO_SHOW', 'E-commerce: Products: without Also Show Parent (Brand)');
     }
 
     public function updateEcommerceList($list)
     {
         return $list
-            ->where('"AllowPurchase" = 1 AND "Product_ProductGroups"."ID" IS NULL')
+            ->where('"Product_ProductGroups"."ID" IS NULL')
             ->sort('Title', 'ASC')
             ->leftJoin('Product_ProductGroups', '"Product_ProductGroups"."ProductID" = "SiteTree"."ID"')
         ;

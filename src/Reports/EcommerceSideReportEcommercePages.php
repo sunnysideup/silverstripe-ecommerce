@@ -27,6 +27,16 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
  */
 class EcommerceSideReportEcommercePages extends Report
 {
+
+
+    /**
+     * @return int - for sorting reports
+     */
+    public function sort()
+    {
+        return 6999;
+    }
+
     /**
      * The class of object being managed by this report.
      * Set by overriding in your subclass.
@@ -54,14 +64,6 @@ class EcommerceSideReportEcommercePages extends Report
     }
 
     /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7000;
-    }
-
-    /**
      * working out the items.
      *
      * @param null|mixed $params
@@ -82,26 +84,5 @@ class EcommerceSideReportEcommercePages extends Report
         return SiteTree::get()->filter(['ClassName' => $array]);
     }
 
-    /**
-     * @return array
-     */
-    public function columns()
-    {
-        return [
-            'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
-                'link' => true,
-            ],
-        ];
-    }
 
-    public function getReportField()
-    {
-        $field = parent::getReportField();
-        $config = $field->getConfig();
-        $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-        $exportButton->setExportColumns($field->getColumns());
-
-        return $field;
-    }
 }

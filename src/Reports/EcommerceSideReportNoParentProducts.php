@@ -23,15 +23,15 @@ class EcommerceSideReportNoParentProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NO_ALSO_SHOW', 'E-commerce: Products without parents');
+        return _t('EcommerceSideReport.NO_PARENT_PRODUCT', 'E-commerce: Products: without parents');
     }
 
     public function updateEcommerceList($list)
     {
         return $list
-            ->where('"AllowPurchase" = 1 AND "PhotographicProductGroup"."ID" IS NULL')
+            ->where(' "ProductGroup"."ID" IS NULL')
             ->sort('Title', 'ASC')
-            ->leftJoin('PhotographicProductGroup', '"SiteTree"."ParentID" = "PhotographicProductGroup"."ID"')
+            ->leftJoin('ProductGroup', '"SiteTree"."ParentID" = "ProductGroup"."ID"')
         ;
     }
 }

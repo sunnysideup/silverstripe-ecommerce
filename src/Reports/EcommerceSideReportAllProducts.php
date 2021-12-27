@@ -23,7 +23,7 @@ class EcommerceSideReportAllProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: All products');
+        return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: Products: All');
     }
 
     /**
@@ -34,8 +34,4 @@ class EcommerceSideReportAllProducts extends Report
         return 7000;
     }
 
-    protected function getEcommerceSort($params = null): array
-    {
-        return ['FullSiteTreeSort' => 'ASC'];
-    }
 }

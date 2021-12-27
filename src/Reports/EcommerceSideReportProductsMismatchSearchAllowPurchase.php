@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportProductsChangedToday extends Report
+class EcommerceSideReportProductsMismatchSearchAllowPurchase extends Report
 {
     use EcommerceProductReportTrait;
 
@@ -23,19 +23,11 @@ class EcommerceSideReportProductsChangedToday extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: Products changed in the last three days');
-    }
-
-    /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7000;
+        return _t('EcommerceSideReport.MISMATCH_SEARCH_ALLOW_PURCHASE', 'E-commerce: Products: not for sale but shown in search or vice versa.');
     }
 
     protected function getEcommerceWhere($params = null): string
     {
-        return '"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -3 DAY)';
+        return '(ShowInSearch = 1 AND AllowPurchase = 0) OR (ShowInSearch = 0 AND AllowPurchase = 1) ';
     }
 }

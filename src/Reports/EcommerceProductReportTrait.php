@@ -2,6 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\FieldList;
+
 trait EcommerceProductReportTrait
 {
     /**
@@ -43,6 +50,8 @@ trait EcommerceProductReportTrait
             $sort = $this->getEcommerceSort();
             if (! empty($sort)) {
                 $list = $list->sort($sort);
+            } else {
+                $list = $list->sort(['FullSiteTreeSort' => 'ASC']);
             }
         }
         if ($this->hasMethod('getEcommerceWhere')) {
@@ -53,6 +62,23 @@ trait EcommerceProductReportTrait
         }
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
+        }
+        $minPrice = (float)($params['MinimumPrice'] ?? 0);
+        if($minPrice) {
+            $list = $list->filter(['Price:GreaterThan' => $minPrice]);
+        }
+        $forSale = $params['ForSale'] ?? '';
+        if($forSale) {
+            if($forSale === 'Yes') {
+                $filter = 1;
+            } elseif('No') {
+                $filter = 0;
+            }
+            $list = $list->filter(['AllowPurchase' => $filter]);
+        }
+        $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
+        if($changedInTheLastXDays) {
+            $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -'.(int) $changedInTheLastXDays.' DAY)']);
         }
 
         return $list;
@@ -72,4 +98,48 @@ trait EcommerceProductReportTrait
             ],
         ];
     }
+
+    public function parameterFields()
+    {
+        $params = FieldList::create();
+
+        $params->push(
+            CurrencyField::create(
+                'MinimumNPrice',
+                'Minimum Price',
+                0
+            )
+        );
+        $params->push(
+            DropdownField::create(
+                'ForSale',
+                'For Sale',
+                [
+                    'Yes' => 'Yes',
+                    'No' => 'No',
+                ]
+            )
+                ->setEmptyString('--- Any ---')
+        );
+
+        $params->push(
+            NumericField::create(
+                'ChangedInTheLastXDays',
+                'Changed less than ... days ago?',
+                ''
+            )
+        );
+
+        return $params;
+    }
+
+    // public function getReportField()
+    // {
+    //     $field = parent::getReportField();
+    //     $config = $field->getConfig();
+    //     $exportButton = $config->getComponentByType(GridFieldExportButton::class);
+    //     $exportButton->setExportColumns($field->getColumns());
+    //
+    //     return $field;
+    // }
 }

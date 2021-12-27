@@ -15,12 +15,13 @@ class EcommerceSideReportFeaturedProducts extends Report
 
     protected $dataClass = Product::class;
 
+
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.FEATUREDPRODUCTS', 'E-commerce: Featured products');
+        return _t('EcommerceSideReport.FEATURED', 'E-commerce: Products: featured');
     }
 
     /**

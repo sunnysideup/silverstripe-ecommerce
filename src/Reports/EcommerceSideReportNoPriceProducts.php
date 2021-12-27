@@ -18,12 +18,13 @@ class EcommerceSideReportNoPriceProducts extends Report
 
     protected $dataClass = Product::class;
 
+
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOPRICE', 'E-commerce: Products without Price');
+        return _t('EcommerceSideReport.NO_PRICE', 'E-commerce: Products: without Price');
     }
 
     /**

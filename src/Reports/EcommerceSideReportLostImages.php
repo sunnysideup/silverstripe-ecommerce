@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportNoImageProducts extends Report
+class EcommerceSideReportLostImages extends Report
 {
     use EcommerceProductReportTrait;
 
@@ -24,14 +24,15 @@ class EcommerceSideReportNoImageProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products: without image');
+        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products: missing images');
     }
 
-    /**
-     * @param mixed $params
-     */
-    protected function getEcommerceWhere($params = null): string
-    {
-        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
+     public function updateEcommerceList($list)
+     {
+         return $list
+            ->leftJoin('File', '"File"."ID" = "Product"."ImageID"')
+            ->where('"File"."ID" IS NULL AND "ImageID" > 0')
+            ->sort('Title', 'ASC')
+        ;
     }
 }

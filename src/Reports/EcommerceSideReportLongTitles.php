@@ -18,6 +18,7 @@ class EcommerceSideReportLongTitles extends Report
 
     protected $dataClass = Product::class;
 
+
     private static $min_length = 100;
 
     /**
@@ -25,7 +26,7 @@ class EcommerceSideReportLongTitles extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: Long Titles');
+        return _t('EcommerceSideReport.LONG_TITLES', 'E-commerce: Products: Long Titles');
     }
 
     /**
