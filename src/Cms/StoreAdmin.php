@@ -10,6 +10,10 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+
+use SilverStripe\Forms\LiteralField;
+
+use SilverStripe\Forms\HeaderField;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -26,6 +30,8 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 class StoreAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
+
+    private static $shortcuts = [];
 
     /**
      * standard SS variable.
@@ -108,7 +114,7 @@ class StoreAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        if (EcommerceDBConfig::class === $this->modelClass || is_subclass_of($this->modelClass, EcommerceDBConfig::class)) {
+        if (singleton($this->modelClass) instanceof EcommerceDBConfig) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
             if ($gridField) {
                 if ($gridField instanceof GridField) {
@@ -120,8 +126,46 @@ class StoreAdmin extends ModelAdmin
                     $config->removeComponentsByType(GridFieldSortableHeader::class);
                 }
             }
+
+            $shortcuts = $this->Config()->get('shortcuts');
+            if(count($shortcuts)) {
+                $form->Fields()->push(HeaderField::create('UsefulLinks', 'Short Cuts'));
+                foreach($shortcuts as $entry) {
+                    $form->Fields()->push(
+                        $this->makeShortCut(
+                            $entry['Title'],
+                            $entry['Link'],
+                            $entry['OnClick'] ?? '',
+                            $entry['Script'] ?? '',
+                        )
+                    );
+                }
+            }
         }
 
         return $form;
+    }
+
+
+    protected function makeShortCut(string $title, string $link, string $onclick = '', string $script = '')
+    {
+        $name = $string = preg_replace("/[\W_]+/u", '', $title);
+        $style = 'min-width: 450px; float: left;';
+        if ($onclick) {
+            $onclick = ' onclick="' . $onclick . '"';
+        }
+        if ($script) {
+            $script = '<script>' . $script . '</script>';
+        }
+        $html = '
+        ' . $script . '
+        <h2 style="' . $style . '">
+            &raquo; <a href="' . $link . '" id="' . $name . '" target="_blank" ' . $onclick . '>' . $title . '</a>
+        </h2>';
+
+        return LiteralField::create(
+            $name,
+            $html
+        );
     }
 }

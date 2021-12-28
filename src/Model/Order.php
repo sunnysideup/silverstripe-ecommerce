@@ -907,7 +907,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         EcommerceCMSButtonField::create(
                             'ProcessQueue',
                             '/dev/tasks/EcommerceTaskProcessOrderQueue/?id=' . $this->ID,
-                            _t('Order.REFRESH', 'process queue')
+                            _t('Order.PROCESS_QUEUE', 'process queue')
                         ),
                     ]
                 );

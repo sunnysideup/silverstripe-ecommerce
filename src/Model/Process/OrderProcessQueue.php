@@ -18,6 +18,7 @@ use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 
 /**
  * This class provides a bunch of Meta Objects
@@ -457,14 +458,11 @@ class OrderProcessQueue extends DataObject
             );
             $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create(
-                    'processQueueNow',
-                    '<h2>
-                        <a href="/dev/tasks/EcommerceTaskProcessOrderQueue/?id=' . $this->OrderID . '" target="_blank">' .
-                            _t('OrderProcessQueue.PROCESS', 'Process now') .
-                        '</a>
-                    </h2>'
-                )
+                EcommerceCMSButtonField::create(
+                    'ProcessQueue',
+                    '/dev/tasks/EcommerceTaskProcessOrderQueue/?id=' . $this->OrderID,
+                    _t('Order.PROCESS_QUEUE', 'process queue')
+                ),
             );
             $fields->replaceField(
                 'OrderID',
