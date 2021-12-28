@@ -84,8 +84,14 @@ trait EcommerceProductReportTrait
     public function columns()
     {
         return [
-            'InternalItemID' => 'Product Code',
-            'ProductType' => 'Product Type',
+            'InternalItemID' => [
+                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Product Code'),
+                'link' => true,
+            ],
+            'ProductType' => [
+                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Product Type'),
+                'link' => true,
+            ],
             'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
