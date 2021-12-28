@@ -408,7 +408,10 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         return DBField::create_field(
             'Enum',
-            _t('Payment.' . strtoupper($this->Status), $this->Status ?: EcommercePayment::INCOMPLETE_STATUS)
+            _t(
+                'Payment.' . strtoupper($this->Status),
+                $this->Status ?: EcommercePayment::INCOMPLETE_STATUS
+            )
         );
     }
 
