@@ -94,7 +94,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
                 '
             );
             $lastPayment = $order->Payments()->last();
-            if($lastPayment) {
+            if ($lastPayment) {
                 $fields->addFieldsToTab(
                     'Root.Next',
                     [

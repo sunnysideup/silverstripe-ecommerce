@@ -3,19 +3,11 @@
 namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Reports\Report;
-
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\DropdownField;
-
 use SilverStripe\Core\ClassInfo;
-
 use SilverStripe\Core\Injector\Injector;
-use Sunnysideup\Ecommerce\Pages\AccountPage;
-use Sunnysideup\Ecommerce\Pages\CartPage;
-use Sunnysideup\Ecommerce\Pages\CheckoutPage;
-use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Reports\Report;
 
 /**
  * EcommerceSideReport classes are to allow quick reports that can be accessed
@@ -88,15 +80,17 @@ class EcommerceSideReportDuplicatePages extends Report
             )
         ;
         $classNameFilter = $params['ClassNameFilter'] ?? '';
-        if($classNameFilter && class_exists($classNameFilter)) {
+        if ($classNameFilter && class_exists($classNameFilter)) {
             $list = $list->filter(['ClassName' => $classNameFilter]);
         }
         $array = $this->Config()->get('excluded_class_names');
         if (count($array)) {
             $list = $list->exclude(['ClassName' => $array]);
         }
+
         return $list;
     }
+
     /**
      * @return array
      */
@@ -119,7 +113,7 @@ class EcommerceSideReportDuplicatePages extends Report
         $params = FieldList::create();
         $list = ClassInfo::subClassesFor(SiteTree::class, false);
         $array = [];
-        foreach($list as $className) {
+        foreach ($list as $className) {
             $obj = Injector::inst()->get($className);
             $array[$className] = $obj->i18n_singular_name();
         }
@@ -135,5 +129,4 @@ class EcommerceSideReportDuplicatePages extends Report
 
         return $params;
     }
-
 }

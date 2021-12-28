@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Cms;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -180,15 +179,14 @@ class SalesAdmin extends ModelAdmin
     {
         // If not supplied, look up the ID from the request
         $id = 0;
-        if ($id === null && is_numeric($this->getRequest()->param('ID'))) {
-            $id = (int)$request->param('ID');
+        if (null === $id && is_numeric($this->getRequest()->param('ID'))) {
+            $id = (int) $request->param('ID');
         }
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
             if ($gridField) {
                 if ($gridField instanceof GridField) {
-                    // get config
                     $config = $gridField->getConfig();
                     // export button
                     $exportButton = new GridFieldExportSalesButton('buttons-before-left');
@@ -260,15 +258,16 @@ class SalesAdmin extends ModelAdmin
         );
     }
 
-    protected function getCurrentRecordId() : int
+    protected function getCurrentRecordId(): int
     {
         $remaining = $this->getRequest()->remaining();
         $items = explode('/', $remaining);
-        foreach($items as $key => $item) {
-            if($item === 'item') {
-                return (int) ($items[$key+1] ?? 0);
+        foreach ($items as $key => $item) {
+            if ('item' === $item) {
+                return (int) ($items[$key + 1] ?? 0);
             }
         }
+
         return 0;
     }
 }

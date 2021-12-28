@@ -10,10 +10,8 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
-
-use SilverStripe\Forms\LiteralField;
-
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -128,9 +126,9 @@ class StoreAdmin extends ModelAdmin
             }
 
             $shortcuts = $this->Config()->get('shortcuts');
-            if(count($shortcuts)) {
+            if (count($shortcuts)) {
                 $form->Fields()->push(HeaderField::create('UsefulLinks', 'Short Cuts'));
-                foreach($shortcuts as $entry) {
+                foreach ($shortcuts as $entry) {
                     $form->Fields()->push(
                         $this->makeShortCut(
                             $entry['Title'],
@@ -146,10 +144,10 @@ class StoreAdmin extends ModelAdmin
         return $form;
     }
 
-
     protected function makeShortCut(string $title, string $link, string $onclick = '', string $script = '')
     {
-        $name = $string = preg_replace("/[\W_]+/u", '', $title);
+        $name = preg_replace('#[\W_]+#u', '', $title);
+        $string = $name;
         $style = 'min-width: 450px; float: left;';
         if ($onclick) {
             $onclick = ' onclick="' . $onclick . '"';

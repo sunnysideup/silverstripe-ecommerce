@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Model\Process;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
@@ -15,10 +14,10 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
+use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
-use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 
 /**
  * This class provides a bunch of Meta Objects
