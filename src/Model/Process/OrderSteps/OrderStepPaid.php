@@ -93,18 +93,20 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
                     See Payments tab for more details.
                 '
             );
-
-            $fields->addFieldsToTab(
-                'Root.Next',
-                [
-                    new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'),
-                    EcommerceCMSButtonField::create(
-                        'EditPayment',
-                        $order->Payments()->first()->CMSEditLink(),
-                        'Edit Payment'
-                    ),
-                ]
-            );
+            $lastPayment = $order->Payments()->last();
+            if($lastPayment) {
+                $fields->addFieldsToTab(
+                    'Root.Next',
+                    [
+                        new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'),
+                        EcommerceCMSButtonField::create(
+                            'EditPayment',
+                            $lastPayment->CMSEditLink(),
+                            'View / Edit Payment'
+                        ),
+                    ]
+                );
+            }
         }
         $paymentField = $fields->fieldByName('Root.Payments.Payments');
         if ($paymentField) {

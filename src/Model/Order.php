@@ -904,6 +904,11 @@ class Order extends DataObject implements EditableEcommerceObject
                             $this->CMSEditLink(),
                             _t('Order.REFRESH', 'refresh now')
                         ),
+                        EcommerceCMSButtonField::create(
+                            'ProcessQueue',
+                            '/dev/tasks/EcommerceTaskProcessOrderQueue/?id=' . $this->ID,
+                            _t('Order.REFRESH', 'process queue')
+                        ),
                     ]
                 );
             }
@@ -1586,6 +1591,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function IsPaid()
     {
         if ($this->IsSubmitted()) {
+            // also see: maximum_ignorable_sales_payments_difference
             return (bool) (($this->Total() >= 0) && ($this->TotalOutstanding() <= 0));
         }
 

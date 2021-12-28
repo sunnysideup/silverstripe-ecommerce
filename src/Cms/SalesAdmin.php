@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Cms;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -177,17 +178,26 @@ class SalesAdmin extends ModelAdmin
 
     public function getEditForm($id = null, $fields = null)
     {
+        // If not supplied, look up the ID from the request
+        $id = 0;
+        if ($id === null && is_numeric($this->getRequest()->param('ID'))) {
+            $id = (int)$request->param('ID');
+        }
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
             if ($gridField) {
                 if ($gridField instanceof GridField) {
+                    // get config
                     $config = $gridField->getConfig();
+                    // export button
                     $exportButton = new GridFieldExportSalesButton('buttons-before-left');
                     $exportButton->setExportColumns($this->getExportFields());
                     $config->addComponent($exportButton);
+                    //print invoices
                     $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
                     $config->addComponent($printAllInvoices);
+                    //print packing slip
                     $printAllPackingSlips = new GridFieldPrintAllPackingSlipsButton('buttons-before-left');
                     $config->addComponent($printAllPackingSlips);
                     //per row ...
@@ -224,6 +234,12 @@ class SalesAdmin extends ModelAdmin
         foreach ($brackets as $key => $bracket) {
             if ($key) {
                 $ids = $arrayOfTabs[$key]['IDs'] ?? [];
+
+                $id = $this->getCurrentRecordId();
+                //todo: find actual id.
+                if ($id) {
+                    $ids[$id] = $id;
+                }
                 if (count($ids)) {
                     $arrayOfTabs[$key] = [
                         'TabName' => 'tab' . $key,
@@ -242,5 +258,17 @@ class SalesAdmin extends ModelAdmin
             $form,
             $this->modelClass
         );
+    }
+
+    protected function getCurrentRecordId() : int
+    {
+        $remaining = $this->getRequest()->remaining();
+        $items = explode('/', $remaining);
+        foreach($items as $key => $item) {
+            if($item === 'item') {
+                return (int) ($items[$key+1] ?? 0);
+            }
+        }
+        return 0;
     }
 }
