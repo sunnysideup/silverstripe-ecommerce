@@ -96,6 +96,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     private static $db = [
         'Status' => "Enum('" . self::INCOMPLETE_STATUS . ',' . self::SUCCESS_STATUS . ',' . self::FAILURE_STATUS . ',' . self::PENDING_STATUS . "','" . self::INCOMPLETE_STATUS . "')",
         'Amount' => 'Money',
+        'SettlementAmount' => 'Money',
         'Message' => 'HTMLText',
         'IP' => 'Varchar(45)', // for IPv6 you have to make sure you have up to 45 characters
         'ProxyIP' => 'Varchar(45)',
