@@ -1627,7 +1627,7 @@ class Order extends DataObject implements EditableEcommerceObject
             } elseif ($this->Payments()->exists()) {
                 $payments = $this->Payments();
                 foreach ($payments as $payment) {
-                    if ('Pending' === $payment->Status) {
+                    if (EcommercePayment::PENDING_STATUS === $payment->Status) {
                         return true;
                     }
                 }
@@ -1646,7 +1646,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function RelevantPayments()
     {
         if ($this->IsPaid()) {
-            return $this->Payments()->filter(['Status' => 'Success']);
+            return $this->Payments()->filter(['Status' => EcommercePayment::SUCCESS_STATUS]);
         }
 
         return $this->Payments();
@@ -2984,7 +2984,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $payments = $this->Payments();
         if ($payments && $payments->exists()) {
             foreach ($payments as $payment) {
-                if ('Success' === $payment->Status) {
+                if (EcommercePayment::SUCCESS_STATUS === $payment->Status) {
                     $paid += $payment->Amount->getAmount();
                 }
             }

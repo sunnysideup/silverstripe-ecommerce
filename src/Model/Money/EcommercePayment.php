@@ -290,7 +290,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
-        if ('Pending' === $this->Status || 'Incomplete' === $this->Status) {
+        if (EcommercePayment::PENDING_STATUS === $this->Status || EcommercePayment::INCOMPLETE_STATUS === $this->Status) {
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if (null !== $extended) {
                 return $extended;
@@ -408,7 +408,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         return DBField::create_field(
             'Enum',
-            _t('Payment.' . strtoupper($this->Status), $this->Status ?: 'Incomplete')
+            _t('Payment.' . strtoupper($this->Status), $this->Status ?: EcommercePayment::INCOMPLETE_STATUS)
         );
     }
 

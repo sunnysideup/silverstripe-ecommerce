@@ -7,6 +7,8 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Model\Order;
+
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
 
 /**
@@ -49,7 +51,7 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
      */
     public function processPayment($data, Form $form)
     {
-        $this->Status = 'Success';
+        $this->Status = EcommercePayment::SUCCESS_STATUS;
         $this->Message = '<div>PAYMENT TEST: SUCCESS</div>';
         $this->write();
 
