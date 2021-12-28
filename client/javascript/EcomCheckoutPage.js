@@ -13,7 +13,7 @@ if(
                 EcomCheckoutPage.init();
             }
         );
-    })(jQuery);
+    })(window.jQuery);
 
 
     var EcomCheckoutPage = {
@@ -34,16 +34,16 @@ if(
         },
 
         makeAllPreviousAndNextAjaxified: function(){
-            jQuery("body").on(
+            window.jQuery("body").on(
                 "click",
                 EcomCheckoutPage.nextPreviousOverviewListSelector+", "+EcomCheckoutPage.nextPreviousButtonsSelector,
                 function(event){
                     event.preventDefault();
-                    var href = jQuery(this).attr("href");
-                    jQuery(EcomCheckoutPage.outerHolderSelector).fadeOut(
+                    var href = window.jQuery(this).attr("href");
+                    window.jQuery(EcomCheckoutPage.outerHolderSelector).fadeOut(
                         function() {
-                            jQuery(EcomCheckoutPage.outerHolderSelector).addClass(EcomCheckoutPage.loadingClass);
-                            var jqxhr = jQuery.ajax(
+                            window.jQuery(EcomCheckoutPage.outerHolderSelector).addClass(EcomCheckoutPage.loadingClass);
+                            var jqxhr = window.jQuery.ajax(
                                 {
                                     url: href,
                                     settings: {
@@ -54,7 +54,7 @@ if(
                             .done(
                                 function( data, textStatus, jqXHR ) {
                                     EcomCheckoutPage.attachCSSAndJSHeader(jqXHR);
-                                    jQuery(EcomCheckoutPage.outerHolderSelector).html(data);
+                                    window.jQuery(EcomCheckoutPage.outerHolderSelector).html(data);
                                 }
                             )
                             .fail(
@@ -64,9 +64,9 @@ if(
                             )
                             .always(
                                 function() {
-                                    jQuery(EcomCheckoutPage.outerHolderSelector).fadeIn(
+                                    window.jQuery(EcomCheckoutPage.outerHolderSelector).fadeIn(
                                         function() {
-                                            jQuery(EcomCheckoutPage.outerHolderSelector).removeClass(EcomCheckoutPage.loadingClass);
+                                            window.jQuery(EcomCheckoutPage.outerHolderSelector).removeClass(EcomCheckoutPage.loadingClass);
                                         }
                                     );
                                 }
@@ -96,7 +96,7 @@ if(
             //timeout:   3000
         };
          // bind form using 'ajaxForm'
-        jQuery(EcomCheckoutPage.formsSelectors).ajaxForm(options);
+        window.jQuery(EcomCheckoutPage.formsSelectors).ajaxForm(options);
          },
 
 
@@ -106,7 +106,7 @@ if(
             // but the form plugin does this for you automatically when it submits the data
             var queryString = $.param(formData);
 
-            // jqForm is a jQuery object encapsulating the form element.  To access the
+            // jqForm is a window.jQuery object encapsulating the form element.  To access the
             // DOM element for the form do this:
             // var formElement = jqForm[0];
 
@@ -142,10 +142,10 @@ if(
             console.debug(headers["X-Include-CSS"]);
             console.debug(CSSArray);
             if(CSSArray.length > 0) {
-                jQuery.each(
+                window.jQuery.each(
                     CSSArray,
                     function( index, value ) {
-                        jQuery('<link>')
+                        window.jQuery('<link>')
                             .appendTo('head')
                             .attr({type : 'text/css', rel : 'stylesheet'})
                             .attr('href', value);
@@ -154,10 +154,10 @@ if(
             }
             var JSArray = headers["X-Include-JS"].split(",");
             if(JSArray.length > 0) {
-                jQuery.each(
+                window.jQuery.each(
                     JSArray,
                     function( index, value ) {
-                        jQuery.getScript( value);
+                        window.jQuery.getScript( value);
                     }
                 );
             }

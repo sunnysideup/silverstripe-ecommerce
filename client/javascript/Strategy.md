@@ -3,4 +3,4 @@ Right now, we are using the following strategy for the JS files (these are not r
 - All files are named Ecom{mynamegoeshere}
 - We do not worry that there are a fair few files, they can always be put into one using the Requirements::combine_files method.
 - All files contain one variable Ecom{mynamegoeshere}, which has several functions and variables.
-- The code will usually be kicked into action by jQuery(document).ready(bla bla).
+- The code will usually be kicked into action by window.jQuery(document).ready(bla bla).

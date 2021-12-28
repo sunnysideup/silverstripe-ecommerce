@@ -1,5 +1,5 @@
 /**
- *@author Nicolaas [at] sunnysideup.co.nz
+ * @author Nicolaas [at] sunnysideup.co.nz
  * adds JS functionality to the OrderForm
  *
  * Adds the following function to the OrderForm (final form in Checkout):
@@ -10,97 +10,91 @@
  *
  **/
 if (
-  document.getElementById("OrderForm_OrderForm") !== null &&
-  typeof document.getElementById("OrderForm_OrderForm") !== "undefined"
+  document.getElementById('OrderForm_OrderForm') !== null &&
+  typeof document.getElementById('OrderForm_OrderForm') !== 'undefined'
 ) {
   (function ($) {
     $(document).ready(function () {
-      EcomOrderForm.init();
-    });
-  })(jQuery);
+      EcomOrderForm.init()
+    })
+  })(window.window.jQuery)
 
   var EcomOrderForm = {
-    orderFormSelector: "#OrderForm_OrderForm",
+    orderFormSelector: '#OrderForm_OrderForm',
 
-    loadingClass: "loading",
+    loadingClass: 'loading',
 
-    submitButtonSelector: ".btn-toolbar input",
+    submitButtonSelector: '.btn-toolbar input',
 
-    termsAndConditionsCheckBoxSelector: "#ReadTermsAndConditions input",
+    termsAndConditionsCheckBoxSelector: '#OrderForm_OrderForm_ReadTermsAndConditions_Holder input',
 
-    termsAndConditionsLinkSelector: "#ReadTermsAndConditions a",
+    termsAndConditionsLinkSelector: '#OrderForm_OrderForm_ReadTermsAndConditions_Holder a',
 
-    TermsAndConditionsMessage:
-      "You must agree with the terms and conditions to proceed.",
+    TermsAndConditionsMessage: 'You must agree with the terms and conditions to proceed.',
+
     set_TermsAndConditionsMessage: function (s) {
-      EcomOrderForm.TermsAndConditionsMessage = s;
+      EcomOrderForm.TermsAndConditionsMessage = s
     },
 
-    processingMessage: "processing ...",
+    processingMessage: 'processing ...',
     set_processingMessage: function (s) {
-      EcomOrderForm.processingMessage = s;
+      EcomOrderForm.processingMessage = s
     },
 
     clicked: false,
 
     init: function () {
-      jQuery(document).on(
-        "click",
+      window.window.jQuery(document).on(
+        'click',
         EcomOrderForm.submitButtonSelector,
         function (e) {
           if (!EcomOrderForm.TandCcheck()) {
-            e.preventDefault();
+            e.preventDefault()
           }
           if (EcomOrderForm.clicked) {
-            e.preventDefault();
+            e.preventDefault()
           }
         }
-      );
-      EcomOrderForm.ajaxifyForm();
-      EcomOrderForm.TandCclick();
+      )
+      EcomOrderForm.ajaxifyForm()
+      EcomOrderForm.TandCclick()
     },
 
     TandCclick: function () {
-      jQuery(EcomOrderForm.termsAndConditionsLinkSelector).attr(
-        "target",
-        "termsandconditions"
-      );
+      window.window.jQuery(EcomOrderForm.termsAndConditionsLinkSelector).attr(
+        'target',
+        'termsandconditions'
+      )
     },
 
     TandCcheck: function () {
       if (EcomOrderForm.TermsAndConditionsMessage) {
-        if (
-          jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).length == 1
-        ) {
-          if (
-            !jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).is(
-              ":checked"
-            )
-          ) {
-            jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).focus();
-            alert(EcomOrderForm.TermsAndConditionsMessage);
-            return false;
+        if (window.window.jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).length === 1) {
+          if (!window.window.jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).is(':checked')) {
+            window.window.jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).focus()
+            window.alert(EcomOrderForm.TermsAndConditionsMessage)
+            return false
           }
         }
       }
-      return true;
+      return true
     },
 
     ajaxifyForm: function () {
-      jQuery(document).on(
-        "submit",
+      window.window.jQuery(document).on(
+        'submit',
         EcomOrderForm.orderFormSelector,
         function (e) {
-          EcomOrderForm.clicked = true;
+          EcomOrderForm.clicked = true
           setTimeout(function () {
-            jQuery(EcomOrderForm.submitButtonSelector)
+            window.window.jQuery(EcomOrderForm.submitButtonSelector)
               .parent()
               .addClass(EcomOrderForm.loadingClass)
-              .text(EcomOrderForm.processingMessage);
-            jQuery(EcomOrderForm.submitButtonSelector).hide();
-          }, 100);
+              .text(EcomOrderForm.processingMessage)
+            window.window.jQuery(EcomOrderForm.submitButtonSelector).hide()
+          }, 100)
         }
-      );
-    },
-  };
+      )
+    }
+  }
 }

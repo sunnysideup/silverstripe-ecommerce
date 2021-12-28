@@ -1,4 +1,4 @@
-jQuery(document).ready(
+window.jQuery(document).ready(
     function(){
         EcomCreditCardValidation.init();
     }
@@ -8,20 +8,20 @@ var EcomCreditCardValidation = {
 
     init: function(){
         //do we need to run it at all?
-        if(jQuery(".ecommercecreditcard").length > 0) {
-            if(jQuery(".ecommercecreditcard .message").length){
-                jQuery(".creditCardField input").on(
+        if(window.jQuery(".ecommercecreditcard").length > 0) {
+            if(window.jQuery(".ecommercecreditcard .message").length){
+                window.jQuery(".creditCardField input").on(
                     "keyup",
                     function(){
                         value = "";
-                        jQuery(".creditCardField input").each(
+                        window.jQuery(".creditCardField input").each(
                             function(i, el) {
-                                value += jQuery(el).val();
+                                value += window.jQuery(el).val();
                             }
                         );
                         if(EcomCreditCardValidation.validateCreditCard(value)) {
-                            jQuery(".ecommercecreditcard .message").hide();
-                            jQuery(".ecommercecreditcard ").removeClass("holder-bad");
+                            window.jQuery(".ecommercecreditcard .message").hide();
+                            window.jQuery(".ecommercecreditcard ").removeClass("holder-bad");
                         }
                     }
                 )

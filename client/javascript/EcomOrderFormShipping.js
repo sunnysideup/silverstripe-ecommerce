@@ -13,7 +13,7 @@ if (
       EcomOrderFormWithShippingAddress.init();
       EcomOrderFormWithShippingAddress.removeEmailFromShippingCityHack();
     });
-  })(jQuery);
+  })(window.jQuery);
 
   var EcomOrderFormWithShippingAddress = {
     /**
@@ -106,7 +106,7 @@ if (
     //update shipping fields, when billing fields are changed.
     init: function () {
       if (
-        jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector)
+        window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector)
           .length > 0
       ) {
         this.getListOfSharedFields();
@@ -134,22 +134,22 @@ if (
         if (i > 0) {
           EcomOrderFormWithShippingAddress.turnOnListeners();
           if (
-            jQuery(
+            window.jQuery(
               EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector
             ).length > 0
           ) {
-            jQuery(
+            window.jQuery(
               EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector
             ).change();
           } else {
-            jQuery(
+            window.jQuery(
               EcomOrderFormWithShippingAddress.useShippingDetailsSelector
             ).change();
           }
         }
       }
       //why this????
-      jQuery(
+      window.jQuery(
         EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector
       ).removeAttr("required");
       //update one more time ...
@@ -181,8 +181,8 @@ if (
           EcomOrderFormWithShippingAddress.shippingFieldSelector(
             EcomOrderFormWithShippingAddress.fieldArray[i]
           );
-        billingField = jQuery(billingFieldSelector);
-        shippingField = jQuery(shippingFieldSelector);
+        billingField = window.jQuery(billingFieldSelector);
+        shippingField = window.jQuery(shippingFieldSelector);
         if (hasShippingAddress === true) {
           if (
             billingField.hasClass(
@@ -315,12 +315,12 @@ if (
     removeEmailFromShippingCityHack: function () {
       var pattern =
         /^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/;
-      var shippingCitySelectorValue = jQuery(
+      var shippingCitySelectorValue = window.jQuery(
         EcomOrderFormWithShippingAddress.shippingCitySelector
       ).val();
       if (pattern.test(shippingCitySelectorValue)) {
-        jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector)
-          .val(jQuery(EcomOrderFormWithShippingAddress.citySelector).val())
+        window.jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector)
+          .val(window.jQuery(EcomOrderFormWithShippingAddress.citySelector).val())
           .change();
       } else {
         //do nothing
@@ -332,7 +332,7 @@ if (
      * get a list of fields that is potentially shared.
      */
     getListOfSharedFields: function () {
-      jQuery(
+      window.jQuery(
         this.formSelector +
           " input, " +
           this.formSelector +
@@ -340,7 +340,7 @@ if (
           this.formSelector +
           " textarea"
       ).each(function (i, el) {
-        el = jQuery(el);
+        el = window.jQuery(el);
         var name = el.attr("name");
         if (typeof name !== "undefined") {
           var type = el.prop("nodeName");
@@ -354,11 +354,11 @@ if (
               var shippingFieldSelector =
                 EcomOrderFormWithShippingAddress.shippingFieldSelector(name);
               if (
-                jQuery(billingFieldSelector).length > 0 &&
+                window.jQuery(billingFieldSelector).length > 0 &&
                 !EcomOrderFormWithShippingAddress.isShippingField(name)
               ) {
                 if (
-                  jQuery.inArray(
+                  window.jQuery.inArray(
                     name,
                     EcomOrderFormWithShippingAddress.fieldArray
                   )
@@ -374,7 +374,7 @@ if (
 
     turnOnListeners: function () {
       //if the billing updates, the shipping updates
-      jQuery(EcomOrderFormWithShippingAddress.billingFieldSelectors).change(
+      window.jQuery(EcomOrderFormWithShippingAddress.billingFieldSelectors).change(
         function () {
           //important ...
           EcomOrderFormWithShippingAddress.updateFields();
@@ -382,36 +382,36 @@ if (
       );
 
       //on focus of the shipping fields, look for update...
-      jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).focus(
+      window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).focus(
         function () {
           EcomOrderFormWithShippingAddress.updateFields();
         }
       );
 
       //turn-on shipping details toggle
-      jQuery(
+      window.jQuery(
         EcomOrderFormWithShippingAddress.useShippingDetailsSelector
       ).change(function () {
         if (EcomOrderFormWithShippingAddress.hasShippingAddress()) {
           //slidedown
-          jQuery(
+          window.jQuery(
             EcomOrderFormWithShippingAddress.shippingSectionSelector
           ).slideDown();
 
           //focus on first field
           var firstShippingField =
             EcomOrderFormWithShippingAddress.fieldArray[0];
-          jQuery(
+          window.jQuery(
             EcomOrderFormWithShippingAddress.shippingFieldSelector(
               firstShippingField
             )
           ).focus();
 
           //set required fields ...
-          jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
+          window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
             function (i, el) {
-              if (jQuery(el).hasClass("required")) {
-                jQuery(el)
+              if (window.jQuery(el).hasClass("required")) {
+                window.jQuery(el)
                   .attr("required", "required")
                   .attr("aria-required", true)
                   .attr("aria-required", true)
@@ -425,15 +425,15 @@ if (
           EcomOrderFormWithShippingAddress.closed = false;
         } else {
           //slide up
-          jQuery(
+          window.jQuery(
             EcomOrderFormWithShippingAddress.shippingSectionSelector
           ).slideUp();
 
           //make not required
-          jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
+          window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(
             function (i, el) {
-              if (jQuery(el).hasClass("required")) {
-                jQuery(el)
+              if (window.jQuery(el).hasClass("required")) {
+                window.jQuery(el)
                   .removeAttr("required")
                   .removeAttr("aria-required")
                   .removeAttr("data-has-required");
@@ -451,27 +451,27 @@ if (
         EcomOrderFormWithShippingAddress.updateFields();
       });
       if (
-        jQuery(
+        window.jQuery(
           EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector
         ).length > 0
       ) {
-        jQuery(
+        window.jQuery(
           EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector
         ).change(function (event) {
           if (
-            jQuery(
+            window.jQuery(
               EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector
             ).is(":checked") === true
           ) {
-            jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector)
+            window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector)
               .attr("checked", "checked")
               .val("1");
           } else {
-            jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector)
+            window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector)
               .removeAttr("checked", "checked")
               .val("0");
           }
-          jQuery(
+          window.jQuery(
             EcomOrderFormWithShippingAddress.useShippingDetailsSelector
           ).change();
         });
@@ -479,7 +479,7 @@ if (
     },
 
     swapBillingHeader: function () {
-      var billingHeader = jQuery(this.formSelector + "_BillingDetails");
+      var billingHeader = window.jQuery(this.formSelector + "_BillingDetails");
       var hasShippingAddress = this.hasShippingAddress();
       if (hasShippingAddress) {
         var newHeaderAttr = this.billingHeaderAttributeTitleAlternative;
@@ -492,18 +492,18 @@ if (
     },
 
     hasShippingAddress: function () {
-      var isHidden = jQuery(
+      var isHidden = window.jQuery(
         EcomOrderFormWithShippingAddress.useShippingDetailsSelector +
           '[type="hidden"]'
       );
       if (isHidden) {
         var isOne =
-          jQuery(
+          window.jQuery(
             EcomOrderFormWithShippingAddress.useShippingDetailsSelector
           ).val() == "1";
         return isOne;
       } else {
-        var isChecked = jQuery(
+        var isChecked = window.jQuery(
           EcomOrderFormWithShippingAddress.useShippingDetailsSelector
         ).is(":checked");
         return isChecked;
@@ -525,23 +525,23 @@ if (
         } else {
           var options = CountryPrice_SetCountriesForDelivery_New;
         }
-        var el = jQuery("select[name='Country']");
+        var el = window.jQuery("select[name='Country']");
         EcomOrderFormWithShippingAddress.swappingOptions(el, options);
       }
     },
 
     /**
      * update a select with new options
-     * @var jQuery Object
+     * @var window.jQuery Object
      * @var array
      */
     swappingOptions: function (el, newOptions) {
-      var oldValue = jQuery(el).val();
-      jQuery(el).empty();
+      var oldValue = window.jQuery(el).val();
+      window.jQuery(el).empty();
       $.each(newOptions, function (key, value) {
         el.append($("<option></option>").attr("value", key).text(value));
       });
-      jQuery(el).val(oldValue);
+      window.jQuery(el).val(oldValue);
     },
   };
 }

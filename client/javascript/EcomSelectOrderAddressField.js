@@ -22,7 +22,7 @@
                 }
             }
         );
-    })(jQuery);
+    })(window.jQuery);
 
 
 
@@ -73,7 +73,7 @@
             set_data: function(i, object) {EcomSelectOrderAddressField.data[i] = object; },
 
         init: function() {
-            if(jQuery(EcomSelectOrderAddressField.fieldSelector).length > 0) {
+            if(window.jQuery(EcomSelectOrderAddressField.fieldSelector).length > 0) {
                 EcomSelectOrderAddressField.setupAddressChanges();
                 EcomSelectOrderAddressField.setupNoLongerInUseLinks();
             }
@@ -81,23 +81,23 @@
         },
 
         setupAddressChanges: function(){
-            jQuery(EcomSelectOrderAddressField.fieldSelector).each(
+            window.jQuery(EcomSelectOrderAddressField.fieldSelector).each(
                 function(i, el){
-                    //jQuery(el).next(EcomSelectOrderAddressField.addressSelector).hide();
-                    jQuery(el).find(EcomSelectOrderAddressField.inputSelector).each(
+                    //window.jQuery(el).next(EcomSelectOrderAddressField.addressSelector).hide();
+                    window.jQuery(el).find(EcomSelectOrderAddressField.inputSelector).each(
                         function(i, el) {
-                            jQuery(el).change(
+                            window.jQuery(el).change(
                                 function(e) {
-                                    //jQuery(this).parents(EcomSelectOrderAddressField.fieldSelector).next(EcomSelectOrderAddressField.addressSelector).show();
-                                    var id = jQuery(this).val();
-                                    jQuery(this).closest("ul").children("li").removeClass("selected");
-                                    jQuery(this).closest("li").addClass("selected");
+                                    //window.jQuery(this).parents(EcomSelectOrderAddressField.fieldSelector).next(EcomSelectOrderAddressField.addressSelector).show();
+                                    var id = window.jQuery(this).val();
+                                    window.jQuery(this).closest("ul").children("li").removeClass("selected");
+                                    window.jQuery(this).closest("li").addClass("selected");
                                     var data = EcomSelectOrderAddressField.data[id];
                                     if(data) {
-                                        jQuery.each(
+                                        window.jQuery.each(
                                             data,
                                             function(i, n){
-                                                jQuery("input[name='"+i+"'], select[name='"+i+"'], textarea[name='"+i+"']").val(n);
+                                                window.jQuery("input[name='"+i+"'], select[name='"+i+"'], textarea[name='"+i+"']").val(n);
                                             }
                                         );
                                     }
@@ -106,25 +106,25 @@
                         }
                     );
                     //must do the after setting change event.
-                    jQuery(this).find("input:first").click();
+                    window.jQuery(this).find("input:first").click();
                 }
             );
         },
 
         setupNoLongerInUseLinks: function(){
-            jQuery(EcomSelectOrderAddressField.removeLinkSelector).click(
+            window.jQuery(EcomSelectOrderAddressField.removeLinkSelector).click(
                 function(e) {
                     e.preventDefault();
-                    jQuery(this).addClass(EcomSelectOrderAddressField.loadingClass);
-                    var id = jQuery(this).attr("rel");
-                    var url = jQuery(this).attr("href");
-                    jQuery.get(
+                    window.jQuery(this).addClass(EcomSelectOrderAddressField.loadingClass);
+                    var id = window.jQuery(this).attr("rel");
+                    var url = window.jQuery(this).attr("href");
+                    window.jQuery.get(
                         url,
                         function(data){
-                            jQuery(".val"+id).addClass("removed");
-                            jQuery(".val"+id+" input").remove();
-                            jQuery(".val"+id+" label").html(data);
-                            jQuery(this).removeClass(EcomSelectOrderAddressField.loadingClass);
+                            window.jQuery(".val"+id).addClass("removed");
+                            window.jQuery(".val"+id+" input").remove();
+                            window.jQuery(".val"+id+" label").html(data);
+                            window.jQuery(this).removeClass(EcomSelectOrderAddressField.loadingClass);
                         }
                     );
                 }

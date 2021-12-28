@@ -13,7 +13,7 @@ if (
     $(document).ready(function () {
       EcomPasswordField.init();
     });
-  })(jQuery);
+  })(window.jQuery);
 
   var EcomPasswordField = {
     chars: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz",
@@ -29,46 +29,46 @@ if (
     //toggles password selection and enters random password so that users still end up with a password
     //even if they do not choose one.
     init: function () {
-      var yesLabel = jQuery(
+      var yesLabel = window.jQuery(
         EcomPasswordField.choosePasswordLinkSelector
       ).text();
       if (
-        !jQuery(EcomPasswordField.choosePasswordLinkSelector).attr("datayes")
+        !window.jQuery(EcomPasswordField.choosePasswordLinkSelector).attr("datayes")
       ) {
-        jQuery(EcomPasswordField.choosePasswordLinkSelector).attr(
+        window.jQuery(EcomPasswordField.choosePasswordLinkSelector).attr(
           "datayes",
           yesLabel
         );
       }
 
-      if (jQuery(EcomPasswordField.passwordFieldInputSelectors).length) {
-        jQuery(document).on(
+      if (window.jQuery(EcomPasswordField.passwordFieldInputSelectors).length) {
+        window.jQuery(document).on(
           "click",
           EcomPasswordField.choosePasswordLinkSelector,
           function () {
-            jQuery(EcomPasswordField.passwordFieldInputSelectors).slideToggle(
+            window.jQuery(EcomPasswordField.passwordFieldInputSelectors).slideToggle(
               function () {
                 if (
-                  jQuery(EcomPasswordField.passwordFieldInputSelectors).is(
+                  window.jQuery(EcomPasswordField.passwordFieldInputSelectors).is(
                     ":visible"
                   )
                 ) {
                   var newPassword = "";
-                  var newLabel = jQuery(
+                  var newLabel = window.jQuery(
                     EcomPasswordField.choosePasswordLinkSelector
                   ).attr("datano");
                 } else {
                   var newPassword = EcomPasswordField.passwordGenerator();
-                  var newLabel = jQuery(
+                  var newLabel = window.jQuery(
                     EcomPasswordField.choosePasswordLinkSelector
                   ).attr("datayes");
                 }
-                jQuery(EcomPasswordField.choosePasswordLinkSelector).text(
+                window.jQuery(EcomPasswordField.choosePasswordLinkSelector).text(
                   newLabel
                 );
-                jQuery(EcomPasswordField.passwordFieldInputSelectors).each(
+                window.jQuery(EcomPasswordField.passwordFieldInputSelectors).each(
                   function (i, el) {
-                    jQuery(el).find("input").val(newPassword);
+                    window.jQuery(el).find("input").val(newPassword);
                   }
                 );
               }
@@ -76,35 +76,35 @@ if (
             return false;
           }
         );
-        jQuery(EcomPasswordField.choosePasswordLinkSelector).click();
+        window.jQuery(EcomPasswordField.choosePasswordLinkSelector).click();
       }
 
-      jQuery("form").on("click", ".btn-toolbar input", function () {
+      window.jQuery("form").on("click", ".btn-toolbar input", function () {
         var notAllHaveSomething = false;
         //reset to avoid auto-fills
-        jQuery(EcomPasswordField.passwordFieldInputSelectors).each(function (
+        window.jQuery(EcomPasswordField.passwordFieldInputSelectors).each(function (
           i,
           el
         ) {
           if (
-            jQuery(el).find("input").val() == "" ||
-            jQuery(el).is(":hidden")
+            window.jQuery(el).find("input").val() == "" ||
+            window.jQuery(el).is(":hidden")
           ) {
             notAllHaveSomething = true;
           }
         });
         if (notAllHaveSomething) {
-          jQuery(EcomPasswordField.passwordFieldInputSelectors).each(function (
+          window.jQuery(EcomPasswordField.passwordFieldInputSelectors).each(function (
             i,
             el
           ) {
-            jQuery(el).find("input").val("");
+            window.jQuery(el).find("input").val("");
           });
         }
       });
       //show passwords straight away IF there is an error
-      if (jQuery(EcomPasswordField.errorMessageSelector).length) {
-        jQuery(EcomPasswordField.choosePasswordLinkSelector).click();
+      if (window.jQuery(EcomPasswordField.errorMessageSelector).length) {
+        window.jQuery(EcomPasswordField.choosePasswordLinkSelector).click();
       }
     },
 

@@ -17,7 +17,7 @@ if(
                 EcomOrderFormAddress.init();
             }
         );
-    })(jQuery);
+    })(window.jQuery);
 
 
 
@@ -33,25 +33,25 @@ if(
 
         init: function() {
             this.postalCodeLinkSetup();
-            jQuery(this.formSelector).attr('autocomplete', 'off');
+            window.jQuery(this.formSelector).attr('autocomplete', 'off');
             if(this.addJSValidation) {
-                jQuery(this.formSelector).attr("novalidate", "novalidate");
-                jQuery(document).on(
+                window.jQuery(this.formSelector).attr("novalidate", "novalidate");
+                window.jQuery(document).on(
                     "submit",
                     EcomOrderFormAddress.formSelector,
                     function(){
                         var isFormValid = true;
-                        jQuery(EcomOrderFormAddress.formSelector + " input[required='required'], " + EcomOrderFormAddress.formSelector + " input[required='required'], ").each(
+                        window.jQuery(EcomOrderFormAddress.formSelector + " input[required='required'], " + EcomOrderFormAddress.formSelector + " input[required='required'], ").each(
                             function(i, el){ // Note the :text
-                                if (jQuery.trim(jQuery(el).val()).length == 0){
-                                    jQuery(el).parents("div.field").addClass("holder-bad");
-                                    if(jQuery(el).is(":visible")) {
+                                if (window.jQuery.trim(window.jQuery(el).val()).length == 0){
+                                    window.jQuery(el).parents("div.field").addClass("holder-bad");
+                                    if(window.jQuery(el).is(":visible")) {
 
                                     }
                                     isFormValid = false;
                                 }
                                 else {
-                                    jQuery(el).parents("div.field").removeClass("holder-bad");
+                                    window.jQuery(el).parents("div.field").removeClass("holder-bad");
                                 }
                         });
                         return isFormValid;
@@ -61,18 +61,18 @@ if(
         },
 
         setReadOnly: function(fieldName) {
-            jQuery("name=['"+fieldName+"']").attr("disabled", true);
-            jQuery("name=['"+fieldName+"']").attr("readonly", true);
+            window.jQuery("name=['"+fieldName+"']").attr("disabled", true);
+            window.jQuery("name=['"+fieldName+"']").attr("readonly", true);
         },
 
         undoReadOnly: function(fieldName) {
-            jQuery("name=['"+fieldName+"']").attr("disabled", false);
-            jQuery("name=['"+fieldName+"']").attr("readonly", false);
+            window.jQuery("name=['"+fieldName+"']").attr("disabled", false);
+            window.jQuery("name=['"+fieldName+"']").attr("readonly", false);
         },
 
 
         postalCodeLinkSetup: function() {
-            jQuery(EcomOrderFormAddress.postalCodeLink).attr("target", EcomOrderFormAddress.postalCodeLinkTarget);
+            window.jQuery(EcomOrderFormAddress.postalCodeLink).attr("target", EcomOrderFormAddress.postalCodeLinkTarget);
         }
     }
 }
