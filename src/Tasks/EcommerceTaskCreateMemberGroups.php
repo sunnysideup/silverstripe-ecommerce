@@ -7,6 +7,7 @@ use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
+use Sunnysideup\PermissionProvider\Interfaces\PermissionProviderFactoryProvider;
 
 /**
  * create the e-commerce specific Member Groups.
@@ -15,7 +16,7 @@ use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
  * @package: ecommerce
  * @sub-package: tasks
  */
-class EcommerceTaskCreateMemberGroups extends BuildTask
+class EcommerceTaskCreateMemberGroups extends BuildTask implements PermissionProviderFactoryProvider
 {
     protected $title = 'Create e-commerce Member Groups';
 
