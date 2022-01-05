@@ -21,8 +21,13 @@ class EcommerceTaskCreateMemberGroups extends BuildTask implements PermissionPro
     protected $title = 'Create e-commerce Member Groups';
 
     protected $description = 'Create the member groups and members for e-commerce, such as Customers and Shop Admininistrators.';
-
     public function run($request)
+    {
+        self::permission_provider_factory_runner();
+    }
+
+
+    public static function permission_provider_factory_runner()
     {
         DB::alteration_message('========================== <br />creating customer group', 'created');
         PermissionProviderFactory::inst()
@@ -61,5 +66,7 @@ class EcommerceTaskCreateMemberGroups extends BuildTask implements PermissionPro
             ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'assistant_role_permission_codes'))
             ->CreateGroupAndMember()
         ;
+
     }
+
 }
