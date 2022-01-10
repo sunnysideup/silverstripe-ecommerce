@@ -6,6 +6,8 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+
+use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
@@ -74,15 +76,17 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
     public static function flush()
     {
-        $tables = DB::table_list();
-        if (array_key_exists(strtolower('ProductGroupSearchTable'), $tables)) {
-            DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
-            DB::query(
-                '
-                DELETE ProductSearchTable FROM ProductSearchTable
-                LEFT JOIN Product_Live ON Product_Live.ID = ProductSearchTable.ProductID
-                WHERE Product_Live.ID IS NULL'
-            );
+        if(Security::database_is_ready()) {
+            $tables = DB::table_list();
+            if (in_array('ProductGroupSearchTable', $tables)) {
+                DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
+                DB::query(
+                    '
+                    DELETE ProductSearchTable FROM ProductSearchTable
+                    LEFT JOIN Product_Live ON Product_Live.ID = ProductSearchTable.ProductID
+                    WHERE Product_Live.ID IS NULL'
+                );
+            }
         }
     }
 
