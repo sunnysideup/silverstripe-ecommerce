@@ -31,7 +31,7 @@ abstract class AbstractProductsAndGroupsList
     //#########################################
 
     /**
-     * @var DataList
+     * @var SS_List
      */
     protected $products;
 
