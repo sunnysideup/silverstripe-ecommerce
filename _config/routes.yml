@@ -1,5 +1,7 @@
 ---
 Name: ecommerce_routes
+Before:
+   - '#adminroutes'
 ---
 SilverStripe\Control\Director:
   rules:
@@ -9,3 +11,4 @@ SilverStripe\Control\Director:
     ecommercebuyabledatalist//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
     ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
     ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\OrderModifierFormController
+    admin/ecommerce/quick-updates//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\QuickUpdates
