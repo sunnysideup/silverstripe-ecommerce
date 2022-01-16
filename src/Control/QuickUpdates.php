@@ -14,6 +14,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
@@ -26,8 +27,24 @@ class QuickUpdates extends Controller
     private static $allowed_actions = [
         'index' => 'SHOPASSISTANTS',
         'do' => 'SHOPASSISTANTS',
+        'done' => 'SHOPASSISTANTS',
         'MyForm' => 'SHOPASSISTANTS',
     ];
+
+    public function Title()
+    {
+        return $this->getTitle();
+    }
+
+    public function getTitle()
+    {
+        return 'E-commerce Quick Updates';
+    }
+
+    public function Parent() : self
+    {
+        return Injector::inst()->get(self::class);
+    }
 
     public function MyForm()
     {
@@ -45,7 +62,7 @@ class QuickUpdates extends Controller
 
     public function Menu() : ArrayList
     {
-        $classes = ClassInfo::subclassesFor(static::class, false);
+        $classes = ClassInfo::subclassesFor(QuickUpdates::class, false);
         $al = ArrayList::create();
         foreach($classes as $class) {
             $obj = Injector::inst()->get($class);
@@ -61,13 +78,17 @@ class QuickUpdates extends Controller
         return $al;
     }
 
+    public function Now()
+    {
+        return DBDatetime::now()->Nice();
+    }
 
     public function index($request)
     {
         return $this->renderWith(static::class);
     }
 
-    public function do($request)
+    public function done($request)
     {
         return $this->renderWith(static::class);
     }
