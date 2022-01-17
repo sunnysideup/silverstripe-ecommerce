@@ -130,11 +130,11 @@ class StoreAdmin extends ModelAdmin
                 $html = '';
                 $form->Fields()->push(HeaderField::create('UsefulLinks', 'Short-cuts'));
                 foreach ($shortcuts as $group => $entries) {
-                    if($html) {
+                    if ($html) {
                         $html .= '</div>';
                     }
-                    $html .= '<div style="min-width: 450px; float: left; padding: 10px;"><h1>'.$group.'</h1>';
-                    foreach($entries as $entry) {
+                    $html .= '<div style="min-width: 450px; float: left; padding: 10px;"><h1>' . $group . '</h1>';
+                    foreach ($entries as $entry) {
                         $html .= $this->makeShortCut(
                             $entry['Title'],
                             $entry['Link'],
@@ -167,6 +167,7 @@ class StoreAdmin extends ModelAdmin
         <h2 style="' . $style . '">
             &raquo; <a href="' . $link . '" id="' . $name . '" target="_blank" ' . $onclick . '>' . $title . '</a>
         </h2>';
+
         return LiteralField::create(
             $name,
             $html
