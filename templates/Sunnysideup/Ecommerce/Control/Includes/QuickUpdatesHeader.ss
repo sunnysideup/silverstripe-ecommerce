@@ -64,7 +64,23 @@
         }
         .field {
             padding-top: 10px;
+            padding-bottom: 10px;
         }
+        .level51-ajaxSelectFieldBase input[type=text] {
+            width: calc(100% - 20px)!important;
+            height: auto!important;
+        }
+        select, input, textarea {
+            padding: 8px;
+            border: 1px solid #ced5e1;
+        }
+        span.description {
+            font-style: italic;
+            font-family: serif;
+            text-align: right;
+            display: block;
+        }
+
         input.action {
             border: 1px solid #008a00;
             color: #008a00;
@@ -89,9 +105,6 @@
         .message.warning {
             border-color: goldenrod;
             color: goldenrod;
-        }
-        .level51-ajaxSelectFieldBase input[type=text] {
-            width: calc(100% - 20px)!important;
         }
         @media print {
 

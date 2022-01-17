@@ -158,8 +158,8 @@ class QuickUpdates extends Controller
                     'InternalItemID:PartialMatch' => '__QUERY__',
                 ];
                 $list = Product::get()
-                ->filter(['AllowPurchase' => true,])
-                ->sort('InternalItemID');
+                    ->filter(['AllowPurchase' => true,])
+                    ->sort('InternalItemID');
                 // This part is only required if the idOnlyMode is active
                 foreach($filter as $key => $value) {
                     if($query) {
@@ -169,12 +169,12 @@ class QuickUpdates extends Controller
                         unset($filter[$key]);
                     }
                 }
-                $objects = $list->filterAny($filter)->limit(50);
+                $list = $list->filterAny($filter);
                 $results = [];
-                foreach ($objects as $obj) {
+                foreach ($list as $obj) {
                     $results[] = [
                         'id' => $obj->ID,
-                        'title' => $obj->FullName
+                        'title' => $obj->FullName,
                     ];
                 }
 
