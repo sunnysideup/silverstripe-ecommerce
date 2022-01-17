@@ -61,6 +61,11 @@
             outline: none;
             padding: 20px 0;
             margin: 0;
+            background-color: #004e7f3b;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+            border: 1px solid #008a00aa;
         }
         .field {
             padding-top: 10px;
