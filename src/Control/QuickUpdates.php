@@ -17,6 +17,8 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
+use SilverStripe\ORM\SS_List;
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -31,7 +33,7 @@ class QuickUpdates extends Controller
 
     private static $allowed_actions = [
         'index' => 'SHOPASSISTANTS',
-        'do' => 'SHOPASSISTANTS',
+        'doform' => 'SHOPASSISTANTS',
         'done' => 'SHOPASSISTANTS',
         'list' => 'SHOPASSISTANTS',
         'updateone' => 'SHOPASSISTANTS',
@@ -85,7 +87,7 @@ class QuickUpdates extends Controller
         );
 
         $actions = new FieldList(
-            FormAction::create('do')->setTitle('Submit')
+            FormAction::create('doform')->setTitle('Submit')
         );
 
         $required = new RequiredFields();
@@ -193,4 +195,62 @@ class QuickUpdates extends Controller
             ->setSearchCallback($callBackFx)
         ;
     }
+
+    protected function productList() : SS_List
+    {
+        $array = [];
+        $al = ArrayList::create();
+        $step = 50;
+        $maxItems = 100;
+        $doneItems = 0;
+        for($i = 0; $i < $maxItems; $i++) {
+            $products = Product::get()
+                ->filter(['AllowPurchase' => true])
+                ->sort('Price DESC')
+                ->limit($step, $i * $step);
+            foreach($products as $product) {
+                $test = $this->isIncludedInListForProduct($product);
+                if($test === true) {
+                    $al->push(new ArrayData([
+                        'Item' => $product,
+                        'Link' => $this->Link('updateone/'.$product->ID),
+                    ]));
+                    $doneItems++;
+                }
+                if($doneItems > $maxItems) {
+                    $i = $maxItems + 1;
+                }
+            }
+        }
+        return $al;
+    }
+
+    protected function isIncludedInListForProduct(Product $product) : bool
+    {
+        return true;
+    }
+
+    public function MyProduct()
+    {
+        $session = $this->getRequest()->getSession();
+        $id = $session->get('LastProductUpdated');
+        if ($id) {
+            $session->set('LastProductUpdated', 0);
+            $product = Product::get_by_id((int) $id);
+            if ($product) {
+                return DBField::create_field(
+                    'HTMLText',
+                    '<p class="message success">
+                        Updated <a href="' . $product->Link() . '" target="_blank">' . $product->FullName . '</a>
+                    </p>
+                    <p>
+                        <a href="'.$this->Link('updateone/'.$product->ID).'">Add More</a> /
+                        <a href="'.$this->Link('list').'">Review List</a> / Choose another product below ...
+                    </p>'
+                );
+            }
+        }
+    }
+
+
 }

@@ -73,6 +73,7 @@
         select, input, textarea {
             padding: 8px;
             border: 1px solid #ced5e1;
+            width: calc(100% - 2px);
         }
         span.description {
             font-style: italic;
@@ -87,6 +88,7 @@
             padding: 15px 50px;
             border-radius: 3px;
             background-color: transparent;
+            width: auto!important;
         }
         input.action:hover {
             background-color: #008a00;
@@ -105,6 +107,25 @@
         .message.warning {
             border-color: goldenrod;
             color: goldenrod;
+        }
+        .message.error {
+            border-color: red;
+            color: red;
+            color: #fff;
+        }
+        .message.error * {
+            color: #fff!important;
+        }
+        .message.required {
+            color: red;
+            margin-top: 0px;
+            display: inline-block;
+            border: none;
+            border-radius: 0;
+            background-color: transparent;
+            font-weight: bold;
+            background-color: yellow;
+            margin-left: 20px;
         }
         @media print {
 
