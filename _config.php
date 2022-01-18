@@ -14,4 +14,6 @@ use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 //last param is priority
 
 // CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
-CMSMenu::remove_menu_class(CMSPageAddControllerProducts::class);
+if (isset($_SERVER['REQUEST_URI']) && 0 === strpos($_SERVER['REQUEST_URI'], '/admin/')) {
+    CMSMenu::remove_menu_class(CMSPageAddControllerProducts::class);
+}
