@@ -344,7 +344,7 @@ class Product extends Page implements BuyableModel
         }
         if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
-                'Root.AlsoShowHere',
+                'Root.Under',
                 [
                     new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
                     $this->getProductGroupsTableField(),
