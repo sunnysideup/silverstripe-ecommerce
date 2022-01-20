@@ -3,8 +3,6 @@
 namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\Reports\Report;
-use Sunnysideup\Ecommerce\Reports\EcommerceProductReportTrait;
-
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
