@@ -2725,7 +2725,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if (null === $includeName) {
                 $includeName = EcommerceConfig::get(Order::class, 'include_customer_name_in_title');
             }
-            $title = $this->i18n_singular_name() . ' #' . number_format($this->ID);
+            $title = $this->i18n_singular_name() . ' #' . $this->ID;
             if ($dateFormat) {
                 $submissionLog = $this->SubmissionLog();
                 if ($submissionLog && $submissionLog->exists()) {
