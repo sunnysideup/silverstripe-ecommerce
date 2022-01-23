@@ -123,7 +123,7 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
             ->setRoleTitle(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_role_title'))
             ->setPermissionArray(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_role_permission_codes'))
 
-            ->setDecription(
+            ->setDescription(
                 _t(
                     'EcommerceRoleAssistant.STORE_ASSISTANTS_HELP',
                     'Store Assistant - can only view sales details and makes notes about orders'

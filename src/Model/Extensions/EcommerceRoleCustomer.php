@@ -79,7 +79,7 @@ class EcommerceRoleCustomer implements PermissionProviderFactoryProvider
             ->setGroupName(EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_name'))
             ->setPermissionCode(EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_permission_code'))
 
-            ->setDecription(
+            ->setDescription(
                 _t(
                     'EcommerceRoleCustomer.CUSTOMERS_HELP',
                     'Customer Permissions (usually very little)'
