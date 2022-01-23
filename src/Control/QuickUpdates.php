@@ -24,6 +24,7 @@ class QuickUpdates extends Controller
     protected $isList = false;
 
     protected $currentItemID = 0;
+
     private static $url_segment = 'admin/ecommerce/quick-updates';
 
     private static $allowed_actions = [

@@ -284,7 +284,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 DB::alteration_message('
                         <h2>Total number of abandonned carts: ' . $totalToDelete . '</h2>
                         <br /><b>number of records deleted at one time:</b> ' . $this->maximumNumberOfObjectsDeleted . '
-                        <br /><b>Criteria:</b> last edited ' . $clearMinutes . ' (~' . round($clearMinutes / 60 / 24, 2) . " days)
+                        <br /><b>Criteria:</b> last edited ' . $clearMinutesWithoutMember . ' (~' . round($clearMinutesWithoutMember / 60 / 24, 2) . " days)
                         minutes ago or more {$this->memberDeleteNote}", 'created');
             }
             foreach ($oldCarts as $oldCart) {

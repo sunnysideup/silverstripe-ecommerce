@@ -2337,14 +2337,17 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
-        if ($this->canView($member) && $this->MyStep()->CustomerCanEdit) {
+        if ($this->MyStep()->CustomerCanEdit && $member && $this->MemberID === $member->ID) {
             return true;
         }
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
-        //is the member is a shop assistant they can always view it
-        return EcommerceRole::current_member_is_shop_assistant($member);
+        if(EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -24,7 +24,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     /**
      * standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'OrderFeedback';
 

@@ -37,6 +37,10 @@ use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
 
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\PermissionProvider\Interfaces\PermissionProviderFactoryProvider;
+
+use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
 /**
  * @description EcommerceRole provides specific customisations to the {@link Member}
  * class for the ecommerce module.
@@ -45,8 +49,34 @@ use Sunnysideup\Ecommerce\Model\Order;
  * @package: ecommerce
  * @sub-package: extensions
  */
-class EcommerceRole extends DataExtension implements PermissionProvider
+class EcommerceRole extends DataExtension implements PermissionProvider, PermissionProviderFactoryProvider
 {
+
+    public static function permission_provider_factory_runner() : Group
+    {
+        return PermissionProviderFactory::inst()
+            ->setParentGroup(EcommerceRole::get_category())
+
+            ->setEmail(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email'))
+            ->setFirstName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name'))
+            ->setSurname(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname'))
+            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
+            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
+            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
+            ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
+            ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
+
+            ->setDescription(
+                _t(
+                    'EcommerceRole.ADMINISTRATORS_HELP',
+                    'Store Manager - can edit everything to do with the e-commerce application.'
+                )
+            )
+            ->setSort(99)
+            ->CreateGroup($member = null)
+        ;
+    }
+
     protected static $adminMemberCache;
 
     protected static $shopAssistantMemberCache;
@@ -79,21 +109,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * @var bool
      */
     private static $automatically_update_member_details = true;
-
-    /**
-     * @var string
-     */
-    private static $customer_group_code = 'shopcustomers';
-
-    /**
-     * @var string
-     */
-    private static $customer_group_name = 'Shop Customers';
-
-    /**
-     * @var string
-     */
-    private static $customer_permission_code = 'SHOPCUSTOMER';
 
     /**
      * @var string
@@ -134,6 +149,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      * @var array
      */
     private static $admin_role_permission_codes = [
+        // key one
+        'CMS_ACCESS_SalesAdmin_PROCESS',
+
         'CMS_ACCESS_ProductsAndGroupsModelAdmin',
         'CMS_ACCESS_ProductConfigModelAdmin',
         'CMS_ACCESS_SalesAdmin',
@@ -146,54 +164,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         'CMS_ACCESS_StoreAdmin',
         'CMS_ACCESS_AssetAdmin',
         'CMS_ACCESS_CMSMain',
-        'CMS_ACCESS_SalesAdmin_PROCESS',
-    ];
-
-    /**
-     * @var string
-     */
-    private static $assistant_group_code = 'shopassistants';
-
-    /**
-     * @var string
-     */
-    private static $assistant_group_name = 'Shop Assistants';
-
-    /**
-     * @var string
-     */
-    private static $assistant_group_user_first_name = '';
-
-    /**
-     * @var string
-     */
-    private static $assistant_group_user_surname = '';
-
-    /**
-     * @var string
-     */
-    private static $assistant_group_user_email = '';
-
-    /**
-     * @var string
-     */
-    private static $assistant_permission_code = 'SHOPASSISTANTS';
-
-    /**
-     * @var string
-     */
-    private static $assistant_role_title = 'Store Assistant';
-
-    /**
-     * @var array
-     */
-    private static $assistant_role_permission_codes = [
-        'CMS_ACCESS_SalesAdmin',
-        'CMS_ACCESS_SalesAdminByOrderSize',
-        'CMS_ACCESS_SalesAdminByOrderStep',
-        'CMS_ACCESS_SalesAdminByDeliveryOption',
-        'CMS_ACCESS_SalesSalesAdminProcess',
-        'CMS_ACCESS_SalesAdminExtras',
     ];
 
     /**
@@ -244,12 +214,17 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public static function get_customer_group()
     {
-        $customerCode = EcommerceConfig::get(EcommerceRole::class, 'customer_group_code');
+        $customerCode = EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_code');
 
         return DataObject::get_one(
             Group::class,
             ['Code' => $customerCode]
         );
+    }
+
+    public static function get_category() : string
+    {
+        return EcommerceConfig::get(EcommerceRole::class, 'permission_category');
     }
 
     /**
@@ -417,7 +392,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public static function get_assistant_group()
     {
-        $assistantCode = EcommerceConfig::get(EcommerceRole::class, 'assistant_group_code');
+        $assistantCode = EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_code');
 
         return DataObject::get_one(
             Group::class,
@@ -445,7 +420,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider
      */
     public static function get_default_shop_assistant_user()
     {
-        self::$shopAssistantMemberCache;
         if (null === self::$shopAssistantMemberCache) {
             $group = self::get_assistant_group();
             if ($group) {
@@ -505,36 +479,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
     public function providePermissions()
     {
         $category = EcommerceConfig::get(EcommerceRole::class, 'permission_category');
-        $perms[EcommerceConfig::get(EcommerceRole::class, 'customer_permission_code')] = [
-            'name' => _t(
-                'EcommerceRole.CUSTOMER_PERMISSION_ANME',
-                'Customers'
-            ),
-            'category' => $category,
-            'help' => _t(
-                'EcommerceRole.CUSTOMERS_HELP',
-                'Customer Permissions (usually very little)'
-            ),
-            'sort' => 98,
-        ];
-        $perms[EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code')] = [
-            'name' => EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'),
-            'category' => $category,
-            'help' => _t(
-                'EcommerceRole.ADMINISTRATORS_HELP',
-                'Store Manager - can edit everything to do with the e-commerce application.'
-            ),
-            'sort' => 99,
-        ];
-        $perms[EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code')] = [
-            'name' => EcommerceConfig::get(EcommerceRole::class, 'assistant_role_title'),
-            'category' => $category,
-            'help' => _t(
-                'EcommerceRole.STORE_ASSISTANTS_HELP',
-                'Store Assistant - can only view sales details and makes notes about orders'
-            ),
-            'sort' => 100,
-        ];
+
         $perms[EcommerceConfig::get(EcommerceRole::class, 'process_orders_permission_code')] = [
             'name' => _t(
                 'EcommerceRole.PROCESS_ORDERS_PERMISSION_NAME',
@@ -581,7 +526,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
         );
         $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"{$link}\" target=\"_blank\">Place order for customer</a></p>");
         $fields->addFieldsToTab(
-            'Root.Orders',
+            'Root.ecommerce',
             [
                 $orderField,
                 $preferredCurrencyField,
@@ -792,7 +737,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider
             return true;
         }
 
-        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRole::class, 'assistant_permission_code'));
+        return Permission::checkMember($this->owner, EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_permission_code'));
     }
 
     /**

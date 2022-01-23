@@ -63,12 +63,15 @@ trait EcommerceProductReportTrait
         }
         $forSale = $params['ForSale'] ?? '';
         if ($forSale) {
+            $forSaleFilter = null;
             if ('Yes' === $forSale) {
-                $filter = 1;
-            } elseif ('No') {
-                $filter = 0;
+                $forSaleFilter = 1;
+            } elseif ('No' === $forSale) {
+                $forSaleFilter = 0;
             }
-            $list = $list->filter(['AllowPurchase' => $filter]);
+            if($forSaleFilter !== null) {
+                $list = $list->filter(['AllowPurchase' => $forSaleFilter]);
+            }
         }
         $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
         if ($changedInTheLastXDays) {

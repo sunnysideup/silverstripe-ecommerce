@@ -31,6 +31,8 @@ use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRoleAssistant;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRoleCustomer;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -190,6 +192,8 @@ class EcommerceConfigDefinitions
         'CUSTOMERS' => [
             OrderAddress::class,
             EcommerceRole::class,
+            EcommerceRoleAssistant::class,
+            EcommerceRoleCustomer::class,
             BillingAddress::class,
             ShippingAddress::class,
             EcommerceCountry::class,
@@ -523,12 +527,6 @@ class EcommerceConfigDefinitions
                     first name) will be automatically updated from the billing address.  That is,
                     if the customers enters a different email or surname in the billing field then the member record will be updated based on these new values.',
 
-                'customer_group_code' => 'Code for the customer member group.',
-
-                'customer_group_name' => 'Title (name) for the customer member group.',
-
-                'customer_permission_code' => 'Permission code for the customer member group.',
-
                 'admin_group_code' => 'Code for the shop administrator member group.',
 
                 'admin_group_name' => 'Title (name) for the shop administrator member group.',
@@ -544,6 +542,14 @@ class EcommerceConfigDefinitions
                 'admin_role_title' => 'Role title for the shop administrator member group.',
 
                 'admin_role_permission_codes' => 'Permission codes for the shop administrator member group.',
+
+                'process_orders_permission_code' => 'Permission code for being allowed to process orders.
+                    This code is separate from admins and assistants to make it easier to apply separate codes to groups.',
+            ],
+
+
+            EcommerceRoleAssistant::class => [
+
 
                 'assistant_group_code' => 'Code for the shop assistant member group.',
 
@@ -561,8 +567,15 @@ class EcommerceConfigDefinitions
 
                 'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.',
 
-                'process_orders_permission_code' => 'Permission code for being allowed to process orders.
-                    This code is separate from admins and assistants to make it easier to apply separate codes to groups.',
+            ],
+
+            EcommerceRoleCustomer::class => [
+
+                'customer_group_code' => 'Code for the customer member group.',
+
+                'customer_group_name' => 'Title (name) for the customer member group.',
+
+                'customer_permission_code' => 'Permission code for the customer member group.',
             ],
 
             BillingAddress::class => [
