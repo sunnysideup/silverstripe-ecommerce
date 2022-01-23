@@ -699,7 +699,6 @@ class OrderItem extends OrderAttribute
                 $obj = $className::get_by_id($this->BuyableID);
             }
             if ($obj && ! ($obj instanceof BuyableModel)) {
-                $obj = null;
                 user_error(
                     'Tried to create: ' . $className . ' in OrderItem ' . $this->ID .
                     ' with BuyableClassName' . $this->BuyableClassName . ' AND ' .
@@ -707,6 +706,7 @@ class OrderItem extends OrderAttribute
                     ClassName = ' . $obj->ClassName . ' and ID ' . $obj->ID,
                     E_USER_NOTICE
                 );
+                $obj = null;
             }
             $this->tempBuyableStore[$currentOrVersion] = $obj;
         }

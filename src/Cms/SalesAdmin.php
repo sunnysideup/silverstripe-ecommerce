@@ -180,7 +180,7 @@ class SalesAdmin extends ModelAdmin
         // If not supplied, look up the ID from the request
         $id = 0;
         if (null === $id && is_numeric($this->getRequest()->param('ID'))) {
-            $id = (int) $request->param('ID');
+            $id = (int) $this->getRequest()->param('ID');
         }
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
