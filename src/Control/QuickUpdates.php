@@ -154,7 +154,7 @@ class QuickUpdates extends Controller
     /**
      * @param int $id
      *
-     * @return DropdownField|AjaxSelectField
+     * @return AjaxSelectField|DropdownField
      */
     protected function productLookupField(string $name, string $title, ?int $id = 0)
     {

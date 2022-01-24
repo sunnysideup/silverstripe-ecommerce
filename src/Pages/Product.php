@@ -48,8 +48,6 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
-
 /**
  * This is a standard Product page-type with fields like
  * Price, Weight, Model and basic management of
@@ -871,8 +869,6 @@ class Product extends Page implements BuyableModel
 
     /**
      * Is it a variation?
-     *
-     * @return bool
      */
     public function IsProductVariation(): bool
     {
@@ -881,15 +877,13 @@ class Product extends Page implements BuyableModel
 
     /**
      * tells us if the current page is part of e-commerce.
-     *
-     * @return bool
      */
-    public function IsEcommercePage() : bool
+    public function IsEcommercePage(): bool
     {
         return true;
     }
 
-    public function ProductType() : string
+    public function ProductType(): string
     {
         return $this->getProductType();
     }

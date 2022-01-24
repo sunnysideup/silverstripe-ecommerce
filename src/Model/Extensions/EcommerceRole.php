@@ -36,11 +36,9 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Order;
-
-use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
 use Sunnysideup\PermissionProvider\Interfaces\PermissionProviderFactoryProvider;
 
-use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
 /**
  * @description EcommerceRole provides specific customisations to the {@link Member}
  * class for the ecommerce module.
@@ -51,32 +49,6 @@ use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
  */
 class EcommerceRole extends DataExtension implements PermissionProvider, PermissionProviderFactoryProvider
 {
-
-    public static function permission_provider_factory_runner() : Group
-    {
-        return PermissionProviderFactory::inst()
-            ->setParentGroup(EcommerceRole::get_category())
-
-            ->setEmail(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email'))
-            ->setFirstName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name'))
-            ->setSurname(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname'))
-            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
-            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
-            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
-            ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
-            ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
-
-            ->setDescription(
-                _t(
-                    'EcommerceRole.ADMINISTRATORS_HELP',
-                    'Shop Manager - can edit everything to do with the e-commerce application.'
-                )
-            )
-            ->setSort(99)
-            ->CreateGroup($member = null)
-        ;
-    }
-
     protected static $adminMemberCache;
 
     protected static $shopAssistantMemberCache;
@@ -196,6 +168,31 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         'CustomerDetails' => 'Varchar',
     ];
 
+    public static function permission_provider_factory_runner(): Group
+    {
+        return PermissionProviderFactory::inst()
+            ->setParentGroup(EcommerceRole::get_category())
+
+            ->setEmail(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email'))
+            ->setFirstName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name'))
+            ->setSurname(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname'))
+            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
+            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
+            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
+            ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
+            ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
+
+            ->setDescription(
+                _t(
+                    'EcommerceRole.ADMINISTRATORS_HELP',
+                    'Shop Manager - can edit everything to do with the e-commerce application.'
+                )
+            )
+            ->setSort(99)
+            ->CreateGroup($member = null)
+        ;
+    }
+
     public function getCustomerDetails(): string
     {
         if ($this->getOwner()->exists()) {
@@ -222,7 +219,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         );
     }
 
-    public static function get_category() : string
+    public static function get_category(): string
     {
         return EcommerceConfig::get(EcommerceRole::class, 'permission_category');
     }

@@ -69,7 +69,7 @@ trait EcommerceProductReportTrait
             } elseif ('No' === $forSale) {
                 $forSaleFilter = 0;
             }
-            if($forSaleFilter !== null) {
+            if (null !== $forSaleFilter) {
                 $list = $list->filter(['AllowPurchase' => $forSaleFilter]);
             }
         }

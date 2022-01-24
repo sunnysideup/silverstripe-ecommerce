@@ -2343,11 +2343,8 @@ class Order extends DataObject implements EditableEcommerceObject
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
-        if(EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
-            return true;
-        }
 
-        return false;
+        return EcommerceRole::current_member_can_process_orders(Security::getCurrentUser());
     }
 
     /**

@@ -547,10 +547,7 @@ class EcommerceConfigDefinitions
                     This code is separate from admins and assistants to make it easier to apply separate codes to groups.',
             ],
 
-
             EcommerceRoleAssistant::class => [
-
-
                 'assistant_group_code' => 'Code for the shop assistant member group.',
 
                 'assistant_group_name' => 'Title (name) for the shop assistant member group.',
@@ -566,11 +563,9 @@ class EcommerceConfigDefinitions
                 'assistant_role_title' => 'Role title for the shop assistant member group.',
 
                 'assistant_role_permission_codes' => 'Permission codes for the shop assistant member group.',
-
             ],
 
             EcommerceRoleCustomer::class => [
-
                 'customer_group_code' => 'Code for the customer member group.',
 
                 'customer_group_name' => 'Title (name) for the customer member group.',
