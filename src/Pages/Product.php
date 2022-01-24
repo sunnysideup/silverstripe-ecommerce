@@ -48,6 +48,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 
+use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
+
 /**
  * This is a standard Product page-type with fields like
  * Price, Weight, Model and basic management of
@@ -389,7 +391,10 @@ class Product extends Page implements BuyableModel
             $obj = SiteTree::get_by_id((int) $obj->ParentID - 0);
             if ($obj) {
                 $parentSortArray[] = sprintf('%03d', $obj->Sort);
-                if (is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))) {
+                if (
+                    is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))
+                    && ! is_a($obj, EcommerceConfigClassNames::getName(ProductGroupSearchPage::class))
+                ) {
                     $parentTitleArray[] = $obj->Title;
                 }
             }
@@ -869,7 +874,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
-    public function IsProductVariation()
+    public function IsProductVariation(): bool
     {
         return false;
     }
@@ -879,12 +884,17 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
-    public function IsEcommercePage()
+    public function IsEcommercePage() : bool
     {
         return true;
     }
 
-    public function ProductType()
+    public function ProductType() : string
+    {
+        return $this->getProductType();
+    }
+
+    public function getProductType(): string
     {
         return $this->singular_name();
     }

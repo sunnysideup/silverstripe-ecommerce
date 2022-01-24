@@ -95,6 +95,10 @@ trait EcommerceProductReportTrait
                 'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Product Type'),
                 'link' => true,
             ],
+            'Title' => [
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
+                'link' => true,
+            ],
             'FullName' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
                 'link' => true,
