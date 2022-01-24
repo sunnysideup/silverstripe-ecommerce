@@ -533,6 +533,14 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $notesFields,
                 $loginAsField,
                 $orderForLink,
+                $fields->dataFieldByName('Notes'),
+                HeaderField::create(
+                    'ProductFilterSortPreferences',
+                    'Product Filter Sort Preferences'
+                ),
+                $fields->dataFieldByName('DefaultSortOrder'),
+                $fields->dataFieldByName('DefaultFilter'),
+                $fields->dataFieldByName('DisplayStyle'),
             ]
         );
     }
