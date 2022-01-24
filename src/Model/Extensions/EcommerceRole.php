@@ -69,7 +69,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             ->setDescription(
                 _t(
                     'EcommerceRole.ADMINISTRATORS_HELP',
-                    'Store Manager - can edit everything to do with the e-commerce application.'
+                    'Shop Manager - can edit everything to do with the e-commerce application.'
                 )
             )
             ->setSort(99)
@@ -143,7 +143,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     /**
      * @var string
      */
-    private static $admin_role_title = 'Managing Store';
+    private static $admin_role_title = 'Managing Shop';
 
     /**
      * @var array

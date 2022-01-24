@@ -69,7 +69,7 @@ class StoreAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $required_permission_codes = 'CMS_ACCESS_StoreAdmin';
+    private static $required_permission_codes = 'CMS_ACCESS_ShopAdmin';
 
     /**
      * standard SS variable.

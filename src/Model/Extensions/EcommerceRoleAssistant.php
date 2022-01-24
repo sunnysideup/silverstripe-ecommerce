@@ -89,7 +89,7 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
     /**
      * @var string
      */
-    private static $assistant_role_title = 'Store Assistant';
+    private static $assistant_role_title = 'Shop Assistant';
 
     /**
      * @var array
@@ -122,8 +122,8 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
 
             ->setDescription(
                 _t(
-                    'EcommerceRoleAssistant.STORE_ASSISTANTS_HELP',
-                    'Store Assistant - can only view sales details and makes notes about orders'
+                    'EcommerceRoleAssistant.SHOP_ASSISTANTS_HELP',
+                    'Shop Assistant - can only view sales details and makes notes about orders'
                 )
             )
             ->setSort(100)
