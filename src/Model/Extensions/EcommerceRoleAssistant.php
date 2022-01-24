@@ -95,15 +95,12 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
      * @var array
      */
     private static $assistant_role_permission_codes = [
-        'CMS_ACCESS_ProductsAndGroupsModelAdmin',
-        'CMS_ACCESS_ProductConfigModelAdmin',
         'CMS_ACCESS_SalesAdmin',
         'CMS_ACCESS_SalesAdminByOrderSize',
         'CMS_ACCESS_SalesAdminByOrderStep',
         'CMS_ACCESS_SalesAdminByDeliveryOption',
         'CMS_ACCESS_SalesSalesAdminProcess',
         'CMS_ACCESS_SalesAdminByPaymentType',
-        'CMS_ACCESS_SalesAdminExtras',
         'CMS_ACCESS_StoreAdmin'
     ];
 
