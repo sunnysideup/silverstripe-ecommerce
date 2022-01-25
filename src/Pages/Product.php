@@ -920,7 +920,7 @@ class Product extends Page implements BuyableModel
      *
      * @return float
      */
-    public function getCalculatedPrice($forceRecalculation = false)
+    public function getCalculatedPrice(?bool $forceRecalculation = false)
     {
         if (! isset(self::$_calculated_price_cache[$this->ID]) || $forceRecalculation) {
             $price = $this->Price;
@@ -952,9 +952,9 @@ class Product extends Page implements BuyableModel
         return $this->getCalculatedPriceAsMoney();
     }
 
-    public function getCalculatedPriceAsMoney()
+    public function getCalculatedPriceAsMoney(?bool $forceRecalculation = false)
     {
-        return EcommerceCurrency::get_money_object_from_order_currency($this->getCalculatedPrice());
+        return EcommerceCurrency::get_money_object_from_order_currency($this->getCalculatedPrice($forceRecalculation));
     }
 
     //CRUD SETTINGS

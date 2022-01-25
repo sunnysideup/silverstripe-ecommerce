@@ -226,16 +226,16 @@ interface BuyableModel
      */
     public function CalculatedPrice();
 
-    public function getCalculatedPrice();
+    public function getCalculatedPrice(?bool $forceRecalculation = false);
 
     /**
      * How do we display the price?
      *
      * @return \SilverStripe\ORM\FieldType\DBMoney
      */
-    public function CalculatedPriceAsMoney();
+    public function CalculatedPriceAsMoney(?bool $forceRecalculation = false);
 
-    public function getCalculatedPriceAsMoney();
+    public function getCalculatedPriceAsMoney(?bool $forceRecalculation = false);
 
     //CRUD SETTINGS
 
