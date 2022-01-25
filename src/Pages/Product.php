@@ -947,9 +947,9 @@ class Product extends Page implements BuyableModel
      *
      * @return \SilverStripe\ORM\FieldType\DBMoney
      */
-    public function CalculatedPriceAsMoney()
+    public function CalculatedPriceAsMoney(?bool $forceRecalculation = false)
     {
-        return $this->getCalculatedPriceAsMoney();
+        return $this->getCalculatedPriceAsMoney($forceRecalculation);
     }
 
     public function getCalculatedPriceAsMoney(?bool $forceRecalculation = false)
