@@ -93,6 +93,7 @@ class Product extends Page implements BuyableModel
         'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
+        'ProductBreadcrump' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
     ];
 
@@ -121,7 +122,7 @@ class Product extends Page implements BuyableModel
 
     private static $indexes = [
         'FullSiteTreeSort' => true,
-        'FullName' => true,
+        'ProductBreadcrump' => true,
         'InternalItemID' => true,
         'AllowPurchase' => true,
         'Price' => true,
@@ -155,7 +156,7 @@ class Product extends Page implements BuyableModel
             'field' => ProductGroupDropdown::class,
             'filter' => 'ExactMatchFilter',
         ],
-        'FullName' => [
+        'Title' => [
             'title' => 'Keyword',
             'field' => TextField::class,
             'filter' => 'PartialMatchFilter',
@@ -220,7 +221,8 @@ class Product extends Page implements BuyableModel
     {
         return [
             'Image.CMSThumbnail' => 'Image',
-            'FullName' => 'Description',
+            'InternalItemID' => 'Code',
+            'ProductBreadcrump' => 'Breadcrump',
             'Price.Nice' => 'Price',
             'AllowPurchaseNice' => 'For Sale',
         ];
@@ -284,6 +286,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
+        $fields->addFieldToTab('Root.Details', new ReadonlyField('ProductBreadcrump', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrump')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
@@ -398,12 +401,13 @@ class Product extends Page implements BuyableModel
             }
         }
         $reverseArray = array_reverse($parentSortArray);
-        $parentTitle = '';
+        $parentsTitle = '';
         if (count($parentTitleArray)) {
-            $parentTitle = ' (' . _t('product.IN', 'in') . ' ' . implode(' / ', $parentTitleArray) . ')';
+            $parentsTitle =  implode(' / ', $parentTitleArray) ;
         }
         //setting fields with new values!
-        $this->FullName = $fullName . $parentTitle;
+        $this->FullName = $fullName . ' (' . _t('product.IN', 'in') . ' ' . $parentsTitle . ')';
+        $this->ProductBreadcrump = $parentsTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
     }
 
@@ -1181,10 +1185,9 @@ class Product extends Page implements BuyableModel
         return [
             $this->InternalItemID,
             $this->Title,
-            $this->FullName,
+            $this->ProductBreadcrump,
             $this->ShortDescription,
-            $this->Content,
-            $this->FullName,
+            $this->Content
         ];
     }
 

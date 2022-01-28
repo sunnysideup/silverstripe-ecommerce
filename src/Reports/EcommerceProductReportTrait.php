@@ -57,7 +57,7 @@ trait EcommerceProductReportTrait
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
-        $minPrice = (float) ($params['MinimumPrice'] ?? 0);
+        $minPrice = (float) preg_replace('/[^0-9.\-]/', '', ($params['MinimumPrice'] ?? 0));
         if ($minPrice) {
             $list = $list->filter(['Price:GreaterThan' => $minPrice]);
         }
@@ -77,6 +77,10 @@ trait EcommerceProductReportTrait
         if ($changedInTheLastXDays) {
             $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
         }
+        $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
+        if ($createdInTheLastXDays) {
+            $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
+        }
 
         return $list;
     }
@@ -88,19 +92,19 @@ trait EcommerceProductReportTrait
     {
         return [
             'InternalItemID' => [
-                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Product Code'),
+                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Code'),
                 'link' => true,
             ],
             'ProductType' => [
-                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Product Type'),
+                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Type'),
                 'link' => true,
             ],
             'Title' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
+                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Title'),
                 'link' => true,
             ],
-            'FullName' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Item'),
+            'ProductBreadcrumb' => [
+                'title' => _t('EcommerceSideReport.BREADCRUMB', 'Breadcrumb'),
                 'link' => true,
             ],
         ];
@@ -112,7 +116,7 @@ trait EcommerceProductReportTrait
 
         $params->push(
             CurrencyField::create(
-                'MinimumNPrice',
+                'MinimumPrice',
                 'Minimum Price',
                 0
             )
@@ -133,6 +137,13 @@ trait EcommerceProductReportTrait
             NumericField::create(
                 'ChangedInTheLastXDays',
                 'Changed less than ... days ago?',
+                ''
+            )
+        );
+        $params->push(
+            NumericField::create(
+                'CreatedInTheLastXDays',
+                'Created less than ... days ago?',
                 ''
             )
         );
