@@ -5,7 +5,15 @@ namespace Sunnysideup\Ecommerce\Reports;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\NumericField;
+
+use SilverStripe\Core\ClassInfo;
+
+use SilverStripe\Core\Injector\Injector;
+
+use Sunnysideup\Ecommerce\Pages\Product;
 
 trait EcommerceProductReportTrait
 {
@@ -36,7 +44,10 @@ trait EcommerceProductReportTrait
      */
     public function sourceRecords($params = null)
     {
-        $className = $this->dataClass;
+        $className = ($params['ProductType'] ?? '');
+        if(! $className) {
+            $className = $this->dataClass;
+        }
         $list = $className::get();
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
@@ -81,6 +92,10 @@ trait EcommerceProductReportTrait
         if ($createdInTheLastXDays) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
+        $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
+        if ($createdInTheLastXDays) {
+            $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
+        }
 
         return $list;
     }
@@ -99,12 +114,16 @@ trait EcommerceProductReportTrait
                 'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Type'),
                 'link' => true,
             ],
+            'ProductBreadcrumb' => [
+                'title' => _t('EcommerceSideReport.BREADCRUMB', 'Breadcrumb'),
+                'link' => true,
+            ],
             'Title' => [
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Title'),
                 'link' => true,
             ],
-            'ProductBreadcrumb' => [
-                'title' => _t('EcommerceSideReport.BREADCRUMB', 'Breadcrumb'),
+            'Price' => [
+                'title' => _t('EcommerceSideReport.PRICE', 'Price'),
                 'link' => true,
             ],
         ];
@@ -112,43 +131,64 @@ trait EcommerceProductReportTrait
 
     public function parameterFields()
     {
-        $params = FieldList::create();
+        $fields = FieldList::create();
+        $productTypes = $this->getProductTypes();
+        $fields->push(
+            FieldGroup::create(
+                'Optional Filters',
+                CurrencyField::create(
+                    'MinimumPrice',
+                    'Minimum Price',
+                    0
+                ),
+                DropdownField::create(
+                    'ForSale',
+                    'For Sale',
+                    [
+                        'Yes' => 'Yes',
+                        'No' => 'No',
+                    ]
+                )
+                    ->setEmptyString('-- Any --'),
+                NumericField::create(
+                    'ChangedInTheLastXDays',
+                    'Changed less than ... days ago?',
+                    ''
+                ),
+                NumericField::create(
+                    'CreatedInTheLastXDays',
+                    'Created less than ... days ago?',
+                    ''
+                ),
+                DropdownField::create(
+                    'ProductType',
+                    'Product Type',
+                    $productTypes
 
-        $params->push(
-            CurrencyField::create(
-                'MinimumPrice',
-                'Minimum Price',
-                0
+                )
             )
         );
-        $params->push(
-            DropdownField::create(
-                'ForSale',
-                'For Sale',
-                [
-                    'Yes' => 'Yes',
-                    'No' => 'No',
-                ]
-            )
-                ->setEmptyString('--- Any ---')
+        $fields->recursiveWalk(
+            function(FormField $field) {
+                if(strpos($field->getName(), 'filter[') !== 0) {
+                    $field->setName(sprintf('filters[%s]', $field->getName()));
+                }
+                $field->addExtraClass('no-change-track'); // ignore in changetracker
+            }
         );
 
-        $params->push(
-            NumericField::create(
-                'ChangedInTheLastXDays',
-                'Changed less than ... days ago?',
-                ''
-            )
-        );
-        $params->push(
-            NumericField::create(
-                'CreatedInTheLastXDays',
-                'Created less than ... days ago?',
-                ''
-            )
-        );
+        return $fields;
 
-        return $params;
+    }
+
+    protected function getProductTypes()
+    {
+        $list = ClassInfo::subClassesFor(Product::class, true);
+        $newArray = [];
+        foreach($list as $className) {
+            $newArray[$className] = $className === Product::class ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
+        }
+        return $newArray;
     }
 
     // public function getReportField()
