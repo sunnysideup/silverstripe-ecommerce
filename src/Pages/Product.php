@@ -949,12 +949,12 @@ class Product extends Page implements BuyableModel
         $cacheKey = '';
         $price = null;
         if($this->AllowPriceCaching()) {
-            $cacheKey = 'PPC'.$this->ID;
+            $cacheKey = 'ppc_'.$this->ID;
             if(EcommerceCache::inst()->hasCache($cacheKey)) {
-                $price = EcommerceCache::inst()->retrieve($cacheKey, true);
+                $price = (float) EcommerceCache::inst()->retrieve($cacheKey, true);
             }
         }
-        if($price !== null) {
+        if($price === null) {
             $price = $this->Price;
             $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {

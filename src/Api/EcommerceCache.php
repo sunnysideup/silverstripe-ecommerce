@@ -139,7 +139,7 @@ class EcommerceCache implements Flushable
 
     public function AllowCaching(): bool
     {
-        return ! isset($_GET['no-cache']);
+        return empty($_GET['no-cache']);
     }
 
     public function clear()
