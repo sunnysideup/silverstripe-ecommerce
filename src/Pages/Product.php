@@ -949,7 +949,7 @@ class Product extends Page implements BuyableModel
         $cacheKey = '';
         $price = null;
         if($this->AllowPriceCaching()) {
-            $cacheKey = 'ProductPrice'.$this->ID;
+            $cacheKey = 'PPC'.$this->ID;
             if(EcommerceCache::inst()->hasCache($cacheKey)) {
                 $price = EcommerceCache::inst()->retrieve($cacheKey, true);
             }
