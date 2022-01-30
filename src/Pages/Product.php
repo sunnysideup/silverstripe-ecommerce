@@ -947,29 +947,33 @@ class Product extends Page implements BuyableModel
     public function getCalculatedPrice(?bool $forceRecalculation = false)
     {
         $cacheKey = '';
+        $price = null;
         if($this->AllowPriceCaching()) {
             $cacheKey = 'ProductPrice'.$this->ID;
-            $price = EcommerceCache::inst()->retrieve($cacheKey);
+            if(EcommerceCache::inst()->hasCache($cacheKey)) {
+                $price = EcommerceCache::inst()->retrieve($cacheKey, true);
+            }
         }
-        $price = $this->Price;
-        $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
-        if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-            $price = $updatedPrice[0];
-        }
+        if($price !== null) {
+            $price = $this->Price;
+            $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
 
-        $updatedPrice = $this->extend('updateCalculatedPrice', $price);
-        if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-            $price = $updatedPrice[0];
-        }
+            $updatedPrice = $this->extend('updateCalculatedPrice', $price);
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
 
-        $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
-        if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-            $price = $updatedPrice[0];
+            $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
+            if ($cacheKey) {
+                EcommerceCache::inst()->save($cacheKey, $price, true);
+            }
         }
-        if ($cacheKey) {
-            EcommerceCache::inst()->save($cacheKey, $price);
-        }
-
         return $price;
     }
 
