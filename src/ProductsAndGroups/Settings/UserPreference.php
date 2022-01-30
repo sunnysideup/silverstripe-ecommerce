@@ -250,10 +250,12 @@ class UserPreference
             } else {
                 $newPreference = $this->userPreferences[$type];
             }
+
             $this->userPreferences[$type] = $newPreference;
             //save preference to session
             $this->savePreferenceToSession($type, $newPreference);
         }
+
         // there is always a sort ...
         if (! $this->userPreferences['SORT']) {
             $this->userPreferences['SORT'] = $this->rootGroup->getListConfigCalculated('SORT');
@@ -269,9 +271,9 @@ class UserPreference
      *
      * @param string $type - FILTER | SORT | DISPLAY
      *
-     * @return string
+     * @return array
      */
-    public function getCurrentUserPreferences(?string $type = '')
+    public function getCurrentUserPreferences(?string $type = '') : array
     {
         if (! $type) {
             $types = array_keys($this->getProductGroupSchema()->getData());
@@ -282,18 +284,22 @@ class UserPreference
 
             return $arrayValues;
         }
+
         $key = '';
         if ($this->getUseSession($type)) {
             $sessionName = $this->rootGroupController->getSortFilterDisplayValues($type, 'sessionName');
             if ($this->getUseSessionPerPage($type)) {
                 $sessionName .= '_' . $this->rootGroup->ID;
             }
+
             $sessionValue = $this->request->getSession()->get('ProductGroup_' . $sessionName);
             $key = Convert::raw2sql($sessionValue);
         }
+
         if (! $key) {
             $key = $this->userPreferences[$type] ?? '';
         }
+
         if (! $key) {
             $key = $this->rootGroup->getListConfigCalculated($type);
         }
@@ -335,6 +341,7 @@ class UserPreference
         if ($withPageNumber) {
             $pageStart = $this->rootGroupController->getCurrentPageNumber();
         }
+
         $pageId = $this->rootGroup->ID;
         if (! $pageId) {
             user_error('Must have page ID');
@@ -385,10 +392,12 @@ class UserPreference
                     } elseif ((int) $count === (int) EcommerceConfig::get(ProductGroupSearchPage::class, 'maximum_number_of_products_to_list_for_search')) {
                         $count = _t('ProductGroup.BEST', 'Best');
                     }
+
                     $toAdd = $count . ' ' . $productString;
                 } else {
                     $toAdd = 'No ' . $productString;
                 }
+
                 $secondaryTitle .= $this->addToTitle($toAdd);
             }
 
@@ -410,7 +419,7 @@ class UserPreference
 
             $currentPageNumber = $this->rootGroupController->getCurrentPageNumber();
             if ($currentPageNumber > 1) {
-                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', 'Page') . ' ' . $currentPageNumber);
+                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', \Page::class) . ' ' . $currentPageNumber);
             }
 
             if ($secondaryTitle) {
@@ -427,16 +436,19 @@ class UserPreference
         }
     }
 
-    public function standardiseCurrentUserPreferences(string $type, $keyOrArray)
+    public function standardiseCurrentUserPreferences(string $type, $keyOrArray) : array
     {
         if (is_array($keyOrArray)) {
             if (null === $keyOrArray['params']) {
                 $keyOrArray['params'] = [];
             }
+
             if (isset($keyOrArray['key'], $keyOrArray['params'], $keyOrArray['title'])) {
                 return $keyOrArray;
             }
+
             user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
+            return $keyOrArray;
         } else {
             return [
                 'key' => $keyOrArray,
@@ -479,6 +491,7 @@ class UserPreference
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesParams($type);
             }
+
             $isCurrent = ! (bool) $currentKey;
             $obj = new ArrayData(
                 [
@@ -515,6 +528,7 @@ class UserPreference
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesKey($type);
             }
+
             foreach ($options as $key => $data) {
                 $isCurrent = $currentKey === $key;
                 $obj = new ArrayData(
@@ -557,6 +571,7 @@ class UserPreference
                     //keep current value
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
+
                 if ($hideCurrentValue && $type && $myType === $type) {
                 } elseif (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
                     $getVars[$values['getVariable']] = $value;
@@ -566,10 +581,12 @@ class UserPreference
                         if (is_array($params)) {
                             $params = implode(',', $params);
                         }
+
                         $getVars[$values['getVariable']] = $params;
                     }
                 }
             }
+
             self::$linkTemplateCache[$cacheKey] = count($getVars) ? $base . '?' . http_build_query($getVars) : $base;
         }
 
@@ -597,6 +614,7 @@ class UserPreference
                 ],
             ];
         }
+
         if ($array) {
             $this->saveUserPreferences($array);
         }
@@ -650,6 +668,7 @@ class UserPreference
             if ($this->getUseSessionPerPage($type)) {
                 $sessionName .= '_' . $this->rootGroup->ID;
             }
+
             $this->getSession()->set('ProductGroup_' . $sessionName, $newPreference);
         }
     }

@@ -143,7 +143,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $casting = [
         'UseThisOneNice' => 'Varchar',
-    ]; //adds computed fields that can also have a type (e.g.
+    ];
+     //adds computed fields that can also have a type (e.g.
 
     /**
      * Standard SS Variable.
@@ -168,7 +169,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $summary_fields = [
         'Title' => 'Title',
-    ]; //note no => for relational fields
+    ];
+     //note no => for relational fields
 
     /**
      * Standard SS variable.
@@ -244,17 +246,19 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (EcommerceDBConfig::get()->exists()) {
             return false;
         }
@@ -268,13 +272,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -289,17 +294,19 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -312,20 +319,23 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @param \SilverStripe\Security\Member $member
      *
-     * @var bool
+     * @return bool
      */
     public function canDelete($member = null)
     {
         if ($this->UseThisOne) {
             return false;
         }
+
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -336,7 +346,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @var array
+     * @return array
      */
     public function populateDefaults()
     {
@@ -374,6 +384,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             if (! class_exists($className)) {
                 $className = EcommerceDBConfig::class;
             }
+
             self::$_my_current_one = DataObject::get_one(
                 $className,
                 ['UseThisOne' => 1],
@@ -634,6 +645,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $field->setDescription($fieldDescriptions[$field->Name]);
             }
         }
+
         Requirements::block('sunnysideup/ecommerce: client/javascript/EcomPrintAndMail.js');
 
         return $fields;
@@ -793,6 +805,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         $obj = Image::create();
         $obj->Link = $this->DefaultImageLink();
         $obj->URL = $this->DefaultImageLink();
@@ -810,6 +823,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $obj = self::create();
             $obj->write();
         }
+
         DB::alteration_message(
             '
             <hr /><hr /><hr /><hr /><hr />
@@ -867,6 +881,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         } else {
             $value = $this->{$fieldNameOrMethod} ?? null;
         }
+
         if (! $value) {
             $value = $default;
         }
@@ -891,6 +906,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         $configs = EcommerceDBConfig::get()
             ->Filter(['Title' => $this->Title])
             ->Exclude(['ID' => $this->ID])

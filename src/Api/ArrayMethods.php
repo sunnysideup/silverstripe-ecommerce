@@ -31,7 +31,8 @@ class ArrayMethods
         if (! is_array($array)) {
             $array = [];
         }
-        if (0 === count($array)) {
+
+        if ([] === $array) {
             $array = [0 => 0];
         }
 
@@ -55,6 +56,7 @@ class ArrayMethods
             $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
+
         if ($includeElse) {
             $ifStatement .= ' ELSE 999999999 ';
         }

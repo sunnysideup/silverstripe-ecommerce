@@ -122,7 +122,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         'InUseNice' => 'Available',
         'IsDefaultNice' => 'Default Currency',
         'ExchangeRate' => 'Exchange Rate',
-    ]; //note no => for relational fields
+    ];
+     //note no => for relational fields
 
     /**
      * standard SS variable.
@@ -265,17 +266,19 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -289,17 +292,19 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -313,17 +318,19 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -344,10 +351,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             if (! $member) {
                 $member = Security::getCurrentUser();
             }
+
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if (null !== $extended) {
                 return $extended;
             }
+
             if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
                 return true;
             }
@@ -407,9 +416,11 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if ($price instanceof DBCurrency) {
             $price = $price->getValue();
         }
+
         if (! $order) {
             $order = ShoppingCart::current_order();
         }
+
         $currencyCode = '';
         if (Config::inst()->get('show_currency_at_all')) {
             $currency = $order->CurrencyUsed();
@@ -464,9 +475,11 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if ($obj) {
             $code = $obj->Code;
         }
+
         if (! $code) {
             $code = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         }
+
         if (! $code) {
             $code = 'NZD';
         }
@@ -521,6 +534,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRate', $fieldLabels['ExchangeRate'], $this->ExchangeRate()));
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRateExplanation', $fieldLabels['ExchangeRateExplanation'], $this->ExchangeRateExplanation()));
         }
+
         $fields->addFieldsToTab('Root.Main', [
             new HeaderField('Symbols', 'Symbols'),
             new ReadonlyField('DefaultSymbol', 'Default'),
@@ -715,6 +729,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if ($this->IsDefault()) {
             $linkingMode .= ' default';
         }
+
         if ($this->IsCurrent()) {
             $linkingMode .= ' current';
         } else {
@@ -731,9 +746,11 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if (! $this->Code || 3 !== mb_strlen($this->Code)) {
             $errors[] = 'The code must be 3 characters long.';
         }
+
         if (! $this->Name) {
             $errors[] = 'The name is required.';
         }
+
         if (! count($errors)) {
             $this->Code = strtoupper($this->Code);
             // Check that there are no 2 same code currencies in use
@@ -748,6 +765,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         foreach ($errors as $error) {
             $result->addError($error);
         }
@@ -791,6 +809,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
             $name = isset($currencies[$code]) ? $currencies[$code] : $code;
         }
+
         $name = ucwords($name);
         $currency = DataObject::get_one(
             EcommerceCurrency::class,
@@ -809,6 +828,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
+
         $valid = $currency->write();
         if ($valid) {
             return $currency;

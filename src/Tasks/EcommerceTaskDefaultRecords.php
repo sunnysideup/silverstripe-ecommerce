@@ -57,6 +57,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         } else {
             DB::alteration_message('No need to create an account page, it already exists.');
         }
+
         //CHECKOUT PAGE
 
         //CHECKOUT PAGE
@@ -77,10 +78,11 @@ class EcommerceTaskDefaultRecords extends BuildTask
         } else {
             DB::alteration_message('No need to create an checkout page, it already exists.');
         }
+
         if ($checkoutPage) {
             $cacheDataObjectGetOne = false;
             $termsPage = DataObject::get_one(
-                'Page',
+                \Page::class,
                 ['URLSegment' => 'terms-and-conditions'],
                 $cacheDataObjectGetOne
             );
@@ -90,6 +92,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             } else {
                 DB::alteration_message('No terms and conditions page linked.');
             }
+
             $checkoutPage->writeToStage('Stage');
             $checkoutPage->publish('Stage', 'Live');
             DB::alteration_message('Checkout page saved');
@@ -120,12 +123,15 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 if (! $ecommerceConfig->ReceiptEmail) {
                     user_error("you must set an Admin Email ... Config::modify()->update('Email', 'admin_email', 'foo@bar.nz') ... ", E_USER_NOTICE);
                 }
+
                 $update[] = 'created default entry for ReceiptEmail';
             }
+
             if (! $ecommerceConfig->NumberOfProductsPerPage) {
                 $ecommerceConfig->NumberOfProductsPerPage = 12;
                 $update[] = 'created default entry for NumberOfProductsPerPage';
             }
+
             if (count($update)) {
                 $ecommerceConfig->write();
                 DB::alteration_message($ecommerceConfig->ClassName . ' created/updated: ' . implode(' --- ', $update), 'created');

@@ -338,8 +338,10 @@ class OrderModifier extends OrderAttribute
             if ($this->mustUpdate && $this->canBeUpdated()) {
                 $this->write();
             }
+
             $this->runningTotal += $this->CalculatedTotal;
         }
+
         parent::runUpdate($recalculate);
     }
 
@@ -734,10 +736,12 @@ class OrderModifier extends OrderAttribute
         if (is_array($function)) {
             list($function, $format) = $function;
         }
+
         $total = $this->{$function}();
         if (isset($format)) {
             $total = $total->{$format}();
         }
+
         $ajaxObject = $this->AJAXDefinitions();
         //TableValue is a database value
         // $tableValue = DBField::create_field('Currency', $this->TableValue)->Nice();
@@ -862,7 +866,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if (null === $this->orderModifier_Descriptor) {
+        if (!$this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]

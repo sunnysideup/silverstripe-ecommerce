@@ -490,11 +490,13 @@ class Order extends DataObject implements EditableEcommerceObject
 
             return $order;
         }
+
         if ($orderId) {
             $order = self::$order_cache[$orderId] ?? null;
             if ($order && $order->exists()) {
                 return $order;
             }
+
             $order = Order::get_by_id($orderId);
             self::set_order_cached($order);
 
@@ -561,6 +563,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             self::$_modifier_form_cache = $arrayList;
         }
 
@@ -618,6 +621,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $list = $list->filter(['StatusID:greaterThan' => 0]);
         }
+
         if (! $includeCancelledOrders) {
             $list = $list->filter(['CancelledByID' => 0]);
         }
@@ -662,6 +666,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $statusOptions = OrderStep::get();
         }
+
         if ($statusOptions->exists()) {
             $preSelected = [];
             // $createdOrderStatus = $statusOptions->First();
@@ -672,6 +677,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     if (isset($_GET['q']['StatusID'][$key])) {
                         $preSelected[$key] = $key;
                     }
+
                     $count = Order::get()
                         ->Filter(['StatusID' => (int) $key])
                         ->count()
@@ -683,6 +689,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             $statusField = new CheckboxSetField(
                 'StatusID',
                 Injector::inst()->get(OrderStep::class)->i18n_singular_name(),
@@ -691,6 +698,7 @@ class Order extends DataObject implements EditableEcommerceObject
             );
             $fieldList->push($statusField);
         }
+
         $fieldList->push(new DropdownField('CancelledByID', 'Cancelled', [-1 => '(Any)', 1 => 'yes', 0 => 'no']));
 
         //allow changes
@@ -784,6 +792,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->StatusID = $firstStep->ID;
             $this->write();
         }
+
         $submitted = $this->IsSubmitted();
         if ($submitted) {
             //TODO
@@ -802,10 +811,12 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->calculateOrderAttributes(true);
             Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
         }
+
         $this->fieldsAndTabsToBeRemoved[] = $submitted ? 'CustomerOrderNote' : 'Emails';
         foreach ($this->fieldsAndTabsToBeRemoved as $field) {
             $fields->removeByName($field);
         }
+
         $summaryFields = [];
         // 'OrderItemsSummaryNice' => 'Order Items',
         // 'Status.Title' => 'Next Step',
@@ -866,6 +877,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 } else {
                     $myQueueObjectField = LiteralField::create('MyQueueObjectField', '<p>' . _t('Order.NOT_QUEUED', 'This order is not queued for future processing.') . '</p>');
                 }
+
                 $nextFieldArray = array_merge(
                     $nextFieldArray,
                     [
@@ -913,6 +925,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 );
             }
         }
+
         $fields->addFieldsToTab(
             'Root.Next',
             $nextFieldArray
@@ -1004,6 +1017,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $fields->addFieldToTab('Root.Payments', new HeaderField('MakeAdditionalPaymentHeader', $header, 3));
                 $fields->addFieldToTab('Root.Payments', new LiteralField('MakeAdditionalPayment', $linkHTML));
             }
+
             //member
             $member = $this->Member();
             if ($member && $member->exists()) {
@@ -1014,6 +1028,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     '<p>' . _t('Order.NO_ACCOUNT', 'There is no --- account --- associated with this order') . '</p>'
                 ));
             }
+
             if ($this->getFeedbackLink()) {
                 $fields->addFieldToTab(
                     'Root.Account',
@@ -1025,18 +1040,21 @@ class Order extends DataObject implements EditableEcommerceObject
                     )
                 );
             }
+
             $cancelledField = $fields->dataFieldByName('CancelledByID');
             $fields->removeByName('CancelledByID');
             $shopAdminAndCurrentCustomerArray = EcommerceRole::list_of_admins(true);
             if ($member && $member->exists()) {
                 $shopAdminAndCurrentCustomerArray[$member->ID] = $member->getName();
             }
+
             if ($this->CancelledByID) {
                 $cancellingMember = $this->CancelledBy();
                 if ($cancellingMember && $cancellingMember->exists()) {
                     $shopAdminAndCurrentCustomerArray[$this->CancelledByID] = $cancellingMember->getName();
                 }
             }
+
             if ($this->canCancel()) {
                 $fields->addFieldsToTab(
                     'Root.Cancellations',
@@ -1059,6 +1077,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     )
                 );
             }
+
             $fields->addFieldToTab('Root.Log', $this->getOrderStatusLogsTableField_Archived());
             $submissionLog = $this->SubmissionLog();
             if ($submissionLog) {
@@ -1095,10 +1114,12 @@ class Order extends DataObject implements EditableEcommerceObject
                 $currentMemberID = $currentMember->ID;
                 $specialOptionsArray[$currentMemberID] = _t('Order.ASSIGNTHISORDERTOME', '- Assign this order to me: ') . $currentMember->getTitle();
             }
+
             //MEMBER FIELD!!!!!!!
             $memberArray = $specialOptionsArray + EcommerceRole::list_of_customers(true);
             $fields->addFieldToTab('Root.Next', new DropdownField('MemberID', _t('Order.SELECTCUSTOMER', 'Select Customer'), $memberArray), 'CustomerOrderNote');
         }
+
         $fields->addFieldToTab('Root.Addresses', new HeaderField('BillingAddressHeader', _t('Order.BILLINGADDRESS', 'Billing Address')));
 
         $fields->addFieldToTab('Root.Addresses', $this->getBillingAddressField());
@@ -1110,6 +1131,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $fields->addFieldToTab('Root.Addresses', $this->getShippingAddressField());
             }
         }
+
         $currencies = EcommerceCurrency::get_list();
         if ($currencies->exists()) {
             $currencies = $currencies->map()->toArray();
@@ -1133,6 +1155,7 @@ class Order extends DataObject implements EditableEcommerceObject
             );
             $fields->replaceField('CurrencyUsedID', $fields->dataFieldByName('CurrencyUsedID')->performReadonlyTransformation());
         }
+
         $fields->addFieldsToTab(
             'Root.Log',
             [
@@ -1248,8 +1271,10 @@ class Order extends DataObject implements EditableEcommerceObject
                 if (! $createdOrderStatus) {
                     user_error('No ordersteps have been created', E_USER_WARNING);
                 }
+
                 $this->StatusID = $createdOrderStatus->ID;
             }
+
             $createdModifiersClassNames = [];
             $modifiersAsArrayList = new ArrayList();
             $modifiers = $this->modifiersFromDatabase($includingRemoved = true);
@@ -1258,13 +1283,15 @@ class Order extends DataObject implements EditableEcommerceObject
                     $modifiersAsArrayList->push($modifier);
                 }
             }
+
             if ($modifiersAsArrayList->exists()) {
                 foreach ($modifiersAsArrayList as $modifier) {
                     $createdModifiersClassNames[$modifier->ID] = $modifier->ClassName;
                 }
             }
+
             $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
-            if (is_array($modifiersToAdd) && count($modifiersToAdd) > 0) {
+            if (is_array($modifiersToAdd) && $modifiersToAdd !== []) {
                 foreach ($modifiersToAdd as $numericKey => $className) {
                     if (! in_array($className, $createdModifiersClassNames, true)) {
                         if (class_exists($className)) {
@@ -1287,6 +1314,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             $this->extend('onInit', $this);
             //careful - this will call "onAfterWrite" again
             $this->write();
@@ -1327,6 +1355,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     return;
                 }
             }
+
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
             $this->_isSubmittedTempVar = -1;
@@ -1346,6 +1375,7 @@ class Order extends DataObject implements EditableEcommerceObject
                                 $delay = 0;
                             }
                         }
+
                         $queueObjectSingleton->AddOrderToQueue(
                             $this,
                             $delay
@@ -1357,6 +1387,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             self::$_try_to_finalise_order_is_running[$this->ID] = false;
         }
     }
@@ -1400,6 +1431,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $member = EcommerceRole::get_default_shop_admin_user();
         }
+
         if ($member) {
             //archive and write
             $this->Archive($avoidWrites = true);
@@ -1409,6 +1441,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $this->CancelledByID = $member->ID;
                 $this->write();
             }
+
             //create log ...
             $log = OrderStatusLogCancel::create();
             $log->AuthorID = $member->ID;
@@ -1417,6 +1450,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($member->IsShopAdmin()) {
                 $log->InternalUseOnly = true;
             }
+
             $log->write();
             //remove from queue ...
             $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
@@ -1449,6 +1483,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return true;
             }
+
             $this->StatusID = $lastOrderStep->ID;
             $this->write();
 
@@ -1471,6 +1506,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->StatusID) {
             $step = OrderStep::get_by_id($this->StatusID);
         }
+
         if (! $step) {
             $step = DataObject::get_one(
                 OrderStep::class,
@@ -1478,9 +1514,11 @@ class Order extends DataObject implements EditableEcommerceObject
                 $cacheDataObjectGetOne = false
             );
         }
+
         if (! $step) {
             $step = OrderStepCreated::create();
         }
+
         if (! $step) {
             user_error('You need an order step in your Database.');
         }
@@ -1745,6 +1783,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             return $this->Member();
         }
+
         if ($this->MemberID) {
             $member = $this->Member();
         } else {
@@ -1756,12 +1795,15 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         if (! ($member && $member->exists())) {
             $member = $this->Member();
         }
+
         if (! ($member && $member->exists())) {
             $member = new Member();
         }
+
         if ($member && $forceCreation) {
             $member->write();
         }
@@ -1785,15 +1827,18 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($alternativeMethodName) {
                 $methodName = $alternativeMethodName;
             }
+
             if ($this->IsSubmitted()) {
                 return $this->{$methodName}();
             }
+
             $variableName = Config::inst()->get($className, 'table_name') . 'ID';
             $fieldName = Config::inst()->get($className, 'table_name') . 'ID';
             $address = null;
             if ($this->{$variableName}) {
                 $address = $this->{$methodName}();
             }
+
             if (! $address) {
                 $address = new $className();
                 $member = $this->CreateOrReturnExistingMember();
@@ -1801,14 +1846,17 @@ class Order extends DataObject implements EditableEcommerceObject
                     $address->FillWithLastAddressFromMember($member, $write = false);
                 }
             }
+
             if ($address) {
                 if (! $address->exists()) {
                     $address->write();
                 }
+
                 if ($address->OrderID !== $this->ID) {
                     $address->OrderID = $this->ID;
                     $address->write();
                 }
+
                 if ($this->{$variableName} !== $address->ID) {
                     if (! $this->IsSubmitted()) {
                         $this->{$variableName} = $address->ID;
@@ -1839,6 +1887,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     $billingAddress->SetCountryFields($countryCode);
                 }
             }
+
             if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
                 if ($includeShippingAddress) {
                     $shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class);
@@ -1864,6 +1913,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($billingAddress && $billingAddress->exists()) {
                 $billingAddress->SetRegionFields($regionID);
             }
+
             if ($this->CanHaveShippingAddress()) {
                 $shippingAddress = $this->CreateOrReturnExistingAddress(ShippingAddress::class);
                 if ($shippingAddress && $shippingAddress->exists()) {
@@ -1887,6 +1937,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if (! is_a($newCurrency, EcommerceConfigClassNames::getName(EcommerceCurrency::class))) {
                 $newCurrency = EcommerceCurrency::default_currency();
             }
+
             $this->CurrencyUsedID = $newCurrency->ID;
             //getExchangeRate no longer works
             $this->ExchangeRate = $newCurrency->getExchangeRate();
@@ -1997,9 +2048,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! is_array($types) && is_string($types)) {
             $types = [$types];
         }
+
         if (! is_array($types)) {
             user_error('wrong parameter (types) provided in Order::getOrderAttributesByTypes');
         }
+
         $al = new ArrayList();
         $items = $this->Items();
         foreach ($items as $item) {
@@ -2007,6 +2060,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $al->push($item);
             }
         }
+
         $modifiers = $this->Modifiers();
         foreach ($modifiers as $modifier) {
             if (in_array($modifier->OrderAttributeType(), $types, true)) {
@@ -2137,16 +2191,20 @@ class Order extends DataObject implements EditableEcommerceObject
                         if ($stopAtExcludedModifier) {
                             break;
                         }
+
                         //do the next modifier
                         continue;
                     }
+
                     if (is_string($excluded) && ($modifier->ClassName === $excluded)) {
                         if ($stopAtExcludedModifier) {
                             break;
                         }
+
                         //do the next modifier
                         continue;
                     }
+
                     $total += $modifier->CalculationTotal();
                 }
             }
@@ -2190,6 +2248,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
+
         if ($member->exists()) {
             return $member->IsShopAdmin();
         }
@@ -2209,12 +2268,14 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! $this->exists()) {
             return true;
         }
+
         $member = $this->getMemberForCanFunctions($member);
         //check if this has been "altered" in any DataExtension
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         //is the member is a shop admin they can always view it
         if (EcommerceRole::current_member_is_shop_admin($member)) {
             return true;
@@ -2224,10 +2285,12 @@ class Order extends DataObject implements EditableEcommerceObject
         if (EcommerceRole::current_member_is_shop_assistant($member)) {
             return true;
         }
+
         //if the current member OWNS the order, (s)he can always view it.
         if ($member->exists() && $this->MemberID === $member->ID) {
             return true;
         }
+
         //it is the current order
         if ($this->IsInSession()) {
             //we do some additional CHECKS for session hackings!
@@ -2262,6 +2325,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //can view overrides any concerns
             return true;
         }
+
         $tsOrder = strtotime($this->LastEdited);
         $tsNow = time();
         $minutes = EcommerceConfig::get(Order::class, 'minutes_an_order_can_be_viewed_without_logging_in');
@@ -2269,6 +2333,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //has the order been edited recently?
             return true;
         }
+
         $orderStep = $this->MyStep();
         if ($orderStep && $orderStep->exists()) {
             // order is being processed ...
@@ -2337,9 +2402,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
+
         if ($this->MyStep()->CustomerCanEdit && $member && $this->MemberID === $member->ID) {
             return true;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -2362,6 +2429,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return (bool) $extended;
         }
+
         $submitErrors = $this->SubmitErrors();
 
         return $submitErrors && $submitErrors->exists() ? false : true;
@@ -2383,9 +2451,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
+
         if ($this->IsSubmitted()) {
             return false;
         }
+
         $submitErrors = $this->SubmitErrors();
 
         return ! ($submitErrors && $submitErrors->count());
@@ -2403,6 +2473,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
+
         if ($this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending()) {
             return false;
         }
@@ -2421,11 +2492,13 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->CancelledByID) {
             return false;
         }
+
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (EcommerceRole::current_member_can_process_orders($member)) {
             return true;
         }
@@ -2445,6 +2518,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extended) {
             return $extended;
         }
+
         if ($this->IsSubmitted()) {
             return false;
         }
@@ -2509,11 +2583,13 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->BillingAddressID && $this->BillingAddress()) {
             $email = $this->BillingAddress()->Email;
         }
+
         if (! $email) {
             if ($this->MemberID && $this->Member()) {
                 $email = $this->Member()->Email;
             }
         }
+
         $extendedEmail = $this->extend('updateOrderEmail', $email);
         if (null !== $extendedEmail && is_array($extendedEmail) && count($extendedEmail)) {
             $email = implode(';', $extendedEmail);
@@ -2722,9 +2798,11 @@ class Order extends DataObject implements EditableEcommerceObject
             if (null === $dateFormat) {
                 $dateFormat = EcommerceConfig::get(Order::class, 'date_format_for_title');
             }
+
             if (null === $includeName) {
                 $includeName = EcommerceConfig::get(Order::class, 'include_customer_name_in_title');
             }
+
             $title = $this->i18n_singular_name() . ' #' . $this->ID;
             if ($dateFormat) {
                 $submissionLog = $this->SubmissionLog();
@@ -2735,12 +2813,15 @@ class Order extends DataObject implements EditableEcommerceObject
                     $dateObject = $this->dbObject('Created');
                     $placed = _t('Order.STARTED', 'started');
                 }
+
                 $title .= ' - ' . $placed . ' ' . $dateObject->Format($dateFormat);
             }
+
             $name = '';
             if ($this->CancelledByID) {
                 $name = ' - ' . _t('Order.CANCELLED', 'CANCELLED');
             }
+
             if ($includeName) {
                 $by = _t('Order.BY', 'by');
                 if (! $name) {
@@ -2751,6 +2832,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         }
                     }
                 }
+
                 if (! $name) {
                     if ($this->MemberID) {
                         $member = $this->Member();
@@ -2760,16 +2842,19 @@ class Order extends DataObject implements EditableEcommerceObject
                                 if (! trim($memberName)) {
                                     $memberName = _t('Order.ANONYMOUS', 'anonymous');
                                 }
+
                                 $name = ' - ' . $by . ' ' . $memberName;
                             }
                         }
                     }
                 }
             }
+
             $title .= $name;
         } else {
             $title = _t('Order.NEW', 'New') . ' ' . $this->i18n_singular_name();
         }
+
         $extendedTitle = $this->extend('updateTitle', $title);
         if (null !== $extendedTitle && is_array($extendedTitle) && count($extendedTitle)) {
             $title = implode('; ', $extendedTitle);
@@ -2804,6 +2889,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 } else {
                     $html .= $orderItem->BuyableFullName;
                 }
+
                 $html .= '</li>';
                 if ($x > 3) {
                     $html .= '<li style="font-family: monospace; font-size: 0.9em; color: black;">- open for more items</li>';
@@ -2811,6 +2897,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     break;
                 }
             }
+
             $html .= '</ul></div>';
         }
 
@@ -2989,6 +3076,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         $reverseExchange = 1;
         if ($this->ExchangeRate && 1 !== $this->ExchangeRate) {
             $reverseExchange = 1 / $this->ExchangeRate;
@@ -3114,6 +3202,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         if ($this->IsSeparateShippingAddress()) {
             $shippingAddress = ShippingAddress::get_by_id($this->ShippingAddressID);
             if ($shippingAddress) {
@@ -3122,6 +3211,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         if ((EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $countryCodes['Shipping'])
             ||
             (! $countryCodes['Billing'] && $countryCodes['Shipping'])
@@ -3235,6 +3325,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         if ($this->CanHaveShippingAddress()) {
             if ($this->ShippingAddressID) {
                 $shippingAddress = $this->ShippingAddress();
@@ -3245,7 +3336,8 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        if (count($regionIDs)) {
+
+        if ($regionIDs !== []) {
             //note the double-check with $this->CanHaveShippingAddress() and get_use_....
             if ($this->CanHaveShippingAddress() && EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $regionIDs['Shipping']) {
                 return EcommerceRegion::get_by_id($regionIDs['Shipping']);
@@ -3292,6 +3384,7 @@ class Order extends DataObject implements EditableEcommerceObject
             } else {
                 $this->ExchangeRate = 0;
             }
+
             if ($this->ExchangeRate !== $oldExchangeRate) {
                 $this->write();
             }
@@ -3437,6 +3530,7 @@ class Order extends DataObject implements EditableEcommerceObject
         } elseif ($this->MyStep()->ShowAsCompletedOrder) {
             $str = _t('Order.COMPLETED', 'Completed');
         }
+
         if ($withDetail) {
             if (! $this->HideStepFromCustomer) {
                 $str .= ' (' . $this->MyStep()->Name . ')';
@@ -3502,6 +3596,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($page) {
             return $page->getOrderLink($this->ID);
         }
+
         $page = DataObject::get_one(
             ErrorPage::class,
             ['ErrorCode' => '404']
@@ -3524,6 +3619,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($page) {
             return $page->Link();
         }
+
         $page = DataObject::get_one(
             ErrorPage::class,
             ['ErrorCode' => '404']
@@ -3598,19 +3694,23 @@ class Order extends DataObject implements EditableEcommerceObject
         if (is_array($function)) {
             list($function, $format) = $function;
         }
+
         $subTotal = $this->{$function}();
         if (isset($format)) {
             $subTotal = $subTotal->{$format}();
             unset($format);
         }
+
         $function = EcommerceConfig::get(Order::class, 'ajax_total_format');
         if (is_array($function)) {
             list($function, $format) = $function;
         }
+
         $total = $this->{$function}();
         if (isset($format)) {
             $total = $total->{$format}();
         }
+
         $ajaxObject = $this->AJAXDefinitions();
         $js[] = [
             't' => 'id',
@@ -3682,9 +3782,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! $this->getCanHaveShippingAddress()) {
             $this->UseShippingAddress = false;
         }
+
         if (! $this->CurrencyUsedID) {
             $this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
         }
+
         if (! $this->SessionID) {
             $generator = Injector::inst()->create(RandomGenerator::class);
             $token = $generator->randomToken('sha1');
@@ -3705,6 +3807,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsCancelled() && ! $this->IsArchived()) {
             $this->Archive($avoidWrites = true);
         }
+
         $isSubmitted = $this->IsSubmitted($recalculate = true);
         if ($isSubmitted) {
             //do nothing
@@ -3845,6 +3948,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (OrderStatusLog::class !== $sourceClass && class_exists($sourceClass)) {
             $source = $source->filter(['ClassName' => ClassInfo::subclassesFor($sourceClass)]);
         }
+
         $fieldName = ClassInfo::shortName($sourceClass);
         $gridField = GridField::create($fieldName, $title, $source, $config = GridFieldConfig_RelationEditor::create());
         $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
@@ -3898,14 +4002,17 @@ class Order extends DataObject implements EditableEcommerceObject
         } else {
             $to = $this->getOrderEmail();
         }
+
         if ($from && $to) {
             if (! class_exists($emailClassName)) {
                 user_error('Invalid Email ClassName provided: ' . $emailClassName, E_USER_ERROR);
             }
+
             $email = new $emailClassName();
             if (! is_a($email, EcommerceConfigClassNames::getName(Email::class))) {
                 user_error('No correct email class provided.', E_USER_ERROR);
             }
+
             $email->setFrom($from);
             $email->setTo($to);
 
@@ -3917,6 +4024,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($cc) {
                 $email->setCc($cc);
             }
+
             $bcc = $arrayData->getField('BCC');
             if ($bcc) {
                 $email->setBcc($bcc);
@@ -3971,9 +4079,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! $subject) {
             $subject = $step->CalculatedEmailSubject($this);
         }
+
         if (! $message) {
             $message = $step->CalculatedCustomerMessage($this);
         }
+
         $subject = str_replace('[OrderNumber]', $this->ID, $subject);
         //set other variables
         $replacementArray['Subject'] = $subject;
@@ -4058,6 +4168,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         $this->extend('onCalculateOrderItems', $orderItems);
     }
 
@@ -4076,6 +4187,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         $this->extend('onCalculateModifiers', $createdModifiers);
     }
 
@@ -4089,6 +4201,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         if (! $member) {
             $member = new Member();
             $member->ID = 0;

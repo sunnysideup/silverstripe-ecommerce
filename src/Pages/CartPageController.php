@@ -132,9 +132,10 @@ class CartPageController extends PageController
         if (! $request->getVar('ready') && ! $request->getVar('done')) {
             return $this->redirect($this->Link('share/' . $codes) . '?ready=1');
         }
+
         $titleAppendixArray = [];
         $buyables = explode('-', $codes);
-        if (count($buyables)) {
+        if ($buyables !== []) {
             $sc = ShoppingCart::singleton();
             $order = $sc->currentOrder();
             foreach ($buyables as $buyable) {
@@ -156,11 +157,13 @@ class CartPageController extends PageController
                     }
                 }
             }
+
             $order->calculateOrderAttributes(false);
             if (! $request->getVar('done')) {
                 return $this->redirect($this->Link('share/' . $codes) . '?done=1');
             }
         }
+
         $this->Title .= ': ' . implode(', ', $titleAppendixArray);
         if (strlen($this->Title) > 255) {
             $this->Title = substr($this->Title, 0, 255) . ' ...';
@@ -200,12 +203,14 @@ class CartPageController extends PageController
 
             return [];
         }
+
         if ($this->currentOrder && $this->currentOrder->getTotalItems()) {
             $this->currentOrder->write();
             self::set_message(_t('CartPage.ORDERSAVED', 'Your order has been saved.'));
         } else {
             self::set_message(_t('CartPage.ORDERCOULDNOTBESAVED', 'Your order could not be saved.'));
         }
+
         $this->redirectBack();
 
         return [];
@@ -226,6 +231,7 @@ class CartPageController extends PageController
                 self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
             }
         }
+
         self::set_message(_t('CartPage.ORDERNOTDELETED', 'Order could not be deleted.'));
 
         return [];
@@ -334,6 +340,7 @@ class CartPageController extends PageController
 
             return true;
         }
+
         if (Security::getCurrentUser() || $this->currentOrder->MemberID) {
             return false;
         }
@@ -392,6 +399,7 @@ class CartPageController extends PageController
                 $this->currentOrder = Order::get_order_cached((int) $id);
             }
         }
+
         if (! $this->currentOrder) {
             $this->currentOrder = ShoppingCart::current_order();
             if ($this->currentOrder) {
@@ -400,6 +408,7 @@ class CartPageController extends PageController
                 }
             }
         }
+
         //redirect if we are viewing the order with the wrong page!
         if ($this->currentOrder) {
             $canView = $this->overrideCanView ? $this->currentOrder->canOverrideCanView() : $this->currentOrder->canView();
@@ -414,6 +423,7 @@ class CartPageController extends PageController
                 if (! $this->LoginToOrderLinkLabel) {
                     $this->LoginToOrderLinkLabel = _t('CartPage.LOGINFIRST', 'You will need to log in before you can access the requested order order. ');
                 }
+
                 $messages = [
                     'default' => DBField::create_field('HTMLText', '<p class="message good">' . $this->LoginToOrderLinkLabel . '</p>'),
                     'logInAgain' => _t('CartPage.LOGINAGAIN', 'You have been logged out. If you would like to log in again, please do so below.'),
@@ -422,6 +432,7 @@ class CartPageController extends PageController
 
                 return false;
             }
+
             if (! $this->currentOrder->IsSubmitted()) {
                 //we always want to make sure the order is up-to-date.
                 $this->currentOrder->init($force = false);
@@ -444,6 +455,7 @@ class CartPageController extends PageController
         if (! $validUntilTS) {
             $validUntilTS = time() + 3600;
         }
+
         $this->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', $orderID);
 
         $this->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', $validUntilTS);

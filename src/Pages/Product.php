@@ -25,6 +25,7 @@ use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
@@ -81,6 +82,11 @@ class Product extends Page implements BuyableModel
      */
     private static $folder_name_for_images = 'ProductImages';
 
+    /**
+     * @var bool
+     */
+    private static $allow_price_caching = true;
+
     private static $table_name = 'Product';
 
     private static $db = [
@@ -93,7 +99,7 @@ class Product extends Page implements BuyableModel
         'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
-        'ProductBreadcrump' => 'Varchar(255)', //Name for look-up lists
+        'ProductBreadcrumb' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
     ];
 
@@ -122,9 +128,10 @@ class Product extends Page implements BuyableModel
 
     private static $indexes = [
         'FullSiteTreeSort' => true,
-        'ProductBreadcrump' => true,
+        'ProductBreadcrumb' => true,
         'InternalItemID' => true,
         'AllowPurchase' => true,
+        'FullName' => true,
         'Price' => true,
     ];
 
@@ -215,14 +222,12 @@ class Product extends Page implements BuyableModel
      */
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
-    private static $_calculated_price_cache = [];
-
     public function SummaryFields()
     {
         return [
             'Image.CMSThumbnail' => 'Image',
             'InternalItemID' => 'Code',
-            'ProductBreadcrump' => 'Breadcrump',
+            'ProductBreadcrumb' => 'Breadcrumb',
             'Price.Nice' => 'Price',
             'AllowPurchaseNice' => 'For Sale',
         ];
@@ -286,7 +291,7 @@ class Product extends Page implements BuyableModel
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
-        $fields->addFieldToTab('Root.Details', new ReadonlyField('ProductBreadcrump', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrump')));
+        $fields->addFieldToTab('Root.Details', new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrumb')));
         $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
 
         $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
@@ -318,9 +323,11 @@ class Product extends Page implements BuyableModel
                 NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
             );
         }
+
         if (EcommerceConfig::inst()->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
+
         if (EcommerceConfig::inst()->ProductsHaveQuantifiers) {
             $fields->addFieldToTab(
                 'Root.Details',
@@ -328,6 +335,7 @@ class Product extends Page implements BuyableModel
                     ->setDescription(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'))
             );
         }
+
         if ($this->canPurchase()) {
             $fields->addFieldToTab(
                 'Root.Main',
@@ -345,6 +353,7 @@ class Product extends Page implements BuyableModel
                 )
             );
         }
+
         if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.Under',
@@ -383,6 +392,7 @@ class Product extends Page implements BuyableModel
         if ($this->InternalItemID) {
             $fullName .= $this->InternalItemID . ': ';
         }
+
         $fullName .= $this->Title;
         //FullSiteTreeSort
         $parentSortArray = [sprintf('%03d', $this->Sort)];
@@ -400,14 +410,16 @@ class Product extends Page implements BuyableModel
                 }
             }
         }
+
         $reverseArray = array_reverse($parentSortArray);
         $parentsTitle = '';
-        if (count($parentTitleArray)) {
-            $parentsTitle =  implode(' / ', $parentTitleArray) ;
+        if ($parentTitleArray !== []) {
+            $parentsTitle = implode(' / ', $parentTitleArray);
         }
+
         //setting fields with new values!
         $this->FullName = $fullName . ' (' . _t('product.IN', 'in') . ' ' . $parentsTitle . ')';
-        $this->ProductBreadcrump = $parentsTitle;
+        $this->ProductBreadcrumb = $parentsTitle;
         $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
     }
 
@@ -507,6 +519,7 @@ class Product extends Page implements BuyableModel
                 return $image;
             }
         }
+
         $parent = $this->ParentGroup();
         if ($parent && $parent->exists()) {
             return $parent->BestAvailableImage();
@@ -608,9 +621,11 @@ class Product extends Page implements BuyableModel
         if (! $id) {
             $id = $this->ID;
         }
+
         if (! $version) {
             $version = $this->Version;
         }
+
         //not sure why this is running via OrderItem...
 
         $obj = OrderItem::get_version($this->ClassName, $id, $version);
@@ -913,6 +928,11 @@ class Product extends Page implements BuyableModel
         return $this->getCalculatedPrice();
     }
 
+    public function AllowPriceCaching() : bool
+    {
+        return $this->Config()->allow_price_caching;
+    }
+
     /**
      * Products have a standard price, but for specific situations they have a calculated price.
      * The Price can be changed for specific member discounts, etc...
@@ -920,30 +940,37 @@ class Product extends Page implements BuyableModel
      * We add three "hooks" / "extensions" here... so that you can update prices
      * in a logical order (e.g. firstly change to forex and then apply discount)
      *
-     * @param mixed $forceRecalculation
+     * @param bool|null $forceRecalculation
      *
      * @return float
      */
     public function getCalculatedPrice(?bool $forceRecalculation = false)
     {
-        if (! isset(self::$_calculated_price_cache[$this->ID]) || $forceRecalculation) {
-            $price = $this->Price;
-            $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
-            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-                $price = $updatedPrice[0];
-            }
-            $updatedPrice = $this->extend('updateCalculatedPrice', $price);
-            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-                $price = $updatedPrice[0];
-            }
-            $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
-            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-                $price = $updatedPrice[0];
-            }
-            self::$_calculated_price_cache[$this->ID] = $price;
+        $cacheKey = '';
+        if($this->AllowPriceCaching()) {
+            $cacheKey = 'PriceFor'.$this->ID;
+            $price = EcommerceCache::inst()->retrieve($cacheKey);
+        }
+        $price = $this->Price;
+        $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
+        if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+            $price = $updatedPrice[0];
         }
 
-        return self::$_calculated_price_cache[$this->ID];
+        $updatedPrice = $this->extend('updateCalculatedPrice', $price);
+        if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+            $price = $updatedPrice[0];
+        }
+
+        $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
+        if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+            $price = $updatedPrice[0];
+        }
+        if ($cacheKey) {
+            EcommerceCache::inst()->save($cacheKey, $price);
+        }
+
+        return $price;
     }
 
     /**
@@ -1005,6 +1032,7 @@ class Product extends Page implements BuyableModel
                 return false;
             }
         }
+
         // Standard mechanism for accepting permission changes from decorators
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
@@ -1020,6 +1048,7 @@ class Product extends Page implements BuyableModel
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -1041,6 +1070,7 @@ class Product extends Page implements BuyableModel
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -1060,6 +1090,7 @@ class Product extends Page implements BuyableModel
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -1130,6 +1161,7 @@ class Product extends Page implements BuyableModel
             $html .= '<li><b>Product Group Admin:</b> <a href="' . '/admin/pages/edit/show/' . $productGroup->ID . '">' . $productGroup->Title . ' Admin</a> </li>';
             $html .= '<li><b>Edit this Product:</b> <a href="' . '/admin/pages/edit/show/' . $this->ID . '">' . $this->Title . ' Admin</a> </li>';
         }
+
         $html .= '</ul>';
 
         return $html;
@@ -1185,9 +1217,9 @@ class Product extends Page implements BuyableModel
         return [
             $this->InternalItemID,
             $this->Title,
-            $this->ProductBreadcrump,
+            $this->ProductBreadcrumb,
             $this->ShortDescription,
-            $this->Content
+            $this->Content,
         ];
     }
 

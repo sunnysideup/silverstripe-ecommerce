@@ -231,7 +231,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
@@ -239,10 +239,12 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         // only allow countries to be created if not all of them are there.
         if (EcommerceCountry::get()->count() < 220) {
             $can = parent::canCreate($member);
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -257,17 +259,19 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -281,17 +285,19 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -311,16 +317,20 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (ShippingAddress::get()->filter(['ShippingCountry' => $this->Code])->exists()) {
             return false;
         }
+
         if (BillingAddress::get()->filter(['Country' => $this->Code])->exists()) {
             return false;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -340,6 +350,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $visitorCountryProviderClassName) {
             $visitorCountryProviderClassName = EcommerceCountryVisitorCountryProvider::class;
         }
+
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
         return $visitorCountryProvider->getCountry();
@@ -357,6 +368,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $visitorCountryProviderClassName) {
             $visitorCountryProviderClassName = EcommerceCountryVisitorCountryProvider::class;
         }
+
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
         return $visitorCountryProvider->getIP();
@@ -388,12 +400,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             } else {
                 $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
+
             if ($objects->exists()) {
                 $idField = $useIDNotCode ? 'ID' : 'Code';
                 $array = $objects->map($idField, 'Name')->toArray();
             }
+
             self::$_countries_from_db_cache[$key] = $array;
         }
+
         if (count($array)) {
             if ($addEmptyString) {
                 $array = ['', ' -- please select -- '] + $array;
@@ -448,6 +463,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (isset($options[$code])) {
             return $options[$code];
         }
+
         if ($code) {
             $obj = DataObject::get_one(
                 EcommerceCountry::class,
@@ -515,17 +531,20 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 if ($orderID && $orderID !== $o->ID) {
                     $o = DataObject::get_one(Order::class, ['ID' => $orderID]);
                 }
+
                 if ($o && $o->exists()) {
                     $countryCode = $o->getCountry();
                 //3 ... if there is no shopping cart, then we still want it from IP
                 } else {
                     $countryCode = self::get_country_from_ip();
                 }
+
                 //4 check default country set in GEO IP....
                 if (! $countryCode) {
                     $countryCode = self::get_country_default();
                 }
             }
+
             self::set_country_cache($countryCode, $orderID);
         }
 
@@ -565,6 +584,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get_by_id($var);
         }
+
         if ($var instanceof EcommerceCountry) {
             if ($asCode) {
                 return $var->Code;
@@ -610,9 +630,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $countryCode) {
             $countryCode = self::get_country($recalculate);
         }
+
         if (isset(self::$_code_to_id_map[$countryCode])) {
             return self::$_code_to_id_map[$countryCode];
         }
+
         self::$_code_to_id_map[$countryCode] = 0;
         $country = DataObject::get_one(
             EcommerceCountry::class,
@@ -712,7 +734,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
     public static function set_for_current_order_only_show_countries(array $a)
     {
-        if (count(self::$for_current_order_only_show_countries)) {
+        if (self::$for_current_order_only_show_countries !== []) {
             //we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
             self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
         } else {
@@ -749,6 +771,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             if (is_array($doNotShow) && count($doNotShow)) {
                 foreach ($doNotShow as $code) {
                     if (isset($defaultArray[$code])) {
@@ -756,6 +779,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             self::$list_of_allowed_entries_for_dropdown_array = $defaultArray;
         }
 
@@ -836,6 +860,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
             return $defaultArray;
         }
+
         $countries = EcommerceCountry::get()->exclude(['DoNotAllowSales' => 1]);
         if ($countries && $countries->exists()) {
             foreach ($countries as $country) {

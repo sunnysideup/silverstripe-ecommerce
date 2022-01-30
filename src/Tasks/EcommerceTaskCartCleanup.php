@@ -209,6 +209,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             if ($request->getVar('limit')) {
                 $this->maximumNumberOfObjectsDeleted = (int) $request->getVar('limit');
             }
+
             if ($request->getVar('purge')) {
                 $this->neverDeleteIfLinkedToMember = false;
             }
@@ -287,18 +288,21 @@ class EcommerceTaskCartCleanup extends BuildTask
                         <br /><b>Criteria:</b> last edited ' . $clearMinutesWithoutMember . ' (~' . round($clearMinutesWithoutMember / 60 / 24, 2) . " days)
                         minutes ago or more {$this->memberDeleteNote}", 'created');
             }
+
             foreach ($oldCarts as $oldCart) {
                 ++$count;
                 if ($this->verbose) {
                     $this->flush();
                     DB::alteration_message("{$count} ... deleting abandonned order #" . $oldCart->ID, 'deleted');
                 }
+
                 $this->deleteObject($oldCart);
             }
         } elseif ($this->verbose) {
             $this->flush();
             DB::alteration_message('There are no old carts', 'created');
         }
+
         if ($this->verbose) {
             $this->flush();
             $timeLegible = date('Y-m-d H:i:s', $timeWithoutMember);
@@ -352,15 +356,18 @@ class EcommerceTaskCartCleanup extends BuildTask
                         <br /><b>Criteria:</b> there are no order items and
                         the order was last edited {$clearMinutes} minutes ago {$this->memberDeleteNote}", 'created');
             }
+
             foreach ($oldCarts as $oldCart) {
                 ++$count;
                 if ($this->verbose) {
                     $this->flush();
                     DB::alteration_message("{$count} ... deleting empty order #" . $oldCart->ID, 'deleted');
                 }
+
                 $this->deleteObject($oldCart);
             }
         }
+
         if ($this->verbose) {
             $this->flush();
             $timeLegible = date('Y-m-d H:i:s', $time);
@@ -399,7 +406,8 @@ class EcommerceTaskCartCleanup extends BuildTask
             $this->flush();
             DB::alteration_message('<h2>Checking one-to-one relationships</h2>.');
         }
-        if (count($this->oneToOne)) {
+
+        if ($this->oneToOne !== []) {
             foreach ($this->oneToOne as $orderFieldName => $className) {
                 $tableName = Config::inst()->get($className, 'table_name');
                 if (! in_array($className, $this->oneToMany, true) && ! in_array($className, $this->manyToMany, true)) {
@@ -407,6 +415,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         $this->flush();
                         DB::alteration_message("looking for {$className} objects without link to order.");
                     }
+
                     $rows = DB::query("
                         SELECT \"{$tableName}\".\"ID\"
                         FROM \"{$tableName}\"
@@ -422,7 +431,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                             $this->oneToOneIDArray[$row['ID']] = $row['ID'];
                         }
                     }
-                    if (count($this->oneToOneIDArray)) {
+
+                    if ($this->oneToOneIDArray !== []) {
                         $unlinkedObjects = $className::get()
                             ->filter(['ID' => $this->oneToOneIDArray])
                         ;
@@ -432,6 +442,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                                     $this->flush();
                                     DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
                                 }
+
                                 $this->deleteObject($unlinkedObject);
                             }
                         } elseif ($this->verbose) {
@@ -442,6 +453,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         $this->flush();
                         DB::alteration_message("All references in Order to {$className} are valid.", 'created');
                     }
+
                     if ($this->verbose) {
                         $this->flush();
                         $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableName}\"")->value();
@@ -462,7 +474,8 @@ class EcommerceTaskCartCleanup extends BuildTask
             $this->flush();
             DB::alteration_message('<h2>Checking one-to-many relationships</h2>.');
         }
-        if (count($this->oneToMany)) {
+
+        if ($this->oneToMany !== []) {
             foreach ($this->oneToMany as $classWithOrderID => $classWithLastEdited) {
                 $tableWithOrderID = Config::inst()->get($classWithOrderID, 'table_name');
                 if (! in_array($classWithLastEdited, $this->oneToOne, true) && ! in_array($classWithLastEdited, $this->manyToMany, true)) {
@@ -470,6 +483,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         $this->flush();
                         DB::alteration_message('looking for ' . $tableWithOrderID . ' objects without link to order.');
                     }
+
                     $rows = DB::query("
                         SELECT \"{$tableWithOrderID}\".\"ID\"
                         FROM \"{$tableWithOrderID}\"
@@ -483,7 +497,8 @@ class EcommerceTaskCartCleanup extends BuildTask
                             $this->oneToManyIDArray[$row['ID']] = $row['ID'];
                         }
                     }
-                    if (count($this->oneToManyIDArray)) {
+
+                    if ($this->oneToManyIDArray !== []) {
                         $unlinkedObjects = $classWithLastEdited::get()
                             ->filter(['ID' => $this->oneToManyIDArray])
                         ;
@@ -492,6 +507,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                                 if ($this->verbose) {
                                     DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
                                 }
+
                                 $this->deleteObject($unlinkedObject);
                             }
                         } elseif ($this->verbose) {
@@ -502,6 +518,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         $this->flush();
                         DB::alteration_message("All {$classWithLastEdited} objects have a reference to a valid order.", 'created');
                     }
+
                     if ($this->verbose) {
                         $this->flush();
                         $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableWithOrderID}\"")->value();
@@ -511,6 +528,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 }
             }
         }
+
         if ($this->verbose) {
             $this->flush();
             DB::alteration_message('---------------- DONE --------------------');

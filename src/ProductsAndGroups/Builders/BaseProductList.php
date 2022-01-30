@@ -127,9 +127,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         if (! $buyableClassName) {
             $buyableClassName = $rootGroup->getBuyableClassName();
         }
+
         if (! $levelOfProductsToShow) {
             $levelOfProductsToShow = $rootGroup->getLevelOfProductsToShow();
         }
+
         $this
             //set defaults
             ->setRootGroup($rootGroup)
@@ -274,6 +276,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $ids2 = $this->getAlsoShowProductsProductGroupInclusive()->columnUnique();
             $this->filterForCandidateCategoryIds = array_merge($ids1, $ids2);
         }
+
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
 
@@ -303,7 +306,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function getAlsoShowParentIds(): array
     {
-        if (! count($this->alsoShowParentIds)) {
+        if ($this->alsoShowParentIds === []) {
             $rows = DB::query('
                 SELECT "ProductGroupID"
                 FROM "Product_ProductGroups"
@@ -340,6 +343,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         if (null === $maxRecursiveLevel) {
             $maxRecursiveLevel = $this->getLevelOfProductsToShow();
         }
+
         $list = $this->getProductGroupListProvider()->getGroups($maxRecursiveLevel, $filter);
         ClassHelpers::check_for_instance_of($list, SS_List::class);
 
@@ -467,8 +471,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
                     );
                 }
             }
+
             $groupFilter = '"' . $this->getBuyableTableNameName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) . ')';
         }
+
         $alsoShowFilter = '"' . $this->getBuyableTableNameName() . '"."ID" IN (' . implode(',', $this->getAlsoShowProductsIds()) . ')';
         $fullFilter = '((' . $groupFilter . ') OR (' . $alsoShowFilter . '))';
         $this->products = $this->products->where($fullFilter);
@@ -487,6 +493,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             if (is_array(self::$checked_products) && count(self::$checked_products)) {
                 $productsThatNeedChecking = $productsThatNeedChecking->exclude(['ID' => self::$checked_products]);
             }
+
             foreach ($productsThatNeedChecking as $buyable) {
                 self::$checked_products[$buyable->ID] = $buyable->ID;
                 if (! $buyable->canPurchase()) {

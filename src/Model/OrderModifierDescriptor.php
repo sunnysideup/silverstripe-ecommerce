@@ -137,10 +137,12 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -219,7 +221,8 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         if (! is_array($arrayOfModifiers)) {
             $arrayOfModifiers = [];
         }
-        if (count($arrayOfModifiers)) {
+
+        if ($arrayOfModifiers !== []) {
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
                     OrderModifierDescriptor::class,
@@ -236,6 +239,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
                 }
             }
         }
+
         //delete the ones that are not relevant
         $orderModifierDescriptors = OrderModifierDescriptor::get();
         if ($orderModifierDescriptors->exists()) {

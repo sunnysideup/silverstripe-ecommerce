@@ -91,9 +91,6 @@ interface BuyableModel
      */
     public function OrderItem();
 
-    /**
-     * @var string
-     */
     //protected $defaultClassNameForOrderItem;
 
     /**

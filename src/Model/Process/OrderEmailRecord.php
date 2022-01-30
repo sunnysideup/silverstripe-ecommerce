@@ -158,15 +158,13 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
 
     /**
      * casted Variable.
-     *
-     * @var string
      */
-    public function ResultNice()
+    public function ResultNice() : string
     {
         return $this->getResultNice();
     }
 
-    public function getResultNice()
+    public function getResultNice() : string
     {
         if ($this->Result) {
             return _t('OrderEmailRecord.YES', 'Yes');
@@ -211,14 +209,17 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         $order = $this->getOrderCached();
         if ($order && $order->exists()) {
             return $order->canView();
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -329,6 +330,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                     if (isset($_GET['q']['OrderStepID'][$key])) {
                         $preSelected[$key] = $key;
                     }
+
                     $count = OrderEmailRecord::get()
                         ->Filter(['OrderStepID' => (int) $key])
                         ->count()
@@ -338,6 +340,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             $statusField = new CheckboxSetField(
                 'OrderStepID',
                 Injector::inst()->get(OrderStep::class)->i18n_singular_name(),

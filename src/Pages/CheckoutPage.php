@@ -87,7 +87,7 @@ class CheckoutPage extends CartPage
      * @var array
      */
     private static $has_one = [
-        'TermsPage' => 'Page',
+        'TermsPage' => \Page::class,
     ];
 
     /**
@@ -158,6 +158,7 @@ class CheckoutPage extends CartPage
         if ($page) {
             return $page->Link($action);
         }
+
         user_error('No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.', E_USER_NOTICE);
 
         return '404-checkout-page';
@@ -179,6 +180,7 @@ class CheckoutPage extends CartPage
                 $step = array_pop($steps);
             }
         }
+
         if ($step) {
             $step = Controller::join_links('checkoutstep', strtolower($step)) . '/#' . $step;
         }
@@ -208,6 +210,7 @@ class CheckoutPage extends CartPage
                     } else {
                         ++$key;
                     }
+
                     if (isset($steps[$key])) {
                         $nextStep = $steps[$key];
                     }
@@ -217,6 +220,7 @@ class CheckoutPage extends CartPage
             } else {
                 $nextStep = array_pop($steps);
             }
+
             if ($nextStep) {
                 return Controller::join_links($link, 'checkoutstep', $nextStep);
             }
@@ -353,6 +357,7 @@ class CheckoutPage extends CartPage
         if (OrderModifierDescriptor::get()->exists()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
+
         if (CheckoutPageStepDescription::get()->exists()) {
             $fields->addFieldToTab('Root.Messages.Messages.CheckoutSteps', $this->getCheckoutStepDescriptionField());
         }

@@ -158,7 +158,7 @@ class ProductGroupController extends PageController
                 $this->setCachedProductList($this->productList);
             }
         }
-
+        /** @return SS_List */
         return $this->productList;
     }
 

@@ -61,17 +61,19 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -85,17 +87,19 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -109,17 +113,19 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
      * @param \SilverStripe\Security\Member $member
      * @param mixed                         $context
      *
-     * @var bool
+     * @return bool
      */
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -132,17 +138,19 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
      *
      * @param \SilverStripe\Security\Member $member
      *
-     * @var bool
+     * @return bool
      */
     public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }

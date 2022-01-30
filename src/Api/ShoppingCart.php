@@ -181,6 +181,7 @@ class ShoppingCart
                 $orderID = $order->ID;
             }
         }
+
         if (ClassHelpers::check_for_instance_of($orderOrOrderID, Order::class, false)) {
             $orderID = $orderOrOrderID->ID;
         } elseif ((int) $orderOrOrderID) {
@@ -232,6 +233,7 @@ class ShoppingCart
         if ($order) {
             $this->order = $order;
         }
+
         if ($this->allowWrites()) {
             if (! $this->order) {
                 $this->order = self::session_order();
@@ -250,14 +252,17 @@ class ShoppingCart
                             if (! $this->order->MemberID) {
                                 $updateMember = true;
                             }
+
                             if (! $loggedInMember->IsShopAdmin()) {
                                 $updateMember = true;
                             }
+
                             if ($updateMember) {
                                 $this->order->MemberID = $loggedInMember->ID;
                                 $this->order->write();
                             }
                         }
+
                         //IF current order has nothing in it AND the member already has an order: use the old one first
                         //first, lets check if the current order is worthwhile keeping
                         if ($this->order->StatusID || $this->order->TotalItems()) {
@@ -277,6 +282,7 @@ class ShoppingCart
                                 if ($count > 12) {
                                     break;
                                 }
+
                                 ++$count;
                                 if ($previousOrderFromMember && $previousOrderFromMember->canView()) {
                                     if ($previousOrderFromMember->StatusID || $previousOrderFromMember->TotalItems()) {
@@ -285,8 +291,10 @@ class ShoppingCart
 
                                         break;
                                     }
+
                                     $previousOrderFromMember->delete();
                                 }
+
                                 $previousOrderFromMember = DataObject::get_one(Order::class, '
                                         "MemberID" = ' . $loggedInMember->ID . '
                                         AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
@@ -295,6 +303,7 @@ class ShoppingCart
                         }
                     }
                 }
+
                 if (! $this->order) {
                     if ($loggedInMember) {
                         //find previour order...
@@ -309,9 +318,11 @@ class ShoppingCart
                             }
                         }
                     }
+
                     if ($this->order && ! $this->order->exists()) {
                         $this->order = null;
                     }
+
                     if (! $this->order) {
                         //here we cleanup old orders, because they should be
                         //cleaned at the same rate that they are created...
@@ -319,26 +330,33 @@ class ShoppingCart
                             $cartCleanupTask = Injector::inst()->get(EcommerceTaskCartCleanup::class);
                             $cartCleanupTask->runSilently();
                         }
+
                         //create new order
                         $this->order = Order::create();
                         if ($loggedInMember) {
                             $this->order->MemberID = $loggedInMember->ID;
                         }
+
                         $this->order->write();
                     }
+
                     $sessionVariableName = $this->sessionVariableName('OrderID');
                     Controller::curr()->getRequest()->getSession()->set($sessionVariableName, (int) $this->order->ID);
                 }
+
                 if ($this->order) {
                     if ($this->order->exists()) {
                         $this->order->calculateOrderAttributes($force = false);
                     }
+
                     if (! $this->order->SessionID) {
                         $this->order->write();
                     }
+
                     //add session ID...
                 }
             }
+
             //try it again
             //but limit to three, just in case ...
             //just in case ...
@@ -350,6 +368,7 @@ class ShoppingCart
 
             return $this->order;
         }
+
         //we still return an order so that we do not end up with errors...
         return Order::create();
     }
@@ -389,11 +408,13 @@ class ShoppingCart
 
                 return false;
             }
+
             if (! $buyable->canPurchase()) {
                 $this->addMessage(_t('Order.ITEMCOULDNOTBEADDED', 'This item is not for sale.'), 'bad');
 
                 return false;
             }
+
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item && $quantity) {
@@ -411,6 +432,7 @@ class ShoppingCart
 
             return $item;
         }
+
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
@@ -440,6 +462,7 @@ class ShoppingCart
 
                 return $item;
             }
+
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
         } else {
             $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
@@ -470,12 +493,14 @@ class ShoppingCart
                 if ($item->Quantity < 0) {
                     $item->Quantity = 0;
                 }
+
                 $item->write();
                 $msg = $quantity > 1 ? _t('Order.ITEMSREMOVED', 'Items removed.') : _t('Order.ITEMREMOVED', 'Item removed.');
                 $this->addMessage($msg);
 
                 return $item;
             }
+
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
         } else {
             $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
@@ -506,6 +531,7 @@ class ShoppingCart
 
                 return true;
             }
+
             $this->addMessage(_t('Order.ITEMNOTFOUND', 'Item could not be found.'), 'bad');
         } else {
             $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
@@ -537,6 +563,7 @@ class ShoppingCart
         if (! $buyable) {
             user_error('No buyable was provided', E_USER_WARNING);
         }
+
         if (! $buyable->canPurchase()) {
             return null;
         }
@@ -573,6 +600,7 @@ class ShoppingCart
         if ($quantity > 0) {
             return $quantity;
         }
+
         $this->addMessage(_t('Order.INVALIDQUANTITY', 'Invalid quantity.'), 'warning');
 
         return 0;
@@ -598,6 +626,7 @@ class ShoppingCart
 
                     return false;
                 }
+
                 $className = $buyable->classNameForOrderItem();
 
                 $item = new $className();
@@ -611,15 +640,18 @@ class ShoppingCart
                     }
                 }
             }
+
             if ($parameters) {
                 $item->Parameters = $parameters;
             }
+
             if (! $item) {
                 $item = OrderItem::create();
             }
 
             return $item;
         }
+
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
@@ -659,6 +691,7 @@ class ShoppingCart
 
             return true;
         }
+
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
@@ -683,6 +716,7 @@ class ShoppingCart
             Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
             Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         }
+
         $memberID = (int) Member::currentUserID();
         if ($memberID) {
             $orders = Order::get()->filter(['MemberID' => $memberID]);
@@ -727,11 +761,13 @@ class ShoppingCart
 
                 return false;
             }
+
             if (! $modifier->CanBeRemoved()) {
                 $this->addMessage(_t('Order.MODIFIERCANNOTBEREMOVED', 'Modifier can not be removed.'), 'bad');
 
                 return false;
             }
+
             $modifier->HasBeenRemoved = 1;
             $modifier->onBeforeRemove();
             $modifier->write();
@@ -740,6 +776,7 @@ class ShoppingCart
 
             return true;
         }
+
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
@@ -762,17 +799,20 @@ class ShoppingCart
             } elseif (! is_a($modifier, EcommerceConfigClassNames::getName(OrderModifier::class))) {
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
             }
+
             if (! $modifier) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
 
                 return false;
             }
+
             $modifier->HasBeenRemoved = 0;
             $modifier->write();
             $this->addMessage(_t('Order.MODIFIERREMOVED', 'Added.'));
 
             return true;
         }
+
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
@@ -797,6 +837,7 @@ class ShoppingCart
             } else {
                 user_error('Bad order provided as parameter to ShoppingCart::loadOrder()');
             }
+
             if ($this->order) {
                 //first can view and then, if can view, set as session...
                 if ($this->order->canView()) {
@@ -808,14 +849,17 @@ class ShoppingCart
 
                     return true;
                 }
+
                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
 
                 return false;
             }
+
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
 
             return false;
         }
+
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
@@ -860,10 +904,12 @@ class ShoppingCart
 
                     return $newOrder;
                 }
+
                 $this->addMessage(_t('Order.NOPERMISSION', 'You do not have permission to view this order.'), 'bad');
 
                 return false;
             }
+
             $this->addMessage(_t('Order.NOORDER', 'Order can not be found.'), 'bad');
         } else {
             $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
@@ -942,6 +988,7 @@ class ShoppingCart
 
                 return true;
             }
+
             $this->addMessage(_t('Order.NOTUPDATEDCOUNTRY', 'Could not update country.'), 'bad');
         } else {
             $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
@@ -965,6 +1012,7 @@ class ShoppingCart
 
             return true;
         }
+
         $this->addMessage(_t('ORDER.NOTUPDATEDREGION', 'Could not update region.'), 'bad');
 
         return false;
@@ -987,12 +1035,14 @@ class ShoppingCart
                     $member->SetPreferredCurrency($currency);
                 }
             }
+
             $this->currentOrder()->UpdateCurrency($currency);
             $msg = _t('Order.CURRENCYUPDATED', 'Currency updated.');
             $this->addMessage($msg);
 
             return true;
         }
+
         $msg = _t('Order.CURRENCYCOULDNOTBEUPDATED', 'Currency could not be updated.');
         $this->addMessage($msg, 'bad');
 
@@ -1021,6 +1071,7 @@ class ShoppingCart
             } else {
                 echo '<p>there are no items for this order</p>';
             }
+
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Modifiers</h1>';
             $modifiers = $this->currentOrder()->Modifiers();
             if ($modifiers->exists()) {
@@ -1030,6 +1081,7 @@ class ShoppingCart
             } else {
                 echo '<p>there are no modifiers for this order</p>';
             }
+
             echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Addresses</h1>';
             $billingAddress = $this->currentOrder()->BillingAddress();
             if ($billingAddress && $billingAddress->exists()) {
@@ -1037,22 +1089,26 @@ class ShoppingCart
             } else {
                 echo '<p>there is no billing address for this order</p>';
             }
+
             $shippingAddress = $this->currentOrder()->ShippingAddress();
             if ($shippingAddress && $shippingAddress->exists()) {
                 print_r($shippingAddress);
             } else {
                 echo '<p>there is no shipping address for this order</p>';
             }
+
             $currencyUsed = $this->currentOrder()->CurrencyUsed();
             if ($currencyUsed && $currencyUsed->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Currency</h1>';
                 print_r($currencyUsed);
             }
+
             $cancelledBy = $this->currentOrder()->CancelledBy();
             if ($cancelledBy && $cancelledBy->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Cancelled By</h1>';
                 print_r($cancelledBy);
             }
+
             $logs = $this->currentOrder()->OrderStatusLogs();
             if ($logs->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Logs</h1>';
@@ -1060,6 +1116,7 @@ class ShoppingCart
                     print_r($log);
                 }
             }
+
             $payments = $this->currentOrder()->Payments();
             if ($payments->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Payments</h1>';
@@ -1067,6 +1124,7 @@ class ShoppingCart
                     print_r($payment);
                 }
             }
+
             $emails = $this->currentOrder()->Emails();
             if ($emails->exists()) {
                 echo '<hr /><hr /><hr /><hr /><hr /><hr /><h1>Emails</h1>';
@@ -1074,6 +1132,7 @@ class ShoppingCart
                     print_r($email);
                 }
             }
+
             echo '</blockquote></blockquote></blockquote></blockquote>';
         } else {
             echo 'Please log in as admin first';
@@ -1098,6 +1157,7 @@ class ShoppingCart
         if (! in_array($status, $statusOptions, true)) {
             user_error('Message status should be one of the following: ' . implode(',', $statusOptions), E_USER_NOTICE);
         }
+
         $this->messages[] = ['Message' => $message, 'Type' => $status];
     }
 
@@ -1143,6 +1203,7 @@ class ShoppingCart
         if ($message && $status) {
             $this->addMessage($message, $status);
         }
+
         //TODO: handle passing back multiple messages
         if (Director::is_ajax()) {
             $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
@@ -1150,6 +1211,7 @@ class ShoppingCart
 
             return $obj->ReturnCartData($this->getMessages());
         }
+
         //TODO: handle passing a message back to a form->sessionMessage
         $this->StoreMessagesInSession();
         if ($form) {
@@ -1220,10 +1282,11 @@ class ShoppingCart
         $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
         $newarray = array_merge([], $defaultParamFilters);
         //clone array
-        if (! count($newarray)) {
+        if ($newarray === []) {
             return [];
             //no use for this if there are not parameters defined
         }
+
         foreach (array_keys($newarray) as $field) {
             if (isset($params[$field])) {
                 $newarray[$field] = Convert::raw2sql($params[$field]);
@@ -1243,12 +1306,14 @@ class ShoppingCart
             return '';
             //no use for this if there are not parameters defined
         }
+
         $cleanedparams = $this->cleanParameters($parameters);
         $outputArray = [];
         foreach ($cleanedparams as $field => $value) {
             $outputarray[$field] = '"' . $field . '" = ' . $value;
         }
-        if (count($outputArray)) {
+
+        if ($outputArray !== []) {
             return implode(' AND ', $outputArray);
         }
 
@@ -1276,6 +1341,7 @@ class ShoppingCart
         if (! in_array($name, self::$session_variable_names, true)) {
             user_error("Tried to set session variable {$name}, that is not in use", E_USER_NOTICE);
         }
+
         $sessionCode = EcommerceConfig::get(ShoppingCart::class, 'session_code');
 
         return $sessionCode . '_' . $name;

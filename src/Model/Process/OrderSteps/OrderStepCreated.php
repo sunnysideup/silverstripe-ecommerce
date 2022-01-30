@@ -96,16 +96,19 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
             if (! $order->getTotalItems()) {
                 $problems[] = 'There are no --- Order Items (products) --- associated with this order.';
             }
+
             if (! $order->MemberID) {
                 $billingAddress = null;
                 $problems[] = 'There is no --- Customer --- associated with this order.';
             }
+
             $billingAddress = null;
             if ($order->BillingAddressID) {
                 $billingAddress = $order->BillingAddress();
             } else {
                 $problems[] = 'There is no --- Billing Address --- associated with this order.';
             }
+
             if ($billingAddress) {
                 $requiredBillingFields = $billingAddress->getRequiredFields();
                 if ($requiredBillingFields && is_array($requiredBillingFields) && count($requiredBillingFields)) {
@@ -116,9 +119,11 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
                     }
                 }
             }
-            if (count($problems)) {
+
+            if ($problems !== []) {
                 $msg = '<p>You can not submit this order because:</p> <ul><li>' . implode('</li><li>', $problems) . '</li></ul>';
             }
+
             $fields->addFieldToTab('Root.Next', new HeaderField('CreateSubmitRecordHeader', $header, 3));
             $fields->addFieldToTab('Root.Next', new LiteralField('CreateSubmitRecordMessage', $msg));
             if (! $problems) {

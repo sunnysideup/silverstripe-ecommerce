@@ -283,7 +283,7 @@ abstract class AbstractProductsAndGroupsList
      *
      * @todo: EcommerceCache candidate
      *
-     * @var array
+     * @return array
      */
     abstract public function getParentGroupIds(): array;
 
@@ -291,14 +291,14 @@ abstract class AbstractProductsAndGroupsList
      * parent groups that come from the natural hierarchy
      * the baselist knows about these.
      *
-     * @var DataList
+     * @return DataList
      */
     abstract public function getParentGroups(): DataList;
 
     /**
      * hierarchy parent groups excluding any parent groups that are included in AlsoShow.
      *
-     * @var DataList
+     * @return DataList
      */
     final public function getParentGroupsExclusive(): DataList
     {

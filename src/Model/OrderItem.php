@@ -234,8 +234,6 @@ class OrderItem extends OrderAttribute
 
     /**
      * Standard SS method.
-     *
-     * @var string
      */
     public function getCMSFields()
     {
@@ -285,6 +283,7 @@ class OrderItem extends OrderAttribute
         } else {
             $fields->replaceField('OrderID', NumericField::create('OrderID', _t('Order.SINGULARNAME', 'Order')));
         }
+
         $fields->removeByName('Sort');
         $fields->removeByName('CalculatedTotal');
         $fields->removeByName('GroupSort');
@@ -305,6 +304,7 @@ class OrderItem extends OrderAttribute
                 } else {
                     $buyableLink .= _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
                 }
+
                 $fields->addFieldToTab(
                     'Root.Main',
                     HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
@@ -388,10 +388,12 @@ class OrderItem extends OrderAttribute
         if (is_array($function)) {
             list($function, $format) = $function;
         }
+
         $total = $this->{$function}();
         if (isset($format)) {
             $total = $total->{$format}();
         }
+
         $ajaxObject = $this->AJAXDefinitions();
         if ($this->Quantity) {
             $js[] = [
@@ -463,6 +465,7 @@ class OrderItem extends OrderAttribute
                     $this->write();
                 }
             }
+
             $oldValue = $this->CalculatedTotal - 0;
             $newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
             if ((round($newValue, 5) !== round($oldValue, 5)) || $recalculate) {
@@ -512,16 +515,19 @@ class OrderItem extends OrderAttribute
 
             return $this->CalculatedTotal / $this->Quantity;
         }
+
         // calculate price
         $buyable = $this->getBuyableCached();
         if ($buyable) {
             if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
             }
+
             $unitPrice = self::$calculated_buyable_price[$this->ID];
         } else {
             $unitPrice = 0;
         }
+
         //$updatedUnitPrice = $this->extend('updateUnitPrice', $price);
         //if ($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
         //    $unitPrice = $updatedUnitPrice[0];
@@ -654,11 +660,13 @@ class OrderItem extends OrderAttribute
                 $currentOrVersion = 'current';
             }
         }
+
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
             if (! $this->BuyableID) {
                 // user_error('There was an error retrieving the product', E_USER_NOTICE);
                 return Product::create();
             }
+
             //start hack
             if (! $this->BuyableClassName) {
                 $this->BuyableClassName = str_replace('OrderItem', '', $this->ClassName);
@@ -689,15 +697,18 @@ class OrderItem extends OrderAttribute
                      */
                     $obj = self::get_version($this->BuyableClassName, $this->BuyableID, $this->Version);
                 }
+
                 //our second to last resort
                 if (! $obj || (! $obj->exists())) {
                     $obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
                 }
             }
+
             //our final backup
             if (! $obj || (! $obj->exists())) {
                 $obj = $className::get_by_id($this->BuyableID);
             }
+
             if ($obj && ! ($obj instanceof BuyableModel)) {
                 user_error(
                     'Tried to create: ' . $className . ' in OrderItem ' . $this->ID .
@@ -708,8 +719,10 @@ class OrderItem extends OrderAttribute
                 );
                 $obj = null;
             }
+
             $this->tempBuyableStore[$currentOrVersion] = $obj;
         }
+
         //check for data integrity
         return $this->tempBuyableStore[$currentOrVersion];
     }
@@ -740,6 +753,7 @@ class OrderItem extends OrderAttribute
             if ($title) {
                 return $title;
             }
+
             //This should work in all cases, because ultimately, it will return #ID - see DataObject
             return parent::getTitle();
         }
@@ -843,6 +857,7 @@ class OrderItem extends OrderAttribute
         if ($subtitle) {
             return $subtitle;
         }
+
         $buyable = $this->getBuyableCached();
         if ($buyable && $buyable->exists()) {
             if ($buyable->ShortDescription) {
@@ -1002,6 +1017,7 @@ class OrderItem extends OrderAttribute
         if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
             $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
         }
+
         if (! $this->exists()) {
             if ($buyable) {
                 if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
@@ -1009,12 +1025,14 @@ class OrderItem extends OrderAttribute
                 }
             }
         }
+
         //now we can do the parent thing
         parent::onBeforeWrite();
         //always keep quantity above 0
         if (0 === floatval($this->Quantity)) {
             $this->Quantity = 1;
         }
+
         if (! $this->Version && $buyable) {
             $this->Version = $buyable->Version;
         }

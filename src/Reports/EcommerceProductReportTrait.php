@@ -2,17 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\NumericField;
-
-use SilverStripe\Core\ClassInfo;
-
-use SilverStripe\Core\Injector\Injector;
-
 use Sunnysideup\Ecommerce\Pages\Product;
 
 trait EcommerceProductReportTrait
@@ -45,9 +42,10 @@ trait EcommerceProductReportTrait
     public function sourceRecords($params = null)
     {
         $className = ($params['ProductType'] ?? '');
-        if(! $className) {
+        if (! $className) {
             $className = $this->dataClass;
         }
+
         $list = $className::get();
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
@@ -55,23 +53,28 @@ trait EcommerceProductReportTrait
                 $list = $list->filter($filter);
             }
         }
+
         if ($this->hasMethod('getEcommerceSort')) {
             $sort = $this->getEcommerceSort();
             $list = empty($sort) ? $list->sort(['FullSiteTreeSort' => 'ASC']) : $list->sort($sort);
         }
+
         if ($this->hasMethod('getEcommerceWhere')) {
             $where = $this->getEcommerceWhere();
             if (! empty($where)) {
                 $list = $list->where($where);
             }
         }
+
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
-        $minPrice = (float) preg_replace('/[^0-9.\-]/', '', ($params['MinimumPrice'] ?? 0));
+
+        $minPrice = (float) preg_replace('#[^0-9.\-]#', '', ($params['MinimumPrice'] ?? 0));
         if ($minPrice) {
             $list = $list->filter(['Price:GreaterThan' => $minPrice]);
         }
+
         $forSale = $params['ForSale'] ?? '';
         if ($forSale) {
             $forSaleFilter = null;
@@ -80,18 +83,22 @@ trait EcommerceProductReportTrait
             } elseif ('No' === $forSale) {
                 $forSaleFilter = 0;
             }
+
             if (null !== $forSaleFilter) {
                 $list = $list->filter(['AllowPurchase' => $forSaleFilter]);
             }
         }
+
         $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
         if ($changedInTheLastXDays) {
             $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
         }
+
         $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
         if ($createdInTheLastXDays) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
+
         $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
         if ($createdInTheLastXDays) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
@@ -164,30 +171,30 @@ trait EcommerceProductReportTrait
                     'ProductType',
                     'Product Type',
                     $productTypes
-
                 )
             )
         );
         $fields->recursiveWalk(
-            function(FormField $field) {
-                if(strpos($field->getName(), 'filter[') !== 0) {
+            function (FormField $field) {
+                if (0 !== strpos($field->getName(), 'filter[')) {
                     $field->setName(sprintf('filters[%s]', $field->getName()));
                 }
+
                 $field->addExtraClass('no-change-track'); // ignore in changetracker
             }
         );
 
         return $fields;
-
     }
 
     protected function getProductTypes()
     {
         $list = ClassInfo::subClassesFor(Product::class, true);
         $newArray = [];
-        foreach($list as $className) {
-            $newArray[$className] = $className === Product::class ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
+        foreach ($list as $className) {
+            $newArray[$className] = Product::class === $className ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
         }
+
         return $newArray;
     }
 

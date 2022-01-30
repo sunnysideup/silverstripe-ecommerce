@@ -164,8 +164,9 @@ class ProductSearchFilter extends BaseApplyer
      * @var DataList
      */
     protected static $groupListCache;
+
     /**
-     * @var DataList
+     * @var string
      */
     protected static $debugString = '';
 

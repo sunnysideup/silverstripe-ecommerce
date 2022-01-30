@@ -69,6 +69,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
         if (false === self::$singleton_cache) {
             user_error('Use ::inst to create me!');
         }
+
         $this->setRootGroupController($rootGroupController);
         $this->setRootGroup($rootGroup);
 
@@ -101,7 +102,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     /**
      * Set the root {@link ProductGroup} to display the products from.
      *
-     * @param ProductGroup $rootGroupController
+     * @param ProductGroupController $rootGroupController
      */
     public function setRootGroupController($rootGroupController): self
     {
@@ -262,6 +263,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
             $ids3 = $this->getParentGroupsBasedOnProductsFiltered()->columnUnique();
             $this->filterForCandidateCategoryIdsFiltered = array_merge($ids1, $ids2, $ids3);
         }
+
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered(), true);
 
         return $list->exclude(['ID' => $this->getParentGroupIds()])
@@ -274,7 +276,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     public function getAlsoShowParentIdsFiltered(): array
     {
-        if (! count($this->alsoShowParentIdsFiltered)) {
+        if ($this->alsoShowParentIdsFiltered === []) {
             $rows = DB::query('
                 SELECT "ProductGroupID"
                 FROM "Product_ProductGroups"

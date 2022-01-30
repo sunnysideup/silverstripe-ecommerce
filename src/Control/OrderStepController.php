@@ -52,7 +52,7 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
 
-        return $this->renderWith('Page');
+        return $this->renderWith(\Page::class);
     }
 
     /**
@@ -64,7 +64,7 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
 
-        return $this->renderWith('Page');
+        return $this->renderWith(\Page::class);
     }
 
     /**
@@ -197,6 +197,7 @@ abstract class OrderStepController extends Controller
                 $id = (int) $this->request->param('ID');
                 $sessionID = Convert::raw2sql($this->request->param('OtherID'));
             }
+
             self::$_order = Order::get_order_cached((int) $id);
             if (self::$_order) {
                 if ($this->secureHash(self::$_order) !== $sessionID) {

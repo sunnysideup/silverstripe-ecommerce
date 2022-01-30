@@ -342,6 +342,7 @@ class EcommerceConfigDefinitions
 
             Product::class => [
                 'folder_name_for_images' => 'Default folder for uploading product images.',
+                'allow_price_caching' => 'Allow prices to be cached - they are the same for all customers.',
             ],
 
             ProductSearchForm::class => [

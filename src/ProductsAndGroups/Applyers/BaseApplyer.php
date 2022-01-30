@@ -142,9 +142,10 @@ abstract class BaseApplyer
         if (empty($params)) {
             $params = null;
         }
+
         $sql = $this->checkOption($key);
         if (is_array($sql)) {
-            if (count($sql)) {
+            if ($sql !== []) {
                 foreach ($sql as $key => $item) {
                     $sql[$key] = $this->sqlPlaceholderReplacer($item, $params);
                 }
@@ -191,11 +192,13 @@ abstract class BaseApplyer
         if (! $key) {
             $key = $defaultKey;
         }
+
         if (is_string($key)) {
             $options = $this->getOptions();
             if (isset($options[$key])) {
                 return $options[$key][$returnValue];
             }
+
             //backup!
             if ($key !== $defaultKey) {
                 return $this->checkOption($defaultKey, $returnValue);
@@ -219,6 +222,7 @@ abstract class BaseApplyer
             if (! is_array($params)) {
                 $params = [$params];
             }
+
             foreach ($params as $param) {
                 $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);
             }
