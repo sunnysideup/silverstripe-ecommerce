@@ -141,6 +141,10 @@ class Product extends Page implements BuyableModel
         ]
     ];
 
+    public function AdditionalImages()
+	{
+		return $this->getManyManyComponents('AdditionalImages')->sort('Sort');
+	}
     /**
      * Standard SS variable.
      */
