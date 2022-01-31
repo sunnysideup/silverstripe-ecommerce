@@ -135,6 +135,12 @@ class Product extends Page implements BuyableModel
         'Price' => true,
     ];
 
+    private static $many_many_extraFields = [
+        'AdditionalImages' => [
+            'Sort' => 'Int',
+        ]
+    ];
+
     /**
      * Standard SS variable.
      */
