@@ -36,6 +36,8 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductGroupDropdown;
 use Sunnysideup\Ecommerce\Forms\Fields\YesNoDropDownField;
 use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProductGroups;
+
+use Bummzack\SortableFile\Forms\SortableUploadField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -137,14 +139,18 @@ class Product extends Page implements BuyableModel
 
     private static $many_many_extraFields = [
         'AdditionalImages' => [
-            'Sort' => 'Int',
+            'ImageSort' => 'Int',
+        ],
+        'AdditionalFiles' => [
+            'FileSort' => 'Int',
         ]
     ];
 
     public function AdditionalImages()
-	{
-		return $this->getManyManyComponents('AdditionalImages')->sort('Sort');
-	}
+    {
+        return $this->getManyManyComponents('AdditionalImages')>sort('Product_AdditionalImages.ImageSort ASC');
+    }
+
     /**
      * Standard SS variable.
      */
@@ -1290,11 +1296,10 @@ class Product extends Page implements BuyableModel
      */
     protected function getAdditionalImagesField()
     {
-        $uploadField = new UploadFIeld(
+        return (new SortableUploadField(
             'AdditionalImages',
             'More images'
-        );
-        $uploadField->setAllowedMaxFileNumber(12);
+        ))->setSortColumn('ImageSort');
 
         return $uploadField;
     }
@@ -1306,11 +1311,10 @@ class Product extends Page implements BuyableModel
      */
     protected function getAdditionalFilesField()
     {
-        $uploadField = new UploadFIeld(
+        return (new SortableUploadField(
             'AdditionalFiles',
-            'Additional Files'
-        );
-        $uploadField->setAllowedMaxFileNumber(12);
+            'Download Files'
+        ))->setSortColumn('FileSort');
 
         return $uploadField;
     }

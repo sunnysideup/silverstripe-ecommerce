@@ -28,6 +28,7 @@
     }
   ],
   "require": {
+    "bummzack/sortablefile": "^2.0",
     "silverstripe/recipe-cms": "^4.0@stable",
     "pelago/emogrifier": "^4.0@stable",
     "silverstripe/lumberjack": "^2.0@stable",
