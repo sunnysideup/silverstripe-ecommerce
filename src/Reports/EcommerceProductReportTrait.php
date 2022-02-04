@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CurrencyField;
@@ -9,6 +10,7 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\NumericField;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -68,6 +70,11 @@ trait EcommerceProductReportTrait
 
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
+        }
+
+        $title = (string) Convert::raw2sql($params['Title'] ??  '');
+        if ($title) {
+            $list = $list->filterAny(['Title:PartialMatch' => $title,'ProductBreadcrumb:PartialMatch' => $title,'InternalItemID:PartialMatch' => $title,]);
         }
 
         $minPrice = (float) preg_replace('#[^0-9.\-]#', '', ($params['MinimumPrice'] ?? 0));
@@ -143,6 +150,10 @@ trait EcommerceProductReportTrait
         $fields->push(
             FieldGroup::create(
                 'Optional Filters',
+                TextField::create(
+                    'Title',
+                    'Keyword',
+                ),
                 CurrencyField::create(
                     'MinimumPrice',
                     'Minimum Price',
@@ -171,8 +182,8 @@ trait EcommerceProductReportTrait
                     'ProductType',
                     'Product Type',
                     $productTypes
-                )
-            )
+                ),
+            )->addExtraClass('stacked')
         );
         $fields->recursiveWalk(
             function (FormField $field) {
