@@ -112,7 +112,7 @@ class ProductProductImageUploadField extends UploadField
     public function __construct($name, $title = null, SS_List $items = null)
     {
         parent::__construct($name, $title, $items);
-        $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'jpeg', 'png']);
+        $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'png']);
 
         $callingClass = $this->getCallingClass();
         $folderName = Config::inst()->get($callingClass, 'folder_name_for_images');
