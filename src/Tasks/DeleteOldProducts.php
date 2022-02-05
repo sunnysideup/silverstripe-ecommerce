@@ -42,16 +42,7 @@ class DeleteOldProducts extends BuildTask
         $cutOfTs = strtotime('-' . $this->Config()->get('last_sold_days_ago') . ' days');
         $products = Product::get()->filter(['AllowPurchase' => false]);
         foreach ($products as $product) {
-            $markForDeletion = false;
-            if ($product->hasBeenSold()) {
-                $lastSoldTs = strtotime($product->SalesRecord()->max('LastEdited'));
-                if ($lastSoldTs < $cutOfTs) {
-                    $markForDeletion = true;
-                }
-            } else {
-                $markForDeletion = true;
-            }
-            if ($markForDeletion) {
+            if (! $product->hasBeenSold()) {
                 $ids[$product->ID] = $product->ID;
             }
         }
