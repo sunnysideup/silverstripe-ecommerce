@@ -20,7 +20,7 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
  * @package: ecommerce
  * @sub-package: cms
  */
-class ProductConfigModelAdmin extends ModelAdmin
+class ProductSearchModelAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
 
@@ -31,7 +31,7 @@ class ProductConfigModelAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $url_segment = 'product-config';
+    private static $url_segment = 'product-search';
 
     /**
      * standard SS variable.
@@ -45,14 +45,17 @@ class ProductConfigModelAdmin extends ModelAdmin
      *
      * @var array
      */
-    private static $managed_models = [];
+    private static $managed_models = [
+        SearchReplacement::class,
+        SearchHistory::class,
+    ];
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $required_permission_codes = 'CMS_ACCESS_ProductConfigModelAdmin';
+    private static $required_permission_codes = 'CMS_ACCESS_ProductSearchModelAdmin';
 
     /**
      * standard SS variable.

@@ -126,6 +126,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
         'CMS_ACCESS_ProductsAndGroupsModelAdmin',
         'CMS_ACCESS_ProductConfigModelAdmin',
+        'CMS_ACCESS_ProductSearchModelAdmin',
         'CMS_ACCESS_SalesAdmin',
         'CMS_ACCESS_SalesAdminByOrderSize',
         'CMS_ACCESS_SalesAdminByOrderStep',
