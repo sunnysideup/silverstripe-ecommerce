@@ -45,7 +45,6 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin
      */
     private static $managed_models = [
         Product::class,
-        ProductGroup::class,
     ];
 
     private static $allowed_actions = [

@@ -10,6 +10,8 @@ use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
+
 /**
  * @description: Manages stuff related to products,
  * but not the product (groups) themselves
@@ -45,7 +47,9 @@ class ProductConfigModelAdmin extends ModelAdmin
      *
      * @var array
      */
-    private static $managed_models = [];
+    private static $managed_models = [
+        ProductGroup::class,
+    ];
 
     /**
      * standard SS variable.

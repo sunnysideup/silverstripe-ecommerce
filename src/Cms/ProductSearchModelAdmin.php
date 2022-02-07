@@ -38,7 +38,7 @@ class ProductSearchModelAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $menu_title = 'Product Details';
+    private static $menu_title = 'Product Search';
 
     /**
      * standard SS variable.
@@ -48,6 +48,8 @@ class ProductSearchModelAdmin extends ModelAdmin
     private static $managed_models = [
         SearchReplacement::class,
         SearchHistory::class,
+        ProductGroupSearchTable::class,
+        ProductSearchTable::class,
     ];
 
     /**
