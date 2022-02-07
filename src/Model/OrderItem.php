@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Model;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\NumericField;
@@ -144,7 +145,7 @@ class OrderItem extends OrderAttribute
             'title' => 'Order Number',
         ],
         'BuyableID' => [
-            'field' => ProductDropdown::class,
+            'field' => TextField::class,
             'title' => 'Internal Item ID',
             'filter' => 'OrderItemProductFilter',
         ],
