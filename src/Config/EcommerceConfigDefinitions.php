@@ -11,6 +11,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin;
+use Sunnysideup\Ecommerce\Cms\ProductSearchModelAdmin;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
 use Sunnysideup\Ecommerce\Cms\StoreAdmin;
@@ -151,6 +152,7 @@ class EcommerceConfigDefinitions
             StoreAdmin::class,
             ProductsAndGroupsModelAdmin::class,
             ProductConfigModelAdmin::class,
+            ProductSearchModelAdmin::class,
             SalesAdmin::class,
         ],
         'TEMPLATES' => [
@@ -304,6 +306,11 @@ class EcommerceConfigDefinitions
 
             ProductConfigModelAdmin::class => [
                 'managed_models' => 'An array of data object classes that are managed as \'Product Config\' configuration items.
+                    These are all items that relate to Products and Product Groups that are not in the main group.
+                    This includes any searches carried out in the Product Group. ', ],
+
+            ProductSearchModelAdmin::class => [
+                'managed_models' => 'An array of data object classes that are managed as \'Product Search\' configuration items.
                     These are all items that relate to Products and Product Groups that are not in the main group.
                     This includes any searches carried out in the Product Group. ', ],
 

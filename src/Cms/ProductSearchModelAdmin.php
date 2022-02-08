@@ -10,8 +10,6 @@ use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
-
 /**
  * @description: Manages stuff related to products,
  * but not the product (groups) themselves
@@ -22,7 +20,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @sub-package: cms
  */
-class ProductConfigModelAdmin extends ModelAdmin
+class ProductSearchModelAdmin extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
 
@@ -33,14 +31,14 @@ class ProductConfigModelAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $url_segment = 'product-config';
+    private static $url_segment = 'product-search';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $menu_title = 'Product Details';
+    private static $menu_title = 'Product Search';
 
     /**
      * standard SS variable.
@@ -48,7 +46,10 @@ class ProductConfigModelAdmin extends ModelAdmin
      * @var array
      */
     private static $managed_models = [
-        ProductGroup::class,
+        SearchReplacement::class,
+        SearchHistory::class,
+        ProductGroupSearchTable::class,
+        ProductSearchTable::class,
     ];
 
     /**
@@ -56,7 +57,7 @@ class ProductConfigModelAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $required_permission_codes = 'CMS_ACCESS_ProductConfigModelAdmin';
+    private static $required_permission_codes = 'CMS_ACCESS_ProductSearchModelAdmin';
 
     /**
      * standard SS variable.

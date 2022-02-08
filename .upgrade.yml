@@ -191,6 +191,7 @@ mappings:
   ModelAdminEcommerceBaseClass: Sunnysideup\Ecommerce\Cms\ModelAdminEcommerceBaseClass
   SalesAdminExtras: Sunnysideup\Ecommerce\Cms\SalesAdminExtras
   ProductConfigModelAdmin: Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
+  ProductSearchModelAdmin: Sunnysideup\Ecommerce\Cms\ProductSearchModelAdmin
   ProductBulkLoader: Sunnysideup\Ecommerce\Cms\ProductBulkLoader
   StoreAdmin: Sunnysideup\Ecommerce\Cms\StoreAdmin
   CheckoutPageController: Sunnysideup\Ecommerce\Pages\CheckoutPageController
