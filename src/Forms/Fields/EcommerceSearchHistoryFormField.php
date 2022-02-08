@@ -164,7 +164,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 }
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'] . '-' . $key] = $row['Title'];
-                $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                $link = $redirectToPage->Link() .'?searchfilter=Keyword~' . urlencode($row['Title']);
                 $debugLink = $link . '&DebugSearch=1';
                 $tableContent .= '
                     <tr>
