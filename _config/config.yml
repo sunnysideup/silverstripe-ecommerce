@@ -33,7 +33,7 @@ SilverStripe\ORM\FieldType\DBMoney:
   extensions:
     - Sunnysideup\Ecommerce\Money\EcommerceMoney
 Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
-  url_segment: ecommerce-email-preview
+  url_segment: admin/ecommerce-email-preview
 Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN

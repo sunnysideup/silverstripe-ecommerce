@@ -9,6 +9,6 @@ SilverStripe\Control\Director:
     ecommercepayment//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommercePaymentController
     ecommercetemplatetest//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
     ecommercebuyabledatalist//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
-    ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
+    admin/ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
     ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\OrderModifierFormController
     admin/ecommerce/quick-updates//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\QuickUpdates

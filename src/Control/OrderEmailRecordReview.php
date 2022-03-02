@@ -12,6 +12,8 @@ class OrderEmailRecordReview extends Controller
         'read' => 'ShopAdmin',
     ];
 
+    private static $url_segment = 'admin/ecommerce-email-preview';
+
     public static function review_link($email)
     {
         return Config::inst()->get(OrderEmailRecordReview::class, 'url_segment') . '/read/' . $email->ID;
