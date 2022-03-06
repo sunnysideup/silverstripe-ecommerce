@@ -76,7 +76,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $summary_fields = [
-        'Created' => 'Send',
+        'Created' => 'Sent Date + Time',
         'OrderStepNice' => 'Order Step',
         'From' => 'From',
         'To' => 'To',
@@ -90,7 +90,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $field_labels = [
-        'Created' => 'Send',
+        'Created' => 'Sent Date + Time',
         'OrderStepNice' => 'Order Step',
         'From' => 'From',
         'To' => 'To',

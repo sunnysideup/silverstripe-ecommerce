@@ -385,7 +385,7 @@ class ProductSearchFilter extends BaseApplyer
 
         //product groups
         $tmpVar = $this->baseClassNameForGroups;
-        $filter = ['ID' => ArrayMethods::filter_array($this->productGroupIds)];
+        $filter = ['ID' => ArrayMethods::filter_array($this->productGroupIds), 'ShowInSearch' => 1];
         $this->productsForGroups = $tmpVar::get()->filter($filter);
     }
 
@@ -577,7 +577,7 @@ class ProductSearchFilter extends BaseApplyer
         }
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
         $this->productsForGroups = $this->productsForGroups
-            ->filter(['ID' => ArrayMethods::filter_array($ids)])
+            ->filter(['ID' => ArrayMethods::filter_array($ids), 'ShowInSearch' => 1])
             ->sort($sortStatement)
         ;
         $this->productGroupIds = $ids;
