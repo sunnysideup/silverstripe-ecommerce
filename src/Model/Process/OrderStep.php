@@ -1443,24 +1443,26 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $filter,
                             $cacheDataObjectGetOne = false
                         );
-                        if ($obj->Code !== $code) {
-                            $obj->Code = $code;
-                            $obj->write();
-                        }
-                        if ($obj->ClassName !== $className) {
-                            $obj->ClassName = $className;
-                            $obj->write();
-                        }
-                        //replace default description
-                        $parentObj = singleton(OrderStep::class);
-                        if ($obj->Description === $parentObj->myDescription()) {
-                            $obj->Description = $obj->myDescription();
-                            $obj->write();
-                        }
-                        //check sorting order
-                        if ($obj->Sort !== $indexNumber) {
-                            $obj->Sort = $indexNumber;
-                            $obj->write();
+                        if($obj && $obj instanceof OrderStep) {
+                            if ($obj->Code !== $code) {
+                                $obj->Code = $code;
+                                $obj->write();
+                            }
+                            if ($obj->ClassName !== $className) {
+                                $obj->ClassName = $className;
+                                $obj->write();
+                            }
+                            //replace default description
+                            $parentObj = singleton(OrderStep::class);
+                            if ($obj->Description === $parentObj->myDescription()) {
+                                $obj->Description = $obj->myDescription();
+                                $obj->write();
+                            }
+                            //check sorting order
+                            if ($obj->Sort !== $indexNumber) {
+                                $obj->Sort = $indexNumber;
+                                $obj->write();
+                            }
                         }
                     } else {
                         $oldObjects = OrderStep::get()->filterAny($filter);
