@@ -508,20 +508,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     )
                 );
             }
-            $fields->addFieldToTab(
+
+            $fields->addFieldsToTab(
                 'Root.Queue',
-                $deferTimeInSecondsField = TextField::create(
-                    'DeferTimeInSeconds',
-                    _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
-                )
-                    ->setDescription(
-                        _t(
-                            'OrderStep.TIME_EXPLANATION',
-                            '86,400 seconds is one day ...
-                        <br />To make it easier, you can also enter things like <em>1 week</em>, <em>3 hours</em>, or <em>7 minutes</em>.
-                        <br />Non-second entries will automatically be converted to seconds.'
-                        )
+                [
+                    new HeaderField('DeferHeader', _t('OrderStep.DEFER_HEADER', 'Delay'), 3),
+                    $deferTimeInSecondsField = TextField::create(
+                        'DeferTimeInSeconds',
+                        _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
                     )
+                        ->setDescription(
+                            _t(
+                                'OrderStep.TIME_EXPLANATION',
+                                '86,400 seconds is one day ...
+                            <br />To make it easier, you can also enter things like <em>1 week</em>, <em>3 hours</em>, or <em>7 minutes</em>.
+                            <br />Non-second entries will automatically be converted to seconds.'
+                            )
+                        )
+                ]
             );
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
@@ -599,7 +603,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $fields->addFieldToTab('Root.Main', new HeaderField('WARNING2', _t('OrderStep.CUSTOMERCANCHANGE', 'What can be changed during this step?'), 3), 'CustomerCanEdit');
         $fields->addFieldToTab('Root.Main', new HeaderField('WARNING5', _t('OrderStep.ORDERGROUPS', 'Order groups for customer?'), 3), 'ShowAsUncompletedOrder');
         $fields->addFieldToTab('Root.Main', new HeaderField('HideStepFromCustomerHeader', _t('OrderStep.HIDE_STEP_FROM_CUSTOMER_HEADER', 'Customer Interaction'), 3), 'HideStepFromCustomer');
-        $fields->addFieldToTab('Root.Main', new HeaderField('DeferHeader', _t('OrderStep.DEFER_HEADER', 'Delay'), 3), 'DeferTimeInSeconds');
         //final cleanup
         $fields->removeFieldFromTab('Root.Main', 'Sort');
         $fields->addFieldToTab('Root.Main', new TextareaField('Description', _t('OrderStep.DESCRIPTION', 'Explanation for internal use only')), 'WARNING1');
