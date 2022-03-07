@@ -383,16 +383,16 @@ class OrderConfirmationPageController extends CartPageController
                 if ($step) {
                     $emailClassName = $step->getEmailClassName();
                 }
-                $email = filter_var($statusIDSend, FILTER_SANITIZE_EMAIL);
-                if (! $email) {
-                    $email = true;
+                $adminOnlyOrToEmail = filter_var($statusIDSend, FILTER_SANITIZE_EMAIL);
+                if (! $adminOnlyOrToEmail) {
+                    $adminOnlyOrToEmail = true;
                 }
                 $this->currentOrder->sendEmail(
                     $emailClassName,
-                    _t('Account.TEST_ONLY', '--- TEST ONLY ---') . ' ' . $subject,
+                    $subject,
                     $message,
                     $resend = true,
-                    $adminOnlyOrToEmail = $email
+                    $adminOnlyOrToEmail
                 );
             }
 
