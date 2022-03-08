@@ -491,14 +491,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
-        $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
-        if ($queueField) {
-            $config = $queueField->getConfig();
-            $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-            $config->removeComponentsByType(GridFieldDeleteAction::class);
-        }
-        $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
+            $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
+            if ($queueField) {
+                $config = $queueField->getConfig();
+                $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+                $config->removeComponentsByType(GridFieldDeleteAction::class);
+            }
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
                     'Root.Queue',
@@ -546,6 +545,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 'Root.Queue',
                 $queueField
             );
+        } else {
+            $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         }
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(
@@ -1484,7 +1485,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         $cacheDataObjectGetOne = false
                     );
                     if (! $obj) {
-                        user_error("There was an error in creating the {$code} OrderStep");
+                        user_error("There was an error in creating the {$code} OrderStep", E_USER_NOTICE);
                     }
                 }
             }
