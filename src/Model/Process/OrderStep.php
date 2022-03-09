@@ -491,14 +491,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
-        $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
-        if ($queueField) {
-            $config = $queueField->getConfig();
-            $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
-            $config->removeComponentsByType(GridFieldDeleteAction::class);
-        }
-        $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         if ($this->canBeDefered()) {
+            $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
+            if ($queueField) {
+                $config = $queueField->getConfig();
+                $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+                $config->removeComponentsByType(GridFieldDeleteAction::class);
+            }
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
                     'Root.Queue',
@@ -546,6 +545,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 'Root.Queue',
                 $queueField
             );
+        } else {
+            $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
         }
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(
@@ -1443,24 +1444,26 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $filter,
                             $cacheDataObjectGetOne = false
                         );
-                        if ($obj->Code !== $code) {
-                            $obj->Code = $code;
-                            $obj->write();
-                        }
-                        if ($obj->ClassName !== $className) {
-                            $obj->ClassName = $className;
-                            $obj->write();
-                        }
-                        //replace default description
-                        $parentObj = singleton(OrderStep::class);
-                        if ($obj->Description === $parentObj->myDescription()) {
-                            $obj->Description = $obj->myDescription();
-                            $obj->write();
-                        }
-                        //check sorting order
-                        if ($obj->Sort !== $indexNumber) {
-                            $obj->Sort = $indexNumber;
-                            $obj->write();
+                        if($obj && $obj instanceof OrderStep) {
+                            if ($obj->Code !== $code) {
+                                $obj->Code = $code;
+                                $obj->write();
+                            }
+                            if ($obj->ClassName !== $className) {
+                                $obj->ClassName = $className;
+                                $obj->write();
+                            }
+                            //replace default description
+                            $parentObj = singleton(OrderStep::class);
+                            if ($obj->Description === $parentObj->myDescription()) {
+                                $obj->Description = $obj->myDescription();
+                                $obj->write();
+                            }
+                            //check sorting order
+                            if ($obj->Sort !== $indexNumber) {
+                                $obj->Sort = $indexNumber;
+                                $obj->write();
+                            }
                         }
                     } else {
                         $oldObjects = OrderStep::get()->filterAny($filter);
@@ -1482,7 +1485,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         $cacheDataObjectGetOne = false
                     );
                     if (! $obj) {
-                        user_error("There was an error in creating the {$code} OrderStep");
+                        user_error("There was an error in creating the {$code} OrderStep", E_USER_NOTICE);
                     }
                 }
             }

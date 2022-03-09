@@ -161,18 +161,6 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-    //private static $default_sort = "\"FullSiteTreeSort\" ASC, \"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
-    //private static $default_sort = "\"Sort\" ASC, \"InternalItemID\" ASC, \"Price\" ASC";
-
-    /**
-     * Standard SS variable.
-     */
-    private static $summary_fields = [
-    ];
-
-    /**
-     * Standard SS variable.
-     */
     private static $searchable_fields = [
         'ParentID' => [
             'title' => 'Category',
@@ -243,6 +231,7 @@ class Product extends Page implements BuyableModel
         return [
             'Image.CMSThumbnail' => 'Image',
             'InternalItemID' => 'Code',
+            'Title' => 'Title',
             'ProductBreadcrumb' => 'Breadcrumb',
             'Price.Nice' => 'Price',
             'AllowPurchaseNice' => 'For Sale',

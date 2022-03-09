@@ -1,4 +1,7 @@
 <h1 class="pagetitle">$Title</h1>
+
+<% if $CustomerOrderStepForm %><div id="CustomerOrderStepForm">$CustomerOrderStepForm</div><% end_if %>
+
 <div class="paymentMessage $PaymentMessageType">
     <h3 class="paymentHeader">$PaymentHeader</h3>
     <div class="paymentMessageInner">$PaymentMessage</div>
@@ -6,7 +9,6 @@
 
 <% if Content %><div id="ContentHolder">$Content</div><% end_if %>
 
-<% if $CustomerOrderStepForm %><div id="CustomerOrderStepForm">$CustomerOrderStepForm</div><% end_if %>
 
 <% if Order %>
 <% with Order %>
