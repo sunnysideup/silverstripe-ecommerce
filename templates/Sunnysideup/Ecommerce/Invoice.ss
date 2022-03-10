@@ -1,7 +1,7 @@
 <% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageHeader Title='Invoice' %>
 
 
-<div style="page-break-after: always;" >
+<div >
     <% include Sunnysideup\Ecommerce\Includes\Order_ShopInfo_Invoice %>
     <% with Order %>
         <% include Sunnysideup\Ecommerce\Includes\Order %>

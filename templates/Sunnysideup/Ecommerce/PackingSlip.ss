@@ -1,7 +1,7 @@
 <% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageHeader Title='Packing Slip' %>
 
 
-<div style="page-break-after: always;" id="Wrapper">
+<div id="Wrapper">
     <h1 class="title"><% if PackingSlipTitle %>$PackingSlipTitle<% else %><% _t("Order.PACKING_SLIP", "Packing Slip") %><% end_if %></h1>
     <div id="AddressesHolder">
         <div id="Sender" class="section">
