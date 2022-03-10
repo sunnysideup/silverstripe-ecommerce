@@ -2883,7 +2883,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;
                 $buyable = $orderItem->getBuyableCached();
-                $html .= '<li style="font-family: monospace; font-size: 0.9em; color: #1F9433; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . '× ';
+                $html .= '<li style="font-family: monospace; font-size: 0.9em; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . '× ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
                 } else {
