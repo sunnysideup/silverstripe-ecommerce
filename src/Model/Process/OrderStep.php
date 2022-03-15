@@ -575,12 +575,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                                 var href = jQuery(caller).attr("href");
                                 var email = prompt("Enter an email address to receive a copy of this example in your inbox, leave blank to view in the browser");
                                 if (email) {
-                                    href += "&send=" + email;
+                                    href += "&to=" + email;
                                 }
                                 window.open(href);
                             };
                         </script>'
-                    )
+                    ),
+                    'EmailSubject'
                 );
             }
 
@@ -607,7 +608,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //final cleanup
         $fields->removeFieldFromTab('Root.Main', 'Sort');
         $fields->addFieldToTab('Root.Main', new TextareaField('Description', _t('OrderStep.DESCRIPTION', 'Explanation for internal use only')), 'WARNING1');
-
+        $fields->addFieldsToTab(
+            'Root.Advanced',
+            [
+                ReadonlyField::create(
+                    'ClassName',
+                    'ClassName'
+                )
+            ]
+        );
         return $fields;
     }
 

@@ -61,7 +61,7 @@ class SalesAdmin extends ModelAdmin
     /**
      * @var int
      */
-    private static $cache_seconds = 300;
+    private static $cache_seconds = 30;
 
     /**
      * standard SS variable.

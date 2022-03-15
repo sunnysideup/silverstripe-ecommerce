@@ -3,6 +3,8 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use SilverStripe\Core\Config\Config;
+
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -12,6 +14,7 @@ use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
+use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * @description:
@@ -327,15 +330,22 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
-    public static function get_email_link($orderID, $emailClassName = OrderStatusEmail::class, $actuallySendEmail = false, $alternativeOrderStepID = 0)
+    public static function get_email_link(int $orderID,?string $emailClassName = OrderStatusEmail::class, ?bool $actuallySendEmail = false, ?int $alternativeOrderStepID = 0)
     {
-        $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . $emailClassName;
+        $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . str_replace('\\', '-', $emailClassName);
         $getParams = [];
-        if ($actuallySendEmail) {
-            $getParams['send'] = 1;
+        if(! $alternativeOrderStepID) {
+            $order = DataObject::get_one(Order::class, ['ID' => $orderID]);
+            if($order) {
+                $alternativeOrderStepID = $order->StatusID;
+            }
         }
-        if ($alternativeOrderStepID) {
-            $getParams['test'] = $alternativeOrderStepID;
+        if($alternativeOrderStepID) {
+            if ($actuallySendEmail) {
+                $getParams['send'] = $alternativeOrderStepID;
+            } else {
+                $getParams['test'] = $alternativeOrderStepID;
+            }
         }
         $getParams = http_build_query($getParams);
 

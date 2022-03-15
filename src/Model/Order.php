@@ -1960,11 +1960,11 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Send the invoice of the order by email.
      *
-     * @param string $emailClassName     (optional) class used to send email
-     * @param string $subject            (optional) subject for the email
-     * @param string $message            (optional) the main message in the email
-     * @param bool   $resend             (optional) send the email even if it has been sent before
-     * @param bool   $adminOnlyOrToEmail (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+     * @param string          $emailClassName     (optional) class used to send email
+     * @param string          $subject            (optional) subject for the email
+     * @param string          $message            (optional) the main message in the email
+     * @param bool            $resend             (optional) send the email even if it has been sent before
+     * @param bool|string     $adminOnlyOrToEmail (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
      * @return bool TRUE on success, FALSE on failure
      */
@@ -2622,11 +2622,13 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if (! isset($_REQUEST['print'])) {
             if ($this->IsSubmitted()) {
+                $step = $this->MyStep();
                 return Director::AbsoluteURL(
                     OrderConfirmationPage::get_email_link(
                         $this->ID,
-                        ClassHelpers::sanitise_class_name($this->MyStep()->getEmailClassName()),
-                        $actuallySendEmail = true
+                        ClassHelpers::sanitise_class_name($step->getEmailClassName()),
+                        $actuallySendEmail = true,
+                        $step->ID
                     )
                 );
             }

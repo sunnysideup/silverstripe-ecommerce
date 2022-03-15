@@ -7,6 +7,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\Requirements;
+
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -368,52 +370,56 @@ class OrderConfirmationPageController extends CartPageController
             $emailClassName = OrderReceiptEmail::class;
 
             // different classname
-            $otherId = str_replace('\\', '-', $request->param('OtherID'));
-            if (class_exists($otherId)) {
-                if (is_a(singleton($otherId), EcommerceConfigClassNames::getName(OrderEmail::class))) {
-                    $emailClassName = $otherId;
+            $potentialClassName = str_replace('-', '\\', $request->param('OtherID'));
+            if (class_exists($potentialClassName)) {
+                if (is_a(singleton($potentialClassName), EcommerceConfigClassNames::getName(OrderEmail::class))) {
+                    $emailClassName = $potentialClassName;
                 }
             }
-
-            $statusIDSend = (int) $request->getVar('send');
-            if ($statusIDSend) {
-                $step = OrderStep::get_by_id($statusIDSend);
-                $subject = $step->CalculatedEmailSubject($this->currentOrder);
-                $message = $step->CalculatedCustomerMessage($this->currentOrder);
-                if ($step) {
-                    $emailClassName = $step->getEmailClassName();
-                }
-                $adminOnlyOrToEmail = filter_var($statusIDSend, FILTER_SANITIZE_EMAIL);
-                if (! $adminOnlyOrToEmail) {
-                    $adminOnlyOrToEmail = true;
-                }
-                $this->currentOrder->sendEmail(
-                    $emailClassName,
-                    $subject,
-                    $message,
-                    $resend = true,
-                    $adminOnlyOrToEmail
-                );
+            $sendStepID = (int) $request->getVar('send');
+            $testStepID = (int) $request->getVar('test');
+            $stepID = 0;
+            if($sendStepID) {
+                $stepID = $sendStepID;
+                $isTest = false;
+            } elseif($testStepID) {
+                $stepID = $testStepID;
+                $isTest = true;
             }
-
-            //test
-            $statusIDTest = (int) $request->getVar('test');
-            if ($statusIDTest) {
-                $email = $this->currentOrder->getOrderEmail();
-                if ($email) {
-                    $step = OrderStep::get_by_id($statusIDTest);
+            if ($stepID) {
+                $to = '';
+                if(Permission::check('ADMIN')) {
+                    $to = (string) $request->getVar('to');
+                }
+                $step = OrderStep::get_by_id($stepID);
+                if($step) {
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
-                    $emailClassName = OrderInvoiceEmail::class;
-                    $adminOnlyOrToEmail = false;
-                    $resend = true;
-                    if ($this->currentOrder->sendEmail(
+                    $emailClassName = $step->getEmailClassName();
+                    $adminOnlyOrToEmail = $isTest;
+                    if($to) {
+                        $to = filter_var($to, FILTER_SANITIZE_EMAIL);
+                        if ($to) {
+                            $adminOnlyOrToEmail = $to;
+                            $email = $adminOnlyOrToEmail;
+                        }
+                    }
+                    if(! $to) {
+                        if($adminOnlyOrToEmail) {
+                            $email = 'site administrator';
+                        } else {
+                            $email = $this->currentOrder->getOrderEmail();
+                        }
+                        // goes to Email for order.
+                    }
+                    $outcome = $this->currentOrder->sendEmail(
                         $emailClassName,
                         $subject,
                         $message,
-                        $resend,
+                        $resend = true,
                         $adminOnlyOrToEmail
-                    )) {
+                    );
+                    if ($outcome) {
                         $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ') . $email . '.';
                     } else {
                         $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . $email;
@@ -421,6 +427,7 @@ class OrderConfirmationPageController extends CartPageController
                 } else {
                     $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
                 }
+
             }
             //display same data...
             Requirements::clear();
