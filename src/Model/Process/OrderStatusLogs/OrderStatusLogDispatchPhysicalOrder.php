@@ -27,7 +27,6 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         'DispatchTicket' => 'Varchar(100)',
         'DispatchLink' => 'Varchar(255)',
         'Sent' => 'Boolean',
-        'DoNotSendEmail' => 'Boolean',
     ];
 
     private static $indexes = [
