@@ -27,6 +27,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         'DispatchTicket' => 'Varchar(100)',
         'DispatchLink' => 'Varchar(255)',
         'Sent' => 'Boolean',
+        'DoNotSendEmail' => 'Boolean',
     ];
 
     private static $indexes = [
@@ -128,11 +129,12 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
             [
                 ReadonlyField::create('CustomerInfo', 'Customer', $this->getOrderCached()->Member()->getCustomerDetails()),
                 ReadonlyField::create('OrderInfo', 'Order', $this->getOrderCached()->getTitle()),
-                ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItems')),
+                ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItemsTiny')),
                 TextField::create('DispatchedBy'),
                 TextField::create('DispatchTicket'),
                 TextField::create('DispatchLink'),
                 CheckboxField::create('Sent'),
+                CheckboxField::create('InternalUseOnly', 'Do not send update to customer'),
             ]
         );
     }

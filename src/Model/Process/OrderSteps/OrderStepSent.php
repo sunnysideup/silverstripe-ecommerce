@@ -57,7 +57,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
-            'Root.Main',
+            'Root.CustomerMessage',
             HeaderField::create(
                 'ActuallySendDetails',
                 _t('OrderStep.ACTUALLYSENDDETAILS', 'Send details to the customer?'),
@@ -129,13 +129,14 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
                 return true; //do nothing
             }
 
-            return $order->sendEmail(
+            $order->sendEmail(
                 $this->getEmailClassName(),
                 $subject = $this->CalculatedEmailSubject($order),
                 $message = $this->CalculatedCustomerMessage($order),
                 $resend = false,
                 ! (bool) $this->SendDetailsToCustomer
             );
+            return true;
         }
 
         return false;
