@@ -127,16 +127,16 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         if ($log) {
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
+            } elseif ($log->Sent) {
+                $order->sendEmail(
+                    $this->getEmailClassName(),
+                    $subject = $this->CalculatedEmailSubject($order),
+                    $message = $this->CalculatedCustomerMessage($order),
+                    $resend = false,
+                    ! (bool) $this->SendDetailsToCustomer
+                );
+                return true;
             }
-
-            $order->sendEmail(
-                $this->getEmailClassName(),
-                $subject = $this->CalculatedEmailSubject($order),
-                $message = $this->CalculatedCustomerMessage($order),
-                $resend = false,
-                ! (bool) $this->SendDetailsToCustomer
-            );
-            return true;
         }
 
         return false;
