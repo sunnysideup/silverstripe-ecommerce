@@ -59,19 +59,21 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
         );
     }
 
-    /**
-     * can do next step once the admin notification has been sent.
-     *
-     * @return null|OrderStep (next step OrderStep object)
-     */
-    public function nextStep(Order $order)
-    {
-        if ($this->hasBeenSent($order)) {
-            return parent::nextStep($order);
-        }
 
-        return null;
-    }
+    /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;
+     * @var array
+     */
+    private static $step_logic_conditions = [
+        'hasBeenSent' => true,
+    ];
+
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.

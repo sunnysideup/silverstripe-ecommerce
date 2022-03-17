@@ -30,6 +30,20 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
         'check2' => 'Products are available',
     ];
 
+    /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;
+     * @var array
+     */
+    private static $step_logic_conditions = [
+        'PaymentConfirmed' => true,
+    ];
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
@@ -69,25 +83,16 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    /**
-     * can go to next step if order payment has been confirmed...
-     *
-     * @return null|OrderStep
-     */
-    public function nextStep(Order $order)
+    public function PaymentConfirmed($order) : bool
     {
-        $className = $this->getRelevantLogEntryClassName();
-        $orderStatusLog_PaymentChecks = $className::get()
+        $paymentConfirmedLog = $this->getRelevantLogEntryClassName();
+        $paymentConfirmedList = $paymentConfirmedLog::get()
             ->Filter([
                 'OrderID' => $order->ID,
                 'PaymentConfirmed' => 1,
             ])
         ;
-        if ($orderStatusLog_PaymentChecks->exists()) {
-            return parent::nextStep($order);
-        }
-
-        return null;
+        return (bool) $paymentConfirmedList->exists();
     }
 
     /**

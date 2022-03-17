@@ -27,6 +27,10 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
         'SendInvoiceToCustomer' => 'Boolean',
     ];
 
+    private static $step_logic_conditions = [
+        'hasBeenSent' => true,
+    ];
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
@@ -84,20 +88,6 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
             $adminOnlyOrToEmail,
             $this->getEmailClassName()
         );
-    }
-
-    /**
-     * can do next step once the invoice has been sent or in case the invoice does not need to be sent.
-     *
-     * @return null|OrderStep (next step OrderStep object)
-     */
-    public function nextStep(Order $order)
-    {
-        if ($this->hasBeenSent($order)) {
-            return parent::nextStep($order);
-        }
-
-        return null;
     }
 
     /**

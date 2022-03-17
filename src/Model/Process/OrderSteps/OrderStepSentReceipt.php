@@ -29,6 +29,11 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
         'SendReceiptToCustomer' => 'Boolean',
     ];
 
+    private static $step_logic_conditions = [
+        'hasBeenSent' => true,
+    ];
+
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
@@ -89,20 +94,6 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
             $adminOnlyOrToEmail,
             $this->getEmailClassName()
         );
-    }
-
-    /**
-     * can continue if receipt has been sent or if there is no need to send a receipt.
-     *
-     * @return null|OrderStep - DataObject = next OrderStep
-     */
-    public function nextStep(Order $order)
-    {
-        if ($this->hasBeenSent($order)) {
-            return parent::nextStep($order);
-        }
-
-        return null;
     }
 
     /**

@@ -6,6 +6,8 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\FieldType\DBDatetime;
+
+use SilverStripe\Control\Controller;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
@@ -27,6 +29,10 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      * @var string
      */
     protected $relevantLogEntryClassName = OrderStatusLogSubmitted::class;
+
+    private static $step_logic_conditions = [
+        'IsSubmitted' => true,
+    ];
 
     private static $table_name = 'OrderStepSubmitted';
 
@@ -92,7 +98,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order): bool
     {
-        if (! $order->IsSubmitted()) {
+        if (! $order->IsSubmitted($order)) {
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
                 //add currency if needed.
@@ -142,18 +148,10 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    /**
-     * go to next step if order has been submitted.
-     *
-     * @return null|OrderStep (next step OrderStep)
-     */
-    public function nextStep(Order $order)
-    {
-        if ($order->IsSubmitted()) {
-            return parent::nextStep($order);
-        }
 
-        return null;
+    public function IsSubmitted($order) : bool
+    {
+        return $order->IsSubmitted();
     }
 
     /**

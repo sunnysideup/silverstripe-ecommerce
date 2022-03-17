@@ -33,6 +33,20 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
 
     private static $table_name = 'OrderStepSent';
 
+    /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;
+     * @var array
+     */
+    private static $step_logic_conditions = [
+        'MarkedAsSent' => true,
+    ];
+
     private static $db = [
         'SendDetailsToCustomer' => 'Boolean',
         'EmailSubjectGift' => 'Varchar(200)',
@@ -142,25 +156,15 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return false;
     }
 
-    /**
-     *nextStep:
-     * returns the next step (after it checks if everything is in place for the next step to run...).
-     *
-     * @see Order::doNextStatus
-     *
-     * @return null|OrderStep (next step OrderStep object)
-     */
-    public function nextStep(Order $order)
+    public function MarkedAsSent($order) : bool
     {
         $log = $this->RelevantLogEntry($order);
         if ($log) {
-            if ($log->Sent) {
-                return parent::nextStep($order);
-            }
+            return (bool) $log->Sent;
         }
-
-        return null;
+        return false;
     }
+
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.

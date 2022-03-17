@@ -28,6 +28,20 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
     ];
 
     /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;
+     * @var array
+     */
+    private static $step_logic_conditions = [
+        'IsPaid' => true,
+    ];
+
+    /**
      *initStep:
      * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
      * should be able to run this function many times to check if the step is ready.
@@ -60,20 +74,9 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    /**
-     * can go to next step if order has been paid.
-     *
-     * @see Order::doNextStatus
-     *
-     * @return null|OrderStep (next step OrderStep object)
-     */
-    public function nextStep(Order $order)
+    public function IsPaid($order) : bool
     {
-        if ($order->IsPaid()) {
-            return parent::nextStep($order);
-        }
-
-        return null;
+        return (bool) $order->IsPaid();
     }
 
     /**

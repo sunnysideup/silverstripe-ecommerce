@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Process;
-
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -627,16 +627,34 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'ClassName',
                     'ClassName'
                 ),
-                ReadonlyField::create(
+                LiteralField::create(
                     'SpecialConditions',
-                    'Special Conditions',
-                    '<pre>
-                        '.print_r($this->Config()->get('step_logic_conditions')).'
-                    </pre>'
+                    $this->stepExplanations()
                 ),
             ]
         );
         return $fields;
+    }
+
+    protected function stepExplanations() : string
+    {
+        $html = '<h2>Moving to next step</h2><ul>';
+        $array = $this->Config()->get('step_logic_conditions');
+        if(count($array)) {
+            foreach($array as $method => $classNameOrTrue) {
+                $nextStep = $classNameOrTrue === true ? $this->nextStepObject() : $classNameOrTrue::get()->first();
+                if($nextStep) {
+                    $html .= '<li>If <strong>'.$method.'</strong> returns TRUE then move order to <a href="'.$nextStep->CMSEditLink().'">'.$nextStep->getTitle().'</a></li>';
+                } else {
+                    $html .= '<li>If <strong>'.$method.'</strong> returns TRUE then <strong>not specified</strong></li>';
+                }
+            }
+        } else {
+            $html .= '<li>Rules are not defined here.</li>';
+        }
+
+        $html .= '</ul>';
+        return $html;
     }
 
     /**
@@ -803,14 +821,26 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function nextStep(Order $order)
     {
         $conditions = $this->Config()->get('step_logic_conditions');
-        foreach($conditions as $method => $className) {
+        foreach($conditions as $method => $classNameOrTrue) {
             $outcome = $this->$method($order);
             if($outcome === true) {
-                return $className;
-            } elseif($outcome !== false) {
-                user_error($method.' is required to return TRUE or FALSE');
+                if($classNameOrTrue === true) {
+                    return $this->nextStepObject();
+                }
+                return $classNameOrTrue::get()->first();
+            } elseif ($outcome === false) {
+                // important
+                return null;
+            } else {
+                user_error($method.' is required to return TRUE or FALSE, answer is: '.print_r($outcome));
             }
+
         }
+        return $this->nextStepObject();
+    }
+
+    public function nextStepObject() : ?OrderStep
+    {
         $sort = (int) $this->Sort;
         if (! $sort) {
             $sort = 0;
@@ -820,11 +850,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             OrderStep::class,
             $where
         );
-        if ($nextOrderStepObject) {
-            return $nextOrderStepObject;
-        }
-
-        return null;
+        return $nextOrderStepObject ?:null;
     }
 
     // Boolean checks

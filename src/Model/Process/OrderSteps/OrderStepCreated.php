@@ -31,6 +31,19 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     ];
 
     /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;
+     * @var array
+     */
+    private static $step_logic_conditions = [
+        'HasItems' => true,
+    ];
+    /**
      *initStep:
      * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
      * should be able to run this function many times to check if the step is ready.
@@ -62,22 +75,12 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    /**
-     * We can run the next step, once any items have been added.
-     *
-     * @see Order::doNextStatus
-     *
-     * @return null|OrderStep (next step OrderStep object)
-     */
-    public function nextStep(Order $order)
+    public function HasItems($order) : bool
     {
-        $order->TotalItems($recalculate = true);
-        if ($order) {
-            return parent::nextStep($order);
-        }
-
-        return null;
+        $count = $order->TotalItems($recalculate = true);
+        return $count > 0 ? true : false;
     }
+
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
