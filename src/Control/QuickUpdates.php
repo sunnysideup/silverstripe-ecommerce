@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Level51\AjaxSelectField\AjaxSelectField;
+use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;

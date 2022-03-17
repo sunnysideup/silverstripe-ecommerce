@@ -71,6 +71,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     ];
 
     /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;
+     * @var array
+     */
+    private static $step_logic_conditions = [];
+
+    /**
      * @var int
      */
     private static $number_of_days_to_send_update_email = 10;
@@ -614,7 +626,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ReadonlyField::create(
                     'ClassName',
                     'ClassName'
-                )
+                ),
+                ReadonlyField::create(
+                    'SpecialConditions',
+                    'Special Conditions',
+                    '<pre>
+                        '.print_r($this->Config()->get('step_logic_conditions')).'
+                    </pre>'
+                ),
             ]
         );
         return $fields;
@@ -783,6 +802,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function nextStep(Order $order)
     {
+        $conditions = $this->Config()->get('step_logic_conditions');
+        foreach($conditions as $method => $className) {
+            $outcome = $this->$method($order);
+            if($outcome === true) {
+                return $className;
+            } elseif($outcome !== false) {
+                user_error($method.' is required to return TRUE or FALSE');
+            }
+        }
         $sort = (int) $this->Sort;
         if (! $sort) {
             $sort = 0;
