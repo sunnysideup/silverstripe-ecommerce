@@ -1165,7 +1165,6 @@ class Order extends DataObject implements EditableEcommerceObject
         );
         $this->MyStep()->addOrderStepFields($fields, $this, true);
         $this->extend('updateCMSFields', $fields);
-
         return $fields;
     }
 
@@ -3641,7 +3640,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function ConvertToHTML()
     {
         SetThemed::start();
-        $html = $this->renderWith('Sunnysideup\Ecommerce\Includes\OrderBasics');
+        $html = $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderBasics');
         SetThemed::end();
 
         return preg_replace('#\s+#', ' ', $html);
@@ -4032,17 +4031,15 @@ class Order extends DataObject implements EditableEcommerceObject
                 $email->setBcc($bcc);
             }
 
-            $email->setData($arrayData);
             // This might be called from within the CMS,
             // so we need to restore the theme, just in case
             // templates within the theme exist
             SetThemed::start();
+            $email->setData($arrayData);
             $email->setOrder($this);
             $email->setResend($resend);
             $result = $email->send(null);
             SetThemed::end();
-            //todo: we are experiencing issues with emails, so we always return true!
-            // return true;
             return $result;
         }
 
@@ -4092,7 +4089,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $replacementArray['To'] = '';
         $replacementArray['CC'] = '';
         $replacementArray['BCC'] = '';
-        $replacementArray['OrderStepMessage'] = $message;
+        $replacementArray['OrderStepMessage'] = DBField::create_field('HTMLText', $message);
         $replacementArray['Order'] = $this;
         $replacementArray['EmailLogo'] = $config->EmailLogo();
         $replacementArray['ShopPhysicalAddress'] = $config->ShopPhysicalAddress;

@@ -18,7 +18,7 @@
             <tr class="message">
                 <td class="left">
                     <h1 class="title">$Subject</h1>
-                    <% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage</div><% end_if %>
+                    <% if OrderStepMessage %><div class="orderStepMessage">$OrderStepMessage.Raw</div><% end_if %>
                 </td>
             </tr>
 
@@ -30,7 +30,7 @@
 <% if Order %>
     <% with Order %>
                     <div id="OrderInformation">
-                        <h2 class="orderHeading"><% if RetrieveLink %><a href="$RetrieveLink"><% end_if %>$Title<% if RetrieveLink %></a><% end_if %></h2>
+                    <h2 class="orderHeading"><% if RetrieveLink %><a href="$RetrieveLink"><% end_if %>$Title - click to update order<% if RetrieveLink %></a><% end_if %></h2>
                         <% include Sunnysideup\Ecommerce\Includes\Order_OrderStatusLogs %>
                         <% include Sunnysideup\Ecommerce\Includes\Order_CustomerNote %>
                         <% include Sunnysideup\Ecommerce\Includes\Order_Addresses %>

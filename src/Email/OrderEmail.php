@@ -246,7 +246,10 @@ abstract class OrderEmail extends Email
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
         if ($this->getBcc()) {
-            $orderEmailRecord->To .= ', BCC: ' . $this->emailToVarchar($this->getBcc());
+            $bcc =  trim($this->emailToVarchar($this->getBcc()));
+            if($bcc) {
+                $orderEmailRecord->To .= ', BCC: ' . $bcc;
+            }
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->subject;

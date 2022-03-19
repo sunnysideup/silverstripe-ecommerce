@@ -120,7 +120,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                         $saved = true;
                     }
                     if ($this->SaveOrderAsHTML || ! $saved) {
-                        $obj->OrderAsHTML = Convert::raw2sql($order->ConvertToHTML());
+                        $obj->OrderAsHTML = $order->ConvertToHTML();
                     }
                     $obj->write();
                 } else {

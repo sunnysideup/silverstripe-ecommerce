@@ -821,22 +821,24 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function nextStep(Order $order)
     {
         $conditions = $this->Config()->get('step_logic_conditions');
-        foreach($conditions as $method => $classNameOrTrue) {
-            $outcome = $this->$method($order);
-            if($outcome === true) {
-                if($classNameOrTrue === true) {
-                    return $this->nextStepObject();
+        if(count($conditions)) {
+            foreach($conditions as $method => $classNameOrTrue) {
+                $outcome = $this->$method($order);
+                if($outcome === true) {
+                    if($classNameOrTrue === true) {
+                        return $this->nextStepObject();
+                    }
+                    return $classNameOrTrue::get()->first();
+                } elseif ($outcome === false) {
+                    // important - do nothing - allow another condition to apply
+                } else {
+                    user_error($method.' is required to return TRUE or FALSE, answer is: '.print_r($outcome, 1));
                 }
-                return $classNameOrTrue::get()->first();
-            } elseif ($outcome === false) {
-                // important
-                return null;
-            } else {
-                user_error($method.' is required to return TRUE or FALSE, answer is: '.print_r($outcome));
             }
-
+        } else {
+            // if there are no conditions then just return the next step.
+            return $this->nextStepObject();
         }
-        return $this->nextStepObject();
     }
 
     public function nextStepObject() : ?OrderStep
