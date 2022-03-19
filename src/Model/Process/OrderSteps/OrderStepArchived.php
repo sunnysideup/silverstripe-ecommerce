@@ -60,7 +60,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @return null|OrderStep (next step OrderStep object)
      */
-    public function nextStep(Order $order)
+    public function nextStep(Order $order): ?OrderStep
     {
         //IMPORTANT
         return null;

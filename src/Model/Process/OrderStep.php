@@ -818,7 +818,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return null|OrderStep (next step OrderStep object)
      */
-    public function nextStep(Order $order)
+    public function nextStep(Order $order) : ?OrderStep
     {
         $conditions = $this->Config()->get('step_logic_conditions');
         if(count($conditions)) {
@@ -839,6 +839,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             // if there are no conditions then just return the next step.
             return $this->nextStepObject();
         }
+        return null;
     }
 
     public function nextStepObject() : ?OrderStep

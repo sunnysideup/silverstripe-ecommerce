@@ -32,7 +32,7 @@ interface OrderStepInterface
      *
      * @return null|OrderStep (nextStep DataObject)
      */
-    public function nextStep(Order $order);
+    public function nextStep(Order $order): ?OrderStep;
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
