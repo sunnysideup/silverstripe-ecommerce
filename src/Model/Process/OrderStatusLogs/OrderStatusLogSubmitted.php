@@ -131,15 +131,15 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        // todo: this needs work!
-        // $order = $this->getOrderCached();
-        // if ($order) {
-        //     $this->OrderAsString = $order->ConvertToString();
-        //     if (! $this->Total) {
-        //         $this->Total = $order->Total();
-        //         $this->SubTotal = $order->SubTotal();
-        //     }
-        // }
+        $order = $this->getOrderCached();
+        if ($order) {
+            // todo: this needs work!
+            // $this->OrderAsString = $order->ConvertToString();
+            if (! $this->Total) {
+                $this->Total = $order->Total();
+                $this->SubTotal = $order->SubTotal();
+            }
+        }
         if (! (int) $this->SequentialOrderNumber) {
             $this->SequentialOrderNumber = 1;
             $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') - 0;
