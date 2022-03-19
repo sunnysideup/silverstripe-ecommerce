@@ -249,6 +249,8 @@ abstract class OrderEmail extends Email
             $bcc =  trim($this->emailToVarchar($this->getBcc()));
             if($bcc) {
                 $orderEmailRecord->To .= ', BCC: ' . $bcc;
+            } else {
+                $orderEmailRecord->To .= ', BCC: ' . print_r($this->getBcc(), 1);
             }
         }
         //always set result to try if

@@ -33,7 +33,7 @@ class ArrayMethods
         }
 
         if ([] === $array) {
-            $array = [0 => 0];
+            $array = [-1 => -1];
         }
 
         return array_values(array_unique($array));
