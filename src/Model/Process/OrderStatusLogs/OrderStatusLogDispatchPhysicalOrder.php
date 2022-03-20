@@ -122,7 +122,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         return $html;
     }
 
-    public function DosFields()
+    public function getFrontEndFields($params = null)
     {
         return FieldList::create(
             [

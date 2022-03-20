@@ -79,7 +79,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     private static $table_name = 'EcommerceDBConfig';
 
     private static $db = [
-        'Title' => 'Varchar(30)',
+        'Title' => 'Varchar(70)',
         'UseThisOne' => 'Boolean',
         'ShopClosed' => 'Boolean',
         'ShopPricesAreTaxExclusive' => 'Boolean',
