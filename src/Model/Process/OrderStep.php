@@ -36,6 +36,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
+
 /**
  * @description: see OrderStep.md
  *
@@ -349,6 +350,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         return $this->yesOrNoNiceHelper($this->HideStepFromCustomer);
     }
+
 
     public function i18n_singular_name()
     {

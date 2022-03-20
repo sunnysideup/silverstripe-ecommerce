@@ -9,6 +9,8 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
+
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -76,6 +78,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         'CustomerNote' => 'HTMLText',
         'Type' => 'Varchar',
         'InternalUseOnlyNice' => 'Varchar',
+        'PopUpLink' => 'Varchar',
     ];
 
     /**
@@ -170,6 +173,30 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
 
         return _t('OrderStatusLog.No', 'No');
+    }
+
+    public function PopUpLink()
+    {
+        return $this->getPopUpLink();
+    }
+
+    public function getPopUpLink()
+    {
+        $className = 'Sunnysideup\\DataObjectSorter\\DataObjectOneRecordUpdateController';
+        if(class_exists($className)) {
+            $link =  $className::popup_link($this->getOwner()->ClassName, $this->getOwner()->ID, $this->getPopUpLinkTitle());
+        } else {
+            $link = '<a href="'.$this->CMSEditLink().'">'.$this->getPopUpLinkTitle().'</a>"';
+        }
+        return DBHTMLText::create_field(
+            'HTMLText',
+            $link
+        );
+    }
+
+    protected function getPopUpLinkTitle() : string
+    {
+        return 'Update Details';
     }
 
     /**
