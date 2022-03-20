@@ -21,6 +21,7 @@
                     <% with EcomConfig %>
                         <div id="ShopInfo">
                             <% if EmailLogo %><img src="$EmailLogo.getAbsoluteURL" alt="Logo - $EmailLogo.Title" /><% end_if %>
+                            <% if $SiteConfig && $SiteConfig.Title %><div id="SiteConfigTitle">$SiteConfig.Title</div><% end_if %>
                             <% if ShopPhysicalAddress %><div id="ShopPhysicalAddress">$ShopPhysicalAddress</div><% end_if %>
                         </div>
                     <% end_with %>

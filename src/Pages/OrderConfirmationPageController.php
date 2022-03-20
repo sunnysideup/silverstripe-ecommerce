@@ -420,7 +420,7 @@ class OrderConfirmationPageController extends CartPageController
                         $adminOnlyOrToEmail
                     );
                     if ($outcome) {
-                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'An email has been sent to: ') . $email . '.';
+                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'This email has been sent to: ') . $email . '.';
                     } else {
                         $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . $email;
                     }
@@ -431,11 +431,11 @@ class OrderConfirmationPageController extends CartPageController
             }
             //display same data...
             Requirements::clear();
-
+            echo $message;
             return $this->currentOrder->renderOrderInEmailFormat(
                 $emailClassName,
                 $subject,
-                $message
+                ''
             );
         }
 
