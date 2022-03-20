@@ -1045,13 +1045,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $canArray[] = _t('OrderStep.CANCEL', 'cancel');
         }
         if (count($canArray)) {
-            $v .= '<br />' . _t('OrderStep.CUSTOMER_CAN', 'Customer Can') . ': ' . implode(', ', $canArray) . '';
+            $v .= '<br />' . _t('OrderStep.CUSTOMER_CAN', 'Customer Can') . ': ' . implode(', ', $canArray) . '.';
         }
         if ($this->hasCustomerMessage()) {
-            $v .= '<br />' . _t('OrderStep.CUSTOMER_MESSAGES', 'Includes message to customer');
+            $v .= '<br />' . _t('OrderStep.CUSTOMER_MESSAGES', 'Includes message to customer.');
         }
         if ($this->hasStepConditions()) {
-            $v .= '<br />' . _t('OrderStep.HAS_CONDITIONS', 'Conditions must be met before order can progress');
+            $v .= '<br />' . _t('OrderStep.HAS_CONDITIONS', 'Conditions must be met before order can progress.');
         }
         if ($this->DeferTimeInSeconds) {
             $v .= '<br />' . $this->humanReadeableDeferTimeInSeconds();
