@@ -659,6 +659,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $html;
     }
 
+    protected function hasStepConditions() : bool
+    {
+        if(! empty($this->Config()->get('step_logic_conditions'))) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * link to edit the record.
      *
@@ -1041,6 +1049,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         }
         if ($this->hasCustomerMessage()) {
             $v .= '<br />' . _t('OrderStep.CUSTOMER_MESSAGES', 'Includes message to customer');
+        }
+        if ($this->hasStepConditions()) {
+            $v .= '<br />' . _t('OrderStep.HAS_CONDITIONS', 'Conditions must be met before order can progress');
         }
         if ($this->DeferTimeInSeconds) {
             $v .= '<br />' . $this->humanReadeableDeferTimeInSeconds();
