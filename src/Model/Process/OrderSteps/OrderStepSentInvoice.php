@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
@@ -44,14 +45,14 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldToTab(
-            'Root.Main',
-            HeaderField::create(
-                'ActuallySendTheInvoice',
-                _t('OrderStep.ACTUALLYSENDTHEINVOICE', 'Actually send the invoice? '),
-                3
-            ),
-            'SendInvoiceToCustomer'
+        $fields->addFieldsToTab(
+            'Root.CustomerMessage',
+            [
+                CheckboxField::create(
+                    'SendInvoiceToCustomer',
+                    'Send Invoice to Customer?'
+                )
+            ]
         );
 
         return $fields;

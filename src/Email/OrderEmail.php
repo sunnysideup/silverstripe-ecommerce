@@ -186,11 +186,11 @@ abstract class OrderEmail extends Email
             $emailString = $email;
         } elseif (is_array($email)) {
             $count = 0;
-            foreach ($email as $address) {
+            foreach ($email as $key => $address) {
                 if ($count) {
                     $emailString .= ', ';
                 }
-                $emailString .= $address;
+                $emailString .= $key . $address;
                 ++$count;
             }
         }
@@ -246,12 +246,7 @@ abstract class OrderEmail extends Email
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
         if ($this->getBcc()) {
-            $bcc =  trim($this->emailToVarchar($this->getBcc()));
-            if($bcc) {
-                $orderEmailRecord->To .= ', BCC: ' . $bcc;
-            } else {
-                $orderEmailRecord->To .= ', BCC: ' . print_r($this->getBcc(), 1);
-            }
+            $orderEmailRecord->To .= ', BCC: ' . trim($this->emailToVarchar($this->getBcc()));
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->subject;
