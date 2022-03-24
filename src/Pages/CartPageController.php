@@ -394,6 +394,9 @@ class CartPageController extends PageController
                     $this->currentOrder = $retrievedOrder;
                     $this->overrideCanView = true;
                     $this->setRetrievalOrderID($this->currentOrder->ID);
+                } else {
+                    $this->httpError(404,'No order was found.');
+                    $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
                 }
             } elseif ((int) $id && in_array($action, $this->stat('allowed_actions'), true)) {
                 $this->currentOrder = Order::get_order_cached((int) $id);
@@ -411,6 +414,7 @@ class CartPageController extends PageController
 
         //redirect if we are viewing the order with the wrong page!
         if ($this->currentOrder) {
+            $this->currentOrder->setOverrideCanView($this->overrideCanView);
             $canView = $this->overrideCanView ? $this->currentOrder->canOverrideCanView() : $this->currentOrder->canView();
             //IMPORTANT SECURITY QUESTION!
             if ($canView) {

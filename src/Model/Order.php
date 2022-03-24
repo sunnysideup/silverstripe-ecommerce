@@ -2255,6 +2255,14 @@ class Order extends DataObject implements EditableEcommerceObject
         return parent::canCreate($member, $context);
     }
 
+    protected $overrideCanView = false;
+
+    public function setOverrideCanView(bool $b)
+    {
+        $this->overrideCanView = $b;
+        return $this;
+    }
+
     /**
      * Standard SS method - can the current member view this order?
      *
@@ -2264,6 +2272,9 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
+        if($this->overrideCanView && ! $this->IsArchived()) {
+            return true;
+        }
         if (! $this->exists()) {
             return true;
         }
