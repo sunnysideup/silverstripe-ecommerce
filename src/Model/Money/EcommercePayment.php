@@ -287,6 +287,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null, $context = [])
     {
+        if (Director::isDev()) {
+            return Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'));
+        }
         if (! $member) {
             $member = Security::getCurrentUser();
         }
