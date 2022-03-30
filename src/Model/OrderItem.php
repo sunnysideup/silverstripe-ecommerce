@@ -168,7 +168,7 @@ class OrderItem extends OrderAttribute
      *            stardard SS definition
      */
     private static $summary_fields = [
-        'OrderID' => 'Order ID',
+        'Order.Title' => 'Order Details',
         'BuyableFullName' => 'Item',
         'BuyableMoreDetails' => 'Details ... ',
         'UnitPrice' => 'Unit Price',

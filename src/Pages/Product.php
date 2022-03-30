@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use Page;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
@@ -369,6 +370,19 @@ class Product extends Page implements BuyableModel
             );
         }
 
+        $fields->addFieldsToTab(
+            'Root.Orders',
+            [
+                GridField::create(
+                    'SalesOrderItems',
+                    'Sales Record',
+                    $this->SalesOrderItems(),
+                    GridFieldConfig_RecordViewer::create()
+                )
+                    ->setDescription('Includes unsold items in cart.')
+            ]
+        );
+
         return $fields;
     }
 
@@ -717,9 +731,18 @@ class Product extends Page implements BuyableModel
         return (bool) $this->SalesRecord()->exists();
     }
 
+    public function SalesOrderItems(): DataList
+    {
+        return OrderItem::get()->filter(
+            [
+                'BuyableID' => $this->ID,
+                'BuyableClassName' => $this->ClassName,
+            ]
+        );
+    }
     public function SalesRecord(): DataList
     {
-        $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
+        $dataList = Order::get_datalist_of_orders_with_submit_record(false, false);
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
         $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
 
