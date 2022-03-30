@@ -379,7 +379,7 @@ class Product extends Page implements BuyableModel
                     $this->SalesOrderItems(),
                     GridFieldConfig_RecordViewer::create()
                 )
-                    ->setDescription('Includes unsold items in cart.')
+                    ->setDescription('Includes unsold items in cart can cancelled orders, please check individual orders for details.')
             ]
         );
 
@@ -731,6 +731,10 @@ class Product extends Page implements BuyableModel
         return (bool) $this->SalesRecord()->exists();
     }
 
+    /**
+     * includes unsold items - raw list!
+     * @return DataList
+     */
     public function SalesOrderItems(): DataList
     {
         return OrderItem::get()->filter(
@@ -740,9 +744,14 @@ class Product extends Page implements BuyableModel
             ]
         );
     }
+
+    /**
+     * is used to work out if a product has been sold!
+     * @return DataList
+     */
     public function SalesRecord(): DataList
     {
-        $dataList = Order::get_datalist_of_orders_with_submit_record(false, false);
+        $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
         $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
 
