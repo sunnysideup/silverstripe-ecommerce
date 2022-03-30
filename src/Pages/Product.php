@@ -370,19 +370,20 @@ class Product extends Page implements BuyableModel
             );
         }
 
-        $fields->addFieldsToTab(
-            'Root.Orders',
-            [
-                GridField::create(
-                    'SalesOrderItems',
-                    'Sales Record',
-                    $this->SalesOrderItems(),
-                    GridFieldConfig_RecordViewer::create()
-                )
-                    ->setDescription('Includes unsold items in cart can cancelled orders, please check individual orders for details.')
-            ]
-        );
-
+        if($this->exists()) {
+            $fields->addFieldsToTab(
+                'Root.Orders',
+                [
+                    GridField::create(
+                        'SalesOrderItems',
+                        'Sales Record',
+                        $orderItems = $this->SalesOrderItems()->sort(['ID' =>  'DESC']),
+                        GridFieldConfig_RecordViewer::create()
+                    )
+                        ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.')
+                ]
+            );
+        }
         return $fields;
     }
 
