@@ -116,10 +116,6 @@
         .message.error {
             border-color: red;
             color: red;
-            color: #fff;
-        }
-        .message.error * {
-            color: #fff!important;
         }
         .message.required {
             color: red;

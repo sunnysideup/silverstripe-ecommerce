@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
@@ -154,7 +153,7 @@ class QuickUpdates extends Controller
     /**
      * @param int $id
      *
-     * @return AjaxSelectField|DropdownField
+     * @return Dropdown2AutocompleteField|DropdownField
      */
     protected function productLookupField(string $name, string $title, ?int $id = 0)
     {
@@ -204,7 +203,7 @@ class QuickUpdates extends Controller
 
     protected function myLookupField($name, $title, $callBackFx): AjaxSelectField
     {
-        return AjaxSelectField::create($name, $title)
+        return Dropdown2AutocompleteField::create($name, $title)
             ->setMinSearchChars(3)
             ->setPlaceholder('find ...' . $title)
             ->setIdOnlyMode(true)

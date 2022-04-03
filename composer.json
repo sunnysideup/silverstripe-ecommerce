@@ -38,7 +38,8 @@
     "sunnysideup/permission_provider": "dev-master",
     "sunnysideup/vardump": "dev-master",
     "sunnysideup/model-admin-many-tabs": "dev-master",
-    "sunnysideup/email_address_database_field": "dev-master"
+    "sunnysideup/email_address_database_field": "dev-master",
+    "sunnysideup/dropdown2autocomplete": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.7"
