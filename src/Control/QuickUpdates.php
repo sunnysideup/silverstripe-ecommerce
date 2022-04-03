@@ -134,7 +134,9 @@ class QuickUpdates extends Controller
                 return DBField::create_field(
                     'HTMLText',
                     '<p class="message success">
-                        Updated <a href="' . $product->Link() . '" target="_blank">' . $product->FullName . '</a>
+                        Updated
+                        <a href="' . $product->CMSEditLink() . '" target="_blank">✎</a>
+                        <a href="' . $product->Link() . '" target="_blank">' . $product->FullName . '</a>
                     </p>
                     <p>
                         <a href="' . $this->Link('updateone/' . $product->ID) . '">Add More</a> /
