@@ -616,13 +616,13 @@ class Order extends DataObject implements EditableEcommerceObject
     public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
     {
         $list = Order::get();
-        if ($onlySubmittedOrders) {
+        if ($onlySubmittedOrders !== false) {
             $list = self::get_datalist_of_orders_with_joined_submission_record($list);
         } else {
-            $list = $list->filter(['StatusID:greaterThan' => 0]);
+            $list = $list->filter(['StatusID:GreaterThan' => 0]);
         }
 
-        if (! $includeCancelledOrders) {
+        if ($includeCancelledOrders !== true) {
             $list = $list->filter(['CancelledByID' => 0]);
         }
 

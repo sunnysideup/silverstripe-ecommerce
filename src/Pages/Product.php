@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use Page;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
@@ -369,6 +370,20 @@ class Product extends Page implements BuyableModel
             );
         }
 
+        if($this->exists()) {
+            $fields->addFieldsToTab(
+                'Root.Orders',
+                [
+                    GridField::create(
+                        'SalesOrderItems',
+                        'Sales Record',
+                        $orderItems = $this->SalesOrderItems()->sort(['ID' =>  'DESC']),
+                        GridFieldConfig_RecordViewer::create()
+                    )
+                        ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.')
+                ]
+            );
+        }
         return $fields;
     }
 
@@ -717,6 +732,24 @@ class Product extends Page implements BuyableModel
         return (bool) $this->SalesRecord()->exists();
     }
 
+    /**
+     * includes unsold items - raw list!
+     * @return DataList
+     */
+    public function SalesOrderItems(): DataList
+    {
+        return OrderItem::get()->filter(
+            [
+                'BuyableID' => $this->ID,
+                'BuyableClassName' => $this->ClassName,
+            ]
+        );
+    }
+
+    /**
+     * is used to work out if a product has been sold!
+     * @return DataList
+     */
     public function SalesRecord(): DataList
     {
         $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
