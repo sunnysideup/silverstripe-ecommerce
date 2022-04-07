@@ -1118,8 +1118,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
         return null;
     }
+
     /**
-     * returns the OrderStatusLog that is relevant to this step.
+     * returns the OrderStatusLog that is relevant to this step, even if non exists.
      *
      * @return OrderStatusLog
      */
