@@ -34,6 +34,8 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
+
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 
@@ -1115,6 +1117,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         }
 
         return null;
+    }
+    /**
+     * returns the OrderStatusLog that is relevant to this step.
+     *
+     * @return OrderStatusLog
+     */
+    public function RelevantLogEntryFindOrMake(Order $order)
+    {
+        $log = $this->RelevantLogEntry($order);
+        if(! $log) {
+            $className = $this->getRelevantLogEntryClassName();
+            if(! class_exists($className)) {
+                $className = OrderStatusLog::class;
+            }
+            $log = $className::create();
+            $log->OrderID = $order->ID;
+            $log->write();
+        }
+        return $log;
     }
 
     /**
