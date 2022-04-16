@@ -423,6 +423,7 @@ class Product extends Page implements BuyableModel
             if($previousCheck !== $check) {
                 $array[] = $row;
             }
+            $previousCheck = $check;
         }
         return $array;
     }
