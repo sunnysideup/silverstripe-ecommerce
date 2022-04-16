@@ -404,6 +404,7 @@ class Product extends Page implements BuyableModel
         $sql = '
             SELECT
                 LastEdited,
+                Title,
                 Price,
                 AllowPurchase
             From Product_Versions
