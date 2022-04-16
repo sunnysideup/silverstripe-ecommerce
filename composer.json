@@ -40,8 +40,7 @@
     "sunnysideup/model-admin-many-tabs": "dev-master",
     "sunnysideup/email_address_database_field": "dev-master",
     "sunnysideup/silverstripe-ajax-select-field": "dev-master",
-    "sunnysideup/dropdown2autocomplete": "dev-master",
-    "dekor/php-array-table": "^1.0"
+    "sunnysideup/dropdown2autocomplete": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.7"

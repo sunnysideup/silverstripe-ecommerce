@@ -52,7 +52,8 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
-use dekor\ArrayToTextTable;
+
+use Sunnysideup\Vardump\ArrayToTable;
 
 /**
  * This is a standard Product page-type with fields like
@@ -390,7 +391,7 @@ class Product extends Page implements BuyableModel
                 [
                     LiteralField::create(
                         'ChangeHistory',
-                        (new ArrayToTextTable($this->getHistoryData()))->render()
+                        ArrayToTable::convert($this->getHistoryData())
                     )
                 ]
             );
