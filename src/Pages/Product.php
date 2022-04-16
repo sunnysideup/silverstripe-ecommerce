@@ -19,6 +19,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -51,6 +52,7 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
+use dekor\ArrayToTextTable;
 
 /**
  * This is a standard Product page-type with fields like
@@ -383,8 +385,44 @@ class Product extends Page implements BuyableModel
                         ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.')
                 ]
             );
+            $fields->addFieldsToTab(
+                'Root.History',
+                [
+                    LiteralField::create(
+                        'ChangeHistory',
+                        (new ArrayToTextTable($this->getHistoryData()))->render()
+                    )
+                ]
+            );
         }
         return $fields;
+    }
+
+    public function getHistoryData() : array
+    {
+        $sql = '
+            SELECT
+                LastEdited,
+                Price,
+                AllowPurchase
+            From Product_Versions
+                INNER JOIN SiteTree_Versions
+                ON
+                    SiteTree_Versions.RecordID = Product_Versions.RecordID AND
+                    SiteTree_Versions.Version = Product_Versions.Version
+            WHERE InternalItemID = \''.$this->InternalItemID.'\'
+            ORDER BY Product_Versions.ID DESC
+            LIMIT 1000;';
+        $array = [];
+        $rows = DB::query($sql);
+        $previousCheck = '';
+        foreach($rows as $row) {
+            $check = $row['Price'].'-'.$row['AllowPurchase'];
+            if($previousCheck !== $check) {
+                $array[] = $row;
+            }
+        }
+        return $array;
     }
 
     /**
