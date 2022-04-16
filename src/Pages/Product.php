@@ -414,7 +414,7 @@ class Product extends Page implements BuyableModel
                     SiteTree_Versions.Version = Product_Versions.Version
             WHERE InternalItemID = \''.$this->InternalItemID.'\'
             ORDER BY Product_Versions.ID DESC
-            LIMIT 1000;';
+            LIMIT 50;';
         $array = [];
         $rows = DB::query($sql);
         $previousCheck = '';
