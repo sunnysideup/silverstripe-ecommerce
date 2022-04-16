@@ -419,7 +419,7 @@ class Product extends Page implements BuyableModel
         $rows = DB::query($sql);
         $previousCheck = '';
         foreach($rows as $row) {
-            $check = $row['Price'].'-'.$row['AllowPurchase'];
+            $check = $row['Price'].'-'.$row['AllowPurchase'].'-'.$row['Title'];
             if($previousCheck !== $check) {
                 $array[] = $row;
             }
