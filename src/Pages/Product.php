@@ -391,7 +391,8 @@ class Product extends Page implements BuyableModel
                 [
                     LiteralField::create(
                         'ChangeHistory',
-                        ArrayToTable::convert($this->getHistoryData())
+                        ArrayToTable::convert($this->getHistoryData()).
+                        '<p><a href="/admin/pages/history/show/'.$this->ID.'">Full History</a></p>'
                     )
                 ]
             );
@@ -421,7 +422,12 @@ class Product extends Page implements BuyableModel
         foreach($rows as $row) {
             $check = $row['Price'].'-'.$row['AllowPurchase'].'-'.$row['Title'];
             if($previousCheck !== $check) {
-                $array[] = $row;
+                $array[] = [
+                    'Changed' => $row['LastEdited'],
+                    'Title' => $row['Title'],
+                    'Price' => $row['Price'],
+                    'For Sale' => $row['AllowPurchase'] ? 'YES' : 'NO',
+                ];
             }
             $previousCheck = $check;
         }
