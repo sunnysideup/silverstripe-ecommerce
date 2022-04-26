@@ -14,6 +14,7 @@ use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -86,6 +87,7 @@ class ProductGroup extends Page
         'DefaultSortOrder' => 'Varchar(20)',
         'DefaultFilter' => 'Varchar(20)',
         'DisplayStyle' => 'Varchar(20)',
+        'UseImageForProducts' => 'Boolean',
     ];
 
     private static $has_one = [
@@ -222,9 +224,12 @@ class ProductGroup extends Page
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->addFieldToTab(
+        $fields->addFieldsToTab(
             'Root.Images',
-            ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image'))
+            [
+                ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')),
+                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
+            ]
         );
 
         $calculatedNumberOfProductsPerPage = $this->getProductsPerPage();

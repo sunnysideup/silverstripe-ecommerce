@@ -107,6 +107,7 @@ class Product extends Page implements BuyableModel
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ProductBreadcrumb' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
+        'UseImageForProducts' => 'Boolean', //For use in lists.
     ];
 
     private static $has_one = [
@@ -292,9 +293,13 @@ class Product extends Page implements BuyableModel
         $htmlEditorField->setRows(3);
         $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
         //dirty hack to show images!
-        $fields->addFieldToTab(
+        $fields->addFieldsToTab(
             'Root.Images',
-            UploadField::create('Image', _t('Product.IMAGE', 'Product Image'))
+            [
+                UploadField::create('Image', _t('Product.IMAGE', 'Product Image')),
+                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product'),
+            ]
+
         );
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
         $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
@@ -586,12 +591,12 @@ class Product extends Page implements BuyableModel
                 return $image;
             }
         }
-
-        $parent = $this->ParentGroup();
-        if ($parent && $parent->exists()) {
-            return $parent->BestAvailableImage();
+        if($this->UseParentImage) {
+            $parent = $this->ParentGroup();
+            if ($parent && $parent->exists() && $parent->UseImageForProducts) {
+                return $parent->BestAvailableImage();
+            }
         }
-
         return null;
     }
 
