@@ -18,6 +18,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataList;
@@ -288,28 +289,19 @@ class Product extends Page implements BuyableModel
         //if($siteTreeFieldExtensions) {
         //$this->enableCMSFieldsExtensions();
         //}
-        $fields->replaceField('Root.Main', $htmlEditorField = new HTMLEditorField('Content', _t('Product.DESCRIPTION', 'Product Description')));
 
-        $htmlEditorField->setRows(3);
-        $fields->addFieldToTab('Root.Main', new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')), 'Content');
-        //dirty hack to show images!
+
+        // main fields
         $fields->addFieldsToTab(
-            'Root.Images',
+            'Root.Main',
             [
-                UploadField::create('Image', _t('Product.IMAGE', 'Product Image')),
-                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product'),
-            ]
+                CurrencyField::create('Price', _t('Product.PRICE', 'Price')),
+                new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30),
+                $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')),
 
+            ],
+            'URLSegment'
         );
-        $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesField());
-        $fields->addFieldToTab('Root.Images', $this->getAdditionalImagesMessage());
-        $fields->addFieldToTab('Root.Images', $this->getAdditionalFilesField());
-        $fields->addFieldToTab('Root.Details', new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')));
-        $fields->addFieldToTab('Root.Details', new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrumb')));
-        $fields->addFieldToTab('Root.Details', new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')));
-
-        $fields->addFieldToTab('Root.Details', $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')));
-
         $config = EcommerceConfig::inst();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
@@ -324,13 +316,33 @@ class Product extends Page implements BuyableModel
             }
         }
 
-        $fields->addFieldToTab('Root.Details', new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')));
-        $fields->addFieldToTab(
-            'Root.Details',
-            NumericField::create('Price', _t('Product.PRICE', 'Price'), '', 12)->setScale(2)
+        // images - dirty hack to show images!
+        $fields->addFieldsToTab(
+            'Root.Images',
+            [
+                UploadField::create('Image', _t('Product.IMAGE', 'Product Image')),
+                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product'),
+                $this->getAdditionalImagesField(),
+                $this->getAdditionalImagesMessage(),
+                $this->getAdditionalFilesField(),
+            ]
         );
 
-        $fields->addFieldToTab('Root.Details', new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30));
+        // details
+        $fields->addFieldsToTab(
+            'Root.Details',
+            [
+                new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
+                new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrumb')),
+                new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')),
+                new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
+                new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
+                HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
+                    ->setRows(3),
+
+            ]
+        );
+
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
             $fields->addFieldToTab(
                 'Root.Details',
@@ -391,6 +403,7 @@ class Product extends Page implements BuyableModel
                         ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.')
                 ]
             );
+
             $fields->addFieldsToTab(
                 'Root.History',
                 [
