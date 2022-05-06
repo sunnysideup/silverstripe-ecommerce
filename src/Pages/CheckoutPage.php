@@ -14,11 +14,12 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+
+use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Forms\Fields\OptionalTreeDropdownField;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
@@ -320,7 +321,7 @@ class CheckoutPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'DeleteOrderLinkLabel');
 
-        $termsPageIDField = OptionalTreeDropdownField::create(
+        $termsPageIDField = TreeDropdownField::create(
             'TermsPageID',
             _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
             SiteTree::class
