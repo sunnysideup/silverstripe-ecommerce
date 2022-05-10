@@ -1,4 +1,4 @@
-<% if EcomConfig.Currencies %>
+<% if $EcomConfig.Currencies %>
 <div class="sidebarBox currency">
     <h3><% _t("SideBar.CURRENCIES","Currencies") %></h3>
     <% with EcomConfig %>

@@ -12,7 +12,7 @@
 <table style="width: 95%;" border="1" cellspacing="5">
     <tr><th scope="row" style="width: 40%;">Current User<br />&#36;EcomConfig.Customer.ID</th><td width="60%">$EcomConfig.Customer.ID</td></tr>
     <tr><th scope="row" style="width: 40%;">Current User<br />&#36;EcomConfig.Customer.Email</th><td width="60%">$EcomConfig.Customer.Email</td></tr>
-    <tr><th scope="row" style="width: 40%;">Is Shop Admin?<br />&#36;EcomConfig.Customer.IsShopAdmin</th><td width="60%"><% if EcomConfig.Customer.IsShopAdmin %>TRUE<% else %>FALSE<% end_if %></td></tr>
+    <tr><th scope="row" style="width: 40%;">Is Shop Admin?<br />&#36;EcomConfig.Customer.IsShopAdmin</th><td width="60%"><% if $EcomConfig.Customer.IsShopAdmin %>TRUE<% else %>FALSE<% end_if %></td></tr>
     <tr><th scope="row" style="width: 40%;">Customer Linked to current order?<br />&#36;EcomConfig.CustomerForOrder.ID</th><td width="60%">$EcomConfig.CustomerForOrder.ID</td></tr>
 </table>
 
