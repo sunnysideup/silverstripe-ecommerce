@@ -130,6 +130,8 @@ class EcommerceSearchHistoryFormField extends LiteralField
             FROM "SearchHistory"
             WHERE Created > ( NOW() - INTERVAL ' . $totalNumberOfDaysBack . ' DAY )
                 AND Created < ( NOW() - INTERVAL ' . $this->endingDaysBack . " DAY )
+                AND \"Title\" IS NOT NULL
+                AND  \"Title\" <> ''
             GROUP BY \"Title\"
             HAVING COUNT(\"ID\") >= {$this->minimumCount}
             ORDER BY myCount DESC
