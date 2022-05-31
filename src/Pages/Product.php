@@ -434,7 +434,7 @@ class Product extends Page implements BuyableModel
                 ON
                     SiteTree_Versions.RecordID = Product_Versions.RecordID AND
                     SiteTree_Versions.Version = Product_Versions.Version
-            WHERE InternalItemID = \''.$this->InternalItemID.'\'
+            WHERE InternalItemID = \''.$code.'\'
             ORDER BY Product_Versions.ID DESC
             LIMIT 50;';
         $array = [];
@@ -444,6 +444,7 @@ class Product extends Page implements BuyableModel
             $check = $row['Price'].'-'.$row['AllowPurchase'].'-'.$row['Title'];
             if($previousCheck !== $check) {
                 $array[] = [
+                    'Code' => $code,
                     'Changed' => $row['LastEdited'],
                     'Title' => $row['Title'],
                     'Price' => $row['Price'],
