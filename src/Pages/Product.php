@@ -418,8 +418,11 @@ class Product extends Page implements BuyableModel
         return $fields;
     }
 
-    public function getHistoryData() : array
+    public function getHistoryData(?string $code = '') : array
     {
+        if(! $code) {
+            $code = $this->InternalItemID;
+        }
         $sql = '
             SELECT
                 LastEdited,
