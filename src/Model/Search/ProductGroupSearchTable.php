@@ -64,14 +64,14 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
      *
      * @var string
      */
-    private static $singular_name = 'Product Group Search Data';
+    private static $singular_name = 'Product Group Search Entry';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $plural_name = 'Product Group Search Data Entries';
+    private static $plural_name = 'Product Group Search Entries';
 
     public static function flush()
     {

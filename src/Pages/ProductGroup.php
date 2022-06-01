@@ -13,6 +13,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\Tab;
@@ -96,6 +97,10 @@ class ProductGroup extends Page
 
     private static $owns = [
         'Image',
+    ];
+
+    private static $belongs_to = [
+        'ProductGroupSearchTable' => ProductGroupSearchTable::class,
     ];
 
     private static $belongs_many_many = [
@@ -277,6 +282,35 @@ class ProductGroup extends Page
                 'Debug Products and Links',
                 DBField::create_field('HTMLText', '<a href="' . $this->Link() . '?showdebug=1">show debug information</a>')
             )
+        );
+        $mySearchDetail = $this->ProductGroupSearchTable();
+        if ($mySearchDetail && $mySearchDetail->exists()) {
+            $searchDetails = '
+            <h2>Title recorded (prioritised in search)</h2>
+            <p>
+                '.$mySearchDetail->Title.'
+            </p>
+            <h2>Keywords recorded</h2>
+            <p>
+                '.$mySearchDetail->Data.'
+            </p>
+            <p>
+                <a href="'.$mySearchDetail->CMSEditLink().'">See Search Keywords Recorded</a>
+            </p>';
+        } else {
+            $searchDetails = '
+            <p class="message warning">
+                No search data is recorded
+            </p>';
+        }
+        $fields->addFieldsToTab(
+            'Root.Search',
+            [
+                LiteralField::create(
+                    'SearchDetails',
+                    $searchDetails
+                )
+            ]
         );
 
         return $fields;

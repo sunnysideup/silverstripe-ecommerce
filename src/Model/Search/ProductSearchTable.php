@@ -64,7 +64,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
      *
      * @var string
      */
-    private static $singular_name = 'Product Search Data';
+    private static $singular_name = 'Product Search Entry';
 
     /**
      * standard SS variable.
@@ -138,6 +138,6 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
     public function canDelete($member = null)
     {
-        return false;
+        return true;
     }
 }
