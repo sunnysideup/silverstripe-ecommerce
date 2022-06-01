@@ -418,14 +418,32 @@ class Product extends Page implements BuyableModel
                     )
                 ]
             );
-
+            $mySearchDetail = $this->ProductSearchTable();
+            if ($mySearchDetail && $mySearchDetail->exists()) {
+                $searchDetails = '
+                <h2>Title recorded (prioritised in search)</h2>
+                <p>
+                    '.$mySearchDetail->Title.'
+                </p>
+                <h2>Keywords recorded</h2>
+                <p>
+                    '.$mySearchDetail->Data.'
+                </p>
+                <p>
+                    <a href="'.$mySearchDetail->CMSEditLink().'">See Search Keywords Recorded</a>
+                </p>';
+            } else {
+                $searchDetails = '
+                <p class="message warning">
+                    No search data is recorded
+                </p>';
+            }
             $fields->addFieldsToTab(
                 'Root.Search',
                 [
                     LiteralField::create(
-                        'ChangeHistory',
-                        ArrayToTable::convert($this->getHistoryData()).
-                        '<p><a href="/admin/pages/history/show/'.$this->ID.'">Full History</a></p>'
+                        'SearchDetails',
+                        $searchDetails
                     )
                 ]
             );
@@ -1299,7 +1317,11 @@ class Product extends Page implements BuyableModel
     public function onAfterPublish()
     {
         parent::onAfterPublish();
+        $this->addToSearchTable();
+    }
 
+    public function addToSearchTable()
+    {
         if (Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
             ProductSearchTable::add_product(
                 $this,
@@ -1308,6 +1330,7 @@ class Product extends Page implements BuyableModel
             );
         }
     }
+
 
     public function onBeforeUnpublish()
     {
