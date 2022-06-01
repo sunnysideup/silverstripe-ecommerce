@@ -115,6 +115,10 @@ class Product extends Page implements BuyableModel
         'Image' => Image::class,
     ];
 
+    private static $belongs_to = [
+        'ProductSearchTable' => ProductSearchTable::class,
+    ];
+
     private static $many_many = [
         'ProductGroups' => ProductGroup::class,
         'AdditionalImages' => Image::class,
@@ -406,6 +410,17 @@ class Product extends Page implements BuyableModel
 
             $fields->addFieldsToTab(
                 'Root.History',
+                [
+                    LiteralField::create(
+                        'ChangeHistory',
+                        ArrayToTable::convert($this->getHistoryData()).
+                        '<p><a href="/admin/pages/history/show/'.$this->ID.'">Full History</a></p>'
+                    )
+                ]
+            );
+
+            $fields->addFieldsToTab(
+                'Root.Search',
                 [
                     LiteralField::create(
                         'ChangeHistory',
