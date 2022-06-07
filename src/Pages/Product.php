@@ -460,7 +460,7 @@ class Product extends Page implements BuyableModel
             SELECT
                 SiteTree_Versions.LastEdited,
                 SiteTree_Versions.Title,
-                SiteTree_Versions.Version
+                SiteTree_Versions.Version,
                 Product_Versions.Price,
                 Product_Versions.AllowPurchase,
             From Product_Versions
