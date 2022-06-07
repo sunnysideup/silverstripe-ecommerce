@@ -451,17 +451,18 @@ class Product extends Page implements BuyableModel
         return $fields;
     }
 
-    public function getHistoryData(?string $code = '') : array
+    public function getHistoryData(?string $code = '', ?int $limit = 50) : array
     {
         if(! $code) {
             $code = $this->InternalItemID;
         }
         $sql = '
             SELECT
-                LastEdited,
-                Title,
-                Price,
-                AllowPurchase
+                SiteTree_Versions.LastEdited,
+                SiteTree_Versions.Title,
+                SiteTree_Versions.Version
+                Product_Versions.Price,
+                Product_Versions.AllowPurchase,
             From Product_Versions
                 INNER JOIN SiteTree_Versions
                 ON
@@ -469,15 +470,16 @@ class Product extends Page implements BuyableModel
                     SiteTree_Versions.Version = Product_Versions.Version
             WHERE InternalItemID = \''.$code.'\'
             ORDER BY Product_Versions.ID DESC
-            LIMIT 50;';
+            LIMIT '.$limit.'; ';
         $array = [];
         $rows = DB::query($sql);
         $previousCheck = '';
         foreach($rows as $row) {
-            $check = $row['Price'].'-'.$row['AllowPurchase'].'-'.$row['Title'];
+            $check = $row['Price'].'-'.($row['AllowPurchase'] ? 'Y': 'N').'-'.$row['Title'];
             if($previousCheck !== $check) {
                 $array[] = [
                     'Code' => $code,
+                    'Version' => $row['Version'],
                     'Changed' => $row['LastEdited'],
                     'Title' => $row['Title'],
                     'Price' => $row['Price'],
