@@ -463,7 +463,7 @@ class Product extends Page implements BuyableModel
                 SiteTree_Versions.Version,
                 Product_Versions.Price,
                 Product_Versions.AllowPurchase
-            From Product_Versions
+            FROM Product_Versions
                 INNER JOIN SiteTree_Versions
                 ON
                     SiteTree_Versions.RecordID = Product_Versions.RecordID AND
