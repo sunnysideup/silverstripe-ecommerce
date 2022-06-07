@@ -462,7 +462,7 @@ class Product extends Page implements BuyableModel
                 SiteTree_Versions.Title,
                 SiteTree_Versions.Version,
                 Product_Versions.Price,
-                Product_Versions.AllowPurchase,
+                Product_Versions.AllowPurchase
             From Product_Versions
                 INNER JOIN SiteTree_Versions
                 ON
