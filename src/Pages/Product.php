@@ -588,7 +588,7 @@ class Product extends Page implements BuyableModel
             }
         }
 
-        return ProductGroup::get()->filter(['ID' => $allParentsArray]);
+        return ProductGroup::get()->filter(['ID' => ArrayMethods::filter_array($allParentsArray)]);
     }
 
     /**

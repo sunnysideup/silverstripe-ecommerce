@@ -15,6 +15,8 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
 
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
+
 // Class used to describe the steps in the checkout
 
 class CheckoutPageStepDescription extends DataObject implements EditableEcommerceObject
@@ -291,7 +293,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                 }
                 $idArray[$obj->ID] = $obj->ID;
             }
-            $toDeleteObjects = CheckoutPageStepDescription::get()->exclude(['ID' => $idArray]);
+            $toDeleteObjects = CheckoutPageStepDescription::get()->exclude(['ID' => ArrayMethods::filter_array($idArray)]);
             if ($toDeleteObjects->exists()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
                     DB::alteration_message('Deleting CheckoutPageStepDescription ' . $toDeleteObject->Code, 'deleted');

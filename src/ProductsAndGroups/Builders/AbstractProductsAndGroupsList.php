@@ -415,7 +415,7 @@ abstract class AbstractProductsAndGroupsList
             foreach ($groups as $group) {
                 $filterParent = $group->MyFilterParent();
                 if ($filterParent) {
-                    $newArray[$filterParent->ID] = $filterParent->ID;
+                    $newArray[] = $filterParent->ID;
                 }
             }
             $newGroups = ProductGroup::get()->filter(['ID' => ArrayMethods::filter_array($newArray)]);
