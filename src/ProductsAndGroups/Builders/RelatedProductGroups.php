@@ -164,12 +164,10 @@ class RelatedProductGroups
                 $this->groups = ProductGroup::get();
             } elseif ($this->rootGroup) {
                 $ids = $this->getGroupsRecursive(0, $this->rootGroup->ID);
-
                 if ($this->includeRoot) {
-                    $ids[$this->rootGroup->ID] = $this->rootGroup->ID;
+                    $ids[] = $this->rootGroup->ID;
                 }
-                $ids = ArrayMethods::filter_array($ids);
-
+                // $ids = ArrayMethods::filter_array($ids);
                 $this->groups = ProductGroup::get()->filter(['ID' => $ids]);
             } else {
                 $this->groups = ProductGroup::get();
