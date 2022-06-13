@@ -456,7 +456,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
             );
         } else {
-            $this->parentGroupIds[$this->rootGroup->ID] = $this->rootGroup->ID;
+            $this->parentGroupIds[] = $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
@@ -464,7 +464,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $childGroups = $this->getProductGroupListProvider()->getGroups();
             if ($childGroups->exists()) {
                 foreach ($childGroups as $childGroup) {
-                    $this->parentGroupIds[$childGroup->ID] = $childGroup->ID;
+                    $this->parentGroupIds[] = $childGroup->ID;
                     $this->alsoShowProductsIds = array_merge(
                         $this->alsoShowProductsIds,
                         $childGroup->getProductsToBeIncludedFromOtherGroupsArray()
