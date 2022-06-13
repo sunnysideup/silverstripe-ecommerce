@@ -167,7 +167,7 @@ class RelatedProductGroups
                 if ($this->includeRoot) {
                     $ids[] = $this->rootGroup->ID;
                 }
-                // $ids = ArrayMethods::filter_array($ids);
+                $ids = ArrayMethods::filter_array($ids);
                 $this->groups = ProductGroup::get()->filter(['ID' => $ids]);
             } else {
                 $this->groups = ProductGroup::get();
