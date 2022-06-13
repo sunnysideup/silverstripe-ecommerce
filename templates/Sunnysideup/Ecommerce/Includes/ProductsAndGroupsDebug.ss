@@ -4,7 +4,7 @@
         background-color: #eee;
     }
     .answer {
-        display: none;
+        /* display: none; */
     }
     ul:hover .answer {
         display: block;
