@@ -167,7 +167,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'] . '-' . $key] = $row['Title'];
                 $link = $redirectToPage->Link() .'?searchfilter=Keyword~' . urlencode($row['Title']);
-                $debugLink = $link . '&DebugSearch=1';
+                $debugLink = $link . '&showdebug=1';
                 $tableContent .= '
                     <tr>
                         <td style="text-align: right; width: 30%; padding: 5px;">
@@ -190,7 +190,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     <table class="aToz" style="widht: 100%">';
                 foreach ($list as $key => $title) {
                     $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
-                    $debugLink = $link . '&DebugSearch=1';
+                    $debugLink = $link . '&showdebug=1';
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
                     $tableContent .= '
