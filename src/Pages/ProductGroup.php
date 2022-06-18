@@ -820,4 +820,18 @@ class ProductGroup extends Page
             $this->Content,
         ];
     }
+
+    public function CleanURLSegment() : string
+    {
+        $urlSegment = $this->URLSegment;
+        $x = 2;
+        while ($x < 10) {
+            if(substr($urlSegment, -2)) === '-'.$x;
+            $urlSegment = rtrim($urlSegment, "-");
+            $x++;
+        }
+        $urlSegment = rtrim($urlSegment, "23456789");
+        if((strlen($urlSegment) + 2) === ())
+        return $urlSegment;
+    }
 }
