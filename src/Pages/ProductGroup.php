@@ -821,17 +821,21 @@ class ProductGroup extends Page
         ];
     }
 
+    /**
+     * returns a URL without the -2 or -3, at the end,
+     * so that the URLSegment can be used as a code.
+     * @return string [description]
+     */
     public function CleanURLSegment() : string
     {
         $urlSegment = $this->URLSegment;
         $x = 2;
         while ($x < 10) {
-            if(substr($urlSegment, -2)) === '-'.$x;
-            $urlSegment = rtrim($urlSegment, "-");
+            if(substr($urlSegment, -2) === '-'.$x) {
+                return substr($urlSegment, 0, -2);
+            }
             $x++;
         }
-        $urlSegment = rtrim($urlSegment, "23456789");
-        if((strlen($urlSegment) + 2) === ())
         return $urlSegment;
     }
 }
