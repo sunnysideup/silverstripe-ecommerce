@@ -33,7 +33,10 @@ class OrderItemProductFilter extends ExactMatchFilter
         } else {
             $logs = OrderStatusLogSubmitted::get()
                 ->filterAny(['OrderAsHTML:PartialMatch' => $value, 'OrderAsString:PartialMatch' => $value]);
-            $orderIds = $logs->column('OrderID');
+            $orderIds = [0 => 0];
+            if($logs->exists()) {
+                $orderIds = $logs->column('OrderID');
+            }
             $query->where('OrderID IN ('.implode(',', $orderIds).') OR TableTitle LIKE "%'.$value.'%"');
         }
 
