@@ -8,6 +8,8 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Pages\Product;
 
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+
 /**
  * Filter that searches the Two Addresses (billing + shipping)
  * and the member. It searches all the relevant fields.
@@ -25,9 +27,14 @@ class OrderItemProductFilter extends ExactMatchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $value = $this->getValue();
-        $product = Product::get()->filter(['ID' => Convert::raw2sql($value)])->first();
+        $product = Product::get()->filter(['InternalItemID' => Convert::raw2sql($value)])->first();
         if ($product) {
             $query->where("BuyableClassName = '" . addslashes($product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
+        } else {
+            $logs = OrderStatusLogSubmitted::get()
+                ->filterAny(['OrderAsHTML:PartialMatch' => $value, 'OrderAsString:PartialMatch' => $value]);
+            $orderIds = $logs->column('OrderID');
+            $query->where('OrderID IN ('.implode(',', $orderIds).') OR TableTitle LIKE "%'.$value.'%"');
         }
 
         return $query;
