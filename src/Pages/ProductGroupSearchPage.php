@@ -21,7 +21,7 @@ class ProductGroupSearchPage extends ProductGroup
     /**
      * @var int
      */
-    private static $maximum_number_of_products_to_list_for_search = 500;
+    private static $maximum_number_of_products_to_list_for_search = 100;
 
     /**
      * @var string

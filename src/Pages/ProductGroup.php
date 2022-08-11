@@ -78,7 +78,7 @@ class ProductGroup extends Page
      */
     private static $base_buyable_class = Product::class;
 
-    private static $maximum_number_of_products_to_list = 999;
+    private static $maximum_number_of_products_to_list = 100;
 
     private static $table_name = 'ProductGroup';
 

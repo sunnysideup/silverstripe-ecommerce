@@ -145,7 +145,7 @@ class ProductSearchFilter extends BaseApplyer
      * we limit this because otherwise the system will choke
      * the assumption is that no user is really interested in looking at
      * tons of results.
-     * It defaults to: EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list").
+     * It defaults to: EcommerceConfig::get("ProductGroup", "maximum_number_of_products_to_list_for_search").
      *
      * @var int
      */
