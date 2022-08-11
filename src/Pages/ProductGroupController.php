@@ -824,7 +824,7 @@ class ProductGroupController extends PageController
         if ($list->exists()) {
             $obj = PaginatedList::create($list, $this->request);
             if ($this->IsShowFullList()) {
-                $obj->setPageLength($this->MaxNumberOfProductsPerPageAbsolute());
+                $obj->setPageLength($this->getProductsPerPage() * 2);
             } else {
                 $obj->setPageLength($this->getProductsPerPage());
             }
