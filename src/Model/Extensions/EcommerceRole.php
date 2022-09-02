@@ -500,17 +500,30 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function updateCMSFields(FieldList $fields)
     {
-        $orderField = $fields->dataFieldByName('Orders');
+        $orderField = $fields->dataFieldByName('Orders.Member');
         if ($orderField) {
-            $config = GridFieldConfig_RecordEditor::create();
-            $config->removeComponentsByType(GridFieldDeleteAction::class);
-            $config->removeComponentsByType(GridFieldAddNewButton::class);
             if ($orderField instanceof GridField) {
+                $config = GridFieldConfig_RecordEditor::create();
+                $config->removeComponentsByType(GridFieldDeleteAction::class);
+                $config->removeComponentsByType(GridFieldAddNewButton::class);
                 $orderField->setConfig($config);
                 $orderField->setList($this->getOrders());
             }
         } else {
             $orderField = new HiddenField('Orders', 'Orders');
+        }
+
+        $cancelledOrdersField = $fields->dataFieldByName('CancelledOrders.CancelledBy');
+        if ($cancelledOrdersField) {
+            if ($cancelledOrdersField instanceof GridField) {
+                $config = GridFieldConfig_RecordEditor::create();
+                $config->removeComponentsByType(GridFieldDeleteAction::class);
+                $config->removeComponentsByType(GridFieldAddNewButton::class);
+                $cancelledOrdersField->setConfig($config);
+                $cancelledOrdersField->setList($this->getCancelledOrders());
+            }
+        } else {
+            $cancelledOrdersField = new HiddenField('CancelledOrders', 'Cancelled Orders');
         }
         $preferredCurrencyField = $fields->dataFieldByName('PreferredCurrencyID');
         $notesFields = $fields->dataFieldByName('Notes');
@@ -541,6 +554,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $fields->dataFieldByName('DisplayStyle'),
             ]
         );
+        $fields->removeFieldFromTab('Root', 'Orders');
     }
 
     /**
