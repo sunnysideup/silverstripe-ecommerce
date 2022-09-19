@@ -122,6 +122,10 @@ class ShopAccountFormValidator extends RequiredFields
                 $valid = false;
             }
         }
+        $validExtended = $this->extend('updatePHP', $data, $this);
+        if($validExtended === false) {
+            $valid = false;
+        }
         if (! $valid) {
             $this->form->sessionMessage(_t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'), 'bad');
         }
