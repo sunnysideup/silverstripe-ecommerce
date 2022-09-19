@@ -59,7 +59,16 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
-
+        $validExtended = $this->extend('updatePHP', $data, $this);
+        if($validExtended === false) {
+            $valid = false;
+        }
+        if (! $valid) {
+            $this->form->sessionError(
+                _t('OrderForm.ERRORINFORM', 'We could not process with your order, please check your errors below.'),
+                'error'
+            );
+        }
         return $valid;
     }
 }

@@ -69,7 +69,7 @@
                                                         <span><% if RetrieveLink %><a href="$RetrieveLink">$Title - Click to view and update Online</a><% else %>$Title<% end_if %></span>
                                                     </p>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_OrderStatusLogs %>
-                                                    <% include Sunnysideup\Ecommerce\Includes\Order_PickUpNote %>
+                                                    <% include Sunnysideup\Ecommerce\Includes\Order_PickUpOrDeliveryNote %>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_Addresses %>
                                                     <h2>Order Summary</h2>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_Content %>
