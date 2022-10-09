@@ -14,6 +14,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLReadonlyField;
@@ -494,6 +495,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         return $perms;
     }
 
+    public function updateFormScaffolder($fs, $owner)
+    {
+        $fs->IncludeRelations = false;
+    }
+
     /**
      * Update the CMS Fields
      * for /admin/security.
@@ -506,6 +512,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $config = GridFieldConfig_RecordEditor::create();
                 $config->removeComponentsByType(GridFieldDeleteAction::class);
                 $config->removeComponentsByType(GridFieldAddNewButton::class);
+                $config->removeComponentsByType(GridFieldFilterHeader::class);
                 $orderField->setConfig($config);
                 $orderField->setList($this->getOrders());
             }
@@ -519,6 +526,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $config = GridFieldConfig_RecordEditor::create();
                 $config->removeComponentsByType(GridFieldDeleteAction::class);
                 $config->removeComponentsByType(GridFieldAddNewButton::class);
+                $config->removeComponentsByType(GridFieldFilterHeader::class);
                 $cancelledOrdersField->setConfig($config);
                 $cancelledOrdersField->setList($this->getCancelledOrders());
             }
