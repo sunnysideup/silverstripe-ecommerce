@@ -67,27 +67,28 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
 
     public static function permission_provider_factory_runner(): Group
     {
-        return PermissionProviderFactory::inst()
-            ->setParentGroup(EcommerceRole::get_category())
-
-            ->setEmail(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_email'))
-            ->setFirstName(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_first_name'))
-            ->setSurname(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_surname'))
-            ->setCode(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_code'))
-            ->setGroupName(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_name'))
-            ->setPermissionCode(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_permission_code'))
-            ->setRoleTitle(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_role_title'))
-            ->setPermissionArray(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_role_permission_codes'))
-
-            ->setDescription(
-                _t(
-                    'EcommerceRoleAssistant.SHOP_ASSISTANTS_HELP',
-                    'Shop Assistant - can only view sales details and makes notes about orders'
+        $gorupCode = EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_code');
+        $group = Group::get()->filter(['Code' => $gorupCode])->first();
+        if (!$group) {
+            return PermissionProviderFactory::inst()
+                ->setParentGroup(EcommerceRole::get_category())
+                ->setEmail(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_email'))
+                ->setFirstName(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_first_name'))
+                ->setSurname(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_surname'))
+                ->setCode(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_code'))
+                ->setGroupName(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_name'))
+                ->setPermissionCode(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_permission_code'))
+                ->setRoleTitle(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_role_title'))
+                ->setPermissionArray(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_role_permission_codes'))
+                ->setDescription(
+                    _t(
+                        'EcommerceRoleAssistant.SHOP_ASSISTANTS_HELP',
+                        'Shop Assistant - can only view sales details and makes notes about orders'
+                    )
                 )
-            )
-            ->setSort(100)
-
-            ->CreateGroupAndMember()
-        ;
+                ->setSort(100)
+                ->CreateGroupAndMember();
+        }
+        return $group;
     }
 }
