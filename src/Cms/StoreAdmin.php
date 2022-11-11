@@ -124,53 +124,9 @@ class StoreAdmin extends ModelAdmin
                     $config->removeComponentsByType(GridFieldSortableHeader::class);
                 }
             }
-
-            $shortcuts = $this->Config()->get('shortcuts');
-            if (count($shortcuts)) {
-                $html = '';
-                $form->Fields()->push(HeaderField::create('UsefulLinks', 'Short-cuts'));
-                foreach ($shortcuts as $group => $entries) {
-                    if ($html) {
-                        $html .= '</div>';
-                    }
-                    $html .= '<div style="min-width: 450px; float: left; padding: 10px;"><h1>' . $group . '</h1>';
-                    foreach ($entries as $entry) {
-                        $html .= $this->makeShortCut(
-                            $entry['Title'],
-                            $entry['Link'],
-                            $entry['OnClick'] ?? '',
-                            $entry['Script'] ?? '',
-                        )->Field();
-                    }
-                }
-                $html .= '</div>';
-                $form->Fields()->push(LiteralField::create('ShortCuts', $html));
-            }
         }
 
         return $form;
     }
 
-    protected function makeShortCut(string $title, string $link, string $onclick = '', string $script = '')
-    {
-        $name = preg_replace('#[\W_]+#u', '', $title);
-        $html = '';
-        if ($onclick) {
-            $onclick = ' onclick="' . $onclick . '"';
-        }
-        if ($script) {
-            $script = '<script>' . $script . '</script>';
-        }
-        $style = '';
-        $html = '
-        ' . $script . '
-        <h2 style="' . $style . '">
-            &raquo; <a href="' . $link . '" id="' . $name . '" target="_blank" ' . $onclick . '>' . $title . '</a>
-        </h2>';
-
-        return LiteralField::create(
-            $name,
-            $html
-        );
-    }
 }
