@@ -536,6 +536,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         /** @var string $methodClass */
         /** @var string $methodName */
         foreach ($supportedMethods as $methodClass => $methodName) {
+            // todo: move to afterpay module using some sort of extension
             // Afterpay not allowed due to price limits
             if ($methodName === false && $methodClass === AfterpayEcommercePayment::class) {
                 $msg = EcommerceDBConfig::current_ecommerce_db_config()->NoAfterpayMessage;
