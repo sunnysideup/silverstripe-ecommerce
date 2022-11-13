@@ -659,7 +659,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 //dont allow people to purchase without creating a password
                 $loginDetailsDescription = new LiteralField(
                     'AccountInfo',
-                    '<p class"password-info">' .
+                    '<p class="password-info">' .
                     _t('OrderForm.MUSTCREATEPASSWORD', 'Please choose a password to create your account.')
                     . '</p>'
                 );
