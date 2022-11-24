@@ -2930,10 +2930,11 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $result = 0;
         $items = $this->Items();
+        $type = EcommerceConfigClassNames::getName(OrderAttribute::class);
         if ($items->exists()) {
             foreach ($items as $item) {
-                if (is_a($item, EcommerceConfigClassNames::getName(OrderAttribute::class))) {
-                    $result += $item->Total();
+                if (is_a($item, $type)) {
+                    $result += $item->getTotal();
                 }
             }
         }
