@@ -106,11 +106,16 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
         }
     }
 
+    protected static $already_removed_cache = [];
+
     public static function remove_product_group($productGroup)
     {
-        $obj = ProductGroupSearchTable::get_by_id($productGroup->ID);
-        if ($obj) {
-            $obj->delete();
+        if (empty(self::$already_removed_cache[$productGroup->ID])) {
+            $obj = ProductGroupSearchTable::get()->filter(['ProductGroupID' => $productGroup->ID])->first();
+            if ($obj) {
+                $obj->delete();
+                self::$already_removed_cache[$productGroup->ID] = true;
+            }
         }
     }
 
