@@ -131,6 +131,12 @@ class Product extends Page implements BuyableModel
         'AdditionalFiles',
     ];
 
+    private static $cascade_deletes = [
+        'Image',
+        'AdditionalImages',
+        'AdditionalFiles',
+    ];
+
     private static $casting = [
         'CalculatedPrice' => 'Currency',
         'CalculatedPriceAsMoney' => 'Money',

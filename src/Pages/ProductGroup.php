@@ -99,6 +99,11 @@ class ProductGroup extends Page
         'Image',
     ];
 
+
+    private static $cascade_deletes = [
+        'Image',
+    ];
+
     private static $belongs_to = [
         'ProductGroupSearchTable' => ProductGroupSearchTable::class,
     ];
