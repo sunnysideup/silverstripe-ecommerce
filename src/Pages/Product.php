@@ -287,6 +287,11 @@ class Product extends Page implements BuyableModel
         return _t('Order.PRODUCTS', 'Products');
     }
 
+    public function getFolderName() : string
+    {
+        return Config::inst()->get(static::class, 'folder_name_for_images') ?: 'ProductImages';
+    }
+
     /**
      * Standard SS Method.
      */
@@ -330,7 +335,8 @@ class Product extends Page implements BuyableModel
         $fields->addFieldsToTab(
             'Root.Images',
             [
-                UploadField::create('Image', _t('Product.IMAGE', 'Product Image')),
+                UploadField::create('Image', _t('Product.IMAGE', 'Product Image'))
+                    ->setFolderName($this->getFolderName()),
                 CheckboxField::create('UseParentImage', 'Use parent category image as default image for product'),
                 $this->getAdditionalImagesField(),
                 $this->getAdditionalImagesMessage(),
@@ -1436,9 +1442,10 @@ class Product extends Page implements BuyableModel
         return (new SortableUploadField(
             'AdditionalImages',
             'More images'
-        ))->setSortColumn('ImageSort');
-
-        return $uploadField;
+        ))
+            ->setSortColumn('ImageSort')
+            ->setFolderName($this->getFolderName())
+        ;
     }
 
     /**
@@ -1451,9 +1458,10 @@ class Product extends Page implements BuyableModel
         return (new SortableUploadField(
             'AdditionalFiles',
             'Download Files'
-        ))->setSortColumn('FileSort');
-
-        return $uploadField;
+        ))
+            ->setSortColumn('FileSort')
+            ->setFolderName($this->getFolderName());
+        ;
     }
 
     /**

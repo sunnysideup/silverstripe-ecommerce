@@ -4,6 +4,10 @@ namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Core\Config\Config;
+
+use SilverStripe\Core\Injector\Injector;
+
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\SS_List;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -115,9 +119,9 @@ class ProductProductImageUploadField extends UploadField
         $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'png']);
 
         $callingClass = $this->getCallingClass();
-        $folderName = Config::inst()->get($callingClass, 'folder_name_for_images');
+        $folderName = Injector::inst()->get($callingClass)->getFolderName();
         if (! $folderName) {
-            $folderName = $callingClass . '_' . $name;
+            $folderName = ClassInfo::shortName($callingClass) . '_' . $name;
         }
         $this->setFolderName($folderName);
     }
