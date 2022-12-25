@@ -7,6 +7,7 @@ use Page;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Folder;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -1492,4 +1493,96 @@ class Product extends Page implements BuyableModel
 
         return $array;
     }
+
+    protected $imagesDone = false;
+
+    protected function fixImageFileNames()
+    {
+        if (! $this->imagesDone) {
+            $this->imagesDone = true;
+            $array = [];
+            $folderName = $this->getFolderName();
+            $folder = Folder::find_or_make($folderName);
+            $arrayInner = $this->getArrayOfImages();
+            $count = 0;
+            $folderPathAbsolute = Controller::join_links(ASSETS_PATH, $folder->getFileName());
+            foreach ($arrayInner as $image) {
+                ++$count;
+                $ext = pathinfo($image->Name, PATHINFO_EXTENSION);
+                $ext = $ext ? strtolower($ext) : '';
+                if($ext) {
+                    $name = $this->InternalItemID . '_' . $count . '.' . $ext;
+
+                    if ($image->ParentID !== $folder->ID || $name !== $image->Name) {
+                        $filePath = $image->getFileName();
+                        $oldFileLocationAbsolute = Controller::join_links(ASSETS_PATH, $filePath);
+                        $newFileLocationAbsolute = Controller::join_links($folderPathAbsolute, $name);
+                        //move an existing one out of the way!
+                        if (file_exists($newFileLocationAbsolute)) {
+                            $imageToMove = Image::get()->filter(['ParentID' => $folder->ID, 'Name' => $name])->first();
+                            if ($imageToMove && $imageToMove->ID !== $image->ID) {
+                                $imageToMoveFileName = $this->InternalItemID . '_old_' . $image->ID . '.' . $ext;
+                                $imageToMoveFileNameAbsolute = Controller::join_links($folderPathAbsolute, $imageToMoveFileName);
+                                // last resort!
+                                if(file_exists($imageToMoveFileNameAbsolute)) {
+                                    unlink($imageToMoveFileNameAbsolute);
+                                }
+                                try {
+                                    $imageToMove->Name = $imageToMoveFileName;
+                                    $imageToMove->write();
+                                    $imageToMove->publishSingle();
+                                } catch (\Exception $exception) {
+                                    DB::alteration_message('Caught exception with renaming of file: ' . $exception->getMessage(), 'deleted');
+                                }
+                                // last resort
+                                if(file_exists($newFileLocationAbsolute)) {
+                                    rename($newFileLocationAbsolute, $imageToMoveFileNameAbsolute);
+                                }
+                            }
+                        }
+
+                        $title = $this->Title . ' #' . $count;
+                        $image->ParentID = $folder->ID;
+                        $image->Name = $name;
+                        $image->Title = $title;
+                        $image->write();
+                        $image->publishSingle();
+                    }
+                }
+            }
+
+            // if there are additional images but no primary images then
+            // make the first additional image the primary image.
+            if (! $this->ImageID) {
+                if ([] !== $arrayInner) {
+                    $id = array_key_first($arrayInner);
+                    if ($id) {
+                        $this->ImageID = $id;
+                        $this->AdditionalImages()->removeByID($id);
+                    }
+                }
+            }
+        }
+    }
+
+    protected function getArrayOfImages() : array
+    {
+        $arrayInner = [];
+        if ($this->ImageID) {
+            $image = $this->Image(); //see Product::has_one()
+            if ($image && $image->exists()) {
+                $arrayInner[$image->ID] = $image;
+            }
+        }
+
+        $otherImages = $this->AdditionalImages(); //see Product::many_many()
+        foreach ($otherImages as $otherImage) {
+            if ($otherImage && $otherImage->exists()) {
+                $arrayInner[$otherImage->ID] = $otherImage;
+            }
+        }
+
+        return $arrayInner;
+    }
+
 }
