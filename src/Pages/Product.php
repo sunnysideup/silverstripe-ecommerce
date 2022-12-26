@@ -1369,11 +1369,15 @@ class Product extends Page implements BuyableModel
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-
         $filter = EcommerceCodeFilter::create();
         $filter->checkCode($this, 'InternalItemID');
 
         $this->prepareFullFields();
+
+        if ($this->exists() && $this->AllowPurchase) {
+            $this->fixImageFileNames();
+        }
+
     }
 
     protected function getProductSearchTableDataValues(): array
