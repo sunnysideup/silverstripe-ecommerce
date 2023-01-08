@@ -1493,7 +1493,7 @@ class Product extends Page implements BuyableModel
         return $array;
     }
 
-    protected function getArrayOfImages() : array
+    public function getArrayOfImages() : array
     {
         $arrayInner = [];
         if ($this->ImageID) {
