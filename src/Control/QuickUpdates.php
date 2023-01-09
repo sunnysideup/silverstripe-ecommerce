@@ -150,7 +150,7 @@ class QuickUpdates extends Controller
     protected function init()
     {
         parent::init();
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
     }
 
     /**

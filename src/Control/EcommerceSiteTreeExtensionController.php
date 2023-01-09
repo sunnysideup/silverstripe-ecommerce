@@ -24,7 +24,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     public function onBeforeInit()
     {
         //$this->secureHostSwitcher();
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery/jquery.js');
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
         // if ($this->getOwner()->dataRecord) {
