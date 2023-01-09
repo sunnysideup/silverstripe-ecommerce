@@ -166,7 +166,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $list->filter($filter);
     }
 
-    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString)
+    public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString = '')
     {
         $className = static::class;
         $item = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
