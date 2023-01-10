@@ -48,7 +48,7 @@ class ProductController extends PageController
             if ($record) {
                 //we check again, because we may actually get the same version back...
                 if ($record->Version !== $this->Version) {
-                    $this->record = $record;
+                    $this->dataRecord = $record;
                     $this->dataRecord->AllowPurchase = false;
                     $this->AllowPurchase = false;
                     $this->isCurrentVersion = false;
