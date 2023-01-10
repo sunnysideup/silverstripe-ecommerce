@@ -323,12 +323,12 @@ class OrderConfirmationPage extends CartPage
     /**
      * Return a link to view the order on this page.
      *
-     * @param int|string $orderID                ID of the order
+     * @param int        $orderID                - ID of the order
      * @param string     $emailClassName         - the type of email you want to send
      * @param bool       $actuallySendEmail      - do we actually send the email
      * @param int        $alternativeOrderStepID - OrderStep to use
      *
-     * @return string (URLSegment)
+     * @return string    (URLSegment)
      */
     public static function get_email_link(int $orderID,?string $emailClassName = OrderStatusEmail::class, ?bool $actuallySendEmail = false, ?int $alternativeOrderStepID = 0)
     {

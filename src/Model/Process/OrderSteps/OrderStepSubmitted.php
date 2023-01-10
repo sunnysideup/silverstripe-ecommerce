@@ -135,9 +135,10 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             if (! $order->MemberID) {
                 //lets see if we can find a member
                 $memberOrderID = Controller::curr()->getRequest()->getSession()->get('Ecommerce_Member_For_Order');
-                Controller::curr()->getRequest()->getSession()->clear('Ecommerce_Member_For_Order');
-                Controller::curr()->getRequest()->getSession()->set('Ecommerce_Member_For_Order', 0);
-                Controller::curr()->getRequest()->getSession()->save();
+                $session = Controller::curr()->getRequest()->getSession();
+                $session->clear('Ecommerce_Member_For_Order');
+                $session->set('Ecommerce_Member_For_Order', 0);
+                $session->save('Ecommerce_Member_For_Order');
                 if ($memberOrderID) {
                     $order->MemberID = $memberOrderID;
                 }

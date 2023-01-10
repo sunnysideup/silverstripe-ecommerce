@@ -193,8 +193,9 @@ class ProductGroupSchema
 
     public function getOptions(string $classNameOrType): array
     {
-        /** @var Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductGroupFilter $obj */
+        /** @var ProductGroupFilter $obj */
         $obj = $this->getApplyer($classNameOrType);
+
         return $obj->getOptions();
     }
 
