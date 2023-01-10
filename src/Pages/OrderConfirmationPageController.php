@@ -367,6 +367,7 @@ class OrderConfirmationPageController extends CartPageController
         if ($this->currentOrder) {
             $subject = '';
             $message = '';
+            $email = '';
             $emailClassName = OrderReceiptEmail::class;
 
             // different classname
