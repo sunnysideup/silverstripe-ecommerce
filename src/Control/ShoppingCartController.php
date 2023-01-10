@@ -487,7 +487,7 @@ class ShoppingCartController extends Controller
                 $obj->AllowPurchase = 0;
                 if ($obj instanceof SiteTree) {
                     $obj->writeToStage('Stage');
-                    $obj->doPublish();
+                    $obj->publishRecursive();
                 } else {
                     $obj->write();
                 }
