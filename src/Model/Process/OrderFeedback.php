@@ -238,7 +238,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         }
         $string .= ' - ' . $this->Rating;
         if ($this->Note) {
-            $string .= ' / ' . substr($this->Note, 0, 25);
+            $string .= ' / ' . substr((string) $this->Note, 0, 25);
         }
 
         return $string;

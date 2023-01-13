@@ -225,7 +225,7 @@ class ProductSearchFilter extends BaseApplyer
         $string = Convert::raw2sql($string);
         $string = strtolower($string);
 
-        return substr($string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
+        return substr((string) $string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }
 
     /**

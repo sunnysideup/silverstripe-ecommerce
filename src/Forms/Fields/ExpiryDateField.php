@@ -24,8 +24,8 @@ class ExpiryDateField extends TextField
         $monthValue = '';
         $yearValue = '';
         if(strlen($this->value) == 4) {
-            $monthValue = substr($value, 0, 2);
-            $yearValue = "20".substr($value, 2, 2);
+            $monthValue = substr((string) $value, 0, 2);
+            $yearValue = "20".substr((string) $value, 2, 2);
         }
         $this->children = new FieldList(
             $monthField = new DropdownField(
@@ -55,8 +55,8 @@ class ExpiryDateField extends TextField
         $monthValue = '';
         $yearValue = '';
         if (4 === strlen($this->value)) {
-            $monthValue = substr($this->value, 0, 2);
-            $yearValue = substr($this->value, 2, 2);
+            $monthValue = substr((string) $this->value, 0, 2);
+            $yearValue = substr((string) $this->value, 2, 2);
         }
 
         return '
@@ -118,8 +118,8 @@ class ExpiryDateField extends TextField
         $value .= str_pad($this->value['year'], 2, '0', STR_PAD_LEFT);
         $this->value = $value;
         // months are entered as a simple number (e.g. 1,2,3, we add a leading zero if needed)
-        $monthValue = substr($this->value, 0, 2);
-        $yearValue = '20' . substr($this->value, 2, 2);
+        $monthValue = substr((string) $this->value, 0, 2);
+        $yearValue = '20' . substr((string) $this->value, 2, 2);
         $ts = strtotime(date('Y-m-01')) - (60 * 60 * 24);
         $expiryTs = strtotime('20' . $yearValue . '-' . $monthValue . '-01');
         if ($ts > $expiryTs) {
@@ -144,7 +144,7 @@ class ExpiryDateField extends TextField
     {
         return $this->castedCopy(ReadonlyField::class)
             ->setTitle($this->title)
-            ->setValue(substr($this->value, 0, 2) . '/' . substr($this->value, 2, 2))
+            ->setValue(substr((string) $this->value, 0, 2) . '/' . substr((string) $this->value, 2, 2))
         ;
     }
 

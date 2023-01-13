@@ -166,7 +166,7 @@ class CartPageController extends PageController
 
         $this->Title .= ': ' . implode(', ', $titleAppendixArray);
         if (strlen($this->Title) > 255) {
-            $this->Title = substr($this->Title, 0, 255) . ' ...';
+            $this->Title = substr((string) $this->Title, 0, 255) . ' ...';
         }
 
         return [];

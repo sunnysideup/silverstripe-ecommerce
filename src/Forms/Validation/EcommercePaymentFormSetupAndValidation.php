@@ -349,8 +349,8 @@ class EcommercePaymentFormSetupAndValidation
      */
     public function validateExpiryMonth($monthYear)
     {
-        $month = (int) substr($monthYear, 0, 2);
-        $year = (int) ('20' . substr($monthYear, 2));
+        $month = (int) substr((string) $monthYear, 0, 2);
+        $year = (int) ('20' . substr((string) $monthYear, 2));
         $currentYear = (int) date('Y');
         $currentMonth = (int) date('m');
         if (($month > 0 || $month < 13) && $year > 0) {
@@ -386,8 +386,8 @@ class EcommercePaymentFormSetupAndValidation
             //Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
             if (is_numeric($cvv)) {
                 //Splits up the card number into various identifying lengths.
-                // $firstOne = substr($cardNumber, 0, 1);
-                $firstTwo = substr($cardNumber, 0, 2);
+                // $firstOne = substr((string) $cardNumber, 0, 1);
+                $firstTwo = substr((string) $cardNumber, 0, 2);
 
                 //If the card is an American Express
                 if ('34' === $firstTwo || '37' === $firstTwo) {

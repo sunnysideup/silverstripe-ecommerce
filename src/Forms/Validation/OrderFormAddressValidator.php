@@ -26,7 +26,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
         $allowExistingEmail = ! (bool) Member::currentUserID();
         if (! isset($data['UseShippingAddress']) || ! $data['UseShippingAddress']) {
             foreach (array_keys($this->required) as $key) {
-                if ('Shipping' === substr($key, 0, 8)) {
+                if ('Shipping' === substr((string) $key, 0, 8)) {
                     unset($this->required[$key]);
                 }
             }

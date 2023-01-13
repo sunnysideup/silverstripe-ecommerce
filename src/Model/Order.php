@@ -2377,7 +2377,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $start = 0;
         }
 
-        return substr($this->SessionID, $start, $size);
+        return substr((string) $this->SessionID, $start, $size);
     }
 
     /**
@@ -3803,7 +3803,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! $this->SessionID) {
             $generator = Injector::inst()->create(RandomGenerator::class);
             $token = $generator->randomToken('sha1');
-            $this->SessionID = substr($token, 0, 32);
+            $this->SessionID = substr((string) $token, 0, 32);
         }
     }
 

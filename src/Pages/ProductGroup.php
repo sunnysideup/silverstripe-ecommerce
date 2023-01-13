@@ -836,8 +836,8 @@ class ProductGroup extends Page
         $urlSegment = $this->URLSegment;
         $x = 2;
         while ($x < 10) {
-            if(substr($urlSegment, -2) === '-'.$x) {
-                return substr($urlSegment, 0, -2);
+            if(substr((string) $urlSegment, -2) === '-'.$x) {
+                return substr((string) $urlSegment, 0, -2);
             }
             $x++;
         }
