@@ -9,6 +9,7 @@ use SilverStripe\Core\Injector\Injector;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataObjectInterface;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -29,14 +30,13 @@ use Sunnysideup\Ecommerce\Pages\Product;
  *
  *
  *     $fields->addFieldToTab('Root.Images', $uploadField = new ProductProductImageUploadField('Image', _t('Product.IMAGE', 'Product Image')));
- *     $uploadField->setCallingClass("Product");
  */
 class ProductProductImageUploadField extends UploadField
 {
     /**
-     * @var string
+     * @var DataObjectInterface
      */
-    protected $callingClass = '';
+    protected $callingObject = '';
 
     /**
      * @var array Config for this field used in both, php and javascript
@@ -113,54 +113,26 @@ class ProductProductImageUploadField extends UploadField
      *
      *                       @see $record}, with the same name as the field name.
      */
-    public function __construct($name, $title = null, SS_List $items = null)
+    public function __construct($name, $title = null, SS_List $items = null, string $callingObject = nul)
     {
         parent::__construct($name, $title, $items);
         $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'png']);
 
-        $callingClass = $this->getCallingClass();
-        $folderName = Injector::inst()->get($callingClass)->getFolderName();
-        if (! $folderName) {
-            $folderName = ClassInfo::shortName($callingClass) . '_' . $name;
+        if ($callingObject && $callingObject->hasMethod('getFolderName')) {
+            $this->setFolderName($callingObject->getFolderName());
         }
-        $this->setFolderName($folderName);
     }
 
     /**
      * Must be a real class name.
      *
-     * @param string $name
+     * @param DataObjectInterface $obj
      */
-    public function setCallingClass($name): self
+    public function setCallingObject($obj): self
     {
-        $this->callingClass = $name;
+        $this->callingObject = $obj;
 
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
-    protected function getCallingClass()
-    {
-        if ($this->callingClass) {
-            return $this->callingClass;
-        }
-        //get the trace
-        $trace = debug_backtrace();
-        // Get the class that is asking for who awoke it
-        $class = $trace[1]['class'];
-        $traceCount = count($trace);
-        // +1 to i cos we have to account for calling this function
-        for ($i = 1; $i < $traceCount; ++$i) {
-            if (isset($trace[$i])) {
-                // is it set?
-                if ($class !== $trace[$i]['class']) { // is it a different class
-                    return $trace[$i]['class'];
-                }
-            }
-        }
-
-        return Product::class;
-    }
 }
