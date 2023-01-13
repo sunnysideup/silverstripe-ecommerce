@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\HeaderField;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -51,7 +50,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
                 CheckboxField::create(
                     'SendInvoiceToCustomer',
                     'Send Invoice to Customer?'
-                )
+                ),
             ]
         );
 

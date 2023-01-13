@@ -3,9 +3,8 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\View\SSViewer;
-
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\SSViewer;
 
 class SetThemed
 {
@@ -28,7 +27,7 @@ class SetThemed
     public static function end()
     {
         if (self::$changed) {
-            if(self::$stage_before && self::$stage_before !== Versioned::LIVE) {
+            if (self::$stage_before && Versioned::LIVE !== self::$stage_before) {
                 Versioned::set_stage(self::$stage_before);
             }
             Config::unnest();

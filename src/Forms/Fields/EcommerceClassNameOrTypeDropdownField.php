@@ -59,7 +59,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
 
         $classes += ClassInfo::subclassesFor($this->sourceClass);
 
-        if ($this->availableClasses === []) {
+        if ([] === $this->availableClasses) {
             $this->availableClasses = $classes;
         } elseif ($this->includeBaseClass) {
             $this->availableClasses[] = $this->sourceClass;
@@ -83,7 +83,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
             }
         }
 
-        if ($dropdownArray === []) {
+        if ([] === $dropdownArray) {
             $dropdownArray = [$this->sourceClass => _t('EcommerceClassNameOrTypeDropdownField.CAN_NOT_CREATE', "Can't create.")];
         }
 

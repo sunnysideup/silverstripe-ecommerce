@@ -9,7 +9,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -25,11 +24,10 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class EcommerceTaskArchiveAllOldOrders extends BuildTask
 {
+    private const AGO_STATEMENT = '-6 months';
     protected $title = 'Archive all old orders';
 
-    protected $description = "This task moves all orders to the 'Archived' (last) Order Step that were created ".self::AGO_STATEMENT;
-
-    private const AGO_STATEMENT = '-6 months';
+    protected $description = "This task moves all orders to the 'Archived' (last) Order Step that were created " . self::AGO_STATEMENT;
 
     public function run($request)
     {
@@ -44,15 +42,15 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
             ['Sort' => 'DESC']
         );
         if ($lastOrderStep) {
-            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(Created) < '.strtotime(self::AGO_STATEMENT);
+            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(Created) < ' . strtotime(self::AGO_STATEMENT);
             $count = DB::query("
                 SELECT COUNT (\"Order\".\"ID\")
                 FROM \"Order\"
                 {$whereSQL}
             ")->value();
-            DB::query("
-                UPDATE \"Order\"
-                SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
+            DB::query('
+                UPDATE "Order"
+                SET "Order"."StatusID" = ' . $lastOrderStep->ID . "
                 {$whereSQL}
             ");
             if ($count) {

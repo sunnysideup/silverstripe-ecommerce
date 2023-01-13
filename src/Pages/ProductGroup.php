@@ -7,15 +7,15 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -98,7 +98,6 @@ class ProductGroup extends Page
     private static $owns = [
         'Image',
     ];
-
 
     private static $cascade_deletes = [
         'Image',
@@ -293,14 +292,14 @@ class ProductGroup extends Page
             $searchDetails = '
             <h2>Title recorded (prioritised in search)</h2>
             <p>
-                '.$mySearchDetail->Title.'
+                ' . $mySearchDetail->Title . '
             </p>
             <h2>Keywords recorded</h2>
             <p>
-                '.$mySearchDetail->Data.'
+                ' . $mySearchDetail->Data . '
             </p>
             <p>
-                <a href="'.$mySearchDetail->CMSEditLink().'">See Search Keywords Recorded</a>
+                <a href="' . $mySearchDetail->CMSEditLink() . '">See Search Keywords Recorded</a>
             </p>';
         } else {
             $searchDetails = '
@@ -314,7 +313,7 @@ class ProductGroup extends Page
                 LiteralField::create(
                     'SearchDetails',
                     $searchDetails
-                )
+                ),
             ]
         );
 
@@ -680,6 +679,26 @@ class ProductGroup extends Page
         ProductGroupSearchTable::remove_product_group($this);
     }
 
+    /**
+     * returns a URL without the -2 or -3, at the end,
+     * so that the URLSegment can be used as a code.
+     *
+     * @return string [description]
+     */
+    public function CleanURLSegment(): string
+    {
+        $urlSegment = $this->URLSegment;
+        $x = 2;
+        while ($x < 10) {
+            if (substr((string) $urlSegment, -2) === '-' . $x) {
+                return substr((string) $urlSegment, 0, -2);
+            }
+            ++$x;
+        }
+
+        return $urlSegment;
+    }
+
     protected function getTemplateForSelectionOfProducts(): string
     {
         return $this->Config()->get('template_for_selection_of_products');
@@ -824,23 +843,5 @@ class ProductGroup extends Page
             $this->Title,
             $this->Content,
         ];
-    }
-
-    /**
-     * returns a URL without the -2 or -3, at the end,
-     * so that the URLSegment can be used as a code.
-     * @return string [description]
-     */
-    public function CleanURLSegment() : string
-    {
-        $urlSegment = $this->URLSegment;
-        $x = 2;
-        while ($x < 10) {
-            if(substr((string) $urlSegment, -2) === '-'.$x) {
-                return substr((string) $urlSegment, 0, -2);
-            }
-            $x++;
-        }
-        return $urlSegment;
     }
 }

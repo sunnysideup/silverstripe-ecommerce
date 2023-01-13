@@ -276,7 +276,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     public function getAlsoShowParentIdsFiltered(): array
     {
-        if ($this->alsoShowParentIdsFiltered === []) {
+        if ([] === $this->alsoShowParentIdsFiltered) {
             $rows = DB::query('
                 SELECT "ProductGroupID"
                 FROM "Product_ProductGroups"

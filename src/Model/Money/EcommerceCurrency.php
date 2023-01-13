@@ -123,7 +123,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         'IsDefaultNice' => 'Default Currency',
         'ExchangeRate' => 'Exchange Rate',
     ];
-     //note no => for relational fields
+    //note no => for relational fields
 
     /**
      * standard SS variable.

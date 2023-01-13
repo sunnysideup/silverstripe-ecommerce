@@ -1173,11 +1173,11 @@ class ShoppingCart
         $sessionVariableName = $this->sessionVariableName('Messages');
         $messages = [];
         $curr = Controller::curr();
-        if($curr) {
+        if ($curr) {
             $request = $curr->getRequest();
-            if($request) {
+            if ($request) {
                 $session = $request->getSession();
-                if($session) {
+                if ($session) {
                     //get old messages
                     $messages = unserialize((string) $session->get($sessionVariableName));
                     //clear old messages
@@ -1293,7 +1293,7 @@ class ShoppingCart
         $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
         $newarray = array_merge([], $defaultParamFilters);
         //clone array
-        if ($newarray === []) {
+        if ([] === $newarray) {
             return [];
             //no use for this if there are not parameters defined
         }
@@ -1324,7 +1324,7 @@ class ShoppingCart
             $outputarray[$field] = '"' . $field . '" = ' . $value;
         }
 
-        if ($outputArray !== []) {
+        if ([] !== $outputArray) {
             return implode(' AND ', $outputArray);
         }
 

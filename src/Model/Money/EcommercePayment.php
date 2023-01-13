@@ -538,7 +538,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         foreach ($supportedMethods as $methodClass => $methodName) {
             // todo: move to afterpay module using some sort of extension
             // Afterpay not allowed due to price limits
-            if ($methodName === false && $methodClass === AfterpayEcommercePayment::class) {
+            if (false === $methodName && AfterpayEcommercePayment::class === $methodClass) {
                 $msg = EcommerceDBConfig::current_ecommerce_db_config()->NoAfterpayMessage;
                 if ($msg) {
                     $message = sprintf(
@@ -547,6 +547,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
                     );
                     $fields->insertBefore('PaymentMethod', new LiteralField('', $message));
                 }
+
                 continue;
             }
             $htmlClassName = self::php_class_to_html_class($methodClass);

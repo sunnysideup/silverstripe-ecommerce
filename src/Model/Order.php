@@ -186,6 +186,8 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected static $order_cache = [];
 
+    protected $overrideCanView = false;
+
     /**
      * API Control.
      *
@@ -616,13 +618,13 @@ class Order extends DataObject implements EditableEcommerceObject
     public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
     {
         $list = Order::get();
-        if ($onlySubmittedOrders !== false) {
+        if (false !== $onlySubmittedOrders) {
             $list = self::get_datalist_of_orders_with_joined_submission_record($list);
         } else {
             $list = $list->filter(['StatusID:GreaterThan' => 0]);
         }
 
-        if ($includeCancelledOrders !== true) {
+        if (true !== $includeCancelledOrders) {
             $list = $list->filter(['CancelledByID' => 0]);
         }
 
@@ -1165,6 +1167,7 @@ class Order extends DataObject implements EditableEcommerceObject
         );
         $this->MyStep()->addOrderStepFields($fields, $this, true);
         $this->extend('updateCMSFields', $fields);
+
         return $fields;
     }
 
@@ -1290,7 +1293,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
 
             $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
-            if (is_array($modifiersToAdd) && $modifiersToAdd !== []) {
+            if (is_array($modifiersToAdd) && [] !== $modifiersToAdd) {
                 foreach ($modifiersToAdd as $numericKey => $className) {
                     if (! in_array($className, $createdModifiersClassNames, true)) {
                         if (class_exists($className)) {
@@ -1959,11 +1962,11 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Send the invoice of the order by email.
      *
-     * @param string          $emailClassName     (optional) class used to send email
-     * @param string          $subject            (optional) subject for the email
-     * @param string          $message            (optional) the main message in the email
-     * @param bool            $resend             (optional) send the email even if it has been sent before
-     * @param bool|string     $adminOnlyOrToEmail (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
+     * @param string      $emailClassName     (optional) class used to send email
+     * @param string      $subject            (optional) subject for the email
+     * @param string      $message            (optional) the main message in the email
+     * @param bool        $resend             (optional) send the email even if it has been sent before
+     * @param bool|string $adminOnlyOrToEmail (optional) sends the email to the ADMIN ONLY, if you provide an email, it will go to the email...
      *
      * @return bool TRUE on success, FALSE on failure
      */
@@ -2255,11 +2258,10 @@ class Order extends DataObject implements EditableEcommerceObject
         return parent::canCreate($member, $context);
     }
 
-    protected $overrideCanView = false;
-
     public function setOverrideCanView(bool $b)
     {
         $this->overrideCanView = $b;
+
         return $this;
     }
 
@@ -2272,7 +2274,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if($this->overrideCanView && ! $this->IsArchived()) {
+        if ($this->overrideCanView && ! $this->IsArchived()) {
             return true;
         }
         if (! $this->exists()) {
@@ -2633,6 +2635,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (! isset($_REQUEST['print'])) {
             if ($this->IsSubmitted()) {
                 $step = $this->MyStep();
+
                 return Director::AbsoluteURL(
                     OrderConfirmationPage::get_email_link(
                         $this->ID,
@@ -3350,7 +3353,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
 
-        if ($regionIDs !== []) {
+        if ([] !== $regionIDs) {
             //note the double-check with $this->CanHaveShippingAddress() and get_use_....
             if ($this->CanHaveShippingAddress() && EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $regionIDs['Shipping']) {
                 return EcommerceRegion::get_by_id($regionIDs['Shipping']);
@@ -4052,6 +4055,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $email->setResend($resend);
             $result = $email->send(null);
             SetThemed::end();
+
             return $result;
         }
 

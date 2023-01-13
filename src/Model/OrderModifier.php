@@ -866,7 +866,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if (!$this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
+        if (! $this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]

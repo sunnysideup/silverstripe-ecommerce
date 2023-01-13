@@ -60,7 +60,7 @@ class OrderFormValidator extends RequiredFields
             $valid = false;
         }
         $validExtended = $this->extend('updatePHP', $data, $this);
-        if($validExtended === false) {
+        if (false === $validExtended) {
             $valid = false;
         }
         if (! $valid) {
@@ -69,6 +69,7 @@ class OrderFormValidator extends RequiredFields
                 'error'
             );
         }
+
         return $valid;
     }
 }

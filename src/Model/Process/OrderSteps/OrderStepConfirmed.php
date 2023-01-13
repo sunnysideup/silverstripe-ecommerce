@@ -37,7 +37,8 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *     ]
      * ```
      * MethodToReturnTrue must have an $order as a parameter and bool as the return value
-     * e.g. MyMethod(Order $order) : bool;
+     * e.g. MyMethod(Order $order) : bool;.
+     *
      * @var array
      */
     private static $step_logic_conditions = [
@@ -83,7 +84,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    public function PaymentConfirmed($order) : bool
+    public function PaymentConfirmed($order): bool
     {
         $paymentConfirmedLog = $this->getRelevantLogEntryClassName();
         $paymentConfirmedList = $paymentConfirmedLog::get()
@@ -92,6 +93,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
                 'PaymentConfirmed' => 1,
             ])
         ;
+
         return (bool) $paymentConfirmedList->exists();
     }
 

@@ -69,7 +69,7 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
     {
         $gorupCode = EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_code');
         $group = Group::get()->filter(['Code' => $gorupCode])->first();
-        if (!$group) {
+        if (! $group) {
             return PermissionProviderFactory::inst()
                 ->setParentGroup(EcommerceRole::get_category())
                 ->setEmail(EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_user_email'))
@@ -87,8 +87,10 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
                     )
                 )
                 ->setSort(100)
-                ->CreateGroupAndMember();
+                ->CreateGroupAndMember()
+            ;
         }
+
         return $group;
     }
 }

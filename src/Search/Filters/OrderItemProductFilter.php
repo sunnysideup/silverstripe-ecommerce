@@ -4,13 +4,11 @@ namespace Sunnysideup\Ecommerce\Search\Filters;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\Filters\ExactMatchFilter;
-
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
-use Sunnysideup\Ecommerce\Pages\Product;
-
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Filter that searches the Two Addresses (billing + shipping)
@@ -35,25 +33,27 @@ class OrderItemProductFilter extends ExactMatchFilter
             $query->where("BuyableClassName = '" . addslashes($product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
         } else {
             $done = false;
-            $rows = DB::query('
+            $rows = DB::query(
+                '
                 SELECT SiteTree_Versions.RecordID, SiteTree_Versions.ClassName
                 FROM Product_Versions
                     INNER JOIN SiteTree_Versions
                         ON SiteTree_Versions.RecordID = Product_Versions.RecordID AND SiteTree_Versions.Version = Product_Versions.Version
-                WHERE InternalItemID = \''.$value.'\' LIMIT 1;'
+                WHERE InternalItemID = \'' . $value . '\' LIMIT 1;'
             );
-            foreach($rows as $row) {
+            foreach ($rows as $row) {
                 $query->where("BuyableClassName = '" . addslashes($row['ClassName']) . '\' AND "BuyableID" = ' . $row['RecordID']);
                 $done = true;
             }
-            if(! $done) {
+            if (! $done) {
                 $logs = OrderStatusLogSubmitted::get()
-                    ->filterAny(['OrderAsHTML:PartialMatch' => $value, 'OrderAsString:PartialMatch' => $value]);
+                    ->filterAny(['OrderAsHTML:PartialMatch' => $value, 'OrderAsString:PartialMatch' => $value])
+                ;
                 $orderIds = [0 => 0];
-                if($logs->exists()) {
+                if ($logs->exists()) {
                     $orderIds = $logs->column('OrderID');
                 }
-                $query->where('OrderID IN ('.implode(',', $orderIds).')');
+                $query->where('OrderID IN (' . implode(',', $orderIds) . ')');
             }
         }
 

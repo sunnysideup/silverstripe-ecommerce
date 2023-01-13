@@ -47,7 +47,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
             $valid = false;
         }
         $validExtended = $this->extend('updatePHP', $data, $this);
-        if($validExtended === false) {
+        if (false === $validExtended) {
             $valid = false;
         }
         if (! $valid) {
@@ -56,6 +56,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
                 'error'
             );
         }
+
         return $valid;
     }
 }

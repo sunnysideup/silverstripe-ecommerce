@@ -40,7 +40,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *     ]
      * ```
      * MethodToReturnTrue must have an $order as a parameter and bool as the return value
-     * e.g. MyMethod(Order $order) : bool;
+     * e.g. MyMethod(Order $order) : bool;.
+     *
      * @var array
      */
     private static $step_logic_conditions = [
@@ -141,7 +142,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         if ($log) {
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
-            } elseif ($log->Sent) {
+            }
+            if ($log->Sent) {
                 $order->sendEmail(
                     $this->getEmailClassName(),
                     $subject = $this->CalculatedEmailSubject($order),
@@ -149,6 +151,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
                     $resend = false,
                     ! (bool) $this->SendDetailsToCustomer
                 );
+
                 return true;
             }
         }
@@ -156,15 +159,15 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return false;
     }
 
-    public function MarkedAsSent($order) : bool
+    public function MarkedAsSent($order): bool
     {
         $log = $this->RelevantLogEntry($order);
         if ($log) {
             return (bool) $log->Sent;
         }
+
         return false;
     }
-
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.

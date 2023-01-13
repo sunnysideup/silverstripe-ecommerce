@@ -10,12 +10,13 @@ class OrderStatusLogFormValidator extends RequiredFields
     {
         $this->form->saveDataToSession();
         $validExtended = $this->extend('updatePHP', $data, $this);
-        if($validExtended === false) {
+        if (false === $validExtended) {
             $this->form->sessionError(
                 _t('OrderForm.OrderModifierForm', 'We could not update your order status.'),
                 'error'
             );
         }
+
         return parent::php($data);
     }
 }

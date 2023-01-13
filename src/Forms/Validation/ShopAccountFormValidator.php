@@ -123,7 +123,7 @@ class ShopAccountFormValidator extends RequiredFields
             }
         }
         $validExtended = $this->extend('updatePHP', $data, $this);
-        if($validExtended === false) {
+        if (false === $validExtended) {
             $valid = false;
         }
         if (! $valid) {

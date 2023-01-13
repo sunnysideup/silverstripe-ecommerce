@@ -306,7 +306,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function getAlsoShowParentIds(): array
     {
-        if ($this->alsoShowParentIds === []) {
+        if ([] === $this->alsoShowParentIds) {
             $rows = DB::query('
                 SELECT "ProductGroupID"
                 FROM "Product_ProductGroups"

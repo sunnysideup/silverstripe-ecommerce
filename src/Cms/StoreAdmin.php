@@ -10,8 +10,6 @@ use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
@@ -128,5 +126,4 @@ class StoreAdmin extends ModelAdmin
 
         return $form;
     }
-
 }

@@ -31,6 +31,21 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
     ];
 
     /**
+     * ```php
+     *     [
+     *         'MethodToReturnTrue' => StepClassName
+     *     ]
+     * ```
+     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
+     * e.g. MyMethod(Order $order) : bool;.
+     *
+     * @var array
+     */
+    private static $step_logic_conditions = [
+        'hasBeenSent' => true,
+    ];
+
+    /**
      * can run step once order has been submitted.
      *
      * @param Order $order object
@@ -58,22 +73,6 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
             $this->getEmailClassName()
         );
     }
-
-
-    /**
-     * ```php
-     *     [
-     *         'MethodToReturnTrue' => StepClassName
-     *     ]
-     * ```
-     * MethodToReturnTrue must have an $order as a parameter and bool as the return value
-     * e.g. MyMethod(Order $order) : bool;
-     * @var array
-     */
-    private static $step_logic_conditions = [
-        'hasBeenSent' => true,
-    ];
-
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.

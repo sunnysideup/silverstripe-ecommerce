@@ -3,8 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use SilverStripe\Core\Config\Config;
-
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -13,8 +11,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
-use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 
 /**
  * @description:
@@ -323,24 +321,24 @@ class OrderConfirmationPage extends CartPage
     /**
      * Return a link to view the order on this page.
      *
-     * @param int        $orderID                - ID of the order
-     * @param string     $emailClassName         - the type of email you want to send
-     * @param bool       $actuallySendEmail      - do we actually send the email
-     * @param int        $alternativeOrderStepID - OrderStep to use
+     * @param int    $orderID                - ID of the order
+     * @param string $emailClassName         - the type of email you want to send
+     * @param bool   $actuallySendEmail      - do we actually send the email
+     * @param int    $alternativeOrderStepID - OrderStep to use
      *
-     * @return string    (URLSegment)
+     * @return string (URLSegment)
      */
-    public static function get_email_link(int $orderID,?string $emailClassName = OrderStatusEmail::class, ?bool $actuallySendEmail = false, ?int $alternativeOrderStepID = 0)
+    public static function get_email_link(int $orderID, ?string $emailClassName = OrderStatusEmail::class, ?bool $actuallySendEmail = false, ?int $alternativeOrderStepID = 0)
     {
         $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . str_replace('\\', '-', $emailClassName);
         $getParams = [];
-        if(! $alternativeOrderStepID) {
+        if (! $alternativeOrderStepID) {
             $order = DataObject::get_one(Order::class, ['ID' => $orderID]);
-            if($order) {
+            if ($order) {
                 $alternativeOrderStepID = $order->StatusID;
             }
         }
-        if($alternativeOrderStepID) {
+        if ($alternativeOrderStepID) {
             if ($actuallySendEmail) {
                 $getParams['send'] = $alternativeOrderStepID;
             } else {

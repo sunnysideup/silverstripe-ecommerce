@@ -10,12 +10,13 @@ class OrderModifierFormValidator extends RequiredFields
     {
         $this->form->saveDataToSession();
         $validExtended = $this->extend('updatePHP', $data, $this);
-        if($validExtended === false) {
+        if (false === $validExtended) {
             $this->form->sessionError(
                 _t('OrderForm.OrderModifierForm', 'We could not process your order details.'),
                 'error'
             );
         }
+
         return parent::php($data);
     }
 }

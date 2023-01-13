@@ -1,7 +1,7 @@
 <?php
 
 namespace Sunnysideup\Ecommerce\Model\Process;
-use SilverStripe\Core\Injector\Injector;
+
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -34,10 +34,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
-
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-
 
 /**
  * @description: see OrderStep.md
@@ -80,7 +77,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *     ]
      * ```
      * MethodToReturnTrue must have an $order as a parameter and bool as the return value
-     * e.g. MyMethod(Order $order) : bool;
+     * e.g. MyMethod(Order $order) : bool;.
+     *
      * @var array
      */
     private static $step_logic_conditions = [];
@@ -353,7 +351,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $this->yesOrNoNiceHelper($this->HideStepFromCustomer);
     }
 
-
     public function i18n_singular_name()
     {
         return _t('OrderStep.ORDERSTEP', 'Order Step');
@@ -539,7 +536,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             <br />To make it easier, you can also enter things like <em>1 week</em>, <em>3 hours</em>, or <em>7 minutes</em>.
                             <br />Non-second entries will automatically be converted to seconds.'
                             )
-                        )
+                        ),
                 ]
             );
             if ($this->DeferTimeInSeconds) {
@@ -637,36 +634,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ),
             ]
         );
+
         return $fields;
-    }
-
-    protected function stepExplanations() : string
-    {
-        $html = '<h2>Moving to next step</h2><ul>';
-        $array = $this->Config()->get('step_logic_conditions');
-        if(count($array)) {
-            foreach($array as $method => $classNameOrTrue) {
-                $nextStep = $classNameOrTrue === true ? $this->nextStepObject() : $classNameOrTrue::get()->first();
-                if($nextStep) {
-                    $html .= '<li>If <strong>'.$method.'</strong> returns TRUE then move order to <a href="'.$nextStep->CMSEditLink().'">'.$nextStep->getTitle().'</a></li>';
-                } else {
-                    $html .= '<li>If <strong>'.$method.'</strong> returns TRUE then <strong>not specified</strong></li>';
-                }
-            }
-        } else {
-            $html .= '<li>Rules are not defined here.</li>';
-        }
-
-        $html .= '</ul>';
-        return $html;
-    }
-
-    protected function hasStepConditions() : bool
-    {
-        if(! empty($this->Config()->get('step_logic_conditions'))) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -830,31 +799,34 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return null|OrderStep (next step OrderStep object)
      */
-    public function nextStep(Order $order) : ?OrderStep
+    public function nextStep(Order $order): ?OrderStep
     {
         $conditions = $this->Config()->get('step_logic_conditions');
-        if(count($conditions)) {
-            foreach($conditions as $method => $classNameOrTrue) {
-                $outcome = $this->$method($order);
-                if($outcome === true) {
-                    if($classNameOrTrue === true) {
+        if (count($conditions)) {
+            foreach ($conditions as $method => $classNameOrTrue) {
+                $outcome = $this->{$method}($order);
+                if (true === $outcome) {
+                    if (true === $classNameOrTrue) {
                         return $this->nextStepObject();
                     }
+
                     return $classNameOrTrue::get()->first();
-                } elseif ($outcome === false) {
+                }
+                if (false === $outcome) {
                     // important - do nothing - allow another condition to apply
                 } else {
-                    user_error($method.' is required to return TRUE or FALSE, answer is: '.print_r($outcome, 1));
+                    user_error($method . ' is required to return TRUE or FALSE, answer is: ' . print_r($outcome, 1));
                 }
             }
         } else {
             // if there are no conditions then just return the next step.
             return $this->nextStepObject();
         }
+
         return null;
     }
 
-    public function nextStepObject() : ?OrderStep
+    public function nextStepObject(): ?OrderStep
     {
         $sort = (int) $this->Sort;
         if (! $sort) {
@@ -865,7 +837,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             OrderStep::class,
             $where
         );
-        return $nextOrderStepObject ?:null;
+
+        return $nextOrderStepObject ?: null;
     }
 
     // Boolean checks
@@ -1127,15 +1100,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function RelevantLogEntryFindOrMake(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
-        if(! $log) {
+        if (! $log) {
             $className = $this->getRelevantLogEntryClassName();
-            if(! class_exists($className)) {
+            if (! class_exists($className)) {
                 $className = OrderStatusLog::class;
             }
             $log = $className::create();
             $log->OrderID = $order->ID;
             $log->write();
         }
+
         return $log;
     }
 
@@ -1288,6 +1262,37 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         parent::requireDefaultRecords();
         $this->checkValidityOfOrderSteps();
+    }
+
+    protected function stepExplanations(): string
+    {
+        $html = '<h2>Moving to next step</h2><ul>';
+        $array = $this->Config()->get('step_logic_conditions');
+        if (count($array)) {
+            foreach ($array as $method => $classNameOrTrue) {
+                $nextStep = true === $classNameOrTrue ? $this->nextStepObject() : $classNameOrTrue::get()->first();
+                if ($nextStep) {
+                    $html .= '<li>If <strong>' . $method . '</strong> returns TRUE then move order to <a href="' . $nextStep->CMSEditLink() . '">' . $nextStep->getTitle() . '</a></li>';
+                } else {
+                    $html .= '<li>If <strong>' . $method . '</strong> returns TRUE then <strong>not specified</strong></li>';
+                }
+            }
+        } else {
+            $html .= '<li>Rules are not defined here.</li>';
+        }
+
+        $html .= '</ul>';
+
+        return $html;
+    }
+
+    protected function hasStepConditions(): bool
+    {
+        if (! empty($this->Config()->get('step_logic_conditions'))) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function yesOrNoNiceHelper(?bool $bool): string
@@ -1538,14 +1543,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $filter = ['ClassName' => $className, 'Code' => $code];
                     $indexNumber += 10;
                     $itemCountCounts = OrderStep::get()->filterAny($filter)->count();
-                    if ($itemCountCounts === 1) {
+                    if (1 === $itemCountCounts) {
                         //always reset code
                         $obj = DataObject::get_one(
                             OrderStep::class,
                             $filter,
                             $cacheDataObjectGetOne = false
                         );
-                        if($obj && $obj instanceof OrderStep) {
+                        if ($obj && $obj instanceof OrderStep) {
                             if ($obj->Code !== $code) {
                                 $obj->Code = $code;
                                 $obj->write();

@@ -2,12 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
-use SilverStripe\Core\Convert;
+use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\ORM\FieldType\DBDatetime;
-
-use SilverStripe\Control\Controller;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
@@ -149,8 +147,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
         return true;
     }
 
-
-    public function IsSubmitted($order) : bool
+    public function IsSubmitted($order): bool
     {
         return $order->IsSubmitted();
     }

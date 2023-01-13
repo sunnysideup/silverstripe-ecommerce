@@ -159,12 +159,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * casted Variable.
      */
-    public function ResultNice() : string
+    public function ResultNice(): string
     {
         return $this->getResultNice();
     }
 
-    public function getResultNice() : string
+    public function getResultNice(): string
     {
         if ($this->Result) {
             return _t('OrderEmailRecord.YES', 'Yes');

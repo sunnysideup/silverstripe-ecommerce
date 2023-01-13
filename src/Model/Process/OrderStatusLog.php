@@ -9,7 +9,6 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
-
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -183,20 +182,16 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function getPopUpLink()
     {
         $className = 'Sunnysideup\\DataObjectSorter\\DataObjectOneRecordUpdateController';
-        if(class_exists($className)) {
-            $link =  $className::popup_link($this->getOwner()->ClassName, $this->getOwner()->ID, $this->getPopUpLinkTitle());
+        if (class_exists($className)) {
+            $link = $className::popup_link($this->getOwner()->ClassName, $this->getOwner()->ID, $this->getPopUpLinkTitle());
         } else {
-            $link = '<a href="'.$this->CMSEditLink().'">'.$this->getPopUpLinkTitle().'</a>"';
+            $link = '<a href="' . $this->CMSEditLink() . '">' . $this->getPopUpLinkTitle() . '</a>"';
         }
+
         return DBHTMLText::create_field(
             'HTMLText',
             $link
         );
-    }
-
-    protected function getPopUpLinkTitle() : string
-    {
-        return 'Update Details';
     }
 
     /**
@@ -509,6 +504,11 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
+    }
+
+    protected function getPopUpLinkTitle(): string
+    {
+        return 'Update Details';
     }
 
     /**

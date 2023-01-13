@@ -734,7 +734,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
     public static function set_for_current_order_only_show_countries(array $a)
     {
-        if (self::$for_current_order_only_show_countries !== []) {
+        if ([] !== self::$for_current_order_only_show_countries) {
             //we INTERSECT here so that only countries allowed by all forces (modifiers) are added.
             self::$for_current_order_only_show_countries = array_intersect($a, self::$for_current_order_only_show_countries);
         } else {

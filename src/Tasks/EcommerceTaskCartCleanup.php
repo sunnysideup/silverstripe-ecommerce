@@ -407,7 +407,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message('<h2>Checking one-to-one relationships</h2>.');
         }
 
-        if ($this->oneToOne !== []) {
+        if ([] !== $this->oneToOne) {
             foreach ($this->oneToOne as $orderFieldName => $className) {
                 $tableName = Config::inst()->get($className, 'table_name');
                 if (! in_array($className, $this->oneToMany, true) && ! in_array($className, $this->manyToMany, true)) {
@@ -432,7 +432,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         }
                     }
 
-                    if ($this->oneToOneIDArray !== []) {
+                    if ([] !== $this->oneToOneIDArray) {
                         $unlinkedObjects = $className::get()
                             ->filter(['ID' => $this->oneToOneIDArray])
                         ;
@@ -475,7 +475,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message('<h2>Checking one-to-many relationships</h2>.');
         }
 
-        if ($this->oneToMany !== []) {
+        if ([] !== $this->oneToMany) {
             foreach ($this->oneToMany as $classWithOrderID => $classWithLastEdited) {
                 $tableWithOrderID = Config::inst()->get($classWithOrderID, 'table_name');
                 if (! in_array($classWithLastEdited, $this->oneToOne, true) && ! in_array($classWithLastEdited, $this->manyToMany, true)) {
@@ -498,7 +498,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                         }
                     }
 
-                    if ($this->oneToManyIDArray !== []) {
+                    if ([] !== $this->oneToManyIDArray) {
                         $unlinkedObjects = $classWithLastEdited::get()
                             ->filter(['ID' => $this->oneToManyIDArray])
                         ;

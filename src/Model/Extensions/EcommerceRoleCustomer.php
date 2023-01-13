@@ -36,7 +36,7 @@ class EcommerceRoleCustomer implements PermissionProviderFactoryProvider
     {
         $groupCode = EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_code');
         $group = Group::get()->filter(['Code' => $groupCode])->first();
-        if (!$group) {
+        if (! $group) {
             return PermissionProviderFactory::inst()
                 ->setParentGroup(EcommerceRole::get_category())
 

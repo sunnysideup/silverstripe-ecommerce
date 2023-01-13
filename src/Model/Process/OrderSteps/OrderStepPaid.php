@@ -34,7 +34,8 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *     ]
      * ```
      * MethodToReturnTrue must have an $order as a parameter and bool as the return value
-     * e.g. MyMethod(Order $order) : bool;
+     * e.g. MyMethod(Order $order) : bool;.
+     *
      * @var array
      */
     private static $step_logic_conditions = [
@@ -74,7 +75,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    public function IsPaid($order) : bool
+    public function IsPaid($order): bool
     {
         return (bool) $order->IsPaid();
     }

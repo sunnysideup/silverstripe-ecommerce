@@ -2,16 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\TextField;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 trait EcommerceProductReportTrait
@@ -72,9 +72,9 @@ trait EcommerceProductReportTrait
             $list = $this->updateEcommerceList($list);
         }
 
-        $title = (string) Convert::raw2sql($params['Title'] ??  '');
+        $title = (string) Convert::raw2sql($params['Title'] ?? '');
         if ($title) {
-            $list = $list->filterAny(['Title:PartialMatch' => $title,'ProductBreadcrumb:PartialMatch' => $title,'InternalItemID:PartialMatch' => $title,]);
+            $list = $list->filterAny(['Title:PartialMatch' => $title, 'ProductBreadcrumb:PartialMatch' => $title, 'InternalItemID:PartialMatch' => $title]);
         }
 
         $minPrice = (float) preg_replace('#[^0-9.\-]#', '', ($params['MinimumPrice'] ?? 0));

@@ -33,7 +33,6 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
         'hasBeenSent' => true,
     ];
 
-
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,

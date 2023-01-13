@@ -10,7 +10,7 @@ class OrderFormCancelValidator extends RequiredFields
     {
         $this->form->saveDataToSession();
         $validExtended = $this->extend('updatePHP', $data, $this);
-        if($validExtended === false) {
+        if (false === $validExtended) {
             $this->form->sessionError(
                 _t('OrderForm.OrderFormCancel', 'We could not cancel the order.'),
                 'error'

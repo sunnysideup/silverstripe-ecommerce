@@ -67,7 +67,7 @@ class ProductGroupSearchPage extends ProductGroup
      */
     public static function main_search_page()
     {
-        /** @return null|ProductGroupSearchPage */
+        // @return null|ProductGroupSearchPage
         return DataObject::get_one(ProductGroupSearchPage::class);
     }
 

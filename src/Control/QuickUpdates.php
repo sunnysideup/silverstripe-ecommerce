@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
-use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
@@ -17,6 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
+use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 class QuickUpdates extends Controller

@@ -222,7 +222,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
             $arrayOfModifiers = [];
         }
 
-        if ($arrayOfModifiers !== []) {
+        if ([] !== $arrayOfModifiers) {
             foreach ($arrayOfModifiers as $className) {
                 $orderModifier_Descriptor = DataObject::get_one(
                     OrderModifierDescriptor::class,

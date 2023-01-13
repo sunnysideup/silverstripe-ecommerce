@@ -145,7 +145,7 @@ abstract class BaseApplyer
 
         $sql = $this->checkOption($key);
         if (is_array($sql)) {
-            if ($sql !== []) {
+            if ([] !== $sql) {
                 foreach ($sql as $key => $item) {
                     $sql[$key] = $this->sqlPlaceholderReplacer($item, $params);
                 }

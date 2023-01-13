@@ -135,7 +135,7 @@ class CartPageController extends PageController
 
         $titleAppendixArray = [];
         $buyables = explode('-', $codes);
-        if ($buyables !== []) {
+        if ([] !== $buyables) {
             $sc = ShoppingCart::singleton();
             $order = $sc->currentOrder();
             foreach ($buyables as $buyable) {
@@ -395,7 +395,7 @@ class CartPageController extends PageController
                     $this->overrideCanView = true;
                     $this->setRetrievalOrderID($this->currentOrder->ID);
                 } else {
-                    $this->httpError(404,'No order was found.');
+                    $this->httpError(404, 'No order was found.');
                     $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
                 }
             } elseif ((int) $id && in_array($action, $this->stat('allowed_actions'), true)) {

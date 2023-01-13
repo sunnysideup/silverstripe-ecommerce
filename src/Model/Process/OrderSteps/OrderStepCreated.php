@@ -37,12 +37,14 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *     ]
      * ```
      * MethodToReturnTrue must have an $order as a parameter and bool as the return value
-     * e.g. MyMethod(Order $order) : bool;
+     * e.g. MyMethod(Order $order) : bool;.
+     *
      * @var array
      */
     private static $step_logic_conditions = [
         'HasItems' => true,
     ];
+
     /**
      *initStep:
      * makes sure the step is ready to run.... (e.g. check if the order is ready to be emailed as receipt).
@@ -75,12 +77,12 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
         return true;
     }
 
-    public function HasItems($order) : bool
+    public function HasItems($order): bool
     {
         $count = $order->TotalItems($recalculate = true);
+
         return $count > 0 ? true : false;
     }
-
 
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
@@ -123,7 +125,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
                 }
             }
 
-            if ($problems !== []) {
+            if ([] !== $problems) {
                 $msg = '<p>You can not submit this order because:</p> <ul><li>' . implode('</li><li>', $problems) . '</li></ul>';
             }
 

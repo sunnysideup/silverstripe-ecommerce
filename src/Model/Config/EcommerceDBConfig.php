@@ -144,7 +144,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     private static $casting = [
         'UseThisOneNice' => 'Varchar',
     ];
-     //adds computed fields that can also have a type (e.g.
+    //adds computed fields that can also have a type (e.g.
 
     /**
      * Standard SS Variable.
@@ -170,7 +170,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     private static $summary_fields = [
         'Title' => 'Title',
     ];
-     //note no => for relational fields
+    //note no => for relational fields
 
     /**
      * Standard SS variable.

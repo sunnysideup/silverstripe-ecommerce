@@ -270,10 +270,8 @@ class UserPreference
      * 2. getListConfigCalculated.
      *
      * @param string $type - FILTER | SORT | DISPLAY
-     *
-     * @return array
      */
-    public function getCurrentUserPreferences(?string $type = '') : array
+    public function getCurrentUserPreferences(?string $type = ''): array
     {
         if (! $type) {
             $types = array_keys($this->getProductGroupSchema()->getData());
@@ -436,7 +434,7 @@ class UserPreference
         }
     }
 
-    public function standardiseCurrentUserPreferences(string $type, $keyOrArray) : array
+    public function standardiseCurrentUserPreferences(string $type, $keyOrArray): array
     {
         if (is_array($keyOrArray)) {
             if (null === $keyOrArray['params']) {
@@ -448,14 +446,15 @@ class UserPreference
             }
 
             user_error('Badly set key and params: ' . print_r($keyOrArray, 1));
+
             return $keyOrArray;
-        } else {
-            return [
-                'key' => $keyOrArray,
-                'params' => [],
-                'title' => '',
-            ];
         }
+
+        return [
+            'key' => $keyOrArray,
+            'params' => [],
+            'title' => '',
+        ];
     }
 
     public function getOptions(string $classNameOrType): array

@@ -19,6 +19,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class ProductSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
+    protected static $already_removed_cache = [];
     private static $table_name = 'ProductSearchTable';
 
     private static $db = [
@@ -105,8 +106,6 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
             self::remove_product($product);
         }
     }
-
-    protected static $already_removed_cache = [];
 
     public static function remove_product($product)
     {
