@@ -366,7 +366,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function getFullString()
     {
         SetThemed::start();
-        $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\Order_Address' . str_replace('Address', '', $this->ClassName) . 'FullString');
+        $html = $this->RenderWith('Sunnysideup\Ecommerce\Includes\Order_Address' . str_replace('Address', '', (string) $this->ClassName) . 'FullString');
         SetThemed::end();
 
         return $html;
@@ -387,7 +387,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($fields) {
             foreach (array_keys($fields) as $field) {
                 if (! in_array($field, $excludedFields, true)) {
-                    $comparisonString .= preg_replace('#\s+#', '', $this->{$field});
+                    $comparisonString .= preg_replace('#\s+#', '', (string) $this->{$field});
                 }
             }
         }
@@ -607,7 +607,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     protected function getRegionField($name, $freeTextName = '')
     {
         if (EcommerceRegion::show()) {
-            $nameWithoutID = str_replace('ID', '', $name);
+            $nameWithoutID = str_replace('ID', '', (string) $name);
             $title = _t('OrderAddress.' . strtoupper($nameWithoutID), 'Region / Province / State');
             $regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
             $count = count($regionsForDropdown);

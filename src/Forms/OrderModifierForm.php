@@ -71,7 +71,9 @@ class OrderModifierForm extends Form
         $this->setAttribute('autocomplete', 'off');
         Requirements::themedCSS('client/css/' . ClassInfo::shortName(self::class));
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        // Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
+        Requirements::block('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier
 
         $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");

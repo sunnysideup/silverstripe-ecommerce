@@ -444,8 +444,8 @@ class ProductSearchFilter extends BaseApplyer
         }
         $this->rawData['MinimumPrice'] = $this->rawData['MinimumPrice'] ?? 0;
         $this->rawData['MaximumPrice'] = $this->rawData['MaximumPrice'] ?? 0;
-        $this->rawData['MinimumPrice'] = floatval(str_replace(',', '', $this->rawData['MinimumPrice']));
-        $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', $this->rawData['MaximumPrice']));
+        $this->rawData['MinimumPrice'] = floatval(str_replace(',', '', (string) $this->rawData['MinimumPrice']));
+        $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', (string) $this->rawData['MaximumPrice']));
 
         $this->rawData['OnlyThisSection'] = (bool) (int) ($this->rawData['OnlyThisSection'] ?? 0);
         //swapsies!

@@ -139,7 +139,7 @@ class CartPageController extends PageController
             $sc = ShoppingCart::singleton();
             $order = $sc->currentOrder();
             foreach ($buyables as $buyable) {
-                $details = explode(',', $buyable);
+                $details = explode(',', (string) $buyable);
                 if (3 === count($details)) {
                     $className = $details[0];
                     $className = class_exists($className) ? $className : null;

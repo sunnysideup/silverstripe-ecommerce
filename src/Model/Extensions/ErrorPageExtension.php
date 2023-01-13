@@ -42,7 +42,7 @@ class ErrorPageExtension extends Extension
         $path = '';
         $url = parse_url($request->getURL());
         if (isset($url['path'])) {
-            $path = str_replace('/', '', $url['path']);
+            $path = str_replace('/', '', (string) $url['path']);
         }
         if ($path) {
             return Product::get()

@@ -670,7 +670,7 @@ class OrderItem extends OrderAttribute
 
             //start hack
             if (! $this->BuyableClassName) {
-                $this->BuyableClassName = str_replace('OrderItem', '', $this->ClassName);
+                $this->BuyableClassName = str_replace('OrderItem', '', (string) $this->ClassName);
             }
 
             $className = $this->BuyableClassName;

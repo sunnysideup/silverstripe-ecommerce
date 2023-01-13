@@ -24,7 +24,7 @@ class OrderFormPayment extends Form
     {
         $requiredFields = [];
         $fields = new FieldList(
-            new HiddenField('OrderID', '', $order->ID)
+            new HiddenField('OrderID', '', (string) $order->ID)
         );
         if ($returnToLink) {
             $fields->push(new HiddenField('returntolink', '', Convert::raw2att($returnToLink)));

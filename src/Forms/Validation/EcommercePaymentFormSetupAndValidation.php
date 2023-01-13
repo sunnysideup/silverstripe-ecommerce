@@ -378,8 +378,8 @@ class EcommercePaymentFormSetupAndValidation
      */
     public function validateCVV($cardNumber, $cvv)
     {
-        $cardNumber = preg_replace('#\D#', '', $cardNumber);
-        $cvv = preg_replace('#\D#', '', $cvv);
+        $cardNumber = preg_replace('#\D#', '', (string) $cardNumber);
+        $cvv = preg_replace('#\D#', '', (string) $cvv);
 
         //Checks to see whether the submitted value is numeric (After spaces and hyphens have been removed).
         if (is_numeric($cardNumber)) {

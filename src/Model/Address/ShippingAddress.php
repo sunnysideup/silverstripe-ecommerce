@@ -186,7 +186,7 @@ class ShippingAddress extends OrderAddress
         $summaryFields = $this->stat('field_labels');
         foreach (array_keys($shippingLabels) as $shippingKey) {
             if (! isset($summaryFields[$shippingKey])) {
-                $billingKey = str_replace('Shipping', '', $shippingKey);
+                $billingKey = str_replace('Shipping', '', (string) $shippingKey);
                 if (isset($billingLabels[$billingKey])) {
                     $shippingLabels[$shippingKey] = $billingLabels[$billingKey];
                 }

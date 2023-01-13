@@ -65,7 +65,7 @@ class EcommerceTaskReviewSearches extends BuildTask
 
     public function run($request)
     {
-        $maxRows = (int) preg_replace('#[^\d.]#', '', $request->getVar('maxrows'));
+        $maxRows = (int) preg_replace('#[^\d.]#', '', (string) $request->getVar('maxrows'));
         $maxRows = (int) ($maxRows - 0);
         if (! $maxRows) {
             $maxRows = $this->defaultMaxRows;

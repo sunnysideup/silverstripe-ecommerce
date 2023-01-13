@@ -227,7 +227,7 @@ class ProductController extends PageController
     {
         $listOfIDs = $this->getRequest()->getSession()->get(EcommerceConfig::get(ProductGroup::class, 'session_name_for_product_array'));
         if ($listOfIDs) {
-            $arrayOfIDs = explode(',', $listOfIDs);
+            $arrayOfIDs = explode(',', (string) $listOfIDs);
             if (is_array($arrayOfIDs)) {
                 return $arrayOfIDs;
             }

@@ -9,16 +9,17 @@ use SilverStripe\Versioned\Versioned;
 
 class SetThemed
 {
-    protected static $changed = true;
-    protected static $stage = true;
+    protected static $changed = 0;
+
+    protected static $stage_before = true;
 
     public static function start()
     {
         $themed = Config::inst()->get(SSViewer::class, 'theme_enabled');
-        self::$stage = Versioned::get_stage();
+        self::$stage_before = Versioned::get_stage();
         if (! $themed) {
             Versioned::set_stage(Versioned::LIVE);
-            self::$changed = true;
+            ++self::$changed;
             Config::nest();
             Config::modify()->update(SSViewer::class, 'theme_enabled', true);
         }
@@ -27,10 +28,12 @@ class SetThemed
     public static function end()
     {
         if (self::$changed) {
-            Versioned::set_stage(self::$stage);
+            if(self::$stage_before && self::$stage_before !== Versioned::LIVE) {
+                Versioned::set_stage(self::$stage_before);
+            }
             Config::unnest();
             // Config::modify()->update(SSViewer::class, 'theme_enabled', false);
-            self::$changed = false;
+            --self::$changed;
         }
     }
 }

@@ -102,7 +102,7 @@ class EcommerceCache implements Flushable
         $data = $this->getCacheBackend()->get($cacheKey);
         if ($data) {
             if (false === $alreadyUnserialized) {
-                $data = unserialize($data);
+                $data = strtotime((string) $data);
             }
 
             return $data;

@@ -90,8 +90,8 @@ class ProductSearchForm extends Form
         $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? 0;
         $defaults = [
             'Keyword' => Convert::raw2att($defaults['Keyword']),
-            'MinimumPrice' => (float) str_replace(', ', '', $defaults['MinimumPrice']),
-            'MaximumPrice' => (float) str_replace(', ', '', $defaults['MaximumPrice']),
+            'MinimumPrice' => (float) str_replace(', ', '', (string) $defaults['MinimumPrice']),
+            'MaximumPrice' => (float) str_replace(', ', '', (string) $defaults['MaximumPrice']),
             'OnlyThisSection' => (int) $defaults['OnlyThisSection'] ? 1 : 0,
         ];
         $this->rawData = $defaults;

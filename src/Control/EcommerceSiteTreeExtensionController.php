@@ -148,8 +148,8 @@ class EcommerceSiteTreeExtensionController extends Extension
      *    }
      *
      *    if ($sessionID = $this->getOwner()->request->getVar('session')) {
-     *        $currentUrlFull = str_replace('?session='.$sessionID, '', $currentUrlFull);
-     *        $currentUrlFull = str_replace('&session='.$sessionID, '', $currentUrlFull);
+     *        $currentUrlFull = str_replace('?session='.$sessionID, '', (string) $currentUrlFull);
+     *        $currentUrlFull = str_replace('&session='.$sessionID, '', (string) $currentUrlFull);
      *        // force hard-coded session setting
      *        @session_write_close();
      *        @session_id($sessionID);

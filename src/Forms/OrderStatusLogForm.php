@@ -75,7 +75,9 @@ class OrderStatusLogForm extends Form
         $this->setAttribute('autocomplete', 'off');
 
         Requirements::themedCSS('client/css/client/css' . ClassInfo::shortName($this->ClassName));
-        Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        // Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
+        Requirements::block('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log
         $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
         if ($oldData && (is_array($oldData) || is_object($oldData))) {

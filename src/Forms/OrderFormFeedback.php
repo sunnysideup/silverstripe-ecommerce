@@ -28,7 +28,7 @@ class OrderFormFeedback extends Form
     {
         $this->order = $order;
         $values = $this->getValueFromOrderConfirmationPage('FeedbackValuesOptions');
-        $values = explode(',', $values);
+        $values = explode(',', (string) $values);
 
         $newValues = [];
         foreach ($values as $value) {

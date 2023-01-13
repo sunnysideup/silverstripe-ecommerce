@@ -209,7 +209,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         //all lower case and make replace double spaces
         $this->Search = trim(preg_replace('#\s+#', ' ', strtolower($this->Search)));
         $searchArray = [];
-        foreach (explode(',', $this->Search) as $term) {
+        foreach (explode(',', (string) $this->Search) as $term) {
             $searchArray[] = trim($term);
         }
         $this->Search = implode(',', $searchArray);

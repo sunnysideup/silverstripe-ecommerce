@@ -1171,10 +1171,21 @@ class ShoppingCart
     public function getMessages()
     {
         $sessionVariableName = $this->sessionVariableName('Messages');
-        //get old messages
-        $messages = unserialize(Controller::curr()->getRequest()->getSession()->get($sessionVariableName));
-        //clear old messages
-        Controller::curr()->getRequest()->getSession()->clear($sessionVariableName);
+        $messages = [];
+        $curr = Controller::curr();
+        if($curr) {
+            $request = $curr->getRequest();
+            if($request) {
+                $session = $request->getSession();
+                if($session) {
+                    //get old messages
+                    $messages = unserialize((string) $session->get($sessionVariableName));
+                    //clear old messages
+                    $session->clear($sessionVariableName);
+                }
+            }
+        }
+
         //set to form????
         if ($messages && count($messages)) {
             $this->messages = array_merge($messages, $this->messages);
