@@ -119,7 +119,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
             return $this->OrderAsHTML;
         }
         if ($this->OrderAsString) {
-            return strtotime((string) $this->OrderAsString);
+            return unserialize((string) $this->OrderAsString);
         }
 
         return _t('OrderStatusLog.NO_FURTHER_INFO_AVAILABLE', 'no further information available');
