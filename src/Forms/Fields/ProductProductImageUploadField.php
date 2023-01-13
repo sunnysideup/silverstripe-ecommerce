@@ -113,7 +113,7 @@ class ProductProductImageUploadField extends UploadField
      *
      *                       @see $record}, with the same name as the field name.
      */
-    public function __construct($name, $title = null, SS_List $items = null, string $callingObject = nul)
+    public function __construct($name, $title = null, SS_List $items = null, DataObjectInterface $callingObject = null)
     {
         parent::__construct($name, $title, $items);
         $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'png']);
