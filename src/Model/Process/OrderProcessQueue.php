@@ -385,7 +385,7 @@ class OrderProcessQueue extends DataObject
      */
     public function isReadyToGo()
     {
-        return (strtotime($this->Created) + $this->DeferTimeInSeconds) < time();
+        return (strtotime((string) $this->Created) + $this->DeferTimeInSeconds) < time();
     }
 
     /**
@@ -405,7 +405,7 @@ class OrderProcessQueue extends DataObject
      */
     public function getToBeProcessedAt()
     {
-        return DBField::create_field(DBDatetime::class, (strtotime($this->Created) + $this->DeferTimeInSeconds));
+        return DBField::create_field(DBDatetime::class, (strtotime((string) $this->Created) + $this->DeferTimeInSeconds));
     }
 
     /**
@@ -425,7 +425,7 @@ class OrderProcessQueue extends DataObject
      */
     public function getHasBeenInQueueForSince()
     {
-        return DBField::create_field(DBDatetime::class, strtotime($this->Created));
+        return DBField::create_field(DBDatetime::class, strtotime((string) $this->Created));
     }
 
     /**

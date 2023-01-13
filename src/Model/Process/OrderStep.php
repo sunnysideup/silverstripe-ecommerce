@@ -963,7 +963,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //this would be embarrasing.
         if ($checkDateOfOrder) {
             $lastEditedValue = ($log = $order->SubmissionLog()) ? $log->LastEdited : $order->LastEdited;
-            if ((strtotime($lastEditedValue) < strtotime('-' . EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email') . ' days'))) {
+            if ((strtotime((string) $lastEditedValue) < strtotime('-' . EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email') . ' days'))) {
                 return true;
             }
         }

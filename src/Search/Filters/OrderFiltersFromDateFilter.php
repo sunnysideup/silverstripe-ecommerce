@@ -21,7 +21,7 @@ class OrderFiltersFromDateFilter extends ExactMatchFilter
         $value = $this->getValue();
 
         $date = new DBDate();
-        $date->setValue(strtotime($value));
+        $date->setValue(strtotime((string) $value));
 
         $formattedDate = $date->format('y-MM-d');
 

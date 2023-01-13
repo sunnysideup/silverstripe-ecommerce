@@ -2336,7 +2336,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return true;
         }
 
-        $tsOrder = strtotime($this->LastEdited);
+        $tsOrder = strtotime((string) $this->LastEdited);
         $tsNow = time();
         $minutes = EcommerceConfig::get(Order::class, 'minutes_an_order_can_be_viewed_without_logging_in');
         if ($minutes && ((($tsNow - $tsOrder) / 60) < $minutes)) {
@@ -3488,7 +3488,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $submissionLog = $this->SubmissionLog();
         if ($submissionLog) {
-            return time() - strtotime($submissionLog->Created);
+            return time() - strtotime((string) $submissionLog->Created);
         }
 
         return 0;

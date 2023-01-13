@@ -35,7 +35,7 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
 
         $formattedDate = $date->format('Y-MM-d');
 
-        $distanceFromToday = time() - strtotime($value);
+        $distanceFromToday = time() - strtotime((string) $value);
         $distanceFromTodayInDays = $distanceFromToday / 86400;
         $maxDays = 1;
         $maxDays += round($distanceFromTodayInDays / 30.5) * $this->additionalDaysPerMonth;

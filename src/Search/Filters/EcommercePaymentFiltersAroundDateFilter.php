@@ -44,7 +44,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
         $date = new DBDate();
         $date->setValue($value);
 
-        $distanceFromToday = time() - strtotime($value);
+        $distanceFromToday = time() - strtotime((string) $value);
         $maxDays = round($distanceFromToday / (($this->divider * 2) * 86400)) + 1;
 
         /**
