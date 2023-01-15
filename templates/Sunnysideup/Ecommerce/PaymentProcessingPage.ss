@@ -1,5 +1,5 @@
 <% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageHeader Title='Processing' %>
-<script type="text/javascript" src="$resourceURL('silverstripe/admin:thirdparty/jquery/jquery.js')"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
 <div id="Outer">
     <div id="Inner">
