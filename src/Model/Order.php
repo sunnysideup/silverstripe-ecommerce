@@ -304,6 +304,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'Status' => OrderStep::class,
         'CancelledBy' => Member::class,
         'CurrencyUsed' => EcommerceCurrency::class,
+        // to do - add submission log
     ];
 
     /**
@@ -2821,7 +2822,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $title = $this->i18n_singular_name() . ' #' . $this->ID;
             if ($dateFormat) {
                 $submissionLog = $this->SubmissionLog();
-                if ($submissionLog && $submissionLog->exists()) {
+                if ($submissionLog) {
                     $dateObject = $submissionLog->dbObject('Created');
                     $placed = _t('Order.PLACED', 'placed');
                 } else {
@@ -3415,7 +3416,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function IsSubmitted($recalculate = true)
+    public function IsSubmitted($recalculate = false)
     {
         return $this->getIsSubmitted($recalculate);
     }
@@ -3430,7 +3431,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getIsSubmitted($recalculate = false)
     {
         if (-1 === $this->_isSubmittedTempVar || $recalculate) {
-            $this->_isSubmittedTempVar = (bool) $this->SubmissionLog();
+            $this->_isSubmittedTempVar = (bool) $this->SubmissionLog()->exists();
         }
 
         return $this->_isSubmittedTempVar;
@@ -3451,6 +3452,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return false;
     }
 
+    protected $submissionLog = null;
+    protected $submissionLogChecked = false;
+
     /**
      * Submission Log for this Order (if any).
      *
@@ -3458,12 +3462,16 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function SubmissionLog()
     {
-        $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        if($this->submissionLog === null && $this->submissionLogChecked === false) {
+            $this->submissionLogChecked = true;
+            $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
 
-        return $className::get()
-            ->Filter(['OrderID' => $this->ID])
-            ->Last()
-        ;
+            $this->submissionLog = $className::get()
+                ->Filter(['OrderID' => $this->ID])
+                ->Last()
+            ;
+        }
+        return $this->submissionLog;
     }
 
     /**
