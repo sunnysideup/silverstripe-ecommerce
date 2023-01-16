@@ -3460,7 +3460,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function getIsSubmitted($recalculate = false)
     {
-        if (null === $this->isSubmittedCached || $recalculate ||  self::get_needs_recalculating($this->ID)) {
+        if (null === $this->isSubmittedCached || $recalculate) {
             $this->isSubmittedCached = null;
             $this->submittedLogCheckedCache = false;
             $this->submittedLogCache = null;
@@ -4213,6 +4213,9 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected function calculateOrderItems($recalculate = false)
     {
+        if($this->isSubmitted()) {
+            return;
+        }
         //check if order has modifiers already
         //check /re-add all non-removable ones
         //$start = microtime();
@@ -4235,6 +4238,9 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     protected function calculateModifiers($recalculate = false)
     {
+        if($this->isSubmitted()) {
+            return;
+        }
         $createdModifiers = $this->modifiersFromDatabase();
         if ($createdModifiers->exists()) {
             foreach ($createdModifiers as $modifier) {
