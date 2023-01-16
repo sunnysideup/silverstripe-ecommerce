@@ -829,7 +829,7 @@ class Order extends DataObject implements EditableEcommerceObject
         // }
         } else {
             $this->init(true);
-            $this->calculateOrderAttributes(true);
+            // $this->calculateOrderAttributes(true);
             Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
         }
 
@@ -1389,7 +1389,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
-            $this->getIsSubmitted(true)
+            $this->isSubmittedCached = null;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
             // $timeTaken = microtime(true) - $previousTime;
@@ -3459,11 +3459,16 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function getIsSubmitted($recalculate = false)
     {
+<<<<<<< HEAD
         if (null === $this->isSubmittedCached || $recalculate ||  self::get_needs_recalculating($this->ID)) {
             $this->isSubmittedCached = null;
             $this->submittedLogCheckedCache = false;
             $this->submittedLogCache = null;
             $this->isSubmittedCached = (bool) $this->SubmissionLog();
+=======
+        if (-1 === $this->_isSubmittedTempVar || $recalculate) {
+            $this->_isSubmittedTempVar = (bool) $this->SubmissionLog()->exists();
+>>>>>>> fa61dffe17d49d711a504b1e63183e036c3e9950
         }
 
         return $this->isSubmittedCached;
@@ -3484,6 +3489,9 @@ class Order extends DataObject implements EditableEcommerceObject
         return false;
     }
 
+    protected $submissionLog = null;
+    protected $submissionLogChecked = false;
+
     /**
      * Submission Log for this Order (if any).
      *
@@ -3491,16 +3499,28 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function SubmissionLog()
     {
+<<<<<<< HEAD
         if($this->submittedLogCache === null && $this->submittedLogCheckedCache !== true) {
             $this->submittedLogCheckedCache = true;
             $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
 
             $this->submittedLogCache = $className::get()
+=======
+        if($this->submissionLog === null && $this->submissionLogChecked === false) {
+            $this->submissionLogChecked = true;
+            $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+
+            $this->submissionLog = $className::get()
+>>>>>>> fa61dffe17d49d711a504b1e63183e036c3e9950
                 ->Filter(['OrderID' => $this->ID])
                 ->Last()
             ;
         }
+<<<<<<< HEAD
         return $this->submittedLogCache;
+=======
+        return $this->submissionLog;
+>>>>>>> fa61dffe17d49d711a504b1e63183e036c3e9950
     }
 
     /**
