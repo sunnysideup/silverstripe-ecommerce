@@ -79,7 +79,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
 
     public function HasItems($order): bool
     {
-        $count = $order->TotalItems($recalculate = true);
+        $count = $order->TotalItems();
 
         return $count > 0 ? true : false;
     }

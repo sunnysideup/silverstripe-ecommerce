@@ -24,7 +24,7 @@ use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-
+use SilverStripe\CMS\Model\SiteTree;
 /**
  * @description: An order item is a product which has been added to an order.
  * An order item links to a Buyable (product) by class name
@@ -468,7 +468,7 @@ class OrderItem extends OrderAttribute
 
             $oldValue = $this->CalculatedTotal - 0;
             $newValue = ($this->getUnitPrice() * $this->Quantity) - 0;
-            if ((round($newValue, 5) !== round($oldValue, 5)) || $recalculate) {
+            if ((round($newValue, 5) !== round($oldValue, 5)) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
                 $this->CalculatedTotal = $newValue;
                 $this->write();
             }
@@ -519,7 +519,7 @@ class OrderItem extends OrderAttribute
         // calculate price
         $buyable = $this->getBuyableCached();
         if ($buyable) {
-            if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate) {
+            if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
             }
 
@@ -655,10 +655,11 @@ class OrderItem extends OrderAttribute
     public function getBuyable($current = false)
     {
         $currentOrVersion = $current ? 'current' : 'version';
-        if (null !== $this->getOrderCached() && ! $current) {
-            if (! $this->getOrderCached()->IsSubmitted()) {
-                $currentOrVersion = 'current';
-            }
+        $order = $this->getOrderCached();
+        if ($order && $order->IsSubmitted() && $current === false) {
+            $currentOrVersion = 'version';
+        } else {
+            $currentOrVersion = 'current';
         }
 
         if (! isset($this->tempBuyableStore[$currentOrVersion])) {
@@ -669,7 +670,16 @@ class OrderItem extends OrderAttribute
 
             //start hack
             if (! $this->BuyableClassName) {
-                $this->BuyableClassName = str_replace('OrderItem', '', (string) $this->ClassName);
+                if($this->BuyableID) {
+                    // last resort
+                    $product = SiteTree::get()->byID($this->BuyableID);
+                    if ($product) {
+                        $this->BuyableClassName = $product->ClassName;
+                    } else {
+                        $product = Product::class;
+                    }
+                }
+                // $this->BuyableClassName = str_replace('OrderItem', '', (string) $this->ClassName);
             }
 
             $className = $this->BuyableClassName;
@@ -680,8 +690,8 @@ class OrderItem extends OrderAttribute
             }
 
             //run if current not available or current = false
-            if (! $obj || ! $current) {
-                if (! $obj || (! $obj->exists()) && $this->Version) {
+            if ($currentOrVersion === 'version') {
+                if (! $obj && $this->Version) {
                     /* @TODO: check if the version exists?? - see sample below
                     $versionTable = $this->BuyableClassName."_versions";
                     $dbConnection = DB::get_conn();
@@ -702,11 +712,11 @@ class OrderItem extends OrderAttribute
                 if (! $obj || (! $obj->exists())) {
                     $obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
                 }
-            }
 
-            //our final backup
-            if (! $obj || (! $obj->exists())) {
-                $obj = $className::get_by_id($this->BuyableID);
+                //our final backup
+                if (! $obj || (! $obj->exists())) {
+                    $obj = $className::get_by_id($this->BuyableID);
+                }
             }
 
             if ($obj && ! ($obj instanceof BuyableModel)) {

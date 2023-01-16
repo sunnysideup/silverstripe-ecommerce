@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -30,6 +31,10 @@ class OrderStatusLogSubmitted extends OrderStatusLog
 
     private static $defaults = [
         'InternalUseOnly' => true,
+    ];
+
+    private static $indexes = [
+        'SequentialOrderNumber' => true,
     ];
 
     private static $casting = [
@@ -128,8 +133,8 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * adding a sequential order number.
      */
-    protected function onBeforeWrite()
-    {
+     protected function onBeforeWrite()
+     {
         parent::onBeforeWrite();
         $order = $this->getOrderCached();
         if ($order) {
@@ -141,21 +146,21 @@ class OrderStatusLogSubmitted extends OrderStatusLog
             }
         }
         if (! (int) $this->SequentialOrderNumber) {
-            $this->SequentialOrderNumber = 1;
-            $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') - 0;
+            $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') ?? 1;
             $id = null !== $this->ID ? (int) $this->ID : 0;
-            $lastOne = DataObject::get_one(
-                OrderStatusLogSubmitted::class,
-                "'ID' != '" . $id . "'",
-                $cacheDataObjectGetOne = true,
-                ['SequentialOrderNumber' => 'DESC']
-            );
-            if ($lastOne) {
-                $this->SequentialOrderNumber = (int) $lastOne->SequentialOrderNumber + 1;
+            $lastOne = DB::query("SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> $id")->current();
+            $lastOne = $lastOne['LastOrderNumber'];
+            if ($lastOne > 0) {
+                $this->SequentialOrderNumber = (int) $lastOne + 1;
             }
             if ((int) $min && $this->SequentialOrderNumber < $min) {
                 $this->SequentialOrderNumber = $min;
             }
         }
+        // important to reload submission log!
+        $order->IsSubmitted($recalculate = true);
+
+        // order does not need to be recalculated anymore!
+        Order::set_needs_recalculating(false, $order->ID);
     }
 }

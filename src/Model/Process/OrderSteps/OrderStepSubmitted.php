@@ -84,7 +84,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function initStep(Order $order): bool
     {
-        return (bool) $order->TotalItems($recalculate = true);
+        return (bool) $order->TotalItems();
     }
 
     /**

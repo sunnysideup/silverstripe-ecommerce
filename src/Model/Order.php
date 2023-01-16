@@ -124,7 +124,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @var int
      */
-    protected $totalItems;
+    protected $totalItemsCache;
 
     /**
      * Total Items : total items in cart
@@ -132,7 +132,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @var float
      */
-    protected $totalItemsTimesQuantity;
+    protected $totalItemsTimesQuantityCache;
 
     /**
      * Returns a set of modifier forms for use in the checkout order form,
@@ -177,9 +177,9 @@ class Order extends DataObject implements EditableEcommerceObject
      * speeds up processing by storing the IsSubmitted value
      * we start with -1 to know if it has been requested before.
      *
-     * @var bool
+     * @var bool|null
      */
-    protected $_isSubmittedTempVar = -1;
+    protected $_isSubmittedTempVar = null;
 
     /**
      * @var array[Order]
@@ -304,6 +304,7 @@ class Order extends DataObject implements EditableEcommerceObject
         'Status' => OrderStep::class,
         'CancelledBy' => Member::class,
         'CurrencyUsed' => EcommerceCurrency::class,
+        // to do - add submission log
     ];
 
     /**
@@ -1267,7 +1268,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsSubmitted()) {
             user_error('Can not init an order that has been submitted', E_USER_NOTICE);
-        } elseif ($this->StatusID || $recalculate) {
+        } elseif ($this->StatusID || $recalculate ||  self::get_needs_recalculating($this->ID)) {
             if (! $this->StatusID) {
                 $createdOrderStatus = DataObject::get_one(OrderStep::class);
                 if (! $createdOrderStatus) {
@@ -1360,7 +1361,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
-            $this->_isSubmittedTempVar = -1;
+            $this->_isSubmittedTempVar = null;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
             // $timeTaken = microtime(true) - $previousTime;
@@ -2821,7 +2822,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $title = $this->i18n_singular_name() . ' #' . $this->ID;
             if ($dateFormat) {
                 $submissionLog = $this->SubmissionLog();
-                if ($submissionLog && $submissionLog->exists()) {
+                if ($submissionLog) {
                     $dateObject = $submissionLog->dbObject('Created');
                     $placed = _t('Order.PLACED', 'placed');
                 } else {
@@ -3136,14 +3137,14 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function getTotalItems($recalculate = false): int
     {
-        if (null === $this->totalItems || $recalculate) {
-            $this->totalItems = OrderItem::get()
+        if (null === $this->totalItemsCache || $recalculate || self::get_needs_recalculating($this->ID)) {
+            $this->totalItemsCache = OrderItem::get()
                 ->where('"OrderAttribute"."OrderID" = ' . $this->ID . ' AND "OrderItem"."Quantity" > 0')
                 ->count()
             ;
         }
 
-        return (int) $this->totalItems;
+        return (int) $this->totalItemsCache;
     }
 
     /**
@@ -3172,9 +3173,9 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function getTotalItemsTimesQuantity($recalculate = false)
     {
-        if (null === $this->totalItemsTimesQuantity || $recalculate) {
+        if (null === $this->totalItemsTimesQuantityCache || $recalculate || self::get_needs_recalculating($this->ID)) {
             //to do, why do we check if you can edit ????
-            $this->totalItemsTimesQuantity = DB::query(
+            $this->totalItemsTimesQuantityCache = DB::query(
                 '
                 SELECT SUM("OrderItem"."Quantity")
                 FROM "OrderItem"
@@ -3185,7 +3186,7 @@ class Order extends DataObject implements EditableEcommerceObject
             )->value();
         }
 
-        return $this->totalItemsTimesQuantity - 0;
+        return $this->totalItemsTimesQuantityCache - 0;
     }
 
     /**
@@ -3415,8 +3416,13 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function IsSubmitted($recalculate = true)
+    public function IsSubmitted($recalculate = false)
     {
+        if($recalculate) {
+            $this->_isSubmittedTempVar = null;
+            $this->_submittedLogChecked = null;
+            $this->_submittedLog = null;
+        }
         return $this->getIsSubmitted($recalculate);
     }
 
@@ -3429,7 +3435,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function getIsSubmitted($recalculate = false)
     {
-        if (-1 === $this->_isSubmittedTempVar || $recalculate) {
+        if (null === $this->_isSubmittedTempVar || $recalculate ||  self::get_needs_recalculating($this->ID)) {
             $this->_isSubmittedTempVar = (bool) $this->SubmissionLog();
         }
 
@@ -3452,18 +3458,34 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     *
+     * @var null
+     */
+    protected $_submittedLog = null;
+
+    /**
+     *
+     * @var bool|OrderStatusLogSubmitted
+     */
+    protected $_submittedLogChecked = false;
+
+    /**
      * Submission Log for this Order (if any).
      *
      * @return OrderStatusLog (OrderStatusLogSubmitted)|null
      */
     public function SubmissionLog()
     {
-        $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        if($this->_submittedLog === null && $this->_submittedLogChecked === false) {
+            $this->_submittedLogChecked = true;
+            $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
 
-        return $className::get()
-            ->Filter(['OrderID' => $this->ID])
-            ->Last()
-        ;
+            $this->_submittedLog = $className::get()
+                ->Filter(['OrderID' => $this->ID])
+                ->Last()
+            ;
+        }
+        return $this->_submittedLog;
     }
 
     /**
@@ -3744,7 +3766,7 @@ class Order extends DataObject implements EditableEcommerceObject
             't' => 'class',
             's' => $ajaxObject->TotalItemsClassName(),
             'p' => 'innerHTML',
-            'v' => $this->TotalItems($recalculate = true),
+            'v' => $this->TotalItems(),
         ];
         $js[] = [
             't' => 'class',
@@ -3824,7 +3846,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $this->Archive($avoidWrites = true);
         }
 
-        $isSubmitted = $this->IsSubmitted($recalculate = true);
+        $isSubmitted = $this->IsSubmitted($recalculate = false);
         if ($isSubmitted) {
             //do nothing
         } elseif ($this->StatusID) {

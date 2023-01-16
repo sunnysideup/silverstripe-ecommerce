@@ -553,6 +553,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     protected function priceHasBeenFixed($recalculate = false)
     {
+        if (Order::get_needs_recalculating($this->OrderID) ) {
+            $recalculate = true;
+        }
         if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate) {
             self::$_price_has_been_fixed[$this->OrderID] = false;
             $order = $this->getOrderCached();

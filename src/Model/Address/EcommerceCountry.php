@@ -519,9 +519,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_country($recalculate = false, $orderID = 0)
     {
         //get order ID
-        $orderID = ShoppingCart::current_order_id($orderID);
+        if(! $orderID) {
+            $orderID = ShoppingCart::current_order_id($orderID);
+        }
         $countryCode = self::get_country_cache($orderID);
-        if (null === $countryCode || $recalculate) {
+        if (null === $countryCode || $recalculate || Order::get_needs_recalculating($orderID)) {
             //1. fixed country is first
             $countryCode = self::get_fixed_country_code();
             if (! $countryCode) {

@@ -571,7 +571,7 @@ class ShoppingCartController extends Controller
     {
         $order = $this->cart->CurrentOrder();
         if ($order) {
-            return (int) $order->TotalItems($recalculate = true);
+            return (int) $order->TotalItems($recalculate = false);
         }
 
         return 0;
