@@ -319,7 +319,7 @@ class OrderModifier extends OrderAttribute
         parent::init();
         $this->write();
         $this->mustUpdate = true;
-        $this->runUpdate($force = false);
+        $this->runUpdate($recalculate = true);
 
         return true;
     }
@@ -331,10 +331,10 @@ class OrderModifier extends OrderAttribute
     public function runUpdate($recalculate = false)
     {
         if (! $this->IsRemoved()) {
-            $this->checkField('Name');
-            $this->checkField('CalculatedTotal');
-            $this->checkField('TableValue');
-            $this->checkField('Type');
+            $this->checkField('Name', $recalculate);
+            $this->checkField('CalculatedTotal', $recalculate);
+            $this->checkField('TableValue', $recalculate);
+            $this->checkField('Type', $recalculate);
             if ($this->mustUpdate && $this->canBeUpdated()) {
                 $this->write();
             }
@@ -820,9 +820,9 @@ class OrderModifier extends OrderAttribute
      *
      * @param string $fieldName
      */
-    protected function checkField($fieldName)
+    protected function checkField(string $fieldName, ?bool $recalculate = false)
     {
-        if ($this->canBeUpdated()) {
+        if ($this->canBeUpdated() && $recalculate) {
             $functionName = 'Live' . $fieldName;
             $oldValue = $this->{$fieldName};
             $newValue = $this->{$functionName}();

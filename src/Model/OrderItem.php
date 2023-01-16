@@ -619,14 +619,6 @@ class OrderItem extends OrderAttribute
     //# OTHER LOOKUP METHODS ##
     //#########################
 
-    /**
-     * @param int $orderID
-     */
-    public static function reset_price_has_been_fixed(?int $orderID = 0)
-    {
-        self::set_price_has_been_fixed($orderID);
-    }
-
     public function getBuyableCached($current = false)
     {
         $cacheKey = $this->buyableCacheKey();
@@ -1060,7 +1052,7 @@ class OrderItem extends OrderAttribute
         if ($order) {
             if (! $order->StatusID) {
                 //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
-                $order->init(true);
+                $order->init($recalculate = true);
             }
         }
     }

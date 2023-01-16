@@ -89,7 +89,7 @@ use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMemberAndAddressFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilter;
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersUntilDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
-
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 /**
  * @description:
  * The order class is a databound object for handling Orders within SilverStripe.
@@ -122,17 +122,43 @@ class Order extends DataObject implements EditableEcommerceObject
      * Total Items : total items in cart
      * We start with -1 to easily identify if it has been run before.
      *
-     * @var int
+     * @var int|null
      */
-    protected $totalItemsCache;
+    protected $totalItemsCache = null;
 
     /**
      * Total Items : total items in cart
      * We start with -1 to easily identify if it has been run before.
      *
-     * @var float
+     * @var float|null
      */
-    protected $totalItemsTimesQuantityCache;
+    protected $totalItemsTimesQuantityCache = null;
+
+    /**
+     *
+     * @var null|OrderStatusLogSubmitted
+     */
+    protected $submittedLogCache = null;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $submittedLogCheckedCache = false;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $calculatedOrderAttributesCache = false;
+
+    /**
+     * speeds up processing by storing the IsSubmitted value
+     * we start with -1 to know if it has been requested before.
+     *
+     * @var bool|null
+     */
+    protected $isSubmittedCached = null;
 
     /**
      * Returns a set of modifier forms for use in the checkout order form,
@@ -172,14 +198,6 @@ class Order extends DataObject implements EditableEcommerceObject
         'StatusID',
         'Currency',
     ];
-
-    /**
-     * speeds up processing by storing the IsSubmitted value
-     * we start with -1 to know if it has been requested before.
-     *
-     * @var bool|null
-     */
-    protected $_isSubmittedTempVar = null;
 
     /**
      * @var array[Order]
@@ -811,7 +829,7 @@ class Order extends DataObject implements EditableEcommerceObject
         // }
         } else {
             $this->init(true);
-            $this->calculateOrderAttributes(true);
+            // $this->calculateOrderAttributes(true);
             Controller::curr()->getRequest()->getSession()->set('EcommerceOrderGETCMSHack', $this->ID);
         }
 
@@ -1318,8 +1336,9 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
 
+            $this->calculatedOrderAttributesCache = false;
             $this->extend('onInit', $this);
-            //careful - this will call "onAfterWrite" again
+            //careful - this will call "onAfterWrite" again - if there are changes...
             $this->write();
         }
 
@@ -1327,14 +1346,23 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * has the order attributes been calculated?
+     * @return bool
+     */
+    public function getCalculatedOrderAttributesCache() : bool
+    {
+        return $this->calculatedOrderAttributesCache;
+    }
+
+    /**
      * Goes through the order steps and tries to "apply" the next status to the order.
      *
-     * @param bool $runAgain
+     * @param bool $recalculate
      * @param bool $fromOrderQueue - is it being called from the OrderProcessQueue (or similar)
      */
-    public function tryToFinaliseOrder($runAgain = false, $fromOrderQueue = false)
+    public function tryToFinaliseOrder($recalculate = false, $fromOrderQueue = false)
     {
-        if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $runAgain) {
+        if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $recalculate) {
             // $previousTime = microtime(true);
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
 
@@ -1361,7 +1389,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
-            $this->_isSubmittedTempVar = null;
+            $this->isSubmittedCached = null;
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
             // $timeTaken = microtime(true) - $previousTime;
@@ -1386,7 +1414,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     } else {
                         //status has been completed, so it can be released
                         self::$_try_to_finalise_order_is_running[$this->ID] = false;
-                        $this->tryToFinaliseOrder($runAgain, $fromOrderQueue);
+                        $this->tryToFinaliseOrder($recalculate, $fromOrderQueue);
                     }
                 }
             }
@@ -3411,6 +3439,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * Casted variable - has the order been submitted?
      * alias.
+     * The submission log calls with recalculate TRUE this to ensure we are redoing this
      *
      * @param bool $recalculate
      *
@@ -3418,11 +3447,6 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function IsSubmitted($recalculate = false)
     {
-        if($recalculate) {
-            $this->_isSubmittedTempVar = null;
-            $this->_submittedLogChecked = null;
-            $this->_submittedLog = null;
-        }
         return $this->getIsSubmitted($recalculate);
     }
 
@@ -3435,11 +3459,14 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function getIsSubmitted($recalculate = false)
     {
-        if (null === $this->_isSubmittedTempVar || $recalculate ||  self::get_needs_recalculating($this->ID)) {
-            $this->_isSubmittedTempVar = (bool) $this->SubmissionLog();
+        if (null === $this->isSubmittedCached || $recalculate ||  self::get_needs_recalculating($this->ID)) {
+            $this->isSubmittedCached = null;
+            $this->submittedLogCheckedCache = false;
+            $this->submittedLogCache = null;
+            $this->isSubmittedCached = (bool) $this->SubmissionLog();
         }
 
-        return $this->_isSubmittedTempVar;
+        return $this->isSubmittedCached;
     }
 
     /**
@@ -3458,34 +3485,22 @@ class Order extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     *
-     * @var null
-     */
-    protected $_submittedLog = null;
-
-    /**
-     *
-     * @var bool|OrderStatusLogSubmitted
-     */
-    protected $_submittedLogChecked = false;
-
-    /**
      * Submission Log for this Order (if any).
      *
      * @return OrderStatusLog (OrderStatusLogSubmitted)|null
      */
     public function SubmissionLog()
     {
-        if($this->_submittedLog === null && $this->_submittedLogChecked === false) {
-            $this->_submittedLogChecked = true;
+        if($this->submittedLogCache === null && $this->submittedLogCheckedCache !== true) {
+            $this->submittedLogCheckedCache = true;
             $className = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
 
-            $this->_submittedLog = $className::get()
+            $this->submittedLogCache = $className::get()
                 ->Filter(['OrderID' => $this->ID])
                 ->Last()
             ;
         }
-        return $this->_submittedLog;
+        return $this->submittedLogCache;
     }
 
     /**
@@ -3840,7 +3855,9 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         parent::onAfterWrite();
         //crucial!
-        self::set_needs_recalculating(true, $this->ID);
+        if(! $this->IsSubmitted()) {
+            self::set_needs_recalculating(true, $this->ID);
+        }
         // quick double-check
         if ($this->IsCancelled() && ! $this->IsArchived()) {
             $this->Archive($avoidWrites = true);
@@ -3850,6 +3867,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($isSubmitted) {
             //do nothing
         } elseif ($this->StatusID) {
+            $this->calculatedOrderAttributesCache = true;
             $this->calculateOrderAttributes($recalculate = false);
             if (EcommerceRole::current_member_is_shop_admin()) {
                 if (isset($_REQUEST['SubmitOrderViaCMS'])) {

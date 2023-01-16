@@ -75,6 +75,13 @@ class QuickUpdates extends Controller
         return Injector::inst()->get(self::class);
     }
 
+    protected function processOrders($orders)
+    {
+        foreach ($orders as $order) {
+            $order->tryToFinaliseOrder();
+        }
+    }
+
     public function MyForm()
     {
         $fields = new FieldList(

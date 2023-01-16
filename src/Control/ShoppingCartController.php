@@ -375,8 +375,8 @@ class ShoppingCartController extends Controller
         if ($buyable) {
             $this->cart->deleteBuyable($buyable, $this->parameters());
             //added this because cart was not updating correctly
-            $order = $this->cart->CurrentOrder();
-            $order->calculateOrderAttributes($force = true);
+            // $order = $this->cart->CurrentOrder();
+            // $order->calculateOrderAttributes($recalculate = true);
 
             return $this->cart->setMessageAndReturn();
         }
@@ -412,8 +412,8 @@ class ShoppingCartController extends Controller
     {
         $modifierID = (int) $request->param('ID');
         $this->cart->removeModifier($modifierID);
-        $order = $this->cart->CurrentOrder();
-        $order->calculateOrderAttributes($force = true);
+        // $order = $this->cart->CurrentOrder();
+        // $order->calculateOrderAttributes($recalculate = true);
 
         return $this->cart->setMessageAndReturn();
     }
@@ -428,8 +428,8 @@ class ShoppingCartController extends Controller
     {
         $modifierID = (int) $request->param('ID');
         $this->cart->addModifier($modifierID);
-        $order = $this->cart->CurrentOrder();
-        $order->calculateOrderAttributes($force = true);
+        // $order = $this->cart->CurrentOrder();
+        // $order->calculateOrderAttributes($recalculate = true);
 
         return $this->cart->setMessageAndReturn();
     }

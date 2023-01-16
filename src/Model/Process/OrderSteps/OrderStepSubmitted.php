@@ -96,7 +96,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order): bool
     {
-        if (! $order->IsSubmitted($order)) {
+        if (! $this->IsSubmitted($order)) {
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
                 //add currency if needed.
@@ -147,9 +147,14 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
         return true;
     }
 
+    /**
+     * we need this function for logic. Important that we recalculate!
+     * @param  Order $order
+     * @return bool
+     */
     public function IsSubmitted($order): bool
     {
-        return $order->IsSubmitted();
+        return $order->IsSubmitted($recalculate = true);
     }
 
     /**

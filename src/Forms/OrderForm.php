@@ -47,7 +47,6 @@ class OrderForm extends Form
 
         //set basics
         $order = ShoppingCart::current_order();
-        $order->calculateOrderAttributes($force = false);
 
         $requiredFields = [];
 
@@ -189,9 +188,10 @@ class OrderForm extends Form
 
         //RUN UPDATES TO CHECK NOTHING HAS CHANGED
         $oldTotal = $order->Total();
-        // if the extend line below does not return null then we know there
-        // is an error in the form (e.g. Payment Option not entered)
-        $order->calculateOrderAttributes($force = true);
+
+        // TODO: do we need to submit again, because the user can change the data in another
+        // browser window.
+        $order->calculateOrderAttributes($recalculate = false);
         $newTotal = $order->Total();
         if (floatval($newTotal) !== floatval($oldTotal)) {
             $form->sessionMessage(_t('OrderForm.PRICEUPDATED', 'The order price has been updated, please review the order and submit again.'), 'warning');

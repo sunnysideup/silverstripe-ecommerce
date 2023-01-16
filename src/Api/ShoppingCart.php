@@ -346,7 +346,9 @@ class ShoppingCart
 
                 if ($this->order) {
                     if ($this->order->exists()) {
-                        $this->order->calculateOrderAttributes($force = false);
+                        // when we first load it, we recalculate!
+                        // dont worry about init, because we do not need to init it yet ...
+                        $this->order->calculateOrderAttributes($recalculate = true);
                     }
 
                     if (! $this->order->SessionID) {
@@ -670,7 +672,7 @@ class ShoppingCart
             $this->currentOrder()->tryToFinaliseOrder();
             $this->clear();
             //little hack to clear static memory
-            OrderItem::reset_price_has_been_fixed($this->currentOrder()->ID);
+            OrderItem::set_price_has_been_fixed($this->currentOrder()->ID, true);
 
             return true;
         }
@@ -1214,6 +1216,9 @@ class ShoppingCart
         if ($message && $status) {
             $this->addMessage($message, $status);
         }
+        // recalculate... this is often a change so well worth it.
+        $this->currentOrder();
+        $this->order->calculateOrderAttributes($recalculate = true);
 
         //TODO: handle passing back multiple messages
         if (Director::is_ajax()) {
@@ -1223,15 +1228,13 @@ class ShoppingCart
             return $obj->ReturnCartData($this->getMessages());
         }
 
+
         //TODO: handle passing a message back to a form->sessionMessage
         $this->StoreMessagesInSession();
         if ($form) {
-            // lets make sure that there is an order
-            $this->currentOrder();
             // now we can (re)calculate the order
-            $this->order->calculateOrderAttributes($force = false);
             $form->sessionMessage($message, $status);
-        // let the form controller do the redirectback or whatever else is needed.
+            // let the form controller do the redirectback or whatever else is needed.
         } elseif (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
             Controller::curr()->redirectBack();
         } else {

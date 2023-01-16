@@ -437,11 +437,17 @@ class CartPageController extends PageController
                 return false;
             }
 
-            if (! $this->currentOrder->IsSubmitted()) {
-                //we always want to make sure the order is up-to-date.
-                $this->currentOrder->init($force = false);
-                $this->currentOrder->calculateOrderAttributes($force = true);
-                $this->currentOrder->calculateOrderAttributes($force = true);
+            if ($this->currentOrder->IsSubmitted()) {
+                $this->currentOrder->tryToFinaliseOrder();
+            } else {
+                // we always want to make sure the order is up-to-date.
+                $this->currentOrder->init($recalculate = true);
+
+                if(! $this->currentOrder->getCalculatedOrderAttributesCache()) {
+                    // recalculate after init! - this may already happen with init ....
+                    // make it faster by checking if it did.
+                    $this->currentOrder->calculateOrderAttributes($recalculate = true);
+                }
             }
         } else {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');

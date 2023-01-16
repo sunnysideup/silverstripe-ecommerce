@@ -32,14 +32,14 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
         if ($productGroup) {
             foreach ($this->fieldsToCheck as $method => $fieldName) {
                 $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));
-                $this->checkField($fieldName, $acceptableValuesArray, 'inherit');
+                $this->checkOneField($fieldName, $acceptableValuesArray, 'inherit');
             }
         } else {
             DB::alteration_message('There are no ProductGroup pages to correct', 'created');
         }
     }
 
-    protected function checkField($fieldName, $acceptableValuesArray, $resetValue)
+    protected function checkOneField($fieldName, $acceptableValuesArray, $resetValue)
     {
         $faultyProductGroups = ProductGroup::get()
             ->exclude([$fieldName => $acceptableValuesArray])

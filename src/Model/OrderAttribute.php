@@ -311,7 +311,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 
-        return isset(self::$_price_has_been_fixed[$orderID]) ? self::$_price_has_been_fixed[$orderID] : null;
+        return self::$_price_has_been_fixed[$orderID] ?? null;
     }
 
     //#####################
@@ -498,7 +498,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return EcommerceCurrency::get_money_object_from_order_currency($this->CalculatedTotal, $this->getOrderCached());
     }
 
-    public function runUpdate($force = false)
+    public function runUpdate($recalculate = false)
     {
         $this->baseRunUpdateCalled = true;
     }
@@ -538,6 +538,16 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     }
 
     /**
+     * Standard SS method.
+     */
+    protected function onBeforeDelete()
+    {
+        parent::onBeforeDelete();
+        //crucial!
+        Order::set_needs_recalculating(true, $this->OrderID);
+    }
+
+    /**
      * @description - tells you if an order item price has been "fixed"
      * meaning that is has been saved in the CalculatedTotal field so that
      * it can not be altered.
@@ -559,16 +569,16 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate) {
             self::$_price_has_been_fixed[$this->OrderID] = false;
             $order = $this->getOrderCached();
-            if ($order) {
-                if ($order->IsSubmitted()) {
-                    self::$_price_has_been_fixed[$this->OrderID] = true;
-                    if ($recalculate) {
-                        user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
-                    }
+            if ($order && $order->IsSubmitted()) {
+                self::$_price_has_been_fixed[$this->OrderID] = true;
+                if ($recalculate) {
+                    user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
                 }
             }
         }
-
-        return self::$_price_has_been_fixed[$this->OrderID];
+        if ($this->OrderID) {
+            return self::$_price_has_been_fixed[$this->OrderID];
+        }
+        return false;
     }
 }
