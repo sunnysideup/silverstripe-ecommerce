@@ -1389,7 +1389,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             //a little hack to make sure we do not rely on a stored value
             //of "isSubmitted"
-            $this->getIsSubmitted(true)
+            $this->getIsSubmitted(true);
             //status of order is being progressed
             $nextStatusID = $this->doNextStatus();
             // $timeTaken = microtime(true) - $previousTime;
