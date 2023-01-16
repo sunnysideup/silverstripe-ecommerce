@@ -2193,7 +2193,8 @@ class Order extends DataObject implements EditableEcommerceObject
             //submitted orders are NEVER recalculated.
             //they are set in stone.
         } elseif (self::get_needs_recalculating($this->ID) || $recalculate) {
-            if ($this->StatusID || $this->TotalItems()) {
+            self::set_needs_recalculating(true, $this->ID);
+            if ($this->StatusID || $this->TotalItems($recalculate)) {
                 $this->ensureCorrectExchangeRate();
                 $this->calculateOrderItems($recalculate);
                 $this->calculateModifiers($recalculate);
