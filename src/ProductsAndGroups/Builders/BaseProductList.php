@@ -392,7 +392,9 @@ class BaseProductList extends AbstractProductsAndGroupsList
     //#################################################
 
     /**
+     * key method for cache
      * create a starting point.
+     * @return self
      */
     protected function buildDefaultList(): self
     {
@@ -405,6 +407,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * key method for cache
      * add default filters.
+     * @return self
      */
     protected function applyDefaultFilters(): self
     {
@@ -428,7 +431,11 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this;
     }
 
-    protected function applySearchFilter()
+    /**
+     * key method for cache (called from applyGroupOrSearchFilter)
+     * @return self
+     */
+    protected function applySearchFilter(): self
     {
         $applyer = $this->getApplyer('SEARCHFILTER');
         //Vardump::now(get_class($obj));
@@ -491,6 +498,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      *
      * We all make a record of all the products that are in the current list
      * For efficiency sake, we do both these things at the same time.
+     * @return self
      */
     protected function removeExcludedProducts(): self
     {
@@ -544,6 +552,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     protected function loadCache(): self
     {
         $this->buildDefaultList();
+        // buildDefaultList, applyDefaultFilters, applySearchFilter, applyGroupFilterInner, removeExcludedProducts
         $this->products = $this->products->filter(['ID' => EcommerceCache::inst()->retrieve($this->getCachekey('productids'))]);
         $this->blockedProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('blockedProductsIds')); // set in removeExcludedProducts
         $this->alsoShowProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowProductsIds')); // set in applyGroupFilterInner
