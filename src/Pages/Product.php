@@ -303,6 +303,7 @@ class Product extends Page implements BuyableModel
         //$this->enableCMSFieldsExtensions();
         //}
 
+        $config = EcommerceConfig::inst();
         // main fields
         $fields->addFieldsToTab(
             'Root.Main',
@@ -313,7 +314,6 @@ class Product extends Page implements BuyableModel
             ],
             'URLSegment'
         );
-        $config = EcommerceConfig::inst();
         if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if (0 === $price) {
@@ -361,11 +361,11 @@ class Product extends Page implements BuyableModel
             );
         }
 
-        if (EcommerceConfig::inst()->ProductsHaveModelNames) {
+        if ($config->ProductsHaveModelNames) {
             $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
         }
 
-        if (EcommerceConfig::inst()->ProductsHaveQuantifiers) {
+        if ($config->ProductsHaveQuantifiers) {
             $fields->addFieldToTab(
                 'Root.Details',
                 TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
@@ -391,7 +391,7 @@ class Product extends Page implements BuyableModel
             );
         }
 
-        if (EcommerceConfig::inst()->ProductsAlsoInOtherGroups) {
+        if ($config->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.Under',
                 [
@@ -401,59 +401,61 @@ class Product extends Page implements BuyableModel
             );
         }
 
-        if ($this->exists()) {
-            $fields->addFieldsToTab(
-                'Root.Orders',
-                [
-                    GridField::create(
-                        'SalesOrderItems',
-                        'Sales Record',
-                        $orderItems = $this->SalesOrderItems()->sort(['ID' => 'DESC']),
-                        GridFieldConfig_RecordViewer::create()
-                    )
-                        ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),
-                ]
-            );
+        if ($config->ShowFullDetailsForProducts) {
+            if ($this->exists()) {
+                $fields->addFieldsToTab(
+                    'Root.Orders',
+                    [
+                        GridField::create(
+                            'SalesOrderItems',
+                            'Sales Record',
+                            $orderItems = $this->SalesOrderItems()->sort(['ID' => 'DESC']),
+                            GridFieldConfig_RecordViewer::create()
+                        )
+                            ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),
+                    ]
+                );
 
-            $fields->addFieldsToTab(
-                'Root.History',
-                [
-                    LiteralField::create(
-                        'ChangeHistory',
-                        ArrayToTable::convert($this->getHistoryData()) .
-                        '<p><a href="/admin/pages/history/show/' . $this->ID . '">Full History</a></p>'
-                    ),
-                ]
-            );
-            $mySearchDetail = $this->ProductSearchTable();
-            if ($mySearchDetail && $mySearchDetail->exists()) {
-                $searchDetails = '
-                <h2>Title recorded (prioritised in search)</h2>
-                <p>
-                    ' . $mySearchDetail->Title . '
-                </p>
-                <h2>Keywords recorded</h2>
-                <p>
-                    ' . $mySearchDetail->Data . '
-                </p>
-                <p>
-                    <a href="' . $mySearchDetail->CMSEditLink() . '">See Search Keywords Recorded</a>
-                </p>';
-            } else {
-                $searchDetails = '
-                <p class="message warning">
-                    No search data is recorded
-                </p>';
+                $fields->addFieldsToTab(
+                    'Root.History',
+                    [
+                        LiteralField::create(
+                            'ChangeHistory',
+                            ArrayToTable::convert($this->getHistoryData()) .
+                            '<p><a href="/admin/pages/history/show/' . $this->ID . '">Full History</a></p>'
+                        ),
+                    ]
+                );
+                $mySearchDetail = $this->ProductSearchTable();
+                if ($mySearchDetail && $mySearchDetail->exists()) {
+                    $searchDetails = '
+                    <h2>Title recorded (prioritised in search)</h2>
+                    <p>
+                        ' . $mySearchDetail->Title . '
+                    </p>
+                    <h2>Keywords recorded</h2>
+                    <p>
+                        ' . $mySearchDetail->Data . '
+                    </p>
+                    <p>
+                        <a href="' . $mySearchDetail->CMSEditLink() . '">See Search Keywords Recorded</a>
+                    </p>';
+                } else {
+                    $searchDetails = '
+                    <p class="message warning">
+                        No search data is recorded
+                    </p>';
+                }
+                $fields->addFieldsToTab(
+                    'Root.Search',
+                    [
+                        LiteralField::create(
+                            'SearchDetails',
+                            $searchDetails
+                        ),
+                    ]
+                );
             }
-            $fields->addFieldsToTab(
-                'Root.Search',
-                [
-                    LiteralField::create(
-                        'SearchDetails',
-                        $searchDetails
-                    ),
-                ]
-            );
         }
 
         return $fields;
