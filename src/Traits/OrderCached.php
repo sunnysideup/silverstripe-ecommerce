@@ -34,9 +34,9 @@ trait OrderCached
     {
         $this->getOrderCachedStaticallyIfNeeded($forceNew);
         if (
-            ! ($this->orderCached && $this->orderCached->exists())
-            ||
-            ($this->orderCached && $this->orderCachedStatusID !== $this->orderCached->StatusID)
+            ! ($this->orderCached && $this->orderCached->exists())                         // not set yet
+            ||                                                                             // or
+            ($this->orderCached && $this->orderCachedStatusID !== $this->orderCached->StatusID) // no status yet
         ) {
             //retrieve from Database!
             $this->setOrderCached($this->Order());
