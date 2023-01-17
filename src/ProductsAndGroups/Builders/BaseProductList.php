@@ -143,7 +143,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function init()
     {
-        $this->getProductGroupListProvider()->setLevelOfProductsToShow($this->levelOfProductsToShow);
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
@@ -168,35 +167,37 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public static function inst($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString = '')
     {
-        $className = static::class;
-        $item = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
-        $cacheKey = $item->generateCachekey();
-        if (isset(self::$singleton_caches[$cacheKey])) {
-            self::$singleton_caches[$cacheKey]->setCacheKey($cacheKey);
-            $item = self::$singleton_caches[$cacheKey];
-        } else {
-            $item->setCacheKey($cacheKey);
-            self::$singleton_caches[$cacheKey] = $item;
-            self::$singleton_caches[$cacheKey]->init();
+
+        // low cost creation call to create cache key
+        $cacheKey = self::generate_cache_key($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
+        if (! isset(self::$singleton_caches[$cacheKey])) {
+            $className = static::class;
+            self::$singleton_caches[$cacheKey] = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
         }
+        self::$singleton_caches[$cacheKey]
+            ->setCacheKey($cacheKey)
+            ->init();
 
         return self::$singleton_caches[$cacheKey];
     }
 
-    public function generateCacheKey(): string
+    public static function generate_cache_key($rootGroup, ?string $buyableClassName = '', ?int $levelOfProductsToShow = 0, ?string $searchString = '')
     {
         return implode(
             '_',
-            array_filter(
-                [
-                    $this->rootGroup->ID,
-                    $this->rootGroup->ClassName,
-                    $this->buyableClassName,
-                    $this->levelOfProductsToShow,
-                    $this->searchString,
-                ]
-            )
+            [
+                $rootGroup->ID,
+                $rootGroup->ClassName,
+                $buyableClassName,
+                $levelOfProductsToShow,
+                $searchString,
+            ]
         );
+    }
+
+    public function generateCacheKey(): string
+    {
+        return self::generate_cache_key($this->rootGroup, $this->buyableClassName, $this->levelOfProductsToShow, $this->searchString);
     }
 
     //#########################################
@@ -244,6 +245,14 @@ class BaseProductList extends AbstractProductsAndGroupsList
     public function getLevelOfProductsToShow(): int
     {
         return $this->levelOfProductsToShow;
+    }
+
+
+    public function setCacheKey(string $key): self
+    {
+        $this->cacheKey = $key;
+
+        return $this;
     }
 
     //#########################################
@@ -306,6 +315,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function getAlsoShowParentIds(): array
     {
+        // we can do this here as filter_array always adds an entry.
         if ([] === $this->alsoShowParentIds) {
             $rows = DB::query('
                 SELECT "ProductGroupID"
@@ -376,13 +386,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->blockedProductsIds;
     }
 
-    public function setCacheKey(string $key): self
-    {
-        $this->cacheKey = $key;
-        $this->cacheKey;
-
-        return $this;
-    }
 
     //#################################################
     // BUILDERS
@@ -400,6 +403,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
+     * key method for cache
      * add default filters.
      */
     protected function applyDefaultFilters(): self
@@ -410,6 +414,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
+     * key method for cache
      * apply group filters to products.
      */
     protected function applyGroupOrSearchFilter(): self
@@ -481,6 +486,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
     }
 
     /**
+     * key method for cache
      * Generate Excluded products that can not be purchased.
      *
      * We all make a record of all the products that are in the current list
@@ -539,10 +545,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
     {
         $this->buildDefaultList();
         $this->products = $this->products->filter(['ID' => EcommerceCache::inst()->retrieve($this->getCachekey('productids'))]);
-        $this->blockedProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('blockedProductsIds'));
-        $this->alsoShowProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowProductsIds'));
-        $this->parentGroupIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('parentGroupIds'));
-        $this->alsoShowParentIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowParentIds'));
+        $this->blockedProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('blockedProductsIds')); // set in removeExcludedProducts
+        $this->alsoShowProductsIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowProductsIds')); // set in applyGroupFilterInner
+        $this->parentGroupIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('parentGroupIds')); // set in applyGroupFilterInner
+        $this->alsoShowParentIds = EcommerceCache::inst()->retrieveAsIdList($this->getCachekey('alsoShowParentIds')); // set in getAlsoShowParentIds
 
         return $this;
     }
