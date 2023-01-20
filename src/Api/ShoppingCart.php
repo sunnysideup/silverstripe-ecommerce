@@ -361,7 +361,6 @@ class ShoppingCart
 
             //try it again
             //but limit to three, just in case ...
-            //just in case ...
             if (! $this->order && $recurseCount < 3) {
                 ++$recurseCount;
 
