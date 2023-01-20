@@ -1371,7 +1371,7 @@ class Product extends Page implements BuyableModel
 
         $otherImages = $this->AdditionalImages(); //see Product::many_many()
         foreach ($otherImages as $otherImage) {
-            if ($otherImage && $otherImage->exists()) {
+            if ($otherImage) {
                 $arrayInner[$otherImage->ID] = $otherImage;
             }
         }
