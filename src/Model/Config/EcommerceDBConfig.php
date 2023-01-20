@@ -101,6 +101,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         //"ProductsHaveVariations" => "Boolean",
         'CurrenciesExplanation' => 'HTMLText',
         'AllowFreeProductPurchase' => 'Boolean',
+        'ShowFullDetailsForProducts' => 'Boolean',
     ];
 
     /**
@@ -578,6 +579,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Products',
             [
+                (new CheckboxField('ShowFullDetailsForProducts', $fieldLabels['ShowFullDetailsForProducts']))
+                    ->setDescription('In the CMS, show additional info about price and order changes on products'),
                 new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
                 new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
                 new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
