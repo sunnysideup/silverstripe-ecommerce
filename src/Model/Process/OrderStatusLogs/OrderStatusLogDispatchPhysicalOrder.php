@@ -6,6 +6,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
@@ -124,18 +125,27 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 
     public function getFrontEndFields($params = null)
     {
-        return FieldList::create(
-            [
-                ReadonlyField::create('CustomerInfo', 'Customer', $this->getOrderCached()->Member()->getCustomerDetails()),
-                ReadonlyField::create('OrderInfo', 'Order', $this->getOrderCached()->getTitle()),
-                ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItemsTiny')),
-                TextField::create('DispatchedBy'),
-                TextField::create('DispatchTicket'),
-                TextField::create('DispatchLink'),
-                CheckboxField::create('Sent'),
-                CheckboxField::create('InternalUseOnly', 'Do not send update to customer'),
-            ]
-        );
+        $order = $this->getOrderCached();
+        if($order) {
+            return FieldList::create(
+                [
+                    ReadonlyField::create('CustomerInfo', 'Customer', $order->Member()->getCustomerDetails()),
+                    ReadonlyField::create('OrderInfo', 'Order', $order->getTitle()),
+                    ReadonlyField::create('OrderItemInfo', 'Items', $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderItemsTiny')),
+                    TextField::create('DispatchedBy'),
+                    TextField::create('DispatchTicket'),
+                    TextField::create('DispatchLink'),
+                    CheckboxField::create('Sent'),
+                    CheckboxField::create('InternalUseOnly', 'Do not send update to customer'),
+                ]
+            );
+        } else {
+            return FieldList::create(
+                [
+                    LiteralField::create('OrderNotFound', '<p class="message warning">Order not found.</p>'),
+                ]
+            );
+        }
     }
 
     protected function onBeforeWrite()

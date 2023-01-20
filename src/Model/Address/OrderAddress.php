@@ -213,11 +213,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         if (null === $this->_canView) {
             $this->_canView = false;
-            if ($this->getOrderCached()) {
-                if ($this->getOrderCached()->exists()) {
-                    if ($this->getOrderCached()->canView($member)) {
-                        $this->_canView = true;
-                    }
+            $order = $this->getOrderCached();
+            if ($order) {
+                if ($order->canView($member)) {
+                    $this->_canView = true;
                 }
             }
         }
@@ -247,12 +246,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         if (null === $this->_canEdit) {
             $this->_canEdit = false;
-            if ($this->getOrderCached()) {
-                if ($this->getOrderCached()->exists()) {
-                    if ($this->getOrderCached()->canEdit($member)) {
-                        if (! $this->getOrderCached()->IsSubmitted()) {
-                            $this->_canEdit = true;
-                        }
+            $order = $this->getOrderCached();
+            if ($order) {
+                if ($order->canEdit($member)) {
+                    if (! $order->IsSubmitted()) {
+                        $this->_canEdit = true;
                     }
                 }
             }

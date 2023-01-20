@@ -366,8 +366,9 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     public function getTitle()
     {
         $str = 'TO: ' . $this->To;
-        if ($this->getOrderCached()) {
-            $str .= ' - ' . $this->getOrderCached()->getTitle();
+        $order = $this->getOrderCached();
+        if ($order) {
+            $str .= ' - ' . $order->getTitle();
             $str .= ' - ' . $this->OrderStepNice();
         }
 

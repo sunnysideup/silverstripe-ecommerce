@@ -233,8 +233,9 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     public function getTitle()
     {
         $string = $this->Created;
-        if ($this->getOrderCached()) {
-            $string .= ' (' . $this->getOrderCached()->getTitle() . ')';
+        $order = $this->getOrderCached();
+        if ($order) {
+            $string .= ' (' . $order->getTitle() . ')';
         }
         $string .= ' - ' . $this->Rating;
         if ($this->Note) {
