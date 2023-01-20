@@ -1215,9 +1215,13 @@ class ShoppingCart
         if ($message && $status) {
             $this->addMessage($message, $status);
         }
+
         // recalculate... this is often a change so well worth it.
         $this->currentOrder();
-        $this->order->calculateOrderAttributes($recalculate = true);
+        if($this->order) {
+            //todo- why would there not be an order?
+            $this->order->calculateOrderAttributes($recalculate = true);
+        }
 
         //TODO: handle passing back multiple messages
         if (Director::is_ajax()) {
