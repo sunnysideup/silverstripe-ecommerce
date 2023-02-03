@@ -2,4 +2,4 @@
 Name: ecommerce_sessions
 ---
 SilverStripe\Control\Session:
-  timeout: 1209600
+  timeout: 3600
