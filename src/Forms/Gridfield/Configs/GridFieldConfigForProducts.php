@@ -18,10 +18,11 @@ class GridFieldConfigForProducts extends GridFieldConfig_RelationEditor
      */
     public function __construct($itemsPerPage = null)
     {
-        if (! $itemsPerPage) {
+        if (!$itemsPerPage) {
             $itemsPerPage = 100;
         }
         parent::__construct($itemsPerPage);
+        /** @var GridFieldAddExistingAutocompleter $ac */
         $ac = $this->getComponentByType(GridFieldAddExistingAutocompleter::class);
         if ($ac) {
             $ac->setSearchFields(['InternalItemID', 'Title']);
