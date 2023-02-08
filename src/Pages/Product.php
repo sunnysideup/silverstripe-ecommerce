@@ -314,7 +314,7 @@ class Product extends Page implements BuyableModel
             ],
             'URLSegment'
         );
-        if ($config && ! $config->AllowFreeProductPurchase) {
+        if ($config && !$config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if (0 === $price) {
                 $link = $config->CMSEditLink();
@@ -422,7 +422,7 @@ class Product extends Page implements BuyableModel
                         LiteralField::create(
                             'ChangeHistory',
                             ArrayToTable::convert($this->getHistoryData()) .
-                            '<p><a href="/admin/pages/history/show/' . $this->ID . '">Full History</a></p>'
+                                '<p><a href="/admin/pages/history/show/' . $this->ID . '">Full History</a></p>'
                         ),
                     ]
                 );
@@ -463,7 +463,7 @@ class Product extends Page implements BuyableModel
 
     public function getHistoryData(?string $code = '', ?int $limit = 50): array
     {
-        if (! $code) {
+        if (!$code) {
             $code = $this->InternalItemID;
         }
         $sql = '
@@ -539,7 +539,7 @@ class Product extends Page implements BuyableModel
                 $parentSortArray[] = sprintf('%03d', $obj->Sort);
                 if (
                     is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))
-                    && ! is_a($obj, EcommerceConfigClassNames::getName(ProductGroupSearchPage::class))
+                    && !is_a($obj, EcommerceConfigClassNames::getName(ProductGroupSearchPage::class))
                 ) {
                     $parentTitleArray[] = $obj->Title;
                 }
@@ -626,8 +626,7 @@ class Product extends Page implements BuyableModel
                     'ShowInMenus' => 1,
                     'ParentID' => $this->ParentID,
                 ])
-                ->exclude(['ID' => $this->ID])
-            ;
+                ->exclude(['ID' => $this->ID]);
         }
 
         return null;
@@ -671,7 +670,7 @@ class Product extends Page implements BuyableModel
      */
     public function ParentGroup()
     {
-        if (! isset(self::$parent_cache[$this->ID])) {
+        if (!isset(self::$parent_cache[$this->ID])) {
             self::$parent_cache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 
@@ -754,18 +753,18 @@ class Product extends Page implements BuyableModel
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
-        if (! $id) {
+        if (!$id) {
             $id = $this->ID;
         }
 
-        if (! $version) {
+        if (!$version) {
             $version = $this->Version;
         }
 
         //not sure why this is running via OrderItem...
 
         $obj = OrderItem::get_version($this->ClassName, $id, $version);
-        if (! $obj) {
+        if (!$obj) {
             $className = $this->ClassName;
             $obj = $className::get_by_id($id);
         }
@@ -1162,12 +1161,12 @@ class Product extends Page implements BuyableModel
         }
 
         // not sold at all
-        if (! $this->AllowPurchase) {
+        if (!$this->AllowPurchase) {
             return false;
         }
 
         // check country
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
 
@@ -1177,13 +1176,13 @@ class Product extends Page implements BuyableModel
             return $extended;
         }
 
-        if (! EcommerceCountry::allow_sales()) {
+        if (!EcommerceCountry::allow_sales()) {
             return false;
         }
 
         if ($checkPrice) {
             $price = $this->getCalculatedPrice();
-            if (0 === $price && ! $config->AllowFreeProductPurchase) {
+            if (0 === $price && !$config->AllowFreeProductPurchase) {
                 return false;
             }
         }
@@ -1459,8 +1458,7 @@ class Product extends Page implements BuyableModel
             'More images'
         ))
             ->setSortColumn('ImageSort')
-            ->setFolderName($this->getFolderName())
-        ;
+            ->setFolderName($this->getFolderName());
     }
 
     /**
@@ -1475,8 +1473,7 @@ class Product extends Page implements BuyableModel
             'Download Files'
         ))
             ->setSortColumn('FileSort')
-            ->setFolderName($this->getFolderName())
-        ;
+            ->setFolderName($this->getFolderName());
     }
 
     /**
