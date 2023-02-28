@@ -1241,7 +1241,7 @@ class ShoppingCart
         } elseif (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
             Controller::curr()->redirectBack();
         } else {
-            Controller::curr()->redirect(urldecode($_REQUEST['BackURL']));
+            Controller::curr()->redirect(urldecode( (string) $_REQUEST['BackURL']));
         }
     }
 

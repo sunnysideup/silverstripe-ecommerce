@@ -699,7 +699,7 @@ class UserPreference
     protected function addToTitle(string $toAdd): string
     {
         $toAdd = trim($toAdd);
-        $length = strlen($toAdd);
+        $length = strlen( (string) $toAdd);
 
         if ($length > 0) {
             $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');

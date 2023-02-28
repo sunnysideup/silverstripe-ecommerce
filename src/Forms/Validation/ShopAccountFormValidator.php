@@ -91,7 +91,7 @@ class ShopAccountFormValidator extends RequiredFields
                 );
                 $valid = false;
             }
-            $letterCount = strlen($data['PasswordCheck1']);
+            $letterCount = strlen( (string) $data['PasswordCheck1']);
             $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
             if ($letterCount > 0 && $letterCount < $minLength) {
                 $this->validationError(
@@ -103,7 +103,7 @@ class ShopAccountFormValidator extends RequiredFields
             }
         }
         if (isset($data['FirstName'])) {
-            if (strlen($data['FirstName']) < 2) {
+            if (strlen( (string) $data['FirstName']) < 2) {
                 $this->validationError(
                     'FirstName',
                     _t('Account.NOFIRSTNAME', 'Please enter your first name.'),
@@ -113,7 +113,7 @@ class ShopAccountFormValidator extends RequiredFields
             }
         }
         if (isset($data['Surname'])) {
-            if (strlen($data['Surname']) < 2) {
+            if (strlen( (string) $data['Surname']) < 2) {
                 $this->validationError(
                     'Surname',
                     _t('Account.NOSURNAME', 'Please enter your surname.'),

@@ -23,7 +23,7 @@ class ExpiryDateField extends TextField
         /*
         $monthValue = '';
         $yearValue = '';
-        if(strlen($this->value) == 4) {
+        if(strlen( (string) $this->value) == 4) {
             $monthValue = substr((string) $value, 0, 2);
             $yearValue = "20".substr((string) $value, 2, 2);
         }
@@ -54,7 +54,7 @@ class ExpiryDateField extends TextField
     {
         $monthValue = '';
         $yearValue = '';
-        if (4 === strlen($this->value)) {
+        if (4 === strlen( (string) $this->value)) {
             $monthValue = substr((string) $this->value, 0, 2);
             $yearValue = substr((string) $this->value, 2, 2);
         }

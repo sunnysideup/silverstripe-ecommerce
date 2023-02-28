@@ -743,7 +743,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         $result = parent::validate();
         $errors = [];
-        if (! $this->Code || 3 !== mb_strlen($this->Code)) {
+        if (! $this->Code || 3 !== mb_strlen( (string) $this->Code)) {
             $errors[] = 'The code must be 3 characters long.';
         }
 

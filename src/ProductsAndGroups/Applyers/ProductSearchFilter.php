@@ -325,7 +325,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function setSearchKeyword(string $keyword): self
     {
-        $this->rawData['Keyword'] = urldecode($keyword);
+        $this->rawData['Keyword'] = urldecode( (string) $keyword);
 
         return $this;
     }
@@ -410,7 +410,7 @@ class ProductSearchFilter extends BaseApplyer
 
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
         if ($this->products->exists()) {
-            if (! empty($this->rawData['Keyword']) && strlen($this->rawData['Keyword']) > 1) {
+            if (! empty($this->rawData['Keyword']) && strlen( (string) $this->rawData['Keyword']) > 1) {
                 $this->runKeywordSearch();
             } else {
                 // add directly to results
