@@ -76,7 +76,7 @@ class ProductOrderItem extends OrderItem
         $product = $this->Product();
         if ($product) {
             SetThemed::start();
-            $tableTitle = strip_tags($product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
+            $tableTitle = strip_tags( (string) $product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
             SetThemed::end();
         }
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);

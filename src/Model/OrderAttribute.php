@@ -190,7 +190,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -214,14 +214,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
-        if (! $this->exists()) {
+        if (!$this->exists()) {
             return true;
         }
         if (null === $this->_canView) {
@@ -251,18 +251,18 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
-        if (! $this->exists()) {
+        if (!$this->exists()) {
             return true;
         }
         if (null === $this->_canEdit) {
-            $this->_canEdit = ! $this->priceHasBeenFixed();
+            $this->_canEdit = !$this->priceHasBeenFixed();
         }
 
         return $this->_canEdit;
@@ -464,7 +464,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getTableSubTitleNOHTML()
     {
-        return str_replace("\n", '', strip_tags($this->getTableSubTitle()));
+        return str_replace("\n", '', strip_tags((string) $this->getTableSubTitle()));
     }
 
     /**
