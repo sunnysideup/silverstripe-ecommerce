@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
 
 class GetVariables
 {
@@ -71,18 +72,28 @@ class GetVariables
                     $subString
                 );
                 $items = explode(Config::inst()->get(static::class, 'equal_alternative'), $subString);
-                list($key, $value) = $items;
-                $key = str_replace(
-                    Config::inst()->get(static::class, 'exception_for_tilde'),
-                    Config::inst()->get(static::class, 'equal_alternative'),
-                    $key
-                );
-                $value = str_replace(
-                    Config::inst()->get(static::class, 'exception_for_tilde'),
-                    Config::inst()->get(static::class, 'equal_alternative'),
-                    $value
-                );
-                $newArray[$key] = $value;
+                if (count($items) === 2) {
+                    list($key, $value) = $items;
+                    $key = str_replace(
+                        Config::inst()->get(static::class, 'exception_for_tilde'),
+                        Config::inst()->get(static::class, 'equal_alternative'),
+                        $key
+                    );
+                    $value = str_replace(
+                        Config::inst()->get(static::class, 'exception_for_tilde'),
+                        Config::inst()->get(static::class, 'equal_alternative'),
+                        $value
+                    );
+                    $newArray[$key] = Convert::raw2sql($value);
+                } elseif (count($items) === 1) {
+                    list($key) = $items;
+                    $key = str_replace(
+                        Config::inst()->get(static::class, 'exception_for_tilde'),
+                        Config::inst()->get(static::class, 'equal_alternative'),
+                        $key
+                    );
+                    $newArray[$key] = '';
+                }
             }
         }
 
