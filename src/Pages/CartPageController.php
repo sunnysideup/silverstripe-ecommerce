@@ -103,9 +103,9 @@ class CartPageController extends PageController
      */
     public function showorder(HTTPRequest $request)
     {
-        if (! $this->currentOrder) {
+        if (!$this->currentOrder) {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
-        } elseif (! $this->currentOrder->IsSubmitted()) {
+        } elseif (!$this->currentOrder->IsSubmitted()) {
             $shoppingCart = ShoppingCart::current_order();
             if ($shoppingCart->ID !== $this->currentOrder->ID) {
                 if (ShoppingCart::singleton()->loadOrder($this->currentOrder)) {
@@ -129,7 +129,7 @@ class CartPageController extends PageController
     public function share(HTTPRequest $request)
     {
         $codes = Convert::raw2sql($request->param('ID'));
-        if (! $request->getVar('ready') && ! $request->getVar('done')) {
+        if (!$request->getVar('ready') && !$request->getVar('done')) {
             return $this->redirect($this->Link('share/' . $codes) . '?ready=1');
         }
 
@@ -159,13 +159,13 @@ class CartPageController extends PageController
             }
 
             $order->calculateOrderAttributes(false);
-            if (! $request->getVar('done')) {
+            if (!$request->getVar('done')) {
                 return $this->redirect($this->Link('share/' . $codes) . '?done=1');
             }
         }
 
         $this->Title .= ': ' . implode(', ', $titleAppendixArray);
-        if (strlen( (string) $this->Title) > 255) {
+        if (strlen((string) $this->Title) > 255) {
             $this->Title = substr((string) $this->Title, 0, 255) . ' ...';
         }
 
@@ -198,7 +198,7 @@ class CartPageController extends PageController
     public function saveorder(HTTPRequest $request)
     {
         $member = Security::getCurrentUser();
-        if (! $member) {
+        if (!$member) {
             $this->showCreateAccountForm = true;
 
             return [];
@@ -225,7 +225,7 @@ class CartPageController extends PageController
      */
     public function deleteorder(HTTPRequest $request)
     {
-        if (! $this->CurrentOrderIsInCart()) {
+        if (!$this->CurrentOrderIsInCart()) {
             if ($this->currentOrder->canDelete()) {
                 $this->currentOrder->delete();
                 self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
@@ -273,7 +273,7 @@ class CartPageController extends PageController
     public function Message()
     {
         $this->workOutMessagesAndActions();
-        if (! $this->message) {
+        if (!$this->message) {
             $sessionCode = EcommerceConfig::get(CartPageController::class, 'session_code');
             $sessionMessage = $this->getRequest()->getSession()->get($sessionCode);
             if ($sessionMessage) {
@@ -403,7 +403,7 @@ class CartPageController extends PageController
             }
         }
 
-        if (! $this->currentOrder) {
+        if (!$this->currentOrder) {
             $this->currentOrder = ShoppingCart::current_order();
             if ($this->currentOrder) {
                 if ($this->currentOrder->IsSubmitted()) {
@@ -420,11 +420,11 @@ class CartPageController extends PageController
             if ($canView) {
                 if ($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
                     $this->redirect($this->currentOrder->Link());
-                } elseif (! $this->currentOrder->IsSubmitted() && $this->onlyShowSubmittedOrders()) {
+                } elseif (!$this->currentOrder->IsSubmitted() && $this->onlyShowSubmittedOrders()) {
                     $this->redirect($this->currentOrder->Link());
                 }
             } else {
-                if (! $this->LoginToOrderLinkLabel) {
+                if (!$this->LoginToOrderLinkLabel) {
                     $this->LoginToOrderLinkLabel = _t('CartPage.LOGINFIRST', 'You will need to log in before you can access the requested order order. ');
                 }
 
@@ -443,7 +443,7 @@ class CartPageController extends PageController
                 // we always want to make sure the order is up-to-date.
                 $this->currentOrder->init($recalculate = true);
 
-                if(! $this->currentOrder->getCalculatedOrderAttributesCache()) {
+                if (!$this->currentOrder->getCalculatedOrderAttributesCache()) {
                     // recalculate after init! - this may already happen with init ....
                     // make it faster by checking if it did.
                     $this->currentOrder->calculateOrderAttributes($recalculate = true);
@@ -462,7 +462,7 @@ class CartPageController extends PageController
      */
     protected function setRetrievalOrderID($orderID, $validUntilTS = null)
     {
-        if (! $validUntilTS) {
+        if (!$validUntilTS) {
             $validUntilTS = time() + 3600;
         }
 
@@ -478,11 +478,12 @@ class CartPageController extends PageController
      */
     protected function clearRetrievalOrderID()
     {
-        $this->getRequest()->getSession()->clear('CheckoutPageCurrentOrderID');
-        $this->getRequest()->getSession()->set('CheckoutPageCurrentOrderID', 0);
-        $this->getRequest()->getSession()->clear('CheckoutPageCurrentRetrievalTime');
-        $this->getRequest()->getSession()->set('CheckoutPageCurrentRetrievalTime', 0);
-        $this->getRequest()->getSession()->save($this->getRequest());
+        $session = $this->getRequest()->getSession();
+        $session->clear('CheckoutPageCurrentOrderID');
+        $session->set('CheckoutPageCurrentOrderID', 0);
+        $session->clear('CheckoutPageCurrentRetrievalTime');
+        $session->set('CheckoutPageCurrentRetrievalTime', 0);
+        $session->save($this->getRequest());
     }
 
     /**
@@ -490,7 +491,7 @@ class CartPageController extends PageController
      */
     protected function workOutMessagesAndActions()
     {
-        if (! $this->workedOutMessagesAndActions) {
+        if (!$this->workedOutMessagesAndActions) {
             $this->actionLinks = new ArrayList([]);
             //what order are we viewing?
             $viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
@@ -547,7 +548,7 @@ class CartPageController extends PageController
             //go to current order
             if (property_exists($this, 'CurrentOrderLinkLabel') && null !== $this->CurrentOrderLinkLabel && $this->CurrentOrderLinkLabel) {
                 if ($this->isCartPage()) {
-                    if (! $viewingRealCurrentOrder) {
+                    if (!$viewingRealCurrentOrder) {
                         $this->actionLinks->push(new ArrayData([
                             'Title' => $this->CurrentOrderLinkLabel,
                             'Link' => ShoppingCart::current_order()->Link(),
@@ -561,7 +562,7 @@ class CartPageController extends PageController
                 if ($viewingRealCurrentOrder) {
                     if ($currentUserID && $this->currentOrder->MemberID === $currentUserID) {
                         if ($this->isCartPage()) {
-                            if ($this->currentOrder && $this->currentOrder->getTotalItems() && ! $this->currentOrder->IsSubmitted()) {
+                            if ($this->currentOrder && $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted()) {
                                 $this->actionLinks->push(new ArrayData([
                                     'Title' => $this->SaveOrderLinkLabel,
                                     'Link' => $this->Link('saveorder') . '/' . $this->currentOrder->ID . '/',
@@ -575,7 +576,7 @@ class CartPageController extends PageController
             //load order
             if (property_exists($this, 'LoadOrderLinkLabel') && null !== $this->LoadOrderLinkLabel && $this->LoadOrderLinkLabel) {
                 if ($this->isCartPage() && $this->currentOrder) {
-                    if (! $viewingRealCurrentOrder) {
+                    if (!$viewingRealCurrentOrder) {
                         $this->actionLinks->push(new ArrayData([
                             'Title' => $this->LoadOrderLinkLabel,
                             'Link' => $this->Link('loadorder') . '/' . $this->currentOrder->ID . '/',
@@ -587,7 +588,7 @@ class CartPageController extends PageController
             //delete order
             if (property_exists($this, 'DeleteOrderLinkLabel') && null !== $this->DeleteOrderLinkLabel && $this->DeleteOrderLinkLabel) {
                 if ($this->isCartPage() && $this->currentOrder) {
-                    if (! $viewingRealCurrentOrder) {
+                    if (!$viewingRealCurrentOrder) {
                         $this->actionLinks->push(new ArrayData([
                             'Title' => $this->DeleteOrderLinkLabel,
                             'Link' => $this->Link('deleteorder') . '/' . $this->currentOrder->ID . '/',
@@ -647,7 +648,7 @@ class CartPageController extends PageController
 
             //no items
             if ($this->currentOrder) {
-                if (! $this->currentOrder->getTotalItems()) {
+                if (!$this->currentOrder->getTotalItems()) {
                     $this->message = $this->NoItemsInOrderMessage;
                 }
             } else {
@@ -674,7 +675,7 @@ class CartPageController extends PageController
      */
     protected function isCartPage()
     {
-        return ! $this->isCheckoutPage() && ! $this->isOrderConfirmationPage();
+        return !$this->isCheckoutPage() && !$this->isOrderConfirmationPage();
     }
 
     /**

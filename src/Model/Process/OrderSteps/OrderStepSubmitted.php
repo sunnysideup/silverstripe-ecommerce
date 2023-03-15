@@ -96,7 +96,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order): bool
     {
-        if (! $this->IsSubmitted($order)) {
+        if (!$this->IsSubmitted($order)) {
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
                 //add currency if needed.
@@ -117,7 +117,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                         $obj->OrderAsString = $order->ConvertToString();
                         $saved = true;
                     }
-                    if ($this->SaveOrderAsHTML || ! $saved) {
+                    if ($this->SaveOrderAsHTML || !$saved) {
                         $obj->OrderAsHTML = $order->ConvertToHTML();
                     }
                     $obj->write();
@@ -130,13 +130,14 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             $order->LastEdited = DBDatetime::now()->Rfc2822();
 
             //add member if needed...
-            if (! $order->MemberID) {
+            if (!$order->MemberID) {
                 //lets see if we can find a member
-                $memberOrderID = Controller::curr()->getRequest()->getSession()->get('Ecommerce_Member_For_Order');
-                $session = Controller::curr()->getRequest()->getSession();
+                $request = Controller::curr()->getRequest();
+                $session = $request->getSession();
+                $memberOrderID = $session->get('Ecommerce_Member_For_Order');
                 $session->clear('Ecommerce_Member_For_Order');
                 $session->set('Ecommerce_Member_For_Order', 0);
-                $session->save('Ecommerce_Member_For_Order');
+                $session->save($request);
                 if ($memberOrderID) {
                     $order->MemberID = $memberOrderID;
                 }
