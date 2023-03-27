@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -70,14 +71,27 @@ class ProductOrderItem extends OrderItem
         return $this->getTableTitle();
     }
 
-    public function getTableTitle()
+    public function getTableTitle(): string
     {
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         $product = $this->Product();
         if ($product) {
             SetThemed::start();
-            $tableTitle = strip_tags( (string) $product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
+            $tableTitle = strip_tags((string) $product->renderWith('Sunnysideup\Ecommerce\Includes\ProductTableTitle'));
             SetThemed::end();
+        } else {
+            // last resort ...
+            $rows = DB::query(
+                '
+                SELECT Title
+                FROM SiteTree_Versions
+                WHERE RecordID = ' . $this->BuyableID . '
+                ORDER BY ID DESC LIMIT 1
+                '
+            );
+            foreach ($rows as $row) {
+                $tableTitle = $row['Title'];
+            }
         }
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);
         if (null !== $updatedTableTitle && is_array($updatedTableTitle) && count($updatedTableTitle)) {
