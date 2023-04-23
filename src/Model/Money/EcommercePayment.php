@@ -469,8 +469,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public static function set_supported_methods(array $array)
     {
-        Config::modify()->update(EcommercePayment::class, 'supported_methods', null);
-        Config::modify()->update(EcommercePayment::class, 'supported_methods', $array);
+        Config::modify()->merge(EcommercePayment::class, 'supported_methods', null);
+        Config::modify()->merge(EcommercePayment::class, 'supported_methods', $array);
     }
 
     /**

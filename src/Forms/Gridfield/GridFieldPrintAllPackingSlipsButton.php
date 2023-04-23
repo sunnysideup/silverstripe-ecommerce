@@ -108,7 +108,7 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
             $al->push($order);
         }
         Requirements::clear();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        Config::modify()->merge(SSViewer::class, 'theme_enabled', true);
         Requirements::themedCSS('client/css/OrderReport');
         Requirements::themedCSS('client/css/Order_PackingSlip');
         $curr = Controller::curr();

@@ -32,7 +32,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
     public function run($request)
     {
         //IMPORTANT!
-        Config::modify()->update(Email::class, 'send_all_emails_to', 'no-one@localhost');
+        Config::modify()->merge(Email::class, 'send_all_emails_to', 'no-one@localhost');
         Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $lastOrderStep = DataObject::get_one(
