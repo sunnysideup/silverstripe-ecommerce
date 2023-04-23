@@ -626,6 +626,24 @@ class ProductGroupController extends PageController
         return $this->getSearchApplyer()->getHasResults();
     }
 
+
+    protected function createLinkFromProductList($link): string
+    {
+        /** @var DataList $list */
+        $list = $this->getProductList();
+        if ($list && $list->exists()) {
+            $vars =  implode(',', $list->column('InternalItemID'));
+        } else {
+            $vars = '';
+        }
+        if(strpos($link, '?') === false) {
+            $glue = '?';
+        } else {
+            $glue = '&';
+        }
+        return $link . $glue . 'codes=' . $vars;
+    }
+
     /**
      * Should the product search form be shown immediately?
      */
@@ -636,7 +654,9 @@ class ProductGroupController extends PageController
                 return true;
             }
 
-            return ! (bool) $this->getProductList()->exists();
+            /** @var DataList $list */
+            $list = $this->getProductList();
+            return ! (bool) $list->exists();
         }
 
         return false;
@@ -816,7 +836,7 @@ class ProductGroupController extends PageController
     /**
      * turns full list into paginated list.
      *
-     * @param SS_List $list
+     * @param DataList $list
      */
     protected function paginateList($list): ?PaginatedList
     {

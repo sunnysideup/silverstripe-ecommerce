@@ -779,6 +779,7 @@ class ProductGroup extends Page
             $this->AlsoShowProducts(),
             $config = GridFieldBasicPageRelationConfig::create()
         );
+        /** @var GridFieldAddExistingAutocompleter $ac */
         $ac = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
         if ($ac) {
             $ac->setSearchFields(['Title']);
