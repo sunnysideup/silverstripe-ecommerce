@@ -139,7 +139,7 @@ class ProductGroupController extends PageController
     /**
      * get the unpaginated list. Only set once.
      *
-     * @return SS_List
+     * @return DataList
      */
     public function getProductList()
     {
@@ -816,7 +816,7 @@ class ProductGroupController extends PageController
     /**
      * turns full list into paginated list.
      *
-     * @param SS_List $list
+     * @param DataList $list
      */
     protected function paginateList($list): ?PaginatedList
     {
@@ -824,6 +824,7 @@ class ProductGroupController extends PageController
         if ($list->exists()) {
             $obj = PaginatedList::create($list, $this->request);
             if ($this->IsShowFullList()) {
+                // there is still pagination, but we show more of them.
                 $obj->setPageLength($this->getProductsPerPage() * 2);
             } else {
                 $obj->setPageLength($this->getProductsPerPage());
