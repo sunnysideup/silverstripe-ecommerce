@@ -108,7 +108,7 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
             $al->push($order);
         }
         Requirements::clear();
-        Config::modify()->update(SSViewer::class, 'theme_enabled', true);
+        Config::modify()->merge(SSViewer::class, 'theme_enabled', true);
         Requirements::themedCSS('client/css/OrderReport');
         Requirements::themedCSS('client/css/Order_Invoice');
         Requirements::themedCSS('client/css/Order_Invoice_Print_Only', 'print');
