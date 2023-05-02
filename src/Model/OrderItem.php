@@ -26,13 +26,12 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use SilverStripe\CMS\Model\SiteTree;
 /**
- * @description: An order item is a product which has been added to an order.
- * An order item links to a Buyable (product) by class name
- * That is, we only store the BuyableID and the ClassName
+ * Class \Sunnysideup\Ecommerce\Model\OrderItem
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property float $Quantity
+ * @property int $BuyableID
+ * @property string $BuyableClassName
+ * @property int $Version
  */
 class OrderItem extends OrderAttribute
 {

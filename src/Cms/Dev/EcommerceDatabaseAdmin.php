@@ -11,6 +11,10 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
+ *
+ */
 class EcommerceDatabaseAdmin extends TaskRunner
 {
     //##############################

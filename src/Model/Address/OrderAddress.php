@@ -27,12 +27,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
- * @description: each order has an address: a Shipping and a Billing address
- * This is a base-class for both.
+ * Class \Sunnysideup\Ecommerce\Model\Address\OrderAddress
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: address
  */
 class OrderAddress extends DataObject implements EditableEcommerceObject
 {

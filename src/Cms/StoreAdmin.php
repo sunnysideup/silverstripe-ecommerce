@@ -17,11 +17,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
- * @description: CMS management for the store setup (e.g Order Steps, Countries, etc...)
+ * Class \Sunnysideup\Ecommerce\Cms\StoreAdmin
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
  */
 class StoreAdmin extends ModelAdmin
 {

@@ -5,6 +5,10 @@ namespace Sunnysideup\Ecommerce\Cms;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByOrderStep
+ *
+ */
 class SalesAdminByOrderStep extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByOrderStep';

@@ -24,6 +24,13 @@ use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
 use Sunnysideup\Vardump\Vardump;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\ProductGroupController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\ProductGroup $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\ProductGroup data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\ProductGroup
+ */
 class ProductGroupController extends PageController
 {
     /**

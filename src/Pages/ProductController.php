@@ -18,6 +18,13 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\ProductController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\Product $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\Product data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\Product
+ */
 class ProductController extends PageController
 {
     /**

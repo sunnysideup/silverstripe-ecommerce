@@ -65,11 +65,40 @@ use Sunnysideup\Vardump\ArrayToTable;
  * eCommerce platform. This means you can add an instance
  * of this page type to the shopping cart.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: buyables
- *
- * @todo: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort
+ * @property bool $HideFromShoppingFeed
+ * @property string $MPN
+ * @property float $Price
+ * @property float $Weight
+ * @property string $Model
+ * @property string $Quantifier
+ * @property bool $FeaturedProduct
+ * @property bool $AllowPurchase
+ * @property string $InternalItemID
+ * @property float $FullSiteTreeSort
+ * @property string $FullName
+ * @property string $ProductBreadcrumb
+ * @property string $ShortDescription
+ * @property bool $UseImageForProducts
+ * @property int $GoogleProductCategoryID
+ * @property int $ImageID
+ * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
+ * @method \SilverStripe\Assets\Image Image()
+ * @method \Sunnysideup\Ecommerce\Model\Search\ProductSearchTable ProductSearchTable()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] EcommerceRecommendedProducts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\ProductGroup[] ProductGroups()
+ * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] AdditionalFiles()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDiscountCoupon\Model\DiscountCouponOption[] ApplicableDiscountCoupons()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] RecommendedFor()
+ * @mixin \Sunnysideup\EcommerceGoogleShoppingFeed\Extensions\GoogleShoppingFeedExtension
+ * @mixin \Sunnysideup\EcommerceAlsoRecommended\Model\EcommerceAlsoRecommendedDOD
+ * @mixin \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
+ * @mixin \Sunnysideup\EcommerceDiscountCoupon\Model\Buyables\DiscountCouponProductDataExtension
+ * @mixin \Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator
  */
 class Product extends Page implements BuyableModel
 {

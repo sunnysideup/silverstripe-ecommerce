@@ -12,6 +12,9 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * Allows you to group OrderAttributes.
+ *
+ * @property string $Name
+ * @property int $Sort
  */
 class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
 {

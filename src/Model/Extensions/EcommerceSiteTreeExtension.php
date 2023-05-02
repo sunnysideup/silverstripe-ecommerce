@@ -10,12 +10,9 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
- * @description: adds a few functions to SiteTree to give each page
- * some e-commerce related functionality.
+ * Class \Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: extensions
+ * @property \SilverStripe\CMS\Model\SiteTree|\Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension $owner
  */
 class EcommerceSiteTreeExtension extends SiteTreeExtension
 {

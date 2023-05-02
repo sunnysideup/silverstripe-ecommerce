@@ -13,9 +13,11 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPh
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSent
+ *
+ * @property bool $SendDetailsToCustomer
+ * @property string $EmailSubjectGift
+ * @property string $CustomerMessageGift
  */
 class OrderStepSent extends OrderStep implements OrderStepInterface
 {

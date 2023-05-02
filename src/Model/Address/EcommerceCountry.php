@@ -18,13 +18,15 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
 
 /**
- * @description: This class helps you to manage countries within the context of e-commerce.
- * For example: To what countries can be sold.
- * /dev/build/?resetecommercecountries=1 will reset the list of countries...
+ * Class \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: address
+ * @property string $Code
+ * @property string $Name
+ * @property bool $DoNotAllowSales
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Address\EcommerceRegion[] Regions()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludeFromCountries()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInCountries()
+ * @mixin \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
  */
 class EcommerceCountry extends DataObject implements EditableEcommerceObject
 {

@@ -6,6 +6,10 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
+ *
+ */
 class OrderEmailRecordReview extends Controller
 {
     private static $allowed_actions = [

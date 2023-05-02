@@ -9,14 +9,11 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * @description: used to display a random product in the ProductGroupSchema Test.
+ * Class \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: control
- *
- * @internal
- * @coversNothing
+ * @property \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest $dataRecord
+ * @method \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest data()
+ * @mixin \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
  */
 class EcommerceTemplateTest extends PageController
 {

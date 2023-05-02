@@ -10,9 +10,9 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentInvoice
+ *
+ * @property bool $SendInvoiceToCustomer
  */
 class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
 {

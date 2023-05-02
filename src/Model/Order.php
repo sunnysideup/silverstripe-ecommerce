@@ -90,31 +90,40 @@ use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilte
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersUntilDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+
 /**
- * @description:
- * The order class is a databound object for handling Orders within SilverStripe.
- * Note that it works closely with the ShoppingCart class, which accompanies the Order
- * until it has been paid for / confirmed by the user.
+ * Class \Sunnysideup\Ecommerce\Model\Order
  *
- * CONTENTS:
- * ----------------------------------------------
- * 1. CMS STUFF
- * 2. MAIN TRANSITION FUNCTIONS
- * 3. STATUS RELATED FUNCTIONS / SHORTCUTS
- * 4. LINKING ORDER WITH MEMBER AND ADDRESS
- * 5. CUSTOMER COMMUNICATION
- * 6. ITEM MANAGEMENT
- * 7. CRUD METHODS (e.g. canView, canEdit, canDelete, etc...)
- * 8. GET METHODS (e.g. Total, SubTotal, Title, etc...)
- * 9. TEMPLATE RELATED STUFF
- * 10. STANDARD SS METHODS (requireDefaultRecords, onBeforeDelete, etc...)
- * 11. DEBUG
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
- *
- * NOTE: This is the SQL for selecting orders in sequence of
+ * @property bool $SkipToSecurityChecks
+ * @property int $AdvanceRetailOrderID
+ * @property string $SalesRep
+ * @property string $SessionID
+ * @property bool $UseShippingAddress
+ * @property string $CustomerOrderNote
+ * @property float $ExchangeRate
+ * @property int $AssignedAdminID
+ * @property int $MemberID
+ * @property int $BillingAddressID
+ * @property int $ShippingAddressID
+ * @property int $StatusID
+ * @property int $CancelledByID
+ * @property int $CurrencyUsedID
+ * @method \SilverStripe\Security\Member AssignedAdmin()
+ * @method \SilverStripe\Security\Member Member()
+ * @method \Sunnysideup\Ecommerce\Model\Address\BillingAddress BillingAddress()
+ * @method \Sunnysideup\Ecommerce\Model\Address\ShippingAddress ShippingAddress()
+ * @method \Sunnysideup\Ecommerce\Model\Process\OrderStep Status()
+ * @method \SilverStripe\Security\Member CancelledBy()
+ * @method \Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency CurrencyUsed()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\OrderAttribute[] Attributes()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderStatusLog[] OrderStatusLogs()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Money\EcommercePayment[] Payments()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord[] Emails()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue[] OrderProcessQueue()
+ * @mixin \Sunnysideup\EcommerceAdvanceRetailConnector\Extensions\OrderExtension
+ * @mixin \Sunnysideup\EcommerceGoogleAnalytics\AnalyticsTransactionReversal
+ * @mixin \Sunnysideup\EcommerceAssignOrders\Model\EcommerceAssignOrdersExtension
+ * @mixin \Sunnysideup\EcommerceSecurity\Model\Security\EcommerceSecurityOrderDecoration
  */
 class Order extends DataObject implements EditableEcommerceObject
 {
@@ -1349,7 +1358,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * has the order attributes been calculated?
      * @return bool
      */
-    public function getCalculatedOrderAttributesCache() : bool
+    public function getCalculatedOrderAttributesCache(): bool
     {
         return $this->calculatedOrderAttributesCache;
     }

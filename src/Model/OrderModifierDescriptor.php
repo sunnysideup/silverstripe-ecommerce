@@ -16,6 +16,18 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Model\OrderModifierDescriptor
+ *
+ * @property string $ModifierClassName
+ * @property string $Heading
+ * @property string $Description
+ * @property int $LinkID
+ * @method \SilverStripe\CMS\Model\SiteTree Link()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @mixin \Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator
+ */
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {
     /**

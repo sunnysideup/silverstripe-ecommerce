@@ -42,6 +42,19 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  *
  * This can't be an abstract class because sapphire doesn't
  * support abstract DataObject classes.
+ *
+ * @property string $Status
+ * @property string $Amount
+ * @property string $SettlementAmount
+ * @property string $Message
+ * @property string $IP
+ * @property string $ProxyIP
+ * @property string $ExceptionError
+ * @property string $AlternativeEndPoint
+ * @property int $PaidByID
+ * @property int $OrderID
+ * @method \SilverStripe\Security\Member PaidBy()
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {

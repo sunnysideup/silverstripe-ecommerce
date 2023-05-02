@@ -7,7 +7,6 @@ use SilverStripe\ORM\DataObject;
 /**
  * This page manages searching for products.
  *
- * @author Nicolaas [at] Sunny Side Up .co.nz
  */
 class ProductGroupSearchPage extends ProductGroup
 {

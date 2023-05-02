@@ -45,9 +45,10 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
  * The Cart is a smaller version of the Table. Table is used for Checkout Page + Confirmation page.
  * Cart is used for other pages (pre-checkout for example). At times, the values and names may differ
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property string $Name
+ * @property float $TableValue
+ * @property bool $HasBeenRemoved
+ * @property string $Type
  */
 class OrderModifier extends OrderAttribute
 {

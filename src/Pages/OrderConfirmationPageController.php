@@ -21,6 +21,13 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage
+ */
 class OrderConfirmationPageController extends CartPageController
 {
     /**

@@ -7,6 +7,11 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBMoney;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Money\EcommerceMoney
+ *
+ * @property \SilverStripe\ORM\FieldType\DBMoney|\Sunnysideup\Ecommerce\Money\EcommerceMoney $owner
+ */
 class EcommerceMoney extends Extension
 {
     /**

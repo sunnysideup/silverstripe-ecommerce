@@ -9,9 +9,7 @@ use SilverStripe\Core\Extension;
  * EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin
  * It creates a developer view (as in www.mysite.com/dev/) specifically for ecommerce.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
+ * @property \SilverStripe\Dev\DevelopmentAdmin|\Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator $owner
  */
 class EcommerceDevelopmentAdminDecorator extends Extension
 {

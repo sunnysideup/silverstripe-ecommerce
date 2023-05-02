@@ -17,6 +17,13 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
 use Sunnysideup\Ecommerce\Model\Order;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\CartPageController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\CartPage $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\CartPage data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\CartPage
+ */
 class CartPageController extends PageController
 {
     /**

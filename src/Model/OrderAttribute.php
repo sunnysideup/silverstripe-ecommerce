@@ -19,14 +19,12 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
- * @description: base class for OrderItem (item in cart) and OrderModifier (extra - e.g. Tax)
+ * Class \Sunnysideup\Ecommerce\Model\OrderAttribute
  *
- * @see OrderModifier
- * @see OrderItem
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property float $CalculatedTotal
+ * @property int $Sort
+ * @property int $GroupSort
+ * @property int $OrderID
  */
 class OrderAttribute extends DataObject implements EditableEcommerceObject
 {

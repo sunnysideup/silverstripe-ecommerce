@@ -2,6 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage
+ */
 class ProductGroupSearchPageController extends ProductGroupController
 {
     public function getSearchFilterHeader(): string

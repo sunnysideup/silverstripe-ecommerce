@@ -8,6 +8,13 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Model\Search\SearchHistory
+ *
+ * @property string $Title
+ * @property int $ProductCount
+ * @property int $GroupCount
+ */
 class SearchHistory extends DataObject
 {
     /**

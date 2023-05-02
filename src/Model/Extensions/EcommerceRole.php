@@ -43,12 +43,17 @@ use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
 use Sunnysideup\PermissionProvider\Interfaces\PermissionProviderFactoryProvider;
 
 /**
- * @description EcommerceRole provides specific customisations to the {@link Member}
- * class for the ecommerce module.
+ * Class \Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole
  *
- * @author: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: extensions
+ * @property \SilverStripe\Security\Member|\Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole $owner
+ * @property string $Notes
+ * @property string $DefaultSortOrder
+ * @property string $DefaultFilter
+ * @property string $DisplayStyle
+ * @property int $PreferredCurrencyID
+ * @method \Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency PreferredCurrency()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] Orders() .Member()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] CancelledOrders() .CancelledBy()
  */
 class EcommerceRole extends DataExtension implements PermissionProvider, PermissionProviderFactoryProvider
 {
