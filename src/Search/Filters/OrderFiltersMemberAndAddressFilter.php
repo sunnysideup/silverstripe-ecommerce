@@ -28,16 +28,16 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         $this->model = $query->applyRelation($this->relation);
         $value = Convert::raw2sql($this->getValue());
         $billingAddressesIDs = [];
-        $billingAddresses = BillingAddress::get()->where("
-            \"FirstName\" LIKE '%{$value}%' OR
-            \"Surname\" LIKE '%{$value}%' OR
-            \"Email\" LIKE '%{$value}%' OR
-            \"Address\" LIKE '%{$value}%' OR
-            \"Address2\" LIKE '%{$value}%' OR
-            \"City\" LIKE '%{$value}%' OR
-            \"PostalCode\" LIKE '%{$value}%' OR
-            \"Phone\" LIKE '%{$value}%'
-        ");
+        $billingAddresses = BillingAddress::get()->filterAny([
+            'FirstName:PartialMatch' => $value,
+            'Surname:PartialMatch' => $value,
+            'Email:PartialMatch' => $value,
+            'Address:PartialMatch' => $value,
+            'Address2:PartialMatch' => $value,
+            'City:PartialMatch' => $value,
+            'PostalCode:PartialMatch' => $value,
+            'Phone:PartialMatch' => $value,
+        ]);
 
         if ($billingAddresses->exists()) {
             $billingAddressesIDs = $billingAddresses->columnUnique();
@@ -45,26 +45,26 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         $billingAddressesIDs = ArrayMethods::filter_array($billingAddressesIDs);
         $where[] = '"BillingAddressID" IN (' . implode(',', $billingAddressesIDs) . ')';
         $shippingAddressesIDs = [];
-        $shippingAddresses = ShippingAddress::get()->where("
-            \"ShippingFirstName\" LIKE '%{$value}%' OR
-            \"ShippingSurname\" LIKE '%{$value}%' OR
-            \"ShippingAddress\" LIKE '%{$value}%' OR
-            \"ShippingAddress2\" LIKE '%{$value}%' OR
-            \"ShippingCity\" LIKE '%{$value}%' OR
-            \"ShippingPostalCode\" LIKE '%{$value}%' OR
-            \"ShippingPhone\" LIKE '%{$value}%'
-        ");
+        $shippingAddresses = ShippingAddress::get()->where([
+            'ShippingFirstName:PartialMatch' => $value,
+            'ShippingSurname:PartialMatch' => $value,
+            'ShippingAddress:PartialMatch' => $value,
+            'ShippingAddress2:PartialMatch' => $value,
+            'ShippingCity:PartialMatch' => $value,
+            'ShippingPostalCode:PartialMatch' => $value,
+            'ShippingPhone:PartialMatch' => $value,
+        ]);
         if ($shippingAddresses->exists()) {
             $shippingAddressesIDs = $shippingAddresses->columnUnique();
         }
         $shippingAddressesIDs = ArrayMethods::filter_array($shippingAddressesIDs);
         $where[] = '"ShippingAddressID" IN (' . implode(',', $shippingAddressesIDs) . ')';
         $memberIDs = [];
-        $members = Member::get()->where("
-            \"FirstName\" LIKE '%{$value}%' OR
-            \"Surname\" LIKE '%{$value}%' OR
-            \"Email\" LIKE '%{$value}%'
-        ");
+        $members = Member::get()->where([
+            'FirstName:PartialMatch' => $value,
+            'Surname:PartialMatch' => $value,
+            'Email:PartialMatch' => $value,
+        ]);
         if ($members->exists()) {
             $memberIDs = $members->columnUnique();
         }
