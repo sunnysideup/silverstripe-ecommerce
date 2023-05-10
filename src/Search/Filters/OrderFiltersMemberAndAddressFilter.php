@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Security\Member;
@@ -25,7 +26,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $value = $this->getValue();
+        $value = Convert::raw2sql($this->getValue());
         $billingAddressesIDs = [];
         $billingAddresses = BillingAddress::get()->where("
             \"FirstName\" LIKE '%{$value}%' OR

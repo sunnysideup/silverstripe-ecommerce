@@ -16,7 +16,7 @@ class GridFieldConfigForProducts extends GridFieldConfig_RelationEditor
     /**
      * @param int $itemsPerPage - How many items per page should show up
      */
-    public function __construct($itemsPerPage = null)
+    public function __construct($itemsPerPage = null, $className = Product::class)
     {
         if (!$itemsPerPage) {
             $itemsPerPage = 100;
@@ -27,7 +27,7 @@ class GridFieldConfigForProducts extends GridFieldConfig_RelationEditor
         if ($ac) {
             $ac->setSearchFields(['InternalItemID', 'Title']);
             $ac->setResultsFormat('$Breadcrumbs');
-            $ac->setSearchList(Product::get()->filter(['AllowPurchase' => 1]));
+            $ac->setSearchList($className::get()->filter(['AllowPurchase' => 1]));
         }
         $this->removeComponentsByType(GridFieldAddNewButton::class);
     }

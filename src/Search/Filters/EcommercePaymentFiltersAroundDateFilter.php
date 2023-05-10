@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
@@ -40,21 +41,13 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
     protected function applyOne(DataQuery $query)
     {
         //$this->model = $query->applyRelation($this->relation);
-        $value = $this->getValue();
+        $value = Convert::raw2sql($this->getValue());
         $date = new DBDate();
         $date->setValue($value);
 
         $distanceFromToday = time() - strtotime((string) $value);
         $maxDays = round($distanceFromToday / (($this->divider * 2) * 86400)) + 1;
 
-        /**
-         * ### @@@@ START REPLACEMENT @@@@ ###
-         * WHY: automated upgrade
-         * OLD: ->format( (case sensitive)
-         * NEW: ->format( (COMPLEX)
-         * EXP: If this is a PHP Date format call then this needs to be changed to new Date formatting system. (see http://userguide.icu-project.org/formatparse/datetime)
-         * ### @@@@ STOP REPLACEMENT @@@@ ###.
-         */
         $formattedDate = $date->format('Y-MM-d');
 
         // changed for PostgreSQL compatability
