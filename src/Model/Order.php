@@ -42,6 +42,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
@@ -3117,7 +3118,9 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($payments && $payments->exists()) {
             foreach ($payments as $payment) {
                 if (EcommercePayment::SUCCESS_STATUS === $payment->Status) {
-                    $paid += $payment->Amount->getAmount();
+                    /** @var DBMoney $paymentObject */
+                    $paymentObject = $payment->dbField('Amount');
+                    $paid += $paymentObject->getAmount();
                 }
             }
         }

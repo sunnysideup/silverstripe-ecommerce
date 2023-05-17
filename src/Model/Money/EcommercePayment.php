@@ -17,6 +17,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -44,7 +45,7 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * support abstract DataObject classes.
  *
  * @property string $Status
- * @property string $Amount
+ * @property DBMoney $Amount
  * @property string $SettlementAmount
  * @property string $Message
  * @property string $IP
@@ -111,7 +112,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     private static $db = [
         'Status' => "Enum('" . self::INCOMPLETE_STATUS . ',' . self::SUCCESS_STATUS . ',' . self::FAILURE_STATUS . ',' . self::PENDING_STATUS . "','" . self::INCOMPLETE_STATUS . "')",
-        'Amount' => 'Money',
+        'Amount' => DBMoney::class,
         'SettlementAmount' => 'Money',
         'Message' => 'HTMLText',
         'IP' => 'Varchar(45)', // for IPv6 you have to make sure you have up to 45 characters
