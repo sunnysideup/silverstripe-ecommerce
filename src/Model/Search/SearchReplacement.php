@@ -14,6 +14,10 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * This dataobject
  * saves search replacements
  * as in Smoogle will be replaced by Google.
+ *
+ * @property string $Search
+ * @property string $Replace
+ * @property bool $ReplaceWholePhrase
  */
 class SearchReplacement extends DataObject implements EditableEcommerceObject
 {

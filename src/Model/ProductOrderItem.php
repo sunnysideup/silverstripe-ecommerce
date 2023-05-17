@@ -7,6 +7,10 @@ use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Pages\Product;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Model\ProductOrderItem
+ *
+ */
 class ProductOrderItem extends OrderItem
 {
     /**

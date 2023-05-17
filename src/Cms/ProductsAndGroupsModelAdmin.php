@@ -11,11 +11,8 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
- * @description: for the management of Product and Product Groups only
+ * Class \Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
  */
 class ProductsAndGroupsModelAdmin extends ModelAdmin
 {

@@ -6,6 +6,10 @@ use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByPaymentType
+ *
+ */
 class SalesAdminByPaymentType extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByPaymentType';

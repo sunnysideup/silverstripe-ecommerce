@@ -13,8 +13,6 @@ use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentFailure;
 /**
  * Payment object representing a TEST = FAILURE.
  *
- * @internal
- * @coversNothing
  */
 class EcommercePaymentTestFailure extends EcommercePaymentTest
 {

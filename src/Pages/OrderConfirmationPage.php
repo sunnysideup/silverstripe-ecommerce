@@ -15,15 +15,26 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 
 /**
- * @description:
- * The Order Confirmation page shows order history.
- * It also serves as the end point for the current order...
- * once submitted, the Order Confirmation page shows the
- * finalised detail of the order.
+ * Class \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: Pages
+ * @property string $StartNewOrderLinkLabel
+ * @property string $CopyOrderLinkLabel
+ * @property string $OrderCancelledHeader
+ * @property string $PaymentSuccessfulHeader
+ * @property string $PaymentNotSuccessfulHeader
+ * @property string $PaymentPendingHeader
+ * @property string $OrderCancelledMessage
+ * @property string $PaymentSuccessfulMessage
+ * @property string $PaymentNotSuccessfulMessage
+ * @property string $PaymentPendingMessage
+ * @property bool $IsFeedbackEnabled
+ * @property string $FeedbackFormLinkText
+ * @property string $FeedbackHeader
+ * @property string $FeedbackValuesFieldLabel
+ * @property string $FeedbackValuesOptions
+ * @property string $FeedbackNotesFieldLabel
+ * @property string $FeedbackFormSubmitLabel
+ * @property string $FeedbackFormThankYou
  */
 class OrderConfirmationPage extends CartPage
 {

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 
@@ -20,7 +21,7 @@ class OrderFiltersMultiOptionsetStatusIDFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $values = $this->getValue();
+        $values = Convert::raw2sql($this->getValue());
         if (! is_array($values)) {
             $values = [$values];
         }

@@ -6,9 +6,8 @@ use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel
+ *
  */
 class OrderStatusLogCancel extends OrderStatusLog
 {

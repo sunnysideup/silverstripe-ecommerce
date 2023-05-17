@@ -14,6 +14,14 @@ use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\CheckoutPageController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\CheckoutPage $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\CheckoutPage data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\CheckoutPage
+ * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageExtensionController
+ */
 class CheckoutPageController extends CartPageController
 {
     /**

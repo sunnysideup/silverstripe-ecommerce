@@ -8,6 +8,13 @@ use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Pages\AccountPageController
+ *
+ * @property \Sunnysideup\Ecommerce\Pages\AccountPage $dataRecord
+ * @method \Sunnysideup\Ecommerce\Pages\AccountPage data()
+ * @mixin \Sunnysideup\Ecommerce\Pages\AccountPage
+ */
 class AccountPageController extends PageController
 {
     //TODO: why do we need this?

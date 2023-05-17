@@ -26,10 +26,9 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 /**
  * Object to manage currencies.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: money
- * Precondition : There should always be at least one currency usable.
+ * @property string $Code
+ * @property string $Name
+ * @property bool $InUse
  */
 class EcommerceCurrency extends DataObject implements EditableEcommerceObject
 {

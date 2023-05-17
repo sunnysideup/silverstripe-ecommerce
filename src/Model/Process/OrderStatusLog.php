@@ -25,11 +25,15 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
- * @description: see OrderStep.md
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLog
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property string $Title
+ * @property string $Note
+ * @property bool $InternalUseOnly
+ * @property int $AuthorID
+ * @property int $OrderID
+ * @method \SilverStripe\Security\Member Author()
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
  */
 class OrderStatusLog extends DataObject implements EditableEcommerceObject
 {

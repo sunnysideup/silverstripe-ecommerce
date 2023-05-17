@@ -11,11 +11,14 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * OrderStatusLogSubmitted is an important class that is created when an order is submitted.
+ *
  * It is created by the order and it signifies to the OrderStep to continue to the next step.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property string $OrderAsHTML
+ * @property string $OrderAsString
+ * @property int $SequentialOrderNumber
+ * @property float $Total
+ * @property float $SubTotal
  */
 class OrderStatusLogSubmitted extends OrderStatusLog
 {

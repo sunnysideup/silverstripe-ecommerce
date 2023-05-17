@@ -15,9 +15,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * This is the first Order Step.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
  */
 class OrderStepCreated extends OrderStep implements OrderStepInterface
 {

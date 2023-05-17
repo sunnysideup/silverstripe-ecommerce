@@ -14,9 +14,13 @@ use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatchPhysicalOrder
+ *
+ * @property string $DispatchedBy
+ * @property string $DispatchedOn
+ * @property string $DispatchTicket
+ * @property string $DispatchLink
+ * @property bool $Sent
  */
 class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
 {

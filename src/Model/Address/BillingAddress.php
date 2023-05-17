@@ -18,12 +18,33 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\GoogleAddressField\GoogleAddressField;
 
 /**
- * @description: each order has a billing address.
+ * Class \Sunnysideup\Ecommerce\Model\Address\BillingAddress
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: address
- */
+ * @property string $Gender
+ * @property string $PassportCountry
+ * @property string $Nationality
+ * @property string $PassportNumber
+ * @property string $DepartureDate
+ * @property string $FlightNumber
+ * @property string $FlightTime
+ * @property string $Airport
+ * @property string $Prefix
+ * @property string $FirstName
+ * @property string $Surname
+ * @property string $Address
+ * @property string $Address2
+ * @property string $City
+ * @property string $PostalCode
+ * @property string $Country
+ * @property string $RegionCode
+ * @property string $Phone
+ * @property string $Email
+ * @property bool $Obsolete
+ * @property int $OrderID
+ * @property int $RegionID
+ * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion Region()
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
+  */
 class BillingAddress extends OrderAddress
 {
     /**

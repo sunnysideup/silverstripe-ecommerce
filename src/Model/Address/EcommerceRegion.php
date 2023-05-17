@@ -12,14 +12,14 @@ use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 
 /**
- * @description: This class helps you to manage regions within the context of e-commerce.
- * The regions can be states (e.g. we only sell within New York and Penn State), suburbs (pizza delivery place),
- * or whatever other geographical borders you are using.
- * Each region has one country, so a region can not span more than one country.
+ * Class \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: address
+ * @property string $Code
+ * @property string $Name
+ * @property bool $DoNotAllowSales
+ * @property bool $IsDefault
+ * @property int $CountryID
+ * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry Country()
  */
 class EcommerceRegion extends DataObject implements EditableEcommerceObject
 {

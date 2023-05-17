@@ -8,16 +8,9 @@ use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
- * @Description: We use this payment check class to double check that payment has arrived against
- * the order placed.  We do this independently of Order as a double-check.  It is important
- * that we do this because the main risk in an e-commerce operation is a fake payment.
- * Any e-commerce operator may set up their own policies on what a payment check
- * entails exactly.  It could include a bank reconciliation or even a phone call to the customer.
- * it is important here that we do not add any payment details. Rather, all we have is a tickbox
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentCheck
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property bool $PaymentConfirmed
  */
 class OrderStatusLogPaymentCheck extends OrderStatusLog
 {

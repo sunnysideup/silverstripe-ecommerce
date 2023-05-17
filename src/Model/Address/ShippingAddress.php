@@ -18,11 +18,23 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\GoogleAddressField\GoogleAddressField;
 
 /**
- * @description: each order has a shipping address.
+ * Class \Sunnysideup\Ecommerce\Model\Address\ShippingAddress
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: address
+ * @property string $ShippingPrefix
+ * @property string $ShippingFirstName
+ * @property string $ShippingSurname
+ * @property string $ShippingAddress
+ * @property string $ShippingAddress2
+ * @property string $ShippingCity
+ * @property string $ShippingPostalCode
+ * @property string $ShippingRegionCode
+ * @property string $ShippingCountry
+ * @property string $ShippingPhone
+ * @property bool $Obsolete
+ * @property int $OrderID
+ * @property int $ShippingRegionID
+ * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion ShippingRegion()
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
  */
 class ShippingAddress extends OrderAddress
 {

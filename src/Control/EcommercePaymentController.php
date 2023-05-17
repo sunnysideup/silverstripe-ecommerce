@@ -12,11 +12,8 @@ use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
- * @description: Used to diplay the payment form.
+ * Class \Sunnysideup\Ecommerce\Control\EcommercePaymentController
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: control
  */
 class EcommercePaymentController extends Controller
 {

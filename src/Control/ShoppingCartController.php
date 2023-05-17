@@ -33,11 +33,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * Handles the modification of a shopping cart via http requests.
  * Provides links for making these modifications.
  *
- *@author: Jeremy Shipman, Nicolaas Francken
- *@package: ecommerce
- *
- *@todo supply links for adding, removing, and clearing cart items
- *@todo link for removing modifier(s)
  */
 class ShoppingCartController extends Controller
 {

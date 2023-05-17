@@ -9,14 +9,8 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
- * @description: Manages stuff related to products,
- * but not the product (groups) themselves
+ * Class \Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
  *
- * Main example is product variations
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
  */
 class ProductConfigModelAdmin extends ModelAdmin
 {

@@ -53,9 +53,76 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * Similar to SiteConfig but then for E-commerce
  * To access a singleton here, use: EcommerceConfig::inst().
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: tasks
+ * @property bool $ShowAfterpayOption
+ * @property int $AfterpayMinValue
+ * @property int $AfterpayMaxValue
+ * @property string $NoAfterpayMessage
+ * @property string $CashBackLabel
+ * @property string $TradeInLabel
+ * @property string $ShopOffLineMessage
+ * @property bool $ShowStockAvailability
+ * @property string $ShipsTodayMessage
+ * @property string $NumberToCallForStock
+ * @property bool $ShowHirePurchaseCalculator
+ * @property bool $PayBeforeCollect
+ * @property int $HirePurchaseMinValue
+ * @property bool $ShowQCardBanner
+ * @property int $QCardBannerMinValue
+ * @property bool $StopAdvanceRetailProductUpdates
+ * @property bool $RunFullProductUpdate
+ * @property bool $RunDetailedProductUpdate
+ * @property string $CampaignMonitorSignupHeader
+ * @property string $CampaignMonitorSignupIntro
+ * @property string $CampaignMonitorSignupLabel
+ * @property string $Title
+ * @property bool $UseThisOne
+ * @property bool $ShopClosed
+ * @property bool $ShopPricesAreTaxExclusive
+ * @property string $InvoiceTitle
+ * @property string $InvoiceMessage
+ * @property string $PackingSlipTitle
+ * @property string $PackingSlipNote
+ * @property string $ShopPhysicalAddress
+ * @property string $ReceiptEmail
+ * @property string $PostalCodeURL
+ * @property string $PostalCodeLabel
+ * @property int $NumberOfProductsPerPage
+ * @property bool $ProductsAlsoInOtherGroups
+ * @property bool $OnlyShowProductsThatCanBePurchased
+ * @property string $NotForSaleMessage
+ * @property bool $ProductsHaveWeight
+ * @property bool $ProductsHaveModelNames
+ * @property bool $ProductsHaveQuantifiers
+ * @property string $CurrenciesExplanation
+ * @property bool $AllowFreeProductPurchase
+ * @property bool $ShowFullDetailsForProducts
+ * @property int $SecondHandExplanationPageID
+ * @property int $CashBackPageID
+ * @property int $TradeInPageID
+ * @property int $SpecialPricesExplanationPageID
+ * @property int $StockEnquireNowPageID
+ * @property int $StockAvailablePageID
+ * @property int $StockUnavailablePageID
+ * @property int $QCardInfoPageID
+ * @property int $QCardBannerID
+ * @property int $CampaignMonitorSignupPageID
+ * @property int $EmailLogoID
+ * @property int $DefaultProductImageID
+ * @method \SilverStripe\CMS\Model\SiteTree SecondHandExplanationPage()
+ * @method \SilverStripe\CMS\Model\SiteTree CashBackPage()
+ * @method \SilverStripe\CMS\Model\SiteTree TradeInPage()
+ * @method \SilverStripe\CMS\Model\SiteTree SpecialPricesExplanationPage()
+ * @method \SilverStripe\CMS\Model\SiteTree StockEnquireNowPage()
+ * @method \SilverStripe\CMS\Model\SiteTree StockAvailablePage()
+ * @method \SilverStripe\CMS\Model\SiteTree StockUnavailablePage()
+ * @method \SilverStripe\CMS\Model\SiteTree QCardInfoPage()
+ * @method \SilverStripe\Assets\Image QCardBanner()
+ * @method \Sunnysideup\CampaignMonitor\CampaignMonitorSignupPage CampaignMonitorSignupPage()
+ * @method \SilverStripe\Assets\Image EmailLogo()
+ * @method \SilverStripe\Assets\Image DefaultProductImage()
+ * @mixin \Sunnysideup\EcommerceNewsletterCampaignMonitor\Extensions\EcommerceNewsletterCampaignMonitorSignupDecoratorConfigFixes
+ * @mixin \Sunnysideup\Afterpay\Extensions\AfterpayEcommerceConfigExtension
+ * @mixin \Sunnysideup\EcommerceSecondHandProduct\Model\SecondHandEcommerceConfigExtension
  */
 class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 {

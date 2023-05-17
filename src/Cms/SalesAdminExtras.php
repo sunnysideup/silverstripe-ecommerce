@@ -23,11 +23,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
- * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
+ * Class \Sunnysideup\Ecommerce\Cms\SalesAdminExtras
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
  */
 class SalesAdminExtras extends ModelAdmin
 {

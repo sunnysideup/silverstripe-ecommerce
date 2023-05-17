@@ -15,9 +15,10 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted
+ *
+ * @property bool $SaveOrderAsHTML
+ * @property bool $SaveOrderAsSerializedObject
  */
 class OrderStepSubmitted extends OrderStep implements OrderStepInterface
 {

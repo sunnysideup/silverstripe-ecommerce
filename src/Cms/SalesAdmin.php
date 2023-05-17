@@ -20,11 +20,8 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
 
 /**
- * @description: CMS management for everything you have sold and all related data (e.g. logs, payments)
+ * Class \Sunnysideup\Ecommerce\Cms\SalesAdmin
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: cms
  */
 class SalesAdmin extends ModelAdmin
 {

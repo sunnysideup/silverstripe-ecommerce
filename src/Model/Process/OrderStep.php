@@ -37,11 +37,26 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 /**
- * @description: see OrderStep.md
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderStep
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property string $Name
+ * @property string $Code
+ * @property string $Description
+ * @property string $EmailSubject
+ * @property string $CustomerMessage
+ * @property bool $CustomerCanEdit
+ * @property bool $CustomerCanCancel
+ * @property bool $CustomerCanPay
+ * @property bool $ShowAsUncompletedOrder
+ * @property bool $ShowAsInProcessOrder
+ * @property bool $ShowAsCompletedOrder
+ * @property bool $HideStepFromCustomer
+ * @property int $Sort
+ * @property int $DeferTimeInSeconds
+ * @property bool $DeferFromSubmitTime
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] Orders()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord[] OrderEmailRecords()
+ * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue[] OrderProcessQueueEntries()
  */
 class OrderStep extends DataObject implements EditableEcommerceObject
 {

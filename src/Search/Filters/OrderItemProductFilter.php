@@ -26,8 +26,7 @@ class OrderItemProductFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
-        $value = $this->getValue();
-        $value = Convert::raw2sql($value);
+        $value = Convert::raw2sql($this->getValue());
         $product = Product::get()->filter(['InternalItemID' => $value])->first();
         if ($product) {
             $query->where("BuyableClassName = '" . addslashes($product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);

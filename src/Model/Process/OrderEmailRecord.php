@@ -22,13 +22,17 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
- * @Description: DataObject recording all order emails sent.
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord
  *
- * @authors: Silverstripe, Jeremy, Nicolaas
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * @property string $From
+ * @property string $To
+ * @property string $Subject
+ * @property string $Content
+ * @property bool $Result
+ * @property int $OrderID
+ * @property int $OrderStepID
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method \Sunnysideup\Ecommerce\Model\Process\OrderStep OrderStep()
  */
 class OrderEmailRecord extends DataObject implements EditableEcommerceObject
 {

@@ -19,6 +19,10 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Control\QuickUpdates
+ *
+ */
 class QuickUpdates extends Controller
 {
     protected $isList = false;

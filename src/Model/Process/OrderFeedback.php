@@ -17,6 +17,15 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 // Class used to describe the steps in the checkout
 
+/**
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderFeedback
+ *
+ * @property string $Rating
+ * @property string $Note
+ * @property bool $Actioned
+ * @property int $OrderID
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ */
 class OrderFeedback extends DataObject implements EditableEcommerceObject
 {
     use OrderCached;

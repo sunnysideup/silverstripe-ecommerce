@@ -65,11 +65,40 @@ use Sunnysideup\Vardump\ArrayToTable;
  * eCommerce platform. This means you can add an instance
  * of this page type to the shopping cart.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: buyables
- *
- * @todo: Ask the silverstripe gods why $default_sort won't work with FullSiteTreeSort
+ * @property bool $HideFromShoppingFeed
+ * @property string $MPN
+ * @property float $Price
+ * @property float $Weight
+ * @property string $Model
+ * @property string $Quantifier
+ * @property bool $FeaturedProduct
+ * @property bool $AllowPurchase
+ * @property string $InternalItemID
+ * @property float $FullSiteTreeSort
+ * @property string $FullName
+ * @property string $ProductBreadcrumb
+ * @property string $ShortDescription
+ * @property bool $UseImageForProducts
+ * @property int $GoogleProductCategoryID
+ * @property int $ImageID
+ * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
+ * @method \SilverStripe\Assets\Image Image()
+ * @method \Sunnysideup\Ecommerce\Model\Search\ProductSearchTable ProductSearchTable()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] EcommerceRecommendedProducts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\ProductGroup[] ProductGroups()
+ * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] AdditionalFiles()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDiscountCoupon\Model\DiscountCouponOption[] ApplicableDiscountCoupons()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] RecommendedFor()
+ * @mixin \Sunnysideup\EcommerceGoogleShoppingFeed\Extensions\GoogleShoppingFeedExtension
+ * @mixin \Sunnysideup\EcommerceAlsoRecommended\Model\EcommerceAlsoRecommendedDOD
+ * @mixin \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
+ * @mixin \Sunnysideup\EcommerceDiscountCoupon\Model\Buyables\DiscountCouponProductDataExtension
+ * @mixin \Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator
  */
 class Product extends Page implements BuyableModel
 {
@@ -302,6 +331,7 @@ class Product extends Page implements BuyableModel
         //if($siteTreeFieldExtensions) {
         //$this->enableCMSFieldsExtensions();
         //}
+        $fields->dataFieldByName('Title')->setTitle(_t('Product.NAME', 'Product Name'));
 
         $config = EcommerceConfig::inst();
         // main fields
@@ -344,9 +374,6 @@ class Product extends Page implements BuyableModel
         $fields->addFieldsToTab(
             'Root.Details',
             [
-                new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
-                new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrumb')),
-                new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')),
                 new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
                 new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
                 HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
@@ -395,8 +422,12 @@ class Product extends Page implements BuyableModel
             $fields->addFieldsToTab(
                 'Root.Under',
                 [
+                    new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
+                    new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Product Bread crumb')),
                     new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
                     $this->getProductGroupsTableField(),
+                    (new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')))
+                        ->setDescription('This number is used to sort the product in a list of all products.'),
                 ]
             );
         }
@@ -707,10 +738,11 @@ class Product extends Page implements BuyableModel
      */
     public function CMSThumbnail()
     {
+        /** @var Image $image */
         $image = $this->Image();
         if ($image) {
             if ($image->exists()) {
-                return $image->Thumbnail();
+                return $image->getThumbnail();
             }
         }
 

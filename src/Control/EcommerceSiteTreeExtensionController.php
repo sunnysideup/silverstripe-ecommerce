@@ -15,6 +15,11 @@ use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
+ *
+ * @property \PageController|\Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController $owner
+ */
 class EcommerceSiteTreeExtensionController extends Extension
 {
     /**

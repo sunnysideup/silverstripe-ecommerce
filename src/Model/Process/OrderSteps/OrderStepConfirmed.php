@@ -11,9 +11,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogPaymentChe
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed
+ *
  */
 class OrderStepConfirmed extends OrderStep implements OrderStepInterface
 {

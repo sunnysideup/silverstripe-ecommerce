@@ -4,6 +4,10 @@ namespace Sunnysideup\Ecommerce\Cms;
 
 use Sunnysideup\Ecommerce\Model\Order;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByOrderSize
+ *
+ */
 class SalesAdminByOrderSize extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByOrderSize';

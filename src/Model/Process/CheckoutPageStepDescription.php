@@ -18,6 +18,14 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPageController;
 
 // Class used to describe the steps in the checkout
 
+/**
+ * Class \Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription
+ *
+ * @property string $Heading
+ * @property string $Above
+ * @property string $Below
+ * @property string $Code
+ */
 class CheckoutPageStepDescription extends DataObject implements EditableEcommerceObject
 {
     /**

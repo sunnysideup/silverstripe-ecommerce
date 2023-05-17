@@ -34,24 +34,12 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * to fill out their shipping details, confirming their order
  * and making a payment.
  *
- * @see CheckoutPage_Controller->Order()
- * @see OrderForm
- * @see CheckoutPage_Controller->OrderForm()
- *
- * The CheckoutPage_Controller is also responsible for setting
- * up the modifier forms for each of the OrderModifiers that are
- * enabled on the site (if applicable - some don't require a form
- * for user input). A usual implementation of a modifier form would
- * be something like allowing the customer to enter a discount code
- * so they can receive a discount on their order.
- * @see OrderModifier
- * @see CheckoutPage_Controller->ModifierForms()
- *
- * @todo get rid of all the messages...
- *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: Pages
+ * @property bool $EnableGoogleAnalytics
+ * @property string $ContentAboveCheckout
+ * @property string $TermsAndConditionsMessage
+ * @property int $TermsPageID
+ * @method \Page TermsPage()
+ * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageDataExtension
  */
 class CheckoutPage extends CartPage
 {

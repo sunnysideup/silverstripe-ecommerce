@@ -16,15 +16,18 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
- * @description: This is a page that shows the cart content,
- * without "leading to" checking out. That is, there is no "next step" functionality
- * or a way to submit the order.
- * NOTE: both the Account and the Checkout Page extend from this class as they
- * share some functionality.
+ * Class \Sunnysideup\Ecommerce\Pages\CartPage
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: Pages
+ * @property string $ContinueShoppingLabel
+ * @property string $ProceedToCheckoutLabel
+ * @property string $ShowAccountLabel
+ * @property string $CurrentOrderLinkLabel
+ * @property string $LoginToOrderLinkLabel
+ * @property string $SaveOrderLinkLabel
+ * @property string $LoadOrderLinkLabel
+ * @property string $DeleteOrderLinkLabel
+ * @property string $NoItemsInOrderMessage
+ * @property string $NonExistingOrderMessage
  */
 class CartPage extends Page
 {

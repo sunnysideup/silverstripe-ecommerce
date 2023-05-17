@@ -22,6 +22,14 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
 /**
  * This class provides a bunch of Meta Objects
  * that do not interact with the object at hand, but rather with the datalist as a whole.
+ *
+ * @property int $DeferTimeInSeconds
+ * @property bool $InProcess
+ * @property int $ProcessAttempts
+ * @property int $OrderID
+ * @property int $OrderStepID
+ * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method \Sunnysideup\Ecommerce\Model\Process\OrderStep OrderStep()
  */
 class OrderProcessQueue extends DataObject
 {

@@ -10,6 +10,10 @@ use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
+/**
+ * Class \Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts
+ *
+ */
 class CMSPageAddControllerProducts extends CMSPageAddController
 {
     private static $url_segment = 'addproductorproductgroup';

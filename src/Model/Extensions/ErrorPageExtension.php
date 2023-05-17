@@ -12,6 +12,8 @@ use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Controller for ErrorPages.
+ *
+ * @property \SilverStripe\Control\Controller|\SilverStripe\Forms\Form|\Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension $owner
  */
 class ErrorPageExtension extends Extension
 {

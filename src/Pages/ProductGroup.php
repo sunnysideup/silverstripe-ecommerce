@@ -41,9 +41,17 @@ use Sunnysideup\Vardump\Vardump;
 /**
  * Product Group is a 'holder' for Products within the CMS.
  *
- * @author: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @subpackage: Pages
+ * @property int $NumberOfProductsPerPage
+ * @property int $LevelOfProductsToShow
+ * @property string $DefaultSortOrder
+ * @property string $DefaultFilter
+ * @property string $DisplayStyle
+ * @property bool $UseImageForProducts
+ * @property int $ImageID
+ * @method \SilverStripe\Assets\Image Image()
+ * @method \Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable ProductGroupSearchTable()
+ * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] AlsoShowProducts()
+ * @mixin \SilverStripe\Lumberjack\Model\Lumberjack
  */
 class ProductGroup extends Page
 {

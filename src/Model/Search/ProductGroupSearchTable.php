@@ -16,6 +16,11 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * This dataobject
  * saves search replacements
  * as in Smoogle will be replaced by Google.
+ *
+ * @property string $Title
+ * @property string $Data
+ * @property int $ProductGroupID
+ * @method \Sunnysideup\Ecommerce\Pages\ProductGroup ProductGroup()
  */
 class ProductGroupSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {

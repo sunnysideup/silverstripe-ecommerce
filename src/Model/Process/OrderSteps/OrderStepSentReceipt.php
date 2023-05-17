@@ -12,9 +12,9 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: model
+ * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSentReceipt
+ *
+ * @property bool $SendReceiptToCustomer
  */
 class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
 {
