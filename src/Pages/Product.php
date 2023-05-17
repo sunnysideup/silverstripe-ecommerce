@@ -331,6 +331,7 @@ class Product extends Page implements BuyableModel
         //if($siteTreeFieldExtensions) {
         //$this->enableCMSFieldsExtensions();
         //}
+        $fields->dataFieldByName('Title')->setTitle(_t('Product.NAME', 'Product Name'));
 
         $config = EcommerceConfig::inst();
         // main fields
@@ -373,9 +374,6 @@ class Product extends Page implements BuyableModel
         $fields->addFieldsToTab(
             'Root.Details',
             [
-                new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
-                new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'ProductBreadcrumb')),
-                new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')),
                 new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
                 new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
                 HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
@@ -424,8 +422,12 @@ class Product extends Page implements BuyableModel
             $fields->addFieldsToTab(
                 'Root.Under',
                 [
+                    new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
+                    new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Product Bread crumb')),
                     new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
                     $this->getProductGroupsTableField(),
+                    (new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')))
+                        ->setDescription('This number is used to sort the product in a list of all products.'),
                 ]
             );
         }
@@ -736,10 +738,11 @@ class Product extends Page implements BuyableModel
      */
     public function CMSThumbnail()
     {
+        /** @var Image $image */
         $image = $this->Image();
         if ($image) {
             if ($image->exists()) {
-                return $image->Thumbnail();
+                return $image->getThumbnail();
             }
         }
 
