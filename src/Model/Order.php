@@ -90,6 +90,7 @@ use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersMultiOptionsetStatusIDFilte
 use Sunnysideup\Ecommerce\Search\Filters\OrderFiltersUntilDateFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+
 /**
  * @description:
  * The order class is a databound object for handling Orders within SilverStripe.
@@ -467,16 +468,6 @@ class Order extends DataObject implements EditableEcommerceObject
             'field' => TextField::class,
             'filter' => OrderFiltersAroundDateFilter::class,
             'title' => 'Date (e.g. Today, 1 jan 2007, or last week)',
-        ],
-        'Created' => [
-            'field' => TextField::class,
-            'filter' => OrderFiltersFromDateFilter::class,
-            'title' => 'From (e.g. Today, 1 jan 2007, or last week)',
-        ],
-        'SessionID' => [
-            'field' => TextField::class,
-            'filter' => OrderFiltersUntilDateFilter::class,
-            'title' => 'Until (e.g. Today, 1 jan 2007, or last week)',
         ],
         //make sure to keep the items below, otherwise they do not show in form
         'StatusID' => [
@@ -1349,7 +1340,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * has the order attributes been calculated?
      * @return bool
      */
-    public function getCalculatedOrderAttributesCache() : bool
+    public function getCalculatedOrderAttributesCache(): bool
     {
         return $this->calculatedOrderAttributesCache;
     }

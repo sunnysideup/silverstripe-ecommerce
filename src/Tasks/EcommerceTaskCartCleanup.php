@@ -216,7 +216,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         }
 
         //this->sort
-        $this->sort = '"Order"."Created" ASC';
+        $this->sort = '"Order"."ID" ASC';
 
         //join
         $this->leftMemberJoin = 'LEFT JOIN Member ON "Member"."ID" = "Order"."MemberID"';

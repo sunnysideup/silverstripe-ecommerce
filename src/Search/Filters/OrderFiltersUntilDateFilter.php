@@ -22,11 +22,13 @@ class OrderFiltersUntilDateFilter extends ExactMatchFilter
 
         $date = new DBDate();
         $date->setValue(strtotime((string) $value));
+        if($date->getTimestamp() > 0) {
 
-        $formattedDate = $date->format('y-MM-d');
-
-        $query->where("\"Order\".\"Created\" <= '{$formattedDate}'");
-
+            $formattedDate = $date->format('y-MM-d');
+            if($formattedDate) {
+                $query->where("\"Order\".\"Created\" <= '{$formattedDate}'");
+            }
+        }
         return $query;
     }
 }
