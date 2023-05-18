@@ -3119,7 +3119,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($payments as $payment) {
                 if (EcommercePayment::SUCCESS_STATUS === $payment->Status) {
                     /** @var DBMoney $paymentObject */
-                    $paymentObject = $payment->dbField('Amount');
+                    $paymentObject = $payment->dbObject('Amount');
                     $paid += $paymentObject->getAmount();
                 }
             }
