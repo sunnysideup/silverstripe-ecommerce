@@ -45,7 +45,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         $billingAddressesIDs = ArrayMethods::filter_array($billingAddressesIDs);
         $where[] = '"BillingAddressID" IN (' . implode(',', $billingAddressesIDs) . ')';
         $shippingAddressesIDs = [];
-        $shippingAddresses = ShippingAddress::get()->where([
+        $shippingAddresses = ShippingAddress::get()->filterAny([
             'ShippingFirstName:PartialMatch' => $value,
             'ShippingSurname:PartialMatch' => $value,
             'ShippingAddress:PartialMatch' => $value,
@@ -60,7 +60,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         $shippingAddressesIDs = ArrayMethods::filter_array($shippingAddressesIDs);
         $where[] = '"ShippingAddressID" IN (' . implode(',', $shippingAddressesIDs) . ')';
         $memberIDs = [];
-        $members = Member::get()->where([
+        $members = Member::get()->filterAny([
             'FirstName:PartialMatch' => $value,
             'Surname:PartialMatch' => $value,
             'Email:PartialMatch' => $value,
