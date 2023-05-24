@@ -853,4 +853,16 @@ class ProductGroup extends Page
             $this->Content,
         ];
     }
+
+    public function addToSearchTable()
+    {
+        if (Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
+            ProductGroupSearchTable::add_product_group(
+                $this,
+                $this->getProductSearchTableDataValues()
+            );
+        }
+    }
+
+
 }
