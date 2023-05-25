@@ -32,7 +32,7 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
         $value = Convert::raw2sql($this->getValue());
 
         $date = new DBDate();
-        $date->setValue($value);
+        $date->setValue(strtotime((string) $value));
         if($date->getTimestamp() > 0) {
             $formattedDate = $date->format('Y-MM-d');
 
@@ -41,7 +41,13 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
             $maxDays = 1;
             $maxDays += round($distanceFromTodayInDays / 30.5) * $this->additionalDaysPerMonth;
             if($formattedDate) {
-                $query->where("(ABS(DATEDIFF(\"LastEdited\", '{$formattedDate}')) < " . $maxDays . " OR ABS(DATEDIFF(\"Created\", '{$formattedDate}')) < " . $maxDays . ')');
+                $query->where('
+                (
+                    ABS(DATEDIFF("Order"."LastEdited", \''.$formattedDate.'\')) < ' . $maxDays . '
+                    OR
+                    ABS(DATEDIFF("Order"."Created", \''.$formattedDate.'\')) < ' . $maxDays . '
+                )
+                ');
             }
         }
         return $query;
