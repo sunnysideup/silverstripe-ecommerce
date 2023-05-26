@@ -114,6 +114,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         'Name' => 'Varchar(50)',
         'Code' => 'Varchar(50)',
         'Description' => 'Text',
+        // emails
         'EmailSubject' => 'Varchar(200)',
         'CustomerMessage' => 'HTMLText',
         //customer privileges
@@ -722,7 +723,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             );
         }
         $this->addQuickLogEntryButton($fields, $order);
-
+        $this->extend('addOrderStepFieldsAdditional', $fields, $order, $nothingToDo);
         return $fields;
     }
 
@@ -949,12 +950,20 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
+        $log = $order->SubmissionLog();
+        if($log->BypassEmailing) {
+            return true;
+        }
         if ($checkDateOfOrder) {
-            $lastEditedValue = ($log = $order->SubmissionLog()) ? $log->LastEdited : $order->LastEdited;
-            if ((strtotime((string) $lastEditedValue) < strtotime('-' . EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email') . ' days'))) {
+            $lastEditedValue = $log ? $log->LastEdited : $order->LastEdited;
+            $orderTs = strtotime((string) $lastEditedValue);
+            $days = EcommerceConfig::get(OrderStep::class, 'number_of_days_to_send_update_email');
+            $daysAgoTs = strtotime('-' . $days . ' days');
+            if ($orderTs < $daysAgoTs) {
                 return true;
             }
         }
+
         $exists = OrderEmailRecord::get()
             ->filter(
                 [
@@ -979,7 +988,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             ->count()
         ;
         //tried it twice - abandon to avoid being stuck in a loop!
-        return $count >= 2;
+        return $count > 2;
     }
 
     /**
@@ -1398,7 +1407,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param bool|string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
      * @param string      $emailClassName
      *
-     * @return bool;
+     * @return bool
      */
     protected function sendEmailForStep(
         $order,
@@ -1408,7 +1417,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false,
         $emailClassName = ''
     ): bool {
-        if (false === $this->hasBeenSent($order) || true === boolval($resend)) {
+        if (false === (bool) $this->hasBeenSent($order) || true === (bool) $resend) {
             if (! $subject) {
                 $subject = $this->CalculatedEmailSubject($order);
             }
@@ -1441,7 +1450,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 );
             }
 
-            return $outcome || Director::isDev();
+            return (bool) ($outcome || Director::isDev());
         }
 
         return true;

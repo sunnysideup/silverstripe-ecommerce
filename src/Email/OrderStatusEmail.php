@@ -6,7 +6,7 @@ namespace Sunnysideup\Ecommerce\Email;
  * @Description: This class handles the status email which can be sent
  * after a status update has been made (if told to do so ;-))
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
  */

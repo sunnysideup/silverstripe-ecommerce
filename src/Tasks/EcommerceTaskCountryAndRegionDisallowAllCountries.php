@@ -9,7 +9,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 /**
  * update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

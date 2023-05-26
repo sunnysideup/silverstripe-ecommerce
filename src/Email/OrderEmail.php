@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * @Description: Email specifically for communicating with customer about order.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: email
  */

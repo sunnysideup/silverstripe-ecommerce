@@ -23,7 +23,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * @description: cleans up old (abandonned) carts...
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */
@@ -110,7 +110,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
 
-        if (Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class)) {
+        if (Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrdersStartAt')) {
             if (! $this->isCli()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
@@ -126,7 +126,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             foreach ($orders as $order) {
                 ++$startAt;
 
-                Controller::curr()->getRequest()->getSession()->set(EcommerceTaskTryToFinaliseOrders::class, $startAt);
+                Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrdersStartAt', $startAt);
                 $stepBefore = OrderStep::get_by_id($order->StatusID);
 
                 try {
@@ -152,7 +152,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 }
             }
         } else {
-            Controller::curr()->getRequest()->getSession()->clear(EcommerceTaskTryToFinaliseOrders::class);
+            Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrdersStartAt');
             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
         }
 

@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 /**
  * @description: see description
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

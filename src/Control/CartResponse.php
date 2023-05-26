@@ -13,7 +13,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * @description: returns the cart as JSON
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
  */

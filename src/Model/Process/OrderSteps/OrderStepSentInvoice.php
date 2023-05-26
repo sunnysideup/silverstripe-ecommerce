@@ -75,12 +75,13 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * send invoice to customer
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
+     * @return bool
      */
     public function doStep(Order $order): bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendInvoiceToCustomer;
 
-        return $this->sendEmailForStep(
+        return (bool) $this->sendEmailForStep(
             $order,
             $subject = $this->EmailSubject,
             $message = '',

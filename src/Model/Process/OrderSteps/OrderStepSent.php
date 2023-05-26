@@ -33,6 +33,8 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      */
     protected $relevantLogEntryClassName = OrderStatusLogDispatchPhysicalOrder::class;
 
+    private static $max_days_before_sending_it = 3;
+
     private static $table_name = 'OrderStepSent';
 
     /**
@@ -142,16 +144,25 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     {
         $log = $this->RelevantLogEntry($order);
         if ($log) {
+            // can be sent weeks later... hence the FALSE in the hasBeenSent
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
             }
+            if($this->BypassSendingGoods) {
+                return true;
+            }
             if ($log->Sent) {
+                // too late to send
+                $maxDays = $this->Config('max_days_before_sending_it') ?: 3;
+                if(strtotime($log->LastEdited) < strtotime('-'.$maxDays.' days')) {
+                    return true;
+                }
                 $order->sendEmail(
-                    $this->getEmailClassName(),
-                    $subject = $this->CalculatedEmailSubject($order),
-                    $message = $this->CalculatedCustomerMessage($order),
-                    $resend = false,
-                    ! (bool) $this->SendDetailsToCustomer
+                    $this->getEmailClassName(), // class name
+                    $this->CalculatedEmailSubject($order), // subject
+                    $this->CalculatedCustomerMessage($order), // message
+                    false, // resend
+                    ! (bool) $this->SendDetailsToCustomer // admin only or To Email
                 );
 
                 return true;
@@ -165,7 +176,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     {
         $log = $this->RelevantLogEntry($order);
         if ($log) {
-            return (bool) $log->Sent;
+            return (bool) ($log->Sent || $log->BypassSendingGoods);
         }
 
         return false;

@@ -9,7 +9,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 /**
  * Allows you to filter orders for multiple statusIDs.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
  */

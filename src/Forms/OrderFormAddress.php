@@ -35,7 +35,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * This class is the form for editing the Order Addresses.
  * It is also used to link the order to a member.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

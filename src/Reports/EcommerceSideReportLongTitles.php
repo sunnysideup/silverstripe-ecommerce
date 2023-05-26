@@ -8,7 +8,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Selects all products.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
  */

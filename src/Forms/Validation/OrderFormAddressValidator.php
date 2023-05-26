@@ -8,7 +8,7 @@ use SilverStripe\Security\Member;
  * @Description: allows customer to make additional payments for their order
  *
  * @package: ecommerce
- * @authors: Silverstripe, Jeremy, Nicolaas
+ * @author: Silverstripe, Jeremy, Nicolaas
  */
 class OrderFormAddressValidator extends ShopAccountFormValidator
 {

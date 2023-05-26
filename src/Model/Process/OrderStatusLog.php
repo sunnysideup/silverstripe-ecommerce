@@ -59,6 +59,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     private static $db = [
         'Title' => 'Varchar(100)',
         'Note' => 'HTMLText',
+        'BypassEmailing' => 'Boolean',
         'InternalUseOnly' => 'Boolean',
     ];
 
@@ -424,7 +425,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 $this->getOrderCached()
             )
         );
-
+        $bypassField = $fields->dataFieldByName('BypassEmailing');
+        if($bypassField) {
+            if($this->OrderStep()->hasCustomerMessage()) {
+                $bypassField->setDescription('Do not send email for this Order.');
+            } else {
+                $fields->removeByName('BypassEmailing');
+            }
+        }
         return $fields;
     }
 

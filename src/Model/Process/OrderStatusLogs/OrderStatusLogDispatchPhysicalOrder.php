@@ -32,6 +32,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         'DispatchTicket' => 'Varchar(100)',
         'DispatchLink' => 'Varchar(255)',
         'Sent' => 'Boolean',
+        'BypassSendingGoods' => 'Boolean',
     ];
 
     private static $indexes = [
@@ -140,6 +141,8 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
                     TextField::create('DispatchTicket'),
                     TextField::create('DispatchLink'),
                     CheckboxField::create('Sent'),
+                    CheckboxField::create('BypassSendingGoods'),
+                    CheckboxField::create('BypassEmailing'),
                     CheckboxField::create('InternalUseOnly', 'Do not send update to customer'),
                 ]
             );

@@ -16,7 +16,7 @@ use SilverStripe\View\Requirements;
  * A product, a product variation or any other buyable.
  * using the auto-complete technique from jQuery UI.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  * @inspiration: https://github.com/sheadawson/silverstripe-zenautocompletefield

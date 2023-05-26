@@ -14,7 +14,7 @@ namespace Sunnysideup\Ecommerce\Money;
  * when I have one "from" currency.
  *
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: money
  */
@@ -36,7 +36,7 @@ use SilverStripe\Core\Injector\Injectable;
  * when I have one "from" currency.
  *
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: money
  */

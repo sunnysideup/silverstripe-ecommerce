@@ -14,7 +14,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * Filter that searches the Two Addresses (billing + shipping)
  * and the member. It searches all the relevant fields.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
  */

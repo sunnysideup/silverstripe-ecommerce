@@ -8,7 +8,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 /**
  * Allows you to filter for orders that have at leat one payment.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
  */

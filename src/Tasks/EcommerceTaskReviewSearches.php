@@ -11,7 +11,7 @@ use SilverStripe\Forms\NumericField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

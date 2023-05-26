@@ -10,7 +10,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 /**
  * @description: provides a bunch of filters for search in ModelAdmin (CMS)
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
  */

@@ -51,7 +51,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * This class sets out the static config variables for e-commerce.
  * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
  *
@@ -64,7 +64,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
  * This class sets out the static config variables for e-commerce.
  * It also adds the definitions of any classes that extend EcommerceConfigDefitions.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
  */

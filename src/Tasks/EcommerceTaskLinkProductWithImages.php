@@ -13,7 +13,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Add any Image (or other file) to a product using the InternalItemID.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

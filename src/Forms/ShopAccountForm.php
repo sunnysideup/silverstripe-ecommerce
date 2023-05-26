@@ -26,7 +26,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 /**
  * @description: ShopAccountForm allows shop members to update their details.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

@@ -58,7 +58,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
  * //add item to cart
  * ShoppingCart::singleton()->addBuyable($myProduct);
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: control
  *

@@ -9,7 +9,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * @description: see description
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

@@ -16,7 +16,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  * This "fixer"  was introduced to fix older orders
  * without a submission record.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

@@ -11,7 +11,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 /**
  * shows you the link to remove the current cart.
  *
- * @authors: Nicolaas
+ * @author: Nicolaas
  * @package: ecommerce
  * @sub-package: tasks
  */

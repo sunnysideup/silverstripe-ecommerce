@@ -8,7 +8,7 @@ use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: search
  */

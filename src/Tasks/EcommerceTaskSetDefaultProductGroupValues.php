@@ -10,7 +10,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 /**
  * @description: resets fields in the product group class to "inherit" in case their value does not exist.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

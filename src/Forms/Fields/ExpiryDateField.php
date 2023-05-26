@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
  * @Description: ExpiryDate field, contains validation and formspec for expirydate fields.
  * This can be useful when collecting a credit card.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

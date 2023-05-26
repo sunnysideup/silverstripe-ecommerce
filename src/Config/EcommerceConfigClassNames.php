@@ -9,7 +9,7 @@ namespace Sunnysideup\Ecommerce\Config;
  *
  * We need to have one per classname (e.g. Product)and requestor (Product A with ID = 1)
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
  *
@@ -25,7 +25,7 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * We need to have one per classname (e.g. Product)and requestor (Product A with ID = 1)
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: configuration
  */

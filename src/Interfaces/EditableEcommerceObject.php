@@ -6,7 +6,7 @@ namespace Sunnysideup\Ecommerce\Interfaces;
  * describes any dataobject (apart from pages)
  * that is editable in the CMS.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  */
 interface EditableEcommerceObject

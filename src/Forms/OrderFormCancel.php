@@ -19,7 +19,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * @Description: allows customer to cancel their order.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

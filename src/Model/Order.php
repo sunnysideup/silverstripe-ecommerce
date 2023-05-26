@@ -492,9 +492,11 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     /**
-     * @var array
+     * @var array[bool]
      */
-    private static $_try_to_finalise_order_is_running = [];
+    protected static $_try_to_finalise_order_is_running = [];
+
+    protected static $_try_to_finalise_order_count = [];
 
     public static function set_order_cached(?Order $order)
     {
@@ -1362,6 +1364,13 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function tryToFinaliseOrder($recalculate = false, $fromOrderQueue = false)
     {
+        if(!isset(self::$_try_to_finalise_order_count[$this->ID])) {
+            self::$_try_to_finalise_order_count[$this->ID] = 0;
+        }
+        if(self::$_try_to_finalise_order_count[$this->ID] > 30) {
+            return;
+        }
+        self::$_try_to_finalise_order_count[$this->ID]++;
         if (empty(self::$_try_to_finalise_order_is_running[$this->ID]) || $recalculate) {
             // $previousTime = microtime(true);
             self::$_try_to_finalise_order_is_running[$this->ID] = true;
@@ -1429,17 +1438,21 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return int (StatusID or false if the next status can not be "applied")
      */
-    public function doNextStatus()
+    public function doNextStatus(): int
     {
+        $startsWithID = (int) $this->StatusID;
         if ($this->MyStep()->initStep($this)) {
             if ($this->MyStep()->doStep($this)) {
                 /** @var null|OrderStep $nextOrderStepObject */
                 $nextOrderStepObject = $this->MyStep()->nextStep($this);
                 if ($nextOrderStepObject instanceof OrderStep) {
-                    $this->StatusID = $nextOrderStepObject->ID;
-                    $this->write();
-
-                    return $this->StatusID;
+                    if((int) $startsWithID === (int) $nextOrderStepObject->ID) {
+                        user_error('Recursive order step!');
+                    } else {
+                        $this->StatusID = $nextOrderStepObject->ID;
+                        $this->write();
+                        return $this->StatusID;
+                    }
                 }
             }
         }

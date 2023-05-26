@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * This field shows the admin (and maybe the customer) where the Order is at (which orderstep).
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

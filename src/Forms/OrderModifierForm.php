@@ -18,7 +18,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * @description: this class is the base class for modifier forms in the checkout form... we could do with more stuff here....
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

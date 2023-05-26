@@ -6,7 +6,7 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 
 /**
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

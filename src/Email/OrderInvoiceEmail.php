@@ -6,7 +6,7 @@ namespace Sunnysideup\Ecommerce\Email;
  * @Description: This class handles the invoice email which gets sent once an order is made.
  * You can call it like this: $Order->sendInvoice();
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

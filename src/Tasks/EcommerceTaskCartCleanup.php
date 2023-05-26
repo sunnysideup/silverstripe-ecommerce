@@ -19,7 +19,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * @description: cleans up old (abandonned) carts...
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */

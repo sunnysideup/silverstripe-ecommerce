@@ -31,7 +31,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  *
  * @see CheckoutPage
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

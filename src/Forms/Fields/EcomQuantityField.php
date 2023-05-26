@@ -14,7 +14,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 /**
  * @Description: A links-based field for increasing, decreasing and setting a order item quantity
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: forms
  */

@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 /**
  * set the order id number.
  *
- * @authors: Nicolaas [at] Sunny Side Up .co.nz
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: tasks
  */
