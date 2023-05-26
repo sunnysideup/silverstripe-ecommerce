@@ -61,7 +61,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             $startAt = (int) $_GET['startat'];
         }
         if (! (int) $startAt) {
-            $startAt = (int) Controller::curr()->getRequest()->getSession()->get(EcommerceTaskTryToFinaliseOrders::class);
+            $startAt = $this->getStart();
             if (! $startAt) {
                 $startAt = 0;
             }
@@ -90,14 +90,6 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                         ->sort($sort)
                         ->where('StatusID <> ' . $lastOrderStep->ID)
                         ->exclude(['ID' => $ordersInQueueArray])
-                        ->innerJoin(
-                            'OrderStatusLog',
-                            '"OrderStatusLog"."OrderID" = "Order"."ID"'
-                        )
-                        ->innerJoin(
-                            $submittedOrderStatusLogTableName,
-                            "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
-                        )
                     ;
                     $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
                 } else {
@@ -110,8 +102,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
         }
 
-        if (Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrdersStartAt')) {
-            if (! $this->isCli()) {
+        if (! $this->isCli()) {
+            if ($this->getStart()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
                 echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
             }
@@ -125,34 +117,35 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             DB::alteration_message("<h1>Moving {$limit} Orders (starting from {$startAt})</h1>");
             foreach ($orders as $order) {
                 ++$startAt;
+                $this->setStart($startAt);
+                if($order->IsSubmitted()) {
+                    $stepBefore = OrderStep::get_by_id($order->StatusID);
 
-                Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrdersStartAt', $startAt);
-                $stepBefore = OrderStep::get_by_id($order->StatusID);
-
-                try {
-                    $order->tryToFinaliseOrder();
-                } catch (Exception $exception) {
-                    DB::alteration_message($exception, 'deleted');
-                }
-                $stepAfter = OrderStep::get_by_id($order->StatusID);
-                if ($stepBefore) {
-                    if ($stepAfter) {
-                        if ($stepBefore->ID === $stepAfter->ID) {
-                            DB::alteration_message('could not move Order ' . $order->getTitle() . ', remains at <strong>' . $stepBefore->Name . '</strong>');
-                        } else {
-                            DB::alteration_message('Moving Order #' . $order->getTitle() . ' from <strong>' . $stepBefore->Name . '</strong> to <strong>' . $stepAfter->Name . '</strong>', 'created');
-                        }
-                    } else {
-                        DB::alteration_message('Moving Order ' . $order->getTitle() . ' from  <strong>' . $stepBefore->Name . '</strong> to <strong>unknown step</strong>', 'deleted');
+                    try {
+                        $order->tryToFinaliseOrder();
+                    } catch (Exception $exception) {
+                        DB::alteration_message($exception, 'deleted');
                     }
-                } elseif ($stepAfter) {
-                    DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>' . $stepAfter->Name . '</strong>', 'deleted');
-                } else {
-                    DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
+                    $stepAfter = OrderStep::get_by_id($order->StatusID);
+                    if ($stepBefore) {
+                        if ($stepAfter) {
+                            if ($stepBefore->ID === $stepAfter->ID) {
+                                DB::alteration_message('could not move Order ' . $order->getTitle() . ', remains at <strong>' . $stepBefore->Name . '</strong>');
+                            } else {
+                                DB::alteration_message('Moving Order #' . $order->getTitle() . ' from <strong>' . $stepBefore->Name . '</strong> to <strong>' . $stepAfter->Name . '</strong>', 'created');
+                            }
+                        } else {
+                            DB::alteration_message('Moving Order ' . $order->getTitle() . ' from  <strong>' . $stepBefore->Name . '</strong> to <strong>unknown step</strong>', 'deleted');
+                        }
+                    } elseif ($stepAfter) {
+                        DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>' . $stepAfter->Name . '</strong>', 'deleted');
+                    } else {
+                        DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
+                    }
                 }
             }
         } else {
-            Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrdersStartAt');
+            $this->clearStart();
             DB::alteration_message('<br /><br /><br /><br /><h1>COMPLETED!</h1>All orders have been moved.', 'created');
         }
 
@@ -162,5 +155,26 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     protected function isCli()
     {
         return Director::is_cli();
+    }
+
+    protected function setStart(int $startAt)
+    {
+        if(!Director::is_cli()) {
+            Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrdersStartAt', $startAt);
+        }
+    }
+
+    protected function getStart(): int
+    {
+        if(!Director::is_cli()) {
+            return (int) Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrdersStartAt');
+        }
+        return 0;
+    }
+    protected function clearStart()
+    {
+        if(!Director::is_cli()) {
+            return Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrdersStartAt');
+        }
     }
 }
