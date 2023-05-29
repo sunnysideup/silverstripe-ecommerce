@@ -951,7 +951,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
         $log = $order->SubmissionLog();
-        if($log->BypassEmailing) {
+        if($log && $log->BypassEmailing) {
             return true;
         }
         if ($checkDateOfOrder) {
@@ -1435,7 +1435,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend,
                     $adminOnlyOrToEmail
                 );
-            //ADMIN ONLY ....
+                //ADMIN ONLY ....
             } else {
                 if (! $emailClassName) {
                     $emailClassName = OrderErrorEmail::class;
