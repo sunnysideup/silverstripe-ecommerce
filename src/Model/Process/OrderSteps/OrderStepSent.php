@@ -148,12 +148,9 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
             }
-            if($this->BypassSendingGoods) {
-                return true;
-            }
-            if ($log->Sent) {
+            if ($log->Sent || $log->BypassSendingGoods) {
                 // too late to send
-                $maxDays = $this->Config('max_days_before_sending_it') ?: 3;
+                $maxDays = $this->Config()->get('max_days_before_sending_it') ?: 3;
                 if(strtotime($log->LastEdited) < strtotime('-'.$maxDays.' days')) {
                     return true;
                 }
