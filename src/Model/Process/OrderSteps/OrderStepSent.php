@@ -33,7 +33,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      */
     protected $relevantLogEntryClassName = OrderStatusLogDispatchPhysicalOrder::class;
 
-    private static $max_days_before_sending_it = 3;
+    private static $max_days_before_sending_it = 7;
 
     private static $table_name = 'OrderStepSent';
 
