@@ -1498,7 +1498,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    protected function hasCustomerMessage()
+    public function hasCustomerMessage()
     {
         return false;
     }

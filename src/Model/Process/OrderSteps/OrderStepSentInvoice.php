@@ -106,7 +106,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @return bool
      */
-    protected function hasCustomerMessage()
+    public function hasCustomerMessage()
     {
         return $this->SendInvoiceToCustomer;
     }

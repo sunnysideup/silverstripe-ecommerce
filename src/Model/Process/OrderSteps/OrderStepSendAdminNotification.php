@@ -92,7 +92,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return bool
      */
-    protected function hasCustomerMessage()
+    public function hasCustomerMessage()
     {
         return false;
     }
