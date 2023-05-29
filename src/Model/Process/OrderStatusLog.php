@@ -427,7 +427,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         );
         $bypassField = $fields->dataFieldByName('BypassEmailing');
         if($bypassField) {
-            if($order && $order->OrderStep()->hasCustomerMessage()) {
+            if($order && $order->MyStep()->hasCustomerMessage()) {
                 $bypassField->setDescription('Do not send email for this Order.');
             } else {
                 $fields->removeByName('BypassEmailing');
