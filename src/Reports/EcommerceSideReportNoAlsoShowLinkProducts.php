@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DB;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -23,15 +24,16 @@ class EcommerceSideReportNoAlsoShowLinkProducts extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NO_ALSO_SHOW', 'E-commerce: Products: without Also Show Parent (Brand)');
+        return _t('EcommerceSideReport.NO_ALSO_SHOW', 'E-commerce: Products: without Also Show Parent');
     }
 
     public function updateEcommerceList($list)
     {
         return $list
-            ->where('"Product_ProductGroups"."ID" IS NULL')
+            ->where('"ProductGroup"."ID" IS NULL')
             ->sort('Title', 'ASC')
-            ->leftJoin('Product_ProductGroups', '"Product_ProductGroups"."ProductID" = "SiteTree"."ID"')
+            ->innerJoin('Product_ProductGroups', '"Product_ProductGroups"."ProductID" = "SiteTree"."ID"')
+            ->leftJoin('ProductGroup', '"ProductGroup"."ID" = "Product_ProductGroups"."ProductGroupID"')
         ;
     }
 }
