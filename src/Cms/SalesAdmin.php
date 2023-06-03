@@ -124,38 +124,21 @@ class SalesAdmin extends ModelAdmin
                 if (! empty($ids) && count($ids)) {
                     self::$_list_cache_orders = Order::get()->filter(['ID' => $ids]);
                 } else {
-                    $parentCount = $list->count();
-                    $ids = null;
-                    if ($parentCount < $this->Config()->get('max_entries_for_processing')) {
-                        $ids = $list->columnUnique();
-                    }
-                    $tmpList = Order::get_datalist_of_orders_with_submit_record();
-                    if (! empty($ids)) {
-                        $tmpList = $tmpList->filter(['ID' => $ids]);
-                    }
                     $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
                     $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
 
-                    $tmpList = $tmpList
-                        ->exclude(
+                    $list = $list
+                        ->excludeAny(
                             [
                                 'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),
-                            ]
-                        )
-                    ;
-                    //you can only do one exclude at the same time.
-                    $tmpList = $tmpList
-                        ->exclude(
-                            [
                                 'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique(),
                             ]
                         )
                     ;
 
-                    $tmpList = Order::get_datalist_of_orders_with_joined_submission_record($tmpList);
-                    $tmpList = $tmpList->Sort('OrderStatusLog.ID DESC');
-                    self::$_list_cache_orders = $tmpList;
-                    EcommerceCache::inst()->save($this->getTimeBasedCacheKey(), $tmpList->columnUnique());
+                    $list = $list->Sort('OrderStatusLog.ID DESC');
+                    self::$_list_cache_orders = $list;
+                    EcommerceCache::inst()->save($this->getTimeBasedCacheKey(), $list->columnUnique());
                 }
             }
             $list = self::$_list_cache_orders;

@@ -253,7 +253,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         'CustomerCanCancel' => 0,
         'CustomerCanPay' => 1,
         'ShowAsUncompletedOrder' => 0,
-        'ShowAsInProcessOrder' => 0,
+        'ShowAsInProcessOrder' => 1,
         'ShowAsCompletedOrder' => 0,
         'Code' => 'ORDERSTEP',
     ];
@@ -385,9 +385,33 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function admin_manageable_steps()
     {
-        $lastStep = OrderStep::last_order_step();
+        return OrderStep::get()
+            ->filter(['ShowAsInProcessOrder' => 1])
+            ->excludeAny(['ShowAsUncompletedOrder' => true, 'ShowAsCompletedOrder' => true]);
+    }
 
-        return OrderStep::get()->filter(['ShowAsInProcessOrder' => 1])->exclude(['ID' => $lastStep->ID]);
+    /**
+     * returns all the order steps
+     * that the admin should / can edit....
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    public static function admin_reviewable_steps()
+    {
+        return OrderStep::get()
+            ->filter(['ShowAsUncompletedOrder' => false,]);
+    }
+
+    /**
+     * returns all the order steps
+     * that the admin should / can edit....
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    public static function non_admin_reviewable_steps()
+    {
+        return OrderStep::get()
+            ->exclude(['ShowAsUncompletedOrder' => false,]);
     }
 
     /**
@@ -400,7 +424,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $lastStep = OrderStep::last_order_step();
 
-        return OrderStep::get()->filterAny(['ShowAsInProcessOrder' => 0, 'ID' => $lastStep->ID]);
+        return OrderStep::get()->excludeAny(['ID' => self::admin_manageable_steps()->columnUnique()]);
     }
 
     /**

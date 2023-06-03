@@ -35,6 +35,8 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     protected $title = 'Try to finalise all orders - WILL SEND EMAILS';
 
+    private static $segment = 'EcommerceTaskTryToFinaliseOrders';
+
     protected $description = '
         This task can be useful in moving a bunch of orders through the latest order step.
         It will only move orders if they can be moved through order steps.
@@ -72,36 +74,19 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         $ordersinQueue = $queueObjectSingleton->AllOrdersInQueue();
         //find any other order that may need help ...
 
-        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-        $submittedOrderStatusLogTableName = EcommerceConfig::get(OrderStatusLog::class, 'table_name');
-        if ($submittedOrderStatusLogClassName) {
-            $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
-            if ($submittedStatusLog) {
-                $lastOrderStep = OrderStep::last_order_step();
-                if ($lastOrderStep) {
-                    $sort = $this->isCli() ? 'RAND() ASC' : ['ID' => 'ASC'];
-                    $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->columnUnique() : [];
-                    if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
-                        //do nothing...
-                    } else {
-                        $ordersInQueueArray = ArrayMethods::filter_array([]);
-                    }
-                    $orders = Order::get()
-                        ->sort($sort)
-                        ->where('StatusID <> ' . $lastOrderStep->ID)
-                        ->exclude(['ID' => $ordersInQueueArray])
-                    ;
-                    $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
-                } else {
-                    DB::alteration_message('NO  order step.', 'deleted');
-                }
-            } else {
-                DB::alteration_message('NO submitted order status log.', 'deleted');
-            }
+        $sort = $this->isCli() ? 'RAND() ASC' : ['ID' => 'ASC'];
+        $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->columnUnique() : [];
+        if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
+            //do nothing...
         } else {
-            DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
+            $ordersInQueueArray = ArrayMethods::filter_array([]);
         }
-
+        $orders = Order::get()
+            ->sort($sort)
+            ->filter(['StatusID' => OrderStep::admin_manageable_steps()])
+            ->exclude(['ID' => $ordersInQueueArray]);
+        ;
+        $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
         if (! $this->isCli()) {
             if ($this->getStart()) {
                 DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
@@ -116,8 +101,6 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if ($orders->exists()) {
             DB::alteration_message("<h1>Moving {$limit} Orders (starting from {$startAt})</h1>");
             foreach ($orders as $order) {
-                ++$startAt;
-                $this->setStart($startAt);
                 if($order->IsSubmitted()) {
                     $stepBefore = OrderStep::get_by_id($order->StatusID);
 
@@ -142,7 +125,12 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     } else {
                         DB::alteration_message('Moving Order ' . $order->getTitle() . ' from <strong>unknown step</strong> to <strong>unknown step</strong>', 'deleted');
                     }
+                } else {
+                    DB::alteration_message('ERROR: Moving Order ' . $order->getTitle() . ' IS NOT SUBMITTED YET', 'deleted');
                 }
+                // completed - so can move on
+                ++$startAt;
+                $this->setStart($startAt);
             }
         } else {
             $this->clearStart();

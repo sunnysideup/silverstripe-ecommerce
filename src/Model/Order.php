@@ -639,13 +639,13 @@ class Order extends DataObject implements EditableEcommerceObject
     public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
     {
         $list = Order::get();
-        if (false !== $onlySubmittedOrders) {
+        if (true === $onlySubmittedOrders) {
             $list = self::get_datalist_of_orders_with_joined_submission_record($list);
         } else {
             $list = $list->filter(['StatusID:GreaterThan' => 0]);
         }
 
-        if (true !== $includeCancelledOrders) {
+        if (false === $includeCancelledOrders) {
             $list = $list->filter(['CancelledByID' => 0]);
         }
 
@@ -654,13 +654,8 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public static function get_datalist_of_orders_with_joined_submission_record($list): DataList
     {
-        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-        $submittedOrderStatusLogTableName = DataObject::getSchema()->tableName($submittedOrderStatusLogClassName);
-
-        return $list
-            ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-            ->innerJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-        ;
+        $ids = OrderStep::non_admin_reviewable_steps()->columnUnique();
+        $list = $list->exclude(['StatusID' => $ids]);
     }
 
     /**
@@ -828,7 +823,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //and only tryToFinaliseOrder if this is true....
             // if ($_SERVER['REQUEST_URI'] === $this->CMSEditLink() || $_SERVER['REQUEST_URI'] === $this->CMSEditLink('edit')) {
             $this->tryToFinaliseOrder();
-        // }
+            // }
         } else {
             $this->init(true);
             $this->calculateOrderAttributes(true);
@@ -4067,7 +4062,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($adminOnlyOrToEmail) {
             if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-            // invalid e-mail address
+                // invalid e-mail address
             } else {
                 $to = OrderEmail::get_from_email();
             }
