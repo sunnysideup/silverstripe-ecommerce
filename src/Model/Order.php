@@ -828,7 +828,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //and only tryToFinaliseOrder if this is true....
             // if ($_SERVER['REQUEST_URI'] === $this->CMSEditLink() || $_SERVER['REQUEST_URI'] === $this->CMSEditLink('edit')) {
             $this->tryToFinaliseOrder();
-        // }
+            // }
         } else {
             $this->init(true);
             $this->calculateOrderAttributes(true);
@@ -1327,6 +1327,9 @@ class Order extends DataObject implements EditableEcommerceObject
                                     //init method includes a WRITE
                                     $modifier->init();
                                     //IMPORTANT - add as has_many relationship  (Attributes can be a modifier OR an OrderItem)
+                                    if(! $this->exists()) {
+                                        $this->write();
+                                    }
                                     $this->Attributes()->add($modifier);
                                     $modifiersAsArrayList->push($modifier);
                                 }
@@ -4067,7 +4070,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($adminOnlyOrToEmail) {
             if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-            // invalid e-mail address
+                // invalid e-mail address
             } else {
                 $to = OrderEmail::get_from_email();
             }
