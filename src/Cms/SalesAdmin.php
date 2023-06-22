@@ -131,12 +131,12 @@ class SalesAdmin extends ModelAdmin
                         ->excludeAny(
                             [
                                 'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),
-                                'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique(),
+                                'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique() + [-1 => 0],
                             ]
                         )
                     ;
 
-                    $list = $list->Sort('OrderStatusLog.ID DESC');
+                    // $list = $list->Sort('OrderStatusLog.ID DESC');
                     self::$_list_cache_orders = $list;
                     EcommerceCache::inst()->save($this->getTimeBasedCacheKey(), $list->columnUnique());
                 }
