@@ -24,7 +24,7 @@ SilverStripe\CMS\Model\SiteTree:
   extensions:
     - Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension
   indexes:
-    LastEdited: true
+    LastEdited: true # super important for speed!
 PageController:
   extensions:
     - Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController

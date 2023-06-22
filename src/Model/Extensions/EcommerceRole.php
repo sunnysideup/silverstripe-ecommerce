@@ -922,7 +922,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                     \"EcommercePayment\".\"Status\" = '" . EcommercePayment::SUCCESS_STATUS . "'
                     AND \"Order\".\"MemberID\" = " . $this->getOwner()->ID . '
                 ORDER BY
-                    "EcommercePayment"."Created" DESC
+                    "EcommercePayment"."ID" DESC
                 LIMIT 1
             '
         );

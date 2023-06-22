@@ -24,7 +24,7 @@ class ProductSorter extends BaseApplyer
         ],
         'new' => [
             'Title' => 'Latest Arrivals',
-            'SQL' => '"Created" DESC, "Price" DESC',
+            'SQL' => '"ID" DESC',
             'UsesParamData' => false,
             'IsShowFullList' => false,
         ],
