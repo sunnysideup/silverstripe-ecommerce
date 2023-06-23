@@ -636,7 +636,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList (Orders)
      */
-    public static function get_datalist_of_orders_with_submit_record($onlySubmittedOrders = true, $includeCancelledOrders = false)
+    public static function get_datalist_of_orders_with_submit_record(?bool $onlySubmittedOrders = true, ?bool $includeCancelledOrders = false)
     {
         $list = Order::get();
         if (true === $onlySubmittedOrders) {
@@ -652,10 +652,11 @@ class Order extends DataObject implements EditableEcommerceObject
         return $list;
     }
 
+
     public static function get_datalist_of_orders_with_joined_submission_record($list): DataList
     {
-        $ids = OrderStep::non_admin_reviewable_steps()->columnUnique();
-        $list = $list->exclude(['StatusID' => $ids]);
+        $ids = OrderStep::admin_reviewable_steps()->columnUnique();
+        return $list->filter(['StatusID' => $ids]);
     }
 
     /**

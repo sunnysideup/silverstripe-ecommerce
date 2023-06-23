@@ -797,14 +797,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      *
      * @param bool $includeUnsubmittedOrders - set to TRUE to include unsubmitted orders
      */
-    public function LastOrder($includeUnsubmittedOrders = false)
+    public function LastOrder(?bool $includeUnsubmittedOrders = false)
     {
-        //limit to 10
-        if ($includeUnsubmittedOrders) {
-            $orders = Order::get_datalist_of_orders_with_submit_record(false);
-        } else {
-            $orders = Order::get_datalist_of_orders_with_submit_record(true);
-        }
+        $orders = Order::get_datalist_of_orders_with_submit_record(!$includeUnsubmittedOrders);
 
         return $orders
             ->Filter(['MemberID' => $this->getOwner()->ID])

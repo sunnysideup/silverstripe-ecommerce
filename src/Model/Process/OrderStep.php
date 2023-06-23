@@ -16,6 +16,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
@@ -140,6 +141,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     private static $indexes = [
         'Code' => true,
         'Sort' => true,
+        'ShowAsUncompletedOrder' => true,
+        'ShowAsInProcessOrder' => true,
+        'ShowAsCompletedOrder' => true,
     ];
 
     /**
@@ -383,11 +387,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public static function admin_manageable_steps()
+    public static function admin_manageable_steps(): DataList
     {
         return OrderStep::get()
-            ->filter(['ShowAsInProcessOrder' => 1])
-            ->excludeAny(['ShowAsUncompletedOrder' => true, 'ShowAsCompletedOrder' => true]);
+            ->filter(['ShowAsInProcessOrder' => 1, 'ShowAsUncompletedOrder' => false, 'ShowAsCompletedOrder' => false]);
     }
 
     /**
@@ -396,36 +399,34 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public static function admin_reviewable_steps()
+    public static function non_admin_manageable_steps(): DataList
+    {
+        return OrderStep::get()
+            ->filterAny(['ShowAsInProcessOrder' => false, 'ShowAsUncompletedOrder' => true, 'ShowAsCompletedOrder' => true]);
+    }
+
+    /**
+     * Basically any order that is submitted.
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
+    public static function admin_reviewable_steps(): DataList
     {
         return OrderStep::get()
             ->filter(['ShowAsUncompletedOrder' => false,]);
     }
 
     /**
-     * returns all the order steps
-     * that the admin should / can edit....
+     * order steps that the admin generally should not look at.
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public static function non_admin_reviewable_steps()
+    public static function non_admin_reviewable_steps(): DataList
     {
         return OrderStep::get()
-            ->exclude(['ShowAsUncompletedOrder' => false,]);
+            ->exclude(['ShowAsUncompletedOrder' => true,]);
     }
 
-    /**
-     * returns all the order steps
-     * that the admin should / can edit....
-     *
-     * @return \SilverStripe\ORM\DataList
-     */
-    public static function non_admin_manageable_steps()
-    {
-        $lastStep = OrderStep::last_order_step();
-
-        return OrderStep::get()->excludeAny(['ID' => self::admin_manageable_steps()->columnUnique()]);
-    }
 
     /**
      * @param bool $noCacheValues
@@ -447,7 +448,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
-    public static function bad_order_step_ids()
+    public static function bad_order_step_ids(): array
     {
         $badorderStatus = Order::get()
             ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')

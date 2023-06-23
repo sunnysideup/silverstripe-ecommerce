@@ -897,7 +897,7 @@ class Product extends Page implements BuyableModel
      */
     public function SalesRecord(): DataList
     {
-        $dataList = Order::get_datalist_of_orders_with_submit_record(true, false);
+        $dataList = Order::get_datalist_of_orders_with_submit_record(true, false); // only submitted, cancalled false
         $dataList = $dataList->innerJoin('OrderAttribute', '"OrderAttribute"."OrderID" = "Order"."ID"');
         $dataList = $dataList->innerJoin('OrderItem', '"OrderAttribute"."ID" = "OrderItem"."ID"');
 
