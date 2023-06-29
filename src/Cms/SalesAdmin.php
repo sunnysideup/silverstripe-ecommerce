@@ -132,7 +132,7 @@ class SalesAdmin extends ModelAdmin
                             [
                                 'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),
                                 'StatusID' => OrderStep::non_admin_manageable_steps()->columnUnique() + [-1 => 0],
-                                'IsCancelled' => true,
+                                'CancelledByID:GreaterThan' => 0,
                             ]
                         )
                     ;
