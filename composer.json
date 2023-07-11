@@ -29,7 +29,7 @@
   ],
   "require": {
     "bummzack/sortablefile": "^2.0",
-    "silverstripe/recipe-cms": "^4.0 || ^ 5.0",
+    "silverstripe/recipe-cms": "^4.0 || ^5.0",
     "pelago/emogrifier": "^8.0@stable",
     "silverstripe/lumberjack": "^2.0@stable",
     "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
