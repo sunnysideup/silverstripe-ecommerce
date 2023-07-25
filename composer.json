@@ -42,9 +42,6 @@
     "sunnysideup/silverstripe-ajax-select-field": "dev-master",
     "sunnysideup/dropdown2autocomplete": "dev-master"
   },
-  "require-dev": {
-    "phpunit/phpunit": "~5.7"
-  },
   "suggest": {
     "sunnysideup/flush": "Better, faster output for tasks",
     "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this works on your server, before installing it - otherwise it is useless.",
