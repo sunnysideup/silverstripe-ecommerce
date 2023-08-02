@@ -1865,8 +1865,14 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CreateOrReturnExistingAddress($className = BillingAddress::class, $alternativeMethodName = '')
     {
-        if ($this->exists()) {
-            $methodName = Config::inst()->get($className, 'table_name');
+            if (! $this->exists()) {
+                $this->write();
+            }
+            $methodNames = [
+                BillingAddress::class => 'BillingAddress',
+                ShippingAddress::class => 'ShippingAddress',
+            ];
+            $methodName = $methodNames[$className];
             if ($alternativeMethodName) {
                 $methodName = $alternativeMethodName;
             }
@@ -1909,6 +1915,9 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 return $address;
             }
+        } else {
+            $this->write();
+            return $this->CreateOrReturnExistingAddress($className, $alternativeMethodName);
         }
     }
 
