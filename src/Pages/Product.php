@@ -1392,7 +1392,7 @@ class Product extends Page implements BuyableModel
         $obj->run(null);
     }
 
-    public function getArrayOfImages(): array
+    public function getArrayOfImages(?bool $cached = false): array
     {
         $arrayInner = [];
         if ($this->ImageID) {
@@ -1401,11 +1401,12 @@ class Product extends Page implements BuyableModel
                 $arrayInner[$image->ID] = $image;
             }
         }
+        $otherImagesIDs = DB::query('SELECT * FROM Product_AdditionalImages WHERE ProductID = '.$this->ID. ' ORDER BY ImageSort')->column('ImageID');
 
-        $otherImages = $this->AdditionalImages(); //see Product::many_many()
-        foreach ($otherImages as $otherImage) {
-            if ($otherImage) {
-                $arrayInner[$otherImage->ID] = $otherImage;
+        foreach ($otherImagesIDs as $otherImageID) {
+            $image = Image::get()->byID($otherImageID);
+            if ($otherImageID && $image && $image->exists()) {
+                $arrayInner[$otherImageID] = $image;
             }
         }
 
