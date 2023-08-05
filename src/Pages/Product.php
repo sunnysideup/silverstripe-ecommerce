@@ -1396,17 +1396,28 @@ class Product extends Page implements BuyableModel
     {
         $arrayInner = [];
         if ($this->ImageID) {
-            $image = $this->Image(); //see Product::has_one()
+            $image = Image::get()->byID($this->ImageID); //see Product::has_one()
             if ($image && $image->exists()) {
                 $arrayInner[$image->ID] = $image;
             }
         }
-        $otherImagesIDs = DB::query('SELECT * FROM Product_AdditionalImages WHERE ProductID = '.$this->ID. ' ORDER BY ImageSort')->column('ImageID');
+        $otherImagesIDs = DB::query(
+            '
+            SELECT ImageID FROM
+            Product_AdditionalImages
+                INNER JOIN File
+                    ON File.ID = ImageID
+            WHERE ProductID = '.$this->ID. '
+            ORDER BY ImageSort'
+        )
+            ->column('ImageID');
 
         foreach ($otherImagesIDs as $otherImageID) {
-            $image = Image::get()->byID($otherImageID);
-            if ($otherImageID && $image && $image->exists()) {
-                $arrayInner[$otherImageID] = $image;
+            if($otherImageID) {
+                $image = Image::get()->byID($otherImageID);
+                if ($image && $image->exists()) {
+                    $arrayInner[$otherImageID] = $image;
+                }
             }
         }
 
