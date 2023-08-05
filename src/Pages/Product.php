@@ -1416,7 +1416,7 @@ class Product extends Page implements BuyableModel
             if($otherImageID) {
                 $image = Image::get()->byID($otherImageID);
                 if ($image && $image->exists()) {
-                    $arrayInner[$otherImageID] = $image;
+                    $arrayInner[$image->ID] = $image;
                 }
             }
         }
