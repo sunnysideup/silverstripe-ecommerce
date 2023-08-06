@@ -1481,7 +1481,7 @@ class Product extends Page implements BuyableModel
     /**
      * Used in getCSMFields.
      *
-     * @return GridField
+     * @return SortableUploadField
      */
     protected function getAdditionalImagesField()
     {
@@ -1496,7 +1496,7 @@ class Product extends Page implements BuyableModel
     /**
      * Used in getCSMFields.
      *
-     * @return GridField
+     * @return SortableUploadField
      */
     protected function getAdditionalFilesField()
     {
