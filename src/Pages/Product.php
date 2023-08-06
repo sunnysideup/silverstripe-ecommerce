@@ -1392,20 +1392,32 @@ class Product extends Page implements BuyableModel
         $obj->run(null);
     }
 
-    public function getArrayOfImages(): array
+    public function getArrayOfImages(?bool $cached = false): array
     {
         $arrayInner = [];
         if ($this->ImageID) {
-            $image = $this->Image(); //see Product::has_one()
+            $image = Image::get()->byID($this->ImageID); //see Product::has_one()
             if ($image && $image->exists()) {
                 $arrayInner[$image->ID] = $image;
             }
         }
+        $otherImagesIDs = DB::query(
+            '
+            SELECT ImageID FROM
+            Product_AdditionalImages
+                INNER JOIN File
+                    ON File.ID = ImageID
+            WHERE ProductID = '.$this->ID. '
+            ORDER BY ImageSort'
+        )
+            ->column('ImageID');
 
-        $otherImages = $this->AdditionalImages(); //see Product::many_many()
-        foreach ($otherImages as $otherImage) {
-            if ($otherImage) {
-                $arrayInner[$otherImage->ID] = $otherImage;
+        foreach ($otherImagesIDs as $otherImageID) {
+            if($otherImageID) {
+                $image = Image::get()->byID($otherImageID);
+                if ($image && $image->exists()) {
+                    $arrayInner[$image->ID] = $image;
+                }
             }
         }
 
