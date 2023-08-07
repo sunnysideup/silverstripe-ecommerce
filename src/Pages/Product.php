@@ -1392,13 +1392,18 @@ class Product extends Page implements BuyableModel
         $obj->run(null);
     }
 
-    public function getArrayOfImages(?bool $cached = false): array
+    public function getArrayOfImages(?bool $deleteBadOnes = false): array
     {
         $arrayInner = [];
         if ($this->ImageID) {
             $image = Image::get()->byID($this->ImageID); //see Product::has_one()
             if ($image && $image->exists()) {
                 $arrayInner[$image->ID] = $image;
+            } elseif($deleteBadOnes) {
+                DB::query('DELETE FROM File WHERE ID = '.$this->ImageID);
+                DB::query('DELETE FROM File_Live WHERE ID = '.$this->ImageID);
+                DB::query('UPDATE Product SET ImageID = 0 WHERE ID = '.$this->ID);
+                DB::query('UPDATE Product_Live SET ImageID = 0 WHERE ID = '.$this->ID);
             }
         }
         $otherImagesIDs = DB::query(
@@ -1417,6 +1422,10 @@ class Product extends Page implements BuyableModel
                 $image = Image::get()->byID($otherImageID);
                 if ($image && $image->exists()) {
                     $arrayInner[$image->ID] = $image;
+                } elseif($deleteBadOnes) {
+                    $this->AdditionalImages()->removeByID($otherImageID);
+                    DB::query('DELETE FROM File WHERE ID = '.$otherImageID);
+                    DB::query('DELETE FROM File_Live WHERE ID = '.$otherImageID);
                 }
             }
         }
