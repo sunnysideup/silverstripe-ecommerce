@@ -10,9 +10,22 @@ namespace Sunnysideup\Ecommerce\Api;
  */
 class Sanitizer
 {
-    public static function remove_from_data_array(array $data)
+    /**
+     * removes sensitive data from DataArray
+     *
+     * @param array $data
+     * @return array
+     */
+    public static function remove_from_data_array(array $data): array
     {
-        unset($data['AccountInfo'], $data['LoginDetails'], $data['LoggedInAsNote'], $data['PasswordCheck1'], $data['PasswordCheck2'], $data['Password']);
+        unset(
+            $data['AccountInfo'],
+            $data['LoginDetails'],
+            $data['LoggedInAsNote'],
+            $data['PasswordCheck1'],
+            $data['PasswordCheck2'],
+            $data['Password'],
+        );
 
         return $data;
     }
