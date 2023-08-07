@@ -65,6 +65,8 @@ class ShippingAddress extends OrderAddress
      */
     private static $allow_selection_of_previous_addresses_in_checkout = false;
 
+    private static $show_company_name = true;
+
     /**
      * standard SS variable.
      */
@@ -307,7 +309,11 @@ class ShippingAddress extends OrderAddress
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             }
 
-            $shippingFields->push(new TextField('ShippingCompanyName', _t('ShippingAddress.COMPANY_NAME', 'Company')));
+            if(EcommerceConfig::get(ShippingAddress::class, 'show_company_name')) {
+                $shippingFields->push(
+                    (new TextField('ShippingCompanyName', _t('ShippingAddress.COMPANY_NAME', 'Company Name (if applicable)')))
+                );
+            }
             $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
             $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', 'Address Line 2')));
             $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));

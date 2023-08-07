@@ -75,6 +75,8 @@ class BillingAddress extends OrderAddress
      */
     private static $allow_selection_of_previous_addresses_in_checkout = false;
 
+    private static $show_company_name = true;
+
     /**
      * standard SS variable.
      *
@@ -331,7 +333,12 @@ class BillingAddress extends OrderAddress
             //$billingFields->push(new HiddenField('Address2', "NOT SET", "NOT SET"));
             //$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
         }
-        $billingFields->push(new TextField('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company')));
+        if(EcommerceConfig::get(BillingAddress::class, 'show_company_name')) {
+            $billingFields->push(
+                (new TextField('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company Name  (if applicable)')))
+                    ->setDescription('Optional')
+            );
+        }
         $billingFields->push(new TextField('Address', _t('BillingAddress.ADDRESS', 'Address')));
         $billingFields->push(new TextField('Address2', _t('BillingAddress.ADDRESS2', 'Address Line 2')));
         $billingFields->push(new TextField('City', _t('BillingAddress.CITY', 'Town')));
