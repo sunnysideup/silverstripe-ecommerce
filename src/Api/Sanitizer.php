@@ -11,7 +11,7 @@ namespace Sunnysideup\Ecommerce\Api;
 class Sanitizer
 {
     /**
-     * removes sensitive data from DataArray
+     * removes sensitive data from data
      *
      * @param array $data
      * @return array
