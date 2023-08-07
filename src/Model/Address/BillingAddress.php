@@ -336,7 +336,6 @@ class BillingAddress extends OrderAddress
         if(EcommerceConfig::get(BillingAddress::class, 'show_company_name')) {
             $billingFields->push(
                 (new TextField('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company Name  (if applicable)')))
-                    ->setDescription('Optional')
             );
         }
         $billingFields->push(new TextField('Address', _t('BillingAddress.ADDRESS', 'Address')));
