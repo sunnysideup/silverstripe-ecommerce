@@ -53,6 +53,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
+use Exception;
 
 /**
  * This is a standard Product page-type with fields like
@@ -1392,13 +1393,17 @@ class Product extends Page implements BuyableModel
         $obj->run(null);
     }
 
-    public function getArrayOfImages(?bool $cached = false): array
+    public function getArrayOfImages(?bool $deleteMissingImages = false): array
     {
         $arrayInner = [];
         if ($this->ImageID) {
             $image = Image::get()->byID($this->ImageID); //see Product::has_one()
             if ($image && $image->exists()) {
                 $arrayInner[$image->ID] = $image;
+            } elseif($deleteMissingImages) {
+                DB::query('UPDATE Product SET ImageID = 0 WHERE ID = '.$this->ID);
+                DB::query('UPDATE Product_Live SET ImageID = 0 WHERE ID = '.$this->ID);
+                $this->deleteImage($image);
             }
         }
         $otherImagesIDs = DB::query(
@@ -1417,11 +1422,27 @@ class Product extends Page implements BuyableModel
                 $image = Image::get()->byID($otherImageID);
                 if ($image && $image->exists()) {
                     $arrayInner[$image->ID] = $image;
+                } elseif($deleteMissingImages) {
+                    $this->AdditionalImages()->removeByID($otherImageID);
+                    $this->deleteImage($image);
                 }
             }
         }
 
         return $arrayInner;
+    }
+
+    private function deleteImage($image)
+    {
+        if($image) {
+            try {
+                if($image->canArchive()) {
+                    $image->doArchive();
+                }
+            } catch (Exception $e) {
+                //do nothing
+            }
+        }
     }
 
     protected function onBeforeWrite()
