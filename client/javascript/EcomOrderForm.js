@@ -14,7 +14,7 @@ if (
   typeof document.getElementById('OrderForm_OrderForm') !== 'undefined'
 ) {
   (function ($) {
-    $(document).ready(function () {
+    jQuery(document).ready(function () {
       EcomOrderForm.init()
     })
   })(window.window.jQuery)
