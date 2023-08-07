@@ -32,6 +32,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
             'FirstName:PartialMatch' => $value,
             'Surname:PartialMatch' => $value,
             'Email:PartialMatch' => $value,
+            'CompanyName:PartialMatch' => $value,
             'Address:PartialMatch' => $value,
             'Address2:PartialMatch' => $value,
             'City:PartialMatch' => $value,
@@ -48,6 +49,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         $shippingAddresses = ShippingAddress::get()->filterAny([
             'ShippingFirstName:PartialMatch' => $value,
             'ShippingSurname:PartialMatch' => $value,
+            'ShippingCompanyName:PartialMatch' => $value,
             'ShippingAddress:PartialMatch' => $value,
             'ShippingAddress2:PartialMatch' => $value,
             'ShippingCity:PartialMatch' => $value,

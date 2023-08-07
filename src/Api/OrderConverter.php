@@ -46,6 +46,8 @@ abstract class OrderConverter
         $this->modifiers = $this->order->Modifiers();
         if ($this->order->IsSeparateShippingAddress()) {
             $this->shippingAddress = $this->order->ShippingAddress();
+            $this->shippingAddress->setFieldsToMatchBillingAddress();
+
         } else {
             $this->shippingAddress = $this->billingAddress;
         }

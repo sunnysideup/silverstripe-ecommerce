@@ -375,7 +375,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $comparisonString = '';
         $excludedFields = ['ID', 'OrderID'];
-        $fields = $this->stat('db');
+        $fields = $this->config()->get('db');
         $regionFieldName = $this->fieldPrefix() . 'RegionID';
         $fields[$regionFieldName] = $regionFieldName;
         if ($fields) {
@@ -501,7 +501,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     public function JSONData()
     {
         $jsArray = [];
-        $fields = $this->stat('db');
+        $fields = $this->config()->get('db');
         $regionFieldName = $this->fieldPrefix() . 'RegionID';
         $fields[$regionFieldName] = $regionFieldName;
 
@@ -716,5 +716,15 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
 
         return 'Shipping';
+    }
+
+    public function setFieldsToMatchBillingAddress()
+    {
+        foreach(array_keys($this->config()->get('db')) as $fieldName) {
+            $alsoFieldName = str_replace('Shipping', '', $fieldName);
+            if($alsoFieldName !== $fieldName) {
+                $this->$alsoFieldName = $this->$fieldName;
+            }
+        }
     }
 }

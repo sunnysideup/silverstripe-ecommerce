@@ -31,6 +31,7 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @property string $Prefix
  * @property string $FirstName
  * @property string $Surname
+ * @property string $CompanyName
  * @property string $Address
  * @property string $Address2
  * @property string $City
@@ -57,6 +58,7 @@ class BillingAddress extends OrderAddress
             'Prefix',
             'FirstName',
             'Surname',
+            'CompanyName',
             'Address',
             'Address2',
             'City',
@@ -84,6 +86,7 @@ class BillingAddress extends OrderAddress
         'Prefix' => 'Varchar(10)',
         'FirstName' => 'Varchar(100)',
         'Surname' => 'Varchar(100)',
+        'CompanyName' => 'Varchar(100)',
         'Address' => 'Varchar(255)',
         'Address2' => 'Varchar(200)',
         'City' => 'Varchar(100)',
@@ -328,6 +331,7 @@ class BillingAddress extends OrderAddress
             //$billingFields->push(new HiddenField('Address2', "NOT SET", "NOT SET"));
             //$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
         }
+        $billingFields->push(new TextField('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company')));
         $billingFields->push(new TextField('Address', _t('BillingAddress.ADDRESS', 'Address')));
         $billingFields->push(new TextField('Address2', _t('BillingAddress.ADDRESS2', 'Address Line 2')));
         $billingFields->push(new TextField('City', _t('BillingAddress.CITY', 'Town')));
@@ -358,7 +362,7 @@ class BillingAddress extends OrderAddress
      * sets the country to the best known country {@link EcommerceCountry}
      */
     //function populateDefaults() {
-        //parent::populateDefaults();
-        //$this->Country = EcommerceCountry::get_country(false, $this->OrderID);
+    //parent::populateDefaults();
+    //$this->Country = EcommerceCountry::get_country(false, $this->OrderID);
     //}
 }

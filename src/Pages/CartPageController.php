@@ -405,7 +405,7 @@ class CartPageController extends PageController
                     $this->httpError(404, 'No order was found.');
                     $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
                 }
-            } elseif ((int) $id && in_array($action, $this->stat('allowed_actions'), true)) {
+            } elseif ((int) $id && in_array($action, $this->config()->get('allowed_actions'), true)) {
                 $this->currentOrder = Order::get_order_cached((int) $id);
             }
         }

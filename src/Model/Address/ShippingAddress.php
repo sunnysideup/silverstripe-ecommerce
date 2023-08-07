@@ -23,6 +23,7 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @property string $ShippingPrefix
  * @property string $ShippingFirstName
  * @property string $ShippingSurname
+ * @property string $ShippingCompanyName
  * @property string $ShippingAddress
  * @property string $ShippingAddress2
  * @property string $ShippingCity
@@ -50,6 +51,7 @@ class ShippingAddress extends OrderAddress
             'ShippingSurname',
             'ShippingAddress',
             'ShippingAddress2',
+            'ShippingCompanyName',
             'ShippingCity',
             'ShippingPostalCode',
             'ShippingRegionCode',
@@ -72,6 +74,7 @@ class ShippingAddress extends OrderAddress
         'ShippingPrefix' => 'Varchar(10)',
         'ShippingFirstName' => 'Varchar(100)',
         'ShippingSurname' => 'Varchar(100)',
+        'ShippingCompanyName' => 'Varchar(100)',
         'ShippingAddress' => 'Varchar(200)',
         'ShippingAddress2' => 'Varchar(255)',
         'ShippingCity' => 'Varchar(100)',
@@ -195,7 +198,7 @@ class ShippingAddress extends OrderAddress
         $billingAddress = Injector::inst()->get(BillingAddress::class);
         $shippingLabels = parent::fieldLabels($includerelations);
         $billingLabels = $billingAddress->fieldLabels($includerelations);
-        $summaryFields = $this->stat('field_labels');
+        $summaryFields = $this->config()->get('field_labels');
         foreach (array_keys($shippingLabels) as $shippingKey) {
             if (! isset($summaryFields[$shippingKey])) {
                 $billingKey = str_replace('Shipping', '', (string) $shippingKey);
@@ -304,6 +307,7 @@ class ShippingAddress extends OrderAddress
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             }
 
+            $shippingFields->push(new TextField('ShippingCompanyName', _t('ShippingAddress.COMPANY_NAME', 'Company')));
             $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
             $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', 'Address Line 2')));
             $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
@@ -330,5 +334,15 @@ class ShippingAddress extends OrderAddress
     public function getRequiredFields()
     {
         return $this->Config()->get('required_fields');
+    }
+
+    public function setFieldsToMatchBillingAddress()
+    {
+        foreach(array_keys($this->config()->get('db')) as $fieldName) {
+            $alsoFieldName = str_replace('Shipping', '', $fieldName);
+            if($alsoFieldName !== $fieldName) {
+                $this->$alsoFieldName = $this->$fieldName;
+            }
+        }
     }
 }
