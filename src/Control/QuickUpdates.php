@@ -33,14 +33,14 @@ class QuickUpdates extends Controller
 
     private static $url_segment = 'admin/ecommerce/quick-updates';
 
-    private static $allowed_actions = [
-        'index' => 'SHOPASSISTANTS',
-        'doform' => 'SHOPASSISTANTS',
-        'done' => 'SHOPASSISTANTS',
-        'list' => 'SHOPASSISTANTS',
-        'updateone' => 'SHOPASSISTANTS',
-        'MyForm' => 'SHOPASSISTANTS',
-    ];
+    // private static $allowed_actions = [
+    //     'index' => 'SHOPASSISTANTS',
+    //     'doform' => 'SHOPASSISTANTS',
+    //     'done' => 'SHOPASSISTANTS',
+    //     'list' => 'SHOPASSISTANTS',
+    //     'updateone' => 'SHOPASSISTANTS',
+    //     'MyForm' => 'SHOPASSISTANTS',
+    // ];
 
     public function updateone($request)
     {
@@ -165,9 +165,14 @@ class QuickUpdates extends Controller
     protected function init()
     {
         parent::init();
-        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
-        if(!Security::getCurrentUser()) {
+        $allowedActions = $this->Config()->get('allowed_actions');
+        $securityCheck = $allowedActions['index'] ?? 'ADMIN';
+        if(! Permission::check($securityCheck)) {
             return Security::permissionFailure($this);
+        }
+        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        if(get_class($this) === QuickUpdates::class) {
+            return $this->httpError(404, 'Please choose a specific update.');
         }
     }
 
