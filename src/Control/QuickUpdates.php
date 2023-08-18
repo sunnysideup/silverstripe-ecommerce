@@ -14,6 +14,8 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
@@ -88,14 +90,15 @@ class QuickUpdates extends Controller
 
     public function MyForm()
     {
-        $fields = new FieldList(
-        );
+        $fields = new FieldList([]);
 
         $actions = new FieldList(
-            FormAction::create('doform')->setTitle('Submit')
+            [
+                FormAction::create('doform')->setTitle('Submit')
+            ]
         );
 
-        $required = new RequiredFields();
+        $required = new RequiredFields([]);
 
         return new Form($this, 'MyForm', $fields, $actions, $required);
     }
@@ -158,10 +161,14 @@ class QuickUpdates extends Controller
         }
     }
 
+
     protected function init()
     {
         parent::init();
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        if(!Security::getCurrentUser()) {
+            return Security::permissionFailure($this);
+        }
     }
 
     /**
@@ -169,15 +176,19 @@ class QuickUpdates extends Controller
      *
      * @return AjaxSelectField|DropdownField
      */
-    protected function productLookupField(string $name, string $title, ?int $id = 0)
+    protected function productLookupField(string $name, string $title, ?int $id = 0, ?bool $offerRemoveOption = false)
     {
         $product = Product::get()->byID($id);
         if ($product) {
+            $source = [$product->ID => $product->FullName];
+            if($offerRemoveOption) {
+                $source = [-1 * $product->ID => '--- remove ---'] + $source;
+            }
             return DropdownField::create(
-                'ParentProductID',
-                'Product',
+                $name,
+                $title,
             )
-                ->setSource([$product->ID => $product->FullName])
+                ->setSource($source)
                 ->setHasEmptyDefault(false)
                 ->setValue($product->ID)
             ;
@@ -225,12 +236,17 @@ class QuickUpdates extends Controller
         ;
     }
 
+    protected function getMaxItems(): int
+    {
+        return 100;
+    }
+
     protected function productList(): SS_List
     {
         $array = [];
         $al = ArrayList::create();
         $step = 50;
-        $maxItems = 100;
+        $maxItems = $this->getMaxItems();
         $doneItems = 0;
         for ($i = 0; $i < $maxItems; ++$i) {
             $products = Product::get()
@@ -238,6 +254,7 @@ class QuickUpdates extends Controller
                 ->sort('Price DESC')
                 ->limit($step, $i * $step)
             ;
+            /** @var Product $product */
             foreach ($products as $product) {
                 $test = $this->isIncludedInListForProduct($product);
                 if (true === $test) {
