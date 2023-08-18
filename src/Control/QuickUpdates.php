@@ -33,14 +33,14 @@ class QuickUpdates extends Controller
 
     private static $url_segment = 'admin/ecommerce/quick-updates';
 
-    // private static $allowed_actions = [
-    //     'index' => 'SHOPASSISTANTS',
-    //     'doform' => 'SHOPASSISTANTS',
-    //     'done' => 'SHOPASSISTANTS',
-    //     'list' => 'SHOPASSISTANTS',
-    //     'updateone' => 'SHOPASSISTANTS',
-    //     'MyForm' => 'SHOPASSISTANTS',
-    // ];
+    private static $allowed_actions = [
+        'index' => true,
+        'doform' => true,
+        'done' => true,
+        'list' => true,
+        'updateone' => true,
+        'MyForm' => true,
+    ];
 
     public function updateone($request)
     {
