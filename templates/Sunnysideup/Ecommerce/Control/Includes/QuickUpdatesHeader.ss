@@ -47,6 +47,27 @@
             margin-top: 20px;
             min-height: 1400px;
         }
+        @media only screen and (min-width: 800px) {
+            footer .content {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                padding: 20px;
+                border: 1px solid #999;
+                background-color: #ccc;
+                border-radius: 13px;
+            }
+            footer .content h2 {
+                margin-top: 0;
+            }
+            footer .content ul {
+                margin-bottom: 0;
+            }
+            footer .content ul, footer .content li {
+                list-style: none;
+                padding-left: 0;
+            }
+        }
         li {
             padding-bottom: 10px;
         }
@@ -127,6 +148,13 @@
             font-weight: bold;
             background-color: yellow;
             margin-left: 20px;
+        }
+        a:link, a:visited {
+            color: #222;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #004e7f;
         }
         @media print {
 
