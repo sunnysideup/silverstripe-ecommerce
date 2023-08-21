@@ -11,8 +11,10 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -243,43 +245,29 @@ class QuickUpdates extends Controller
 
     protected function getMaxItems(): int
     {
-        return 100;
+        return 1000;
     }
 
-    protected function productList(): SS_List
+    public function ListItems(): PaginatedList
     {
-        $array = [];
-        $al = ArrayList::create();
-        $step = 50;
-        $maxItems = $this->getMaxItems();
-        $doneItems = 0;
-        for ($i = 0; $i < $maxItems; ++$i) {
-            $products = Product::get()
-                ->filter(['AllowPurchase' => true])
-                ->sort('Price DESC')
-                ->limit($step, $i * $step)
-            ;
-            /** @var Product $product */
-            foreach ($products as $product) {
-                $test = $this->isIncludedInListForProduct($product);
-                if (true === $test) {
-                    $al->push(new ArrayData([
-                        'Item' => $product,
-                        'Link' => $this->Link('updateone/' . $product->ID),
-                    ]));
-                    ++$doneItems;
-                }
-                if ($doneItems > $maxItems) {
-                    $i = $maxItems + 1;
-                }
-            }
-        }
-
-        return $al;
+        return new PaginatedList($this->productList(), $this->getRequest());
     }
 
-    protected function isIncludedInListForProduct(Product $product): bool
+    protected function productList(): DataList
     {
-        return true;
+        $products = Product::get()
+            ->filter(['AllowPurchase' => true])
+            ->sort('Price DESC')
+            ->limit($this->getMaxItems())
+        ;
+        $products = $this->isIncludedInListForProductSqlChanges($products);
+
+        return $products;
     }
+
+    protected function isIncludedInListForProductSqlChanges(DataList $list): DataList
+    {
+        return $list;
+    }
+
 }

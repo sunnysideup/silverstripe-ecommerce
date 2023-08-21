@@ -156,6 +156,20 @@
         a:hover {
             color: #004e7f;
         }
+        .pagination a {
+            background-color: #004e7f;
+            display: inline-block;
+            color: #fff;
+            padding: 5px;
+            text-decoration: none;
+            margin-right: 3px;
+            border-radius: 3px;
+
+        }
+        .pagination a:hover, .pagination a.current {
+            background-color: #008a00;
+        }
+
         @media print {
 
             .hide-in-print {
