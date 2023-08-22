@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Control;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -201,24 +202,19 @@ class QuickUpdates extends Controller
             ;
         }
         $callBackFx = function ($query, $request) {
-            $filter = [
-                'Title:PartialMatch' => '__QUERY__',
-                'InternalItemID:PartialMatch' => '__QUERY__',
-            ];
+
             $list = Product::get()
                 ->filter(['AllowPurchase' => true])
                 ->sort('InternalItemID')
             ;
-            // This part is only required if the idOnlyMode is active
-            foreach ($filter as $key => $value) {
-                if ($query) {
-                    $value = str_replace('__QUERY__', $query, $value);
-                    $filter[$key] = $value;
-                } else {
-                    unset($filter[$key]);
-                }
+            if($query) {
+                $query =  Convert::raw2sql($query);
+                $filter = [
+                    'Title:PartialMatch' => $query,
+                    'InternalItemID:PartialMatch' => $query,
+                ];
+                $list = $list->filterAny($filter);
             }
-            $list = $list->filterAny($filter);
             $results = [];
             foreach ($list as $obj) {
                 $results[] = [
@@ -237,7 +233,7 @@ class QuickUpdates extends Controller
     {
         return AjaxSelectField::create($name, $title)
             ->setMinSearchChars(3)
-            ->setPlaceholder('find ...' . $title)
+            ->setPlaceholder('Start typing and wait for list to appear after a few characters ... ')
             ->setIdOnlyMode(true)
             ->setSearchCallback($callBackFx)
         ;
