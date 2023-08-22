@@ -246,7 +246,8 @@ class QuickUpdates extends Controller
 
     public function ListItems(): PaginatedList
     {
-        return new PaginatedList($this->productList(), $this->getRequest());
+        return (new PaginatedList($this->productList(), $this->getRequest()))
+            ->setPageLength(50);
     }
 
     protected function productList(): DataList

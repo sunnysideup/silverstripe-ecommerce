@@ -50,12 +50,16 @@
         @media only screen and (min-width: 800px) {
             footer .content {
                 position: fixed;
-                top: 10px;
+                top: 120px;
                 right: 10px;
                 padding: 20px;
                 border: 1px solid #999;
                 background-color: #ccc;
                 border-radius: 13px;
+                opacity: 0.8;
+            }
+            footer .content:hover {
+                opacity: 1;
             }
             footer .content h2 {
                 margin-top: 0;
@@ -68,8 +72,9 @@
                 padding-left: 0;
             }
         }
-        li {
-            padding-bottom: 20px;
+        li, p {
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
         .content
         {
@@ -109,16 +114,16 @@
         }
 
         input.action {
-            border: 1px solid #008a00;
-            color: #008a00;
+            border: 1px solid #000;
+            color: #000;
             padding: 15px 50px;
             border-radius: 3px;
-            background-color: transparent;
             width: auto!important;
+            background-color: #ccc;
         }
         input.action:hover {
-            background-color: #008a00;
             color: #fff;
+            background-color: #008a00;
         }
         .message {
             border: 1px solid #555;
