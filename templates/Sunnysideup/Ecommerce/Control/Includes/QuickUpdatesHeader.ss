@@ -69,7 +69,7 @@
             }
         }
         li {
-            padding-bottom: 10px;
+            padding-bottom: 20px;
         }
         .content
         {
@@ -152,11 +152,15 @@
         a:link, a:visited {
             color: #222;
             text-decoration: underline;
+            text-decoration-color: #ccc;
         }
         a:hover {
             color: #004e7f;
         }
-        .pagination a {
+        .pagination {
+            text-align: center;
+        }
+        .pagination a, a.btn {
             background-color: #004e7f;
             display: inline-block;
             color: #fff;
@@ -166,7 +170,7 @@
             border-radius: 3px;
 
         }
-        .pagination a:hover, .pagination a.current {
+        .pagination a:hover, .pagination a.current, a.btn:hover {
             background-color: #008a00;
         }
 
