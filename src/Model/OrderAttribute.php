@@ -498,6 +498,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function runUpdate($recalculate = false)
     {
+        $this->extend('runUpdateExtension', $this);
         $this->baseRunUpdateCalled = true;
     }
 

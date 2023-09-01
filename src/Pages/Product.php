@@ -127,6 +127,7 @@ class Product extends Page implements BuyableModel
     private static $db = [
         'Price' => 'Currency',
         'Weight' => 'Float',
+        'HasPhysicalDispatch' => 'Boolean(1)',
         'Model' => 'Varchar(30)',
         'Quantifier' => 'Varchar(30)',
         'FeaturedProduct' => 'Boolean',
@@ -378,7 +379,8 @@ class Product extends Page implements BuyableModel
                 new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
                 new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
                 HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
-                    ->setRows(3),
+                ->setRows(3),
+                new CheckboxField('HasPhysicalDispatch', _t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch')),
             ]
         );
 

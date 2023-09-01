@@ -25,6 +25,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use SilverStripe\CMS\Model\SiteTree;
+
 /**
  * Class \Sunnysideup\Ecommerce\Model\OrderItem
  *
@@ -99,6 +100,7 @@ class OrderItem extends OrderAttribute
         'BuyableID' => 'Int',
         'BuyableClassName' => 'DBClassName(\'SilverStripe\\ORM\\DataObject\')',
         'Version' => 'Int',
+        'HasPhysicalDispatch' => 'Boolean(1)',
     ];
 
     /**
@@ -259,7 +261,7 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('VersionCheck', 'Version', $this->Version),
                     HTMLReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="' . $this->BuyableLink() . '">' . $this->BuyableLink() . '</a>'),
                     ReadonlyField::create('TableTitle', 'TableTitle', $this->TableTitle),
-                    ReadonlyField::create('Subtitle', 'Table SubTitle', $this->TableSubTitleNOHTML()),
+                    ReadonlyField::create('TableSubTitleNOHTML', 'Table Su bTitle', $this->TableSubTitleNOHTML()),
                     ReadonlyField::create('InternalItemID', 'InternalItemID', $this->InternalItemID()),
                     ReadonlyField::create('Name', 'Name', $this->Name),
 
@@ -457,6 +459,7 @@ class OrderItem extends OrderAttribute
     public function runUpdate($recalculate = false)
     {
         $buyable = $this->getBuyableCached(true);
+        $this->HasPhysicalDispatch = $buyable->hasPhysicalProduct();
         if ($buyable && $buyable->canPurchase()) {
             if (property_exists($buyable, 'Version') && null !== $buyable->Version) {
                 if ($this->Version !== $buyable->Version) {
@@ -527,10 +530,10 @@ class OrderItem extends OrderAttribute
             $unitPrice = 0;
         }
 
-        //$updatedUnitPrice = $this->extend('updateUnitPrice', $price);
-        //if ($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
-        //    $unitPrice = $updatedUnitPrice[0];
-        //}
+        $updatedUnitPrice = $this->extend('updateUnitPrice', $unitPrice);
+        if ($updatedUnitPrice !== null && is_array($updatedUnitPrice) && count($updatedUnitPrice)) {
+            $unitPrice = $updatedUnitPrice[0];
+        }
 
         return $unitPrice;
     }

@@ -2980,7 +2980,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $result = 0;
         $items = $this->Items();
-        $type = EcommerceConfigClassNames::getName(OrderAttribute::class);
+        $type = EcommerceConfigClassNames::getName(OrderItem::class);
         if ($items->exists()) {
             foreach ($items as $item) {
                 if (is_a($item, $type)) {
@@ -3011,6 +3011,22 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getSubTotalAsMoney()
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->SubTotal(), $this);
+    }
+
+    public function HasPhysicalDispatch(): bool
+    {
+        $items = $this->Items();
+        $type = EcommerceConfigClassNames::getName(OrderItem::class);
+        if ($items->exists()) {
+            foreach ($items as $item) {
+                if (is_a($item, $type)) {
+                    if(! empty($item->HasPhysicalDispatch)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
