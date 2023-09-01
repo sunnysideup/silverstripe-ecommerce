@@ -233,6 +233,13 @@ class OrderItem extends OrderAttribute
         return $versionedObject;
     }
 
+    public function init()
+    {
+        parent::init();
+        $buyable = $this->getBuyable(true);
+        $this->HasPhysicalDispatch = $buyable->Product()->HasPhysicalDispatch;
+    }
+
     /**
      * Standard SS method.
      */
@@ -459,7 +466,7 @@ class OrderItem extends OrderAttribute
     public function runUpdate($recalculate = false)
     {
         $buyable = $this->getBuyableCached(true);
-        $this->HasPhysicalDispatch = $buyable->hasPhysicalProduct();
+
         if ($buyable && $buyable->canPurchase()) {
             if (property_exists($buyable, 'Version') && null !== $buyable->Version) {
                 if ($this->Version !== $buyable->Version) {
@@ -1041,6 +1048,7 @@ class OrderItem extends OrderAttribute
             $this->Version = $buyable->Version;
         }
     }
+
 
     /**
      * Standard SS method
