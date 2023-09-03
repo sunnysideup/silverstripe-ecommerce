@@ -1574,6 +1574,29 @@ class Product extends Page implements BuyableModel
 
     public function ProductGroupIDsCached()
     {
+        $cacheKey = 'TEMP!!!!';
+        if (EcommerceCache::inst()->hasCache($cacheKey)) {
+            $price = (float) EcommerceCache::inst()->retrieve($cacheKey, true);
+        }
+        if (null === $price) {
+            $price = $this->Price;
+            $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
 
+            $updatedPrice = $this->extend('updateCalculatedPrice', $price);
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
+
+            $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
+            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
+                $price = $updatedPrice[0];
+            }
+            if ($cacheKey) {
+                EcommerceCache::inst()->save($cacheKey, $price, true);
+            }
+        }
     }
 }
