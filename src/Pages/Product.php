@@ -1571,4 +1571,9 @@ class Product extends Page implements BuyableModel
 
         return $array;
     }
+
+    public function ProductGroupIDsCached()
+    {
+
+    }
 }
