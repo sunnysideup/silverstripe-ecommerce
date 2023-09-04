@@ -818,7 +818,7 @@ class Product extends Page implements BuyableModel
     public function OrderItem()
     {
         $filterArray = [];
-        $extendedFilter = $this->extend('updateItemFilter', $filter);
+        $extendedFilter = $this->extend('updateItemFilter', $filterArray);
 
         if (null !== $extendedFilter && is_array($extendedFilter) && count($extendedFilter)) {
             $filterArray = $extendedFilter;
@@ -1572,31 +1572,18 @@ class Product extends Page implements BuyableModel
         return $array;
     }
 
-    public function ProductGroupIDsCached()
+    public function ProductGroupIDsCached(): ?array
     {
-        $cacheKey = 'TEMP!!!!';
+        $cacheKey = 'ppg_' . $this->ID;
+        $ids = null;
         if (EcommerceCache::inst()->hasCache($cacheKey)) {
-            $price = (float) EcommerceCache::inst()->retrieve($cacheKey, true);
-        }
-        if (null === $price) {
-            $price = $this->Price;
-            $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
-            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-                $price = $updatedPrice[0];
-            }
-
-            $updatedPrice = $this->extend('updateCalculatedPrice', $price);
-            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-                $price = $updatedPrice[0];
-            }
-
-            $updatedPrice = $this->extend('updateAfterCalculatedPrice', $price);
-            if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
-                $price = $updatedPrice[0];
-            }
-            if ($cacheKey) {
-                EcommerceCache::inst()->save($cacheKey, $price, true);
+            $ids = (array) EcommerceCache::inst()->retrieve($cacheKey, true);
+        } else {
+            $ids = DB::query('SELECT ProductGroupID FROM Product_ProductGroups WHERE ProductID = ' . $this->ID)->column();
+            if (is_array($ids)) {
+                EcommerceCache::inst()->save($cacheKey, $ids, true);
             }
         }
+        return $ids;
     }
 }
