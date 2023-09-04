@@ -70,13 +70,18 @@ class ProductOrderItem extends OrderItem
     /**
      * @return string
      */
-    public function TableTitle()
+    public function TableTitle(): string
     {
         return $this->getTableTitle();
     }
 
     public function getTableTitle(): string
     {
+        if($this->priceHasBeenFixed()) {
+            if($this->TableTitleFixed) {
+                return (string) $this->TableTitleFixed;
+            }
+        }
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         $product = $this->Product();
         if ($product) {
@@ -102,19 +107,24 @@ class ProductOrderItem extends OrderItem
             $tableTitle = implode('', $updatedTableTitle);
         }
 
-        return $tableTitle;
+        return (string) $tableTitle;
     }
 
     /**
      * @return string
      */
-    public function TableSubTitle()
+    public function TableSubTitle(): string
     {
         return $this->getTableSubTitle();
     }
 
-    public function getTableSubTitle()
+    public function getTableSubTitle(): string
     {
+        if($this->priceHasBeenFixed()) {
+            if($this->TableSubTitleFixed) {
+                return (string) $this->TableSubTitleFixed;
+            }
+        }
         $tableSubTitle = '';
         $product = $this->Product();
         if ($product) {
@@ -125,7 +135,7 @@ class ProductOrderItem extends OrderItem
             $tableSubTitle = implode('', $updatedSubTableTitle);
         }
 
-        return $tableSubTitle;
+        return (string) $tableSubTitle;
     }
 
     /**

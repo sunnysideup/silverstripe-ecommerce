@@ -81,6 +81,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
         'GroupSort' => 'Int',
+        'TableTitleFixed' => 'HTMLText',
+        'TableSubTitleFixed' => 'HTMLText',
     ];
 
     /**
@@ -98,8 +100,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $casting = [
-        'TableTitle' => 'HTMLText',
-        'TableSubTitle' => 'HTMLText',
         'TableSubTitleNOHTML' => 'Text',
         'CartTitle' => 'HTMLText',
         'CartSubTitle' => 'HTMLText',
@@ -408,14 +408,19 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function TableTitle()
+    public function TableTitle(): string
     {
         return $this->getTableTitle();
     }
 
-    public function getTableTitle()
+    public function getTableTitle(): string
     {
-        return $this->i18n_singular_name();
+        if($this->priceHasBeenFixed()) {
+            if($this->TableTitleFixed) {
+                return (string) $this->TableTitleFixed;
+            }
+        }
+        return (string) $this->i18n_singular_name();
     }
 
     /**
@@ -440,14 +445,19 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function TableSubTitle()
+    public function TableSubTitle(): string
     {
         return $this->getTableSubTitle();
     }
 
-    public function getTableSubTitle()
+    public function getTableSubTitle(): string
     {
-        return '';
+        if($this->priceHasBeenFixed()) {
+            if($this->TableSubTitleFixed) {
+                return (string) $this->TableSubTitleFixed;
+            }
+        }
+        return (string) '';
     }
 
     /**
@@ -455,14 +465,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function TableSubTitleNOHTML()
+    public function TableSubTitleNOHTML(): string
     {
         return $this->getTableSubTitleNOHTML();
     }
 
-    public function getTableSubTitleNOHTML()
+    public function getTableSubTitleNOHTML(): string
     {
-        return str_replace("\n", '', strip_tags((string) $this->getTableSubTitle()));
+        return (string) str_replace("\n", '', strip_tags((string) $this->getTableSubTitle()));
     }
 
     /**
@@ -518,12 +528,19 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if ($this->OrderAttributeGroupID) {
-            $group = $this->OrderAttributeGroup();
-            if ($group) {
-                $this->GroupSort = $group->Sort;
+        if ($this->priceHasBeenFixed()) {
+            //do nothing ...
+        } else {
+            if ($this->OrderAttributeGroupID) {
+                $group = $this->OrderAttributeGroup();
+                if ($group) {
+                    $this->GroupSort = $group->Sort;
+                }
             }
+            $this->TableTitleFixed = $this->getTableTitle();
+            $this->TableSubTitleFixed = $this->getTableSubTitleFixed();
         }
+
     }
 
     /**
@@ -562,17 +579,17 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     protected function priceHasBeenFixed($recalculate = false)
     {
-        if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
-            self::$_price_has_been_fixed[$this->OrderID] = false;
-            $order = $this->getOrderCached();
-            if ($order && $order->IsSubmitted()) {
-                self::$_price_has_been_fixed[$this->OrderID] = true;
-                if ($recalculate) {
-                    user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
+        if ($this->OrderID) {
+            if (null === self::get_price_has_been_fixed($this->OrderID) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
+                self::$_price_has_been_fixed[$this->OrderID] = false;
+                $order = $this->getOrderCached();
+                if ($order && $order->IsSubmitted()) {
+                    self::$_price_has_been_fixed[$this->OrderID] = true;
+                    if ($recalculate) {
+                        user_error('You are trying to recalculate an order that is already submitted.', E_USER_NOTICE);
+                    }
                 }
             }
-        }
-        if ($this->OrderID) {
             return self::$_price_has_been_fixed[$this->OrderID];
         }
         return false;

@@ -452,14 +452,19 @@ class OrderModifier extends OrderAttribute
      *
      * @return string
      */
-    public function TableTitle()
+    public function TableTitle(): string
     {
         return $this->getTableTitle();
     }
 
-    public function getTableTitle()
+    public function getTableTitle(): string
     {
-        return $this->Name;
+        if($this->priceHasBeenFixed()) {
+            if($this->TableTitleFixed) {
+                return (string) $this->TableTitleFixed;
+            }
+        }
+        return (string) $this->Name;
     }
 
     /**

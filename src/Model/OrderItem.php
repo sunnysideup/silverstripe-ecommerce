@@ -69,7 +69,6 @@ class OrderItem extends OrderAttribute
             'TableTitle',
             'TableSubTitleNOHTML',
             'Name',
-            'TableValue',
             'Quantity',
             'BuyableID',
             'BuyableClassName',
@@ -267,8 +266,6 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('BuyableClassNameCheck', 'BuyableClassName', $this->BuyableClassName),
                     ReadonlyField::create('VersionCheck', 'Version', $this->Version),
                     HTMLReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="' . $this->BuyableLink() . '">' . $this->BuyableLink() . '</a>'),
-                    ReadonlyField::create('TableTitle', 'TableTitle', $this->TableTitle),
-                    ReadonlyField::create('TableSubTitleNOHTML', 'Table Su bTitle', $this->TableSubTitleNOHTML()),
                     ReadonlyField::create('InternalItemID', 'InternalItemID', $this->InternalItemID()),
                     ReadonlyField::create('Name', 'Name', $this->Name),
 
@@ -283,7 +280,6 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('QuantityCheck', 'Quantity', $this->Quantity),
                     ReadonlyField::create('UnitPrice', 'UnitPrice', $this->UnitPrice),
                     ReadonlyField::create('CalculatedTotal', 'Total', $this->CalculatedTotal),
-                    ReadonlyField::create('TableValue', 'Table Value', $this->TableValue),
                     ReadonlyField::create('Total', 'Total', $this->Total),
                     ReadonlyField::create('TotalAsMoney', 'Total as Money Object', $this->TotalAsMoney()->Nice()),
                 ]

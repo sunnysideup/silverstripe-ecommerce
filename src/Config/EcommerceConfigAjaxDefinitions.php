@@ -266,7 +266,7 @@ class EcommerceConfigAjaxDefinitions extends ViewableData
     /**
      * @return string for use in the Templates
      */
-    public function TableTitleID()
+    public function TableTitleID(): string
     {
         return $this->TableID() . '_Title';
     }
