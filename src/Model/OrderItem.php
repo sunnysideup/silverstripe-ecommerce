@@ -311,20 +311,13 @@ class OrderItem extends OrderAttribute
                     $buyableLink .= _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
                 }
 
-                $fields->addFieldToTab(
+                $fields->addFieldsToTab(
                     'Root.Main',
-                    HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
-                    'Quantity'
-                );
-
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->TableTitle()),
-                    'Quantity'
-                );
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->BuyableMoreDetails()),
+                    [
+                        HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
+                        ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->TableTitle()),
+                        ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->BuyableMoreDetails()),
+                    ],
                     'Quantity'
                 );
             } else {
@@ -1046,6 +1039,7 @@ class OrderItem extends OrderAttribute
             if (! $this->Version && $buyable) {
                 $this->Version = $buyable->Version;
             }
+            $this->Name = $this->getTableTitle();
         }
     }
 
