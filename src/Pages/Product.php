@@ -597,9 +597,9 @@ class Product extends Page implements BuyableModel
      *
      * @return null|\SilverStripe\ORM\DataList (ProductGroups)
      */
-    public function AllParentGroups(): ?DataList
+    public function AllParentGroups(?bool $cached = true): ?DataList
     {
-        $otherGroupsArray = $this->ProductGroups()->columnUnique();
+        $otherGroupsArray = $this->ProductGroupIDsCached();
         $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
 
         if ($ids) {
