@@ -599,7 +599,11 @@ class Product extends Page implements BuyableModel
      */
     public function AllParentGroups(?bool $cached = true): ?DataList
     {
-        $otherGroupsArray = $this->ProductGroupIDsCached();
+        if($cached) {
+            $otherGroupsArray = $this->ProductGroupIDsCached();
+        } else {
+            $otherGroupsArray = $this->ProductGroups()->columnUnique();
+        }
         $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
 
         if ($ids) {
