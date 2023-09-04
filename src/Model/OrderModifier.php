@@ -158,7 +158,20 @@ class OrderModifier extends OrderAttribute
      */
     private static $summary_fields = [
         'OrderID' => 'Order ID',
-        'TableTitle' => 'Table Title',
+        'Name' => 'Table Title',
+        'TableSubTitle' => 'More ...',
+        'TableValue' => 'Value Shown',
+        'CalculatedTotal' => 'Calculation Total',
+    ];
+
+    /**
+     * stardard SS definition.
+     *
+     * @var array
+     */
+    private static $field_labels = [
+        'OrderID' => 'Order ID',
+        'Name' => 'Table Title',
         'TableSubTitle' => 'More ...',
         'TableValue' => 'Value Shown',
         'CalculatedTotal' => 'Calculation Total',
@@ -765,25 +778,25 @@ class OrderModifier extends OrderAttribute
                 't' => 'id',
                 's' => $ajaxObject->TableTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->TableTitle(),
+                'v' => $this->getTableTitle(),
             ];
             $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->CartTitle(),
+                'v' => $this->getCartTitle(),
             ];
             $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableSubTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->TableSubTitle(),
+                'v' => $this->getTableSubTitle(),
             ];
             $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartSubTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->CartSubTitle(),
+                'v' => $this->getCartSubTitle(),
             ];
             $js[] = [
                 't' => 'id',

@@ -315,7 +315,7 @@ class OrderItem extends OrderAttribute
                     'Root.Main',
                     [
                         HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
-                        ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->TableTitle()),
+                        ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->getTableTitle()),
                         ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->BuyableMoreDetails()),
                     ],
                     'Quantity'
