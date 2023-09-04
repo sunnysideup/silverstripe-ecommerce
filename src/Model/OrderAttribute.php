@@ -81,8 +81,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
         'GroupSort' => 'Int',
-        'TableTitleFixed' => 'HTMLText',
-        'TableSubTitleFixed' => 'HTMLText',
+        'TableSubTitleFixed' => 'HTMLVarchar',
     ];
 
     /**
@@ -416,8 +415,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function getTableTitle(): string
     {
         if($this->priceHasBeenFixed()) {
-            if($this->TableTitleFixed) {
-                return (string) $this->TableTitleFixed;
+            if($this->Name) {
+                return (string) $this->Name;
             }
         }
         return (string) $this->i18n_singular_name();
@@ -430,14 +429,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CartTitle()
+    public function CartTitle(): string
     {
         return $this->getCartTitle();
     }
 
-    public function getCartTitle()
+    public function getCartTitle(): string
     {
-        return $this->TableTitle();
+        return (string) $this->TableTitle();
     }
 
     /**
@@ -537,7 +536,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
                     $this->GroupSort = $group->Sort;
                 }
             }
-            $this->TableTitleFixed = $this->getTableTitle();
             $this->TableSubTitleFixed = $this->getTableSubTitleFixed();
         }
 

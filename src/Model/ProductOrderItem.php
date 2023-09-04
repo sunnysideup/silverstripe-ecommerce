@@ -78,8 +78,8 @@ class ProductOrderItem extends OrderItem
     public function getTableTitle(): string
     {
         if($this->priceHasBeenFixed()) {
-            if($this->TableTitleFixed) {
-                return (string) $this->TableTitleFixed;
+            if($this->Name) {
+                return (string) $this->Name;
             }
         }
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
