@@ -537,7 +537,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
                     $this->GroupSort = $group->Sort;
                 }
             }
-            $this->TableSubTitleFixed = $this->getTableSubTitleFixed();
+            $this->TableSubTitleFixed = $this->getTableSubTitle();
         }
 
     }

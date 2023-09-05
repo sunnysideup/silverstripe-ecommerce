@@ -316,7 +316,7 @@ class OrderItem extends OrderAttribute
                     [
                         HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
                         ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->getTableTitle()),
-                        ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->BuyableMoreDetails()),
+                        ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->getBuyableMoreDetails()),
                     ],
                     'Quantity'
                 );
@@ -1040,6 +1040,8 @@ class OrderItem extends OrderAttribute
                 $this->Version = $buyable->Version;
             }
             $this->Name = $this->getTableTitle();
+        } else {
+            parent::onBeforeWrite();
         }
     }
 

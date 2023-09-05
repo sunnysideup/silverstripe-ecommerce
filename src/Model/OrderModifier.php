@@ -714,6 +714,11 @@ class OrderModifier extends OrderAttribute
         return $this->HasBeenRemoved;
     }
 
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+    }
+
     /**
      * removing the Order Modifier does not delete it
      * rather, it ignores it (e.g. remove discount coupon)
