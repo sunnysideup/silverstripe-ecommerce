@@ -267,7 +267,6 @@ class OrderItem extends OrderAttribute
                     ReadonlyField::create('VersionCheck', 'Version', $this->Version),
                     HTMLReadonlyField::create('BuyableLinkExample', 'Buyable Link', '<a href="' . $this->BuyableLink() . '">' . $this->BuyableLink() . '</a>'),
                     ReadonlyField::create('InternalItemID', 'InternalItemID', $this->InternalItemID()),
-                    ReadonlyField::create('Name', 'Name', $this->Name),
 
                     HeaderField::create('OrderItemHeading', 'Order Item'),
                     HTMLReadonlyField::create('LinkExample', 'Link', '<a href="' . $this->Link() . '">' . $this->Link() . '</a>'),
