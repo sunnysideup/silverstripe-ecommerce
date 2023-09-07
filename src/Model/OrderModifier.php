@@ -116,7 +116,7 @@ class OrderModifier extends OrderAttribute
     private static $table_name = 'OrderModifier';
 
     private static $db = [
-        'Name' => 'HTMLText', // we use this to create the TableTitle, CartTitle and TableSubTitle
+        'Name' => 'HTMLVarchar(200)', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
         'HasBeenRemoved' => 'Boolean', // we add this so that we can see what modifiers have been removed
         'Type' => 'Enum("Other,Discount,Tax,Delivery", "Other")',
@@ -144,7 +144,8 @@ class OrderModifier extends OrderAttribute
             'field' => NumericField::class,
             'title' => 'Order Number',
         ],
-        //"TableTitle" => "PartialMatchFilter",
+        "Name" => "PartialMatchFilter",
+        "TableSubTitle" => "PartialMatchFilter",
         'TableValue' => 'PartialMatchFilter',
         'HasBeenRemoved' => 'ExactMatchFilter',
         'Type' => 'ExactMatchFilter',
@@ -157,7 +158,20 @@ class OrderModifier extends OrderAttribute
      */
     private static $summary_fields = [
         'OrderID' => 'Order ID',
-        'TableTitle' => 'Table Title',
+        'Name' => 'Table Title',
+        'TableSubTitle' => 'More ...',
+        'TableValue' => 'Value Shown',
+        'CalculatedTotal' => 'Calculation Total',
+    ];
+
+    /**
+     * stardard SS definition.
+     *
+     * @var array
+     */
+    private static $field_labels = [
+        'OrderID' => 'Order ID',
+        'Name' => 'Table Title',
         'TableSubTitle' => 'More ...',
         'TableValue' => 'Value Shown',
         'CalculatedTotal' => 'Calculation Total',
@@ -459,11 +473,6 @@ class OrderModifier extends OrderAttribute
 
     public function getTableTitle(): string
     {
-        if($this->priceHasBeenFixed()) {
-            if($this->TableTitleFixed) {
-                return (string) $this->TableTitleFixed;
-            }
-        }
         return (string) $this->Name;
     }
 
@@ -705,6 +714,11 @@ class OrderModifier extends OrderAttribute
         return $this->HasBeenRemoved;
     }
 
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+    }
+
     /**
      * removing the Order Modifier does not delete it
      * rather, it ignores it (e.g. remove discount coupon)
@@ -769,25 +783,25 @@ class OrderModifier extends OrderAttribute
                 't' => 'id',
                 's' => $ajaxObject->TableTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->TableTitle(),
+                'v' => $this->getTableTitle(),
             ];
             $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->CartTitle(),
+                'v' => $this->getCartTitle(),
             ];
             $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->TableSubTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->TableSubTitle(),
+                'v' => $this->getTableSubTitle(),
             ];
             $js[] = [
                 't' => 'id',
                 's' => $ajaxObject->CartSubTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->CartSubTitle(),
+                'v' => $this->getCartSubTitle(),
             ];
             $js[] = [
                 't' => 'id',

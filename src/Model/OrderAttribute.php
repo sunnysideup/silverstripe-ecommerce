@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Model;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
@@ -81,8 +82,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
         'GroupSort' => 'Int',
-        'TableTitleFixed' => 'HTMLText',
-        'TableSubTitleFixed' => 'HTMLText',
+        'TableSubTitleFixed' => 'HTMLVarchar(200)',
     ];
 
     /**
@@ -416,8 +416,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     public function getTableTitle(): string
     {
         if($this->priceHasBeenFixed()) {
-            if($this->TableTitleFixed) {
-                return (string) $this->TableTitleFixed;
+            if($this->Name) {
+                return (string) $this->Name;
             }
         }
         return (string) $this->i18n_singular_name();
@@ -430,14 +430,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CartTitle()
+    public function CartTitle(): string
     {
         return $this->getCartTitle();
     }
 
-    public function getCartTitle()
+    public function getCartTitle(): string
     {
-        return $this->TableTitle();
+        return (string) $this->getTableTitle();
     }
 
     /**
@@ -481,20 +481,20 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CartSubTitle()
+    public function CartSubTitle(): string
     {
         return $this->getCartSubTitle();
     }
 
-    public function getCartSubTitle()
+    public function getCartSubTitle(): string
     {
-        return $this->TableSubTitle();
+        return (string) $this->TableSubTitle();
     }
 
     /**
      * Returns the Money object of the CalculatedTotal.
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function CalculatedTotalAsMoney()
     {
@@ -537,8 +537,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
                     $this->GroupSort = $group->Sort;
                 }
             }
-            $this->TableTitleFixed = $this->getTableTitle();
-            $this->TableSubTitleFixed = $this->getTableSubTitleFixed();
+            $this->TableSubTitleFixed = $this->getTableSubTitle();
         }
 
     }

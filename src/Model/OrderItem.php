@@ -95,6 +95,7 @@ class OrderItem extends OrderAttribute
     private static $table_name = 'OrderItem';
 
     private static $db = [
+        'Name' => 'HTMLVarchar(200)',
         'Quantity' => 'Double',
         'BuyableID' => 'Int',
         'BuyableClassName' => 'DBClassName(\'SilverStripe\\ORM\\DataObject\')',
@@ -148,7 +149,8 @@ class OrderItem extends OrderAttribute
             'title' => 'Internal Item ID',
             'filter' => 'OrderItemProductFilter',
         ],
-        //"TableTitle" => "PartialMatchFilter",
+        "Name" => "PartialMatchFilter",
+        "TableSubTitle" => "PartialMatchFilter",
         //"UnitPrice",
         'Quantity',
         //"Total"
@@ -308,20 +310,13 @@ class OrderItem extends OrderAttribute
                     $buyableLink .= _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
                 }
 
-                $fields->addFieldToTab(
+                $fields->addFieldsToTab(
                     'Root.Main',
-                    HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
-                    'Quantity'
-                );
-
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->TableTitle()),
-                    'Quantity'
-                );
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->BuyableMoreDetails()),
+                    [
+                        HeaderField::create('buyableLink', DBField::create_field('HTMLText', $buyableLink)),
+                        ReadonlyField::create('TableTitle', _t('OrderItem.ROW_TITLE', 'Row Title'), $this->getTableTitle()),
+                        ReadonlyField::create('TableSubTitleNOHTML', _t('OrderItem.SUB_TITLE', 'Sub Title'), $this->getBuyableMoreDetails()),
+                    ],
                     'Quantity'
                 );
             } else {
@@ -1018,29 +1013,34 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        $this->resetCache();
-        $buyable = $this->getBuyableCached(true);
-        if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
-            $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
-        }
+        if(! $this->priceHasBeenFixed()) {
+            $this->resetCache();
+            $buyable = $this->getBuyableCached(true);
+            if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
+                $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
+            }
 
-        if (! $this->exists()) {
-            if ($buyable) {
-                if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
-                    $this->setClassName($buyable->classNameForOrderItem());
+            if (! $this->exists()) {
+                if ($buyable) {
+                    if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
+                        $this->setClassName($buyable->classNameForOrderItem());
+                    }
                 }
             }
-        }
 
-        //now we can do the parent thing
-        parent::onBeforeWrite();
-        //always keep quantity above 0
-        if (0 === floatval($this->Quantity)) {
-            $this->Quantity = 1;
-        }
+            //now we can do the parent thing
+            parent::onBeforeWrite();
+            //always keep quantity above 0
+            if (0 === floatval($this->Quantity)) {
+                $this->Quantity = 1;
+            }
 
-        if (! $this->Version && $buyable) {
-            $this->Version = $buyable->Version;
+            if (! $this->Version && $buyable) {
+                $this->Version = $buyable->Version;
+            }
+            $this->Name = $this->getTableTitle();
+        } else {
+            parent::onBeforeWrite();
         }
     }
 
