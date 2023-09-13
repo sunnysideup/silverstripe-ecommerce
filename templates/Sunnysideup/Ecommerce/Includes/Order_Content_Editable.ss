@@ -66,7 +66,7 @@
                 <% end_if %>
             </td>
         </tr>
-        <tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
+        <tr class="showOnZeroItems"<% if Items %> style="display: none!important"<% end_if %>>
             <td colspan="5" class="center fiveCols">
                 $DisplayPage.NoItemsInOrderMessage
             </td>
