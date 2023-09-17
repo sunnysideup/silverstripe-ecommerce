@@ -9,6 +9,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Email\OrderStatusEmail;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -407,8 +408,8 @@ class OrderConfirmationPage extends CartPage
                 $orderConfirmationPage->Title = 'Order Confirmation';
                 $orderConfirmationPage->MenuTitle = 'Order Confirmation';
                 $orderConfirmationPage->URLSegment = 'order-confirmation';
-                $orderConfirmationPage->writeToStage('Stage');
-                $orderConfirmationPage->publish('Stage', 'Live');
+                $orderConfirmationPage->writeToStage(Versioned::DRAFT);
+                $orderConfirmationPage->publishRecursive();
             }
         }
     }

@@ -502,7 +502,7 @@ class CartPageController extends PageController
             $this->actionLinks = new ArrayList([]);
             //what order are we viewing?
             $viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
-            $currentUserID = Member::currentUserID();
+            $currentUserID = Security::getCurrentUser()?->ID;
 
             //Continue Shopping
             if (property_exists($this, 'ContinueShoppingLabel') && null !== $this->ContinueShoppingLabel && $this->ContinueShoppingLabel) {

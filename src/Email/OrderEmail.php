@@ -125,23 +125,33 @@ abstract class OrderEmail extends Email
         $this->resend = $resend;
     }
 
+
+
+    public function send(): void
+    {
+        $this->sendInner(false);
+    }
+
+
+    public function getBodyOnly(): string
+    {
+        return $this->sendInner(false);
+    }
+
     /**
-     * @param null|string $messageID      - ID for the message, you can leave this blank
-     * @param bool        $returnBodyOnly - rather than sending the email, only return the HTML BODY
      *
-     * @return bool - TRUE for success and FALSE for failure
      */
-    public function send($messageID = null, $returnBodyOnly = false)
+    public function sendInner(?bool $returnBodyOnly = false): ?string
     {
         if (! $this->order) {
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
-        if (! $this->subject) {
-            $this->subject = self::get_subject();
+        if (! $this->getSubject()) {
+            $this->setSubject(self::get_subject());
         }
-        $this->subject = str_replace('[OrderNumber]', $this->order->ID, $this->subject);
+        $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, $this->getSubject()));
         if (! $this->hasBeenSent() || ($this->resend)) {
-            if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->to !== self::get_from_email())) {
+            if (EcommerceConfig::get(OEmailrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
                 $memberEmail = self::get_from_email();
                 if ($memberEmail) {
                     $array = [$memberEmail];
@@ -155,7 +165,7 @@ abstract class OrderEmail extends Email
             //last chance to adjust
             $this->extend('adjustOrderEmailSending', $this, $order);
             if ($returnBodyOnly) {
-                return $this->getBody();
+                return (string) $this->getBody();
             }
 
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
@@ -166,10 +176,9 @@ abstract class OrderEmail extends Email
 
             $result = $this->createRecord($result);
 
-            return (bool) $result->Result;
         }
+        return null;
 
-        return false;
     }
 
     /**
@@ -226,7 +235,7 @@ abstract class OrderEmail extends Email
         parent::render($plainOnly);
         //moves CSS to inline CSS in email.
         if (! $plainOnly) {
-            $this->body = $this->body ? self::emogrify_html($this->body) : '';
+            $this->setBody($this->getBody() ? self::emogrify_html($this->getBody()) : '');
         }
 
         return $this;
@@ -238,8 +247,8 @@ abstract class OrderEmail extends Email
     protected function createRecord($result): OrderEmailRecord
     {
         $orderEmailRecord = OrderEmailRecord::create();
-        $from = is_array($this->from) ? array_key_first($this->from) : $this->from;
-        $to = is_array($this->to) ? array_key_first($this->to) : $this->to;
+        $from = is_array($this->getFrom()) ? array_key_first($this->getFrom()) : $this->getFrom();
+        $to = is_array($this->getTo()) ? array_key_first($this->getTo()) : $this->getTo();
         $orderEmailRecord->From = $this->emailToVarchar($from);
         $orderEmailRecord->To = $this->emailToVarchar($to);
         if ($this->getCc()) {
@@ -249,14 +258,14 @@ abstract class OrderEmail extends Email
             $orderEmailRecord->To .= ', BCC: ' . trim($this->emailToVarchar($this->getBcc()));
         }
         //always set result to try if
-        $orderEmailRecord->Subject = $this->subject;
+        $orderEmailRecord->setSubject($this->getSubject());
         if (! $result) {
             if (Director::isDev()) {
                 $result = true;
                 $orderEmailRecord->Subject .= _t('OrderEmail.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
             }
         }
-        $orderEmailRecord->Content = $this->body;
+        $orderEmailRecord->Content = $this->getBody();
         $orderEmailRecord->Result = $result ? 1 : 0;
         $orderEmailRecord->OrderID = $this->order->ID;
         $orderEmailRecord->OrderStepID = $this->order->StatusID;

@@ -403,7 +403,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 $objects = EcommerceCountry::get()->filter(['DoNotAllowSales' => 0]);
             }
 
-            if ($objects->exists()) {
+            if ($objects && $objects->exists()) {
                 $idField = $useIDNotCode ? 'ID' : 'Code';
                 $array = $objects->map($idField, 'Name')->toArray();
             }
@@ -538,7 +538,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
 
                 if ($o && $o->exists()) {
                     $countryCode = $o->getCountry();
-                //3 ... if there is no shopping cart, then we still want it from IP
+                    //3 ... if there is no shopping cart, then we still want it from IP
                 } else {
                     $countryCode = self::get_country_from_ip();
                 }

@@ -22,6 +22,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -375,7 +376,7 @@ class ProductGroup extends Page
                         if ($count > 0) {
                             $oldURLSegment = $productGroup->URLSegment;
                             DB::alteration_message(' ... Correcting URLSegment for ' . $productGroup->Title . ' with ID: ' . $productGroup->ID, 'deleted');
-                            $productGroup->writeToStage('Stage');
+                            $productGroup->writeToStage(Versioned::DRAFT);
                             $productGroup->publishRecursive();
 
                             $newURLSegment = $productGroup->URLSegment;

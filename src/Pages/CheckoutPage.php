@@ -18,6 +18,7 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\OrderModifierDescriptor;
@@ -299,7 +300,7 @@ class CheckoutPage extends CartPage
      */
     public function getCMSFields()
     {
-        $fields = parent :: getCMSFields();
+        $fields = parent::getCMSFields();
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'ProceedToCheckoutLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'ContinueShoppingLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'ContinuePageID');
@@ -363,8 +364,8 @@ class CheckoutPage extends CartPage
                 $checkoutPage->Title = 'Checkout';
                 $checkoutPage->MenuTitle = 'Checkout';
                 $checkoutPage->URLSegment = 'checkout';
-                $checkoutPage->writeToStage('Stage');
-                $checkoutPage->publish('Stage', 'Live');
+                $checkoutPage->writeToStage(Versioned::DRAFT);
+                $checkoutPage->publishResursive();
             }
         }
     }

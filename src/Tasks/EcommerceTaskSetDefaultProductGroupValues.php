@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -47,8 +48,8 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
         if ($faultyProductGroups->exists()) {
             foreach ($faultyProductGroups as $faultyProductGroup) {
                 $faultyProductGroup->{$fieldName} = $resetValue;
-                $faultyProductGroup->writeToStage('Stage');
-                $faultyProductGroup->publish('Stage', 'Live');
+                $faultyProductGroup->writeToStage(Versioned::DRAFT);
+                $faultyProductGroup->publishRecursive();
                 DB::alteration_message("Reset {$fieldName} for " . $faultyProductGroup->Title, 'created');
             }
         } else {

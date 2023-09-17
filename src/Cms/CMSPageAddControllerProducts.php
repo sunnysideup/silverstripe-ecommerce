@@ -3,7 +3,10 @@
 namespace Sunnysideup\Ecommerce\Cms;
 
 use SilverStripe\CMS\Controllers\CMSPageAddController;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -39,11 +42,10 @@ class CMSPageAddControllerProducts extends CMSPageAddController
      */
     private static $root_parent_class_for_adding_page = ProductGroupSearchPage::class;
 
-    public function doCancel($data, $form)
+    public function doCancel(array $data, Form $form): HTTPResponse
     {
-        return $this->redirect(singleton(ProductsAndGroupsModelAdmin::class)->Link());
+        return $this->redirect(Injector::inst()->get(ProductsAndGroupsModelAdmin::class)->Link());
     }
-
     /**
      * @return \SilverStripe\ORM\ArrayList
      */

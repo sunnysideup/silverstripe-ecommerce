@@ -751,11 +751,11 @@ class Order extends DataObject implements EditableEcommerceObject
             'ajaxSafe' => true,
         ]);
         $fields->insertBefore(
+            'Main',
             Tab::create(
                 'Next',
                 _t('Order.NEXT_TAB', 'Action')
-            ),
-            'Main'
+            )
         );
         $fields->addFieldsToTab(
             'Root',
@@ -4129,10 +4129,10 @@ class Order extends DataObject implements EditableEcommerceObject
             $email->setData($arrayData);
             $email->setOrder($this);
             $email->setResend($resend);
-            $result = $email->send(null);
+            $email->send();
             SetThemed::end();
 
-            return $result;
+            return true;
         }
 
         return false;

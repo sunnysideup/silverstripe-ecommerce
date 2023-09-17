@@ -264,7 +264,7 @@ class AccountPage extends Page
      */
     protected function pastOrdersSelection()
     {
-        $memberID = (int) Member::currentUserID();
+        $memberID = (int) Security::getCurrentUser()?->ID;
         if (! $memberID) {
             //set t
             $memberID = rand(0, 1000000) * -1;

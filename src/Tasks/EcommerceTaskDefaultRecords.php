@@ -6,6 +6,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
@@ -51,8 +52,8 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $accountPage->Content = '<p>This is the account page. It is used for shop users to login and change their member details if they have an account.</p>';
             $accountPage->URLSegment = 'account';
             $accountPage->ShowInMenus = false;
-            $accountPage->writeToStage('Stage');
-            $accountPage->publish('Stage', 'Live');
+            $accountPage->writeToStage(Versioned::DRAFT);
+            $accountPage->publishRecursive();
             DB::alteration_message("Account page 'Account' created", 'created');
         } else {
             DB::alteration_message('No need to create an account page, it already exists.');
@@ -93,8 +94,8 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 DB::alteration_message('No terms and conditions page linked.');
             }
 
-            $checkoutPage->writeToStage('Stage');
-            $checkoutPage->publish('Stage', 'Live');
+            $checkoutPage->writeToStage(Versioned::DRAFT);
+            $checkoutPage->publishRecursive();
             DB::alteration_message('Checkout page saved');
 
             $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class, null, $cacheDataObjectGetOne = false);
@@ -109,8 +110,8 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 $orderConfirmationPage->Content = '<p>This is the order confirmation page. It is used to confirm orders after they have been placed in the checkout page.</p>';
                 $orderConfirmationPage->URLSegment = 'order-confirmation';
                 $orderConfirmationPage->ShowInMenus = false;
-                $orderConfirmationPage->writeToStage('Stage');
-                $orderConfirmationPage->publish('Stage', 'Live');
+                $orderConfirmationPage->writeToStage(Versioned::DRAFT);
+                $orderConfirmationPage->publishRecursive();
                 DB::alteration_message('Order Confirmation created', 'created');
             }
         }

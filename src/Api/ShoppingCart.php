@@ -555,10 +555,10 @@ class ShoppingCart
     public function prepareOrderItem(BuyableModel $buyable, $parameters = [], $mustBeExistingItem = true)
     {
         $parametersArray = $parameters;
-        $form = null;
+        // $form = null;
         if (ClassHelpers::check_for_instance_of($parameters, Form::class, false)) {
             $parametersArray = [];
-            $form = $parameters;
+            // $form = $parameters;
         }
 
         if (! $buyable) {
@@ -581,9 +581,9 @@ class ShoppingCart
             return null;
         }
 
-        if ($form) {
-            $form->saveInto($item);
-        }
+        // if ($form) {
+        //     $form->saveInto($item);
+        // }
 
         return $item;
     }
@@ -718,7 +718,7 @@ class ShoppingCart
             Controller::curr()->getRequest()->getSession()->save(Controller::curr()->getRequest());
         }
 
-        $memberID = (int) Member::currentUserID();
+        $memberID = (int) Security::getCurrentUser()?->ID;
         if ($memberID) {
             $orders = Order::get()->filter(['MemberID' => $memberID]);
             if ($orders->exists()) {
@@ -1241,7 +1241,7 @@ class ShoppingCart
         } elseif (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
             Controller::curr()->redirectBack();
         } else {
-            Controller::curr()->redirect(urldecode( (string) $_REQUEST['BackURL']));
+            Controller::curr()->redirect(urldecode((string) $_REQUEST['BackURL']));
         }
     }
 

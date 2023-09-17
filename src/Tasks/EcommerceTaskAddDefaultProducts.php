@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
@@ -32,8 +33,8 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
                     <p>In this example we have setup a main product group (this page), with a nested product group containing 2 example products.</p>
                 ";
                 $productGroup1->URLSegment = 'products';
-                $productGroup1->writeToStage('Stage');
-                $productGroup1->publish('Stage', 'Live');
+                $productGroup1->writeToStage(Versioned::DRAFT);
+                $productGroup1->publish(Versioned::DRAFT, 'Live');
                 DB::alteration_message("Product group page 'Products' created", 'created');
             } else {
                 $productGroup1 = ProductGroup::get()->first();
@@ -47,8 +48,8 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page1->ParentID = $productGroup1->ID;
             $page1->Price = '15.00';
             $page1->FeaturedProduct = true;
-            $page1->writeToStage('Stage');
-            $page1->publish('Stage', 'Live');
+            $page1->writeToStage(Versioned::DRAFT);
+            $page1->publish(Versioned::DRAFT, 'Live');
             DB::alteration_message("Product page 'Example product' created", 'created');
 
             $page2 = new Product();
@@ -57,8 +58,8 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page2->URLSegment = 'example-product-2';
             $page2->ParentID = $productGroup1->ID;
             $page2->Price = '25.00';
-            $page2->writeToStage('Stage');
-            $page2->publish('Stage', 'Live');
+            $page2->writeToStage(Versioned::DRAFT);
+            $page2->publish(Versioned::DRAFT, 'Live');
             DB::alteration_message("Product page 'Example product 2' created", 'created');
         } else {
             DB::alteration_message('No products created as they already exist.');

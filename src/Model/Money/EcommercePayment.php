@@ -483,8 +483,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public static function set_supported_methods(array $array)
     {
-        Config::modify()->merge(EcommercePayment::class, 'supported_methods', null);
-        Config::modify()->merge(EcommercePayment::class, 'supported_methods', $array);
+        Config::modify()->set(EcommercePayment::class, 'supported_methods', $array);
     }
 
     /**
@@ -694,7 +693,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->PaidByID = Member::currentUserID();
+        $this->PaidByID = Security::getCurrentUser()?->ID;
     }
 
     /**

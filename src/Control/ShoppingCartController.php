@@ -16,6 +16,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
@@ -481,7 +482,7 @@ class ShoppingCartController extends Controller
                 $obj = $className::get_by_id($id);
                 $obj->AllowPurchase = 0;
                 if ($obj instanceof SiteTree) {
-                    $obj->writeToStage('Stage');
+                    $obj->writeToStage(Versioned::DRAFT);
                     $obj->publishRecursive();
                 } else {
                     $obj->write();
