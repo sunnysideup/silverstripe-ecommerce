@@ -19,6 +19,7 @@ use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -312,6 +313,7 @@ class ShoppingCartController extends Controller
      */
     public function additem(HTTPRequest $request)
     {
+        /** Buya*/
         $buyable = $this->buyable();
         if ($buyable) {
             $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
@@ -388,6 +390,7 @@ class ShoppingCartController extends Controller
      */
     public function removeallitemandedit(HTTPRequest $request)
     {
+        /** @var Product|BuyableModel $buyable */
         $buyable = $this->buyable();
         if ($buyable) {
             $link = $buyable->Link();
@@ -839,7 +842,7 @@ class ShoppingCartController extends Controller
     /**
      * Gets a buyable object based on URL actions.
      *
-     * @return null|OrderItem - returns buyable
+     * @return null|BuyableModel - returns buyable
      */
     protected function buyable()
     {
