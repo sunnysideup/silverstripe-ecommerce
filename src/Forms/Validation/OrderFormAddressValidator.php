@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * @Description: allows customer to make additional payments for their order
