@@ -42,10 +42,11 @@ class CMSPageAddControllerProducts extends CMSPageAddController
      */
     private static $root_parent_class_for_adding_page = ProductGroupSearchPage::class;
 
-    public function doCancel(array $data, Form $form): HTTPResponse
-    {
-        return $this->redirect(Injector::inst()->get(ProductsAndGroupsModelAdmin::class)->Link());
-    }
+    // TODO: SS4 / SS5 Compat issues
+    // public function doCancel(array $data, Form $form): HTTPResponse
+    // {
+    //     return $this->redirect(Injector::inst()->get(ProductsAndGroupsModelAdmin::class)->Link());
+    // }
     /**
      * @return \SilverStripe\ORM\ArrayList
      */
