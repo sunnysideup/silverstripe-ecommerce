@@ -258,7 +258,7 @@ abstract class OrderEmail extends Email
             $orderEmailRecord->To .= ', BCC: ' . trim($this->emailToVarchar($this->getBcc()));
         }
         //always set result to try if
-        $orderEmailRecord->setSubject($this->getSubject());
+        $orderEmailRecord->Subject = $this->getSubject();
         if (! $result) {
             if (Director::isDev()) {
                 $result = true;
