@@ -136,8 +136,8 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * adding a sequential order number.
      */
-     protected function onBeforeWrite()
-     {
+    protected function onBeforeWrite()
+    {
         parent::onBeforeWrite();
         $order = $this->getOrderCached();
         if ($order) {
@@ -151,7 +151,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         if (! (int) $this->SequentialOrderNumber) {
             $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') ?? 1;
             $id = null !== $this->ID ? (int) $this->ID : 0;
-            $lastOne = DB::query("SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> $id")->current();
+            $lastOne = DB::query("SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> $id")->value();
             $lastOne = $lastOne['LastOrderNumber'];
             if ($lastOne > 0) {
                 $this->SequentialOrderNumber = (int) $lastOne + 1;
