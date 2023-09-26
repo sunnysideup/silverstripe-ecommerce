@@ -775,7 +775,7 @@ class ProductGroupController extends PageController
 
             return Product::get()
                 ->filter(['ID' => $ids])
-                ->sort(ArrayMethods::create_sort_statement_from_id_array($ids, Product::class))
+                ->orderBy(ArrayMethods::create_sort_statement_from_id_array($ids, Product::class))
             ;
         }
 

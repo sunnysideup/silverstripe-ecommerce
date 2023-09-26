@@ -37,7 +37,7 @@ class EcommerceTemplateTest extends PageController
             $notForSale = false;
             $product = Product::get()
                 ->where('"AllowPurchase" = 1  AND "Price" > 0')
-                ->sort('RAND()')
+                ->orderBy('RAND()')
                 ->limit(1, $offSet)
                 ->First()
             ;

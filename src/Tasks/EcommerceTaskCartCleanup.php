@@ -264,7 +264,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $where = '(' . $whereWithoutMember . ') OR (' . $whereWithMember . ')';
         $oldCarts = Order::get()
             ->where($where)
-            ->sort($this->sort)
+            ->orderBy($this->sort)
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
@@ -332,7 +332,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
         $oldCarts = Order::get()
             ->where($where)
-            ->sort($this->sort)
+            ->orderBy($this->sort)
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
         $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);

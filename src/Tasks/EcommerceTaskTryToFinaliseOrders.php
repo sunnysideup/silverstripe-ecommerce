@@ -82,7 +82,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             $ordersInQueueArray = ArrayMethods::filter_array([]);
         }
         $orders = Order::get()
-            ->sort($sort)
+            ->orderBy($sort)
             ->filter(['StatusID' => OrderStep::admin_manageable_steps()])
             ->exclude(['ID' => $ordersInQueueArray]);
         ;

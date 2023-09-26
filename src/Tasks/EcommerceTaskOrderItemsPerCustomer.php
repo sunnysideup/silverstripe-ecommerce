@@ -38,7 +38,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         $offset = 0;
         $count = 50;
         $orders = Order::get()
-            ->sort('"Order"."ID" ASC')
+            ->orderBy('"Order"."ID" ASC')
             ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
             ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
@@ -70,7 +70,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 }
             }
             $orders = Order::get()
-                ->sort('"Order"."ID" ASC')
+                ->orderBy('"Order"."ID" ASC')
                 ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
                 ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')

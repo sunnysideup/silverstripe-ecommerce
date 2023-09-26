@@ -1500,7 +1500,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if (! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
-                    ->sort('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
+                    ->orderBy('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
                     ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
                     ->first()
                 ;

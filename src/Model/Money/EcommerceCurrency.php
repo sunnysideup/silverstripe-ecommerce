@@ -374,16 +374,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function ecommerce_currency_list()
     {
-        $dos = EcommerceCurrency::get()
-            ->Filter(['InUse' => 1])
-            ->Sort(
-                [
-                    "IF(\"Code\" = '" . strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency')) . "', 0, 1)" => 'ASC',
-                    'Name' => 'ASC',
-                    'Code' => 'ASC',
-                ]
-            )
-        ;
+        $dos = self::get_list();
         if ($dos->count() < 2) {
             return null;
         }
@@ -395,12 +386,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         return EcommerceCurrency::get()
             ->filter(['InUse' => 1])
-            ->sort(
-                [
-                    "IF(\"Code\" = '" . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . "', 0, 1)" => 'ASC',
-                    'Name' => 'ASC',
-                    'Code' => 'ASC',
-                ]
+            ->orderBy(
+                '
+                    IF("Code" = \'' . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . '\', 0, 1) ASC,
+                    "Name" ASC,
+                    "Code" ASC
+                '
             )
         ;
     }
@@ -742,7 +733,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         $result = parent::validate();
         $errors = [];
-        if (! $this->Code || 3 !== mb_strlen( (string) $this->Code)) {
+        if (! $this->Code || 3 !== mb_strlen((string) $this->Code)) {
             $errors[] = 'The code must be 3 characters long.';
         }
 

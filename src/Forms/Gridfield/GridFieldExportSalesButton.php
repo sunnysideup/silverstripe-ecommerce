@@ -217,7 +217,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
     protected function getMyOrders($idArray, $count, $offset)
     {
         return Order::get()
-            ->sort('"Order"."ID" ASC')
+            ->sort(['Order.ID' => 'ASC'])
             ->filter(['ID' => $idArray])
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset)

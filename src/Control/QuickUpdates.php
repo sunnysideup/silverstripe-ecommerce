@@ -254,7 +254,7 @@ class QuickUpdates extends Controller
     {
         $products = Product::get()
             ->filter(['AllowPurchase' => true])
-            ->sort('Price DESC')
+            ->sort(['Price' =>  'DESC'])
             ->limit($this->getMaxItems())
         ;
         $products = $this->isIncludedInListForProductSqlChanges($products);

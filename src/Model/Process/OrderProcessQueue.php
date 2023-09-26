@@ -332,7 +332,7 @@ class OrderProcessQueue extends DataObject
 
         return Order::get()
             ->filter(['ID' => $orderIDs])
-            ->sort($this->sortPhraseForOrderIDs($orderIDs))
+            ->orderBy($this->sortPhraseForOrderIDs($orderIDs))
         ;
     }
 
@@ -349,7 +349,7 @@ class OrderProcessQueue extends DataObject
 
         return empty($orderIDs) ? null : Order::get()
             ->filter(['ID' => $orderIDs])
-            ->sort($this->sortPhraseForOrderIDs($orderIDs))
+            ->orderBy($this->sortPhraseForOrderIDs($orderIDs))
             ->limit($limit)
         ;
     }
@@ -382,7 +382,7 @@ class OrderProcessQueue extends DataObject
 
         return Order::get()
             ->filter(['ID' => $orderIDs])
-            ->sort($this->sortPhraseForOrderIDs($orderIDs))
+            ->orderBy($this->sortPhraseForOrderIDs($orderIDs))
         ;
     }
 

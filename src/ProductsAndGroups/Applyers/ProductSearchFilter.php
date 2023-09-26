@@ -325,7 +325,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function setSearchKeyword(string $keyword): self
     {
-        $this->rawData['Keyword'] = urldecode( (string) $keyword);
+        $this->rawData['Keyword'] = urldecode((string) $keyword);
 
         return $this;
     }
@@ -410,7 +410,7 @@ class ProductSearchFilter extends BaseApplyer
 
         //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
         if ($this->products->exists()) {
-            if (! empty($this->rawData['Keyword']) && strlen( (string) $this->rawData['Keyword']) > 1) {
+            if (! empty($this->rawData['Keyword']) && strlen((string) $this->rawData['Keyword']) > 1) {
                 $this->runKeywordSearch();
             } else {
                 // add directly to results
@@ -578,7 +578,7 @@ class ProductSearchFilter extends BaseApplyer
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
         $this->productsForGroups = $this->productsForGroups
             ->filter(['ID' => ArrayMethods::filter_array($ids), 'ShowInSearch' => 1])
-            ->sort($sortStatement)
+            ->orderBy($sortStatement)
         ;
         $this->productGroupIds = $ids;
         if ($this->debug) {
