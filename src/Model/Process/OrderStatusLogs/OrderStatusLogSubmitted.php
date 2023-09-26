@@ -152,7 +152,6 @@ class OrderStatusLogSubmitted extends OrderStatusLog
             $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') ?? 1;
             $id = null !== $this->ID ? (int) $this->ID : 0;
             $lastOne = DB::query("SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> $id")->value();
-            $lastOne = $lastOne['LastOrderNumber'];
             if ($lastOne > 0) {
                 $this->SequentialOrderNumber = (int) $lastOne + 1;
             }
