@@ -268,7 +268,7 @@ class Product extends Page implements BuyableModel
 
     public function AdditionalImages()
     {
-        return $this->getManyManyComponents('AdditionalImages')->sort('Product_AdditionalImages.ImageSort ASC');
+        return $this->getManyManyComponents('AdditionalImages')->orderBy('Product_AdditionalImages.ImageSort ASC');
     }
 
     public function SummaryFields()

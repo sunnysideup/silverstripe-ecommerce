@@ -365,7 +365,7 @@ class CheckoutPage extends CartPage
                 $checkoutPage->MenuTitle = 'Checkout';
                 $checkoutPage->URLSegment = 'checkout';
                 $checkoutPage->writeToStage(Versioned::DRAFT);
-                $checkoutPage->publishResursive();
+                $checkoutPage->publishRecursive();
             }
         }
     }
