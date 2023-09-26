@@ -1,7 +1,6 @@
 ---
 Name: ecommerce
 ---
-
 SilverStripe\Control\Controller:
   extensions:
     - Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension
@@ -50,4 +49,6 @@ SilverStripe\Admin\LeftAndMain:
         - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderSize
         - Sunnysideup-Ecommerce-Cms-SalesAdmin
         - Sunnysideup-Ecommerce-Cms-SalesAdminExtras
-        - refresh
+        - Sunnysideup-Ecommerce-Cms-SalesAdminByPaymentType
+        - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderStep
+        - Sunnysideup-Ecommerce-Cms-SalesAdminProcess

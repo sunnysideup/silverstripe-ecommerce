@@ -602,7 +602,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         if (EcommerceRegion::show()) {
             $nameWithoutID = str_replace('ID', '', (string) $name);
-            $title = _t('OrderAddress.' . strtoupper($nameWithoutID), 'Region / Province / State');
+            $title = _t('OrderAddress.' . strtoupper((string) $nameWithoutID), 'Region / Province / State');
             $regionsForDropdown = EcommerceRegion::list_of_allowed_entries_for_dropdown();
             $count = count($regionsForDropdown);
             if ($count < 1) {
@@ -639,7 +639,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     protected function getCountryField($name)
     {
         $countriesForDropdown = EcommerceCountry::list_of_allowed_entries_for_dropdown();
-        $title = _t('OrderAddress.' . strtoupper($name), 'Country');
+        $title = _t('OrderAddress.' . strtoupper((string) $name), 'Country');
         $order = $this->getOrderCached();
 
         $countryCode = null;
@@ -652,7 +652,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
         }
         $countryField = new DropdownField($name, $title, $countriesForDropdown, $countryCode);
-        $countryField->setDescription(_t('OrderAddress.' . strtoupper($name) . '_RIGHT', ' '));
+        $countryField->setDescription(_t('OrderAddress.' . strtoupper((string) $name) . '_RIGHT', ' '));
         if (count($countriesForDropdown) < 2) {
             $countryField = $countryField->performReadonlyTransformation();
             if (count($countriesForDropdown) < 1) {

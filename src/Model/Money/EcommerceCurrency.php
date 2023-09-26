@@ -474,7 +474,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $code = 'NZD';
         }
 
-        return strtoupper($code);
+        return strtoupper((string) $code);
     }
 
     /**
@@ -499,7 +499,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         return DataObject::get_one(
             EcommerceCurrency::class,
             [
-                'Code' => trim(strtoupper($currencyCode)),
+                'Code' => trim(strtoupper((string) $currencyCode)),
                 'InUse' => 1,
             ]
         );
@@ -595,7 +595,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return strtoupper($this->Code) === strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
+        return strtoupper((string) $this->Code) === strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
     }
 
     /**
@@ -742,7 +742,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         }
 
         if (! count($errors)) {
-            $this->Code = strtoupper($this->Code);
+            $this->Code = strtoupper((string) $this->Code);
             // Check that there are no 2 same code currencies in use
             if ($this->isChanged('Code')) {
                 $exists = EcommerceCurrency::get()
@@ -794,7 +794,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function create_new($code, $name = '')
     {
-        $code = trim(strtoupper($code));
+        $code = trim(strtoupper((string) $code));
         if (! $name) {
             $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
             $name = isset($currencies[$code]) ? $currencies[$code] : $code;
@@ -840,7 +840,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         parent::onBeforeWrite();
         // Check that there is always at least one currency in use
-        $this->Code = strtoupper($this->Code);
+        $this->Code = strtoupper((string) $this->Code);
         if (! $this->InUse) {
             $list = self::get_list();
             $count = $list->Count();

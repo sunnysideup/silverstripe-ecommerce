@@ -459,7 +459,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     public static function find_title($code)
     {
-        $code = strtoupper($code);
+        $code = strtoupper((string) $code);
         $options = self::get_country_dropdown($showAllCountries = true);
         // check if code was provided, and is found in the country array
         if (isset($options[$code])) {
@@ -583,7 +583,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_country_from_mixed_var($var, $asCode = false)
     {
         if (is_string($var)) {
-            $var = strtoupper($var);
+            $var = strtoupper((string) $var);
             $var = DataObject::get_one(EcommerceCountry::class, ['Code' => $var]);
         } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get_by_id($var);

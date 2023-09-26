@@ -488,7 +488,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if (is_array($array) && count($array)) {
             foreach ($array as $className) {
                 $code = singleton($className)->getMyCode();
-                $newArray[$className] = strtoupper($code);
+                $newArray[$className] = strtoupper((string) $code);
             }
         }
 
@@ -784,7 +784,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             ->filter(
                 [
                     'Name' => $this->Name,
-                    'Code' => strtoupper($this->Code),
+                    'Code' => strtoupper((string) $this->Code),
                 ]
             )
             ->exclude(['ID' => (int) $this->ID])
@@ -1379,7 +1379,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $this->DeferTimeInSeconds -= time();
             }
         }
-        $this->Code = strtoupper($this->Code);
+        $this->Code = strtoupper((string) $this->Code);
     }
 
     /**
@@ -1590,7 +1590,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if ($codesToInclude && count($codesToInclude)) {
                 foreach ($codesToInclude as $className => $code) {
                     $className = (string) $className;
-                    $code = strtoupper($code);
+                    $code = strtoupper((string) $code);
                     $filter = ['ClassName' => $className, 'Code' => $code];
                     $indexNumber += 10;
                     $itemCountCounts = OrderStep::get()->filterAny($filter)->count();

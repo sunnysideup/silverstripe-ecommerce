@@ -71,8 +71,8 @@ class ExchangeRateProvider
      */
     public function ExchangeRate($fromCode, $toCode)
     {
-        $fromCode = strtoupper($fromCode);
-        $toCode = strtoupper($toCode);
+        $fromCode = strtoupper((string) $fromCode);
+        $toCode = strtoupper((string) $toCode);
         $cacheCode = $fromCode . '_' . $toCode;
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
