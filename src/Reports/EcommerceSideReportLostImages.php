@@ -31,7 +31,7 @@ class EcommerceSideReportLostImages extends Report
         return $list
             ->leftJoin('File', '"File"."ID" = "Product"."ImageID"')
             ->where('"File"."ID" IS NULL AND "ImageID" > 0')
-            ->sort('Title', 'ASC')
+            ->sort(['Title' => 'ASC'])
         ;
     }
 }

@@ -64,7 +64,7 @@ class ProductSorter extends BaseApplyer
             if (is_array($sort) && count($sort)) {
                 $this->products = $this->products->sort($sort);
             } elseif ($sort) {
-                $this->products = $this->products->sort($sort);
+                $this->products = $this->products->orderBy($sort);
             }
             // @todo
             $this->applyEnd($key, $params);

@@ -77,7 +77,7 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
             DB::alteration_message('All Product.FullSiteTreeSort have been updated');
         }
         $examples = Product::get()
-            ->sort('RAND()')
+            ->orderBy(DB::get_conn()->random())
             ->limit(3)
         ;
         if ($examples->exists()) {

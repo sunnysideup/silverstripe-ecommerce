@@ -270,10 +270,15 @@ class FinalProductList extends AbstractProductsAndGroupsList
         }
 
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered(), true);
-
+        $sort = $this->Config()->get('group_filter_candidates_sort');
+        if(is_array($sort)) {
+            $list = $list->sort($sort);
+        } else {
+            $list = $list->orderBy($sort);
+        }
         return $list
             ->exclude(['ID' => $this->getParentGroupIds()])
-            ->Sort($this->Config()->get('group_filter_candidates_sort'))
+            ->sort($this->Config()->get('group_filter_candidates_sort'))
         ;
     }
 

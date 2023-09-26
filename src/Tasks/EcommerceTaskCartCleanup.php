@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
@@ -262,12 +263,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         $whereWithMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithMember} ";
 
         $where = '(' . $whereWithoutMember . ') OR (' . $whereWithMember . ')';
-        $oldCarts = Order::get()
-            ->where($where)
-            ->orderBy($this->sort)
-            ->limit($this->maximumNumberOfObjectsDeleted)
-        ;
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
+        $oldCarts = $this->getOldCarts($where);
         if ($oldCarts->exists()) {
             $count = 0;
             if ($this->verbose) {
@@ -330,12 +326,8 @@ class EcommerceTaskCartCleanup extends BuildTask
         $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_empty_carts');
         $time = strtotime('-' . $clearMinutes . ' minutes');
         $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
-        $oldCarts = Order::get()
-            ->where($where)
-            ->orderBy($this->sort)
-            ->limit($this->maximumNumberOfObjectsDeleted)
-        ;
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
+        $oldCarts = $this->getOldCarts($where);
+
         if ($oldCarts->exists()) {
             $count = 0;
             if ($this->verbose) {
@@ -552,5 +544,20 @@ class EcommerceTaskCartCleanup extends BuildTask
             ob_flush();
             flush();
         }
+    }
+
+    protected function getOldCarts($where): DataList
+    {
+        $oldCarts = Order::get()
+            ->where($where)
+            ->limit($this->maximumNumberOfObjectsDeleted)
+        ;
+        if(is_array($this->sort)) {
+            $oldCarts = $oldCarts->sort($this->sort);
+        } else {
+            $oldCarts = $oldCarts->orderBy($this->sort);
+        }
+        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
+        return $oldCarts;
     }
 }

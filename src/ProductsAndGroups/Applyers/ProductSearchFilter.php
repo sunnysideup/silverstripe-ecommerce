@@ -607,9 +607,14 @@ class ProductSearchFilter extends BaseApplyer
             $sort = $this->Config()->get('in_group_sort_sql');
             $listToAdd = $listToAdd
                 ->limit($this->maxToAdd())
-                ->sort($sort)
                 ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)])
             ;
+            if(is_array($sort)) {
+                $listToAdd = $listToAdd->sort($sort);
+            } else {
+                $listToAdd = $listToAdd->orderBy($sort);
+
+            }
             $customMethod = $this->Config()->get('custom_id_method_to_retrieve_products');
             if (! $customMethod) {
                 //check that this is the right order!

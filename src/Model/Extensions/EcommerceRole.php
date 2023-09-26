@@ -844,7 +844,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 ->where(
                     '"Obsolete" = 0 AND "Order"."MemberID" = ' . $this->getOwner()->ID
                 )
-                ->sort('LastEdited', 'DESC')
+                ->sort(['LastEdited' => 'DESC'])
                 ->exclude(['ID' => $excludeID])
                 ->limit($limit)
                 ->innerJoin('Order', '"Order"."' . $fieldName . '" = "OrderAddress"."ID"');

@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 
@@ -37,7 +38,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         $now = microtime(true);
         //IMPORTANT!
         if (! $this->sendEmails) {
-            Config::modify()->merge(Email::class, 'send_all_emails_to', 'no-one@localhost');
+            Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         }
         $id = (int) $request->getVar('id') - 0;
@@ -67,7 +68,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         //limit orders
         $orders = $orders->limit($this->limit);
         //we sort randomly so it is less likely we get stuck with the same ones
-        $orders = $orders->sort('RAND()');
+        $orders = $orders->orderBy(DB::get_conn()->random());
 
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         foreach ($orders as $order) {

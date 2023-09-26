@@ -122,7 +122,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             if (! $ecommerceConfig->ReceiptEmail) {
                 $ecommerceConfig->ReceiptEmail = Email::config()->admin_email;
                 if (! $ecommerceConfig->ReceiptEmail) {
-                    user_error("you must set an Admin Email ... Config::modify()->merge('Email', 'admin_email', 'foo@bar.nz') ... ", E_USER_NOTICE);
+                    user_error("you must set an Admin Email ... Config::modify()->set('Email', 'admin_email', 'foo@bar.nz') ... ", E_USER_NOTICE);
                 }
 
                 $update[] = 'created default entry for ReceiptEmail';

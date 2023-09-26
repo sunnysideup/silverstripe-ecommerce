@@ -14,6 +14,6 @@ class ProductDropdown extends DropdownField
 
     public function getSource()
     {
-        return Product::get()->Sort('InternalItemID ASC, Title ASC')->map('ID', 'FullName')->toArray();
+        return Product::get()->Sort(['InternalItemID' => 'ASC', 'Title' => 'ASC'])->map('ID', 'FullName')->toArray();
     }
 }

@@ -75,7 +75,7 @@ class CartResponse extends EcommerceResponse
             $this->addHeader('Content-Type', 'application/json');
         }
 
-        Config::modify()->merge(SSViewer::class, 'source_file_comments', false);
+        Config::modify()->set(SSViewer::class, 'source_file_comments', false);
         //merge messages
         $messagesImploded = '';
         if (is_array($messages) && count($messages)) {

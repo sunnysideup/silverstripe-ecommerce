@@ -72,7 +72,7 @@ class EcommerceSideReportDuplicatePages extends Report
             ->where('
                 (TheOtherSiteTree.ID IS NOT NULL AND TheOtherSiteTree.ID <> SiteTree.ID)
             ')
-            ->sort('Title', 'ASC')
+            ->sort(['Title' => 'ASC'])
             ->leftJoin(
                 'SiteTree',
                 '"SiteTree"."Title" = TheOtherSiteTree.Title',

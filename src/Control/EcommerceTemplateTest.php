@@ -3,7 +3,9 @@
 namespace Sunnysideup\Ecommerce\Control;
 
 use PageController;
+use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -37,7 +39,7 @@ class EcommerceTemplateTest extends PageController
             $notForSale = false;
             $product = Product::get()
                 ->where('"AllowPurchase" = 1  AND "Price" > 0')
-                ->orderBy('RAND()')
+                ->orderBy(DB::get_conn()->random(), 'ASC')
                 ->limit(1, $offSet)
                 ->First()
             ;
@@ -50,17 +52,16 @@ class EcommerceTemplateTest extends PageController
         return $product;
     }
 
-    public function SubmittedOrder()
+    public function SubmittedOrder(): ?Order
     {
         $lastStatusOrder = OrderStep::last_order_step();
         if ($lastStatusOrder) {
-            return DataObject::get_one(
-                Order::class,
-                ['StatusID' => $lastStatusOrder->ID],
-                $cacheDataObjectGetOne = true,
-                'RAND()'
-            );
+            return Order::get()
+                ->filter(['StatusID' => $lastStatusOrder->ID])
+                ->orderBy(DB::get_conn()->random())
+                ->first();
         }
+        return null;
     }
 
     /**
@@ -68,7 +69,7 @@ class EcommerceTemplateTest extends PageController
      *
      * @return bool
      */
-    public function IsEcommercePage()
+    public function IsEcommercePage(): bool
     {
         return true;
     }

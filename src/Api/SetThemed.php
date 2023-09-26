@@ -20,7 +20,7 @@ class SetThemed
             Versioned::set_stage(Versioned::LIVE);
             ++self::$changed;
             Config::nest();
-            Config::modify()->merge(SSViewer::class, 'theme_enabled', true);
+            Config::modify()->set(SSViewer::class, 'theme_enabled', true);
         }
     }
 
@@ -31,7 +31,7 @@ class SetThemed
                 Versioned::set_stage(self::$stage_before);
             }
             Config::unnest();
-            // Config::modify()->merge(SSViewer::class, 'theme_enabled', false);
+            // Config::modify()->set(SSViewer::class, 'theme_enabled', false);
             --self::$changed;
         }
     }

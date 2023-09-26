@@ -18,7 +18,7 @@ class ProductGroupDropdown extends DropdownField
         $idList = Product::get()->filter(['AllowPurchase' => 1])->columnUnique('ParentID');
 
         return ProductGroup::get()
-            ->Sort('Title')
+            ->Sort(['Title' => 'ASC'])
             ->filter(['ID' => $idList])
             ->map('ID', 'Title')
             ->toArray()

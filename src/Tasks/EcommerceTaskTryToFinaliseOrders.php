@@ -46,7 +46,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     {
         //IMPORTANT!
         if (! $this->sendEmails) {
-            Config::modify()->merge(Email::class, 'send_all_emails_to', 'no-one@localhost');
+            Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         }
 
@@ -74,7 +74,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         $ordersinQueue = $queueObjectSingleton->AllOrdersInQueue();
         //find any other order that may need help ...
 
-        $sort = $this->isCli() ? 'RAND() ASC' : ['ID' => 'ASC'];
+        $sort = $this->isCli() ? DB::get_conn()->random() : 'Order.ID ASC';
         $ordersInQueueArray = $ordersinQueue ? $ordersinQueue->columnUnique() : [];
         if (is_array($ordersInQueueArray) && count($ordersInQueueArray)) {
             //do nothing...

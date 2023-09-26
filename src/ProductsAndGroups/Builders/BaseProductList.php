@@ -288,10 +288,14 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
-
+        $sort = $this->Config()->get('group_filter_candidates_sort');
+        if(is_array($sort)) {
+            $list = $list->sort($sort);
+        } else {
+            $list = $list->orderBy($sort);
+        }
         return $list
             ->exclude(['ID' => $this->getParentGroupIds()])
-            ->sort($this->Config()->get('group_filter_candidates_sort'))
         ;
     }
 
@@ -474,6 +478,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
             );
+            /** @var DataList $childGroups  */
             $childGroups = $this->getGroups();
             if ($childGroups->exists()) {
                 foreach ($childGroups as $childGroup) {

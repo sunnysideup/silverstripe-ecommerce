@@ -443,7 +443,8 @@ class Product extends Page implements BuyableModel
                         GridField::create(
                             'SalesOrderItems',
                             'Sales Record',
-                            $orderItems = $this->SalesOrderItems()->sort(['ID' => 'DESC']),
+                            $orderItems = $this->SalesOrderItems()
+                                ->sort(['ID' => 'DESC']),
                             GridFieldConfig_RecordViewer::create()
                         )
                             ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),

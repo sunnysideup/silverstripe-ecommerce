@@ -55,10 +55,17 @@ trait EcommerceProductReportTrait
                 $list = $list->filter($filter);
             }
         }
-
+        $sort = null;
         if ($this->hasMethod('getEcommerceSort')) {
             $sort = $this->getEcommerceSort();
-            $list = empty($sort) ? $list->sort(['FullSiteTreeSort' => 'ASC']) : $list->sort($sort);
+            if(empty($sort)) {
+                $sort = ['FullSiteTreeSort' => 'ASC'];
+            }
+            if(is_array($sort)) {
+                $list = $list->sort($sort);
+            } else {
+                $list = $list->orderBy($sort);
+            }
         }
 
         if ($this->hasMethod('getEcommerceWhere')) {

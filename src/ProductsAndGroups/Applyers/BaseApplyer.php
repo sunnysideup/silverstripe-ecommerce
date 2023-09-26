@@ -89,6 +89,11 @@ abstract class BaseApplyer
         return Config::inst()->get(static::class, 'options');
     }
 
+    /**
+     *
+     *
+     * @return DataList
+     */
     public function getProducts()
     {
         return $this->products;
