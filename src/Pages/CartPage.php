@@ -234,7 +234,8 @@ class CartPage extends Page
      */
     public static function new_order_link($orderID)
     {
-        return self::find_link() . 'startneworder/';
+        return Controller::join_links(self::find_link(), 'startneworder', $orderID);
+
     }
 
     /**
@@ -246,7 +247,7 @@ class CartPage extends Page
      */
     public static function copy_order_link($orderID)
     {
-        return OrderConfirmationPage::find_link() . 'copyorder/' . $orderID . '/';
+        return Controller::join_links(self::find_link(), 'copyorder', $orderID);
     }
 
     /**
