@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Page;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\Tab;
@@ -257,7 +258,7 @@ class CartPage extends Page
      */
     public static function get_order_link($orderID)
     {
-        return self::find_link() . 'showorder/' . $orderID . '/';
+        return Controller::join_links(self::find_link(), 'showorder', $orderID);
     }
 
     /**
