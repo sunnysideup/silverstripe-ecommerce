@@ -22,7 +22,7 @@
 
     <% if HasCheckoutSteps %>
     <div class="checkoutStepPrevNextHolder next">
-        <a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("NEXT","next") %></a>
+        <a href="{$Link}/checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("NEXT","next") %></a>
     </div>
     <% end_if %>
 
@@ -38,7 +38,7 @@
 
     <% if HasCheckoutSteps %>
     <div class="checkoutStepPrevNextHolder prev">
-        <a href="{$Link}checkoutstep/orderitems/#OrderItemsOuter" class="action btn"><% _t("GOBACK","go back") %></a>
+        <a href="{$Link}/checkoutstep/orderitems/#OrderItemsOuter" class="action btn"><% _t("GOBACK","go back") %></a>
     </div>
     <% end_if %>
 
@@ -62,7 +62,7 @@
 
     <% if HasCheckoutSteps %>
     <div class="checkoutStepPrevNextHolder prev">
-        <a href="{$Link}checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("GOBACK","go back") %></a>
+        <a href="{$Link}/checkoutstep/orderformaddress/#OrderFormAddressOuter" class="action btn"><% _t("GOBACK","go back") %></a>
     </div>
     <% else %>
     <div class="checkoutStepPrevNextHolder prev">
