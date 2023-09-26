@@ -388,9 +388,9 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             ->filter(['InUse' => 1])
             ->orderBy(
                 '
-                    IF("Code" = \'' . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . '\', 0, 1) ASC,
-                    "Name" ASC,
-                    "Code" ASC
+                    IF("Code" = \'' . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . '\', 0, 1),
+                    "Name",
+                    "Code"
                 '
             )
         ;
