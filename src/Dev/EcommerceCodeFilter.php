@@ -48,14 +48,14 @@ class EcommerceCodeFilter
             $obj->{$fieldName} = strval($str);
             $isObject = false;
         }
-        $s = trim($obj->{$fieldName});
+        $s = trim((string) $obj->{$fieldName});
         foreach ($this->regexReplacements as $regex => $replace) {
             $s = preg_replace($regex, $replace, $s);
         }
         foreach ($this->straightReplacements as $find => $replace) {
             $s = str_replace($find, $replace, $s);
         }
-        $s = trim($s);
+        $s = trim((string) $s);
         //check for other ones.
         if ($s) {
             $count = 2;

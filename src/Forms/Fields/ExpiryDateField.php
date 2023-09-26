@@ -54,7 +54,7 @@ class ExpiryDateField extends TextField
     {
         $monthValue = '';
         $yearValue = '';
-        if (4 === strlen( (string) $this->value)) {
+        if (4 === strlen((string) $this->value)) {
             $monthValue = substr((string) $this->value, 0, 2);
             $yearValue = substr((string) $this->value, 2, 2);
         }
@@ -79,7 +79,7 @@ class ExpiryDateField extends TextField
             $string = '';
             foreach ($this->value as $part) {
                 $part = str_pad($part, 2, '0', STR_PAD_LEFT);
-                $string .= trim($part);
+                $string .= trim((string) $part);
             }
 
             return $string;

@@ -223,7 +223,7 @@ class ProductSearchFilter extends BaseApplyer
     public static function keyword_sanitised(?string $string = ''): string
     {
         $string = Convert::raw2sql($string);
-        $string = strtolower($string);
+        $string = strtolower((string) $string);
 
         return substr((string) $string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }

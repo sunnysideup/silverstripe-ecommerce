@@ -199,7 +199,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                                 <a href="' . $link . '">' . $title . '</a>
                             </td>
                             <td style="background-color: silver;  padding: 5px; width: 70%">
-                                <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #004D40; color: #fff;">' . trim($array[0]) . '</div>
+                                <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #004D40; color: #fff;">' . trim((string) $array[0]) . '</div>
                             </td>
                             <td style="background-color: silver; width: 20px">
                                 <a href="' . $debugLink . '">☕</a>

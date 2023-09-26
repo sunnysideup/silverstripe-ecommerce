@@ -252,7 +252,7 @@ class ProductSearchForm extends Form
             }
             $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
             if ($this->additionalGetParameters) {
-                $link .= '&' . trim($this->additionalGetParameters, '&');
+                $link .= '&' . trim((string) $this->additionalGetParameters, '&');
             }
             //important - sort by relevancy
             $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();

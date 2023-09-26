@@ -2901,7 +2901,7 @@ class Order extends DataObject implements EditableEcommerceObject
                         if ($member && $member->exists()) {
                             $memberName = $member->getName();
                             if ($memberName) {
-                                if (! trim($memberName)) {
+                                if (! trim((string) $memberName)) {
                                     $memberName = _t('Order.ANONYMOUS', 'anonymous');
                                 }
 

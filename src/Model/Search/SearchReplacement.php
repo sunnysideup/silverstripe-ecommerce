@@ -211,12 +211,12 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     {
         parent::onBeforeWrite();
         //all lower case and make replace double spaces
-        $this->Search = trim(preg_replace('#\s+#', ' ', strtolower($this->Search)));
+        $this->Search = trim(preg_replace('#\s+#', ' ', strtolower((string) $this->Search)));
         $searchArray = [];
         foreach (explode(',', (string) $this->Search) as $term) {
-            $searchArray[] = trim($term);
+            $searchArray[] = trim((string) $term);
         }
         $this->Search = implode(',', $searchArray);
-        $this->Replace = strtolower($this->Replace);
+        $this->Replace = strtolower((string) $this->Replace);
     }
 }

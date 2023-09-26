@@ -47,7 +47,7 @@ class EcommerceMoney extends Extension
         $symbol = self::get_default_symbol($currency);
         if ($symbol && $currency) {
             $i = 0;
-            while ($i < mb_strlen( (string) $symbol) && substr((string) $symbol, $i, 1) === substr((string) $currency, $i, 1)) {
+            while ($i < mb_strlen((string) $symbol) && substr((string) $symbol, $i, 1) === substr((string) $currency, $i, 1)) {
                 ++$i;
             }
 
@@ -67,8 +67,8 @@ class EcommerceMoney extends Extension
     public static function get_long_symbol(?string $currency = 'NZD')
     {
         $symbol = self::get_default_symbol($currency);
-        if ($symbol && mb_strlen( (string) $symbol) < 3) {
-            $symbol = substr((string) $currency, 0, 3 - mb_strlen( (string) $symbol)) . $symbol;
+        if ($symbol && mb_strlen((string) $symbol) < 3) {
+            $symbol = substr((string) $currency, 0, 3 - mb_strlen((string) $symbol)) . $symbol;
         }
 
         return $symbol;
@@ -121,7 +121,7 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_long_symbol($this->getOwner()->currency);
         $short = self::get_short_symbol($this->getOwner()->currency);
-        $pre = substr((string) $symbol, 0, mb_strlen( (string) $symbol) - mb_strlen( (string) $short));
+        $pre = substr((string) $symbol, 0, mb_strlen((string) $symbol) - mb_strlen((string) $short));
         if ($html) {
             $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->getOwner()->currency}\"><span class=\"currencyPreSymbol\">{$pre}</span><span class=\"currencySymbol\">{$short}</span></span>";
         } else {
@@ -149,7 +149,7 @@ class EcommerceMoney extends Extension
         if ($html) {
             $symbol = "<span class=\"currencySymbol\">{$symbol}</span>";
         }
-        $code = strtolower($this->getOwner()->currency);
+        $code = strtolower((string) $this->getOwner()->currency);
         if ($html) {
             $code = "<span class=\"currencyHolder\">{$code}</span>";
         }

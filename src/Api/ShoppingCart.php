@@ -1152,7 +1152,7 @@ class ShoppingCart
     {
         //clean status for the lazy programmer
         //TODO: remove the awkward replace
-        $status = strtolower($status);
+        $status = strtolower((string) $status);
         str_replace(['success', 'failure'], ['good', 'bad'], $status);
         $statusOptions = ['good', 'bad', 'warning'];
         if (! in_array($status, $statusOptions, true)) {

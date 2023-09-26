@@ -11,7 +11,7 @@ class CsvFunctionality
         $item = str_replace("\n", ' ', $item);
         $item = str_replace("\t", ' ', $item);
 
-        return trim($item);
+        return trim((string) $item);
     }
 
     public static function convertToCSV($rows, $delimiter = ';', $enclosure = '"', $encloseAll = false)

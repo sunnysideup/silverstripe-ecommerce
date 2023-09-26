@@ -86,7 +86,7 @@ abstract class OrderEmail extends Email
             $email = Email::config()->admin_email;
         }
 
-        return trim($email);
+        return trim((string) $email);
     }
 
     /**
@@ -255,7 +255,7 @@ abstract class OrderEmail extends Email
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
         if ($this->getBcc()) {
-            $orderEmailRecord->To .= ', BCC: ' . trim($this->emailToVarchar($this->getBcc()));
+            $orderEmailRecord->To .= ', BCC: ' . trim((string) $this->emailToVarchar($this->getBcc()));
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->getSubject();

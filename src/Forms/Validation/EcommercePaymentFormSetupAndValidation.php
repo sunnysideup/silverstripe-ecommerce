@@ -224,7 +224,7 @@ class EcommercePaymentFormSetupAndValidation
                     break;
                 case 'CVVNumber':
                     $cardNumber = $this->paymentObject->{$dbFieldName};
-                    $this->paymentObject->{$dbFieldName} = trim($data[$formFieldName]);
+                    $this->paymentObject->{$dbFieldName} = trim((string) $data[$formFieldName]);
                     if (! $this->validateCVV($cardNumber, $this->paymentObject->{$dbFieldName})) {
                         $form->sessionError(
                             $formFieldName,
@@ -235,8 +235,8 @@ class EcommercePaymentFormSetupAndValidation
 
                     break;
                 case 'NameOnCard':
-                    $this->paymentObject->{$dbFieldName} = trim($data[$formFieldName]);
-                    if (strlen( (string) $this->paymentObject->{$dbFieldName}) < 3) {
+                    $this->paymentObject->{$dbFieldName} = trim((string) $data[$formFieldName]);
+                    if (strlen((string) $this->paymentObject->{$dbFieldName}) < 3) {
                         $form->sessionError(
                             $formFieldName,
                             _t('EcommercePaymentFormSetupAndValidation.NO_CARD_NAME', 'No card name provided.'),
@@ -331,7 +331,7 @@ class EcommercePaymentFormSetupAndValidation
         if (! $cardNumber) {
             return false;
         }
-        for ($sum = 0, $i = strlen( (string) $cardNumber) - 1; $i >= 0; --$i) {
+        for ($sum = 0, $i = strlen((string) $cardNumber) - 1; $i >= 0; --$i) {
             $digit = (int) $cardNumber[$i];
             $sum += ($i % 2) === 0 ? array_sum(str_split($digit * 2)) : $digit;
         }

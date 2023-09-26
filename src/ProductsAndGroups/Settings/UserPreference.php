@@ -572,7 +572,7 @@ class UserPreference
                 }
 
                 if ($hideCurrentValue && $type && $myType === $type) {
-                } elseif (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim($value)) {
+                } elseif (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)) {
                     $getVars[$values['getVariable']] = $value;
                 } else {
                     $params = $this->getCurrentUserPreferencesParams($myType);
@@ -698,8 +698,8 @@ class UserPreference
      */
     protected function addToTitle(string $toAdd): string
     {
-        $toAdd = trim($toAdd);
-        $length = strlen( (string) $toAdd);
+        $toAdd = trim((string) $toAdd);
+        $length = strlen((string) $toAdd);
 
         if ($length > 0) {
             $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');
