@@ -205,7 +205,7 @@ class QuickUpdates extends Controller
 
             $list = Product::get()
                 ->filter(['AllowPurchase' => true])
-                ->sort(['InternalItemID' => 'ASC')
+                ->sort(['InternalItemID' => 'ASC'])
             ;
             if($query) {
                 $query =  Convert::raw2sql($query);

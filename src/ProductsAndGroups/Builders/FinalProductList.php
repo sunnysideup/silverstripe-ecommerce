@@ -278,7 +278,6 @@ class FinalProductList extends AbstractProductsAndGroupsList
         }
         return $list
             ->exclude(['ID' => $this->getParentGroupIds()])
-            ->sort($this->Config()->get('group_filter_candidates_sort'))
         ;
     }
 
