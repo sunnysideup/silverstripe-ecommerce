@@ -166,7 +166,7 @@ class SearchHistory extends DataObject
      */
     protected function onBeforeWrite()
     {
-        $this->Title = trim(preg_replace('#\s+#', ' ', $this->Title));
+        $this->Title = trim(preg_replace('#\s+#', ' ', (string) $this->Title));
         parent::onBeforeWrite();
     }
 }

@@ -47,7 +47,7 @@ class Sanitizer
                             str_replace(
                                 '<',
                                 ' <',
-                                $html
+                                (string) $html
                             )
                         )
                     )

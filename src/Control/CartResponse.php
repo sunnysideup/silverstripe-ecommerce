@@ -213,7 +213,7 @@ class CartResponse extends EcommerceResponse
         $json = str_replace('\t', ' ', $json);
         $json = str_replace('\r', ' ', $json);
         $json = str_replace('\n', ' ', $json);
-        $json = preg_replace('#\s\s+#', ' ', $json);
+        $json = preg_replace('#\s\s+#', ' ', (string) $json);
         if (Director::isDev()) {
             $json = str_replace('{', "\r\n{", $json);
         }

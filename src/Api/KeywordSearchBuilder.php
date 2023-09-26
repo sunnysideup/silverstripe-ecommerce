@@ -36,7 +36,7 @@ class KeywordSearchBuilder
         $this->keywordPhrase = $keywordPhrase;
         $this->replaceSearchPhraseOrWord();
         //now we are going to look for synonyms
-        $words = explode(' ', trim(preg_replace('#\s+#', ' ', $this->keywordPhrase)));
+        $words = explode(' ', trim(preg_replace('#\s+#', ' ', (string) $this->keywordPhrase)));
         foreach ($words as $word) {
             //todo: why are we looping through words?
             $this->replaceSearchPhraseOrWord($word);
@@ -58,7 +58,7 @@ class KeywordSearchBuilder
     {
         $this->ifStatement = '';
         //make three levels of search
-        $fullPhrase = preg_replace('#\s+#', ' ', $phrase);
+        $fullPhrase = preg_replace('#\s+#', ' ', (string) $phrase);
         $wordAsArray = explode(' ', $fullPhrase);
 
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB

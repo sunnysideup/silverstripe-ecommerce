@@ -511,7 +511,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return Convert::array2json($jsArray);
+        return json_encode($jsArray);
     }
 
     public function debug()

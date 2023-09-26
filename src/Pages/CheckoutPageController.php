@@ -171,7 +171,7 @@ class CheckoutPageController extends CartPageController
                         $completedClass = 'notCompleted';
                     } else {
                         if ($completed) {
-                            $do->Link = $this->Link('checkoutstep') . '/' . $do->Code . '/';
+                            $do->Link = Controller::join_links($this->Link('checkoutstep'), $do->Code);
                         }
                         $do->LinkingMode = "link {$completedClass}";
                     }

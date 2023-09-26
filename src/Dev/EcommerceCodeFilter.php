@@ -50,7 +50,7 @@ class EcommerceCodeFilter
         }
         $s = trim((string) $obj->{$fieldName});
         foreach ($this->regexReplacements as $regex => $replace) {
-            $s = preg_replace($regex, $replace, $s);
+            $s = preg_replace($regex, $replace, (string) $s);
         }
         foreach ($this->straightReplacements as $find => $replace) {
             $s = str_replace($find, $replace, $s);

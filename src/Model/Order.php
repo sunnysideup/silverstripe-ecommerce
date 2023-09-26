@@ -3731,7 +3731,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $html = $this->renderWith('Sunnysideup\\Ecommerce\\Includes\\OrderBasics');
         SetThemed::end();
 
-        return preg_replace('#\s+#', ' ', $html);
+        return preg_replace('#\s+#', ' ', (string) $html);
     }
 
     /**

@@ -187,7 +187,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                 $columnData[] = '"' . $email . '"';
                 $columnData[] = '"' . $date . '"';
                 foreach ($exportFields as $field) {
-                    $value = $item->hasMethod($field) ? $item->{$field}() : $item->{$field};
+                    $value = $item->hasMethod($field) ? (string) $item->{$field}() : (string) $item->{$field};
                     $value = preg_replace('#\s+#', ' ', $value);
                     $value = preg_replace('#\s+#', ' ', $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);

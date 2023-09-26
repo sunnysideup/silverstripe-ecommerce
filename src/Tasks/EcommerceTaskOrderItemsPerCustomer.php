@@ -108,7 +108,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                 $columnData[] = '"' . $date . '"';
                 foreach ($exportFields as $field) {
                     $value = $item->{$field};
-                    $value = preg_replace('#\s+#', ' ', $value);
+                    $value = preg_replace('#\s+#', ' ', (string) $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);
                     $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
                     $columnData[] = $tmpColumnData;
