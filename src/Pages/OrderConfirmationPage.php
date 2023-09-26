@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\HeaderField;
@@ -327,7 +328,7 @@ class OrderConfirmationPage extends CartPage
      */
     public static function get_order_link($orderID)
     {
-        return OrderConfirmationPage::find_link() . 'showorder/' . $orderID . '/';
+        return Controller::join_links(OrderConfirmationPage::find_link(), 'showorder', $orderID);
     }
 
     /**
@@ -342,7 +343,7 @@ class OrderConfirmationPage extends CartPage
      */
     public static function get_email_link(int $orderID, ?string $emailClassName = OrderStatusEmail::class, ?bool $actuallySendEmail = false, ?int $alternativeOrderStepID = 0)
     {
-        $link = OrderConfirmationPage::find_link() . 'sendemail/' . $orderID . '/' . str_replace('\\', '-', $emailClassName);
+        $link = Controller::join_links(OrderConfirmationPage::find_link(), 'sendemail', $orderID, str_replace('\\', '-', $emailClassName));
         $getParams = [];
         if (! $alternativeOrderStepID) {
             $order = DataObject::get_one(Order::class, ['ID' => $orderID]);
