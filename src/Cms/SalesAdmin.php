@@ -137,7 +137,7 @@ class SalesAdmin extends ModelAdmin
                         )
                     ;
 
-                    // $list = $list->Sort('OrderStatusLog.ID DESC');
+                    // $list = $list->sort(['OrderStatusLog.ID' => 'DESC']);
                     self::$_list_cache_orders = $list;
                     EcommerceCache::inst()->save($this->getTimeBasedCacheKey(), $list->columnUnique());
                 }
