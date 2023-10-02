@@ -502,6 +502,10 @@ const EcomCart = {
                 }
                 // scroll to the top of the product list.
                 window.jQuery('html, body').animate({scrollTop: window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500)
+
+                //fire an event to inform that data on the page has changed
+                const event = new Event("paginationchange");
+                window.dispatchEvent(event);
               },
               url: url
             }
