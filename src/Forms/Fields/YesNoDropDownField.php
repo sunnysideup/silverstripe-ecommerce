@@ -30,7 +30,7 @@ class YesNoDropDownField extends DropdownField
         $source = [],
         $value = null
     ) {
-        if (empty($source)) {
+        if (empty($source) || ! is_array($source) || count($source) < 2 || count($source) < 3) {
             $source = [
                 null => self::ANY_IE_NO_SELECTION,
                 '0' => 'No',
