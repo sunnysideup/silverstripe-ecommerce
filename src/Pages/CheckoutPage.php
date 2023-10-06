@@ -171,7 +171,7 @@ class CheckoutPage extends CartPage
         }
 
         if ($step) {
-            $step = Controller::join_links('/checkoutstep', strtolower((string) $step)) . '/#' . $step;
+            $step = Controller::join_links('checkoutstep', strtolower((string) $step)) . '/#' . $step;
         }
 
         return self::find_link($step);
