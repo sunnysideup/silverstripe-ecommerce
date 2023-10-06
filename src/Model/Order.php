@@ -4082,16 +4082,19 @@ class Order extends DataObject implements EditableEcommerceObject
     ) {
         $arrayData = $this->createReplacementArrayForEmail($subject, $message);
         $from = OrderEmail::get_from_email();
+        $replyTo = null;
         //why are we using this email and NOT the member.EMAIL?
         //for historical reasons????
         if ($adminOnlyOrToEmail) {
-            if (filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
+            if ($adminOnlyOrToEmail !== true && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL)) {
                 $to = $adminOnlyOrToEmail;
-                // invalid e-mail address
             } else {
+                // send to admin or invalid e-mail address
                 $to = OrderEmail::get_from_email();
+                $replyTo = $this->getOrderEmail();
             }
         } else {
+            // send to customer
             $to = $this->getOrderEmail();
         }
 
@@ -4107,6 +4110,9 @@ class Order extends DataObject implements EditableEcommerceObject
 
             $email->setFrom($from);
             $email->setTo($to);
+            if($replyTo) {
+                $email->setReplyTo($replyTo);
+            }
 
             //we take the subject from the Array Data, just in case it has been adjusted.
             $email->setSubject($arrayData->getField('Subject'));

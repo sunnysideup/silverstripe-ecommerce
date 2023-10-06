@@ -1462,8 +1462,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $resend,
                     $adminOnlyOrToEmail
                 );
-                //ADMIN ONLY ....
             } else {
+                //ADMIN ONLY ....
                 if (! $emailClassName) {
                     $emailClassName = OrderErrorEmail::class;
                 }
@@ -1493,12 +1493,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function testEmailLink(): ?string
     {
         if ($this->getEmailClassName()) {
-            $order = DataObject::get_one(
-                Order::class,
-                ['StatusID' => $this->ID],
-                $cacheDataObjectGetOne = true,
-                'RAND() ASC'
-            );
+            $order = Order::get()
+                ->filter(['StatusID' => $this->ID])
+                ->orderBy(DB::get_conn()->random())
+                ->first();
             if (! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
