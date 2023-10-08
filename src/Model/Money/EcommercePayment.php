@@ -358,7 +358,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function redirectToOrder()
     {
         if ($this->AlternativeEndPoint) {
-            return Controller::curr()->redirect(Director::absoluteBaseURL() . $this->AlternativeEndPoint);
+            return Controller::curr()->redirect(Controller::join_links(Director::absoluteBaseURL(), $this->AlternativeEndPoint));
         }
         $order = $this->getOrderCached();
         if ($order) {

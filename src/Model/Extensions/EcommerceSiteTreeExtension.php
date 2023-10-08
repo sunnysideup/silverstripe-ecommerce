@@ -51,10 +51,8 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
             $link = EcommerceConfig::inst()->AccountPageLink();
         }
 
-        return Controller::join_links(
-            Director::absoluteBaseURL(),
-            '/Security/login'
-        ) . '?BackURL=' . urlencode($link);
+        return Controller::join_links(Director::absoluteBaseURL(), 'Security/login')
+        . '?BackURL=' . urlencode($link);
     }
 
     public function augmentValidURLSegment()
