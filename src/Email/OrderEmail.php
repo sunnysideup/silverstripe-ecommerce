@@ -165,7 +165,7 @@ abstract class OrderEmail extends Email
             //last chance to adjust
             $this->extend('adjustOrderEmailSending', $this, $order);
             if ($returnBodyOnly) {
-                return (string) $this->getBody();
+                return (string) $this->getHtmlBody();
             }
 
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
@@ -235,7 +235,8 @@ abstract class OrderEmail extends Email
         parent::render($plainOnly);
         //moves CSS to inline CSS in email.
         if (! $plainOnly) {
-            $this->setBody($this->getBody() ? self::emogrify_html($this->getBody()) : '');
+            $html = (string) ($this->getHtmlBody() ?: '');
+            $this->setBody($html);
         }
 
         return $this;
@@ -265,7 +266,7 @@ abstract class OrderEmail extends Email
                 $orderEmailRecord->Subject .= _t('OrderEmail.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
             }
         }
-        $orderEmailRecord->Content = $this->getBody();
+        $orderEmailRecord->Content = (string) $this->getHtmlBody();
         $orderEmailRecord->Result = $result ? 1 : 0;
         $orderEmailRecord->OrderID = $this->order->ID;
         $orderEmailRecord->OrderStepID = $this->order->StatusID;
