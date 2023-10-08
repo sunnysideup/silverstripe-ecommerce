@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Respect\Validation\Rules\Control;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -2750,10 +2751,23 @@ class Order extends DataObject implements EditableEcommerceObject
                 $this->write();
             }
 
-            return Director::AbsoluteURL(OrderConfirmationPage::find_link()) . 'retrieveorder/' . $this->SessionID . '/' . $this->ID . '/';
+            return Director::AbsoluteURL(
+                Controller::join_links(
+                    OrderConfirmationPage::find_link(),
+                    'retrieveorder',
+                    $this->SessionID,
+                    $this->ID
+                )
+            );
         }
 
-        return Director::AbsoluteURL('/shoppingcart/loadorder/' . $this->ID . '/');
+        return Director::AbsoluteURL(
+            Controller::join_links(
+                OrderConfirmationPage::find_link(),
+                'loadorder',
+                $this->ID
+            )
+        );
     }
 
     public function ShareLink()
