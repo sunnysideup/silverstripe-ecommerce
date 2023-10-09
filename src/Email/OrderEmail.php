@@ -7,12 +7,14 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * @Description: Email specifically for communicating with customer about order.
@@ -135,7 +137,7 @@ abstract class OrderEmail extends Email
 
     public function getBodyOnly(): string
     {
-        return $this->sendInner(false);
+        return $this->sendInner(true);
     }
 
     /**
@@ -147,7 +149,6 @@ abstract class OrderEmail extends Email
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
         $this->fixupSubject();
-        $this->fixupBody();
         if (! $this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get(OEmailrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
                 $memberEmail = self::get_from_email();
@@ -167,16 +168,31 @@ abstract class OrderEmail extends Email
             }
 
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
-                $result = parent::sendPlain();
+                parent::sendPlain();
             } else {
-                $result = parent::send();
+                // see parent::send()
+                parent::send();
             }
 
-            $result = $this->createRecord($result);
+            $result = $this->createRecord();
 
         }
         return null;
 
+    }
+
+
+    /**
+     * @param resource|string|null $body
+     *
+     * @return $this
+     */
+    public function html($body, string $charset = 'utf-8'): static
+    {
+        if (null !== $body && !\is_string($body)) {
+            $body = self::emogrify_html($body);
+        }
+        return parent::html($body, $charset);
     }
 
     protected function fixupSubject()
@@ -187,14 +203,6 @@ abstract class OrderEmail extends Email
         $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, (string) $this->getSubject()));
     }
 
-    protected function fixupBody()
-    {
-        $html =  $this->getHtmlBody() ?: '';
-        if($html) {
-            $html = self::emogrify_html($html);
-            $this->setBody($html);
-        }
-    }
 
     /**
      * converts an Email to A Varchar.
@@ -207,19 +215,19 @@ abstract class OrderEmail extends Email
     {
         $emailString = '';
         if (is_string($email)) {
-            $emailString = $email;
+            $emailString = (string) $email;
         } elseif (is_array($email)) {
             $count = 0;
             foreach ($email as $key => $address) {
                 if ($count) {
                     $emailString .= ', ';
                 }
-                $emailString .= $key . $address;
+                $emailString .= (string) $key . (string) $address;
                 ++$count;
             }
         }
 
-        return str_replace(['<', '>', '"', "'"], ' - ', $emailString);
+        return trim(str_replace(['<', '>', '"', "'"], ' - ', $emailString));
     }
 
     /**
@@ -260,7 +268,7 @@ abstract class OrderEmail extends Email
     /**
      * @param mixed $result
      */
-    protected function createRecord($result): OrderEmailRecord
+    protected function createRecord(): OrderEmailRecord
     {
         $orderEmailRecord = OrderEmailRecord::create();
         $from = is_array($this->getFrom()) ? array_key_first($this->getFrom()) : $this->getFrom();
@@ -271,18 +279,15 @@ abstract class OrderEmail extends Email
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
         if ($this->getBcc()) {
-            $orderEmailRecord->To .= ', BCC: ' . trim((string) $this->emailToVarchar($this->getBcc()));
+            $orderEmailRecord->To .= ', BCC: ' . $this->emailToVarchar($this->getBcc());
         }
         //always set result to try if
         $orderEmailRecord->Subject = $this->getSubject();
-        if (! $result) {
-            if (Director::isDev()) {
-                $result = true;
-                $orderEmailRecord->Subject .= _t('OrderEmail.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
-            }
+        if (Director::isDev()) {
+            $orderEmailRecord->Subject .= _t('OrderEmail.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
         }
         $orderEmailRecord->Content = (string) $this->getHtmlBody();
-        $orderEmailRecord->Result = $result ? 1 : 0;
+        $orderEmailRecord->Result = true;
         $orderEmailRecord->OrderID = $this->order->ID;
         $orderEmailRecord->OrderStepID = $this->order->StatusID;
         $sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to');
