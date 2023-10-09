@@ -189,7 +189,7 @@ abstract class OrderEmail extends Email
      */
     public function html($body, string $charset = 'utf-8'): static
     {
-        if (null !== $body && !\is_string($body)) {
+        if (null !== $body && is_string($body)) {
             $body = self::emogrify_html($body);
         }
         return parent::html($body, $charset);
