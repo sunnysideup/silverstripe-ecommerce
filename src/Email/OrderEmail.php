@@ -146,10 +146,8 @@ abstract class OrderEmail extends Email
         if (! $this->order) {
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
-        if (! $this->getSubject()) {
-            $this->setSubject(self::get_subject());
-        }
-        $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, $this->getSubject()));
+        $this->fixupSubject();
+        $this->fixupBody();
         if (! $this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get(OEmailrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
                 $memberEmail = self::get_from_email();
@@ -179,6 +177,23 @@ abstract class OrderEmail extends Email
         }
         return null;
 
+    }
+
+    protected function fixupSubject()
+    {
+        if (! $this->getSubject()) {
+            $this->setSubject(self::get_subject());
+        }
+        $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, (string) $this->getSubject()));
+    }
+
+    protected function fixupBody()
+    {
+        $html =  $this->getHtmlBody() ?: '';
+        if($html) {
+            $html = self::emogrify_html($html);
+            $this->setBody($html);
+        }
     }
 
     /**
