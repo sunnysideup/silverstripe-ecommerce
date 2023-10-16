@@ -1,103 +1,106 @@
 /**
-* @description: update Cart using AJAX (JSON data source)
-* as well as making any "add to cart" and "remove from cart" links
-* work with AJAX (if setup correctly)
-* @author nicolaas @ sunny side up . co . nz
-*
-* in short, the way this works is that a bunch of items on the page
-* are set up to interact with the shopping cart:
-* - country selector
-* - region selector
-* - add to cart buttons
-* - remove from cart buttons
-*
-* If any of these form fields / buttons are clicked / changed
-* data is requested from the server.
-*
-* When the data returns, it is processed and its 'instruction'
-* are applied. Instructions can be:
-*
-* type = "id" | "class"
-*     parameter = innerHTML => update innerHTML
-*     parameter = hide => show/hide, using "hideForNow" class
-*      parameter = anything else =>  update attribute
-* WITH name:
-*  - update attribute (e.g. update value for quantity field using the field's name)
-* WITH dropdownArray
-*  - update dropdown
-* WITH rows:
-*  - add / delete TO BE IMPLEMENTED
-*
-*
-* It is recommended that you adjust the IDs / class names / names / dropdown identifiers
-* in your html rather than trying to change what is being returned (although this is possible too).
-*
-* To see what is returns can be done as follows:
-* 1. log in with administrator credentials
-* 2. browse to:
-* @http://www.yoursite.com/shoppingcart/test/
-*
-* NOTE: for your own ajax needs, you can also JUST access the cart, like this:
-* http://www.yourseite.com/shoppingcart/showcart/
-*
-**/
-(function ($) {
-  $(document).ready(
-    function () {
-      EcomCart.init()
-    }
-  )
+ * @description: update Cart using AJAX (JSON data source)
+ * as well as making any "add to cart" and "remove from cart" links
+ * work with AJAX (if setup correctly)
+ * @author nicolaas @ sunny side up . co . nz
+ *
+ * in short, the way this works is that a bunch of items on the page
+ * are set up to interact with the shopping cart:
+ * - country selector
+ * - region selector
+ * - add to cart buttons
+ * - remove from cart buttons
+ *
+ * If any of these form fields / buttons are clicked / changed
+ * data is requested from the server.
+ *
+ * When the data returns, it is processed and its 'instruction'
+ * are applied. Instructions can be:
+ *
+ * type = "id" | "class"
+ *     parameter = innerHTML => update innerHTML
+ *     parameter = hide => show/hide, using "hideForNow" class
+ *      parameter = anything else =>  update attribute
+ * WITH name:
+ *  - update attribute (e.g. update value for quantity field using the field's name)
+ * WITH dropdownArray
+ *  - update dropdown
+ * WITH rows:
+ *  - add / delete TO BE IMPLEMENTED
+ *
+ *
+ * It is recommended that you adjust the IDs / class names / names / dropdown identifiers
+ * in your html rather than trying to change what is being returned (although this is possible too).
+ *
+ * To see what is returns can be done as follows:
+ * 1. log in with administrator credentials
+ * 2. browse to:
+ * @http://www.yoursite.com/shoppingcart/test/
+ *
+ * NOTE: for your own ajax needs, you can also JUST access the cart, like this:
+ * http://www.yourseite.com/shoppingcart/showcart/
+ *
+ **/
+;(function ($) {
+  $(document).ready(function () {
+    EcomCart.init()
+  })
 })(window.jQuery)
 
 const EcomCart = {
-
   /**
-  * Set to TRUE to see debug info.
-  * @var Boolean
-  */
+   * Set to TRUE to see debug info.
+   * @var Boolean
+   */
   debug: false,
-  set_debug: function (b) { this.debug = b },
+  set_debug: function (b) {
+    this.debug = b
+  },
 
   /**
-  * selector to identify input field for selecting country.
-  */
+   * selector to identify input field for selecting country.
+   */
   shoppingCartURLSegment: 'shoppingcart',
-  set_shoppingCartURLSegment: function (s) { this.shoppingCartURLSegment = s },
+  set_shoppingCartURLSegment: function (s) {
+    this.shoppingCartURLSegment = s
+  },
 
   /**
-  * this is a collection of dom elements that hold the item causing the change
-  * we retain this here so that we can add a loading class to it and,
-  * on return, we can remove it.
-  * Because it is an array, each clicked element can be individually given
-  * the loading class and also removed when its particular request returns.
-  */
+   * this is a collection of dom elements that hold the item causing the change
+   * we retain this here so that we can add a loading class to it and,
+   * on return, we can remove it.
+   * Because it is an array, each clicked element can be individually given
+   * the loading class and also removed when its particular request returns.
+   */
   loadingSelectors: [],
 
   /**
-  * tells us the number of ajax calls that are currently awaiting
-  * processing
-  * @var Int
-  */
+   * tells us the number of ajax calls that are currently awaiting
+   * processing
+   * @var Int
+   */
   openAjaxCalls: 0,
 
   /**
-  * are there any items in the cart
-  * @var Boolean
-  */
+   * are there any items in the cart
+   * @var Boolean
+   */
   cartHasItems: false,
 
   /**
-  * This is the data that we start with (which may be contained in the original HTML)
-  * @var Array
-  */
+   * This is the data that we start with (which may be contained in the original HTML)
+   * @var Array
+   */
   initialData: [],
-  set_initialData: function (a) { this.initialData = a },
+  set_initialData: function (a) {
+    this.initialData = a
+  },
 
   /**
-  *  array of callbacks to call after update
-  *
-  * @type Array
-  */
+   *  array of callbacks to call after update
+   *
+   * @type Array
+   */
   reinitCallbacks: [],
 
   // #################################
@@ -105,238 +108,299 @@ const EcomCart = {
   // #################################
 
   /**
-  * selector to identify the area in which the country + region selection takes place
-  * @todo: can we make this more specific?
-  */
+   * selector to identify the area in which the country + region selection takes place
+   * @todo: can we make this more specific?
+   */
   countryAndRegionRootSelector: 'body',
-  set_countryAndRegionRootSelector: function (s) { this.countryAndRegionRootSelector = s },
+  set_countryAndRegionRootSelector: function (s) {
+    this.countryAndRegionRootSelector = s
+  },
 
   /**
-  * selector to identify input field for selecting country.
-  */
+   * selector to identify input field for selecting country.
+   */
   ajaxCountryFieldSelector: 'select.ajaxCountryField',
-  set_ajaxCountryFieldSelector: function (s) { this.ajaxCountryFieldSelector = s },
+  set_ajaxCountryFieldSelector: function (s) {
+    this.ajaxCountryFieldSelector = s
+  },
 
   /**
-  * selector to identify input field for selecting region.
-  */
+   * selector to identify input field for selecting region.
+   */
   ajaxRegionFieldSelector: 'select.ajaxRegionField',
-  set_ajaxRegionFieldSelector: function (s) { this.ajaxRegionFieldSelector = s },
+  set_ajaxRegionFieldSelector: function (s) {
+    this.ajaxRegionFieldSelector = s
+  },
 
   // #################################
   // UPDATING THE CART - CLASSES USED
   // #################################
 
   /**
-  * class used to show cart data is being updated.
-  */
+   * class used to show cart data is being updated.
+   */
   classToShowLoading: 'loading',
-  set_classToShowLoading: function (s) { this.classToShowLoading = s },
+  set_classToShowLoading: function (s) {
+    this.classToShowLoading = s
+  },
 
   /**
-  * class used to 'lock' the page while cart updates are being processed.
-  */
+   * class used to 'lock' the page while cart updates are being processed.
+   */
   classToShowPageIsUpdating: 'ecomCartIsUpdating',
-  set_classToShowPageIsUpdating: function (s) { this.classToShowPageIsUpdating = s },
+  set_classToShowPageIsUpdating: function (s) {
+    this.classToShowPageIsUpdating = s
+  },
 
   /**
-  * the class used to show add/remove buyable buttons
-  */
+   * the class used to show add/remove buyable buttons
+   */
   showClass: 'show',
-  set_showClass: function (s) { this.showClass = s },
+  set_showClass: function (s) {
+    this.showClass = s
+  },
 
   /**
-  * the class used to hide add/remove buyable buttons
-  */
+   * the class used to hide add/remove buyable buttons
+   */
   hideClass: 'hide',
-  set_hideClass: function (s) { this.hideClass = s },
+  set_hideClass: function (s) {
+    this.hideClass = s
+  },
 
   /**
-  * a method called before the update
-  * params for onBeforeUpdate:
-  * url, params, EcomCart.setChanges
-  * EcomCart.set_onBeforeUpdate(function(url, params, setChanges) {alert("before");});
-  */
+   * a method called before the update
+   * params for onBeforeUpdate:
+   * url, params, EcomCart.setChanges
+   * EcomCart.set_onBeforeUpdate(function(url, params, setChanges) {alert("before");});
+   */
   onBeforeUpdate: null,
-  set_onBeforeUpdate: function (f) { this.onBeforeUpdate = f },
+  set_onBeforeUpdate: function (f) {
+    this.onBeforeUpdate = f
+  },
 
   /**
-  * a method called after the update
-  * params for onAfterUpdate:
-  * changes, status
-  * EcomCart.set_onAfterUpdate(function(change, status) {alert("after");});
-  */
+   * a method called after the update
+   * params for onAfterUpdate:
+   * changes, status
+   * EcomCart.set_onAfterUpdate(function(change, status) {alert("after");});
+   */
   onAfterUpdate: null,
-  set_onAfterUpdate: function (f) { this.onAfterUpdate = f },
+  set_onAfterUpdate: function (f) {
+    this.onAfterUpdate = f
+  },
 
   /**
-  * @var Array
-  * Synonyms are used in the update to also update
-  * They take the form of:
-  * Selector (e.g. MyCart) => Other Selectors
-  * It updates the Other Selectors at the same time as it updates the Selector
-  * e.g. Order_DB_302_Total => ".TotalAmounts"
-  * As most of the core selctors are dynamic, they should be set at runtime.
-  */
+   * @var Array
+   * Synonyms are used in the update to also update
+   * They take the form of:
+   * Selector (e.g. MyCart) => Other Selectors
+   * It updates the Other Selectors at the same time as it updates the Selector
+   * e.g. Order_DB_302_Total => ".TotalAmounts"
+   * As most of the core selctors are dynamic, they should be set at runtime.
+   */
   synonyms: [],
-  set_synonyms: function (a) { this.synonyms = a },
-  add_synonym: function (key, value) { this.synonyms[key] = value },
-  remove_synonym: function (key) { this.synonyms.splice(key, 1) },
+  set_synonyms: function (a) {
+    this.synonyms = a
+  },
+  add_synonym: function (key, value) {
+    this.synonyms[key] = value
+  },
+  remove_synonym: function (key) {
+    this.synonyms.splice(key, 1)
+  },
 
   // #################################
   // ITEMS (OR LACK OF) IN THE CART
   // #################################
 
   /**
-  * selector of the dom elements shown when there are no items in cart.
-  */
+   * selector of the dom elements shown when there are no items in cart.
+   */
   selectorShowOnZeroItems: '.showOnZeroItems',
-  set_selectorShowOnZeroItems: function (s) { this.selectorShowOnZeroItems = s },
+  set_selectorShowOnZeroItems: function (s) {
+    this.selectorShowOnZeroItems = s
+  },
 
   /**
-  * selector of the dom elements that is hidden on zero items.
-  */
+   * selector of the dom elements that is hidden on zero items.
+   */
   selectorHideOnZeroItems: '.hideOnZeroItems',
-  set_selectorHideOnZeroItems: function (s) { this.selectorHideOnZeroItems = s },
+  set_selectorHideOnZeroItems: function (s) {
+    this.selectorHideOnZeroItems = s
+  },
 
   /**
-  * selector for the item rows.
-  */
+   * selector for the item rows.
+   */
   selectorItemRows: 'tr.orderitem',
-  set_selectorItemRows: function (s) { this.selectorItemRows = s },
+  set_selectorItemRows: function (s) {
+    this.selectorItemRows = s
+  },
 
   /**
-  * the selector used to identify "remove from cart" links within the cart.
-  */
+   * the selector used to identify "remove from cart" links within the cart.
+   */
   removeCartSelector: '.ajaxRemoveFromCart',
-  set_removeCartSelector: function (s) { this.removeCartSelector = s },
+  set_removeCartSelector: function (s) {
+    this.removeCartSelector = s
+  },
 
   // #################################
   // AJAX CART LINKS OUTSIDE THE CART
   // #################################
 
   /**
-  * turn on / off the ajax buttons outside of the cart
-  * (e.g. add this product to cart, delete from cart)
-  * @var Boolean
-  */
+   * turn on / off the ajax buttons outside of the cart
+   * (e.g. add this product to cart, delete from cart)
+   * @var Boolean
+   */
   ajaxButtonsOn: true,
-  set_ajaxButtonsOn: function (b) { this.ajaxButtonsOn = b },
+  set_ajaxButtonsOn: function (b) {
+    this.ajaxButtonsOn = b
+  },
 
   /**
-  * Can the Product List be updated using AJAX?
-  *
-  * @var Boolean
-  */
+   * Can the Product List be updated using AJAX?
+   *
+   * @var Boolean
+   */
   ajaxifyProductList: false,
-  set_ajaxifyProductList: function (b) { this.ajaxifyProductList = b },
+  set_ajaxifyProductList: function (b) {
+    this.ajaxifyProductList = b
+  },
 
   /**
-  * Is the product list from a cached source?
-  *
-  * This is important to know, because in this case
-  * we have to disable the SecurityID by adding
-  * cached=1 to all URLs
-  *
-  * @var Boolean
-  */
+   * Is the product list from a cached source?
+   *
+   * This is important to know, because in this case
+   * we have to disable the SecurityID by adding
+   * cached=1 to all URLs
+   *
+   * @var Boolean
+   */
   productListIsFromCachedSource: true,
 
   /**
-  * NOTE: set to empty string to bypass confirmation step
-  */
-  confirmDeleteText: 'Are you sure you would like to remove this item from your cart?',
-  set_confirmDeleteText: function (s) { this.confirmDeleteText = s },
+   * NOTE: set to empty string to bypass confirmation step
+   */
+  confirmDeleteText:
+    'Are you sure you would like to remove this item from your cart?',
+  set_confirmDeleteText: function (s) {
+    this.confirmDeleteText = s
+  },
 
   /**
-  * the area in which the ajax links can be found.
-  */
+   * the area in which the ajax links can be found.
+   */
   ajaxLinksAreaSelector: 'body',
-  set_ajaxLinksAreaSelector: function (v) { this.ajaxLinksAreaSelector = v },
+  set_ajaxLinksAreaSelector: function (v) {
+    this.ajaxLinksAreaSelector = v
+  },
 
   /**
-  * the selector used to identify links that add buyables to the cart
-  */
+   * the selector used to identify links that add buyables to the cart
+   */
   addLinkSelector: '.ajaxBuyableAdd',
-  set_addLinkSelector: function (s) { this.addLinkSelector = s },
+  set_addLinkSelector: function (s) {
+    this.addLinkSelector = s
+  },
 
   /**
-  * the selector used to identify links that add buyables to the cart
-  */
+   * the selector used to identify links that add buyables to the cart
+   */
   excludedPagesSelector: '.no-ajax-buttons',
-  set_excludedPagesSelector: function (s) { this.excludedPagesSelector = s },
+  set_excludedPagesSelector: function (s) {
+    this.excludedPagesSelector = s
+  },
 
   /**
-  * the selector used to identify links that remove buyables from the cart
-  * (outside the cart itself)
-  */
+   * the selector used to identify links that remove buyables from the cart
+   * (outside the cart itself)
+   */
   removeLinkSelector: '.ajaxBuyableRemove',
-  set_removeLinkSelector: function (s) { this.removeLinkSelector = s },
+  set_removeLinkSelector: function (s) {
+    this.removeLinkSelector = s
+  },
 
   /**
-  * the selector used to identify any buyable holder within a cart
-  */
+   * the selector used to identify any buyable holder within a cart
+   */
   orderItemHolderSelector: '.orderItemHolder',
-  set_orderItemHolderSelector: function (s) { this.removeLinkSelector = s },
+  set_orderItemHolderSelector: function (s) {
+    this.removeLinkSelector = s
+  },
 
   /**
-  * the selector used to identify the cart related menu items (e.g. cart / checkout)
-  */
+   * the selector used to identify the cart related menu items (e.g. cart / checkout)
+   */
   cartMenuLinksSelector: '.cartlink',
-  set_cartMenuLinksSelector: function (s) { this.cartMenuLinksSelector = s },
+  set_cartMenuLinksSelector: function (s) {
+    this.cartMenuLinksSelector = s
+  },
 
   // #################################
   // AJAX PRODUCT LINKS
   // #################################
 
   /**
-  * the selector used to identify links
-  * that change the product list. These can be ajaxified so that the list
-  * is using AJAX rather than reload the whole page.
-  * @var String
-  */
+   * the selector used to identify links
+   * that change the product list. These can be ajaxified so that the list
+   * is using AJAX rather than reload the whole page.
+   * @var String
+   */
   ajaxifiedListAdjusterSelectors: '.ajaxifyMyProductGroupLinks',
-  set_ajaxifiedListAdjusterSelectors: function (s) { this.ajaxifiedListAdjusterSelectors = s },
+  set_ajaxifiedListAdjusterSelectors: function (s) {
+    this.ajaxifiedListAdjusterSelectors = s
+  },
 
   /**
-  * selector of element that will be replaced by the new
-  * product list
-  * @var String
-  */
+   * selector of element that will be replaced by the new
+   * product list
+   * @var String
+   */
   ajaxifiedListHolderSelector: '#ProductGroup',
-  set_ajaxifiedListHolderSelector: function (s) { this.ajaxifiedListsSelector = s },
+  set_ajaxifiedListHolderSelector: function (s) {
+    this.ajaxifiedListsSelector = s
+  },
 
   /**
-  * Hidden page title, used when products are updated using the
-  * @var String
-  */
+   * Hidden page title, used when products are updated using the
+   * @var String
+   */
   hiddenPageTitleID: '#HiddenPageTitleID',
-  set_hiddenPageTitleID: function (s) { this.hiddenPageTitleID = s },
+  set_hiddenPageTitleID: function (s) {
+    this.hiddenPageTitleID = s
+  },
 
   /**
-  * Hidden page title, used when products are updated using the
-  * @var function
-  */
+   * Hidden page title, used when products are updated using the
+   * @var function
+   */
   ajaxifiedProductsCallBack: function () {},
-  set_ajaxifiedProductsCallBack: function (f) { this.ajaxifiedProductsCallBack = f },
+  set_ajaxifiedProductsCallBack: function (f) {
+    this.ajaxifiedProductsCallBack = f
+  },
 
   // #################################
   // DIALOGUE POP-UP BOX
   // #################################
 
   /**
-  * the selector used to identify any links that open a pop-up dialogue
-  * the syntax is as follows:
-  * <a href="#colorboxDialogCart" class="colorboxDialog" rel="">show cart</a>
-  * <div id="colorboxDialogCart">content for pop-up</div> (this line is optional)
-  */
+   * the selector used to identify any links that open a pop-up dialogue
+   * the syntax is as follows:
+   * <a href="#colorboxDialogCart" class="colorboxDialog" rel="">show cart</a>
+   * <div id="colorboxDialogCart">content for pop-up</div> (this line is optional)
+   */
   colorboxDialogSelector: '.colorboxDialog',
-  set_colorboxDialogSelector: function (s) { this.colorboxDialogSelector = s },
+  set_colorboxDialogSelector: function (s) {
+    this.colorboxDialogSelector = s
+  },
 
   /**
-  * The options set for the colorbox dialogue, see: https://github.com/jackmoore/colorbox
-  * @var Int
-  */
+   * The options set for the colorbox dialogue, see: https://github.com/jackmoore/colorbox
+   * @var Int
+   */
   colorboxDialogOptions: {
     height: '95%',
     width: '95%',
@@ -348,15 +412,17 @@ const EcomCart = {
       EcomCart.reinit(true)
     }
   },
-  set_colorboxDialogOptions: function (o) { this.colorboxDialogOptions = o },
+  set_colorboxDialogOptions: function (o) {
+    this.colorboxDialogOptions = o
+  },
 
   // #################################
   // INIT AND RESET FUNCTIONS
   // #################################
 
   /**
-  * initialises all the ajax functionality
-  */
+   * initialises all the ajax functionality
+   */
   init: function () {
     if (typeof window.EcomCartOptions !== 'undefined') {
       for (var key in window.EcomCartOptions) {
@@ -395,9 +461,9 @@ const EcomCart = {
   },
 
   /**
-  * runs everytime the cart is updated
-  * @param Boolean changes applied? have changes been applied in the meantime.
-  */
+   * runs everytime the cart is updated
+   * @param Boolean changes applied? have changes been applied in the meantime.
+   */
   reinit: function (changesApplied) {
     // hide or show "zero items" information
     if (changesApplied) {
@@ -413,65 +479,80 @@ const EcomCart = {
   // #################################
 
   /**
-  * sets the functions for updating country and region
-  */
+   * sets the functions for updating country and region
+   */
   countryAndRegionUpdates: function () {
-    window.jQuery(EcomCart.countryAndRegionRootSelector).on(
-      'change',
-      EcomCart.ajaxCountryFieldSelector,
-      function () {
+    window
+      .jQuery(EcomCart.countryAndRegionRootSelector)
+      .on('change', EcomCart.ajaxCountryFieldSelector, function () {
         var url = EcomCart.createUrl('setcountry', this.value)
         EcomCart.getChanges(url, null, this)
-      }
-    )
-    window.jQuery(EcomCart.countryAndRegionRootSelector).on(
-      'change',
-      EcomCart.ajaxRegionFieldSelector,
-      function () {
+      })
+    window
+      .jQuery(EcomCart.countryAndRegionRootSelector)
+      .on('change', EcomCart.ajaxRegionFieldSelector, function () {
         var url = EcomCart.createUrl('setregion', this.value)
         EcomCart.getChanges(url, null, this)
-      }
-    )
+      })
   },
 
   /**
-  * gets the options from the main country field and presents them as options for the user
-  * to select a new country.
-  */
+   * gets the options from the main country field and presents them as options for the user
+   * to select a new country.
+   */
   changeCountryFieldSwap: function () {
-    window.jQuery(EcomCart.countryAndRegionRootSelector).on(
-      'change',
-      EcomCart.selectorChangeCountryFieldHolder + ' select',
-      function () {
-        var val = window.jQuery(EcomCart.selectorChangeCountryFieldHolder + ' select').val()
-        window.jQuery(EcomCart.ajaxCountryFieldSelector).val(val)
-        var url = EcomCart.createUrl('setcountry', val)
-        EcomCart.getChanges(url, null, this)
-        window.jQuery(EcomCart.selectorChangeCountryLink).click()
-      }
-    )
+    window
+      .jQuery(EcomCart.countryAndRegionRootSelector)
+      .on(
+        'change',
+        EcomCart.selectorChangeCountryFieldHolder + ' select',
+        function () {
+          var val = window
+            .jQuery(EcomCart.selectorChangeCountryFieldHolder + ' select')
+            .val()
+          window.jQuery(EcomCart.ajaxCountryFieldSelector).val(val)
+          var url = EcomCart.createUrl('setcountry', val)
+          EcomCart.getChanges(url, null, this)
+          window.jQuery(EcomCart.selectorChangeCountryLink).click()
+        }
+      )
   },
 
   /**
-  * ajaxify the product list
-  *
-  */
+   * ajaxify the product list
+   *
+   */
   addAjaxificationOfProductList: function () {
     if (EcomCart.ajaxifyProductList) {
-      window.jQuery(EcomCart.ajaxifiedListHolderSelector).on(
-        'click',
-        EcomCart.ajaxifiedListAdjusterSelectors + ' a',
-        function (event) {
-          event.preventDefault()
-          var url = window.jQuery(this).attr('href')
-          window.jQuery.ajax(
-            {
-              beforeSend: function () { window.jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.classToShowLoading) },
+      window
+        .jQuery(EcomCart.ajaxifiedListHolderSelector)
+        .on(
+          'click',
+          EcomCart.ajaxifiedListAdjusterSelectors + ' a',
+          function (event) {
+            event.preventDefault()
+            var url = window.jQuery(this).attr('href')
+            window.jQuery.ajax({
+              beforeSend: function () {
+                window
+                  .jQuery(EcomCart.ajaxifiedListHolderSelector)
+                  .addClass(EcomCart.classToShowLoading)
+              },
               // cache: false,
-              complete: function () { window.jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.classToShowLoading) },
+              complete: function () {
+                window
+                  .jQuery(EcomCart.ajaxifiedListHolderSelector)
+                  .removeClass(EcomCart.classToShowLoading)
+              },
               dataType: 'html',
               error: function (jqXHR, textStatus, errorThrown) {
-                alert('An error occurred (' + textStatus + ' ' + errorThrown + ')! I will try reloading the page now.')
+                alert(
+                  'An error occurred (' +
+                    textStatus +
+                    ' ' +
+                    errorThrown +
+                    ')! I will try reloading the page now.'
+                )
                 window.location.href = url
               },
               success: function (data, textStatus, jqXHR) {
@@ -483,7 +564,7 @@ const EcomCart = {
                 var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
                 window.history.pushState(
                   {
-                    'pageTitle': pageTitle
+                    pageTitle: pageTitle
                   },
                   pageTitle,
                   url
@@ -494,24 +575,32 @@ const EcomCart = {
                 // set changes also does the reinit
                 EcomCart.openAjaxCalls++
                 EcomCart.setChanges(EcomCart.initialData, '')
-                if (typeof (EcomProducts) !== 'undefined') {
+                if (typeof EcomProducts !== 'undefined') {
                   EcomProducts.reinit()
                 }
-                if (typeof (EcomCart.ajaxifiedProductsCallBack) === 'function') {
+                if (typeof EcomCart.ajaxifiedProductsCallBack === 'function') {
                   EcomCart.ajaxifiedProductsCallBack()
                 }
                 // scroll to the top of the product list.
-                window.jQuery('html, body').animate({scrollTop: window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top}, 500)
+                window
+                  .jQuery('html, body')
+                  .animate(
+                    {
+                      scrollTop: window
+                        .jQuery(EcomCart.ajaxifiedListHolderSelector)
+                        .offset().top
+                    },
+                    500
+                  )
 
                 //fire an event to inform that data on the page has changed
-                const event = new Event("paginationchange");
-                window.dispatchEvent(event);
+                const event = new Event('paginationchange')
+                window.dispatchEvent(event)
               },
               url: url
-            }
-          )
-        }
-      )
+            })
+          }
+        )
     }
   },
 
@@ -520,34 +609,33 @@ const EcomCart = {
   // #################################
 
   /**
-  * adds the "add to cart" ajax functionality to links.
-  * @param String withinSelector: area where these links can be found, the more specific the better (faster)
-  */
+   * adds the "add to cart" ajax functionality to links.
+   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   */
   addAddLinks: function (withinSelector) {
-    window.jQuery(withinSelector).not(EcomCart.excludedPagesSelector).on(
-      'click',
-      EcomCart.addLinkSelector,
-      function () {
+    window
+      .jQuery(withinSelector)
+      .not(EcomCart.excludedPagesSelector)
+      .on('click', EcomCart.addLinkSelector, function () {
         var url = window.jQuery(this).attr('href')
         if (EcomCart.productListIsFromCachedSource) {
           url += '&cached=1'
         }
         EcomCart.getChanges(url, null, this)
         return false
-      }
-    )
+      })
   },
 
   /**
-  * add ajax functionality to "remove from cart" links
-  * outside the cart
-  * @param String withinSelector: area where these links can be found, the more specific the better (faster)
-  */
+   * add ajax functionality to "remove from cart" links
+   * outside the cart
+   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   */
   addRemoveLinks: function (withinSelector) {
-    window.jQuery(withinSelector).not(EcomCart.excludedPagesSelector).on(
-      'click',
-      EcomCart.removeLinkSelector,
-      function () {
+    window
+      .jQuery(withinSelector)
+      .not(EcomCart.excludedPagesSelector)
+      .on('click', EcomCart.removeLinkSelector, function () {
         if (EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
           var url = window.jQuery(this).attr('href')
           if (EcomCart.productListIsFromCachedSource) {
@@ -556,34 +644,31 @@ const EcomCart = {
           EcomCart.getChanges(url, null, this)
         }
         return false
-      }
-    )
+      })
   },
 
   /**
-  * adds the "remove from cart" ajax functionality to links
-  * IN THE CART!
-  * @param String withinSelector: area where these links can be found, the more specific the better (faster)
-  */
+   * adds the "remove from cart" ajax functionality to links
+   * IN THE CART!
+   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   */
   addCartRemove: function (withinSelector) {
-    window.jQuery(withinSelector).on(
-      'click',
-      EcomCart.removeCartSelector,
-      function (event) {
-        if (!EcomCart.confirmDeleteText || confirm(EcomCart.confirmDeleteText)) {
+    window
+      .jQuery(withinSelector)
+      .on('click', EcomCart.removeCartSelector, function (event) {
+        if (
+          !EcomCart.confirmDeleteText ||
+          confirm(EcomCart.confirmDeleteText)
+        ) {
           var url = window.jQuery(this).attr('href')
           var el = window.jQuery(this).parents(EcomCart.orderItemHolderSelector)
-          window.jQuery(el).slideUp(
-            'slow',
-            function () {
-              window.jQuery(el).remove()
-            }
-          )
+          window.jQuery(el).slideUp('slow', function () {
+            window.jQuery(el).remove()
+          })
           EcomCart.getChanges(url, null, this)
         }
         return false
-      }
-    )
+      })
   },
 
   // #################################
@@ -591,11 +676,11 @@ const EcomCart = {
   // #################################
 
   /**
-  * get JSON data from server
-  * @param String url: URL for getting data (ajax request)
-  * @param Array params: parameters to add to ajax request
-  * @param Object loadingElement: the element that is being clicked or should be shown as "loading"
-  */
+   * get JSON data from server
+   * @param String url: URL for getting data (ajax request)
+   * @param Array params: parameters to add to ajax request
+   * @param Object loadingElement: the element that is being clicked or should be shown as "loading"
+   */
   getChanges: function (url, params, loadingElement) {
     if (params === null) {
       params = {}
@@ -609,7 +694,7 @@ const EcomCart = {
     var loadingIndex = this.addLoadingSelector(loadingElement)
     params.loadingindex = loadingIndex
     if (EcomCart.onBeforeUpdate) {
-      if (typeof (EcomCart.onBeforeUpdate) === 'function') {
+      if (typeof EcomCart.onBeforeUpdate === 'function') {
         EcomCart.onBeforeUpdate.call(url, params, EcomCart.setChanges)
       }
     }
@@ -618,13 +703,13 @@ const EcomCart = {
   },
 
   /**
-  * when, for example, you click on an "add to cart" button
-  * this method adds the loading class to the clicked button
-  * and retains the element so that the loading class can be removed
-  * when the data is returned.
-  * @param element (e.g. window.jQuery("#MyClickableButton") )
-  * @return integer
-  */
+   * when, for example, you click on an "add to cart" button
+   * this method adds the loading class to the clicked button
+   * and retains the element so that the loading class can be removed
+   * when the data is returned.
+   * @param element (e.g. window.jQuery("#MyClickableButton") )
+   * @return integer
+   */
   addLoadingSelector: function (loadingElement) {
     loadingElement = window.jQuery(loadingElement).parent().parent()
     window.jQuery(loadingElement).addClass(EcomCart.classToShowLoading)
@@ -634,13 +719,17 @@ const EcomCart = {
   },
 
   /**
-  *
-  *
-  *
-  * @return String
-  */
+   *
+   *
+   *
+   * @return String
+   */
   createUrl: function (method, variable) {
-    var url = window.jQuery('base').attr('href') + EcomCart.shoppingCartURLSegment + '/'
+    var url =
+      window.jQuery('base').attr('href') +
+      '/' +
+      EcomCart.shoppingCartURLSegment +
+      '/'
     if (method) {
       url += method + '/'
     }
@@ -651,17 +740,19 @@ const EcomCart = {
   },
 
   /**
-  * apply changes to the page using the JSON data from the server.
-  * @param JSON OBJECT changes: a JSON object of changes
-  * @param String status: status of updates
-  */
+   * apply changes to the page using the JSON data from the server.
+   * @param JSON OBJECT changes: a JSON object of changes
+   * @param String status: status of updates
+   */
   setChanges: function (changes, status) {
     EcomCart.set_initialData(changes)
     EcomCart.openAjaxCalls--
     // change to switch
     // add loadingElement to data return
     // clean up documentation at the top of the document
-    if (EcomCart.debug) { console.debug('------------- SET CHANGES -----------') }
+    if (EcomCart.debug) {
+      console.debug('------------- SET CHANGES -----------')
+    }
     if (changes.reload) {
       window.location = window.location
       return
@@ -669,16 +760,26 @@ const EcomCart = {
     if (EcomCart.openAjaxCalls <= 0) {
       for (var i in changes) {
         var change = changes[i]
-        if (typeof (change.t) !== 'undefined') {
+        if (typeof change.t !== 'undefined') {
           var type = change.t
           var selector = change.s
           var parameter = change.p
           var value = EcomCart.escapeHTML(change.v)
           // class OR id
-          if (EcomCart.debug) { console.debug('type' + type + ', selector: ' + selector + ', parameter:' + parameter + ', value') }
+          if (EcomCart.debug) {
+            console.debug(
+              'type' +
+                type +
+                ', selector: ' +
+                selector +
+                ', parameter:' +
+                parameter +
+                ', value'
+            )
+          }
           if (type == 'class' || type == 'id') {
             var additionalSelectors = ''
-            if (typeof (EcomCart.synonyms[selector]) !== 'undefined') {
+            if (typeof EcomCart.synonyms[selector] !== 'undefined') {
               selector += ', ' + EcomCart.synonyms[selector]
             }
             if (type == 'id') {
@@ -701,24 +802,33 @@ const EcomCart = {
             }
             // inner html
             else if (parameter == 'innerHTML') {
-              window.jQuery(selector).each(
-                function (i, el) {
-                  window.jQuery(el).html(value)
-                }
-              )
+              window.jQuery(selector).each(function (i, el) {
+                window.jQuery(el).html(value)
+              })
             }
             // attribute
             else {
               window.jQuery(selector).attr(parameter, value)
             }
             if (selector == '.number_of_items') {
-              if (EcomCart.debug) { console.debug('doing .number_of_items') }
+              if (EcomCart.debug) {
+                console.debug('doing .number_of_items')
+              }
               var numericValue = parseFloat(value)
-              if (EcomCart.debug) { console.debug('value ' + numericValue) }
-              EcomCart.cartHasItems = (numericValue > 0 ? true : false)
+              if (EcomCart.debug) {
+                console.debug('value ' + numericValue)
+              }
+              EcomCart.cartHasItems = numericValue > 0 ? true : false
               // update cart menu items
-              window.jQuery('a' + EcomCart.cartMenuLinksSelector + ',  li' + EcomCart.cartMenuLinksSelector + ' > a').each(
-                function (i, el) {
+              window
+                .jQuery(
+                  'a' +
+                    EcomCart.cartMenuLinksSelector +
+                    ',  li' +
+                    EcomCart.cartMenuLinksSelector +
+                    ' > a'
+                )
+                .each(function (i, el) {
                   var myElement = el
                   if (!window.jQuery(el).is('a')) {
                     myElement = window.jQuery(el).find('a')
@@ -727,17 +837,14 @@ const EcomCart = {
                   var numbersOnlyRE = new RegExp('(\\d+)', 'g')
                   var newInnerText = innerText.replace(numbersOnlyRE, value)
                   window.jQuery(myElement).html(newInnerText)
-                }
-              )
+                })
             }
           }
           // name: used for form fields...
           else if (type == 'name') {
-            window.jQuery('[name=' + selector + ']').each(
-              function () {
-                window.jQuery(this).attr(parameter, value)
-              }
-            )
+            window.jQuery('[name=' + selector + ']').each(function () {
+              window.jQuery(this).attr(parameter, value)
+            })
           }
           // replace dropdown values
           else if (type == 'dropdown') {
@@ -751,7 +858,17 @@ const EcomCart = {
                   } else {
                     var selected = ''
                   }
-                  window.jQuery(selector).append('<option value="' + value[i].id + '"' + selected + '>' + value[i].name + '</option>')
+                  window
+                    .jQuery(selector)
+                    .append(
+                      '<option value="' +
+                        value[i].id +
+                        '"' +
+                        selected +
+                        '>' +
+                        value[i].name +
+                        '</option>'
+                    )
                 }
               }
             }
@@ -774,33 +891,39 @@ const EcomCart = {
             // we go through all the ones that are marked as 'inCart' already
             // as part of this we check if they are still incart
             // and as part of this process, we add the "inCart" where needed
-            if (EcomCart.debug) { console.debug('starting replaceclass process') }
-            window.jQuery('.' + parameter).each(
-              function (i, el) {
-                var id = window.jQuery(el).attr('id')
-                if (EcomCart.debug) { console.debug('checking ' + id) }
-                var inCart = false
-                for (var i = 0; i < selector.length; i++) {
-                  if (EcomCart.debug) { console.debug("testing: '" + selector[i] + "' AGAINST '" + id + "'") }
-                  if (id == selector[i]) {
-                    inCart = true
-                    // DO NOT REMOVE IT SO THAT WE CAN USE IT IN THE FUTURE
-                    // selector.splice(i, 1);
-                  }
+            if (EcomCart.debug) {
+              console.debug('starting replaceclass process')
+            }
+            window.jQuery('.' + parameter).each(function (i, el) {
+              var id = window.jQuery(el).attr('id')
+              if (EcomCart.debug) {
+                console.debug('checking ' + id)
+              }
+              var inCart = false
+              for (var i = 0; i < selector.length; i++) {
+                if (EcomCart.debug) {
+                  console.debug(
+                    "testing: '" + selector[i] + "' AGAINST '" + id + "'"
+                  )
                 }
-                if (inCart) {
-                  window.jQuery(el).removeClass(without).addClass(value)
-                } else {
-                  window.jQuery(el).removeClass(value).addClass(without)
+                if (id == selector[i]) {
+                  inCart = true
+                  // DO NOT REMOVE IT SO THAT WE CAN USE IT IN THE FUTURE
+                  // selector.splice(i, 1);
                 }
               }
-            )
+              if (inCart) {
+                window.jQuery(el).removeClass(without).addClass(value)
+              } else {
+                window.jQuery(el).removeClass(value).addClass(without)
+              }
+            })
           }
           // remove loading class from selected loading element
         }
       }
       if (EcomCart.onAfterUpdate) {
-        if (typeof (EcomCart.onAfterUpdate) === 'function') {
+        if (typeof EcomCart.onAfterUpdate === 'function') {
           EcomCart.onAfterUpdate.call(changes, status)
         }
       }
@@ -808,24 +931,24 @@ const EcomCart = {
       EcomCart.reinit(changes.length > 0)
       window.jQuery('body').removeClass(EcomCart.classToShowPageIsUpdating)
       for (var i = 0; i < EcomCart.loadingSelectors.length; i++) {
-        window.jQuery(EcomCart.loadingSelectors[i]).removeClass(EcomCart.classToShowLoading)
+        window
+          .jQuery(EcomCart.loadingSelectors[i])
+          .removeClass(EcomCart.classToShowLoading)
       }
     }
   },
 
   /**
-  * changes to the cart based on zero OR one or more rows
-  */
+   * changes to the cart based on zero OR one or more rows
+   */
   updateForZeroVSOneOrMoreRows: function () {
     if (EcomCart.cartHasItems) {
       window.jQuery(EcomCart.selectorShowOnZeroItems).hide()
-      window.jQuery(EcomCart.selectorHideOnZeroItems).each(
-        function (i, el) {
-          if (!window.jQuery(el).hasClass('hideForNow')) {
-            window.jQuery(el).show()
-          }
+      window.jQuery(EcomCart.selectorHideOnZeroItems).each(function (i, el) {
+        if (!window.jQuery(el).hasClass('hideForNow')) {
+          window.jQuery(el).show()
         }
-      )
+      })
     } else {
       window.jQuery(EcomCart.selectorShowOnZeroItems).show()
       window.jQuery(EcomCart.selectorHideOnZeroItems).hide()
@@ -837,31 +960,31 @@ const EcomCart = {
   // ##########################################
 
   /**
-  * cleaning up strings
-  * @param String str
-  * @return string
-  */
+   * cleaning up strings
+   * @param String str
+   * @return string
+   */
   escapeHTML: function (str) {
     return str
   },
 
   /**
-  * check if a particular variable is set
-  * @param Mixed
-  * @return bool
-  */
+   * check if a particular variable is set
+   * @param Mixed
+   * @return bool
+   */
   variableIsSet: function (variable) {
-    if (typeof (variable) === 'undefined' || variable == 'undefined') {
+    if (typeof variable === 'undefined' || variable == 'undefined') {
       return false
     }
     return true
   },
 
   /**
-  * check if a particular variable is set AND has a value
-  * @param Mixed
-  * @return bool
-  */
+   * check if a particular variable is set AND has a value
+   * @param Mixed
+   * @return bool
+   */
   variableSetWithValue: function (variable) {
     if (EcomCart.variableIsSet(variable)) {
       if (variable) {
@@ -876,21 +999,18 @@ const EcomCart = {
   // #################################
 
   /**
-  * Setup dialogue links
-  */
+   * Setup dialogue links
+   */
   initColorboxDialog: function () {
-    window.jQuery(document).on(
-      'click',
-      EcomCart.colorboxDialogSelector,
-      function (e) {
+    window
+      .jQuery(document)
+      .on('click', EcomCart.colorboxDialogSelector, function (e) {
         EcomCart.colorboxDialogOptions.href = window.jQuery(this).attr('href')
         EcomCart.colorboxDialogOptions.open = true
         window.jQuery.colorbox(EcomCart.colorboxDialogOptions)
         return false
-      }
-    )
+      })
   }
-
 }
 
 window.EcomCart = EcomCart
