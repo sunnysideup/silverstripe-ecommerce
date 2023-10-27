@@ -107,7 +107,7 @@ class ProductOrderItem extends OrderItem
             $tableTitle = implode('', $updatedTableTitle);
         }
 
-        return (string) $tableTitle;
+        return (string) trim($tableTitle);
     }
 
     /**
