@@ -17,7 +17,10 @@ if (typeof require === 'undefined') {
 
 var EcomQuantityField = {
   joinWithSlash: (...strings) =>
-    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+    strings
+      .map(str => (str.endsWith('/') ? str : `${str}/`))
+      .join('')
+      .slice(0, -1),
 
   //todo: make more specific! some selector that holds true for all cart holders.
   hidePlusAndMinues: true,

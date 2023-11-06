@@ -717,7 +717,10 @@ const EcomCart = {
   },
 
   joinWithSlash: (...strings) =>
-    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+    strings
+      .map(str => (str.endsWith('/') ? str : `${str}/`))
+      .join('')
+      .slice(0, -1),
 
   /**
    *
@@ -731,10 +734,10 @@ const EcomCart = {
       EcomCart.shoppingCartURLSegment
     )
     if (method) {
-      url += method + '/'
+      EcomCart.joinWithSlash(url, method)
     }
     if (variable) {
-      url += variable + '/'
+      EcomCart.joinWithSlash(url, variable)
     }
     return url
   },

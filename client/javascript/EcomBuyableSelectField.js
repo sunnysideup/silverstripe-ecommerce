@@ -39,7 +39,10 @@ const EcomBuyableSelectField = {
   },
 
   joinWithSlash: (...strings) =>
-    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+    strings
+      .map(str => (str.endsWith('/') ? str : `${str}/`))
+      .join('')
+      .slice(0, -1),
 
   /**
    * the class that is being added when we are searching...

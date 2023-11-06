@@ -59,7 +59,10 @@ var EcomCart = {
   },
 
   joinWithSlash: (...strings) =>
-    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+    strings
+      .map(str => (str.endsWith('/') ? str : `${str}/`))
+      .join('')
+      .slice(0, -1),
 
   /**
    * selector to identify input field for selecting country.
@@ -717,10 +720,10 @@ var EcomCart = {
       EcomCart.shoppingCartURLSegment
     )
     if (method) {
-      url += method + '/'
+      EcomCart.joinWithSlash(url, method)
     }
     if (variable) {
-      url += variable + '/'
+      EcomCart.joinWithSlash(url, variable)
     }
     return url
   },
