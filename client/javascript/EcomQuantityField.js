@@ -16,6 +16,9 @@ if (typeof require === 'undefined') {
 }
 
 var EcomQuantityField = {
+  joinWithSlash: (...strings) =>
+    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+
   //todo: make more specific! some selector that holds true for all cart holders.
   hidePlusAndMinues: true,
 
@@ -163,13 +166,16 @@ var EcomQuantityField = {
                 } else {
                   URLSegment = URLSegment + '&'
                 }
-                var url =
-                  window.jQuery('base').attr('href').replace(/\/$/, '') +
-                  '/' +
-                  URLSegment +
-                  'quantity=' +
-                  this.value
+                var url = EcomQuantityField.joinWithSlash(
+                  window.jQuery('base').attr('href'),
+                  URLSegment
+                )
+                // add quantity
+                url += 'quantity=' + this.value
+
+                // no double-encoded ampersands
                 url = url.replace('&amp;', '&')
+
                 if (typeof EcomQuantityField.EcomCart !== 'undefined') {
                   EcomQuantityField.EcomCart.getChanges(url, null, this)
                 } else if (typeof EcomCart !== 'undefined') {

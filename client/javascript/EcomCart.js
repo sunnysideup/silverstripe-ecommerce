@@ -58,6 +58,9 @@ var EcomCart = {
     this.debug = b
   },
 
+  joinWithSlash: (...strings) =>
+    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+
   /**
    * selector to identify input field for selecting country.
    */
@@ -709,11 +712,10 @@ var EcomCart = {
    * @return String
    */
   createUrl: function (method, variable) {
-    var url =
-      window.jQuery('base').attr('href') +
-      '/' +
-      EcomCart.shoppingCartURLSegment +
-      '/'
+    var url = EcomCart.joinWithSlash(
+      window.jQuery('base').attr('href'),
+      EcomCart.shoppingCartURLSegment
+    )
     if (method) {
       url += method + '/'
     }

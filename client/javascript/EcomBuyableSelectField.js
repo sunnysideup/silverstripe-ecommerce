@@ -38,6 +38,9 @@ const EcomBuyableSelectField = {
     this.url_segment = s
   },
 
+  joinWithSlash: (...strings) =>
+    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+
   /**
    * the class that is being added when we are searching...
    * @var String
@@ -192,11 +195,11 @@ const EcomBuyableSelectField = {
           EcomBuyableSelectField.requestTerm = request.term
           window.jQuery.ajax({
             type: 'POST',
-            url:
-              window.jQuery('base').attr('href') +
-              '/' +
-              EcomBuyableSelectField.url_segment +
-              '/json/',
+            url: EcomBuyableSelectField.joinWithSlash(
+              window.jQuery('base').attr('href'),
+              EcomBuyableSelectField.url_segment,
+              'json'
+            ),
             dataType: 'json',
             data: {
               term: request.term,

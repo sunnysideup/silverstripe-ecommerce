@@ -582,16 +582,14 @@ const EcomCart = {
                   EcomCart.ajaxifiedProductsCallBack()
                 }
                 // scroll to the top of the product list.
-                window
-                  .jQuery('html, body')
-                  .animate(
-                    {
-                      scrollTop: window
-                        .jQuery(EcomCart.ajaxifiedListHolderSelector)
-                        .offset().top
-                    },
-                    500
-                  )
+                window.jQuery('html, body').animate(
+                  {
+                    scrollTop: window
+                      .jQuery(EcomCart.ajaxifiedListHolderSelector)
+                      .offset().top
+                  },
+                  500
+                )
 
                 //fire an event to inform that data on the page has changed
                 const event = new Event('paginationchange')
@@ -718,6 +716,9 @@ const EcomCart = {
     return EcomCart.loadingSelectors.length - 1
   },
 
+  joinWithSlash: (...strings) =>
+    strings.map(str => (str.endsWith('/') ? str : `${str}/`)).join(''),
+
   /**
    *
    *
@@ -725,11 +726,10 @@ const EcomCart = {
    * @return String
    */
   createUrl: function (method, variable) {
-    var url =
-      window.jQuery('base').attr('href') +
-      '/' +
-      EcomCart.shoppingCartURLSegment +
-      '/'
+    var url = EcomCartWebPack.joinWithSlash(
+      window.jQuery('base').attr('href'),
+      EcomCart.shoppingCartURLSegment
+    )
     if (method) {
       url += method + '/'
     }
