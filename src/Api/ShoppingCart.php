@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
@@ -1173,18 +1174,12 @@ class ShoppingCart
     {
         $sessionVariableName = $this->sessionVariableName('Messages');
         $messages = [];
-        $curr = Controller::curr();
-        if ($curr) {
-            $request = $curr->getRequest();
-            if ($request) {
-                $session = $request->getSession();
-                if ($session) {
-                    //get old messages
-                    $messages = unserialize((string) $session->get($sessionVariableName));
-                    //clear old messages
-                    $session->clear($sessionVariableName);
-                }
-            }
+        $session = $this->getSession();
+        if ($session) {
+            //get old messages
+            $messages = unserialize((string) $session->get($sessionVariableName));
+            //clear old messages
+            $session->clear($sessionVariableName);
         }
 
         //set to form????
@@ -1193,6 +1188,18 @@ class ShoppingCart
         }
 
         return $this->messages;
+    }
+
+    protected function getSession(): ?Session
+    {
+        $curr = Controller::curr();
+        if ($curr) {
+            $request = $curr->getRequest();
+            if ($request) {
+                return $request->getSession();
+            }
+        }
+        return null;
     }
 
     /**

@@ -26,7 +26,7 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property int $OrderID
  * @method \Sunnysideup\Ecommerce\Model\Order Order()
  */
-class OrderFeedback extends DataObject implements EditableEcommerceObject
+class Referral extends DataObject implements EditableEcommerceObject
 {
     use OrderCached;
 
@@ -35,12 +35,19 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $table_name = 'OrderFeedback';
+    private static $table_name = 'Referral';
 
     private static $db = [
-        'Rating' => 'Varchar',
-        'Note' => 'Text',
-        'Actioned' => 'Boolean',
+        'Source' => 'Varchar',
+        'Medium' => 'Varchar',
+        'Campaign' => 'Varchar',
+        'SessionID' => 'Varchar',
+    ];
+
+    private static $field_labels_right = [
+        'Source' => 'Identifies the source of the traffic (e.g., google, newsletter)',
+        'Medium' => 'The medium used to share the link (e.g., email, cpc)',
+        'Campaign' => 'The specific campaign or promotion (e.g., spring_sale',
     ];
 
     /**
@@ -58,8 +65,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $searchable_fields = [
-        'Rating' => 'PartialMatchFilter',
-        'Note' => 'PartialMatchFilter',
+        'Source' => 'PartialMatchFilter',
         'OrderID' => [
             'field' => NumericField::class,
             'title' => 'Order Number',
@@ -74,8 +80,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     private static $summary_fields = [
         'Order.Title' => 'Order',
         'Created' => 'When',
-        'Rating' => 'Rating',
-        'Note' => 'Note',
+        'Source' => 'Source'
     ];
 
     /**
@@ -101,21 +106,21 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
      *
      * @var string
      */
-    private static $singular_name = 'Order Feedback';
+    private static $singular_name = 'Order Referral';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $plural_name = 'Feedback Entries';
+    private static $plural_name = 'Order Referrals';
 
     /**
      * Standard SS variable.
      *
      * @var string
      */
-    private static $description = 'Customer Order Feedback';
+    private static $description = 'Customer Order Referrals';
 
     /**
      * standard SS variable.
@@ -126,12 +131,12 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
 
     public function i18n_singular_name()
     {
-        return _t('OrderFeedback.SINGULAR_NAME', 'Order Feedback');
+        return _t('OrderFeedback.SINGULAR_NAME', 'Order Referral');
     }
 
     public function i18n_plural_name()
     {
-        return _t('OrderFeedback.PLURAL_NAME', 'Order Feedback Entries');
+        return _t('OrderFeedback.PLURAL_NAME', 'Order Referrals');
     }
 
     /**
@@ -246,23 +251,9 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
         if ($order) {
             $string .= ' (' . $order->getTitle() . ')';
         }
-        $string .= ' - ' . $this->Rating;
-        if ($this->Note) {
-            $string .= ' / ' . substr((string) $this->Note, 0, 25);
-        }
+        $string .= ' - ' . $this->Source;
 
         return $string;
     }
 
-    /**
-     * Event handler called before writing to the database.
-     */
-    protected function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        $this->Note = str_replace(["\n", "\r"], ' ¶ ', $this->Note);
-        $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
-        $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
-        $this->Note = str_replace(['¶  ¶'], ' ¶ ', $this->Note);
-    }
 }
