@@ -46,7 +46,6 @@ class ShoppingCartController extends Controller
      */
     protected $methodsRequiringSecurityID = [
         'additem',
-        'addreferral',
         'removeitem',
         'removeallitem',
         'removeallitemandedit',
@@ -317,7 +316,7 @@ class ShoppingCartController extends Controller
     {
         $buyable = $this->buyable();
         if ($buyable) {
-            $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
+            $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters(true));
 
             return $this->cart->setMessageAndReturn();
         }
@@ -334,8 +333,9 @@ class ShoppingCartController extends Controller
     public function addreferral(HTTPRequest $request)
     {
         if($this->cart) {
-            return $this->cart->addReferral($this->parameters('POST'));
+            return $this->cart->addReferral($this->parameters(true));
         }
+        return -1;
     }
 
     /**
@@ -349,7 +349,7 @@ class ShoppingCartController extends Controller
     {
         $buyable = $this->buyable();
         if ($buyable) {
-            $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters());
+            $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters(true));
 
             return $this->cart->setMessageAndReturn();
         }
@@ -367,7 +367,7 @@ class ShoppingCartController extends Controller
     {
         $buyable = $this->buyable();
         if ($buyable) {
-            $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters());
+            $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters(true));
 
             return $this->cart->setMessageAndReturn();
         }
@@ -385,7 +385,7 @@ class ShoppingCartController extends Controller
     {
         $buyable = $this->buyable();
         if ($buyable) {
-            $this->cart->deleteBuyable($buyable, $this->parameters());
+            $this->cart->deleteBuyable($buyable, $this->parameters(true));
             //added this because cart was not updating correctly
             // $order = $this->cart->CurrentOrder();
             // $order->calculateOrderAttributes($recalculate = true);
@@ -408,7 +408,7 @@ class ShoppingCartController extends Controller
         $buyable = $this->buyable();
         if ($buyable) {
             $link = $buyable->Link();
-            $this->cart->deleteBuyable($buyable, $this->parameters());
+            $this->cart->deleteBuyable($buyable, $this->parameters(true));
             $this->redirect($link);
         } else {
             $this->redirectBack();
@@ -795,19 +795,17 @@ class ShoppingCartController extends Controller
     {
         parent::init();
         $action = $this->request->param('Action');
-        if (! isset($_GET['cached'])) {
-            if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
-                $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
+        if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
+            $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
+            if ($savedSecurityID) {
+                if (! isset($_GET['SecurityID'])) {
+                    $_GET['SecurityID'] = '';
+                }
                 if ($savedSecurityID) {
-                    if (! isset($_GET['SecurityID'])) {
-                        $_GET['SecurityID'] = '';
+                    if ($_GET['SecurityID'] !== $savedSecurityID) {
+                        $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
                     }
-                    if ($savedSecurityID) {
-                        if ($_GET['SecurityID'] !== $savedSecurityID) {
-                            $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
-                        }
-                        //all OK!
-                    }
+                    //all OK!
                 }
             }
         }
@@ -902,9 +900,10 @@ class ShoppingCartController extends Controller
      *
      * @return array
      */
-    protected function parameters(?string $getpost = 'GET')
+    protected function parameters(?bool $getVars = true)
     {
-        return 'GET' === $getpost ? $this->getRequest()->getVars() : $_POST;
+        // TODO: postvars do not seem to work!!!
+        return $getVars ? $this->getRequest()->getVars() : $this->getRequest()->postVars();
     }
 
     protected function goToErrorPage()
