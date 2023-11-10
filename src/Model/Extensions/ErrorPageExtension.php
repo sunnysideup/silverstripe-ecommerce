@@ -26,8 +26,10 @@ class ErrorPageExtension extends Extension
     {
         $product = $this->urlToProduct($request);
         if ($product) {
+            $getVars = $request->getVars();
+            $dest = $product->Link() . '?' . http_build_query($getVars);
+
             $response = new HTTPResponse();
-            $dest = $product->Link();
             $response->redirect(Director::absoluteURL($dest), '302');
 
             throw new HTTPResponse_Exception($response);

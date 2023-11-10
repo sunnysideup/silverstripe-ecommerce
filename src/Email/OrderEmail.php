@@ -135,7 +135,7 @@ abstract class OrderEmail extends Email
 
     public function getBodyOnly(): string
     {
-        return $this->sendInner(false);
+        return $this->sendInner(true);
     }
 
     /**
