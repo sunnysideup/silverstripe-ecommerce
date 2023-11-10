@@ -1,4 +1,5 @@
 function getUTMParameters () {
+  // console.log('getting params from url')
   const params = new URLSearchParams(window.location.search)
   const utmParams = {}
   ;['utm_source', 'utm_medium', 'utm_campaign'].forEach(param => {
@@ -16,6 +17,7 @@ function saveToLocalStorage (data) {
 }
 
 function getUTMDataFromLocalStorage () {
+  // console.log('getting data from local storage')
   const utmData = {}
   ;['utm_source', 'utm_medium', 'utm_campaign'].forEach(param => {
     const value = localStorage.getItem(param)
@@ -27,30 +29,27 @@ function getUTMDataFromLocalStorage () {
 }
 
 function clearLocalStorage () {
-  ;[
-    'utm_source',
-    'utm_medium',
-    'utm_campaign',
-    'utm_term',
-    'utm_content'
-  ].forEach(param => {
+  // console.log('clearing local storage')
+  ;[('utm_source', 'utm_medium', 'utm_campaign')].forEach(param => {
     localStorage.removeItem(param)
   })
 }
 
 function sendUTMDataToServer (utmData) {
+  // console.log('sending to server')
   const baseTag = document.querySelector('base')
-  const baseHref = baseTag ? baseTag.getAttribute('href') : null
+  let baseHref = baseTag ? baseTag.getAttribute('href') : null
+
   if (baseHref) {
-    fetch(baseHref + '/shoppingcart/addreferral', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(utmData)
-    })
+    // Remove trailing slash if it exists
+    baseHref = baseHref.endsWith('/') ? baseHref.slice(0, -1) : baseHref
+    const queryParams = new URLSearchParams(utmData).toString()
+    const url = `${baseHref}/shoppingcart/addreferral?${queryParams}`
+
+    fetch(url)
       .then(response => response.text())
       .then(data => {
+        // console.log(data)
         if (parseInt(data) > 0) {
           clearLocalStorage()
         }
@@ -59,14 +58,16 @@ function sendUTMDataToServer (utmData) {
   }
 }
 
-// Main execution
-let utmParams = getUTMParameters()
-if (Object.keys(utmParams).length > 0) {
-  saveToLocalStorage(utmParams)
-} else {
-  utmParams = getUTMDataFromLocalStorage()
-}
+if (window.location.search && window.location.search.indexOf('utm_') > -1) {
+  // Main execution
+  let utmParams = getUTMParameters()
+  if (Object.keys(utmParams).length > 0) {
+    saveToLocalStorage(utmParams)
+  } else {
+    utmParams = getUTMDataFromLocalStorage()
+  }
 
-if (Object.keys(utmParams).length > 0) {
-  sendUTMDataToServer(utmParams)
+  if (Object.keys(utmParams).length > 0) {
+    sendUTMDataToServer(utmParams)
+  }
 }
