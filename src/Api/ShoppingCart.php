@@ -1166,12 +1166,15 @@ class ShoppingCart
 
     public function addReferral($params): int
     {
-        $order = $this->currentOrder();
-        if($order && $order->exists()) {
-            Referral::add_referral($order, $params);
-            return $order->ID;
+        if(count($params)) {
+            $order = $this->currentOrder();
+            if($order && $order->exists()) {
+                if(Referral::add_referral($order, $params)) {
+                    return $order->ID;
+                }
+            }
         }
-        return 0;
+        return -2;
     }
 
     // UI MESSAGE HANDLING
