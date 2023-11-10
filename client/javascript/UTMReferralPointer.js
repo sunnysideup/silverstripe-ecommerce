@@ -1,8 +1,20 @@
+const getVarsToExpect = [
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_term',
+  'utm_content',
+  'fbclid',
+  'gad',
+  'gclid',
+  'gclsrc',
+  'twclid'
+]
 function getUTMParameters () {
   // console.log('getting params from url')
   const params = new URLSearchParams(window.location.search)
   const utmParams = {}
-  ;['utm_source', 'utm_medium', 'utm_campaign'].forEach(param => {
+  getVarsToExpect.forEach(param => {
     if (params.has(param)) {
       utmParams[param] = params.get(param)
     }
@@ -19,7 +31,7 @@ function saveToLocalStorage (data) {
 function getUTMDataFromLocalStorage () {
   // console.log('getting data from local storage')
   const utmData = {}
-  ;['utm_source', 'utm_medium', 'utm_campaign'].forEach(param => {
+  getVarsToExpect.forEach(param => {
     const value = localStorage.getItem(param)
     if (value) {
       utmData[param] = value
@@ -30,7 +42,7 @@ function getUTMDataFromLocalStorage () {
 
 function clearLocalStorage () {
   // console.log('clearing local storage')
-  ;[('utm_source', 'utm_medium', 'utm_campaign')].forEach(param => {
+  getVarsToExpect.forEach(param => {
     localStorage.removeItem(param)
   })
 }
@@ -58,16 +70,17 @@ function sendUTMDataToServer (utmData) {
   }
 }
 
-if (window.location.search && window.location.search.indexOf('utm_') > -1) {
-  // Main execution
-  let utmParams = getUTMParameters()
-  if (Object.keys(utmParams).length > 0) {
-    saveToLocalStorage(utmParams)
-  } else {
-    utmParams = getUTMDataFromLocalStorage()
-  }
+const searchParams = window.location.search
+const itemsToCheck = getVarsToExpect
 
-  if (Object.keys(utmParams).length > 0) {
-    sendUTMDataToServer(utmParams)
-  }
+// Main execution
+let utmParams = getUTMParameters()
+if (Object.keys(utmParams).length > 0) {
+  saveToLocalStorage(utmParams)
+} else {
+  utmParams = getUTMDataFromLocalStorage()
+}
+
+if (Object.keys(utmParams).length > 0) {
+  sendUTMDataToServer(utmParams)
 }

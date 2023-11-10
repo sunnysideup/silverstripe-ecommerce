@@ -40,10 +40,21 @@ class Referral extends DataObject implements EditableEcommerceObject
             if(! $ref) {
                 $ref = Referral::create($filter);
             }
-            $ref->Source = $params['utm_source'] ?? '';
-            $ref->Medium = $params['utm_medium'] ?? '';
-            $ref->Campaign = $params['utm_campaign'] ?? '';
-            return $ref->write();
+            $ref->Source = '';
+            $ref->Source .= isset($params['fbclid']) ? 'Facebook Ads' . $params['fbclid'] : '';
+            $ref->Source .= isset($params['gad']) ? 'Google Ads' . $params['gad'] : '';
+            $ref->Source .= isset($params['twclid']) ? 'Twitter Ads' . $params['gad'] : '';
+            $ref->Source .= $params['utm_source'] ?? '';
+
+            $ref->Medium =  '';
+            $ref->Medium .= $params['gclsrc'] ?? '';
+            $ref->Medium .= $params['utm_medium'] ?? '';
+
+            $ref->Campaign = '';
+            $ref->Campaign .= isset($params['gclid']) ? 'Google Campaign' . $params['gclid'] : '';
+            $ref->Campaign .= $params['utm_campaign'] ?? '';
+
+            $ref->write();
         }
         return null;
     }
@@ -56,9 +67,9 @@ class Referral extends DataObject implements EditableEcommerceObject
     private static $table_name = 'Referral';
 
     private static $db = [
-        'Source' => 'Varchar',
-        'Medium' => 'Varchar',
-        'Campaign' => 'Varchar',
+        'Source' => 'Varchar(100)',
+        'Medium' => 'Varchar(100)',
+        'Campaign' => 'Varchar(100)',
     ];
 
     private static $field_labels_right = [
