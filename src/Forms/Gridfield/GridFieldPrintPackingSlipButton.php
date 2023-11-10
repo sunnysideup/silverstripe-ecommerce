@@ -82,7 +82,6 @@ class GridFieldPrintPackingSlipButton implements GridField_ColumnProvider, GridF
         )
             ->addExtraClass('gridfield-button-printpackingslip')
             ->setAttribute('title', _t('GridPacking Slip.PRINT_PACKING_SLIP', 'Packing Slip'))
-            ->setAttribute('data-icon', 'download-csv')
             ->setAttribute('onclick', $onclickStatement)
             ->setDescription(_t('GridPacking Slip.PRINT_PACKING_SLIP_DESCRIPTION', 'Print Packing Slip'))
             ->Field()

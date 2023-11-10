@@ -97,8 +97,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             'exportsales',
             null
         );
-        $button->setAttribute('data-icon', 'download-csv');
-        $button->addExtraClass('no-ajax action_export');
+        $button->addExtraClass('action btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
 
         return [

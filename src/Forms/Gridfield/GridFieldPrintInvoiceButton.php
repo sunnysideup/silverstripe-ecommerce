@@ -81,9 +81,8 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
                 'printinvoice',
                 ['RecordID' => $record->ID]
             )
-                ->addExtraClass('gridfield-button-printinvoice')
+                ->addExtraClass('gridfield-button-printinvoice action btn btn-secondary no-ajax font-icon-down-circled action_export ')
                 ->setAttribute('title', _t('GridAction.PRINT_INVOICE', 'Invoice'))
-                ->setAttribute('data-icon', 'grid_print')
                 ->setAttribute('onclick', $onclickStatement)
                 ->setDescription(_t('GridAction.PRINT_INVOICE_DESCRIPTION', 'Print Invoice'))
                 ->Field()
@@ -127,7 +126,9 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
         if ('printinvoice' === $actionName) {
-            $item = $gridField->getList()->byID($arguments['RecordID']);
+            /** @var DataList $list */
+            $list = $gridField->getList();
+            $item = $list->byID($arguments['RecordID']);
             if (! $item) {
                 return;
             }

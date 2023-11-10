@@ -54,8 +54,7 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
             'printallpackingslips',
             null
         );
-        $button->setAttribute('data-icon', 'grid_print');
-        $button->addExtraClass('no-ajax action_print_all_packing_slips');
+        $button->addExtraClass('action_print_all_packing_slips action btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
 
         return [

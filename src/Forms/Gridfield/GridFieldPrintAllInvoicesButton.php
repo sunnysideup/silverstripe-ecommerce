@@ -54,8 +54,7 @@ class GridFieldPrintAllInvoicesButton implements GridField_HTMLProvider, GridFie
             'printallinvoices',
             null
         );
-        $button->setAttribute('data-icon', 'grid_print');
-        $button->addExtraClass('no-ajax action_print_all_invoices');
+        $button->addExtraClass('action_print_all_invoices action btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
 
         return [
