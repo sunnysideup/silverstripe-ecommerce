@@ -47,7 +47,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             $ref->Source .= $params['utm_source'] ?? '';
 
             $ref->Medium =  '';
-            $ref->Medium .= $params['gclsrc'] ?? '';
+            $ref->Medium .= isset($params['gclsrc']) ? 'Google Source' . $params['gclsrc'] : '';
             $ref->Medium .= $params['utm_medium'] ?? '';
 
             $ref->Campaign = '';
