@@ -42,7 +42,7 @@ function sendUTMDataToServer (utmData) {
   const baseTag = document.querySelector('base')
   const baseHref = baseTag ? baseTag.getAttribute('href') : null
   if (baseHref) {
-    fetch('YOUR_SERVER_ENDPOINT', {
+    fetch(baseHref + '/shoppingcart/addreferral', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

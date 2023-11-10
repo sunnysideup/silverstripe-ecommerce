@@ -46,6 +46,7 @@ class ShoppingCartController extends Controller
      */
     protected $methodsRequiringSecurityID = [
         'additem',
+        'addreferral',
         'removeitem',
         'removeallitem',
         'removeallitemandedit',
@@ -77,6 +78,7 @@ class ShoppingCartController extends Controller
         'json',
         'index',
         'additem',
+        'addreferral',
         'removeitem',
         'removeallitem',
         'removeallitemandedit',
@@ -313,7 +315,6 @@ class ShoppingCartController extends Controller
      */
     public function additem(HTTPRequest $request)
     {
-        /** Buya*/
         $buyable = $this->buyable();
         if ($buyable) {
             $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
@@ -322,6 +323,19 @@ class ShoppingCartController extends Controller
         }
 
         return $this->goToErrorPage();
+    }
+
+    /**
+     * Adds item to cart via controller action; one by default.
+     *
+     * @return mixed - if the request is AJAX, it returns JSON - CartResponse::ReturnCartData();
+     *               If it is not AJAX it redirects back to requesting page
+     */
+    public function addreferral(HTTPRequest $request)
+    {
+        if($this->cart) {
+            return $this->cart->addReferral($this->parameters('POST'));
+        }
     }
 
     /**

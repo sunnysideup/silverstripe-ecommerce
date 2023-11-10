@@ -28,6 +28,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Sunnysideup\Ecommerce\Model\Process\Referral;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
 
 /*
@@ -1163,6 +1164,16 @@ class ShoppingCart
         $this->messages[] = ['Message' => $message, 'Type' => $status];
     }
 
+    public function addReferral($params): int
+    {
+        $order = $this->currentOrder();
+        if($order && $order->exists()) {
+            Referral::add_referral($order, $params);
+            return $order->ID;
+        }
+        return 0;
+    }
+
     // UI MESSAGE HANDLING
 
     /**
@@ -1224,10 +1235,10 @@ class ShoppingCart
         }
 
         // recalculate... this is often a change so well worth it.
-        $this->currentOrder();
-        if($this->order) {
+        $order = $this->currentOrder();
+        if($order) {
             //todo- why would there not be an order?
-            $this->order->calculateOrderAttributes($recalculate = true);
+            $order->calculateOrderAttributes($recalculate = true);
         }
 
         //TODO: handle passing back multiple messages

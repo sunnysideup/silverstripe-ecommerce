@@ -30,6 +30,23 @@ class Referral extends DataObject implements EditableEcommerceObject
 {
     use OrderCached;
 
+    public static function add_referral(Order $order, ?array $params)
+    {
+        $filter = [
+            'OrderID' => $order->ID,
+        ];
+        $ref = DataObject::get_one(Referral::class, $filter);
+        if(! $ref) {
+            $ref = Referral::create($filter);
+        }
+        if($params) {
+            $ref->Source = $params['utm_source'] ?? '';
+            $ref->Medium = $params['utm_medium'] ?? '';
+            $ref->Campaign = $params['utm_campaign'] ?? '';
+        }
+        $ref->write();
+    }
+
     /**
      * standard SS variable.
      *
@@ -41,7 +58,6 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Source' => 'Varchar',
         'Medium' => 'Varchar',
         'Campaign' => 'Varchar',
-        'SessionID' => 'Varchar',
     ];
 
     private static $field_labels_right = [
@@ -79,8 +95,12 @@ class Referral extends DataObject implements EditableEcommerceObject
      */
     private static $summary_fields = [
         'Order.Title' => 'Order',
+        'Order.Status' => 'Status',
+        'Order.Total' => 'Total',
         'Created' => 'When',
-        'Source' => 'Source'
+        'Source' => 'Source',
+        'Medium' => 'Medium',
+        'Campaign' => 'Campaign',
     ];
 
     /**
