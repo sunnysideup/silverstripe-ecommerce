@@ -6,6 +6,7 @@ use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Sunnysideup\Ecommerce\Model\Process\Referral;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
@@ -43,8 +44,9 @@ class SalesAdminProcess extends ModelAdmin
      * @var array
      */
     private static $managed_models = [
-        OrderProcessQueue::class,
+        Referral::class,
         OrderFeedback::class,
+        OrderProcessQueue::class,
     ];
 
     /**
