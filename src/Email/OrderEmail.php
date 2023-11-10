@@ -203,6 +203,7 @@ abstract class OrderEmail extends Email
         $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, (string) $this->getSubject()));
     }
 
+
     /**
      * converts an Email to A Varchar.
      *
@@ -214,19 +215,19 @@ abstract class OrderEmail extends Email
     {
         $emailString = '';
         if (is_string($email)) {
-            $emailString = $email;
+            $emailString = (string) $email;
         } elseif (is_array($email)) {
             $count = 0;
             foreach ($email as $key => $address) {
                 if ($count) {
                     $emailString .= ', ';
                 }
-                $emailString .= $key . $address;
+                $emailString .= (string) $key . (string) $address;
                 ++$count;
             }
         }
 
-        return str_replace(['<', '>', '"', "'"], ' - ', $emailString);
+        return trim(str_replace(['<', '>', '"', "'"], ' - ', $emailString));
     }
 
     /**
