@@ -557,7 +557,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'Root.Queue',
                     HeaderField::create(
                         'WhenWillThisRun',
-                        $this->humanReadeableDeferTimeInSeconds()
+                        DBField::create_field('HTMLText', $this->humanReadeableDeferTimeInSeconds())
                     )
                 );
             }

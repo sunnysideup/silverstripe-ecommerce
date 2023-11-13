@@ -14,7 +14,7 @@ class EcommerceCMSButtonField extends LiteralField
      * @param mixed  $link      (string|ViewableData|FormField)
      * @param bool   $newWindow
      */
-    public function __construct($name, $link, string $title, ?bool $newWindow = false)
+    public function __construct(string $name, string $link, string $title, ?bool $newWindow = false)
     {
         $target = '';
         if ($newWindow) {

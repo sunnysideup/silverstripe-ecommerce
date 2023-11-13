@@ -739,7 +739,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             new GridFieldToolbarHeader(),
             new GridFieldSortableHeader(),
             new GridFieldDataColumns(),
-            new GridFieldPaginator(10),
+            new GridFieldPaginator(200),
             new GridFieldEditButton(),
             new GridFieldDeleteAction(),
             new GridFieldDetailForm()
