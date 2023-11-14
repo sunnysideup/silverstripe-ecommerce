@@ -145,11 +145,11 @@ abstract class OrderEmail extends Email
      */
     public function sendInner(?bool $returnBodyOnly = false): ?string
     {
-        if (! $this->order) {
+        if (!$this->order) {
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
         $this->fixupSubject();
-        if (! $this->hasBeenSent() || ($this->resend)) {
+        if (!$this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get(OEmailrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
                 $memberEmail = self::get_from_email();
                 if ($memberEmail) {
@@ -197,7 +197,7 @@ abstract class OrderEmail extends Email
 
     protected function fixupSubject()
     {
-        if (! $this->getSubject()) {
+        if (!$this->getSubject()) {
             $this->setSubject(self::get_subject());
         }
         $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, (string) $this->getSubject()));
@@ -257,7 +257,7 @@ abstract class OrderEmail extends Email
         $plainOnly = (bool) $plainOnly;
         parent::render($plainOnly);
         //moves CSS to inline CSS in email.
-        if (! $plainOnly) {
+        if (!$plainOnly) {
             $html = (string) ($this->getHtmlBody() ?: '');
             $this->setBody($html);
         }
@@ -293,9 +293,9 @@ abstract class OrderEmail extends Email
         $sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to');
         if ($sendAllEmailsTo) {
             $orderEmailRecord->To .=
-                _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
-                . $sendAllEmailsTo
-                . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
+            _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
+            . $sendAllEmailsTo
+            . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
         }
         $orderEmailRecord->write();
 
