@@ -547,6 +547,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //replacing
         if ($this->canBeDefered()) {
             $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
+            $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
             if ($queueField) {
                 $config = $queueField->getConfig();
                 $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
@@ -571,12 +572,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
                     )
                         ->setDescription(
-                            _t(
-                                'OrderStep.TIME_EXPLANATION',
-                                '86,400 seconds is one day ...
+                            '86,400 seconds is one day ...
                             <br />To make it easier, you can also enter things like <em>1 week</em>, <em>3 hours</em>, or <em>7 minutes</em>.
-                            <br />Non-second entries will automatically be converted to seconds.'
-                            )
+                            <br />Non-second entries will automatically be converted to seconds.
+                            <br />Current value is equal to <strong>' . round($this->DeferTimeInSeconds / 3600) . '</strong> hours,
+                            or approximately <strong>' . round($this->DeferTimeInSeconds / 86400) . '</strong> days.'
                         ),
                 ]
             );
