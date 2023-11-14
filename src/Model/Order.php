@@ -4147,7 +4147,6 @@ class Order extends DataObject implements EditableEcommerceObject
             // templates within the theme exist
             SetThemed::start();
             $email->setData($arrayData);
-            $email->setBody($message);
             $email->setOrder($this);
             $email->setResend($resend);
             $email->send();
