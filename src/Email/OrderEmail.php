@@ -143,7 +143,7 @@ abstract class OrderEmail extends Email
     /**
      *
      */
-    public function sendInner(?bool $returnBodyOnly = false): ?string
+    protected function sendInner(?bool $returnBodyOnly = false): ?string
     {
         if (!$this->order) {
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
@@ -166,7 +166,6 @@ abstract class OrderEmail extends Email
             if ($returnBodyOnly) {
                 return (string) $this->getHtmlBody();
             }
-
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
                 parent::sendPlain();
             } else {
