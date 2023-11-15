@@ -412,7 +412,7 @@ class OrderConfirmationPageController extends CartPageController
                             $email = $adminOnlyOrToEmail;
                         }
                     }
-                    if (! $to) {
+                    if (!$to) {
                         if ($adminOnlyOrToEmail) {
                             $email = 'site administrator';
                         } else {
@@ -428,7 +428,7 @@ class OrderConfirmationPageController extends CartPageController
                         $adminOnlyOrToEmail
                     );
                     if ($outcome) {
-                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'This email has been sent to: ') . $email . '.';
+                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'This email has been sent to: <strong>') . $email . '</strong><br >with subject: <strong>' . $subject . '</strong><hr />';
                     } else {
                         $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . $email;
                     }
