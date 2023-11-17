@@ -88,7 +88,7 @@ class EcommercePaymentController extends Controller
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get(static::class, 'url_segment');
-        if (! $URLSegment) {
+        if (!$URLSegment) {
             $URLSegment = static::class;
         }
 
@@ -136,7 +136,7 @@ class EcommercePaymentController extends Controller
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         $id = (int) $this->request->param('ID');
-        if (! $id && isset($_REQUEST['OrderID'])) {
+        if (!$id && isset($_REQUEST['OrderID'])) {
             $id = (int) $_REQUEST['OrderID'];
         }
         if ($id) {

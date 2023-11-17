@@ -132,7 +132,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     {
         $order = $this->getOrderCached();
         if($order) {
-            return FieldList::create(
+            $fields = FieldList::create(
                 [
                     ReadonlyField::create('CustomerInfo', 'Customer', $order->Member()->getCustomerDetails()),
                     ReadonlyField::create('OrderInfo', 'Order', $order->getTitle()),
@@ -147,18 +147,20 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
                 ]
             );
         } else {
-            return FieldList::create(
+            $fields = FieldList::create(
                 [
                     LiteralField::create('OrderNotFound', '<p class="message warning">Order not found.</p>'),
                 ]
             );
         }
+        $this->updateFrontEndFields($fields);
+        return $fields;
     }
 
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if (! $this->DispatchedOn) {
+        if (!$this->DispatchedOn) {
             $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
         }
     }

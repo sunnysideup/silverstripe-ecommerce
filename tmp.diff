@@ -5,7 +5,7 @@ index 25c1cb86..44fa2432 100644
 @@ -38,6 +38,12 @@ const EcomBuyableSelectField = {
      this.url_segment = s
    },
- 
+
 +  joinWithSlash: (...strings) =>
 +    strings
 +      .map(str => (str.endsWith('/') ? str : `${str}/`))
@@ -39,7 +39,7 @@ index 355fdc01..eb7e679a 100644
 @@ -58,6 +58,12 @@ var EcomCart = {
      this.debug = b
    },
- 
+
 +  joinWithSlash: (...strings) =>
 +    strings
 +      .map(str => (str.endsWith('/') ? str : `${str}/`))
@@ -72,214 +72,7 @@ index 355fdc01..eb7e679a 100644
      }
      return url
    },
-diff --git a/client/javascript/EcomCart.min.js b/client/javascript/EcomCart.min.js
-deleted file mode 100644
-index 4285440e..00000000
---- a/client/javascript/EcomCart.min.js
-+++ /dev/null
-@@ -1,24 +0,0 @@
--var $jscomp={scope:{},findInternal:function(a,c,b){a instanceof String&&(a=String(a));for(var d=a.length,f=0;f<d;f++){var e=a[f];if(c.call(b,e,f,a))return{i:f,v:e}}return{i:-1,v:void 0}}};$jscomp.defineProperty="function"==typeof Object.defineProperties?Object.defineProperty:function(a,c,b){if(b.get||b.set)throw new TypeError("ES3 does not support getters and setters.");a!=Array.prototype&&a!=Object.prototype&&(a[c]=b.value)};
--$jscomp.getGlobal=function(a){return"undefined"!=typeof window&&window===a?a:"undefined"!=typeof global&&null!=global?global:a};$jscomp.global=$jscomp.getGlobal(this);$jscomp.polyfill=function(a,c,b,d){if(c){b=$jscomp.global;a=a.split(".");for(d=0;d<a.length-1;d++){var f=a[d];f in b||(b[f]={});b=b[f]}a=a[a.length-1];d=b[a];c=c(d);c!=d&&null!=c&&$jscomp.defineProperty(b,a,{configurable:!0,writable:!0,value:c})}};
--$jscomp.polyfill("Array.prototype.find",function(a){return a?a:function(a,b){return $jscomp.findInternal(this,a,b).v}},"es6-impl","es3");(function(a){a(document).ready(function(){EcomCart.init()})})(window.jQuery);
--var EcomCart={debug:!1,set_debug:function(a){this.debug=a},shoppingCartURLSegment:"shoppingcart",set_shoppingCartURLSegment:function(a){this.shoppingCartURLSegment=a},loadingSelectors:[],openAjaxCalls:0,cartHasItems:!1,initialData:[],set_initialData:function(a){this.initialData=a},reinitCallbacks:[],countryAndRegionRootSelector:"body",set_countryAndRegionRootSelector:function(a){this.countryAndRegionRootSelector=a},ajaxCountryFieldSelector:"select.ajaxCountryField",set_ajaxCountryFieldSelector:function(a){this.ajaxCountryFieldSelector=
--a},ajaxRegionFieldSelector:"select.ajaxRegionField",set_ajaxRegionFieldSelector:function(a){this.ajaxRegionFieldSelector=a},classToShowLoading:"loading",set_classToShowLoading:function(a){this.classToShowLoading=a},classToShowPageIsUpdating:"ecomCartIsUpdating",set_classToShowPageIsUpdating:function(a){this.classToShowPageIsUpdating=a},showClass:"show",set_showClass:function(a){this.showClass=a},hideClass:"hide",set_hideClass:function(a){this.hideClass=a},onBeforeUpdate:null,set_onBeforeUpdate:function(a){this.onBeforeUpdate=
--a},onAfterUpdate:null,set_onAfterUpdate:function(a){this.onAfterUpdate=a},synonyms:[],set_synonyms:function(a){this.synonyms=a},add_synonym:function(a,c){this.synonyms[a]=c},remove_synonym:function(a){this.synonyms.splice(a,1)},selectorShowOnZeroItems:".showOnZeroItems",set_selectorShowOnZeroItems:function(a){this.selectorShowOnZeroItems=a},selectorHideOnZeroItems:".hideOnZeroItems",set_selectorHideOnZeroItems:function(a){this.selectorHideOnZeroItems=a},selectorItemRows:"tr.orderitem",set_selectorItemRows:function(a){this.selectorItemRows=
--a},removeCartSelector:".ajaxRemoveFromCart",set_removeCartSelector:function(a){this.removeCartSelector=a},ajaxButtonsOn:!0,set_ajaxButtonsOn:function(a){this.ajaxButtonsOn=a},ajaxifyProductList:!1,set_ajaxifyProductList:function(a){this.ajaxifyProductList=a},productListIsFromCachedSource:!0,confirmDeleteText:"Are you sure you would like to remove this item from your cart?",set_confirmDeleteText:function(a){this.confirmDeleteText=a},ajaxLinksAreaSelector:"body",set_ajaxLinksAreaSelector:function(a){this.ajaxLinksAreaSelector=
--a},addLinkSelector:".ajaxBuyableAdd",set_addLinkSelector:function(a){this.addLinkSelector=a},removeLinkSelector:".ajaxBuyableRemove",set_removeLinkSelector:function(a){this.removeLinkSelector=a},orderItemHolderSelector:".orderItemHolder",set_orderItemHolderSelector:function(a){this.removeLinkSelector=a},cartMenuLinksSelector:".cartlink",set_cartMenuLinksSelector:function(a){this.cartMenuLinksSelector=a},ajaxifiedListAdjusterSelectors:".ajaxifyMyProductGroupLinks",set_ajaxifiedListAdjusterSelectors:function(a){this.ajaxifiedListAdjusterSelectors=
--a},ajaxifiedListHolderSelector:"#ProductGroup",set_ajaxifiedListHolderSelector:function(a){this.ajaxifiedListsSelector=a},hiddenPageTitleID:"#HiddenPageTitleID",set_hiddenPageTitleID:function(a){this.hiddenPageTitleID=a},ajaxifiedProductsCallBack:function(){},set_ajaxifiedProductsCallBack:function(a){this.ajaxifiedProductsCallBack=a},colorboxDialogSelector:".colorboxDialog",set_colorboxDialogSelector:function(a){this.colorboxDialogSelector=a},colorboxDialogOptions:{height:"95%",width:"95%",maxHeight:"95%",
--maxWidth:"95%",loadingClass:"loading",iframe:!0,onOpen:function(a){EcomCart.reinit(!0)}},set_colorboxDialogOptions:function(a){this.colorboxDialogOptions=a},init:function(){if("undefined"!==typeof EcomCartOptions)for(var a in EcomCartOptions)EcomCartOptions.hasOwnProperty(a)&&(this[a]=EcomCartOptions[a]);EcomCart.countryAndRegionUpdates();EcomCart.changeCountryFieldSwap();EcomCart.addAjaxificationOfProductList();EcomCart.ajaxButtonsOn&&(EcomCart.addAddLinks(EcomCart.ajaxLinksAreaSelector),EcomCart.addRemoveLinks(EcomCart.ajaxLinksAreaSelector),
--EcomCart.addCartRemove(EcomCart.ajaxLinksAreaSelector));EcomCart.initColorboxDialog();EcomCart.setChanges(EcomCart.initialData,"");window.onpopstate=function(a){a.state&&(window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(a.state.html),document.title=a.state.pageTitle)}},reinit:function(a){a&&EcomCart.updateForZeroVSOneOrMoreRows();for(a=0;a<EcomCart.reinitCallbacks.length;a++)EcomCart.reinitCallbacks[a]()},countryAndRegionUpdates:function(){window.jQuery(EcomCart.countryAndRegionRootSelector).on("change",
--EcomCart.ajaxCountryFieldSelector,function(){var a=EcomCart.createUrl("setcountry",this.value);EcomCart.getChanges(a,null,this)});window.jQuery(EcomCart.countryAndRegionRootSelector).on("change",EcomCart.ajaxRegionFieldSelector,function(){var a=EcomCart.createUrl("setregion",this.value);EcomCart.getChanges(a,null,this)})},changeCountryFieldSwap:function(){window.jQuery(EcomCart.countryAndRegionRootSelector).on("change",EcomCart.selectorChangeCountryFieldHolder+" select",function(){var a=window.jQuery(EcomCart.selectorChangeCountryFieldHolder+
--" select").val();window.jQuery(EcomCart.ajaxCountryFieldSelector).val(a);a=EcomCart.createUrl("setcountry",a);EcomCart.getChanges(a,null,this);window.jQuery(EcomCart.selectorChangeCountryLink).click()})},addAjaxificationOfProductList:function(){if(EcomCart.ajaxifyProductList)window.jQuery(EcomCart.ajaxifiedListHolderSelector).on("click",EcomCart.ajaxifiedListAdjusterSelectors+" a",function(a){a.preventDefault();var c=window.jQuery(this).attr("href");window.jQuery.ajax({beforeSend:function(){window.jQuery(EcomCart.ajaxifiedListHolderSelector).addClass(EcomCart.classToShowLoading)},
--complete:function(){window.jQuery(EcomCart.ajaxifiedListHolderSelector).removeClass(EcomCart.classToShowLoading)},dataType:"html",error:function(a,d,f){alert("An error occurred ("+d+" "+f+")! I will try reloading the page now.");window.location.href=c},success:function(a,d,f){window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(a);a=window.jQuery(EcomCart.hiddenPageTitleID).text();window.history.pushState({pageTitle:a},a,c);document.title=a;EcomCart.openAjaxCalls++;EcomCart.setChanges(EcomCart.initialData,"");"undefined"!=
--typeof EcomProducts&&EcomProducts.reinit();"function"==typeof EcomCart.ajaxifiedProductsCallBack&&EcomCart.ajaxifiedProductsCallBack();window.jQuery("html, body").animate({scrollTop:window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top},500)},url:c})})},addAddLinks:function(a){window.jQuery(a).on("click",EcomCart.addLinkSelector,function(){var a=window.jQuery(this).attr("href");EcomCart.productListIsFromCachedSource&&(a+="&cached=1");EcomCart.getChanges(a,null,this);return!1})},addRemoveLinks:function(a){window.jQuery(a).on("click",
--EcomCart.removeLinkSelector,function(){if(EcomCart.unconfirmedDelete||confirm(EcomCart.confirmDeleteText)){var a=window.jQuery(this).attr("href");EcomCart.productListIsFromCachedSource&&(a+="&cached=1");EcomCart.getChanges(a,null,this)}return!1})},addCartRemove:function(a){window.jQuery(a).on("click",EcomCart.removeCartSelector,function(a){if(!EcomCart.confirmDeleteText||confirm(EcomCart.confirmDeleteText)){a=window.jQuery(this).attr("href");var b=window.jQuery(this).parents(EcomCart.orderItemHolderSelector);window.jQuery(b).slideUp("slow",
--function(){window.jQuery(b).remove()});EcomCart.getChanges(a,null,this)}return!1})},getChanges:function(a,c,b){null===c&&(c={});EcomCart.ajaxButtonsOn&&(c.ajaxButtonsOn=!0);1<EcomCart.openAjaxCalls&&(c.manyrequests=1);b=this.addLoadingSelector(b);c.loadingindex=b;EcomCart.onBeforeUpdate&&"function"==typeof EcomCart.onBeforeUpdate&&EcomCart.onBeforeUpdate.call(a,c,EcomCart.setChanges);EcomCart.openAjaxCalls++;window.jQuery.getJSON(a,c,EcomCart.setChanges)},addLoadingSelector:function(a){a=window.jQuery(a).parent().parent();
--window.jQuery(a).addClass(EcomCart.classToShowLoading);window.jQuery("body").addClass(EcomCart.classToShowPageIsUpdating);EcomCart.loadingSelectors[EcomCart.loadingSelectors.length]=a;return EcomCart.loadingSelectors.length-1},createUrl:function(a,c){var b=window.jQuery("base").attr("href")+EcomCart.shoppingCartURLSegment+"/";a&&(b+=a+"/");c&&(b+=c+"/");return b},setChanges:function(a,c){EcomCart.set_initialData(a);EcomCart.openAjaxCalls--;EcomCart.debug&&console.debug("------------- SET CHANGES -----------");if(a.reload)window.location=
--window.location;else if(0>=EcomCart.openAjaxCalls){for(var b in a){var d=a[b];if("undefined"!=typeof d.t){var f=d.t,e=d.s,h=d.p,g=EcomCart.escapeHTML(d.v);EcomCart.debug&&console.debug("type"+f+", selector: "+e+", parameter:"+h+", value");if("class"==f||"id"==f)"undefined"!=typeof EcomCart.synonyms[e]&&(e+=", "+EcomCart.synonyms[e]),e="id"==f?"#"+e+"":"."+e+"","hide"==h?g?window.jQuery(e).hide().addClass("hideForNow"):window.jQuery(e).show().removeClass("hideForNow"):"message"==h?window.jQuery(e).html(g):"innerHTML"==
--h?window.jQuery(e).each(function(a,b){window.jQuery(b).html(g)}):window.jQuery(e).attr(h,g),".number_of_items"==e&&(EcomCart.debug&&console.debug("doing .number_of_items"),d=parseFloat(g),EcomCart.debug&&console.debug("value "+d),EcomCart.cartHasItems=0<d?!0:!1,window.jQuery("a"+EcomCart.cartMenuLinksSelector+",  li"+EcomCart.cartMenuLinksSelector+" > a").each(function(a,b){var c=b;window.jQuery(b).is("a")||(c=window.jQuery(b).find("a"));var e=window.jQuery(c).html().replace(RegExp("(\\d+)","g"),g);window.jQuery(c).html(e)}));else if("name"==f)window.jQuery("[name="+
--e+"]").each(function(){window.jQuery(this).attr(h,g)});else if("dropdown"==f){if(e="#"+e+" select",0<window.jQuery(e).length&&0<g.length)for(window.jQuery(e).html(""),b=0;b<g.length;b++)d=h==g[b].id?' selected="selected" ':"",window.jQuery(e).append('<option value="'+g[b].id+'"'+d+">"+g[b].name+"</option>")}else if("newmodifierrow"!=f&&"newitemrow"!=f&&"replaceclass"==f){var k=d.without;EcomCart.debug&&console.debug("starting replaceclass process");window.jQuery("."+h).each(function(a,b){var c=window.jQuery(b).attr("id");EcomCart.debug&&
--console.debug("checking "+c);var d=!1;for(a=0;a<e.length;a++)EcomCart.debug&&console.debug("testing: '"+e[a]+"' AGAINST '"+c+"'"),c==e[a]&&(d=!0);d?window.jQuery(b).removeClass(k).addClass(g):window.jQuery(b).removeClass(g).addClass(k)})}}}EcomCart.onAfterUpdate&&"function"==typeof EcomCart.onAfterUpdate&&EcomCart.onAfterUpdate.call(a,c);EcomCart.reinit(0<a.length);window.jQuery("body").removeClass(EcomCart.classToShowPageIsUpdating);for(b=0;b<EcomCart.loadingSelectors.length;b++)window.jQuery(EcomCart.loadingSelectors[b]).removeClass(EcomCart.classToShowLoading)}},
--updateForZeroVSOneOrMoreRows:function(){EcomCart.cartHasItems?(window.jQuery(EcomCart.selectorShowOnZeroItems).hide(),window.jQuery(EcomCart.selectorHideOnZeroItems).each(function(a,c){window.jQuery(c).hasClass("hideForNow")||window.jQuery(c).show()})):(window.jQuery(EcomCart.selectorShowOnZeroItems).show(),window.jQuery(EcomCart.selectorHideOnZeroItems).hide())},escapeHTML:function(a){return a},variableIsSet:function(a){return"undefined"==typeof a||"undefined"==a?!1:!0},variableSetWithValue:function(a){return EcomCart.variableIsSet(a)&&
--a?!0:!1},initColorboxDialog:function(){window.jQuery(document).on("click",EcomCart.colorboxDialogSelector,function(a){EcomCart.colorboxDialogOptions.href=window.jQuery(this).attr("href");EcomCart.colorboxDialogOptions.open=!0;window.jQuery.colorbox(EcomCart.colorboxDialogOptions);return!1})}};
-diff --git a/client/javascript/EcomCartWebPack.js b/client/javascript/EcomCartWebPack.js
-index 9a4e8a5d..63c93c76 100644
---- a/client/javascript/EcomCartWebPack.js
-+++ b/client/javascript/EcomCartWebPack.js
-@@ -582,16 +582,14 @@ const EcomCart = {
-                   EcomCart.ajaxifiedProductsCallBack()
-                 }
-                 // scroll to the top of the product list.
--                window
--                  .jQuery('html, body')
--                  .animate(
--                    {
--                      scrollTop: window
--                        .jQuery(EcomCart.ajaxifiedListHolderSelector)
--                        .offset().top
--                    },
--                    500
--                  )
-+                window.jQuery('html, body').animate(
-+                  {
-+                    scrollTop: window
-+                      .jQuery(EcomCart.ajaxifiedListHolderSelector)
-+                      .offset().top
-+                  },
-+                  500
-+                )
- 
-                 //fire an event to inform that data on the page has changed
-                 const event = new Event('paginationchange')
-@@ -718,6 +716,12 @@ const EcomCart = {
-     return EcomCart.loadingSelectors.length - 1
-   },
- 
-+  joinWithSlash: (...strings) =>
-+    strings
-+      .map(str => (str.endsWith('/') ? str : `${str}/`))
-+      .join('')
-+      .slice(0, -1),
-+
-   /**
-    *
-    *
-@@ -725,16 +729,15 @@ const EcomCart = {
-    * @return String
-    */
-   createUrl: function (method, variable) {
--    var url =
--      window.jQuery('base').attr('href') +
--      '/' +
--      EcomCart.shoppingCartURLSegment +
--      '/'
-+    var url = EcomCartWebPack.joinWithSlash(
-+      window.jQuery('base').attr('href'),
-+      EcomCart.shoppingCartURLSegment
-+    )
-     if (method) {
--      url += method + '/'
-+      EcomCart.joinWithSlash(url, method)
-     }
-     if (variable) {
--      url += variable + '/'
-+      EcomCart.joinWithSlash(url, variable)
-     }
-     return url
-   },
-diff --git a/client/javascript/EcomCartWebPack.min.js b/client/javascript/EcomCartWebPack.min.js
-deleted file mode 100644
-index f322db1b..00000000
---- a/client/javascript/EcomCartWebPack.min.js
-+++ /dev/null
-@@ -1,38 +0,0 @@
--var $jscomp={scope:{},findInternal:function(a,c,b){a instanceof String&&(a=String(a));for(var d=a.length,f=0;f<d;f++){var e=a[f];if(c.call(b,e,f,a))return{i:f,v:e}}return{i:-1,v:void 0}}};$jscomp.defineProperty="function"==typeof Object.defineProperties?Object.defineProperty:function(a,c,b){if(b.get||b.set)throw new TypeError("ES3 does not support getters and setters.");a!=Array.prototype&&a!=Object.prototype&&(a[c]=b.value)};
--$jscomp.getGlobal=function(a){return"undefined"!=typeof window&&window===a?a:"undefined"!=typeof global&&null!=global?global:a};$jscomp.global=$jscomp.getGlobal(this);$jscomp.polyfill=function(a,c,b,d){if(c){b=$jscomp.global;a=a.split(".");for(d=0;d<a.length-1;d++){var f=a[d];f in b||(b[f]={});b=b[f]}a=a[a.length-1];d=b[a];c=c(d);c!=d&&null!=c&&$jscomp.defineProperty(b,a,{configurable:!0,writable:!0,value:c})}};
--$jscomp.polyfill("Array.prototype.find",function(a){return a?a:function(a,b){return $jscomp.findInternal(this,a,b).v}},"es6-impl","es3");var module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack={};(function(a){a(document).ready(function(){EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.init()})})(window.jQuery);
--var EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack={debug:!1,set_debug:function(a){this.debug=a},shoppingCartURLSegment:"shoppingcart",set_shoppingCartURLSegment:function(a){this.shoppingCartURLSegment=a},loadingSelectors:[],openAjaxCalls:0,cartHasItems:!1,initialData:[],set_initialData:function(a){this.initialData=a},reinitCallbacks:[],countryAndRegionRootSelector:"body",set_countryAndRegionRootSelector:function(a){this.countryAndRegionRootSelector=a},ajaxCountryFieldSelector:"select.ajaxCountryField",
--set_ajaxCountryFieldSelector:function(a){this.ajaxCountryFieldSelector=a},ajaxRegionFieldSelector:"select.ajaxRegionField",set_ajaxRegionFieldSelector:function(a){this.ajaxRegionFieldSelector=a},classToShowLoading:"loading",set_classToShowLoading:function(a){this.classToShowLoading=a},classToShowPageIsUpdating:"ecomCartIsUpdating",set_classToShowPageIsUpdating:function(a){this.classToShowPageIsUpdating=a},showClass:"show",set_showClass:function(a){this.showClass=a},hideClass:"hide",set_hideClass:function(a){this.hideClass=
--a},onBeforeUpdate:null,set_onBeforeUpdate:function(a){this.onBeforeUpdate=a},onAfterUpdate:null,set_onAfterUpdate:function(a){this.onAfterUpdate=a},synonyms:[],set_synonyms:function(a){this.synonyms=a},add_synonym:function(a,c){this.synonyms[a]=c},remove_synonym:function(a){this.synonyms.splice(a,1)},selectorShowOnZeroItems:".showOnZeroItems",set_selectorShowOnZeroItems:function(a){this.selectorShowOnZeroItems=a},selectorHideOnZeroItems:".hideOnZeroItems",set_selectorHideOnZeroItems:function(a){this.selectorHideOnZeroItems=
--a},selectorItemRows:"tr.orderitem",set_selectorItemRows:function(a){this.selectorItemRows=a},removeCartSelector:".ajaxRemoveFromCart",set_removeCartSelector:function(a){this.removeCartSelector=a},ajaxButtonsOn:!0,set_ajaxButtonsOn:function(a){this.ajaxButtonsOn=a},ajaxifyProductList:!1,set_ajaxifyProductList:function(a){this.ajaxifyProductList=a},productListIsFromCachedSource:!0,confirmDeleteText:"Are you sure you would like to remove this item from your cart?",set_confirmDeleteText:function(a){this.confirmDeleteText=
--a},ajaxLinksAreaSelector:"body",set_ajaxLinksAreaSelector:function(a){this.ajaxLinksAreaSelector=a},addLinkSelector:".ajaxBuyableAdd",set_addLinkSelector:function(a){this.addLinkSelector=a},removeLinkSelector:".ajaxBuyableRemove",set_removeLinkSelector:function(a){this.removeLinkSelector=a},orderItemHolderSelector:".orderItemHolder",set_orderItemHolderSelector:function(a){this.removeLinkSelector=a},cartMenuLinksSelector:".cartlink",set_cartMenuLinksSelector:function(a){this.cartMenuLinksSelector=
--a},ajaxifiedListAdjusterSelectors:".ajaxifyMyProductGroupLinks",set_ajaxifiedListAdjusterSelectors:function(a){this.ajaxifiedListAdjusterSelectors=a},ajaxifiedListHolderSelector:"#ProductGroup",set_ajaxifiedListHolderSelector:function(a){this.ajaxifiedListsSelector=a},hiddenPageTitleID:"#HiddenPageTitleID",set_hiddenPageTitleID:function(a){this.hiddenPageTitleID=a},ajaxifiedProductsCallBack:function(){},set_ajaxifiedProductsCallBack:function(a){this.ajaxifiedProductsCallBack=a},colorboxDialogSelector:".colorboxDialog",
--set_colorboxDialogSelector:function(a){this.colorboxDialogSelector=a},colorboxDialogOptions:{height:"95%",width:"95%",maxHeight:"95%",maxWidth:"95%",loadingClass:"loading",iframe:!0,onOpen:function(a){EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.reinit(!0)}},set_colorboxDialogOptions:function(a){this.colorboxDialogOptions=a},init:function(){if("undefined"!==typeof EcomCartOptions)for(var a in EcomCartOptions)EcomCartOptions.hasOwnProperty(a)&&(this[a]=EcomCartOptions[a]);
--EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.countryAndRegionUpdates();EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.changeCountryFieldSwap();EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.addAjaxificationOfProductList();EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxButtonsOn&&(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.addAddLinks(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxLinksAreaSelector),
--EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.addRemoveLinks(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxLinksAreaSelector),EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.addCartRemove(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxLinksAreaSelector));EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.initColorboxDialog();
--EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.setChanges(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.initialData,"");window.onpopstate=function(a){a.state&&(window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListHolderSelector).html(a.state.html),document.title=a.state.pageTitle)}},reinit:function(a){a&&EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.updateForZeroVSOneOrMoreRows();
--for(a=0;a<EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.reinitCallbacks.length;a++)EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.reinitCallbacks[a]()},countryAndRegionUpdates:function(){window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.countryAndRegionRootSelector).on("change",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxCountryFieldSelector,
--function(){var a=EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.createUrl("setcountry",this.value);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.getChanges(a,null,this)});window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.countryAndRegionRootSelector).on("change",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxRegionFieldSelector,function(){var a=
--EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.createUrl("setregion",this.value);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.getChanges(a,null,this)})},changeCountryFieldSwap:function(){window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.countryAndRegionRootSelector).on("change",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorChangeCountryFieldHolder+
--" select",function(){var a=window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorChangeCountryFieldHolder+" select").val();window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxCountryFieldSelector).val(a);a=EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.createUrl("setcountry",a);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.getChanges(a,
--null,this);window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorChangeCountryLink).click()})},addAjaxificationOfProductList:function(){if(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifyProductList)window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListHolderSelector).on("click",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListAdjusterSelectors+
--" a",function(a){a.preventDefault();var c=window.jQuery(this).attr("href");window.jQuery.ajax({beforeSend:function(){window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListHolderSelector).addClass(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.classToShowLoading)},complete:function(){window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListHolderSelector).removeClass(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.classToShowLoading)},
--dataType:"html",error:function(a,d,f){alert("An error occurred ("+d+" "+f+")! I will try reloading the page now.");window.location.href=c},success:function(a,d,f){window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListHolderSelector).html(a);window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.hiddenPageTitleID).text();a=window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.hiddenPageTitleID).text();
--window.history.pushState({pageTitle:a},a,c);document.title=a;EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.openAjaxCalls++;EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.setChanges(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.initialData,"");"undefined"!=typeof EcomProducts&&EcomProducts.reinit();"function"==typeof EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedProductsCallBack&&
--EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedProductsCallBack();window.jQuery("html, body").animate({scrollTop:window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxifiedListHolderSelector).offset().top},500)},url:c})})},addAddLinks:function(a){window.jQuery(a).on("click",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.addLinkSelector,function(){var a=window.jQuery(this).attr("href");EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.productListIsFromCachedSource&&
--(a+="&cached=1");EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.getChanges(a,null,this);return!1})},addRemoveLinks:function(a){window.jQuery(a).on("click",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.removeLinkSelector,function(){if(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.unconfirmedDelete||confirm(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.confirmDeleteText)){var a=
--window.jQuery(this).attr("href");EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.productListIsFromCachedSource&&(a+="&cached=1");EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.getChanges(a,null,this)}return!1})},addCartRemove:function(a){window.jQuery(a).on("click",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.removeCartSelector,function(a){if(!EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.confirmDeleteText||
--confirm(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.confirmDeleteText)){a=window.jQuery(this).attr("href");var b=window.jQuery(this).parents(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.orderItemHolderSelector);window.jQuery(b).slideUp("slow",function(){window.jQuery(b).remove()});EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.getChanges(a,null,this)}return!1})},getChanges:function(a,c,b){null===c&&(c={});EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.ajaxButtonsOn&&
--(c.ajaxButtonsOn=!0);1<EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.openAjaxCalls&&(c.manyrequests=1);b=this.addLoadingSelector(b);c.loadingindex=b;EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.onBeforeUpdate&&"function"==typeof EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.onBeforeUpdate&&EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.onBeforeUpdate.call(a,
--c,EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.setChanges);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.openAjaxCalls++;window.jQuery.getJSON(a,c,EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.setChanges)},addLoadingSelector:function(a){a=window.jQuery(a).parent().parent();window.jQuery(a).addClass(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.classToShowLoading);window.jQuery("body").addClass(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.classToShowPageIsUpdating);
--EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.loadingSelectors[EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.loadingSelectors.length]=a;return EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.loadingSelectors.length-1},createUrl:function(a,c){var b=window.jQuery("base").attr("href")+EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.shoppingCartURLSegment+"/";a&&
--(b+=a+"/");c&&(b+=c+"/");return b},setChanges:function(a,c){EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.set_initialData(a);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.openAjaxCalls--;EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("------------- SET CHANGES -----------");if(a.reload)window.location=window.location;else if(0>=EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.openAjaxCalls){for(var b in a){var d=
--a[b];if("undefined"!=typeof d.t){var f=d.t,e=d.s,h=d.p,g=EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.escapeHTML(d.v);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("type"+f+", selector: "+e+", parameter:"+h+", value");if("class"==f||"id"==f)"undefined"!=typeof EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.synonyms[e]&&(e+=", "+EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.synonyms[e]),
--e="id"==f?"#"+e+"":"."+e+"","hide"==h?g?window.jQuery(e).hide().addClass("hideForNow"):window.jQuery(e).show().removeClass("hideForNow"):"message"==h?window.jQuery(e).html(g):"innerHTML"==h?window.jQuery(e).each(function(a,b){window.jQuery(b).html(g)}):window.jQuery(e).attr(h,g),".number_of_items"==e&&(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("doing .number_of_items"),d=parseFloat(g),EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("value "+
--d),EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.cartHasItems=0<d?!0:!1,window.jQuery("a"+EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.cartMenuLinksSelector+",  li"+EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.cartMenuLinksSelector+" > a").each(function(a,b){var c=b;window.jQuery(b).is("a")||(c=window.jQuery(b).find("a"));var e=window.jQuery(c).html().replace(RegExp("(\\d+)","g"),g);window.jQuery(c).html(e)}));else if("name"==
--f)window.jQuery("[name="+e+"]").each(function(){window.jQuery(this).attr(h,g)});else if("dropdown"==f){if(e="#"+e+" select",0<window.jQuery(e).length&&0<g.length)for(window.jQuery(e).html(""),b=0;b<g.length;b++)d=h==g[b].id?' selected="selected" ':"",window.jQuery(e).append('<option value="'+g[b].id+'"'+d+">"+g[b].name+"</option>")}else if("newmodifierrow"!=f&&"newitemrow"!=f&&"replaceclass"==f){var k=d.without;EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("starting replaceclass process");
--window.jQuery("."+h).each(function(a,b){var c=window.jQuery(b).attr("id");EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("checking "+c);var d=!1;for(a=0;a<e.length;a++)EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.debug&&console.debug("testing: '"+e[a]+"' AGAINST '"+c+"'"),c==e[a]&&(d=!0);d?window.jQuery(b).removeClass(k).addClass(g):window.jQuery(b).removeClass(g).addClass(k)})}}}EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.onAfterUpdate&&
--"function"==typeof EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.onAfterUpdate&&EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.onAfterUpdate.call(a,c);EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.reinit(0<a.length);window.jQuery("body").removeClass(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.classToShowPageIsUpdating);for(b=0;b<EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.loadingSelectors.length;b++)window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.loadingSelectors[b]).removeClass(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.classToShowLoading)}},
--updateForZeroVSOneOrMoreRows:function(){EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.cartHasItems?(window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorShowOnZeroItems).hide(),window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorHideOnZeroItems).each(function(a,c){window.jQuery(c).hasClass("hideForNow")||window.jQuery(c).show()})):(window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorShowOnZeroItems).show(),
--window.jQuery(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.selectorHideOnZeroItems).hide())},escapeHTML:function(a){return a},variableIsSet:function(a){return"undefined"==typeof a||"undefined"==a?!1:!0},variableSetWithValue:function(a){return EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.variableIsSet(a)&&a?!0:!1},initColorboxDialog:function(){window.jQuery(document).on("click",EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.colorboxDialogSelector,
--function(a){EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.colorboxDialogOptions.href=window.jQuery(this).attr("href");EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.colorboxDialogOptions.open=!0;window.jQuery.colorbox(EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.colorboxDialogOptions);return!1})}};module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack.EcomCart=EcomCart$$module$$var$www$picspeanutbutter_com$ecommerce$javascript$EcomCartWebPack;
-diff --git a/client/javascript/EcomOrderFormShipping.min.js b/client/javascript/EcomOrderFormShipping.min.js
-deleted file mode 100644
-index 7c41d9ed..00000000
---- a/client/javascript/EcomOrderFormShipping.min.js
-+++ /dev/null
-@@ -1,15 +0,0 @@
--if(null!==document.getElementById("OrderFormAddress_OrderFormAddress")&&"undefined"!==typeof document.getElementById("OrderFormAddress_OrderFormAddress")){(function(a){a(document).ready(function(){EcomOrderFormWithShippingAddress.init();EcomOrderFormWithShippingAddress.removeEmailFromShippingCityHack()})})(window.jQuery);var EcomOrderFormWithShippingAddress={copy_billing_to_shipping:!1,fieldArray:[],shippingFieldSelectors:"",billingFieldSelectors:"",formSelector:"#OrderFormAddress_OrderFormAddress",shippingSectionSelector:".shippingFieldsHeader, .shippingFields",
--useShippingDetailsSelector:"input[name='UseShippingAddress']",useShippingDetailsAlternativeSelector:"input[name='UseDifferentShippingAddress']",billingHeaderAttributeTitleAlternative:"data-title-with-shipping-address",shippingGeoCodingFieldSelector:"input[name='ShippingEcommerceGeocodingField']",countryToUpdateCartClass:"ajaxCountryField",regionToUpdateCartClass:"ajaxRegionField",closed:!1,init:function(){if(0<window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).length){this.getListOfSharedFields();
--var a;for(a=0;a<EcomOrderFormWithShippingAddress.fieldArray.length;++a)0<a&&(EcomOrderFormWithShippingAddress.shippingFieldSelectors+=", ",EcomOrderFormWithShippingAddress.billingFieldSelectors+=", "),EcomOrderFormWithShippingAddress.shippingFieldSelectors+=EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[a]),EcomOrderFormWithShippingAddress.billingFieldSelectors+=EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[a]);
--0<a&&(EcomOrderFormWithShippingAddress.turnOnListeners(),0<window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).length?window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).change():window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change())}window.jQuery(EcomOrderFormWithShippingAddress.shippingGeoCodingFieldSelector).removeAttr("required")},updateFields:function(){for(var a=this.hasShippingAddress(),b,c,d,e=0;e<EcomOrderFormWithShippingAddress.fieldArray.length;++e)b=
--EcomOrderFormWithShippingAddress.billingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[e]),c=EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[e]),b=window.jQuery(b),c=window.jQuery(c),!0===a?(b.hasClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass)&&(b.removeClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass),c.addClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass)),b.hasClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass)&&
--(b.removeClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass),c.addClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass)),b=b.val(),d=c.val(),EcomOrderFormWithShippingAddress.closed?c.val(""):!d&&b&&EcomOrderFormWithShippingAddress.copy_billing_to_shipping&&c.val(b).change()):(c.hasClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass)&&(c.removeClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass),b.addClass(EcomOrderFormWithShippingAddress.countryToUpdateCartClass)),
--c.hasClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass)&&(c.removeClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass),b.addClass(EcomOrderFormWithShippingAddress.regionToUpdateCartClass)),c.hasClass("required")&&c.removeAttr("required").removeAttr("aria-required").removeAttr("data-has-required"));this.swapBillingHeader()},billingFieldSelector:function(a){a=a.replace("Shipping","");return" "+EcomOrderFormWithShippingAddress.formSelector+" input[name='"+a+"'], "+EcomOrderFormWithShippingAddress.formSelector+
--" select[name='"+a+"'], "+EcomOrderFormWithShippingAddress.formSelector+" textarea[name='"+a+"']"},shippingFieldSelector:function(a){a="Shipping"+a.replace("Billing","");return" "+EcomOrderFormWithShippingAddress.formSelector+" input[name='"+a+"'], "+EcomOrderFormWithShippingAddress.formSelector+" select[name='"+a+"'], "+EcomOrderFormWithShippingAddress.formSelector+" textarea[name='"+a+"']"},removeEmailFromShippingCityHack:function(){var a=window.jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val();
--/^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/.test(a)&&window.jQuery(EcomOrderFormWithShippingAddress.shippingCitySelector).val(window.jQuery(EcomOrderFormWithShippingAddress.citySelector).val()).change()},getListOfSharedFields:function(){window.jQuery(this.formSelector+" input, "+this.formSelector+" select, "+this.formSelector+" textarea").each(function(a,b){var c=window.jQuery(b).attr("name");if("undefined"!==typeof c){var d=window.jQuery(b).attr("type");"undefined"!==typeof d&&"submit"!==d&&"hidden"!==d&&(d=EcomOrderFormWithShippingAddress.billingFieldSelector(c),
--0<window.jQuery(d).length&&EcomOrderFormWithShippingAddress.fieldArray.push(c))}})},turnOnListeners:function(){window.jQuery(EcomOrderFormWithShippingAddress.billingFieldSelectors).change(function(){EcomOrderFormWithShippingAddress.updateFields()});window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).focus(function(){EcomOrderFormWithShippingAddress.updateFields()});window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change(function(){EcomOrderFormWithShippingAddress.hasShippingAddress()?
--(window.jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideDown(),window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelector(EcomOrderFormWithShippingAddress.fieldArray[0])).focus(),window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(function(a,b){window.jQuery(b).hasClass("required")&&window.jQuery(b).attr("required","required").attr("aria-required",!0).attr("aria-required",!0).attr("data-has-required","yes")}),EcomOrderFormWithShippingAddress.closed=!1):(window.jQuery(EcomOrderFormWithShippingAddress.shippingSectionSelector).slideUp(),
--window.jQuery(EcomOrderFormWithShippingAddress.shippingFieldSelectors).each(function(a,b){window.jQuery(b).hasClass("required")&&window.jQuery(b).removeAttr("required").removeAttr("aria-required").removeAttr("data-has-required")}),EcomOrderFormWithShippingAddress.closed=!0);EcomOrderFormWithShippingAddress.makeSureOnlyTheRightCountriesCanBeSelected();EcomOrderFormWithShippingAddress.updateFields()});0<window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).length&&window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).change(function(a){!0===
--window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsAlternativeSelector).is(":checked")?window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).attr("checked","checked").val("1"):window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).removeAttr("checked","checked").val("0");window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).change()})},swapBillingHeader:function(){var a=window.jQuery(this.formSelector+"_BillingDetails"),b=this.hasShippingAddress()?this.billingHeaderAttributeTitleAlternative:
--this.billingHeaderAttributeTitleAlternative+"_default",b=a.attr(b);a.text(b)},hasShippingAddress:function(){return window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector+'[type="hidden"]')?"1"==window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).val():window.jQuery(EcomOrderFormWithShippingAddress.useShippingDetailsSelector).is(":checked")},makeSureOnlyTheRightCountriesCanBeSelected:function(){if("undefined"!==typeof CountryPrice_SetCountriesForDelivery_New&&"undefined"!==typeof CountryPrice_SetCountriesForDelivery_Original){var a=
--this.hasShippingAddress()?CountryPrice_SetCountriesForDelivery_Original:CountryPrice_SetCountriesForDelivery_New,b=window.jQuery("select[name='Country']");EcomOrderFormWithShippingAddress.swappingOptions(b,a)}},swappingOptions:function(a,b){var c=window.jQuery(a).val();window.jQuery(a).empty();$.each(b,function(b,c){a.append($("<option></option>").attr("value",b).text(c))});window.jQuery(a).val(c)}}};
-diff --git a/client/javascript/EcomPayment.min.js b/client/javascript/EcomPayment.min.js
-deleted file mode 100644
-index 1b4ecac2..00000000
---- a/client/javascript/EcomPayment.min.js
-+++ /dev/null
-@@ -1,2 +0,0 @@
--if(null!==document.getElementById("PaymentMethod")&&"undefined"!==typeof document.getElementById("PaymentMethod")){(function(a){a(document).ready(function(){EcomPayment.init()})})(window.jQuery);var EcomPayment={paymentInputsSelectorParent:"#PaymentMethod",paymentInputsSelector:"#PaymentMethod input[type=radio]",paymentFieldSelector:"div.paymentfields",paymentMethodPrefix:".methodFields_",init:function(){var a=window.jQuery(EcomPayment.paymentInputsSelector),b=window.jQuery(EcomPayment.paymentFieldSelector);b.hide();
--a.each(function(a){1==window.jQuery(this).attr("checked")&&window.jQuery(EcomPayment.paymentMethodPrefix+window.jQuery(this).attr("value")).show()});a.click(function(a){b.hide();window.jQuery(EcomPayment.paymentMethodPrefix+window.jQuery(this).attr("value")).show()});window.jQuery(EcomPayment.paymentInputsSelector).first().click();1==window.jQuery(EcomPayment.paymentInputsSelector).length&&window.jQuery(EcomPayment.paymentInputsSelectorParent).hide()}};window.jQuery(EcomPayment.paymentFieldSelector).hide()};
-diff --git a/client/javascript/EcomQuantityField.js b/client/javascript/EcomQuantityField.js
-index f81c2d85..bb98dede 100644
---- a/client/javascript/EcomQuantityField.js
-+++ b/client/javascript/EcomQuantityField.js
-@@ -16,6 +16,12 @@ if (typeof require === 'undefined') {
- }
- 
- var EcomQuantityField = {
-+  joinWithSlash: (...strings) =>
-+    strings
-+      .map(str => (str.endsWith('/') ? str : `${str}/`))
-+      .join('')
-+      .slice(0, -1),
-+
-   //todo: make more specific! some selector that holds true for all cart holders.
-   hidePlusAndMinues: true,
- 
-@@ -163,13 +169,16 @@ var EcomQuantityField = {
-                 } else {
-                   URLSegment = URLSegment + '&'
-                 }
--                var url =
--                  window.jQuery('base').attr('href').replace(/\/$/, '') +
--                  '/' +
--                  URLSegment +
--                  'quantity=' +
--                  this.value
-+                var url = EcomQuantityField.joinWithSlash(
-+                  window.jQuery('base').attr('href'),
-+                  URLSegment
-+                )
-+                // add quantity
-+                url += 'quantity=' + this.value
-+
-+                // no double-encoded ampersands
-                 url = url.replace('&amp;', '&')
-+
-                 if (typeof EcomQuantityField.EcomCart !== 'undefined') {
-                   EcomQuantityField.EcomCart.getChanges(url, null, this)
-                 } else if (typeof EcomCart !== 'undefined') {
+
 diff --git a/client/javascript/UTMReferralPointer.js b/client/javascript/UTMReferralPointer.js
 new file mode 100644
 index 00000000..bbd26dbb
@@ -377,7 +170,7 @@ index 2d4660bc..793529ed 100644
 --- a/src/Api/ShoppingCart.php
 +++ b/src/Api/ShoppingCart.php
 @@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Api;
- 
+
  use SilverStripe\Control\Controller;
  use SilverStripe\Control\Director;
 +use SilverStripe\Control\Session;
@@ -390,12 +183,12 @@ index 2d4660bc..793529ed 100644
  use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 +use Sunnysideup\Ecommerce\Model\Process\Referral;
  use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
- 
+
  /*
 @@ -1162,6 +1164,19 @@ class ShoppingCart
          $this->messages[] = ['Message' => $message, 'Type' => $status];
      }
- 
+
 +    public function addReferral($params): int
 +    {
 +        if(count($params)) {
@@ -410,7 +203,7 @@ index 2d4660bc..793529ed 100644
 +    }
 +
      // UI MESSAGE HANDLING
- 
+
      /**
 @@ -1173,18 +1188,12 @@ class ShoppingCart
      {
@@ -435,12 +228,12 @@ index 2d4660bc..793529ed 100644
 +            //clear old messages
 +            $session->clear($sessionVariableName);
          }
- 
+
          //set to form????
 @@ -1195,6 +1204,18 @@ class ShoppingCart
          return $this->messages;
      }
- 
+
 +    protected function getSession(): ?Session
 +    {
 +        $curr = Controller::curr();
@@ -458,7 +251,7 @@ index 2d4660bc..793529ed 100644
       * When a asynchronious request is made to the shopping cart (ajax),
 @@ -1217,10 +1238,10 @@ class ShoppingCart
          }
- 
+
          // recalculate... this is often a change so well worth it.
 -        $this->currentOrder();
 -        if($this->order) {
@@ -468,7 +261,7 @@ index 2d4660bc..793529ed 100644
 -            $this->order->calculateOrderAttributes($recalculate = true);
 +            $order->calculateOrderAttributes($recalculate = true);
          }
- 
+
          //TODO: handle passing back multiple messages
 diff --git a/src/Cms/SalesAdminProcess.php b/src/Cms/SalesAdminProcess.php
 index 7534d99b..3f6f2791 100644
@@ -480,7 +273,7 @@ index 7534d99b..3f6f2791 100644
  use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 +use Sunnysideup\Ecommerce\Model\Process\Referral;
  use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
- 
+
  /**
 @@ -43,8 +44,9 @@ class SalesAdminProcess extends ModelAdmin
       * @var array
@@ -491,7 +284,7 @@ index 7534d99b..3f6f2791 100644
          OrderFeedback::class,
 +        OrderProcessQueue::class,
      ];
- 
+
      /**
 diff --git a/src/Control/ShoppingCartController.php b/src/Control/ShoppingCartController.php
 index 52d28565..9ba9de05 100644
@@ -514,13 +307,13 @@ index 52d28565..9ba9de05 100644
          if ($buyable) {
 -            $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters());
 +            $this->cart->addBuyable($buyable, $this->quantity(), $this->parameters(true));
- 
+
              return $this->cart->setMessageAndReturn();
          }
 @@ -324,6 +324,20 @@ class ShoppingCartController extends Controller
          return $this->goToErrorPage();
      }
- 
+
 +    /**
 +     * Adds item to cart via controller action; one by default.
 +     *
@@ -544,7 +337,7 @@ index 52d28565..9ba9de05 100644
          if ($buyable) {
 -            $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters());
 +            $this->cart->setQuantity($buyable, $this->quantity(), $this->parameters(true));
- 
+
              return $this->cart->setMessageAndReturn();
          }
 @@ -353,7 +367,7 @@ class ShoppingCartController extends Controller
@@ -553,7 +346,7 @@ index 52d28565..9ba9de05 100644
          if ($buyable) {
 -            $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters());
 +            $this->cart->decrementBuyable($buyable, $this->quantity(), $this->parameters(true));
- 
+
              return $this->cart->setMessageAndReturn();
          }
 @@ -371,7 +385,7 @@ class ShoppingCartController extends Controller
@@ -614,7 +407,7 @@ index 52d28565..9ba9de05 100644
 +        // TODO: postvars do not seem to work!!!
 +        return $getVars ? $this->getRequest()->getVars() : $this->getRequest()->postVars();
      }
- 
+
      protected function goToErrorPage()
 diff --git a/src/Email/OrderEmail.php b/src/Email/OrderEmail.php
 index 85bdc49b..b1c06952 100644
@@ -646,7 +439,7 @@ index 85bdc49b..b1c06952 100644
                  parent::sendPlain();
              } else {
 @@ -197,7 +196,7 @@ abstract class OrderEmail extends Email
- 
+
      protected function fixupSubject()
      {
 -        if (! $this->getSubject()) {
@@ -675,7 +468,7 @@ index 85bdc49b..b1c06952 100644
 +            . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
          }
          $orderEmailRecord->write();
- 
+
 diff --git a/src/Forms/Fields/EcommerceCMSButtonField.php b/src/Forms/Fields/EcommerceCMSButtonField.php
 index 20187ad7..af491d54 100644
 --- a/src/Forms/Fields/EcommerceCMSButtonField.php
@@ -701,7 +494,7 @@ index e1e5f756..42a73720 100644
 -        $button->addExtraClass('no-ajax action_export');
 +        $button->addExtraClass('action btn btn-secondary no-ajax font-icon-down-circled action_export');
          $button->setForm($gridField->getForm());
- 
+
          return [
 diff --git a/src/Forms/Gridfield/GridFieldPrintAllInvoicesButton.php b/src/Forms/Gridfield/GridFieldPrintAllInvoicesButton.php
 index 86353e3c..f14c2d52 100644
@@ -715,7 +508,7 @@ index 86353e3c..f14c2d52 100644
 -        $button->addExtraClass('no-ajax action_print_all_invoices');
 +        $button->addExtraClass('action_print_all_invoices action btn btn-secondary no-ajax font-icon-down-circled action_export');
          $button->setForm($gridField->getForm());
- 
+
          return [
 diff --git a/src/Forms/Gridfield/GridFieldPrintAllPackingSlipsButton.php b/src/Forms/Gridfield/GridFieldPrintAllPackingSlipsButton.php
 index 4a1c83f5..3bddf4c2 100644
@@ -729,7 +522,7 @@ index 4a1c83f5..3bddf4c2 100644
 -        $button->addExtraClass('no-ajax action_print_all_packing_slips');
 +        $button->addExtraClass('action_print_all_packing_slips action btn btn-secondary no-ajax font-icon-down-circled action_export');
          $button->setForm($gridField->getForm());
- 
+
          return [
 diff --git a/src/Forms/Gridfield/GridFieldPrintInvoiceButton.php b/src/Forms/Gridfield/GridFieldPrintInvoiceButton.php
 index 2bff4008..7b0d29c2 100644
@@ -796,7 +589,7 @@ index 008a14b4..d2a33857 100644
              $response = new HTTPResponse();
 -            $dest = $product->Link();
              $response->redirect(Director::absoluteURL($dest), '302');
- 
+
              throw new HTTPResponse_Exception($response);
 diff --git a/src/Model/Order.php b/src/Model/Order.php
 index 7616326f..07c9764e 100644
@@ -840,7 +633,7 @@ index 7616326f..07c9764e 100644
 +                if (!$createdOrderStatus) {
                      user_error('No ordersteps have been created', E_USER_WARNING);
                  }
- 
+
 @@ -1313,18 +1313,18 @@ class Order extends DataObject implements EditableEcommerceObject
              $modifiersToAdd = EcommerceConfig::get(Order::class, 'modifiers');
              if (is_array($modifiersToAdd) && [] !== $modifiersToAdd) {
@@ -875,7 +668,7 @@ index 7616326f..07c9764e 100644
 @@ -1551,7 +1551,7 @@ class Order extends DataObject implements EditableEcommerceObject
              $step = OrderStep::get_by_id($this->StatusID);
          }
- 
+
 -        if (! $step) {
 +        if (!$step) {
              $step = DataObject::get_one(
@@ -884,17 +677,17 @@ index 7616326f..07c9764e 100644
 @@ -1559,11 +1559,11 @@ class Order extends DataObject implements EditableEcommerceObject
              );
          }
- 
+
 -        if (! $step) {
 +        if (!$step) {
              $step = OrderStepCreated::create();
          }
- 
+
 -        if (! $step) {
 +        if (!$step) {
              user_error('You need an order step in your Database.');
          }
- 
+
 @@ -1588,7 +1588,7 @@ class Order extends DataObject implements EditableEcommerceObject
          $obj = $this->MyStep();
          if ($obj->HideStepFromCustomer) {
@@ -911,7 +704,7 @@ index 7616326f..07c9764e 100644
 -        return ! (bool) $this->IsSubmitted();
 +        return !(bool) $this->IsSubmitted();
      }
- 
+
      /**
 @@ -1631,7 +1631,7 @@ class Order extends DataObject implements EditableEcommerceObject
       */
@@ -920,7 +713,7 @@ index 7616326f..07c9764e 100644
 -        return ! (bool) $this->IsInCart();
 +        return !(bool) $this->IsInCart();
      }
- 
+
      /**
 @@ -1782,7 +1782,7 @@ class Order extends DataObject implements EditableEcommerceObject
      public function IsAdminCancelled()
@@ -942,17 +735,17 @@ index 7616326f..07c9764e 100644
                  }
              }
          }
- 
+
 -        if (! ($member && $member->exists())) {
 +        if (!($member && $member->exists())) {
              $member = $this->Member();
          }
- 
+
 -        if (! ($member && $member->exists())) {
 +        if (!($member && $member->exists())) {
              $member = new Member();
          }
- 
+
 @@ -1866,7 +1866,7 @@ class Order extends DataObject implements EditableEcommerceObject
       */
      public function CreateOrReturnExistingAddress($className = BillingAddress::class, $alternativeMethodName = '')
@@ -965,7 +758,7 @@ index 7616326f..07c9764e 100644
 @@ -1889,7 +1889,7 @@ class Order extends DataObject implements EditableEcommerceObject
              $address = $this->{$methodName}();
          }
- 
+
 -        if (! $address) {
 +        if (!$address) {
              $address = new $className();
@@ -973,16 +766,16 @@ index 7616326f..07c9764e 100644
              if ($member && $member->exists()) {
 @@ -1898,7 +1898,7 @@ class Order extends DataObject implements EditableEcommerceObject
          }
- 
+
          if ($address) {
 -            if (! $address->exists()) {
 +            if (!$address->exists()) {
                  $address->write();
              }
- 
+
 @@ -1908,7 +1908,7 @@ class Order extends DataObject implements EditableEcommerceObject
              }
- 
+
              if ($this->{$variableName} !== $address->ID) {
 -                if (! $this->IsSubmitted()) {
 +                if (!$this->IsSubmitted()) {
@@ -997,7 +790,7 @@ index 7616326f..07c9764e 100644
 +            if (!is_a($newCurrency, EcommerceConfigClassNames::getName(EcommerceCurrency::class))) {
                  $newCurrency = EcommerceCurrency::default_currency();
              }
- 
+
 @@ -2094,11 +2094,11 @@ class Order extends DataObject implements EditableEcommerceObject
       */
      public function getOrderAttributesByType($types)
@@ -1006,12 +799,12 @@ index 7616326f..07c9764e 100644
 +        if (!is_array($types) && is_string($types)) {
              $types = [$types];
          }
- 
+
 -        if (! is_array($types)) {
 +        if (!is_array($types)) {
              user_error('wrong parameter (types) provided in Order::getOrderAttributesByTypes');
          }
- 
+
 @@ -2133,7 +2133,7 @@ class Order extends DataObject implements EditableEcommerceObject
       */
      public function Items($filterOrClassName = '')
@@ -1020,7 +813,7 @@ index 7616326f..07c9764e 100644
 +        if (!$this->exists()) {
              $this->write();
          }
- 
+
 @@ -2236,7 +2236,7 @@ class Order extends DataObject implements EditableEcommerceObject
          $modifiers = $this->Modifiers();
          if ($modifiers->exists()) {
@@ -1042,7 +835,7 @@ index 7616326f..07c9764e 100644
 +        if (!$this->exists()) {
              return true;
          }
- 
+
 @@ -2423,7 +2423,7 @@ class Order extends DataObject implements EditableEcommerceObject
       */
      public function LessSecureSessionID($size = 7, $start = null)
@@ -1051,15 +844,15 @@ index 7616326f..07c9764e 100644
 +        if (!$start || $start < 0 || $start > (32 - $size)) {
              $start = 0;
          }
- 
+
 @@ -2518,7 +2518,7 @@ class Order extends DataObject implements EditableEcommerceObject
- 
+
          $submitErrors = $this->SubmitErrors();
- 
+
 -        return ! ($submitErrors && $submitErrors->count());
 +        return !($submitErrors && $submitErrors->count());
      }
- 
+
      /**
 @@ -2616,7 +2616,7 @@ class Order extends DataObject implements EditableEcommerceObject
          $logs = $this->OrderStatusLogs();
@@ -1073,23 +866,23 @@ index 7616326f..07c9764e 100644
 @@ -2644,7 +2644,7 @@ class Order extends DataObject implements EditableEcommerceObject
              $email = $this->BillingAddress()->Email;
          }
- 
+
 -        if (! $email) {
 +        if (!$email) {
              if ($this->MemberID && $this->Member()) {
                  $email = $this->Member()->Email;
              }
 @@ -2680,7 +2680,7 @@ class Order extends DataObject implements EditableEcommerceObject
- 
+
      public function getEmailLink()
      {
 -        if (! isset($_REQUEST['print'])) {
 +        if (!isset($_REQUEST['print'])) {
              if ($this->IsSubmitted()) {
                  $step = $this->MyStep();
- 
+
 @@ -2708,7 +2708,7 @@ class Order extends DataObject implements EditableEcommerceObject
- 
+
      public function getPrintLink()
      {
 -        if (! isset($_REQUEST['print'])) {
@@ -1105,9 +898,9 @@ index 7616326f..07c9764e 100644
 +            if (!$this->SessionID) {
                  $this->write();
              }
- 
+
 @@ -2900,7 +2900,7 @@ class Order extends DataObject implements EditableEcommerceObject
- 
+
              if ($includeName) {
                  $by = _t('Order.BY', 'by');
 -                if (! $name) {
@@ -1118,7 +911,7 @@ index 7616326f..07c9764e 100644
 @@ -2909,13 +2909,13 @@ class Order extends DataObject implements EditableEcommerceObject
                      }
                  }
- 
+
 -                if (! $name) {
 +                if (!$name) {
                      if ($this->MemberID) {
@@ -1130,7 +923,7 @@ index 7616326f..07c9764e 100644
 +                                if (!trim((string) $memberName)) {
                                      $memberName = _t('Order.ANONYMOUS', 'anonymous');
                                  }
- 
+
 @@ -3034,7 +3034,7 @@ class Order extends DataObject implements EditableEcommerceObject
          if ($items->exists()) {
              foreach ($items as $item) {
@@ -1141,7 +934,7 @@ index 7616326f..07c9764e 100644
                      }
                  }
 @@ -3309,7 +3309,7 @@ class Order extends DataObject implements EditableEcommerceObject
- 
+
          if ((EcommerceConfig::get(OrderAddress::class, 'use_shipping_address_for_main_region_and_country') && $countryCodes['Shipping'])
              ||
 -            (! $countryCodes['Billing'] && $countryCodes['Shipping'])
@@ -1156,7 +949,7 @@ index 7616326f..07c9764e 100644
 -            return ! $currency->IsDefault();
 +            return !$currency->IsDefault();
          }
- 
+
          return false;
 @@ -3471,7 +3471,7 @@ class Order extends DataObject implements EditableEcommerceObject
       */
@@ -1169,7 +962,7 @@ index 7616326f..07c9764e 100644
              if ($currency && $currency->exists()) {
 @@ -3635,7 +3635,7 @@ class Order extends DataObject implements EditableEcommerceObject
          }
- 
+
          if ($withDetail) {
 -            if (! $this->HideStepFromCustomer) {
 +            if (!$this->HideStepFromCustomer) {
@@ -1193,12 +986,12 @@ index 7616326f..07c9764e 100644
 +        if (!$this->getCanHaveShippingAddress()) {
              $this->UseShippingAddress = false;
          }
- 
+
 -        if (! $this->CurrencyUsedID) {
 +        if (!$this->CurrencyUsedID) {
              $this->CurrencyUsedID = EcommerceCurrency::default_currency_id();
          }
- 
+
 -        if (! $this->SessionID) {
 +        if (!$this->SessionID) {
              $generator = Injector::inst()->create(RandomGenerator::class);
@@ -1217,10 +1010,10 @@ index 7616326f..07c9764e 100644
 +        if ($this->IsCancelled() && !$this->IsArchived()) {
              $this->Archive($avoidWrites = true);
          }
- 
+
 @@ -4113,12 +4113,12 @@ class Order extends DataObject implements EditableEcommerceObject
          }
- 
+
          if ($from && $to) {
 -            if (! class_exists($emailClassName)) {
 +            if (!class_exists($emailClassName)) {
@@ -1233,7 +1026,7 @@ index 7616326f..07c9764e 100644
 +            if (!is_a($email, EcommerceConfigClassNames::getName(Email::class))) {
                  user_error('No correct email class provided.', E_USER_ERROR);
              }
- 
+
 @@ -4147,6 +4147,7 @@ class Order extends DataObject implements EditableEcommerceObject
              // templates within the theme exist
              SetThemed::start();
@@ -1250,12 +1043,12 @@ index 7616326f..07c9764e 100644
 +        if (!$subject) {
              $subject = $step->CalculatedEmailSubject($this);
          }
- 
+
 -        if (! $message) {
 +        if (!$message) {
              $message = $step->CalculatedCustomerMessage($this);
          }
- 
+
 @@ -4315,11 +4316,11 @@ class Order extends DataObject implements EditableEcommerceObject
      //TODO: please comment why we make use of this function
      protected function getMemberForCanFunctions(Member $member = null)
@@ -1264,7 +1057,7 @@ index 7616326f..07c9764e 100644
 +        if (!$member) {
              $member = Security::getCurrentUser();
          }
- 
+
 -        if (! $member) {
 +        if (!$member) {
              $member = new Member();
@@ -1280,7 +1073,7 @@ index e9231ea9..7768bd0a 100644
       */
 -    private static $plural_name = 'Checkout Feedback Entries';
 +    private static $plural_name = 'Feedback Entries';
- 
+
      /**
       * Standard SS variable.
 diff --git a/src/Model/Process/OrderStep.php b/src/Model/Process/OrderStep.php
@@ -1295,7 +1088,7 @@ index 720c9e12..6725e88e 100644
 +        if (!self::$_last_order_step_cache || $noCacheValues) {
              self::$_last_order_step_cache = OrderStep::get()->Last();
          }
- 
+
 @@ -521,7 +521,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      public function getMyCode()
      {
@@ -1304,7 +1097,7 @@ index 720c9e12..6725e88e 100644
 +        if (!isset($array['Code'])) {
              user_error($this->ClassName . ' does not have a default code specified');
          }
- 
+
 @@ -547,6 +547,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
          //replacing
          if ($this->canBeDefered()) {
@@ -1373,7 +1166,7 @@ index 720c9e12..6725e88e 100644
 -        return (bool) ! $this->hasPassed($code, true);
 +        return (bool) !$this->hasPassed($code, true);
      }
- 
+
      /**
 @@ -937,7 +937,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
       */
@@ -1382,7 +1175,7 @@ index 720c9e12..6725e88e 100644
 -        return ! (bool) $this->hasPassed($code);
 +        return !(bool) $this->hasPassed($code);
      }
- 
+
      /**
 @@ -1151,9 +1151,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      public function RelevantLogEntryFindOrMake(Order $order)
@@ -1424,14 +1217,14 @@ index 720c9e12..6725e88e 100644
          }
          $extended = $this->extendedCan(__FUNCTION__, $member);
 @@ -1339,7 +1339,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
- 
+
      protected function hasStepConditions(): bool
      {
 -        if (! empty($this->Config()->get('step_logic_conditions'))) {
 +        if (!empty($this->Config()->get('step_logic_conditions'))) {
              return true;
          }
- 
+
 @@ -1368,7 +1368,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
              $this->ShowAsUncompletedOrder = false;
              $this->ShowAsInProcessOrder = false;
@@ -1450,7 +1243,7 @@ index 720c9e12..6725e88e 100644
                  $subject = $this->CalculatedEmailSubject($order);
              }
              $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
- 
+
              //this is NOT an admin EMAIL
              if ($this->hasCustomerMessage() || $useAlternativeEmail) {
 -                if (! $emailClassName) {

@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -73,5 +75,34 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
     protected function myDescription()
     {
         return _t('OrderStep.ARCHIVED_DESCRIPTION', 'This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.');
+    }
+    /**
+     * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
+     *
+     * @return FieldList
+     */
+    public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
+    {
+        $title = '<p class="message good">This order has been archived. There is nothing more to do.</p>';
+        $fields->addFieldsToTab(
+            'Root.Next',
+            [
+                LiteralField::create(
+                    'CompletedNext',
+                    $title
+                ),
+            ]
+        );
+        $fields->addFieldsToTab(
+            'Root.Process',
+            [
+                LiteralField::create(
+                    'CompletedProcess',
+                    $title
+                ),
+            ]
+        );
+
+        return $fields;
     }
 }
