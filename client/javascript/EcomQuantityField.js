@@ -16,12 +16,6 @@ if (typeof require === 'undefined') {
 }
 
 var EcomQuantityField = {
-  joinWithSlash: (...strings) =>
-    strings
-      .map(str => (str.endsWith('/') ? str : `${str}/`))
-      .join('')
-      .slice(0, -1),
-
   //todo: make more specific! some selector that holds true for all cart holders.
   hidePlusAndMinues: true,
 
@@ -169,7 +163,7 @@ var EcomQuantityField = {
                 } else {
                   URLSegment = URLSegment + '&'
                 }
-                var url = EcomQuantityField.joinWithSlash(
+                var url = window.joinUrlWithSlash(
                   window.jQuery('base').attr('href'),
                   URLSegment
                 )

@@ -41,6 +41,15 @@
  * http://www.yourseite.com/shoppingcart/showcart/
  *
  **/
+
+window.joinUrlWithSlash = function (...strings) {
+  const hasQuery = strings.some(str => str.includes('?'))
+  return strings
+    .map(str => str.replace(/\/+$/, ''))
+    .join('/')
+    .replace(/([^:]\/)\/+/g, '$1')
+    .replace(hasQuery ? /\/+(\?|$)/ : /\/+$/, '$1')
+}
 ;(function ($) {
   $(document).ready(function () {
     EcomCart.init()
@@ -716,12 +725,6 @@ const EcomCart = {
     return EcomCart.loadingSelectors.length - 1
   },
 
-  joinWithSlash: (...strings) =>
-    strings
-      .map(str => (str.endsWith('/') ? str : `${str}/`))
-      .join('')
-      .slice(0, -1),
-
   /**
    *
    *
@@ -729,15 +732,15 @@ const EcomCart = {
    * @return String
    */
   createUrl: function (method, variable) {
-    var url = EcomCartWebPack.joinWithSlash(
+    var url = window.joinUrlWithSlash(
       window.jQuery('base').attr('href'),
       EcomCart.shoppingCartURLSegment
     )
     if (method) {
-      EcomCart.joinWithSlash(url, method)
+      window.joinUrlWithSlash(url, method)
     }
     if (variable) {
-      EcomCart.joinWithSlash(url, variable)
+      window.joinUrlWithSlash(url, variable)
     }
     return url
   },
