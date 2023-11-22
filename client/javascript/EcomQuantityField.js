@@ -137,8 +137,16 @@ var EcomQuantityField = {
             var URLSegment = EcomQuantityField.getSetQuantityURLSegment(this)
             if (URLSegment.length > 0) {
               this.value = this.value.replace(/[^0-9.]+/g, '')
-              if (this.value == 0 || !this.value) {
-                this.value = 1
+              const minValue = parseFloat(window.jQuery(this).attr('min-value'))
+              if (!minValue || minValue === 0) {
+                minValue = 1
+              }
+              if (minValue && this.value < minValue) {
+                this.value = minValue
+              }
+              const maxValue = parseFloat(window.jQuery(this).attr('max-value'))
+              if (maxValue && this.value > maxValue) {
+                this.value = maxValue
               }
               if (this.value < 2) {
                 window

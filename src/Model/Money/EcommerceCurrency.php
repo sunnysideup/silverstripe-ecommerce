@@ -269,7 +269,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
 
@@ -295,7 +295,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
 
@@ -321,7 +321,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
 
@@ -346,8 +346,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function canDelete($member = null)
     {
-        if (! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
-            if (! $member) {
+        if (!$this->InUse && EcommerceCurrency::get()->Count() > 1) {
+            if (!$member) {
                 $member = Security::getCurrentUser();
             }
 
@@ -407,7 +407,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $price = $price->getValue();
         }
 
-        if (! $order) {
+        if (!$order) {
             $order = ShoppingCart::current_order();
         }
 
@@ -466,11 +466,11 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $code = $obj->Code;
         }
 
-        if (! $code) {
+        if (!$code) {
             $code = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
         }
 
-        if (! $code) {
+        if (!$code) {
             $code = 'NZD';
         }
 
@@ -520,7 +520,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         $titleField->setDescription('e.g. New Zealand Dollar');
 
         $fields->addFieldToTab('Root.Main', new ReadonlyField('IsDefaulNice', $fieldLabels['IsDefaultNice'], $this->getIsDefaultNice()));
-        if (! $this->isDefault()) {
+        if (!$this->isDefault()) {
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRate', $fieldLabels['ExchangeRate'], $this->ExchangeRate()));
             $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRateExplanation', $fieldLabels['ExchangeRateExplanation'], $this->ExchangeRateExplanation()));
         }
@@ -590,7 +590,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function getIsDefault()
     {
         if ($this->exists()) {
-            if (! $this->Code) {
+            if (!$this->Code) {
                 user_error('This currency (ID = ' . $this->ID . ') does not have a code ');
             }
         }
@@ -674,7 +674,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         $string = '1 ' . EcommerceConfig::get(EcommerceCurrency::class, 'default_currency') . ' = ' . round($this->getExchangeRate(), 3) . ' ' . $this->Code;
         $exchangeRate = $this->getExchangeRate();
         $exchangeRateError = '';
-        if (! $exchangeRate) {
+        if (!$exchangeRate) {
             $exchangeRate = 1;
             $exchangeRateError = _t('EcommerceCurrency.EXCHANGE_RATE_ERROR', 'Error in exchange rate. ');
         }
@@ -705,7 +705,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public function Link()
     {
-        return ShoppingCartController::set_currency_link($this->Code);
+        return ShoppingCartController::set_currency_link((string) $this->Code);
     }
 
     /**
@@ -733,15 +733,15 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     {
         $result = parent::validate();
         $errors = [];
-        if (! $this->Code || 3 !== mb_strlen((string) $this->Code)) {
+        if (!$this->Code || 3 !== mb_strlen((string) $this->Code)) {
             $errors[] = 'The code must be 3 characters long.';
         }
 
-        if (! $this->Name) {
+        if (!$this->Name) {
             $errors[] = 'The name is required.';
         }
 
-        if (! count($errors)) {
+        if (!count($errors)) {
             $this->Code = strtoupper((string) $this->Code);
             // Check that there are no 2 same code currencies in use
             if ($this->isChanged('Code')) {
@@ -781,7 +781,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
-        if (! self::default_currency()) {
+        if (!self::default_currency()) {
             self::create_new(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
         }
     }
@@ -795,7 +795,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     public static function create_new($code, $name = '')
     {
         $code = trim(strtoupper((string) $code));
-        if (! $name) {
+        if (!$name) {
             $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
             $name = isset($currencies[$code]) ? $currencies[$code] : $code;
         }
@@ -841,7 +841,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         parent::onBeforeWrite();
         // Check that there is always at least one currency in use
         $this->Code = strtoupper((string) $this->Code);
-        if (! $this->InUse) {
+        if (!$this->InUse) {
             $list = self::get_list();
             $count = $list->Count();
             if (0 === $count || (1 === $count && $list->First()->ID === $this->ID)) {

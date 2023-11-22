@@ -1408,8 +1408,8 @@ class Product extends Page implements BuyableModel
             if ($image && $image->exists()) {
                 $arrayInner[$image->ID] = $image;
             } elseif($deleteMissingImages) {
-                DB::query('UPDATE Product SET ImageID = 0 WHERE ID = '.$this->ID);
-                DB::query('UPDATE Product_Live SET ImageID = 0 WHERE ID = '.$this->ID);
+                DB::query('UPDATE Product SET ImageID = 0 WHERE ID = ' . $this->ID);
+                DB::query('UPDATE Product_Live SET ImageID = 0 WHERE ID = ' . $this->ID);
                 $this->deleteImage($image);
             }
         }
@@ -1419,7 +1419,7 @@ class Product extends Page implements BuyableModel
             Product_AdditionalImages
                 INNER JOIN File
                     ON File.ID = ImageID
-            WHERE ProductID = '.$this->ID. '
+            WHERE ProductID = ' . $this->ID . '
             ORDER BY ImageSort'
         )
             ->column('ImageID');
@@ -1590,5 +1590,15 @@ class Product extends Page implements BuyableModel
             }
         }
         return $ids;
+    }
+
+    public function getMinValueInOrder(): float
+    {
+        return 1;
+    }
+
+    public function getMaxValueInOrder(): float
+    {
+        return 999;
     }
 }

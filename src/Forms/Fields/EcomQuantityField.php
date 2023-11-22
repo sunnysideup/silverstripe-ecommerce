@@ -50,6 +50,20 @@ class EcomQuantityField extends NumericField
     protected $fieldSize = 3;
 
     /**
+     * max value
+     *
+     * @var float
+     */
+    protected $minValue = 0;
+
+    /**
+     * max value
+     *
+     * @var float
+     */
+    protected $maxValue = 999;
+
+    /**
      * @var string
      */
     protected $template = EcomQuantityField::class;
@@ -75,7 +89,7 @@ class EcomQuantityField extends NumericField
         if ($object instanceof BuyableModel) {
             $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
-            if (! $this->orderItem) {
+            if (!$this->orderItem) {
                 $className = $object->classNameForOrderItem();
                 $this->orderItem = new $className($object->dataRecord, 0);
             }
@@ -86,6 +100,11 @@ class EcomQuantityField extends NumericField
         }
         if ($parameters) {
             $this->parameters = $parameters;
+        }
+        $product = $object->Product();
+        if($product) {
+            $this->setMinValue($product->getMinValueInOrder());
+            $this->setMaxValue($product->getMaxValueInOrder());
         }
         $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 
@@ -100,6 +119,30 @@ class EcomQuantityField extends NumericField
     public function setClasses(array $newClasses, $overwrite = false): self
     {
         $this->classes = $overwrite ? array_merge($this->classes, $newClasses) : $newClasses;
+
+        return $this;
+    }
+
+    /**
+     * set classes for field.  you can add or "overwrite".
+     *
+     * @param bool $overwrite
+     */
+    public function setMinValue(float $minValue): self
+    {
+        $this->minValue = $minValue;
+
+        return $this;
+    }
+
+    /**
+     * set classes for field.  you can add or "overwrite".
+     *
+     * @param bool $overwrite
+     */
+    public function setMaxValue(float $maxValue): self
+    {
+        $this->maxValue = $maxValue;
 
         return $this;
     }
@@ -140,7 +183,7 @@ class EcomQuantityField extends NumericField
     public function Field($properties = [])
     {
         $name = $this->getName();
-        if (! isset(self::$tabindex[$name])) {
+        if (!isset(self::$tabindex[$name])) {
             self::$tabindex[$name] = count(self::$tabindex) + 1;
         }
         $attributes = [
@@ -151,6 +194,8 @@ class EcomQuantityField extends NumericField
             'maxlength' => $this->maxLength,
             'size' => $this->fieldSize,
             'data-quantity-link' => $this->getQuantityLink(),
+            'min-value' => $this->minValue,
+            'max-value' => $this->maxValue,
             'tabindex' => self::$tabindex[$name],
             'disabled' => 'disabled',
         ];
