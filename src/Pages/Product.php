@@ -750,7 +750,7 @@ class Product extends Page implements BuyableModel
         $image = $this->Image();
         if ($image) {
             if ($image->exists()) {
-                return $image->getThumbnail();
+                return $image->StripThumbnail();
             }
         }
 
