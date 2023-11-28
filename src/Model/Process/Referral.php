@@ -37,24 +37,24 @@ class Referral extends DataObject implements EditableEcommerceObject
                 'OrderID' => $order->ID,
             ];
             $ref = DataObject::get_one(Referral::class, $filter);
-            if(! $ref) {
+            if(!$ref) {
                 $ref = Referral::create($filter);
             }
             $ref->Source = '';
-            $ref->Source .= isset($params['fbclid']) ? 'Facebook Ads' . $params['fbclid'] : '';
-            $ref->Source .= isset($params['gad']) ? 'Google Ads' . $params['gad'] : '';
-            $ref->Source .= isset($params['twclid']) ? 'Twitter Ads' . $params['gad'] : '';
+            $ref->Source .= isset($params['fbclid']) ? 'Facebook Ads | ' . $params['fbclid'] : '';
+            $ref->Source .= isset($params['gad']) ? 'Google Ads | ' . $params['gad'] : '';
+            $ref->Source .= isset($params['twclid']) ? 'Twitter Ads | ' . $params['gad'] : '';
             $ref->Source .= $params['utm_source'] ?? '';
 
             $ref->Medium =  '';
-            $ref->Medium .= isset($params['gclsrc']) ? 'Google Source' . $params['gclsrc'] : '';
+            $ref->Medium .= isset($params['gclsrc']) ? 'Google Source | ' . $params['gclsrc'] : '';
             $ref->Medium .= $params['utm_medium'] ?? '';
 
             $ref->Campaign = '';
-            $ref->Campaign .= isset($params['gclid']) ? 'Google Campaign' . $params['gclid'] : '';
+            $ref->Campaign .= isset($params['gclid']) ? 'Google Campaign | ' . $params['gclid'] : '';
             $ref->Campaign .= $params['utm_campaign'] ?? '';
-            $ref->Campaign .= $params['utm_term'] ?? '';
-            $ref->Campaign .= $params['utm_content'] ?? '';
+            $ref->Campaign .= '|' . $params['utm_term'] ?? '';
+            $ref->Campaign .= '|' . $params['utm_content'] ?? '';
 
             $ref->write();
         }
@@ -72,6 +72,9 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Source' => 'Varchar(100)',
         'Medium' => 'Varchar(100)',
         'Campaign' => 'Varchar(100)',
+        'IsSubmitted' => 'Boolean',
+        'AmountInvoiced' => 'Currency',
+        'AmountPaid' => 'Currency',
     ];
 
     private static $field_labels_right = [
@@ -123,6 +126,8 @@ class Referral extends DataObject implements EditableEcommerceObject
      */
     private static $casting = [
         'Title' => 'Varchar',
+        'From' => 'Varchar',
+        'FullCode' => 'Varchar',
     ];
 
     /**
@@ -196,7 +201,7 @@ class Referral extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null, $context = [])
     {
-        if (! $member) {
+        if (!$member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -287,6 +292,26 @@ class Referral extends DataObject implements EditableEcommerceObject
         $string .= ' - ' . $this->Source;
 
         return $string;
+    }
+
+    public function getFrom(): string
+    {
+        $txt = $this->getFullCode();
+        if (strpos($txt, 'Google Ads') !== false || strpos($txt, 'Google Source') !== false || strpos($txt, 'Google Campaign') !== false) {
+            $medium = 'Google';
+        } elseif (strpos($txt, 'Facebook Ads') !== false) {
+            $medium = 'Facebook';
+        } elseif (strpos($txt, 'Twitter Ads') !== false) {
+            $medium = 'Twitter';
+        } else {
+            $medium = 'Other';
+        }
+        return $medium;
+    }
+
+    public function getFullCode(): string
+    {
+        return implode('|', array_filter([$this->Source,  $this->Medium , $this->Campaign]));
     }
 
 }
