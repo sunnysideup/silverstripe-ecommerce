@@ -177,22 +177,25 @@ class ReferralSummary extends Controller
                     'Key' => $key,
                     'NumberOfClicks' => 0,
                     'NumberOfClicksIntoOrders' => 0,
+                    'TotalOrderAmountInvoiced' => 0,
                     'TotalOrderAmountPaid' => 0,
                     'AverageClicksIntoOrders' => 0,
                     'AverageOrderAmountPaidPerClick' => 0,
                 ];
             }
-            $hasOrder = $ref->IsSubmitted;
-            $amount = $ref->AmountPaid;
+            $hasSubmittedOrder = $ref->IsSubmitted;
+            $amountInvoiced = $ref->AmountInvoiced;
+            $amountPaid = $ref->AmountPaid;
             $list[$key]['NumberOfClicks']++;
 
-            if ($hasOrder) {
+            if ($hasSubmittedOrder) {
                 $list[$key]['NumberOfClicksIntoOrders']++;
-                $list[$key]['TotalOrderAmountPaid'] += $amount;
+                $list[$key]['TotalOrderAmountInvoiced'] += $amountInvoiced;
+                $list[$key]['TotalOrderAmountPaid'] += $amountPaid;
             }
 
             // Update percentages and averages for each date
-            $list[$key]['AverageClicksIntoOrders'] = ($list[$key]['NumberOfClicks'] > 0) ? round($list[$key]['NumberOfClicksIntoOrders'] / $list[$key]['NumberOfClicks'] * 100, 2) : 0;
+            $list[$key]['AverageClicksIntoOrders'] = ($list[$key]['NumberOfClicks'] > 0) ? round($list[$key]['NumberOfClicksIntoOrders'] / $list[$key]['NumberOfClicks'], 2) : 0;
             $list[$key]['AverageOrderAmountPaidPerClick'] = ($list[$key]['NumberOfClicksIntoOrders'] > 0) ? round($list[$key]['TotalOrderAmountPaid'] / $list[$key]['NumberOfClicksIntoOrders'], 2) : 0;
 
         }
