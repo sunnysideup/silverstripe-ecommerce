@@ -53,8 +53,8 @@ class Referral extends DataObject implements EditableEcommerceObject
             $ref->Campaign = '';
             $ref->Campaign .= isset($params['gclid']) ? 'Google Campaign | ' . $params['gclid'] : '';
             $ref->Campaign .= $params['utm_campaign'] ?? '';
-            $ref->Campaign .= '|' . $params['utm_term'] ?? '';
-            $ref->Campaign .= '|' . $params['utm_content'] ?? '';
+            $ref->Campaign .= '|' . ($params['utm_term'] ?? '');
+            $ref->Campaign .= '|' . ($params['utm_content'] ?? '');
 
             $ref->write();
         }
