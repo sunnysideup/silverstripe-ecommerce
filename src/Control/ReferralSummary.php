@@ -204,7 +204,7 @@ class ReferralSummary extends Controller
     {
         $menuList = $this->Config()->get('menu_list');
         $function = $this->request->param('Action');
-        $title = $menuList[$function] ?? 'Please prep data and then select a report';
+        $title = $menuList[$function] ?? 'Please <a href="/' . $this->Link('prepdata') . '">prep data</a> and then select a report';
         echo '<h1>Referral Summary - ' . $title . '</h1><ul>';
         foreach($menuList as $key => $value) {
             echo '<li><a href="/' . $this->Config()->get('url_segment') . '/' . $key . '">' . $value . '</a></li>';
