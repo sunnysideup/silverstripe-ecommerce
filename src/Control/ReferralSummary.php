@@ -244,12 +244,13 @@ class ReferralSummary extends Controller
                 }
                 th {
                     background-color: #eee;
+                    text-align: center;
                 }
-                th:first-child, td:first-child {
-                    text-align: left;
-                }
-                td:first-child {
+                td {
                     font-size: 10px;
+                }
+                td.string {
+                    text-align: left;
                 }
                 h3 {
                     text-align: center;
@@ -268,7 +269,8 @@ class ReferralSummary extends Controller
             foreach ($array as $row) {
                 $html .= '<tr>';
                 foreach ($row as $cell) {
-                    $html .= '<td>' . str_replace('|', ' | ', $cell) . '</td>';
+                    $isNumber = is_numeric($cell);
+                    $html .= '<td class="' . ($isNumber ? 'number' : 'string') . '">' . str_replace('|', ' | ', $cell) . '</td>';
                 }
                 $html .= '</tr>';
             }
