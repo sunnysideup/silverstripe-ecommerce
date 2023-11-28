@@ -161,27 +161,37 @@ class ReferralSummary extends Controller
 
         $refs = Referral::get()->sort(['ID' => 'DESC'])->limit(999999);
         $list = [];
+        if($includeCampaign) {
+            $includeFrom = true;
+        }
         foreach($refs as $ref) {
             $date = date($dateFormat, strtotime($ref->Created));
             $campaign =  $ref->getFullCode();
             $from =  $ref->getFrom();
             $key = $date;
-            if($includeFrom || $includeCampaign) {
+            if($includeFrom) {
                 $key .= '|' . $from;
             }
             if($includeCampaign) {
                 $key .= '|' . $campaign;
             }
             if (!isset($list[$key])) {
-                $list[$key] = [
-                    'Key' => $key,
-                    'NumberOfClicks' => 0,
-                    'NumberOfClicksIntoOrders' => 0,
-                    'TotalOrderAmountInvoiced' => 0,
-                    'TotalOrderAmountPaid' => 0,
-                    'AverageClicksIntoOrders' => 0,
-                    'AverageOrderAmountPaidPerClick' => 0,
-                ];
+                $list[$key]['Date'] = $date;
+                if($includeFrom) {
+                    $list[$key]['From'] = $from;
+                }
+                if($includeCampaign) {
+                    $list[$key]['Campaign'] = $campaign;
+                }
+                $list[$key] +=
+                    [
+                        'NumberOfClicks' => 0,
+                        'NumberOfClicksIntoOrders' => 0,
+                        'TotalOrderAmountInvoiced' => 0,
+                        'TotalOrderAmountPaid' => 0,
+                        'AverageClicksIntoOrders' => 0,
+                        'AverageOrderAmountPaidPerClick' => 0,
+                    ];
             }
             $hasSubmittedOrder = $ref->IsSubmitted;
             $amountInvoiced = $ref->AmountInvoiced;
@@ -196,7 +206,7 @@ class ReferralSummary extends Controller
 
             // Update percentages and averages for each date
             $list[$key]['AverageClicksIntoOrders'] = ($list[$key]['NumberOfClicks'] > 0) ? round($list[$key]['NumberOfClicksIntoOrders'] / $list[$key]['NumberOfClicks'], 2) : 0;
-            $list[$key]['AverageOrderAmountPaidPerClick'] = ($list[$key]['NumberOfClicksIntoOrders'] > 0) ? round($list[$key]['TotalOrderAmountPaid'] / $list[$key]['NumberOfClicksIntoOrders'], 2) : 0;
+            $list[$key]['AverageOrderAmountPaidPerClick'] = ($list[$key]['NumberOfClicksIntoOrders'] > 0) ? round($list[$key]['TotalOrderAmountInvoiced'] / $list[$key]['NumberOfClicksIntoOrders'], 2) : 0;
 
         }
         ksort($list);
