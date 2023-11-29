@@ -8,8 +8,21 @@ const getVarsToExpect = [
   'gad',
   'gclid',
   'gclsrc',
-  'twclid'
+  'twclid',
+  'gid',
+  'fb_clickid',
+  'twclid',
+  'rf',
+  'subid',
+  'referral_code',
+  'referrer',
+  'direct',
+  'organic',
+  'social',
+  'email',
+  'other'
 ]
+
 function getUTMParameters () {
   // console.log('getting params from url')
   const params = new URLSearchParams(window.location.search)
