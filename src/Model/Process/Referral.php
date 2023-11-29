@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model\Process;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataObject;
@@ -30,9 +31,33 @@ class Referral extends DataObject implements EditableEcommerceObject
 {
     use OrderCached;
 
+    private static $referral_sources = [
+        'gid' => 'Google Ads',
+        'utm_source' => 'Google Tracked',
+        'utm_medium' => 'Google Tracked',
+        'utm_campaign' => 'Google Tracked',
+        'utm_term' => 'Google Tracked',
+        'utm_content' => 'Google Tracked',
+        'gclid' => 'Google Ads',
+        'gclsrc' => 'Google Source',
+        'gad' => 'Google Campaign',
+        'fbclid' => 'Facebook Ads',
+        'fb_clickid' => 'Facebook Ads',
+        'twclid' => 'Twitter Ads',
+        'rf' => 'Affiliate Marketing',
+        'subid' => 'Affiliate Marketing',
+        'referral_code' => 'Custom',
+        'referrer' => 'Custom',
+        'direct' => 'Direct Traffic',
+        'organic' => 'Organic Search',
+        'social' => 'Social Media',
+        'email' => 'Email Marketing',
+        'other' => 'Other Referral Source',
+    ];
+
     public static function add_referral(Order $order, ?array $params): ?int
     {
-        if(!empty($params)) {
+        if(!empty($params) && count($params) > 0) {
             $filter = [
                 'OrderID' => $order->ID,
             ];
@@ -40,25 +65,51 @@ class Referral extends DataObject implements EditableEcommerceObject
             if(!$ref) {
                 $ref = Referral::create($filter);
             }
-            $ref->Source = '';
-            $ref->Source .= isset($params['fbclid']) ? 'Facebook Ads | ' . $params['fbclid'] : '';
-            $ref->Source .= isset($params['gad']) ? 'Google Ads | ' . $params['gad'] : '';
-            $ref->Source .= isset($params['twclid']) ? 'Twitter Ads | ' . $params['gad'] : '';
-            $ref->Source .= $params['utm_source'] ?? '';
-
-            $ref->Medium =  '';
-            $ref->Medium .= isset($params['gclsrc']) ? 'Google Source | ' . $params['gclsrc'] : '';
-            $ref->Medium .= $params['utm_medium'] ?? '';
-
-            $ref->Campaign = '';
-            $ref->Campaign .= isset($params['gclid']) ? 'Google Campaign | ' . $params['gclid'] : '';
-            $ref->Campaign .= $params['utm_campaign'] ?? '';
-            $ref->Campaign .= '|' . ($params['utm_term'] ?? '');
-            $ref->Campaign .= '|' . ($params['utm_content'] ?? '');
-
+            $params = Convert::raw2sql($params);
+            $list = Config::inst()->get(Referral::class, 'referral_sources');
+            $source = [];
+            foreach(array_keys($list) as $getVar) {
+                if(isset($params[$getVar])) {
+                    switch ($getVar) {
+                        case 'utm_source':
+                            $source[] = $params[$getVar];
+                            break;
+                        case 'utm_medium':
+                            $ref->Medium = $params[$getVar];
+                            break;
+                        case 'utm_campaign':
+                            $ref->Campaign = $params[$getVar];
+                            break;
+                        case 'utm_term':
+                            $ref->Term = $params[$getVar];
+                            break;
+                        case 'utm_content':
+                            $ref->Content = $params[$getVar];
+                            break;
+                        default:
+                            $source[] = $params[$getVar];
+                            break;
+                    }
+                }
+            }
+            $ref->Source = implode(' | ', $source);
+            $ref->From = implode(' | ', self::workOutFrom($params));
             $ref->write();
+
         }
         return null;
+    }
+
+    protected static function workOutFrom(array $params): array
+    {
+        $from = [];
+        $list = Config::inst()->get(Referral::class, 'referral_sources');
+        foreach($list as $getVar => $name) {
+            if(isset($params[$getVar])) {
+                $from[] = $name;
+            }
+        }
+        return array_unique($from);
     }
 
     /**
@@ -72,6 +123,8 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Source' => 'Varchar(100)',
         'Medium' => 'Varchar(100)',
         'Campaign' => 'Varchar(100)',
+        'Term' => 'Varchar(100)',
+        'Content' => 'Varchar(100)',
         'IsSubmitted' => 'Boolean',
         'AmountInvoiced' => 'Currency',
         'AmountPaid' => 'Currency',
@@ -103,6 +156,9 @@ class Referral extends DataObject implements EditableEcommerceObject
             'field' => NumericField::class,
             'title' => 'Order Number',
         ],
+        'Medium' => 'PartialMatchFilter',
+        'Campaign' => 'PartialMatchFilter',
+        'IsSubmitted' => 'ExactMatchFilter',
     ];
 
     /**
@@ -111,9 +167,12 @@ class Referral extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $summary_fields = [
-        'Order.Title' => 'Order',
-        'Order.Total' => 'Total',
         'Created' => 'When',
+        'Order.Title' => 'Order',
+        'IsSubmitted.Nice' => 'Submitted',
+        'AmountInvoiced' => 'Invoiced',
+        'AmountPaid' => 'Paid',
+        'From' => 'From',
         'Source' => 'Source',
         'Medium' => 'Medium',
         'Campaign' => 'Campaign',
@@ -294,24 +353,65 @@ class Referral extends DataObject implements EditableEcommerceObject
         return $string;
     }
 
-    public function getFrom(): string
+    public function getFromAfterwards(): string
     {
-        $txt = $this->getFullCode();
-        if (strpos($txt, 'Google Ads') !== false || strpos($txt, 'Google Source') !== false || strpos($txt, 'Google Campaign') !== false) {
-            $medium = 'Google';
-        } elseif (strpos($txt, 'Facebook Ads') !== false) {
-            $medium = 'Facebook';
-        } elseif (strpos($txt, 'Twitter Ads') !== false) {
-            $medium = 'Twitter';
+        if($this->From) {
+            return $this->From;
         } else {
-            $medium = 'Other';
+            $txt = $this->getFullCode();
+            if (strpos($txt, 'Google Ads') !== false || strpos($txt, 'Google Source') !== false || strpos($txt, 'Google Campaign') !== false) {
+                $medium = 'Google';
+            } elseif (strpos($txt, 'Facebook Ads') !== false) {
+                $medium = 'Facebook';
+            } elseif (strpos($txt, 'Twitter Ads') !== false) {
+                $medium = 'Twitter';
+            } else {
+                $medium = 'Other';
+            }
+            return $medium;
         }
-        return $medium;
     }
 
     public function getFullCode(): string
     {
         return implode('|', array_filter([$this->Source,  $this->Medium , $this->Campaign]));
     }
+
+
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+    }
+
+    public function AttachData()
+    {
+        $change = false;
+        $order = $this->getOrderCached();
+        if($order) {
+            if(!$this->IsSubmitted) {
+                $this->IsSubmitted = $order->getIsSubmitted();
+                $change = true;
+            }
+            if($this->IsSubmitted) {
+                if(!$this->AmountInvoiced) {
+                    $change = true;
+                    $this->AmountInvoiced = $order->getTotal();
+                }
+                if(!$this->AmountPaid) {
+                    $change = true;
+                    $this->AmountPaid = $order->getTotalPaid();
+                }
+            }
+        }
+        if(!$this->From) {
+            $change = true;
+            $this->From = $this->getFromAfterwards();
+        }
+        if($change) {
+            $this->write();
+        }
+
+    }
+
 
 }

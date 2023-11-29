@@ -53,7 +53,7 @@ class ReferralSummary extends Controller
 
 
     private static $max_days_of_interest = 720;
-    private static $recalculate_days_for_prep_data = 30;
+    private static $recalculate_days_for_prep_data = 60;
 
     public function index($request) {}
 
@@ -85,13 +85,7 @@ class ReferralSummary extends Controller
         $daysAgo = $this->config()->get('recalculate_days_for_prep_data');
         $refs = Referral::get()->filter("Created:GreaterThan", date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59');
         foreach($refs as $ref) {
-            if($ref->OrderID) {
-                $order = $ref->Order();
-                if($order && $order->exists() && $order->IsSubmitted()) {
-                    DB::query('UPDATE Referrral SET IsSubmitted = 1, AmountPaid = \'' . $order->getTotalPaid() . '\', AmountInvoiced = \'' . $order->getTotal() . '\' WHERE ID = ' . $ref->ID);
-                }
-            }
-
+            $ref->AttachData();
         }
         die('done');
     }
