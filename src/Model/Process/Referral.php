@@ -87,7 +87,7 @@ class Referral extends DataObject implements EditableEcommerceObject
                             $ref->Content = $params[$getVar];
                             break;
                         default:
-                            $source[] = $params[$getVar];
+                            $source[] = $params[$getVar] . ' (' . $getVar . ')';
                             break;
                     }
                 }
@@ -360,11 +360,11 @@ class Referral extends DataObject implements EditableEcommerceObject
         } else {
             $txt = $this->getFullCode();
             if (strpos($txt, 'Google Ads') !== false || strpos($txt, 'Google Source') !== false || strpos($txt, 'Google Campaign') !== false) {
-                $medium = 'Google';
+                $medium = 'Google Ads';
             } elseif (strpos($txt, 'Facebook Ads') !== false) {
-                $medium = 'Facebook';
+                $medium = 'Facebook Ads';
             } elseif (strpos($txt, 'Twitter Ads') !== false) {
-                $medium = 'Twitter';
+                $medium = 'Twitter Ads';
             } else {
                 $medium = 'Other';
             }
@@ -390,22 +390,30 @@ class Referral extends DataObject implements EditableEcommerceObject
         if($order) {
             if(!$this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
-                $change = true;
+                if($this->IsSubmitted) {
+                    $change = true;
+                }
             }
             if($this->IsSubmitted) {
                 if(!$this->AmountInvoiced) {
-                    $change = true;
                     $this->AmountInvoiced = $order->getTotal();
+                    if($this->AmountInvoiced) {
+                        $change = true;
+                    }
                 }
                 if(!$this->AmountPaid) {
-                    $change = true;
                     $this->AmountPaid = $order->getTotalPaid();
+                    if($this->AmountPaid) {
+                        $change = true;
+                    }
                 }
             }
         }
         if(!$this->From) {
-            $change = true;
             $this->From = $this->getFromAfterwards();
+            if($this->From) {
+                $change = true;
+            }
         }
         if($change) {
             $this->write();

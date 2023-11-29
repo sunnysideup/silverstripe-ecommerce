@@ -161,7 +161,7 @@ class ReferralSummary extends Controller
         foreach($refs as $ref) {
             $date = date($dateFormat, strtotime($ref->Created));
             $campaign =  $ref->getFullCode();
-            $from =  $ref->getFrom();
+            $from =  $ref->From;
             $key = $date;
             if($includeFrom) {
                 $key .= '|' . $from;
