@@ -263,7 +263,7 @@ class ProductGroup extends Page
             )
         );
         $numberOfProductsPerPageField->setDescription($numberOfProductsPerPageExplanation);
-        if ($calculatedNumberOfProductsPerPage && ! $this->NumberOfProductsPerPage) {
+        if ($calculatedNumberOfProductsPerPage && !$this->NumberOfProductsPerPage) {
             $this->NumberOfProductsPerPage = 0;
             $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
         }
@@ -277,7 +277,7 @@ class ProductGroup extends Page
         $config = EcommerceConfig::inst();
 
         if ($config->ProductsAlsoInOtherGroups) {
-            if (! ClassHelpers::check_for_instance_of($this, ProductGroupSearchPage::class, false)) {
+            if (!ClassHelpers::check_for_instance_of($this, ProductGroupSearchPage::class, false)) {
                 $fields->addFieldsToTab(
                     'Root.OtherProductsShown',
                     [
@@ -339,7 +339,7 @@ class ProductGroup extends Page
      */
     public function getFilterForCandidateCategories(): DataList
     {
-        if (! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
+        if (!isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
             self::$filterForCandidateCategoriesCache[$this->ID] =
                 $this->getBaseProductList()->getFilterForCandidateCategories();
         }
@@ -461,7 +461,7 @@ class ProductGroup extends Page
      */
     public function getBaseProductList()
     {
-        if (! $this->baseProductList) {
+        if (!$this->baseProductList) {
             $className = $this->getProductGroupSchema()->getBaseProductListClassName();
             $this->baseProductList = $className::inst(
                 $this,
@@ -484,8 +484,11 @@ class ProductGroup extends Page
         return $this->getBaseProductList()->getProducts();
     }
 
-    public function hasProducts(): bool
+    public function hasProducts(?bool $includeAlsoShowProducts = false): bool
     {
+        if($includeAlsoShowProducts) {
+            return $this->getProducts()->exists() || $this->AlsoShowProducts()->exists();
+        }
         return $this->getProducts()->exists();
     }
 
@@ -553,7 +556,7 @@ class ProductGroup extends Page
      */
     public function ParentGroup(): ?ProductGroup
     {
-        if (! isset(self::$parentPageCache[$this->ID])) {
+        if (!isset(self::$parentPageCache[$this->ID])) {
             self::$parentPageCache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 
@@ -602,7 +605,7 @@ class ProductGroup extends Page
      */
     public function getNumberOfProducts(): int
     {
-        if (! isset(self::$getProductCountCache[$this->ID])) {
+        if (!isset(self::$getProductCountCache[$this->ID])) {
             self::$getProductCountCache[$this->ID] = Product::get()->filter(['ParentID' => $this->ID])->count();
         }
 
@@ -809,7 +812,7 @@ class ProductGroup extends Page
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
         $key = $fieldNameOrMethod . '_' . $this->ID;
-        if (! isset(self::$recursiveValuesCache[$key])) {
+        if (!isset(self::$recursiveValuesCache[$key])) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
             $methodWorks = false;
@@ -830,7 +833,7 @@ class ProductGroup extends Page
             if (false === $methodWorks) {
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
-            if (! $value || 'inherit' === $value) {
+            if (!$value || 'inherit' === $value) {
                 $parent = $this->ParentGroup();
                 if ($parent && $parent->exists() && $parent->ID !== $this->ID) {
                     $value = $parent->recursiveValue($fieldNameOrMethod, $default);
@@ -838,7 +841,7 @@ class ProductGroup extends Page
                     $value = EcommerceConfig::inst()->recursiveValue($fieldNameOrMethod, $default);
                 }
             }
-            if (! $value) {
+            if (!$value) {
                 $value = $default;
             }
             self::$recursiveValuesCache[$key] = $value;
