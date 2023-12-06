@@ -15,6 +15,8 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
@@ -345,7 +347,7 @@ class OrderModifier extends OrderAttribute
      */
     public function runUpdate($recalculate = false)
     {
-        if (! $this->IsRemoved()) {
+        if (!$this->IsRemoved()) {
             $this->checkField('Name', $recalculate);
             $this->checkField('CalculatedTotal', $recalculate);
             $this->checkField('TableValue', $recalculate);
@@ -432,7 +434,7 @@ class OrderModifier extends OrderAttribute
     public function ShowFormOutsideEditableOrderTable()
     {
         //extend in OrderModifier Extensions
-        return ! $this->ShowFormInEditableOrderTable();
+        return !$this->ShowFormInEditableOrderTable();
     }
 
     /**
@@ -464,7 +466,7 @@ class OrderModifier extends OrderAttribute
     /**
      * Casted variable, returns the table title.
      *
-     * @return string
+     * @return DBHTMLText
      */
     public function TableTitle(): string
     {
@@ -527,7 +529,7 @@ class OrderModifier extends OrderAttribute
      */
     public function ShowInTable(): bool
     {
-        if (! $this->baseRunUpdateCalled) {
+        if (!$this->baseRunUpdateCalled) {
             if ($this->canBeUpdated()) {
                 user_error('While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier', E_USER_ERROR);
             }
@@ -563,7 +565,7 @@ class OrderModifier extends OrderAttribute
             return true;
         }
 
-        return ! $this->ShowInTable();
+        return !$this->ShowInTable();
     }
 
     /**
@@ -886,7 +888,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if (! $this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
+        if (!$this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]

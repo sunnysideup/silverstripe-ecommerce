@@ -4,6 +4,8 @@ namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -34,6 +36,10 @@ class ProductOrderItem extends OrderItem
             'Order',
             'InternalItemID',
         ],
+    ];
+
+    private static $casting = [
+        'TableTitle' => 'HTMLText',
     ];
 
     /**
@@ -68,12 +74,13 @@ class ProductOrderItem extends OrderItem
     }
 
     /**
-     * @return string
+     * @return DBHTMLText
      */
     public function TableTitle(): string
     {
         return $this->getTableTitle();
     }
+
 
     public function getTableTitle(): string
     {
@@ -107,7 +114,7 @@ class ProductOrderItem extends OrderItem
             $tableTitle = implode('', $updatedTableTitle);
         }
 
-        return (string) trim($tableTitle);
+        return trim($tableTitle);
     }
 
     /**
@@ -146,7 +153,7 @@ class ProductOrderItem extends OrderItem
      */
     public function debug()
     {
-        $title = $this->TableTitle();
+        $title = $this->getTableTitle();
         $productID = $this->BuyableID;
         $productVersion = $this->Version;
         $html = parent::debug() . <<<HTML

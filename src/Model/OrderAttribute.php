@@ -5,6 +5,8 @@ namespace Sunnysideup\Ecommerce\Model;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -101,6 +103,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     private static $casting = [
         'TableSubTitleNOHTML' => 'Text',
+        'TableTitle' => 'HTMLText',
         'CartTitle' => 'HTMLText',
         'CartSubTitle' => 'HTMLText',
         'CalculatedTotalAsMoney' => 'Money',
@@ -437,7 +440,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getCartTitle(): string
     {
-        return (string) $this->getTableTitle();
+        return $this->getTableTitle();
     }
 
     /**
