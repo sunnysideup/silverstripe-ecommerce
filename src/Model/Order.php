@@ -2181,7 +2181,6 @@ class Order extends DataObject implements EditableEcommerceObject
     public function ProductIds(): array
     {
         if($this->productIds === null) {
-            $this->productIds = [1 => 1];
             foreach($this->Items() as $item) {
                 $product = $item->Product();
                 $this->productIds[$product->ID] = $product->ID;
