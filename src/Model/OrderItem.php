@@ -410,7 +410,7 @@ class OrderItem extends OrderAttribute
                 't' => 'id',
                 's' => $ajaxObject->TableTitleID(),
                 'p' => 'innerHTML',
-                'v' => $this->TableTitle(),
+                'v' => $this->getTableTitle(),
             ];
             $js[] = [
                 't' => 'id',
@@ -507,8 +507,8 @@ class OrderItem extends OrderAttribute
     public function getUnitPrice($recalculate = false)
     {
         // price is fixed
-        if ($this->priceHasBeenFixed($recalculate) && ! $recalculate) {
-            if (! $this->Quantity) {
+        if ($this->priceHasBeenFixed($recalculate) && !$recalculate) {
+            if (!$this->Quantity) {
                 $this->Quantity = 1;
             }
 
@@ -518,7 +518,7 @@ class OrderItem extends OrderAttribute
         // calculate price
         $buyable = $this->getBuyableCached();
         if ($buyable) {
-            if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
+            if (!isset(self::$calculated_buyable_price[$this->ID]) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
             }
 
@@ -621,7 +621,7 @@ class OrderItem extends OrderAttribute
     public function getBuyableCached($current = false)
     {
         $cacheKey = $this->buyableCacheKey();
-        if (! isset(self::$buyableCached[$cacheKey])) {
+        if (!isset(self::$buyableCached[$cacheKey])) {
             self::$buyableCached[$cacheKey] = $this->getBuyable($current);
         }
 
@@ -653,14 +653,14 @@ class OrderItem extends OrderAttribute
             $currentOrVersion = 'current';
         }
 
-        if (! isset($this->tempBuyableStore[$currentOrVersion])) {
-            if (! $this->BuyableID) {
+        if (!isset($this->tempBuyableStore[$currentOrVersion])) {
+            if (!$this->BuyableID) {
                 // user_error('There was an error retrieving the product', E_USER_NOTICE);
                 return Product::create();
             }
 
             //start hack
-            if (! $this->BuyableClassName) {
+            if (!$this->BuyableClassName) {
                 if($this->BuyableID) {
                     // last resort
                     $product = SiteTree::get()->byID($this->BuyableID);
@@ -682,7 +682,7 @@ class OrderItem extends OrderAttribute
 
             //run if current not available or current = false
             if ($currentOrVersion === 'version') {
-                if (! $obj && $this->Version) {
+                if (!$obj && $this->Version) {
                     /* @TODO: check if the version exists?? - see sample below
                     $versionTable = $this->BuyableClassName."_versions";
                     $dbConnection = DB::get_conn();
@@ -700,17 +700,17 @@ class OrderItem extends OrderAttribute
                 }
 
                 //our second to last resort
-                if (! $obj || (! $obj->exists())) {
+                if (!$obj || (!$obj->exists())) {
                     $obj = Versioned::get_latest_version($this->BuyableClassName, $this->BuyableID);
                 }
 
                 //our final backup
-                if (! $obj || (! $obj->exists())) {
+                if (!$obj || (!$obj->exists())) {
                     $obj = $className::get_by_id($this->BuyableID);
                 }
             }
 
-            if ($obj && ! ($obj instanceof BuyableModel)) {
+            if ($obj && !($obj instanceof BuyableModel)) {
                 // user_error(
                 //     'Tried to create: ' . $className . ' in OrderItem ' . $this->ID .
                 //     ' with BuyableClassName:' . $this->BuyableClassName . ' AND ' .
@@ -1013,14 +1013,14 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        if(! $this->priceHasBeenFixed()) {
+        if(!$this->priceHasBeenFixed()) {
             $this->resetCache();
             $buyable = $this->getBuyableCached(true);
-            if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && ! $this->OrderID) {
+            if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && !$this->OrderID) {
                 $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
             }
 
-            if (! $this->exists()) {
+            if (!$this->exists()) {
                 if ($buyable) {
                     if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
                         $this->setClassName($buyable->classNameForOrderItem());
@@ -1035,7 +1035,7 @@ class OrderItem extends OrderAttribute
                 $this->Quantity = 1;
             }
 
-            if (! $this->Version && $buyable) {
+            if (!$this->Version && $buyable) {
                 $this->Version = $buyable->Version;
             }
             $this->Name = $this->getTableTitle();
@@ -1055,7 +1055,7 @@ class OrderItem extends OrderAttribute
         parent::onAfterWrite();
         $order = $this->getOrderCached();
         if ($order) {
-            if (! $order->StatusID) {
+            if (!$order->StatusID) {
                 //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
                 $order->init($recalculate = true);
             }

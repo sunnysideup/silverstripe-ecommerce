@@ -2165,7 +2165,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\ArrayList (Buyables)
      */
-    public function Buyables($filterOrClassName = '')
+    public function Buyables(?string $filterOrClassName = '')
     {
         $items = $this->Items($filterOrClassName);
         $arrayList = new ArrayList();
@@ -2174,6 +2174,19 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $arrayList;
+    }
+
+    protected $productIds = null;
+
+    public function ProductIds(): array
+    {
+        if($this->productIds === null) {
+            foreach($this->Items() as $item) {
+                $product = $item->Product();
+                $this->productIds[$product->ID] = $product->ID;
+            }
+        }
+        return $this->productIds;
     }
 
     /**

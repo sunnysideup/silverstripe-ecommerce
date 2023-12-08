@@ -542,9 +542,10 @@ class ShoppingCartController extends Controller
         $this->cart->clear();
         $member = Security::getCurrentUser();
         if ($member) {
-            $member->logout();
+            $this->redirect(Security::logout_url());
+        } else {
+            $this->redirect(Director::baseURL());
         }
-        $this->redirect(Director::baseURL());
 
         return [];
     }
@@ -784,7 +785,7 @@ class ShoppingCartController extends Controller
         } else {
             echo 'please <a href="Security/login/?BackURL=' . urlencode($this->config()->get('url_segment') . '/ajaxtest/') . '">log in</a> first.';
         }
-        if (! $request->isAjax()) {
+        if (!$request->isAjax()) {
             user_error('---- make sure to add ?ajax=1 to the URL ---');
         }
 
@@ -798,7 +799,7 @@ class ShoppingCartController extends Controller
         if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
             $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
             if ($savedSecurityID) {
-                if (! isset($_GET['SecurityID'])) {
+                if (!isset($_GET['SecurityID'])) {
                     $_GET['SecurityID'] = '';
                 }
                 if ($savedSecurityID) {
@@ -844,7 +845,7 @@ class ShoppingCartController extends Controller
     protected static function params_to_get_string(array $array)
     {
         $token = SecurityToken::inst();
-        if (! isset($array['SecurityID'])) {
+        if (!isset($array['SecurityID'])) {
             $array['SecurityID'] = $token->getValue();
         }
 
