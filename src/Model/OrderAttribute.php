@@ -104,6 +104,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         'CartTitle' => 'HTMLText',
         'CartSubTitle' => 'HTMLText',
         'CalculatedTotalAsMoney' => 'Money',
+        'TableTitle' => 'HTMLText',
     ];
 
     /**
