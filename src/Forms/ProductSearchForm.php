@@ -220,7 +220,7 @@ class ProductSearchForm extends Form
         $this->saveDataToSession();
         foreach ($this->Fields()->dataFields() as $field) {
             $name = $field->getName();
-            if (! empty($this->rawData[$name])) {
+            if (!empty($this->rawData[$name])) {
                 $this->cleanedData[$name] = $this->rawData[$name];
             }
         }
@@ -234,18 +234,18 @@ class ProductSearchForm extends Form
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
         $doSearchAtAll = false;
-        if (! empty($this->rawData['OnlyThisSection'])) {
+        if (!empty($this->rawData['OnlyThisSection'])) {
             $doSearchAtAll = true;
-        } elseif (! $this->checkForInternalItemID()) {
-            if (! $this->checkForOneProductTitleMatch()) {
-                if (! $this->checkForOneCategoryTitleMatch()) {
+        } elseif (!$this->checkForInternalItemID()) {
+            if (!$this->checkForOneProductTitleMatch()) {
+                if (!$this->checkForOneCategoryTitleMatch()) {
                     $doSearchAtAll = true;
                 }
             }
         }
         if ($doSearchAtAll) {
             $link = $this->getResultsPageLink();
-            if (! strpos('?', $link)) {
+            if (!strpos('?', $link)) {
                 $link .= '?';
             } else {
                 $link .= '&';
@@ -313,45 +313,44 @@ class ProductSearchForm extends Form
         return $redirectToPage->Link();
     }
 
+    protected function getProductClassName(): string
+    {
+        return Product::class;
+    }
+
+    protected function getProductGroupClassName(): string
+    {
+        return ProductGroup::class;
+    }
+
     protected function checkForInternalItemID()
     {
-        if ($this->rawData['Keyword']) {
-            $product = Product::get()->filter(['InternalItemID' => $this->rawData['Keyword']])->first();
-            if ($product) {
-                return $this->controller->redirect($product->Link());
-            }
-        }
+        return $this->checkForOneInner($this->getProductClassName(), ['InternalItemID' => $this->rawData['Keyword']]);
 
-        return false;
     }
 
     protected function checkForOneProductTitleMatch()
     {
-        if ($this->rawData['Keyword']) {
-            $test = ProductSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
-            if ($test) {
-                $product = Product::get_by_id($test->ProductID);
-                if ($product) {
-                    return $this->controller->redirect($product->Link());
-                }
-            }
-        }
-
-        return false;
+        return $this->checkForOneInner($this->getProductClassName(), ['Title' => $this->rawData['Keyword']]);
     }
 
     protected function checkForOneCategoryTitleMatch()
     {
+        return $this->checkForOneInner($this->getProductGroupClassName(), ['Title' => $this->rawData['Keyword']]);
+    }
+
+    protected function checkForOneInner(string $className, array $filterArray)
+    {
         if ($this->rawData['Keyword']) {
-            $test = ProductGroupSearchTable::get()->filter(['Title' => $this->rawData['Keyword']])->first();
-            if ($test) {
-                $product = ProductGroup::get_by_id($test->ProductGroupID);
-                if ($product) {
-                    return $this->controller->redirect($product->Link());
-                }
+            $filterArray['ShowInSearch'] = 1;
+            $productList = $className::get()->filter($filterArray);
+            if ($productList->count() === 1) {
+                $obj = $productList->first();
+                return $this->controller->redirect($obj->Link());
             }
         }
 
         return false;
     }
+
 }
