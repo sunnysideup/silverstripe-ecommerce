@@ -6,12 +6,13 @@ class CsvFunctionality
 {
     public static function removeBadCharacters($item)
     {
+        $item = (string) $item;
         $item = str_replace(';', ',', $item);
         $item = str_replace("\r", ' ', $item);
         $item = str_replace("\n", ' ', $item);
         $item = str_replace("\t", ' ', $item);
 
-        return trim((string) $item);
+        return trim($item);
     }
 
     public static function convertToCSV($rows, $delimiter = ';', $enclosure = '"', $encloseAll = false)
