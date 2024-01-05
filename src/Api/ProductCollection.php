@@ -21,7 +21,7 @@ abstract class ProductCollection
     {
         $arrayList = ArrayList::create();
 
-        $products = $this->getArrayBasic();
+        $products = $this->getArrayFull();
         foreach ($products as $product) {
             $arrayList->push(
                 ArrayData::create(
