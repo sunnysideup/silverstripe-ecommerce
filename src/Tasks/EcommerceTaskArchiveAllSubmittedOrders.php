@@ -3,9 +3,8 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -30,14 +29,15 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
     protected $description = "
     This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
+    private static $segment = 'ecommercetaskarchiveallsubmittedorders';
+
     public function run($request)
     {
-        //IMPORTANT!
+        //IMPORTANT - just in case!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
-        Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
+        // Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
         $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-        $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName($submittedOrderStatusLogClassName);
         if ($submittedOrderStatusLogClassName) {
             $sampleSubmittedStatusLog = DataObject::get_one(
                 $submittedOrderStatusLogClassName
@@ -51,19 +51,21 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                 );
                 if ($lastOrderStep) {
                     $joinSQL = "INNER JOIN \"{$orderStatusLogTableName}\" ON \"{$orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"";
-                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"{$orderStatusLogTableName}\".ClassName = '{$submittedOrderStatusLogTableName}'";
+                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"{$orderStatusLogTableName}\".ClassName = '" . Convert::raw2sql($submittedOrderStatusLogClassName) . "'";
                     $count = DB::query("
                         SELECT COUNT (\"Order\".\"ID\")
                         FROM \"Order\"
                         {$joinSQL}
                         {$whereSQL}
                     ")->value();
-                    DB::query("
+                    $sql = "
                         UPDATE \"Order\"
                         {$joinSQL}
                         SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
                         {$whereSQL}
-                    ");
+                    ";
+                    DB::alteration_message('SQL: ' . $sql);
+                    DB::query($sql);
                     if ($count) {
                         DB::alteration_message("NOTE: {$count} records were updated.", 'created');
                     } else {
