@@ -42,7 +42,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
      *
      * @var string
      */
-    protected $productManyManyField = 'AdditionalFiles';
+    protected $productManyManyField = 'AdditionalImages';
 
     /**
      * Starting point for selecting products
