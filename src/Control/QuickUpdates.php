@@ -156,8 +156,9 @@ class QuickUpdates extends Controller
                         <a href="' . $product->Link() . '" target="_blank">' . $product->FullName . '</a>
                     </p>
                     <p>
-                        <a href="' . $this->Link('updateone/' . $product->ID) . '">Add More</a> /
-                        <a href="' . $this->Link('list') . '">Review List</a> / Choose another product below ...
+                        <a href="' . $this->Link('updateone/' . $product->ID) . '">Edit Again</a> //
+                        <a href="' . $this->Link('list') . '">Review List</a> //
+                        Choose another below ...
                     </p>'
                 );
             }
