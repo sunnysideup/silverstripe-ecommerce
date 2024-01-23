@@ -44,7 +44,7 @@ class CartPage extends Page
     /**
      * Standard SS variable.
      *
-     * @var array
+     * @var string
      */
     private static $table_name = 'CartPage';
 
