@@ -19,7 +19,6 @@ class KeywordSearchBuilder
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductSearchTable', 'ProductID', $phrase, $where, $limit);
-        die($sql);
         return DB::query($sql)->keyedColumn();
     }
 
