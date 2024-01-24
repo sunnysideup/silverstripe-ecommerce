@@ -18,15 +18,15 @@ class KeywordSearchBuilder
     public function getProductResults($phrase, string $where, ?int $limit = 9999): array
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
-        $sql = $this->createSql('ProductSearchTable', 'ProductID', 'Data', $phrase, $where, $limit);
-
+        $sql = $this->createSql('ProductSearchTable', 'ProductID', $phrase, $where, $limit);
+        die($sql);
         return DB::query($sql)->keyedColumn();
     }
 
     public function getProductGroupResults($phrase, string $where, ?int $limit = 99): array
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
-        $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', 'Data', $phrase, $where, $limit);
+        $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', $phrase, $where, $limit);
 
         return DB::query($sql)->keyedColumn();
     }
@@ -76,8 +76,18 @@ class KeywordSearchBuilder
         $count = 0;
         // Title: exact match with Field
         $this->addIfStatement(++$count, '"' . $primaryField . "\" = '{$fullPhrase}'");
+
+        // Title: starts with full string without extra characters
+        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase} %'");
+        // Title: contains full string without extra characters
+        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase} %'");
         // Title: contains full string
         $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase}%'");
+
+        // Data: starts with full string without extra characters
+        $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '{$fullPhrase} %'");
+        // Data: contains full string without extra characters
+        $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase} %'");
         // Data: contains full string
         $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase}%'");
         if ($hasWordArray) {
@@ -101,7 +111,7 @@ class KeywordSearchBuilder
         $this->ifStatement .= '999' . str_repeat(')', $count) . ' AS gp';
     }
 
-    protected function createSql(string $table, string $idField, string $matchField, string $phrase, string $where, $limit): string
+    protected function createSql(string $table, string $idField, string $phrase, string $where, $limit): string
     {
         if ($where) {
             $where = 'WHERE ' . $where;
@@ -111,13 +121,15 @@ class KeywordSearchBuilder
             SELECT
                 "' . $idField . '",
                 ' . $this->ifStatement . ',
-                MATCH ("' . $matchField . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS score
+                MATCH ("Title") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS scoreA,
+                MATCH ("Data") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS scoreB
             FROM "' . $table . '"
             ' . $where . '
             HAVING gp < 99
             ORDER BY
                 gp ASC,
-                score DESC
+                scoreA DESC,
+                scoreB DESC
             LIMIT ' . $limit . ';';
     }
 
