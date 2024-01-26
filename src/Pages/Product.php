@@ -54,6 +54,9 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
 use Exception;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ArrayData;
 
 /**
  * This is a standard Product page-type with fields like
@@ -1607,5 +1610,18 @@ class Product extends Page implements BuyableModel
     public function getMaxValueInOrder(): float
     {
         return 999;
+    }
+
+    public function AlternativeNames(): ?ArrayList
+    {
+        if($this->AlternativeProductNames) {
+            $list = array_filter(array_filter(explode(',', (string) $this->AlternativeProductNames), 'trim'));
+            $al = ArrayList::create();
+            foreach($list as $name) {
+                $al->push(ArrayData::create(['Title' => DBField::create_field('Varchar', $name)]));
+            }
+            return $al;
+        }
+        return null;
     }
 }

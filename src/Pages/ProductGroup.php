@@ -18,12 +18,14 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -878,5 +880,17 @@ class ProductGroup extends Page
         }
     }
 
+    public function AlternativeNames(): ?ArrayList
+    {
+        if($this->AlternativeProductGroupNames) {
+            $list = array_filter(array_filter(explode(',', $this->AlternativeProductGroupNames), 'trim'));
+            $al = ArrayList::create();
+            foreach($list as $name) {
+                $al->push(ArrayData::create(['Title' => DBField::create_field('Varchar', $name)]));
+            }
+            return $al;
+        }
+        return null;
+    }
 
 }

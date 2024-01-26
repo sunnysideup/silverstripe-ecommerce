@@ -364,6 +364,16 @@ class ProductGroupController extends PageController
      * Are filters available? we check one at the time so that we do the least
      * amount of DB queries.
      */
+    public function HasAnyTypeOfFiltersOrSorts(): bool
+    {
+        return true;
+        $this->HasFilters() || $this->HasGroupFilters() || $this->HasSearchFilters() || $this->HasSorts() || $this->HasDisplays();
+    }
+
+    /**
+     * Are filters available? we check one at the time so that we do the least
+     * amount of DB queries.
+     */
     public function HasSorts(): bool
     {
         return $this->SortLinks()->count() > 1;
