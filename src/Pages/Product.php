@@ -137,6 +137,7 @@ class Product extends Page implements BuyableModel
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ProductBreadcrumb' => 'Varchar(255)', //Name for look-up lists
         'ShortDescription' => 'Varchar(255)', //For use in lists.
+        'AlternativeProductNames' => 'Varchar(255)', //To ensure they are also find for other names in search
         'UseImageForProducts' => 'Boolean', //For use in lists.
     ];
 
@@ -492,7 +493,13 @@ class Product extends Page implements BuyableModel
                 );
             }
         }
-
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                TextField::create('AlternativeProductNames', _t('Product.ALTERNATIVEPRODUCTNAMES', 'Alternative Names (comma separated)')),
+            ],
+            'Price'
+        );
         return $fields;
     }
 

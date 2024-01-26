@@ -17,6 +17,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -98,6 +99,7 @@ class ProductGroup extends Page
         'DefaultFilter' => 'Varchar(20)',
         'DisplayStyle' => 'Varchar(20)',
         'UseImageForProducts' => 'Boolean',
+        'AlternativeProductGroupNames' => 'Varchar(255)', //To ensure they are also find for other names in search
     ];
 
     private static $has_one = [
@@ -242,6 +244,14 @@ class ProductGroup extends Page
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $fields->dataFieldByName('Title')->setTitle(_t('Category.NAME', 'Category Name'));
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                TextField::create('AlternativeProductGroupNames', _t('ProductGroup.ALTERNATIVEPRODUCTGROUPNAMES', 'Alternative Names (comma separated)')),
+            ],
+            'Content'
+        );
         $fields->addFieldsToTab(
             'Root.Images',
             [

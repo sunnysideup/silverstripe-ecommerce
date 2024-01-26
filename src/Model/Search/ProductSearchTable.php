@@ -104,7 +104,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
             if (! $obj) {
                 $obj = ProductSearchTable::create($filter);
             }
-            $obj->Title = Sanitizer::html_to_text($product->Title);
+            $obj->Title = Sanitizer::html_to_text($product->Title . ' ' . $product->AlternativeProductNames);
             $obj->Data = $dataAsString;
             $obj->write();
         } else {

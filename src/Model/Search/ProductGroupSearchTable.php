@@ -104,7 +104,7 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
             if (! $obj) {
                 $obj = ProductGroupSearchTable::create($filter);
             }
-            $obj->Title = Sanitizer::html_to_text($productGroup->Title);
+            $obj->Title = Sanitizer::html_to_text($productGroup->Title . ' ' . $productGroup->AlternativeProductGroupNames);
             $obj->Data = $dataAsString;
             $obj->write();
         } else {
