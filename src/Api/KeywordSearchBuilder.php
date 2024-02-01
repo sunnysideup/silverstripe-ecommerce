@@ -73,21 +73,25 @@ class KeywordSearchBuilder
         }
 
         $count = 0;
-        // Title: exact match with Field
+        // Title: exact match with Field, e.g. Title equals "AAAA BBBB"
         $this->addIfStatement(++$count, '"' . $primaryField . "\" = '{$fullPhrase}'");
 
-        // Title: starts with full string without extra characters
+        // Title: starts with full string without extra characters, e.g. Title equals "AAAA BBBB *" (note space!)
         $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase} %'");
-        // Title: contains full string without extra characters
+
+        // Title: contains full string without extra characters, e.g. Title equals "* AAAA BBBB *" (note space!)
         $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase} %'");
-        // Title: contains full string
+
+        // Title: contains full string, e.g. Title equals "*AAAA BBBB*"
         $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase}%'");
 
-        // Data: starts with full string without extra characters
+        // Content starts with full string without extra characters, e.g. Content equals "AAAA BBBB *"
         $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '{$fullPhrase} %'");
-        // Data: contains full string without extra characters
+
+        // Content contains full string without extra characters, e.g. Content equals "*AAAA BBBB *" (note space!)
         $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase} %'");
-        // Data: contains full string
+
+        // Content contains full string, e.g. Content equals "*AAAA BBBB*"
         $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase}%'");
         if ($hasWordArray) {
             foreach ([$primaryField, $secondaryField] as $field) {
