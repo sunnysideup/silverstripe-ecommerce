@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
@@ -73,15 +74,16 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             if ($result) {
                 return $result;
             }
-            $stage = '';
-            if ('Live' === Versioned::get_stage()) {
-                $stage = '_Live';
-            }
-
+            $singleton = DataObject::singleton(SiteTree::class);
+            $baseTable = $singleton->baseTable();
+            $tableName = $singleton->stageTable($baseTable, Versioned::get_stage());
             return $rootParentClass::get()
                 ->filter('Parent.ParentID', 0)
-                ->innerJoin(Config::inst()
-                ->get(SiteTree::class, 'table_name') . $stage, 'Parent.ID = SiteTree' . $stage . '.ParentID', 'Parent')
+                ->innerJoin(
+                    $tableName,
+                    'MyParentTable.ID = ' . $tableName . '.ParentID',
+                    'MyParentTable'
+                )
                 ->First()
             ;
         }

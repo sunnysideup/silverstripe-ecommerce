@@ -49,11 +49,11 @@ class ArrayMethods
         $ids = ArrayMethods::filter_array($ids);
         $ifStatement = 'CASE ';
         $count = 0;
-        $stage = self::get_stage();
-        $dataClasses = ClassInfo::dataClassesFor($className);
-        $table = DataObject::getSchema()->tableName(array_shift($dataClasses));
+        $singleton = DataObject::singleton($className);
+        $baseTable = $singleton->baseTable();
+        $tableName = $singleton->stageTable($baseTable, Versioned::get_stage());
         foreach ($ids as $id) {
-            $ifStatement .= ' WHEN "' . $table . $stage . "\".\"ID\" = {$id} THEN {$count}";
+            $ifStatement .= ' WHEN "' . $tableName . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
 
@@ -64,19 +64,5 @@ class ArrayMethods
         return $ifStatement . ' END';
     }
 
-    /**
-     * Returns a versioned record stage table suffix (i.e "" or "_Live").
-     *
-     * @return string
-     */
-    protected static function get_stage()
-    {
-        $stage = '';
 
-        if ('Live' === Versioned::get_stage()) {
-            $stage = '_Live';
-        }
-
-        return $stage;
-    }
 }

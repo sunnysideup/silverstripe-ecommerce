@@ -8,6 +8,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -373,28 +374,11 @@ abstract class AbstractProductsAndGroupsList
         return $obj;
     }
 
-    final protected function getBuyableTableNameName(?string $baseClass = SiteTree::class): string
+    final protected function getBuyableTableBaseName(?string $baseClass = SiteTree::class): string
     {
-        $obj = Injector::inst()->get($baseClass);
-        $stage = $this->getStage();
-
-        return $obj->baseTable() . $stage;
-    }
-
-    /**
-     * Returns a versioned record stage table suffix (i.e "" or "_Live").
-     *
-     * @return string
-     */
-    protected function getStage()
-    {
-        $stage = '';
-
-        if ('Live' === Versioned::get_stage()) {
-            $stage = '_Live';
-        }
-
-        return $stage;
+        $singleton = DataObject::singleton($baseClass);
+        $baseTable = $singleton->baseTable();
+        return $singleton->stageTable($baseTable, Versioned::get_stage());
     }
 
     protected function turnIdListIntoProductGroups(array $ids, ?bool $useFilterParent = false): DataList

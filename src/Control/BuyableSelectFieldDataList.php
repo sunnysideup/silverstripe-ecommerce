@@ -75,12 +75,10 @@ class BuyableSelectFieldDataList extends Controller
             $buyables[$key] = [];
             $buyables[$key]['Singleton'] = $singleton;
             $buyables[$key]['ClassName'] = $buyableClassName;
-            $buyables[$key]['TableName'] = $buyableClassName;
+            $buyables[$key]['TableName'] = $singleton->config()->table_name;
 
             if (is_a($singleton, EcommerceConfigClassNames::getName(SiteTree::class))) {
-                if ('Live' === Versioned::get_stage()) {
-                    $buyables[$key]['TableName'] .= '_Live';
-                }
+                $buyables[$key]['TableName'] = $singleton->stageTableDefault();
             }
         }
         unset($arrayOfBuyables);
@@ -158,6 +156,6 @@ class BuyableSelectFieldDataList extends Controller
      */
     protected function array2json(array $array)
     {
-        return Convert::array2json($array);
+        return json_encode($array);
     }
 }

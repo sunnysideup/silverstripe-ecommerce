@@ -56,6 +56,7 @@ use Sunnysideup\Vardump\ArrayToTable;
 use Exception;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -1623,5 +1624,10 @@ class Product extends Page implements BuyableModel
             return $al;
         }
         return null;
+    }
+
+    public function stageTableDefault(): string
+    {
+        return $this->stageTable($this->getSchema()->tableName(static::class), Versioned::get_stage());
     }
 }

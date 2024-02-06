@@ -467,7 +467,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $groupFilter = ' ' . $levelToShow . ' = -1 ';
         } elseif (0 === $levelToShow) {
             //backup - same as 1, but with also show!
-            $groupFilter = '"' . $this->getBuyableTableNameName() . '"."ParentID" = ' . $this->rootGroup->ID;
+            $groupFilter = '"' . $this->getBuyableTableBaseName() . '"."ParentID" = ' . $this->rootGroup->ID;
             $this->alsoShowProductsIds = array_merge(
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
@@ -490,10 +490,10 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 }
             }
 
-            $groupFilter = '"' . $this->getBuyableTableNameName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) . ')';
+            $groupFilter = '"' . $this->getBuyableTableBaseName() . '"."ParentID" IN (' . implode(',', $this->getParentGroupIds()) . ')';
         }
 
-        $alsoShowFilter = '"' . $this->getBuyableTableNameName() . '"."ID" IN (' . implode(',', $this->getAlsoShowProductsIds()) . ')';
+        $alsoShowFilter = '"' . $this->getBuyableTableBaseName() . '"."ID" IN (' . implode(',', $this->getAlsoShowProductsIds()) . ')';
         $fullFilter = '((' . $groupFilter . ') OR (' . $alsoShowFilter . '))';
         $this->products = $this->products->where($fullFilter);
     }
