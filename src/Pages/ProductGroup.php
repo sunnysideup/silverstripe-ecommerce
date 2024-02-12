@@ -264,20 +264,22 @@ class ProductGroup extends Page
 
         $calculatedNumberOfProductsPerPage = $this->getProductsPerPage();
         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
-        $fields->addFieldToTab(
-            'Root',
-            Tab::create(
-                'ProductDisplay',
-                _t('ProductGroup.DISPLAY', 'Display'),
-                $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->getShowProductLevelsArray()),
-                HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
-                $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
-            )
-        );
-        $numberOfProductsPerPageField->setDescription($numberOfProductsPerPageExplanation);
-        if ($calculatedNumberOfProductsPerPage && !$this->NumberOfProductsPerPage) {
-            $this->NumberOfProductsPerPage = 0;
-            $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
+        if($this->exists()) {
+            $fields->addFieldToTab(
+                'Root',
+                Tab::create(
+                    'ProductDisplay',
+                    _t('ProductGroup.DISPLAY', 'Display'),
+                    $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->getShowProductLevelsArray()),
+                    HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
+                    $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
+                )
+            );
+            $numberOfProductsPerPageField->setDescription($numberOfProductsPerPageExplanation);
+            if ($calculatedNumberOfProductsPerPage && !$this->NumberOfProductsPerPage) {
+                $this->NumberOfProductsPerPage = 0;
+                $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
+            }
         }
 
         $this->addDropDownForListConfig($fields, 'FILTER', _t('ProductGroup.DEFAULTFILTER', 'Default Filter'));

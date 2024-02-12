@@ -53,10 +53,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * Similar to SiteConfig but then for E-commerce
  * To access a singleton here, use: EcommerceConfig::inst().
  *
- * @property bool $ShowAfterpayOption
- * @property int $AfterpayMinValue
- * @property int $AfterpayMaxValue
- * @property string $NoAfterpayMessage
  * @property string $CashBackLabel
  * @property string $TradeInLabel
  * @property string $ShopOffLineMessage
@@ -121,7 +117,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @method \SilverStripe\Assets\Image EmailLogo()
  * @method \SilverStripe\Assets\Image DefaultProductImage()
  * @mixin \Sunnysideup\EcommerceNewsletterCampaignMonitor\Extensions\EcommerceNewsletterCampaignMonitorSignupDecoratorConfigFixes
- * @mixin \Sunnysideup\Afterpay\Extensions\AfterpayEcommerceConfigExtension
  * @mixin \Sunnysideup\EcommerceSecondHandProduct\Model\SecondHandEcommerceConfigExtension
  */
 class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
