@@ -74,7 +74,7 @@ class OrderProcessQueue extends DataObject
         'ToBeProcessedAt.Nice' => 'To be processed at',
         'ToBeProcessedAt.Ago' => 'That is ...',
         'HasBeenInQueueForSince.Nice' => 'Added to queue ...',
-        'InProcess.Nice' => 'Currently Running',
+        'InProcess.NiceAndColourfull' => 'Currently Running',
     ];
 
     /**

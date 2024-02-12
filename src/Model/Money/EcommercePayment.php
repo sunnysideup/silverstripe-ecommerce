@@ -21,7 +21,6 @@ use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use Sunnysideup\Afterpay\Model\AfterpayEcommercePayment;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -549,20 +548,6 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         /** @var string $methodClass */
         /** @var string $methodName */
         foreach ($supportedMethods as $methodClass => $methodName) {
-            // todo: move to afterpay module using some sort of extension
-            // Afterpay not allowed due to price limits
-            if (false === $methodName && AfterpayEcommercePayment::class === $methodClass) {
-                $msg = EcommerceDBConfig::current_ecommerce_db_config()->NoAfterpayMessage;
-                if ($msg) {
-                    $message = sprintf(
-                        '<div class="order-address-holder" style="margin: 0 25px 15px 0;">%s</div>',
-                        $msg
-                    );
-                    $fields->insertBefore('PaymentMethod', new LiteralField('', $message));
-                }
-
-                continue;
-            }
             $htmlClassName = self::php_class_to_html_class($methodClass);
             $options[$htmlClassName] = $methodName;
             // Create a new CompositeField with method specific fields,

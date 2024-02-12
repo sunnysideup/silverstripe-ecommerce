@@ -169,7 +169,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     private static $summary_fields = [
         'Created' => 'When',
         'Order.Title' => 'Order',
-        'IsSubmitted.Nice' => 'Submitted',
+        'IsSubmitted.NiceAndColourfull' => 'Submitted',
         'AmountInvoiced' => 'Invoiced',
         'AmountPaid' => 'Paid',
         'From' => 'From',
