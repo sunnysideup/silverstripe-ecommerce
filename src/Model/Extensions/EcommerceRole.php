@@ -507,7 +507,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
     public function updateFormScaffolder($fs, $owner)
     {
-        $fs->IncludeRelations = false;
+        $fs->includeRelations = false;
     }
 
     /**
