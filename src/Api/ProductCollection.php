@@ -38,7 +38,7 @@ abstract class ProductCollection
      *
      * @return array
      */
-    abstract public function getArrayFull(): array;
+    abstract public function getArrayFull(?string $where = ''): array;
 
     /**
      * write like this:
@@ -54,22 +54,17 @@ abstract class ProductCollection
      *
      * @return array
      */
-    public function getArrayBasic(): array
+    public function getArrayBasic(?string $where = ''): array
     {
-        $array = [];
-        $products = DB::query($this->getSQL());
-        foreach ($products as $product) {
-            // ensure special chars are converted to HTML entities for XML output
-            // do other stuff!
-            $array[] = $product;
-        }
-        return $array;
+        return (array) DB::query($this->getSQL($where));
     }
 
     public function getSQL(?string $where = ''): string
     {
         $stage = '_Live'; // always live
-
+        if($where) {
+            $where = '(' . $where . ') AND ';
+        }
         return '
             SELECT
                 "SiteTree' . $stage . '"."ID" ProductID,
@@ -80,7 +75,7 @@ abstract class ProductCollection
                 "Product' . $stage . '" ON "SiteTree' . $stage . '"."ID" = "Product' . $stage . '"."ID"
             WHERE
                 ' . $where . '
-                "Product' . $stage . '"."AllowPurchase" = 1
+                ("Product' . $stage . '"."AllowPurchase" = 1)
             ;
         ';
     }
