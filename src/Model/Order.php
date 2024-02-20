@@ -41,6 +41,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBMoney;
@@ -825,7 +826,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //and only tryToFinaliseOrder if this is true....
             // if ($_SERVER['REQUEST_URI'] === $this->CMSEditLink() || $_SERVER['REQUEST_URI'] === $this->CMSEditLink('edit')) {
             $this->tryToFinaliseOrder();
-        // }
+            // }
         } else {
             $this->init(true);
             $this->calculateOrderAttributes(true);
@@ -3043,8 +3044,8 @@ class Order extends DataObject implements EditableEcommerceObject
     public function HasPhysicalDispatch(): bool
     {
         $items = $this->Items();
-        $type = EcommerceConfigClassNames::getName(OrderItem::class);
         if ($items->exists()) {
+            $type = EcommerceConfigClassNames::getName(OrderItem::class);
             foreach ($items as $item) {
                 if (is_a($item, $type)) {
                     if(!empty($item->HasPhysicalDispatch)) {
@@ -3064,7 +3065,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function ModifiersSubTotalAsCurrencyObject($excluded = null, $stopAtExcludedModifier = false)
     {
-        return DBField::create_field('Currency', $this->ModifiersSubTotal($excluded, $stopAtExcludedModifier));
+        return DBCurrency::create_field('Currency', $this->ModifiersSubTotal($excluded, $stopAtExcludedModifier));
     }
 
     /**
