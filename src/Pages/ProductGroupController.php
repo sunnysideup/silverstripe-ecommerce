@@ -418,7 +418,7 @@ class ProductGroupController extends PageController
     {
         $pageStart = (int) $this->request->getVar('start');
         if ($pageStart) {
-            return ($pageStart / $this->getProductsPerPage()) + 1;
+            return (int) ($pageStart / $this->getProductsPerPage()) + 1;
         }
 
         return 1;
