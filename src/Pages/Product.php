@@ -83,6 +83,7 @@ use SilverStripe\View\ArrayData;
  * @property string $FullName
  * @property string $ProductBreadcrumb
  * @property string $ShortDescription
+ * @property string $AlternativeProductNames
  * @property bool $UseImageForProducts
  * @property int $GoogleProductCategoryID
  * @property int $ImageID

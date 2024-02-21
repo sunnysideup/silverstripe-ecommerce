@@ -601,7 +601,7 @@ class ProductGroup extends Page
      *
      * @return null|Image
      */
-    public function BestAvailableImage()
+    public function BestAvailableImage() :?Image
     {
         return $this->recursiveValue('Image');
     }
