@@ -189,6 +189,13 @@ class ProductGroupController extends PageController
         return $this->paginateList($list);
     }
 
+    public function ProductsPaginated(): ?PaginatedList
+    {
+        $list = $this->getProductList();
+
+        return $this->paginateList($list);
+    }
+
     /**
      * Unique caching key for the product list...
      */
