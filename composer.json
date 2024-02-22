@@ -34,6 +34,7 @@
     "silverstripe/lumberjack": "^2.0 || ^3.0",
     "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
     "sunnysideup/google_address_field": "dev-master",
+    "sunnysideup/phone_field": "dev-master",
     "sunnysideup/cms_edit_link_field": "dev-master",
     "sunnysideup/permission_provider": "dev-master",
     "sunnysideup/vardump": "dev-master",

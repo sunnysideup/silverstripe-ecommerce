@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Config;
 
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
@@ -24,6 +25,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -164,6 +166,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'CurrenciesExplanation' => 'HTMLText',
         'AllowFreeProductPurchase' => 'Boolean',
         'ShowFullDetailsForProducts' => 'Boolean',
+        'PhoneNumberForShop' => 'PhoneField',
     ];
 
     /**
@@ -174,6 +177,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     private static $has_one = [
         'EmailLogo' => Image::class,
         'DefaultProductImage' => Image::class,
+        'DeliveryInfoPage' => SiteTree::class,
+        'ShopPolicyInfoPage' => SiteTree::class,
     ];
 
     /**
@@ -617,6 +622,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                     'UseThisOne',
                     $fieldLabels['UseThisOne']
                 ),
+                new TreeDropdownField('ShopPolicyInfoPageID', 'Shop policy info', SiteTree::class),
                 HTMLReadonlyField::create(
                     'RefreshWebsite',
                     'Update site',
@@ -664,6 +670,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             [
                 new TextField('PostalCodeURL', $fieldLabels['PostalCodeURL']),
                 new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
+                new TextField('PhoneNumberForShop', 'Phone Number for Shop'),
+                new TreeDropdownField('DeliveryInfoPageID', 'Delivery Info Page', SiteTree::class),
                 new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
                 new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
                 new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote']),
