@@ -167,6 +167,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'AllowFreeProductPurchase' => 'Boolean',
         'ShowFullDetailsForProducts' => 'Boolean',
         'PhoneNumberForShop' => 'PhoneField',
+        'ShippingDescriptionShort' => 'Text',
     ];
 
     /**
@@ -672,6 +673,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
                 new TextField('PhoneNumberForShop', 'Phone Number for Shop'),
                 new TreeDropdownField('DeliveryInfoPageID', 'Delivery Info Page', SiteTree::class),
+                new TextField('ShippingDescriptionShort', 'Delivery Info Short', SiteTree::class),
                 new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
                 new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
                 new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote']),
