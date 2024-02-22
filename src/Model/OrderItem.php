@@ -33,6 +33,7 @@ use SilverStripe\CMS\Model\SiteTree;
  * @property int $BuyableID
  * @property string $BuyableClassName
  * @property int $Version
+ * @property bool $HasPhysicalDispatch
  */
 class OrderItem extends OrderAttribute
 {

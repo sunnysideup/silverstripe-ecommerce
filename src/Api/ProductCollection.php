@@ -52,11 +52,11 @@ abstract class ProductCollection
      *      }
      *      return $array;
      *
-     * @return array
+     * @return Query
      */
-    public function getArrayBasic(?string $where = ''): array
+    public function getArrayBasic(?string $where = '')
     {
-        return (array) DB::query($this->getSQL($where));
+        return DB::query($this->getSQL($where))->getIterator();
     }
 
     public function getSQL(?string $where = ''): string
