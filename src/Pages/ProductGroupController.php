@@ -825,7 +825,7 @@ class ProductGroupController extends PageController
         if ($this->request->getVar('reload')) {
             return $this->redirect($this->Link());
         }
-        $this->originalTitle = $this->Title;
+        $this->originalTitle = $this->MenuTitle;
         Requirements::themedCSS('client/css/ProductGroup');
         Requirements::themedCSS('client/css/ProductGroupPopUp');
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomProducts.js');

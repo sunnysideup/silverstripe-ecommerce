@@ -32,7 +32,7 @@ class EcommerceSideReportNoImageProductsButHasAdditionalImages extends Report
             ->where('"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0')
             ->sort(['Title' => 'ASC'])
         ;
-        $ids = [];
+        $ids = [-1 => -1];
         foreach($list as $product) {
             if($product->AdditionalImages()->exists()) {
                 $ids[] = $product->ID;
