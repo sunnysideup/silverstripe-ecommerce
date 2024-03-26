@@ -84,7 +84,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         'CalculatedTotal' => 'Currency',
         'Sort' => 'Int',
         'GroupSort' => 'Int',
-        'TableSubTitleFixed' => 'HTMLVarchar(200)',
+        'TableSubTitleFixed' => 'HTMLVarchar(900)',
     ];
 
     /**
