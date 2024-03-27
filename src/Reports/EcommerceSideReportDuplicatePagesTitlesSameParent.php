@@ -23,7 +23,7 @@ use SilverStripe\Reports\Report;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportDuplicatePages extends Report
+class EcommerceSideReportDuplicatePagesSameParent extends Report
 {
     /**
      * The class of object being managed by this report.
@@ -46,7 +46,7 @@ class EcommerceSideReportDuplicatePages extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.DUPLICATE_PAGES', 'Pages with duplicate names');
+        return _t('EcommerceSideReport.DUPLICATE_PAGES_SAME_PARENT', 'Pages with duplicate names same parent page');
     }
 
     /**
@@ -75,7 +75,7 @@ class EcommerceSideReportDuplicatePages extends Report
             ->sort(['Title' => 'ASC'])
             ->leftJoin(
                 'SiteTree',
-                '"SiteTree"."Title" = TheOtherSiteTree.Title',
+                '"SiteTree"."Title" = TheOtherSiteTree.Title AND TheOtherSiteTree.ParentID = SiteTree.ParentID',
                 'TheOtherSiteTree'
             )
         ;

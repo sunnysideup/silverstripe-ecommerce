@@ -41,7 +41,7 @@ trait EcommerceProductReportTrait
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function sourceRecords($params = null)
+    public function sourceRecords($params = null, $sort = null, $limit = null)
     {
         $className = ($params['ProductType'] ?? '');
         if (! $className) {

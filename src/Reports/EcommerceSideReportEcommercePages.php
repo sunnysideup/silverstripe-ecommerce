@@ -67,7 +67,7 @@ class EcommerceSideReportEcommercePages extends Report
      *
      * @return \SilverStripe\ORM\DataList
      */
-    public function sourceRecords($params = null)
+    public function sourceRecords($params = null, $sort = null, $limit = null)
     {
         $array = [
             CartPage::class,
