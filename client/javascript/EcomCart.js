@@ -49,6 +49,8 @@ window.joinUrlWithSlash = function (...strings) {
     .replace(/([^:]\/)\/+/g, '$1')
     .replace(hasQuery ? /\/+(\?|$)/ : /\/+$/, '$1')
 }
+
+// init EcomCart
 ;(function ($) {
   $(document).ready(function () {
     EcomCart.init()
@@ -722,10 +724,10 @@ var EcomCart = {
       EcomCart.shoppingCartURLSegment
     )
     if (method) {
-      url.joinUrlWithSlash(method)
+      url = window.joinUrlWithSlash(method)
     }
     if (variable) {
-      url.joinUrlWithSlash(variable)
+      url = window.joinUrlWithSlash(variable)
     }
     return url
   },
