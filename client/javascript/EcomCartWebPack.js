@@ -50,6 +50,8 @@ window.joinUrlWithSlash = function (...strings) {
     .replace(/([^:]\/)\/+/g, '$1')
     .replace(hasQuery ? /\/+(\?|$)/ : /\/+$/, '$1')
 }
+
+// init EcomCart
 ;(function ($) {
   $(document).ready(function () {
     EcomCart.init()
@@ -732,15 +734,15 @@ const EcomCart = {
    * @return String
    */
   createUrl: function (method, variable) {
-    var url = window.joinUrlWithSlash(
+    let url = window.joinUrlWithSlash(
       window.jQuery('base').attr('href'),
       EcomCart.shoppingCartURLSegment
     )
     if (method) {
-      window.joinUrlWithSlash(url, method)
+      url = window.joinUrlWithSlash(url, method)
     }
     if (variable) {
-      window.joinUrlWithSlash(url, variable)
+      url = window.joinUrlWithSlash(url, variable)
     }
     return url
   },
