@@ -62,9 +62,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     private static $use_separate_shipping_address = false;
 
     /**
+     * Usually where the product is sent matters more than where the bill goes.
      * @var bool
      */
-    private static $use_shipping_address_for_main_region_and_country = false;
+    private static $use_shipping_address_for_main_region_and_country = true;
 
     /**
      * @var string

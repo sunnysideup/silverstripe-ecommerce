@@ -15,6 +15,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -135,6 +136,9 @@ class OrderFormAddress extends Form
         if ($this->orderMember) {
             $memberFields = $this->orderMember->getEcommerceFields();
             $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
+            if($this->loggedInMember) {
+                $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
+            }
             $addressFieldsMember->merge($memberFields);
         }
 
@@ -271,8 +275,6 @@ class OrderFormAddress extends Form
                                 'OrderAddedTo',
                                 '<p class="message good">' .
                                 _t('Account.ORDERADDEDTO', 'Order will be added to ') .
-                                Convert::raw2xml($this->orderMember->FirstName) . ' ' .
-                                Convert::raw2xml($this->orderMember->Surname) . ' (' .
                                 Convert::raw2xml($this->orderMember->Email) .
                                 ').</p>'
                             )
@@ -573,7 +575,7 @@ class OrderFormAddress extends Form
     {
         //get the best available from order.
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-        $orderPlacedByShopAdmin = $this->loggedInMember && $this->loggedInMember->IsShopAdmin();
+        $orderPlacedByShopAdmin = $this->loggedInUserIsAdmin();
         //1. does the order already have a member
         if ($this->orderMember->exists() && ! $orderPlacedByShopAdmin) {
             if ($this->debug) {
@@ -601,8 +603,7 @@ class OrderFormAddress extends Form
                     }
                     $this->orderMember = Member::create();
                     $this->orderMember->Email = Convert::raw2sql($newEmail);
-                    $this->orderMember->write($forceCreation = true);
-                    $this->newlyCreatedMemberID = $this->orderMember->ID;
+                    $this->newlyCreatedMemberID = $this->orderMember->write();
                 }
             }
         } else {
@@ -644,8 +645,8 @@ class OrderFormAddress extends Form
                                 $this->debugArray[] = '7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER';
                             }
                             $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
-                            $this->orderMember->write($forceCreation = true);
-                            //this is safe because it is memberShouldBeCreated ...
+                            $this->orderMember->write();
+                            //this is safe because of the memberShouldBeCreated above ...
                             $this->newlyCreatedMemberID = $this->orderMember->ID;
                         }
                     }
@@ -672,7 +673,7 @@ class OrderFormAddress extends Form
         //data entered does not match shop admin and
         //data entered does not match existing member...
         //TRUE!
-        if ($this->loggedInMember && $this->loggedInMember->IsShopAdmin()) {
+        if ($this->loggedInUserIsAdmin()) {
             if ($this->enteredEmailAddressDoesNotMatchLoggedInUser($data)) {
                 return ! $this->anotherExistingMemberWithSameUniqueFieldValue($data);
             }
@@ -689,6 +690,11 @@ class OrderFormAddress extends Form
         return false;
     }
 
+    protected function loggedInUserIsAdmin(): bool
+    {
+        return $this->loggedInMember && $this->loggedInMember->IsShopAdmin();
+    }
+
     /**
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
@@ -696,9 +702,22 @@ class OrderFormAddress extends Form
      */
     protected function memberShouldBeSaved(array $data)
     {
+
+        // logged in member is shop admin and members are updateable...
+        if($this->loggedInUserIsAdmin()) {
+            return false;
+        }
+
         //new members always need to be saved
         $newMember = $this->memberShouldBeCreated($data) ||
             $this->newlyCreatedMemberID;
+
+        if($this->loggedInMember && !$this->orderMember) {
+            return false;
+        }
+        if($this->orderMemberAndLoggedInMemberAreDifferent()) {
+            return false;
+        }
 
         // existing logged in members need to be saved if they are updateable
         // AND do not match someone else...
@@ -706,12 +725,7 @@ class OrderFormAddress extends Form
             ! $this->anotherExistingMemberWithSameUniqueFieldValue($data) &&
             EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details');
 
-        // logged in member is shop admin and members are updateable...
-        $memberIsShopAdmin = $this->loggedInMember &&
-            $this->loggedInMember->IsShopAdmin() &&
-            EcommerceConfig::get(EcommerceRole::class, 'automatically_update_member_details');
-
-        return $newMember || $updateableMember || $memberIsShopAdmin;
+        return $newMember || $updateableMember;
     }
 
     /**
@@ -727,12 +741,17 @@ class OrderFormAddress extends Form
     protected function memberShouldBeLoggedIn(array $data)
     {
         if (! $this->loggedInMember) {
-            if ($this->newlyCreatedMemberID && $this->validPasswordHasBeenEntered($data)) {
+            if ($this->newlyCreatedMemberID > 0 && $this->validPasswordHasBeenEntered($data)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    protected function orderMemberAndLoggedInMemberAreDifferent()
+    {
+        $this->loggedInMember && $this->orderMember && (int) $this->loggedInMember->ID !== (int) $this->orderMember->ID;
     }
 
     /**
