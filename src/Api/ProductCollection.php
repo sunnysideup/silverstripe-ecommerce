@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use IteratorAggregate;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
@@ -52,7 +54,7 @@ abstract class ProductCollection
      *      }
      *      return $array;
      *
-     * @return Query
+     * @return IteratorAggregate
      */
     public function getArrayBasic(?string $where = '')
     {
