@@ -214,6 +214,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                ReadonlyField::create('Title', 'Type'),
+            ],
+            'Status'
+        );
         $fields->replaceField(
             'OrderID',
             CMSEditLinkField::create(
@@ -222,7 +229,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
                 $this->getOrderCached()
             )
         );
-        $fields->replaceField('PaidByID', new ReadonlyField('PaidByID', 'Payment made by'));
+        $fields->replaceField(
+            'PaidByID',
+            new ReadonlyField(
+                'PaidByIDNice',
+                'Payment made by',
+                DBField::create_field('HTMLText', '<a href="'.$this->PaidBy()->CMSEditLink().'">'.$this->PaidBy()->getTitle().'</a>')
+            )
+        );
         $fields->removeByName('AlternativeEndPoint');
         foreach ($fields->dataFields() as $field) {
             $name = $field->ID();
@@ -303,11 +317,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (Director::isDev()) {
-            return Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'));
-        }
         if (! $member) {
             $member = Security::getCurrentUser();
+        }
+        if($this->Order()->IsCancelled()) {
+            return false;
+        }
+        if (Director::isDev()) {
+            return Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'));
         }
         if (EcommercePayment::PENDING_STATUS === $this->Status || EcommercePayment::INCOMPLETE_STATUS === $this->Status) {
             $extended = $this->extendedCan(__FUNCTION__, $member);
