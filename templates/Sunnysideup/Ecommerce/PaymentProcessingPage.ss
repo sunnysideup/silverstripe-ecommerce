@@ -7,36 +7,26 @@
         <div id="PaymentLoadingImage">
             <img src="$resourceURL('sunnysideup/ecommerce:client/images/loading.gif')" alt="Loading image" />
         </div>
+        <div id="PaymentFormContent">$Content</div>
         <div id="PaymentFormHolder">$Form.RAW</div>
     </div>
 </div>
 <style type="text/css">
     html, body {
-        width: 100%;
-        height: 100%;
         margin: 0 auto;
         background-color: #ffffff;
     }
-    body {
+    body, * {
         text-align: center;
     }
     #Outer {
-        text-align: center;
-        position: relative;
-        top: 50%;
-        left: 50%;
-    }
-    #Inner {
-        position: absolute;
-        margin-top: -200px;
-        margin-left: -200px;
-        height: 400px;
-        width: 400px;
-        overflow: auto;
+        padding-top: 10vh;
+        margin: 0 auto;
+        max-width: 600px;
     }
     #Inner img {
         display: block;
-        margin: 10px 0;
+        margin: 30px auto;
         border: 0;
     }
 </style>
