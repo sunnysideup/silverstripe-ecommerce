@@ -763,12 +763,18 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public static function is_buyable($className)
+    public static function is_buyable(?string $className = null): bool
     {
-        $className = ClassHelpers::unsanitise_class_name($className);
-        $implementorsArray = class_implements($className);
-
-        return is_array($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true);
+        if($className) {
+            $className = ClassHelpers::unsanitise_class_name($className);
+            if(class_exists($className)) {
+                $implementorsArray = class_implements($className);
+                return is_array($implementorsArray) && !empty($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true);
+            }
+        } else {
+            user_error('No class name provided', E_USER_NOTICE);
+        }
+        return false;
     }
 
     /**
