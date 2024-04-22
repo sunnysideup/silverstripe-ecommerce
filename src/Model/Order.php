@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
-use Respect\Validation\Rules\Control;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -44,7 +43,6 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
@@ -55,6 +53,7 @@ use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\SalesAdmin;
+use Sunnysideup\Ecommerce\Cms\SalesAdminExtras;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -124,7 +123,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
  * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord[] Emails()
  * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue[] OrderProcessQueue()
  * @mixin \Sunnysideup\EcommerceAdvanceRetailConnector\Extensions\OrderExtension
- * @mixin \Sunnysideup\EcommerceGoogleAnalytics\AnalyticsTransactionReversal
  * @mixin \Sunnysideup\EcommerceAssignOrders\Model\EcommerceAssignOrdersExtension
  * @mixin \Sunnysideup\EcommerceSecurity\Model\Security\EcommerceSecurityOrderDecoration
  */
@@ -737,7 +735,12 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function CMSEditLink($action = null)
     {
-        return CMSEditLinkAPI::find_edit_link_for_object($this, $action, 'sales-advanced');
+        if($this->IsAdminManageable()) {
+            $obj = Injector::inst()->get(SalesAdmin::class);
+        } else {
+            $obj = Injector::inst()->get(SalesAdminExtras::class);
+        }
+        return $obj->getCMSEditLinkForManagedDataObject($this);
     }
 
     /**
@@ -1708,6 +1711,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($this->IsPaid()) {
                 //do nothing;
             } elseif ($this->Payments()->exists()) {
+                /** @var DataList $payments */
                 $payments = $this->Payments();
                 foreach ($payments as $payment) {
                     if (EcommercePayment::PENDING_STATUS === $payment->Status) {
@@ -1794,6 +1798,23 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return false;
+    }
+
+    /**
+     * Does this order need to be managed?
+     *
+     * @return bool
+     */
+    public function IsAdminManageable(): bool
+    {
+        if (!$this->IsCancelled()) {
+            $nonSteps = OrderStep::non_admin_manageable_steps()->columnUnique();
+            if(count($nonSteps) && in_array($this->StatusID, $nonSteps, true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -2609,6 +2630,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function CanViewOrderStatusLogs()
     {
         $canViewOrderStatusLogs = new ArrayList();
+        /** @var DataList $logs */
         $logs = $this->OrderStatusLogs();
         foreach ($logs as $log) {
             if ($log->canView()) {
@@ -2627,6 +2649,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function CustomerViewableOrderStatusLogs()
     {
         $customerViewableOrderStatusLogs = new ArrayList();
+        /** @var DataList $logs */
         $logs = $this->OrderStatusLogs();
         if ($logs) {
             foreach ($logs as $log) {
@@ -3175,11 +3198,11 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getTotalPaid()
     {
         $paid = 0;
+        /** @var DataList $payments */
         $payments = $this->Payments();
         if ($payments && $payments->exists()) {
             foreach ($payments as $payment) {
                 if (EcommercePayment::SUCCESS_STATUS === $payment->Status) {
-                    /** @var DBMoney $paymentObject */
                     $paymentObject = $payment->dbObject('Amount');
                     $paid += $paymentObject->getAmount();
                 }
@@ -3952,6 +3975,7 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
+        /** @var DataList $attributes */
         $attributes = $this->Attributes();
         if ($attributes) {
             foreach ($attributes as $attribute) {
