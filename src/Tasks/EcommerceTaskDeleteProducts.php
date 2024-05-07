@@ -22,10 +22,6 @@ class EcommerceTaskDeleteProducts extends BuildTask
 
     protected $description = 'Removes all Buyables (Products) from the database.';
 
-    private static $allowed_actions = [
-        '*' => 'ADMIN',
-    ];
-
     public function run($request)
     {
         $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');

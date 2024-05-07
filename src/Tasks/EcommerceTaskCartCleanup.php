@@ -165,13 +165,6 @@ class EcommerceTaskCartCleanup extends BuildTask
      */
     private static $many_to_many_classes = [];
 
-    /**
-     * Standard SS Variable
-     * TODO: either remove or add to all tasks.
-     */
-    private static $allowed_actions = [
-        '*' => 'SHOPADMIN',
-    ];
 
     /**
      * run in verbose mode.
