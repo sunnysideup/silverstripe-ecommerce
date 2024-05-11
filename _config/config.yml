@@ -35,20 +35,19 @@ Sunnysideup\Ecommerce\Control\OrderEmailRecordReview:
 Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin:
   allowed_actions:
     runTask: ADMIN
-
-SilverStripe\Admin\LeftAndMain:
-  menu_groups:
-    Shop:
-      icon: 'cart'
-      priority: 5
-      children:
-        - Sunnysideup-Ecommerce-Cms-StoreAdmin
-        - Sunnysideup-Ecommerce-Cms-ProductsAndGroupsModelAdmin
-        - Sunnysideup-Ecommerce-Cms-ProductConfigModelAdmin
-        - Sunnysideup-Ecommerce-Cms-ProductSearchModelAdmin
-        - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderSize
-        - Sunnysideup-Ecommerce-Cms-SalesAdmin
-        - Sunnysideup-Ecommerce-Cms-SalesAdminExtras
-        - Sunnysideup-Ecommerce-Cms-SalesAdminByPaymentType
-        - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderStep
-        - Sunnysideup-Ecommerce-Cms-SalesAdminProcess
+# SilverStripe\Admin\LeftAndMain:
+#   menu_groups:
+#     Shop:
+#       icon: 'cart'
+#       priority: 5
+#       children:
+#         - Sunnysideup-Ecommerce-Cms-StoreAdmin
+#         - Sunnysideup-Ecommerce-Cms-ProductsAndGroupsModelAdmin
+#         - Sunnysideup-Ecommerce-Cms-ProductConfigModelAdmin
+#         - Sunnysideup-Ecommerce-Cms-ProductSearchModelAdmin
+#         - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderSize
+#         - Sunnysideup-Ecommerce-Cms-SalesAdmin
+#         - Sunnysideup-Ecommerce-Cms-SalesAdminExtras
+#         - Sunnysideup-Ecommerce-Cms-SalesAdminByPaymentType
+#         - Sunnysideup-Ecommerce-Cms-SalesAdminByOrderStep
+#         - Sunnysideup-Ecommerce-Cms-SalesAdminProcess
