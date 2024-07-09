@@ -59,7 +59,7 @@ class OrderConfirmationPageController extends CartPageController
      * This method exists just so that template
      * sets CurrentOrder variable.
      *
-     * @return array
+     * @return array|string
      */
     public function showorder(HTTPRequest $request)
     {

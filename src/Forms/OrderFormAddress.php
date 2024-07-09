@@ -149,6 +149,10 @@ class OrderFormAddress extends Form
 
         $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
 
+        // remove email field if member is logged in as they can not change it here!
+        if($this->loggedInMember) {
+            $requiredFields = array_values(array_diff($requiredFields, ['Email']));
+        }
         //HACK: move phone to member fields ..
         if ($addressFieldsMember) {
             if ($addressFieldsBilling) {
@@ -296,6 +300,7 @@ class OrderFormAddress extends Form
         $actions = FieldList::create($nextButton);
 
         $validator = OrderFormAddressValidator::create($requiredFields);
+        print_r($validator->getRequired());
 
         parent::__construct($controller, $name, $fields, $actions, $validator);
         $this->setAttribute('autocomplete', 'off');
@@ -654,7 +659,7 @@ class OrderFormAddress extends Form
             }
         }
 
-        return $this->orderMember;
+        return $this->orderMember ?: null;
     }
 
     /**
@@ -684,7 +689,7 @@ class OrderFormAddress extends Form
         } else {
             // no other user exists with the email...
             // TRUE!
-            return ! $this->anotherExistingMemberWithSameUniqueFieldValue($data);
+            return $this->anotherExistingMemberWithSameUniqueFieldValue($data) ? false : true;
         }
         //defaults to FALSE...
         return false;
@@ -760,7 +765,7 @@ class OrderFormAddress extends Form
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      */
-    protected function anotherExistingMemberWithSameUniqueFieldValue(array $data)
+    protected function anotherExistingMemberWithSameUniqueFieldValue(array $data): ?Member
     {
         $uniqueFieldName = Member::config()->get('unique_identifier_field');
         //The check below covers both Scenario 3 and 4....
@@ -781,8 +786,14 @@ class OrderFormAddress extends Form
                 )
                 ->First()
             ;
+        } else {
+            if($this->loggedInMember && $this->loggedInMember->Email) {
+                // all good
+            } else {
+                user_error('No email data was set, suspicious transaction', E_USER_WARNING);
+            }
         }
-        user_error('No email data was set, suspicious transaction', E_USER_WARNING);
+        return null;
     }
 
     /**
