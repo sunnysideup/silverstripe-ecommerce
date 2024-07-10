@@ -458,7 +458,6 @@ class CartPageController extends PageController
         } else {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
         }
-        $this->currentOrder->IsTest = true;
     }
 
     /**
