@@ -792,8 +792,6 @@ class OrderFormAddress extends Form
         } else {
             if($this->loggedInMember && $this->loggedInMember->Email) {
                 // all good
-            } else {
-                user_error('No email data was set, suspicious transaction', E_USER_WARNING);
             }
         }
         return null;
