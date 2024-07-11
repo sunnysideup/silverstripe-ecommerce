@@ -20,6 +20,7 @@ class OrderToArray extends OrderConverter
         $modifiers = $this->order->Modifiers();
         if ($this->order->IsSeparateShippingAddress()) {
             $shipping = $this->order->ShippingAddress();
+            $shipping->setFieldsToMatchBillingAddress();
         }
         $array = [
             'totalAmount' => [
