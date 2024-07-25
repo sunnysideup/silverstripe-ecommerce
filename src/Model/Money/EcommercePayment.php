@@ -378,7 +378,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
         $order = $this->getOrderCached();
         if ($order) {
-            return Controller::curr()->redirect($order->Link());
+            return Controller::curr()->redirect($order->getRedirectLink());
         }
         user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);
     }

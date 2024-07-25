@@ -4151,6 +4151,12 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         if ($from && $to) {
+            if(!filter_var($from, FILTER_VALIDATE_EMAIL)) {
+                $from = Email::config()->admin_email;
+            }
+            if(!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                $to = Email::config()->admin_email;
+            }
             if (!class_exists($emailClassName)) {
                 user_error('Invalid Email ClassName provided: ' . $emailClassName, E_USER_ERROR);
             }
@@ -4172,11 +4178,17 @@ class Order extends DataObject implements EditableEcommerceObject
             //we also see if a CC and a BCC have been added
             $cc = $arrayData->getField('CC');
             if ($cc) {
+                if(!filter_var($cc, FILTER_VALIDATE_EMAIL)) {
+                    $cc = Email::config()->admin_email;
+                }
                 $email->setCc($cc);
             }
 
             $bcc = $arrayData->getField('BCC');
             if ($bcc) {
+                if(!filter_var($bcc, FILTER_VALIDATE_EMAIL)) {
+                    $bcc = Email::config()->admin_email;
+                }
                 $email->setBcc($bcc);
             }
 
