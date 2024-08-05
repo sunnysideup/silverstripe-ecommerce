@@ -812,11 +812,12 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function onAfterWrite()
     {
+        $owner = $this->getOwner();
         $customerGroup = self::get_customer_group();
         if ($customerGroup) {
             $existingMembers = $customerGroup->Members();
             if ($existingMembers) {
-                $existingMembers->add($this->owner);
+                $existingMembers->add($owner);
             }
         }
     }

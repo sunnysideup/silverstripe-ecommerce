@@ -494,7 +494,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *
      * @return string (JSON)
      */
-    public function getJSONData()
+    public function get_json_data()
     {
         return $this->JSONData();
     }
