@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
@@ -11,6 +10,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * @description:
@@ -39,9 +39,9 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
-            Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
+            Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
         }
-        $id = (int) $request->getVar('id') - 0;
+        $id = (int) $request?->getVar('id') - 0;
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
         if (! $ordersinQueue->exists()) {
