@@ -4153,9 +4153,21 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($from && $to) {
             if(!filter_var($from, FILTER_VALIDATE_EMAIL)) {
                 $from = Email::config()->admin_email;
+                if(!filter_var($from, FILTER_VALIDATE_EMAIL)) {
+                    $from = 'no-reply@ '.Director::host();
+                }
             }
             if(!filter_var($to, FILTER_VALIDATE_EMAIL)) {
                 $to = Email::config()->admin_email;
+                if(!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                    $to = 'no-reply@ '.Director::host();
+                }
+            }
+            if($replyTo && !filter_var($to, FILTER_VALIDATE_EMAIL)) {
+                $replyTo = Email::config()->admin_email;
+                if(!filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+                    $replyTo = 'no-reply@ '.Director::host();
+                }
             }
             if (!class_exists($emailClassName)) {
                 user_error('Invalid Email ClassName provided: ' . $emailClassName, E_USER_ERROR);
