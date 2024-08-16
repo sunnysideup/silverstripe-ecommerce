@@ -4163,7 +4163,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     $to = 'no-reply@ '.Director::host();
                 }
             }
-            if($replyTo && !filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            if($replyTo && !filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
                 $replyTo = Email::config()->admin_email;
                 if(!filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
                     $replyTo = 'no-reply@ '.Director::host();
