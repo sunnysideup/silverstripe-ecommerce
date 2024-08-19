@@ -1627,8 +1627,11 @@ class Product extends Page implements BuyableModel
         return null;
     }
 
-    public function stageTableDefault(): string
+    public function stageTableDefault(?string $alternativeClassName = null): string
     {
-        return $this->stageTable($this->getSchema()->tableName(static::class), Versioned::get_stage());
+        if(!$alternativeClassName) {
+            $alternativeClassName = static::class;
+        }
+        return $this->stageTable($this->getSchema()->tableName($alternativeClassName), Versioned::get_stage());
     }
 }
