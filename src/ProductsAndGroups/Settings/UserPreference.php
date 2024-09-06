@@ -494,9 +494,10 @@ class UserPreference
             $isCurrent = ! (bool) $currentKey;
             $obj = new ArrayData(
                 [
-                    'Title' => 'All',
+                    'ID' => 0,
+                    'ClassName' => null,
+                    'Title' => _t('ProductGroup.ALL', 'All'),
                     'Current' => $isCurrent,
-                    //todo: fix this!!!!
                     'Link' => $this->getLinkTemplate('', $type, '', true),
                     'LinkingMode' => $isCurrent ? 'current' : 'link',
                     'Ajaxify' => $ajaxify,
@@ -510,9 +511,10 @@ class UserPreference
                 foreach (array_keys($options) as $key) {
                     $obj = new ArrayData(
                         [
+                            'ID' => $group->ID,
+                            'ClassName' => $group->ClassName,
                             'Title' => $group->MenuTitle,
                             'Current' => $isCurrent,
-                            //todo: fix this!!!!
                             'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
                             'Ajaxify' => $ajaxify,
