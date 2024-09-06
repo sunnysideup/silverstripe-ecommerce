@@ -529,7 +529,7 @@ class ProductGroupController extends PageController
     /**
      * Provides a ArrayList of links for filters products.
      *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, Object, Key))
      */
     public function SearchFilterLinks(): ArrayList
     {
@@ -537,9 +537,9 @@ class ProductGroupController extends PageController
     }
 
     /**
-     * Provides a ArrayList of links for filters products.
+     * Provides an ArrayList of links for filters products.
      *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, Object, Key))
      */
     public function GroupFilterLinks(): SS_List
     {
@@ -547,9 +547,35 @@ class ProductGroupController extends PageController
     }
 
     /**
+     * Provides a DataList of links for filters products.
+     * Note that this loses the special link values!
+     *
+     * @return DataList
+     */
+    public function GroupFilterLinksAsDataList(): DataList
+    {
+        return ProductGroup::get()->filter(['ID' => $this->GroupFilterLinks()->column('ID')]);
+    }
+
+    /**
+     * Provides a ArrayList of links for filters products.
+     * Note that this loses the special link values!
+     *
+     * @return DataList
+     */
+    public function GroupFilterLinksUsingFilteredObjects(array $filter): ArrayList
+    {
+        $filter = $filter + ['ID' => $this->GroupFilterLinks()->column('ID')];
+        $filterList = ProductGroup::get()->filter($filter)->columnUnique();
+        $list = $this->GroupFilterLinks();
+        $list = $list->filter(['ID' => $filterList]);
+        return $list;
+    }
+
+    /**
      * Provides a ArrayList of links for filters products.
      *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(Name, Link, SelectKey, Current (boolean), LinkingMode))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, Object, Key))
      */
     public function FilterLinks(): ArrayList
     {
@@ -660,7 +686,7 @@ class ProductGroupController extends PageController
         } else {
             $vars = '';
         }
-        if(strpos($link, '?') === false) {
+        if (strpos($link, '?') === false) {
             $glue = '?';
         } else {
             $glue = '&';
