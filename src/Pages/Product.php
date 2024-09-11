@@ -612,7 +612,7 @@ class Product extends Page implements BuyableModel
      */
     public function AllParentGroups(?bool $cached = true): ?DataList
     {
-        if($cached) {
+        if ($cached) {
             $otherGroupsArray = $this->ProductGroupIDsCached();
         } else {
             $otherGroupsArray = $this->ProductGroups()->columnUnique();
@@ -1419,7 +1419,7 @@ class Product extends Page implements BuyableModel
             $image = Image::get()->byID($this->ImageID); //see Product::has_one()
             if ($image && $image->exists()) {
                 $arrayInner[$image->ID] = $image;
-            } elseif($deleteMissingImages) {
+            } elseif ($deleteMissingImages) {
                 DB::query('UPDATE Product SET ImageID = 0 WHERE ID = ' . $this->ID);
                 DB::query('UPDATE Product_Live SET ImageID = 0 WHERE ID = ' . $this->ID);
                 $this->deleteImage($image);
@@ -1437,11 +1437,11 @@ class Product extends Page implements BuyableModel
             ->column('ImageID');
 
         foreach ($otherImagesIDs as $otherImageID) {
-            if($otherImageID) {
+            if ($otherImageID) {
                 $image = Image::get()->byID($otherImageID);
                 if ($image && $image->exists()) {
                     $arrayInner[$image->ID] = $image;
-                } elseif($deleteMissingImages) {
+                } elseif ($deleteMissingImages) {
                     $this->AdditionalImages()->removeByID($otherImageID);
                     $this->deleteImage($image);
                 }
@@ -1453,9 +1453,9 @@ class Product extends Page implements BuyableModel
 
     private function deleteImage($image)
     {
-        if($image) {
+        if ($image) {
             try {
-                if($image->canArchive()) {
+                if ($image->canArchive()) {
                     $image->doArchive();
                 }
             } catch (Exception $e) {
@@ -1494,7 +1494,7 @@ class Product extends Page implements BuyableModel
         return new GridField(
             'ProductGroups',
             _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
-            $this->ProductGroups(),
+            $this->ProductGroups()->filter(['ShowInSearch' => 1]),
             GridFieldConfigForProductGroups::create()
         );
     }
@@ -1616,10 +1616,10 @@ class Product extends Page implements BuyableModel
 
     public function AlternativeNames(): ?ArrayList
     {
-        if($this->AlternativeProductNames) {
+        if ($this->AlternativeProductNames) {
             $list = array_filter(array_filter(explode(',', (string) $this->AlternativeProductNames), 'trim'));
             $al = ArrayList::create();
-            foreach($list as $name) {
+            foreach ($list as $name) {
                 $al->push(ArrayData::create(['Title' => DBField::create_field('Varchar', $name)]));
             }
             return $al;
@@ -1629,7 +1629,7 @@ class Product extends Page implements BuyableModel
 
     public function stageTableDefault(?string $alternativeClassName = null): string
     {
-        if(!$alternativeClassName) {
+        if (!$alternativeClassName) {
             $alternativeClassName = static::class;
         }
         return $this->stageTable($this->getSchema()->tableName($alternativeClassName), Versioned::get_stage());
