@@ -41,7 +41,6 @@
     "sunnysideup/model-admin-many-tabs": "dev-master",
     "sunnysideup/email_address_database_field": "dev-master",
     "sunnysideup/silverstripe-ajax-select-field": "dev-master",
-    "sunnysideup/dropdown2autocomplete": "dev-master",
     "sunnysideup/yes-no-any-filter": "dev-master"
   },
   "suggest": {
