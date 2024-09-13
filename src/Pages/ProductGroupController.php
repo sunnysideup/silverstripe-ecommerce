@@ -565,16 +565,17 @@ class ProductGroupController extends PageController
      */
     public function GroupFilterLinksUsingFilteredObjects(array $filter): ArrayList
     {
+        $list = $this->GroupFilterLinks();
+        $listIds = ArrayMethods::filter_array($list->column('ID'));
         if (isset($filter['ID'])) {
             if (! is_array($filter['ID'])) {
                 $filter['ID'] = [$filter['ID']];
             }
-            $filter['ID'] = array_merge($filter['ID'], ArrayMethods::filter_array($this->GroupFilterLinks()->column('ID')));
+            $filter['ID'] = array_merge($filter['ID'], $listIds);
         } else {
-            $filter += ['ID' => ArrayMethods::filter_array($this->GroupFilterLinks()->column('ID'))];
+            $filter += ['ID' => $listIds];
         }
         $filterList = ProductGroup::get()->filter($filter)->columnUnique();
-        $list = $this->GroupFilterLinks();
         $list = $list->filter(['ID' => $filterList]);
         return $list;
     }

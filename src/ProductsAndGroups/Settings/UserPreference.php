@@ -518,14 +518,13 @@ class UserPreference
                             'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
                             'Ajaxify' => $ajaxify,
-                            'Object' => $group,
                             'Key' => $key,
                         ]
                     );
                     $list->push($obj);
                 }
             }
-        } elseif ($isNonGroupSegmentStyle) {
+        } elseif ($isNonGroupSegmentStyle && $type !== 'GROUPFILTER') {
             if (! $currentKey) {
                 $currentKey = $this->getCurrentUserPreferencesKey($type);
             }
@@ -546,7 +545,6 @@ class UserPreference
                 $list->push($obj);
             }
         }
-
         return $list;
     }
 
