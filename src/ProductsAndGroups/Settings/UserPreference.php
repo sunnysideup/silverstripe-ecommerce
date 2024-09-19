@@ -492,20 +492,6 @@ class UserPreference
             }
 
             $isCurrent = ! (bool) $currentKey;
-            $obj = new ArrayData(
-                [
-                    'ID' => 0,
-                    'ClassName' => null,
-                    'Title' => _t('ProductGroup.ALL', 'All'),
-                    'Current' => $isCurrent,
-                    'Link' => $this->getLinkTemplate('', $type, '', true),
-                    'LinkingMode' => $isCurrent ? 'current' : 'link',
-                    'Ajaxify' => $ajaxify,
-                    'Object' => null,
-                    'Key' => '',
-                ]
-            );
-            $list->push($obj);
             foreach ($actions as $group) {
                 $isCurrent = $currentKey === $group->FilterForGroupSegment();
                 foreach (array_keys($options) as $key) {
