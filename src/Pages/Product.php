@@ -414,7 +414,7 @@ class Product extends Page implements BuyableModel
                 'Root.Main',
                 new LiteralField(
                     'AddToCartLink',
-                    '<p class="message good"><a href="' . $this->AddLink() . '">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>'
+                    '<p class="message good"><a href="' . $this->AddLink() . '" target="_parent">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>'
                 )
             );
         } else {

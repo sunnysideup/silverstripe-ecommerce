@@ -141,8 +141,7 @@ class ProductGroup extends Page
     private static $summary_fields = [
         'Image.CMSThumbnail' => 'Image',
         'Title' => 'Category',
-        'NumberOfProducts' => 'Direct Products',
-        'AlsoShowProducts.Count' => 'Also Show Products',
+        'NumberOfProductsIncAlsoShow' => 'Products',
         'Children.Count' => 'Child Categories',
     ];
 
@@ -153,6 +152,7 @@ class ProductGroup extends Page
 
     private static $casting = [
         'NumberOfProducts' => 'Int',
+        'NumberOfProductsIncAlsoShow' => 'Int',
     ];
 
     private static $default_child = Product::class;
@@ -264,7 +264,7 @@ class ProductGroup extends Page
 
         $calculatedNumberOfProductsPerPage = $this->getProductsPerPage();
         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
-        if($this->exists()) {
+        if ($this->exists()) {
             $fields->addFieldToTab(
                 'Root',
                 Tab::create(
@@ -500,7 +500,7 @@ class ProductGroup extends Page
 
     public function hasProducts(?bool $includeAlsoShowProducts = false): bool
     {
-        if($includeAlsoShowProducts) {
+        if ($includeAlsoShowProducts) {
             return $this->getProducts()->exists() || $this->AlsoShowProducts()->exists();
         }
         return $this->getProducts()->exists();
@@ -624,6 +624,14 @@ class ProductGroup extends Page
         }
 
         return self::$getProductCountCache[$this->ID];
+    }
+
+    /**
+     * the number of direct descendants.
+     */
+    public function getNumberOfProductsIncAlsoShow(): int
+    {
+        return $this->getNumberOfProducts() + $this->AlsoShowProducts()->count();
     }
 
     /**
@@ -884,10 +892,10 @@ class ProductGroup extends Page
 
     public function AlternativeNames(): ?ArrayList
     {
-        if($this->AlternativeProductGroupNames) {
+        if ($this->AlternativeProductGroupNames) {
             $list = array_filter(array_filter(explode(',', $this->AlternativeProductGroupNames), 'trim'));
             $al = ArrayList::create();
-            foreach($list as $name) {
+            foreach ($list as $name) {
                 $al->push(ArrayData::create(['Title' => DBField::create_field('Varchar', $name)]));
             }
             return $al;
