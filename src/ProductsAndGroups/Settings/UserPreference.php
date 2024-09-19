@@ -499,7 +499,7 @@ class UserPreference
                     'Title' => _t('ProductGroup.ALL', 'All'),
                     'Current' => $isCurrent,
                     'Link' => $this->getLinkTemplate('', $type, '', true),
-                    'LinkingMode' => $isCurrent ? 'current' : 'link',
+                    'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
                     'Ajaxify' => $ajaxify,
                     'Object' => null,
                     'Key' => '',
