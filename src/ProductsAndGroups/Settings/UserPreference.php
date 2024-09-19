@@ -492,7 +492,6 @@ class UserPreference
             }
 
             $isCurrent = ! (bool) $currentKey;
-<<<<<<< HEAD
             $obj = new ArrayData(
                 [
                     'ID' => 0,
@@ -507,8 +506,6 @@ class UserPreference
                 ]
             );
             $list->push($obj);
-=======
->>>>>>> 23ec0482cb945be69db1dfb31b194d6f0e417b33
             foreach ($actions as $group) {
                 $isCurrent = $currentKey === $group->FilterForGroupSegment();
                 foreach (array_keys($options) as $key) {
