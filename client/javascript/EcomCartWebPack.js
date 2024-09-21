@@ -595,9 +595,10 @@ const EcomCart = {
                 // scroll to the top of the product list.
                 window.jQuery('html, body').animate(
                   {
-                    scrollTop: window
-                      .jQuery(EcomCart.ajaxifiedListHolderSelector)
-                      .offset().top
+                    scrollTop:
+                      window
+                        .jQuery(EcomCart.ajaxifiedListHolderSelector)
+                        .offset().top - 150
                   },
                   500
                 )
