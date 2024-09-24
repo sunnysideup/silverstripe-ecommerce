@@ -195,9 +195,9 @@ class CheckoutPage extends CartPage
                 $key = array_search($currentStep, $steps, true);
                 if (false !== $key) {
                     if ($doPreviousInstead) {
-                        --$key;
+                        $key--;
                     } else {
-                        ++$key;
+                        $key++;
                     }
 
                     if (isset($steps[$key])) {

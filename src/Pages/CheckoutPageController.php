@@ -375,8 +375,8 @@ class CheckoutPageController extends CartPageController
     {
         $key = 1;
         if ($this->currentStep) {
-            $key = array_search($this->currentStep, $this->steps, true);
-            ++$key;
+            $key = (int) array_search($this->currentStep, $this->steps, true);
+            $key++;
         }
 
         return $key;
