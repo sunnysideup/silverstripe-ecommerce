@@ -383,7 +383,6 @@ class UserPreference
                 // @todo: use applier name!
                 $productString = _t('ProductGroup.PRODUCTS_FOUND', 'Search Results');
 
-                $string = $productString;
                 if ($count) {
                     if (1 === $count) {
                         $productString = _t('ProductGroup.ONE_PRODUCT_FOUND', 'Search Result');

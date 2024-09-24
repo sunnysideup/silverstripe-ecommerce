@@ -933,6 +933,7 @@ class ProductGroupController extends PageController
     protected function defaultReturn()
     {
         if ($this->returnAjaxifiedProductList()) {
+            $this->addSecondaryTitle('');
             return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
         }
         // important - because we want to get all the details loaded before we start with
