@@ -835,9 +835,11 @@ class ProductGroupController extends PageController
 
     protected function setCachedProductList($productList)
     {
-        $key = $this->ProductGroupListCachingKey();
-        $ids = ArrayMethods::filter_array($productList->columnUnique());
-        EcommerceCache::inst()->save($key, $ids);
+        if ($productList) {
+            $key = $this->ProductGroupListCachingKey();
+            $ids = ArrayMethods::filter_array($productList->columnUnique());
+            EcommerceCache::inst()->save($key, $ids);
+        }
     }
 
     /**
@@ -932,13 +934,12 @@ class ProductGroupController extends PageController
 
     protected function defaultReturn()
     {
-        if ($this->returnAjaxifiedProductList()) {
-            $this->addSecondaryTitle('');
-            return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
-        }
         // important - because we want to get all the details loaded before we start with
         // building template
         $this->Products();
+        if ($this->returnAjaxifiedProductList()) {
+            return $this->renderWith('Sunnysideup\Ecommerce\Includes\AjaxProductList');
+        }
 
         return [];
     }
