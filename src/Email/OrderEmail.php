@@ -150,7 +150,7 @@ abstract class OrderEmail extends Email
         }
         $this->fixupSubject();
         if (!$this->hasBeenSent() || ($this->resend)) {
-            if (EcommerceConfig::get(OEmailrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
+            if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
                 $memberEmail = self::get_from_email();
                 if ($memberEmail) {
                     $array = [$memberEmail];
@@ -210,7 +210,7 @@ abstract class OrderEmail extends Email
      *
      * @return string - returns email address without &gt; and &lt;
      */
-    public function emailToVarchar($email)
+    public function emailToVarchar($email): string
     {
         $emailString = '';
         if (is_string($email)) {
@@ -221,7 +221,7 @@ abstract class OrderEmail extends Email
                 if ($count) {
                     $emailString .= ', ';
                 }
-                $emailString .= (string) $key . (string) $address;
+                $emailString .= ((string) $key) . ((string) $address);
                 ++$count;
             }
         }
@@ -270,10 +270,8 @@ abstract class OrderEmail extends Email
     protected function createRecord(): OrderEmailRecord
     {
         $orderEmailRecord = OrderEmailRecord::create();
-        $from = is_array($this->getFrom()) ? array_key_first($this->getFrom()) : $this->getFrom();
-        $to = is_array($this->getTo()) ? array_key_first($this->getTo()) : $this->getTo();
-        $orderEmailRecord->From = $this->emailToVarchar($from);
-        $orderEmailRecord->To = $this->emailToVarchar($to);
+        $orderEmailRecord->From = $this->emailToVarchar($this->getFrom());
+        $orderEmailRecord->To = $this->emailToVarchar($this->getTo());
         if ($this->getCc()) {
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
