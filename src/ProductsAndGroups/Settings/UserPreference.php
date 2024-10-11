@@ -500,7 +500,7 @@ class UserPreference
                     'Link' => $this->getLinkTemplate('', $type, '', true),
                     'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
                     'Ajaxify' => $ajaxify,
-                    'Object' => null,
+                    'Image' => null,
                     'Key' => '',
                 ]
             );
@@ -517,6 +517,7 @@ class UserPreference
                             'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
                             'LinkingMode' => $isCurrent ? 'current' : 'link',
                             'Ajaxify' => $ajaxify,
+                            'Image' => $group->Image(),
                             'Key' => $key,
                         ]
                     );
