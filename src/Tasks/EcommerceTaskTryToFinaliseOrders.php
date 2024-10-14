@@ -84,9 +84,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
         $orders = Order::get()
             ->orderBy($sort)
-            ->filter(['StatusID' => OrderStep::admin_manageable_steps()])
+            ->filter(['StatusID' => OrderStep::admin_manageable_steps()->columnUnique()])
             ->exclude(['ID' => $ordersInQueueArray]);
         ;
+        DB::alteration_message("<h1>In total there, are {$orders->count()} Orders to move</h1>");
         $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
         if (! $this->isCli()) {
             if ($this->getStart()) {
