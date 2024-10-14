@@ -180,16 +180,7 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var array
      */
-    private static $options = [
-        self::KEY_FOR_SORTER => [
-            'Title' => 'Most Relevant',
-            'SQL' => [
-                'ShowInSearch' => 1,
-            ],
-            'UsesParamData' => true,
-            'IsShowFullList' => false,
-        ],
-    ];
+    private static $options = self::OPTIONS_FOR_SORT;
 
     /**
      * do we use the cache at all.
@@ -609,7 +600,7 @@ class ProductSearchFilter extends BaseApplyer
                 ->limit($this->maxToAdd())
                 ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)])
             ;
-            if(is_array($sort)) {
+            if (is_array($sort)) {
                 $listToAdd = $listToAdd->sort($sort);
             } else {
                 $listToAdd = $listToAdd->orderBy($sort);
