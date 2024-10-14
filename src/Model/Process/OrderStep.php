@@ -401,7 +401,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function non_admin_manageable_steps(): DataList
     {
-        return OrderStep::get()->exclude(['ID' => self::admin_manageable_steps()->columnUnique()]);
+        return OrderStep::get()->exclude(['ID' => OrderStep::admin_manageable_steps()->columnUnique()]);
     }
 
     /**

@@ -128,10 +128,10 @@ class SalesAdmin extends ModelAdmin
                     $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
 
                     $list = $list
+                        ->filter(['StatusID' => ArrayMethods::filter_array(OrderStep::admin_manageable_steps()->columnUnique()),])
                         ->excludeAny(
                             [
                                 'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),
-                                'StatusID' => ArrayMethods::filter_array(OrderStep::non_admin_manageable_steps()->columnUnique()),
                                 'CancelledByID:GreaterThan' => 0,
                             ]
                         )
