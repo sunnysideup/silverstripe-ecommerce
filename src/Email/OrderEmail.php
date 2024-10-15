@@ -15,6 +15,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
 /**
  * @Description: Email specifically for communicating with customer about order.
@@ -215,17 +216,16 @@ abstract class OrderEmail extends Email
         $emailString = '';
         if (is_string($email)) {
             $emailString = (string) $email;
+        } elseif ($email instanceof Address) {
+            $emailString = (string) $email->toString();
         } elseif (is_array($email)) {
-            $count = 0;
-            foreach ($email as $key => $address) {
-                if ($count) {
+            foreach ($email as $address) {
+                if ($emailString) {
                     $emailString .= ', ';
                 }
-                $emailString .= ((string) $key) . ((string) $address);
-                ++$count;
+                $emailString .=  $this->emailToVarchar($address);
             }
         }
-
         return trim(str_replace(['<', '>', '"', "'"], ' - ', $emailString));
     }
 

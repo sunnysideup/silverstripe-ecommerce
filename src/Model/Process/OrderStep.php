@@ -383,26 +383,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * returns all the order steps
-     * that the admin should / can edit....
+     * that the admin should / can edit
      *
      * @return \SilverStripe\ORM\DataList
      */
     public static function admin_manageable_steps(): DataList
     {
         return OrderStep::get()
-            ->filter(['ShowAsInProcessOrder' => 1, 'ShowAsUncompletedOrder' => false, 'ShowAsCompletedOrder' => false]);
+            ->filter(['ShowAsInProcessOrder' => true, 'ShowAsUncompletedOrder' => false, 'ShowAsCompletedOrder' => false]);
     }
 
     /**
      * returns all the order steps
-     * that the admin should / can edit....
+     * that the admin can not edit...
      *
      * @return \SilverStripe\ORM\DataList
      */
     public static function non_admin_manageable_steps(): DataList
     {
-        return OrderStep::get()
-            ->filterAny(['ShowAsInProcessOrder' => false, 'ShowAsUncompletedOrder' => true, 'ShowAsCompletedOrder' => true]);
+        return OrderStep::get()->exclude(['ID' => OrderStep::admin_manageable_steps()->columnUnique()]);
     }
 
     /**
@@ -976,7 +975,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         //if it has been more than a XXX days since the order was last edited (submitted) then we do not send emails as
         //this would be embarrasing.
         $log = $order->SubmissionLog();
-        if($log && $log->BypassEmailing) {
+        if ($log && $log->BypassEmailing) {
             return true;
         }
         if ($checkDateOfOrder) {

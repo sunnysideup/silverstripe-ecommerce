@@ -19,6 +19,7 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -47,7 +48,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         //IMPORTANT!
         if (! $this->sendEmails) {
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
-            Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
+            Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
         }
 
         //get limits
@@ -83,9 +84,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         }
         $orders = Order::get()
             ->orderBy($sort)
-            ->filter(['StatusID' => OrderStep::admin_manageable_steps()])
+            ->filter(['StatusID' => OrderStep::admin_manageable_steps()->columnUnique()])
             ->exclude(['ID' => $ordersInQueueArray]);
         ;
+        DB::alteration_message("<h1>In total there, are {$orders->count()} Orders to move</h1>");
         $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
         if (! $this->isCli()) {
             if ($this->getStart()) {
@@ -101,7 +103,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if ($orders->exists()) {
             DB::alteration_message("<h1>Moving {$limit} Orders (starting from {$startAt})</h1>");
             foreach ($orders as $order) {
-                if($order->IsSubmitted()) {
+                if ($order->IsSubmitted()) {
                     $stepBefore = OrderStep::get_by_id($order->StatusID);
 
                     try {
@@ -147,21 +149,21 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     protected function setStart(int $startAt)
     {
-        if(!Director::is_cli()) {
+        if (!Director::is_cli()) {
             Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrdersStartAt', $startAt);
         }
     }
 
     protected function getStart(): int
     {
-        if(!Director::is_cli()) {
+        if (!Director::is_cli()) {
             return (int) Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrdersStartAt');
         }
         return 0;
     }
     protected function clearStart()
     {
-        if(!Director::is_cli()) {
+        if (!Director::is_cli()) {
             return Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrdersStartAt');
         }
     }

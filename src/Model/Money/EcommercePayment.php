@@ -320,7 +320,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (! $member) {
             $member = Security::getCurrentUser();
         }
-        if($this->Order()->IsCancelled()) {
+        if ($this->Order()->IsCancelled()) {
             return false;
         }
         if (Director::isDev()) {
@@ -378,7 +378,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
         $order = $this->getOrderCached();
         if ($order) {
-            return Controller::curr()->redirect($order->getRedirectLink());
+            return Controller::curr()->redirect($order->Link());
         }
         user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);
     }

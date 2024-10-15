@@ -12,6 +12,7 @@ use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * After a bug in the saving of orders in the CMS
@@ -33,7 +34,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
     {
         //IMPORTANT!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
-        Injector::inst()->registerService(new EcommerceDummyMailer(), Mailer::class);
+        Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
         $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $lastOrderStep = DataObject::get_one(
             OrderStep::class,
