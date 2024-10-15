@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportNoImageProductsButHasAdditionalImages extends Report
+class EcommerceSideReportProductsNoImageButHasAdditionalImages extends Report
 {
     use EcommerceProductReportTrait;
 
@@ -33,8 +33,8 @@ class EcommerceSideReportNoImageProductsButHasAdditionalImages extends Report
             ->sort(['Title' => 'ASC'])
         ;
         $ids = [-1 => -1];
-        foreach($list as $product) {
-            if($product->AdditionalImages()->exists()) {
+        foreach ($list as $product) {
+            if ($product->AdditionalImages()->exists()) {
                 $ids[] = $product->ID;
             }
         }

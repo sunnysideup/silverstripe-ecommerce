@@ -177,6 +177,17 @@ class ProductGroup extends Page
         return _t('ProductGroup.PLURALNAME', 'Product Categories');
     }
 
+
+    public function ProductGroupType(): string
+    {
+        return $this->getProductGroupType();
+    }
+
+    public function getProductGroupType(): string
+    {
+        return $this->singular_name();
+    }
+
     public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);

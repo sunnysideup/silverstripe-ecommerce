@@ -5,32 +5,31 @@ namespace Sunnysideup\Ecommerce\Reports;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
-/** @author: Nicolaas [at] Sunny Side Up .co.nz
+/**
+ * Selects all products without a price.
+ *
+ * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportFeaturedProducts extends Report
+class EcommerceSideReportProductsNoPrice extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
 
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.FEATURED', 'E-commerce: Products: featured');
+        return _t('EcommerceSideReport.NO_PRICE', 'E-commerce: Products: without Price');
     }
 
     /**
-     * working out the items.
-     *
      * @param null|mixed $params
      */
-    protected function getEcommerceFilter($params = null): array
+    protected function getEcommerceWhere($params = null): string
     {
-        return ['FeaturedProduct' => 1];
+        return '"Product"."Price" IS NULL OR "Product"."Price" = 0 ';
     }
 
     /**

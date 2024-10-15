@@ -12,11 +12,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportAllProducts extends Report
+class EcommerceSideReportProductsAll extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
 
     /**
      * @return string
@@ -26,11 +24,5 @@ class EcommerceSideReportAllProducts extends Report
         return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: Products: All');
     }
 
-    /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7000;
-    }
+
 }

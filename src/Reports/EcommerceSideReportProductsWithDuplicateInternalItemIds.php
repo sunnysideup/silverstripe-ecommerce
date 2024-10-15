@@ -12,19 +12,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class ProductsWithDuplicateInternalItemIds extends Report
+class EcommerceSideReportProductsWithDuplicateInternalItemIds extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
-
-    /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7001;
-    }
 
     /**
      * @return string

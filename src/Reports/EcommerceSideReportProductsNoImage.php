@@ -6,31 +6,29 @@ use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * Selects all products without an InternalID.
+ * Selects all products without an image.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportNoInternalIDProducts extends Report
+class EcommerceSideReportProductsNoImage extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
 
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products: without Internal ID');
+        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products: without image');
     }
 
     /**
-     * @param null|mixed $params
+     * @param mixed $params
      */
     protected function getEcommerceWhere($params = null): string
     {
-        return "\"Product\".\"InternalItemID\" IS NULL OR \"Product\".\"InternalItemID\" = '' OR \"Product\".\"InternalItemID\" = '0' ";
+        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
     }
 }

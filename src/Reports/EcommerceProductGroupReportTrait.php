@@ -13,10 +13,11 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
-trait EcommerceProductReportTrait
+trait EcommerceProductGroupReportTrait
 {
-    protected $dataClass = Product::class;
+    protected $dataClass = ProductGroup::class;
 
     /**
      * not sure if this is used in SS3.
@@ -33,7 +34,7 @@ trait EcommerceProductReportTrait
      */
     public function sort()
     {
-        return 7000;
+        return 6500;
     }
 
     /**
@@ -45,7 +46,7 @@ trait EcommerceProductReportTrait
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
-        $className = ($params['ProductType'] ?? '');
+        $className = ($params['ProductGroupType'] ?? '');
         if (! $className) {
             $className = $this->dataClass;
         }
@@ -83,26 +84,7 @@ trait EcommerceProductReportTrait
 
         $title = (string) Convert::raw2sql($params['Title'] ?? '');
         if ($title) {
-            $list = $list->filterAny(['Title:PartialMatch' => $title, 'ProductBreadcrumb:PartialMatch' => $title, 'InternalItemID:PartialMatch' => $title, 'AlternativeProductNames:PartialMatch' => $title]);
-        }
-
-        $minPrice = (float) preg_replace('#[^0-9.\-]#', '', ($params['MinimumPrice'] ?? 0));
-        if ($minPrice) {
-            $list = $list->filter(['Price:GreaterThan' => $minPrice]);
-        }
-
-        $forSale = $params['ForSale'] ?? '';
-        if ($forSale) {
-            $forSaleFilter = null;
-            if ('Yes' === $forSale) {
-                $forSaleFilter = 1;
-            } elseif ('No' === $forSale) {
-                $forSaleFilter = 0;
-            }
-
-            if (null !== $forSaleFilter) {
-                $list = $list->filter(['AllowPurchase' => $forSaleFilter]);
-            }
+            $list = $list->filterAny(['Title:PartialMatch' => $title, 'AlternativeProductGroupNames:PartialMatch' => $title]);
         }
 
         $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
@@ -115,7 +97,6 @@ trait EcommerceProductReportTrait
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
 
-
         return $list;
     }
 
@@ -125,24 +106,16 @@ trait EcommerceProductReportTrait
     public function columns()
     {
         return [
-            'InternalItemID' => [
-                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Code'),
+            'ProductGroupType' => [
+                'title' => _t('EcommerceSideReport.PRODUCTGROUP_TYPE', 'Type'),
                 'link' => true,
             ],
-            'ProductType' => [
-                'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Type'),
-                'link' => true,
-            ],
-            'ProductBreadcrumb' => [
+            'Breadcrumb' => [
                 'title' => _t('EcommerceSideReport.BREADCRUMB', 'Breadcrumb'),
                 'link' => true,
             ],
             'Title' => [
-                'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Title'),
-                'link' => true,
-            ],
-            'Price' => [
-                'title' => _t('EcommerceSideReport.PRICE', 'Price'),
+                'title' => _t('EcommerceSideReport.PRODUCT_GROUP_NAME', 'Category'),
                 'link' => true,
             ],
         ];
@@ -151,7 +124,7 @@ trait EcommerceProductReportTrait
     public function parameterFields()
     {
         $fields = FieldList::create();
-        $productTypes = $this->getProductTypes();
+        $productTypes = $this->getProductGroupTypes();
         $fields->push(
             FieldGroup::create(
                 'Optional Filters',
@@ -159,20 +132,6 @@ trait EcommerceProductReportTrait
                     'Title',
                     'Keyword',
                 ),
-                CurrencyField::create(
-                    'MinimumPrice',
-                    'Minimum Price',
-                    0
-                ),
-                DropdownField::create(
-                    'ForSale',
-                    'For Sale',
-                    [
-                        'Yes' => 'Yes',
-                        'No' => 'No',
-                    ]
-                )
-                    ->setEmptyString('-- Any --'),
                 NumericField::create(
                     'ChangedInTheLastXDays',
                     'Changed less than ... days ago?',
@@ -184,8 +143,8 @@ trait EcommerceProductReportTrait
                     ''
                 ),
                 DropdownField::create(
-                    'ProductType',
-                    'Product Type',
+                    'ProductGroupType',
+                    'Product Group Type',
                     $productTypes
                 ),
             )->addExtraClass('stacked')
@@ -203,24 +162,16 @@ trait EcommerceProductReportTrait
         return $fields;
     }
 
-    protected function getProductTypes()
+    protected function getProductGroupTypes()
     {
-        $list = ClassInfo::subClassesFor(Product::class, true);
+        $list = ClassInfo::subClassesFor(ProductGroup::class, true);
         $newArray = [];
         foreach ($list as $className) {
-            $newArray[$className] = Product::class === $className ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
+            $newArray[$className] = ProductGroup::class === $className ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
         }
 
         return $newArray;
     }
 
-    // public function getReportField()
-    // {
-    //     $field = parent::getReportField();
-    //     $config = $field->getConfig();
-    //     $exportButton = $config->getComponentByType(GridFieldExportButton::class);
-    //     $exportButton->setExportColumns($field->getColumns());
-    //
-    //     return $field;
-    // }
+
 }

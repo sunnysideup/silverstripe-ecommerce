@@ -13,11 +13,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportNoAlsoShowLinkProducts extends Report
+class EcommerceSideReportProductsNoAlsoShowLink extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
 
     /**
      * @return string

@@ -6,13 +6,13 @@ use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * Selects all products.
+ * Selects all products without an image.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportProductsMismatchSearchAllowPurchase extends Report
+class EcommerceSideReportProductGroupsNoImage extends Report
 {
     use EcommerceProductReportTrait;
 
@@ -21,11 +21,14 @@ class EcommerceSideReportProductsMismatchSearchAllowPurchase extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.MISMATCH_SEARCH_ALLOW_PURCHASE', 'E-commerce: Products: not for sale but shown in search or vice versa.');
+        return _t('EcommerceSideReport.PRODUCT_GROUPS_NOIMAGE', 'E-commerce: Product Groups: without image');
     }
 
+    /**
+     * @param mixed $params
+     */
     protected function getEcommerceWhere($params = null): string
     {
-        return '(ShowInSearch = 1 AND AllowPurchase = 0) OR (ShowInSearch = 0 AND AllowPurchase = 1) ';
+        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
     }
 }

@@ -6,31 +6,28 @@ use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
- * Selects all products without an image.
+ * Selects all products.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportNoImageProducts extends Report
+class EcommerceSideReportProductGroupsLongTitles extends Report
 {
-    use EcommerceProductReportTrait;
+    use EcommerceProductGroupReportTrait;
 
-    protected $dataClass = Product::class;
+    private static $min_length = 100;
 
     /**
      * @return string
      */
     public function title()
     {
-        return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products: without image');
+        return _t('EcommerceSideReport.PRODUCT_GROUPS_LONG_TITLES', 'E-commerce: Product Groups: Long Titles');
     }
 
-    /**
-     * @param mixed $params
-     */
     protected function getEcommerceWhere($params = null): string
     {
-        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
+        return 'CHAR_LENGTH("Title") > ' . $this->Config()->get('min_length');
     }
 }

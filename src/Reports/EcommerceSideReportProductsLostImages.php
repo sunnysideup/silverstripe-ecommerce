@@ -12,12 +12,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportLostImages extends Report
+class EcommerceSideReportProductsLostImages extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
-
     /**
      * @return string
      */

@@ -12,11 +12,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
  * @package: ecommerce
  * @sub-package: reports
  */
-class EcommerceSideReportLongTitles extends Report
+class EcommerceSideReportProductsLongTitles extends Report
 {
     use EcommerceProductReportTrait;
-
-    protected $dataClass = Product::class;
 
     private static $min_length = 100;
 
@@ -25,15 +23,7 @@ class EcommerceSideReportLongTitles extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.LONG_TITLES', 'E-commerce: Products: Long Titles');
-    }
-
-    /**
-     * @return int - for sorting reports
-     */
-    public function sort()
-    {
-        return 7000;
+        return _t('EcommerceSideReport.PRODUCT_LONG_TITLES', 'E-commerce: Products: Long Titles');
     }
 
     protected function getEcommerceWhere($params = null): string

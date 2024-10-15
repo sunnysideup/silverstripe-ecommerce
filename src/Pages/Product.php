@@ -58,6 +58,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 
 /**
  * This is a standard Product page-type with fields like
@@ -1082,9 +1083,9 @@ class Product extends Page implements BuyableModel
      * In templates, it is used like this:
      * $EcommerceConfigAjax.TableID.
      *
-     * @return EcommerceConfigAjax
+     * @return EcommerceConfigAjaxDefinitions
      */
-    public function AJAXDefinitions()
+    public function AJAXDefinitions(): EcommerceConfigAjaxDefinitions
     {
         return EcommerceConfigAjax::get_one($this);
     }
