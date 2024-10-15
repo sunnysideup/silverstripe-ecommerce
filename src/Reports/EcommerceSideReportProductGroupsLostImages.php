@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * Selects all products without an image.
@@ -15,6 +16,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductGroupsLostImages extends Report
 {
     use EcommerceProductGroupReportTrait;
+    protected $dataClass = ProductGroup::class;
     /**
      * @return string
      */
