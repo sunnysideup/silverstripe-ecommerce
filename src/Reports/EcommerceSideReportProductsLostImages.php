@@ -15,6 +15,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductsLostImages extends Report
 {
     use EcommerceProductReportTrait;
+    protected $dataClass = Product::class;
     /**
      * @return string
      */

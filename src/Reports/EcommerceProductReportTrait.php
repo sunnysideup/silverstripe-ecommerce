@@ -16,8 +16,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
 
 trait EcommerceProductReportTrait
 {
-    protected $dataClass = Product::class;
-
     /**
      * not sure if this is used in SS3.
      *

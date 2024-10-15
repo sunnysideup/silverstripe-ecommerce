@@ -12,7 +12,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductsFeatured extends Report
 {
     use EcommerceProductReportTrait;
-
+    protected $dataClass = Product::class;
     /**
      * @return string
      */
