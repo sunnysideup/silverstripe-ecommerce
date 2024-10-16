@@ -8,6 +8,8 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\AbstractProductsAndGroupsList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
@@ -62,6 +64,27 @@ abstract class BaseApplyer
      */
     protected $selectedOptionParams = '';
 
+    /**
+     * class name of the buyables to search
+     * at this stage, you can only search one type of buyable at any one time
+     * e.g. only products or only mydataobject.
+     *
+     * leave blank to use the default
+     *
+     * @var string
+     */
+    protected string $baseClassNameForBuyables;
+
+    /**
+     * class name of the buyables to search
+     * at this stage, you can only search one type of buyable at any one time
+     * e.g. only products or only mydataobject.
+     *
+     * @var string
+     */
+    protected string $baseClassNameForGroups;
+
+
     private static $options = [];
 
     public function __construct($finalProductList = null)
@@ -83,6 +106,21 @@ abstract class BaseApplyer
      * @return BaseApplyer (or other ones)
      */
     abstract public function apply(?string $key = null, $params = null);
+
+
+    public function setBaseClassNameForBuyables(string $s): self
+    {
+        $this->baseClassNameForBuyables = $s;
+
+        return $this;
+    }
+
+    public function setBaseClassNameForGroups(string $s): self
+    {
+        $this->baseClassNameForGroups = $s;
+
+        return $this;
+    }
 
     public function getOptions(): array
     {
@@ -238,6 +276,12 @@ abstract class BaseApplyer
 
     protected function applyStart(?string $key = null, $params = null): bool
     {
+        if (! isset($this->baseClassNameForBuyables)) {
+            $this->baseClassNameForBuyables = (string) EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
+        }
+        if (! isset($this->baseClassNameForGroups)) {
+            $this->baseClassNameForGroups = (string) EcommerceConfig::get(ProductGroup::class, 'base_group_class');
+        }
         if (false === $this->applied) {
             $this->selectedOption = $key;
             $this->selectedOptionParams = $params;
