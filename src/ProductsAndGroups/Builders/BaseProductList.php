@@ -146,7 +146,8 @@ class BaseProductList extends AbstractProductsAndGroupsList
         if ($this->hasCache()) {
             $this->loadCache();
         } else {
-            $this->buildDefaultList()
+            $this
+                ->buildDefaultList()
                 ->applyDefaultFilters()
                 ->applyGroupOrSearchFilter()
                 ->removeExcludedProducts()
@@ -289,7 +290,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
         $sort = $this->Config()->get('group_filter_candidates_sort');
-        if(is_array($sort)) {
+        if (is_array($sort)) {
             $list = $list->sort($sort);
         } else {
             $list = $list->orderBy($sort);
