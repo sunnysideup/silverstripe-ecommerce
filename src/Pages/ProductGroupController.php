@@ -259,13 +259,13 @@ class ProductGroupController extends PageController
      * Returns child product groups for use in 'in this section'. For example
      * the vegetable Product Group may have listed here: Carrot, Cabbage, etc...
      */
-    public function MenuChildGroups(?int $levels = 2): ?DataList
+    public function MenuChildGroups(): ?DataList
     {
         if ($this->IsSearchResults()) {
             return null;
         }
 
-        return $this->ChildCategories($levels);
+        return $this->ChildCategories();
     }
 
     public function ShowGroupFilterLinks(): bool
@@ -374,7 +374,7 @@ class ProductGroupController extends PageController
     public function HasAnyTypeOfFiltersOrSorts(): bool
     {
         return true;
-        $this->HasFilters() || $this->HasGroupFilters() || $this->HasSearchFilters() || $this->HasSorts() || $this->HasDisplays();
+        // $this->HasFilters() || $this->HasGroupFilters() || $this->HasSearchFilters() || $this->HasSorts() || $this->HasDisplays();
     }
 
     /**
@@ -772,7 +772,7 @@ class ProductGroupController extends PageController
             $this->finalProductList->setExtraFilter($extraFilter);
         }
         if ($alternativeSort) {
-            $this->finalProductList->setAlternatveSort($alternativeSort);
+            $this->finalProductList->setAlternativeSort($alternativeSort);
         }
 
         return $this->finalProductList;
@@ -823,8 +823,8 @@ class ProductGroupController extends PageController
         if ($key && EcommerceCache::inst()->hasCache($key)) {
             $ids = EcommerceCache::inst()->retrieve($key);
             $ids = ArrayMethods::filter_array($ids);
-
-            return Product::get()
+            $buyableClassName = $this->getBuyableClassName();
+            return $buyableClassName::get()
                 ->filter(['ID' => $ids])
                 ->orderBy(ArrayMethods::create_sort_statement_from_id_array($ids, Product::class))
             ;
