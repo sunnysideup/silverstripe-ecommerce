@@ -113,26 +113,6 @@ class ProductSearchFilter extends BaseApplyer
     protected $resultArrayPos = 0;
 
     /**
-     * class name of the buyables to search
-     * at this stage, you can only search one type of buyable at any one time
-     * e.g. only products or only mydataobject.
-     *
-     * leave blank to use the default
-     *
-     * @var string
-     */
-    protected $baseClassNameForBuyables = '';
-
-    /**
-     * class name of the buyables to search
-     * at this stage, you can only search one type of buyable at any one time
-     * e.g. only products or only mydataobject.
-     *
-     * @var string
-     */
-    protected $baseClassNameForGroups = ProductGroup::class;
-
-    /**
      * this is mysql specific, see: https://dev.mysql.com/doc/refman/5.0/en/fulltext-boolean.html.
      * not used at the moment!
      *
@@ -233,6 +213,7 @@ class ProductSearchFilter extends BaseApplyer
                 $outcome = $this->partialCacheApplyVariablesFromCache($hash);
                 if ($outcome && ! $this->debug) {
                     $this->runFullProcessFromCache();
+
                 } else {
                     $this->runFullProcess();
                     $this->partialCacheSetCacheForHash($hash);
@@ -328,20 +309,6 @@ class ProductSearchFilter extends BaseApplyer
         return $this;
     }
 
-    public function setBaseClassNameForBuyables(string $s): self
-    {
-        $this->baseClassNameForBuyables = $s;
-
-        return $this;
-    }
-
-    public function setBaseClassNameForGroups(string $s): self
-    {
-        $this->baseClassNameForGroups = $s;
-
-        return $this;
-    }
-
     public function setMaximumNumberOfResults(int $i): self
     {
         $this->maximumNumberOfResults = $i;
@@ -359,9 +326,6 @@ class ProductSearchFilter extends BaseApplyer
             $this->rawData = GetVariables::url_string_to_array((string) $params);
         } else {
             $this->rawData = $params;
-        }
-        if (! $this->baseClassNameForBuyables) {
-            $this->baseClassNameForBuyables = EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
 
         return parent::applyStart($key, $this->rawData);
