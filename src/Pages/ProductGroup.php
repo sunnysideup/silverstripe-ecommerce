@@ -90,6 +90,11 @@ class ProductGroup extends Page
      */
     private static $base_buyable_class = Product::class;
 
+    /**
+     * @var string
+     */
+    private static $base_group_class = ProductGroup::class;
+
     private static $maximum_number_of_products_to_list = 1000;
 
     private static $table_name = 'ProductGroup';
