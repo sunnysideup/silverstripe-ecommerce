@@ -135,7 +135,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public function setAlternativeSort($sort): self
     {
         if ($sort) {
-            if(is_array($sort)) {
+            if (is_array($sort)) {
                 $this->products = $this->products->sort($sort);
             } else {
                 $this->products = $this->products->orderBy($sort);
@@ -164,8 +164,8 @@ class FinalProductList extends AbstractProductsAndGroupsList
     {
         $applyer = $this->getApplyer($classNameOrType);
         //Vardump::now(get_class($obj));
-
         $this->products = $applyer
+            ->setBaseClassNameForBuyables($this->getBuyableClassName())
             ->apply($key, $params)
             ->getProducts()
         ;
@@ -271,7 +271,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered(), true);
         $sort = $this->Config()->get('group_filter_candidates_sort');
-        if(is_array($sort)) {
+        if (is_array($sort)) {
             $list = $list->sort($sort);
         } else {
             $list = $list->orderBy($sort);
