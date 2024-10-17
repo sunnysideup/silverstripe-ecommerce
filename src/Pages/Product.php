@@ -29,6 +29,7 @@ use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
+use Sunnysideup\Ecommerce\Api\GetParentDetails;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -428,16 +429,27 @@ class Product extends Page implements BuyableModel
             );
         }
 
+        $fields->addFieldsToTab(
+            'Root.Under',
+            [
+                new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
+                new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Breadcrumb')),
+                (new ReadonlyField(
+                    'FullSiteTreeSortNice',
+                    _t('Product.FULLSITETREESORT', 'Full sort index'),
+                    GetParentDetails::format_sort_numbers($this->FullSiteTreeSort)
+                )
+                )
+                    ->setDescription('This number is used to sort the product in a list of all products.'),
+            ]
+        );
+
         if ($config->ProductsAlsoInOtherGroups) {
             $fields->addFieldsToTab(
                 'Root.Under',
                 [
-                    new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
-                    new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Product Bread crumb')),
                     new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
                     $this->getProductGroupsTableField(),
-                    (new ReadonlyField('FullSiteTreeSort', _t('Product.FULLSITETREESORT', 'Full sort index')))
-                        ->setDescription('This number is used to sort the product in a list of all products.'),
                 ]
             );
         }
@@ -577,33 +589,16 @@ class Product extends Page implements BuyableModel
         }
 
         $fullName .= $this->Title;
-        //FullSiteTreeSort
-        $parentSortArray = [sprintf('%03d', $this->Sort)];
-        $obj = $this;
-        $parentTitleArray = [];
-        while ($obj && $obj->ParentID) {
-            $obj = SiteTree::get_by_id((int) $obj->ParentID - 0);
-            if ($obj) {
-                $parentSortArray[] = sprintf('%03d', $obj->Sort);
-                if (
-                    is_a($obj, EcommerceConfigClassNames::getName(ProductGroup::class))
-                    && !is_a($obj, EcommerceConfigClassNames::getName(ProductGroupSearchPage::class))
-                ) {
-                    $parentTitleArray[] = $obj->Title;
-                }
-            }
-        }
 
-        $reverseArray = array_reverse($parentSortArray);
-        $parentsTitle = '';
-        if ([] !== $parentTitleArray) {
-            $parentsTitle = implode(' / ', $parentTitleArray);
-        }
+        $obj = (GetParentDetails::create($this, ProductGroup::class))
+            ->setNotAllowedClassNames(ProductGroupSearchPage::class)
+            ->run();
+        $parentsTitle = $obj->getParentsTitle();
 
         //setting fields with new values!
         $this->FullName = $fullName . ' (' . _t('product.IN', 'in') . ' ' . $parentsTitle . ')';
         $this->ProductBreadcrumb = $parentsTitle;
-        $this->FullSiteTreeSort = implode('', array_map($this->numberPad, $reverseArray));
+        $this->FullSiteTreeSort = (int) implode('', $obj->getParentSortArray());
     }
 
     /**

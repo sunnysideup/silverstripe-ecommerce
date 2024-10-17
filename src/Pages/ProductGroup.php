@@ -29,6 +29,7 @@ use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
+use Sunnysideup\Ecommerce\Api\GetParentDetails;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -107,6 +108,8 @@ class ProductGroup extends Page
         'DisplayStyle' => 'Varchar(20)',
         'UseImageForProducts' => 'Boolean',
         'AlternativeProductGroupNames' => 'Varchar(255)', //To ensure they are also find for other names in search
+        'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
+        'ProductGroupBreadcrumb' => 'Varchar(255)', //Name for look-up lists
     ];
 
     private static $has_one = [
@@ -142,6 +145,7 @@ class ProductGroup extends Page
         'DefaultSortOrder' => true,
         'DefaultFilter' => true,
         'DisplayStyle' => true,
+        'FullSiteTreeSort' => true,
     ];
 
     private static $summary_fields = [
@@ -149,6 +153,7 @@ class ProductGroup extends Page
         'Title' => 'Category',
         'NumberOfProductsIncAlsoShow' => 'Products',
         'Children.Count' => 'Child Categories',
+        'ProductBreadcrumb' => 'Breadcrumb',
     ];
 
     private static $searchable_fields = [
@@ -321,11 +326,13 @@ class ProductGroup extends Page
 
         $fields->addFieldsToTab(
             'Root.Advanced',
-            ReadonlyField::create(
-                'DebugLink',
-                'Debug Products and Links',
-                DBField::create_field('HTMLText', '<a href="' . $this->Link() . '?showdebug=1">show debug information</a>')
-            )
+            [
+                ReadonlyField::create(
+                    'DebugLink',
+                    'Debug Products and Links',
+                    DBField::create_field('HTMLText', '<a href="' . $this->Link() . '?showdebug=1">show debug information</a>')
+                )
+            ]
         );
         $mySearchDetail = $this->ProductGroupSearchTable();
         if ($mySearchDetail && $mySearchDetail->exists()) {
@@ -357,6 +364,19 @@ class ProductGroup extends Page
             ]
         );
 
+        $fields->addFieldsToTab(
+            'Root.Under',
+            [
+                new ReadonlyField('ProductGroupBreadcrumb', _t('Product.PRODUCT_GROUP_BREADCRUMP', 'Breadcrumb')),
+                (new ReadonlyField(
+                    'FullSiteTreeSortNice',
+                    _t('Product.FULLSITETREESORT', 'Full sort index'),
+                    GetParentDetails::format_sort_numbers($this->FullSiteTreeSort)
+                )
+                )
+                    ->setDescription('This number is used to sort the product in a list of all products.'),
+            ]
+        );
         return $fields;
     }
 
@@ -717,6 +737,20 @@ class ProductGroup extends Page
                 $this->getProductSearchTableDataValues()
             );
         }
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $obj = (GetParentDetails::create($this, ProductGroup::class))
+            ->setNotAllowedClassNames(ProductGroupSearchPage::class)
+            ->run();
+        $parentsTitle = $obj->getParentsTitle();
+        $parentSortArray = $obj->getParentSortArray();
+
+        //setting fields with new values!
+        $this->ProductGroupBreadcrumb = $parentsTitle;
+        $this->FullSiteTreeSort = (int) implode('', $obj->getParentSortArray());
     }
 
     public function onBeforeUnpublish()
