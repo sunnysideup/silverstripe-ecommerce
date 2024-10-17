@@ -33,11 +33,5 @@ class EcommerceSideReportProductsNoPrice extends Report
         return '"Product"."Price" IS NULL OR "Product"."Price" = 0 ';
     }
 
-    /**
-     * @param null|mixed $params
-     */
-    protected function getEcommerceSort($params = null): array
-    {
-        return ['FullSiteTreeSort' => 'ASC'];
-    }
+
 }

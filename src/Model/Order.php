@@ -1947,7 +1947,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @param bool   $includeBillingAddress
      * @param bool   $includeShippingAddress
      */
-    public function SetCountryFields($countryCode, $includeBillingAddress = true, $includeShippingAddress = true)
+    public function SetCountryFields($countryCode, $includeBillingAddress = true, $includeShippingAddress = true): static
     {
         if ($this->IsSubmitted()) {
             user_error('Can not change country in submitted order', E_USER_NOTICE);
@@ -1968,6 +1968,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+        return $this;
     }
 
     /**
@@ -1975,7 +1976,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param int $regionID - ID for the region to be set
      */
-    public function SetRegionFields($regionID)
+    public function SetRegionFields($regionID): static
     {
         if ($this->IsSubmitted()) {
             user_error('Can not change country in submitted order', E_USER_NOTICE);
@@ -1992,6 +1993,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+        return $this;
     }
 
     /**
@@ -2021,9 +2023,10 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param EcommerceCurrency $currency
      */
-    public function SetCurrency($currency)
+    public function SetCurrency($currency): static
     {
         $this->UpdateCurrency($currency);
+        return $this;
     }
 
     // 5. CUSTOMER COMMUNICATION
@@ -2341,7 +2344,7 @@ class Order extends DataObject implements EditableEcommerceObject
         return parent::canCreate($member, $context);
     }
 
-    public function setOverrideCanView(bool $b)
+    public function setOverrideCanView(bool $b): static
     {
         $this->overrideCanView = $b;
 
@@ -3532,7 +3535,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function IsSubmitted($recalculate = false)
+    public function IsSubmitted(?bool $recalculate = false)
     {
         return $this->getIsSubmitted($recalculate);
     }

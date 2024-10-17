@@ -788,7 +788,7 @@ class ProductGroupController extends PageController
         return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
     }
 
-    public function setSecondaryTitle(string $v)
+    protected function setSecondaryTitle(string $v)
     {
         $this->secondaryTitle = $v;
     }

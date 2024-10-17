@@ -866,9 +866,10 @@ class Product extends Page implements BuyableModel
      *
      * @param string $className
      */
-    public function setAlternativeClassNameForOrderItem($className)
+    public function setAlternativeClassNameForOrderItem($className) : static
     {
         $this->defaultClassNameForOrderItem = $className;
+        return $this;
     }
 
     /**
@@ -1019,7 +1020,7 @@ class Product extends Page implements BuyableModel
      *
      * @return string (Link)
      */
-    public function SetSpecificQuantityItemLink($quantity)
+    public function SetSpecificQuantityItemLink($quantity): string
     {
         return ShoppingCartController::set_quantity_item_link($this->ID, $this->ClassName, array_merge($this->linkParameters('setspecificquantityitem'), ['quantity' => $quantity]));
     }

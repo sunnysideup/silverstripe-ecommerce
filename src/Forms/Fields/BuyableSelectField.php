@@ -134,7 +134,7 @@ class BuyableSelectField extends FormField
         return $clone;
     }
 
-    public function setReadonly($bool)
+    public function setReadonly($bool): static
     {
         parent::setReadonly((bool) $bool);
         if ($bool) {

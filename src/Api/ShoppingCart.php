@@ -11,6 +11,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -212,7 +213,7 @@ class ShoppingCart
      *
      * @return Order
      */
-    public function setOrder($order)
+    public function setOrder($order): Order|null
     {
         $this->order = $order;
 
@@ -383,12 +384,13 @@ class ShoppingCart
      *
      * @return string
      */
-    public function Link(?Order $order = null)
+    public function Link(?Order $order = null): string
     {
         $order = self::singleton()->currentOrder(0, $order);
         if ($order) {
             return $order->Link();
         }
+        return '';
     }
 
     /**
@@ -455,6 +457,9 @@ class ShoppingCart
     public function setQuantity(BuyableModel $buyable, $quantity, array $parameters = [])
     {
         if ($this->allowWrites()) {
+            /**
+             * @var OrderItem $item
+             */
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item) {
@@ -488,6 +493,9 @@ class ShoppingCart
     public function decrementBuyable(BuyableModel $buyable, $quantity = 1.00, array $parameters = [])
     {
         if ($this->allowWrites()) {
+            /**
+             * @var OrderItem $item
+             */
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item) {
@@ -552,7 +560,7 @@ class ShoppingCart
      * @param array|Form   $parameters         - array of parameters to target a specific order item. eg: group=1, length=5*
      *                                         - form saved into item...
      *
-     * @return DataObject
+     * @return OrderItem|null
      */
     public function prepareOrderItem(BuyableModel $buyable, $parameters = [], $mustBeExistingItem = true)
     {
@@ -946,9 +954,9 @@ class ShoppingCart
     /**
      * Add buyables into new Order.
      *
-     * @param Order       $newOrder
-     * @param OrderItem[] $items
-     * @param array       $parameters
+     * @param Order                 $newOrder
+     * @param DataList   $items
+     * @param array                 $parameters
      *
      * @return Order
      */
@@ -1007,7 +1015,7 @@ class ShoppingCart
      *
      * @return bool
      */
-    public function setRegion($regionID)
+    public function setRegion($regionID): bool
     {
         if (EcommerceRegion::regionid_allowed($regionID)) {
             $this->currentOrder()->SetRegionFields($regionID);
@@ -1028,7 +1036,7 @@ class ShoppingCart
      *
      * @return bool
      */
-    public function setCurrency($currencyCode)
+    public function setCurrency($currencyCode): bool
     {
         $currency = EcommerceCurrency::get_one_from_code($currencyCode);
         if ($currency) {
@@ -1166,10 +1174,10 @@ class ShoppingCart
 
     public function addReferral($params): int
     {
-        if(count($params)) {
+        if (count($params)) {
             $order = $this->currentOrder();
-            if($order && $order->exists()) {
-                if(Referral::add_referral($order, $params)) {
+            if ($order && $order->exists()) {
+                if (Referral::add_referral($order, $params)) {
                     return $order->ID;
                 }
             }
@@ -1239,7 +1247,7 @@ class ShoppingCart
 
         // recalculate... this is often a change so well worth it.
         $order = $this->currentOrder();
-        if($order) {
+        if ($order) {
             //todo- why would there not be an order?
             $order->calculateOrderAttributes($recalculate = true);
         }

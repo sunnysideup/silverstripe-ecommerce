@@ -112,7 +112,7 @@ abstract class OrderEmail extends Email
      *
      * @param Order $order - the order to which the email relates
      */
-    public function setOrder(Order $order)
+    public function setOrder(Order $order): static
     {
         $this->order = $order;
         return $this;
@@ -122,9 +122,9 @@ abstract class OrderEmail extends Email
      * sets resend to true, which means that the email
      * is sent even if it has already been sent.
      *
-     * @param mixed $resend
+     * @param bool $resend
      */
-    public function setResend($resend = true)
+    public function setResend($resend = true): static
     {
         $this->resend = $resend;
         return $this;

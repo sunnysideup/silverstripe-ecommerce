@@ -105,7 +105,7 @@ interface BuyableModel
      *
      * @param string $className
      */
-    public function setAlternativeClassNameForOrderItem($className);
+    public function setAlternativeClassNameForOrderItem($className): static;
 
     /**
      * This is used when you add a product to your cart
@@ -173,7 +173,7 @@ interface BuyableModel
      *
      * @return string (Link)
      */
-    public function SetSpecificQuantityItemLink($quantity);
+    public function SetSpecificQuantityItemLink($quantity): string;
 
     /**
      * @return string
