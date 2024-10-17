@@ -10,7 +10,7 @@ class GetParentDetails
     use Injectable;
 
 
-    public static function format_sort_numbers(int $number, int $groupSize = 5, string $delimiter = '-'): string
+    public static function format_sort_numbers(mixed $number, int $groupSize = 5, string $delimiter = '-'): string
     {
         // Convert the number to a string
         $numberStr = (string)$number;

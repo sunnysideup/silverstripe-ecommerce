@@ -371,7 +371,8 @@ class ProductGroup extends Page
                 (new ReadonlyField(
                     'FullSiteTreeSortNice',
                     _t('Product.FULLSITETREESORT', 'Full sort index'),
-                    GetParentDetails::format_sort_numbers($this->FullSiteTreeSort)
+                    /// note use use string to avoid issues with int only supporting 19 digits
+                    GetParentDetails::format_sort_numbers((string) $this->FullSiteTreeSort)
                 )
                 )
                     ->setDescription('This number is used to sort the product in a list of all products.'),
