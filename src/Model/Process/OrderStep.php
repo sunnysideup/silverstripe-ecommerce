@@ -1421,7 +1421,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     protected function sendEmailForStep(
         Order $order,
-        string $subject,
+        ?string $subject = '',
         ?string $message = '',
         ?bool $resend = false,
         $adminOnlyOrToEmail = false,
@@ -1429,7 +1429,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     ): bool {
         if (false === (bool) $this->hasBeenSent($order) || true === (bool) $resend) {
             if (!$subject) {
-                $subject = $this->CalculatedEmailSubject($order);
+                $subject = (string) $this->CalculatedEmailSubject($order);
             }
             $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
 
@@ -1453,9 +1453,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.') . '<br /><br /><br /><br />' . $message;
                 $outcome = $order->sendAdminNotification(
-                    $emailClassName,
-                    $subject,
-                    $message,
+                    (string) $emailClassName,
+                    (string) $subject,
+                    (string) $message,
                     $resend
                 );
             }
