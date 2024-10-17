@@ -988,31 +988,15 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
         }
 
-        $exists = OrderEmailRecord::get()
+        return (bool) OrderEmailRecord::get()
             ->filter(
                 [
                     'OrderID' => $order->ID,
                     'OrderStepID' => $this->ID,
-                    'Result' => 1,
                 ]
             )
             ->exists()
         ;
-        if ($exists) {
-            return true;
-        }
-
-        $count = OrderEmailRecord::get()
-            ->filter(
-                [
-                    'OrderID' => $order->ID,
-                    'OrderStepID' => $this->ID,
-                ]
-            )
-            ->count()
-        ;
-        //tried it twice - abandon to avoid being stuck in a loop!
-        return $count > 2;
     }
 
     /**
@@ -1436,12 +1420,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @return bool
      */
     protected function sendEmailForStep(
-        $order,
-        $subject,
-        $message = '',
-        $resend = false,
+        Order $order,
+        string $subject,
+        ?string $message = '',
+        ?bool $resend = false,
         $adminOnlyOrToEmail = false,
-        $emailClassName = ''
+        ?string $emailClassName = ''
     ): bool {
         if (false === (bool) $this->hasBeenSent($order) || true === (bool) $resend) {
             if (!$subject) {
