@@ -9,24 +9,6 @@ class GetParentDetails
 {
     use Injectable;
 
-    protected object $objectWithParentID;
-
-    // input
-    protected string $expectedParentClassName;
-    protected array $allowedClassNames;
-    protected array $notAllowedClassNames;
-    protected string $sortField = 'Sort';
-
-    // output
-    protected string $parentsTitle;
-
-    protected array $parentSortArray;
-
-    public function setSortField(string $sortField): self
-    {
-        $this->sortField = $sortField;
-        return $this;
-    }
 
     public static function format_sort_numbers(int $number, int $groupSize = 5, string $delimiter = '-'): string
     {
@@ -45,6 +27,25 @@ class GetParentDetails
 
         // Join the chunks with the specified delimiter
         return implode($delimiter, $chunks);
+    }
+
+    protected object $objectWithParentID;
+
+    // input
+    protected string $expectedParentClassName;
+    protected array $allowedClassNames;
+    protected array $notAllowedClassNames;
+    protected string $sortField = 'Sort';
+
+    // output
+    protected string $parentsTitle;
+
+    protected array $parentSortArray;
+
+    public function setSortField(string $sortField): self
+    {
+        $this->sortField = $sortField;
+        return $this;
     }
 
     public function setAllowedClassNames(array|string $allowedClassNames): self
