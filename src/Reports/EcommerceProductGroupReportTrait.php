@@ -105,7 +105,7 @@ trait EcommerceProductGroupReportTrait
     {
         return [
             'ProductGroupType' => [
-                'title' => _t('EcommerceSideReport.PRODUCTGROUP_TYPE', 'Type'),
+                'title' => _t('EcommerceSideReport.PRODUCT_GROUP_TYPE', 'Type'),
                 'link' => true,
             ],
             'Breadcrumb' => [
@@ -165,7 +165,7 @@ trait EcommerceProductGroupReportTrait
         $list = ClassInfo::subClassesFor(ProductGroup::class, true);
         $newArray = [];
         foreach ($list as $className) {
-            $newArray[$className] = ProductGroup::class === $className ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
+            $newArray[$className] = ProductGroup::class === $className ? '(Any)' : Injector::inst()->get($className)->i18n_plural_name();
         }
 
         return $newArray;

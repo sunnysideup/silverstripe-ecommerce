@@ -28,7 +28,7 @@ class EcommerceSideReportProductGroupsLostImages extends Report
     public function updateEcommerceList($list)
     {
         return $list
-            ->leftJoin('File', '"File"."ID" = "Product"."ImageID"')
+            ->leftJoin('File', '"File"."ID" = "ProductGroup"."ImageID"')
             ->where('"File"."ID" IS NULL AND "ImageID" > 0')
             ->sort(['Title' => 'ASC'])
         ;

@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceSideReportProductGroupsNoImage extends Report
 {
-    use EcommerceProductReportTrait;
+    use EcommerceProductGroupReportTrait;
     protected $dataClass = ProductGroup::class;
 
     /**
@@ -31,6 +31,6 @@ class EcommerceSideReportProductGroupsNoImage extends Report
      */
     protected function getEcommerceWhere($params = null): string
     {
-        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
+        return '"ProductGroup"."ImageID" IS NULL OR "ProductGroup"."ImageID" <= 0';
     }
 }
