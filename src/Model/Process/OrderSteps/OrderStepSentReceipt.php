@@ -85,7 +85,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendReceiptToCustomer;
 
-        return $this->sendEmailForStep(
+        return (bool) $this->sendEmailForStep(
             $order,
             $subject = $this->CalculatedEmailSubject($order),
             $message = '',
