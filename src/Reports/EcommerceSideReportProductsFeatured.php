@@ -31,11 +31,5 @@ class EcommerceSideReportProductsFeatured extends Report
         return ['FeaturedProduct' => 1];
     }
 
-    /**
-     * @param null|mixed $params
-     */
-    protected function getEcommerceSort($params = null): array
-    {
-        return ['FullSiteTreeSort' => 'ASC'];
-    }
+
 }
