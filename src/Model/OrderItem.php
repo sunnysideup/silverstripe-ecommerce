@@ -662,7 +662,7 @@ class OrderItem extends OrderAttribute
 
             //start hack
             if (!$this->BuyableClassName) {
-                if($this->BuyableID) {
+                if ($this->BuyableID) {
                     // last resort
                     $product = SiteTree::get()->byID($this->BuyableID);
                     if ($product) {
@@ -900,6 +900,16 @@ class OrderItem extends OrderAttribute
      *
      * @return string
      */
+    public function AbsoluteLinkNoStage()
+    {
+        return str_replace('?stage=Stage', '', $this->getAbsoluteLink());
+    }
+
+    /**
+     * alias.
+     *
+     * @return string
+     */
     public function AbsoluteLink()
     {
         return $this->getAbsoluteLink();
@@ -1014,7 +1024,7 @@ class OrderItem extends OrderAttribute
      */
     protected function onBeforeWrite()
     {
-        if(!$this->priceHasBeenFixed()) {
+        if (!$this->priceHasBeenFixed()) {
             $this->resetCache();
             $buyable = $this->getBuyableCached(true);
             if (Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack') && !$this->OrderID) {

@@ -953,6 +953,17 @@ class Product extends Page implements BuyableModel
         return $this;
     }
 
+
+    /**
+     * alias.
+     *
+     * @return string
+     */
+    public function AbsoluteLinkNoStage()
+    {
+        return str_replace('?stage=Stage', '', $this->getAbsoluteLink());
+    }
+
     /**
      * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
      *
