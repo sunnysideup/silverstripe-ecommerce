@@ -961,7 +961,7 @@ class Product extends Page implements BuyableModel
      */
     public function AbsoluteLinkNoStage()
     {
-        return str_replace('?stage=Stage', '', $this->getAbsoluteLink());
+        return str_replace('?stage=Stage', '', $this->AbsoluteLink());
     }
 
     /**
