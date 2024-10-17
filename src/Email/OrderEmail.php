@@ -115,6 +115,7 @@ abstract class OrderEmail extends Email
     public function setOrder(Order $order)
     {
         $this->order = $order;
+        return $this;
     }
 
     /**
@@ -126,6 +127,7 @@ abstract class OrderEmail extends Email
     public function setResend($resend = true)
     {
         $this->resend = $resend;
+        return $this;
     }
 
 
@@ -235,11 +237,13 @@ abstract class OrderEmail extends Email
     public function hasBeenSent(): bool
     {
         $orderStep = $this->order->Status();
-        if (is_a($orderStep, EcommerceConfigClassNames::getName(OrderStep::class))) {
+        if ($orderStep) {
             return $orderStep->hasBeenSent($this->order);
+        } else {
+            user_error('Order Step not found for Order ID: ' . $this->order->ID, E_USER_NOTICE);
         }
 
-        return false;
+        return true;
     }
 
     /**
