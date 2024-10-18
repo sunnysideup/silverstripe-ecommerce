@@ -957,11 +957,11 @@ class Order extends DataObject implements EditableEcommerceObject
 
         if ($submitted) {
             $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');
-            $html = '<p>' . $permaLinkLabel . ': <a href="' . $this->getRetrieveLink() . '">' . $this->getRetrieveLink() . '</a></p>';
+            $otherHTML = '<p>' . $permaLinkLabel . ': <a href="' . $this->getRetrieveLink() . '">' . $this->getRetrieveLink() . '</a></p>';
             $shareLinkLabel = _t('Order.SHARE_LINK', 'Share Link');
-            $html .= '<p>' . $shareLinkLabel . ': <a href="' . $this->getShareLink() . '">' . $this->getShareLink() . '</a></p>';
+            $otherHTML .= '<p>' . $shareLinkLabel . ': <a href="' . $this->getShareLink() . '">' . $this->getShareLink() . '</a></p>';
             $feedbackLinkLabel = _t('Order.FEEDBACK_LINK', 'Feedback Link');
-            $html .= '<p>' . $feedbackLinkLabel . ': <a href="' . $this->getFeedbackLink() . '">' . $this->getFeedbackLink() . '</a></p>';
+            $otherHTML .= '<p>' . $feedbackLinkLabel . ': <a href="' . $this->getFeedbackLink() . '">' . $this->getFeedbackLink() . '</a></p>';
             $js = "window.open(this.href, 'payment', 'toolbar=0,scrollbars=1,location=1,statusbar=1,menubar=0,resizable=1,width=800,height=600'); return false;";
             $link = $this->getPrintLink();
             $label = _t('Order.PRINT_INVOICE', 'invoice');
@@ -971,13 +971,19 @@ class Order extends DataObject implements EditableEcommerceObject
             $label = _t('Order.PRINT_PACKING_SLIP', 'packing slip');
             $labelPrint = _t('Order.PRINT', 'Print');
             $linkHTML .= '<a href="' . $link . '" onclick="' . $js . '">' . $label . '</a>';
-            $html .= '<h3>';
+            $html = '<h3>';
             $html .= $labelPrint . ': ' . $linkHTML;
             $html .= '</h3>';
 
             $fields->addFieldToTab(
+                'Root.Next',
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html),
+                'OrderItemsSummaryNice'
+            );
+
+            $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html)
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html.$otherHTML),
             );
 
             //add order here as well.
@@ -2999,7 +3005,7 @@ class Order extends DataObject implements EditableEcommerceObject
             foreach ($this->owner->OrderItems() as $orderItem) {
                 ++$x;
                 $buyable = $orderItem->getBuyableCached();
-                $html .= '<li style="font-family: monospace; font-size: 0.9em; line-height: 1; padding-bottom: 5px;">' . $orderItem->Quantity . '× ';
+                $html .= '<li>' . $orderItem->Quantity . '× ';
                 if ($buyable) {
                     $html .= $buyable->InternalItemID . ' ' . $buyable->Title;
                 } else {
@@ -3008,7 +3014,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
                 $html .= '</li>';
                 if ($x > 3) {
-                    $html .= '<li style="font-family: monospace; font-size: 0.9em; color: black;">- open for more items</li>';
+                    $html .= '<li>- open for more items</li>';
 
                     break;
                 }
