@@ -4,7 +4,7 @@
             <% if ShowInCart %>
 <li id="$CartID" class="$Classes $FirstLast orderItemHolder">
     <a class="ajaxQuantityLink removeFromCart" href="$removeallLink" title="remove">
-        <img src="$resourceURL('sunnysideup/ecommerce:client/images/remove.gif')" alt="x" />
+        <img loading="lazy" src="$resourceURL('sunnysideup/ecommerce:client/images/remove.gif')" alt="x" />
     </a>
     <% if Link %>
     <a id="$AJAXDefinitions.CartTitleID" href="$Link" class="cartTitle">$CartTitle.LimitWordCount</a>

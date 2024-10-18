@@ -5,7 +5,7 @@
     <div id="Inner">
         <div id="PaymentLogoImage">$Logo.RAW</div>
         <div id="PaymentLoadingImage">
-            <img src="$resourceURL('sunnysideup/ecommerce:client/images/loading.gif')" alt="Loading image" />
+            <img loading="lazy" src="$resourceURL('sunnysideup/ecommerce:client/images/loading.gif')" alt="Loading image" />
         </div>
         <div id="PaymentFormContent">$Content</div>
         <div id="PaymentFormHolder">$Form.RAW</div>

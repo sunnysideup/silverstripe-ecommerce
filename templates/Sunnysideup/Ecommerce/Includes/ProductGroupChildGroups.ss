@@ -6,7 +6,7 @@
         <% if Image %>
             <div class="productGroupImage">
                 <a href="$Link">
-                    <img class="productGroupSmallImage" src="$Image.URL" alt="<%t Product.IMAGE '{name} image' name=$Title.ATT %>" />
+                    <img loading="lazy" class="productGroupSmallImage" src="$Image.URL" alt="<%t Product.IMAGE '{name} image' name=$Title.ATT %>" />
                 </a>
             </div>
         <% end_if %>

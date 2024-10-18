@@ -15,7 +15,7 @@
         <% if CanBeRemoved %>
             <strong>
                 <a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveLink">
-                    <img src="$resourceURL('sunnysideup/ecommerce:client/images/remove.gif')" alt="x" />
+                    <img loading="lazy" src="$resourceURL('sunnysideup/ecommerce:client/images/remove.gif')" alt="x" />
                 </a>
             </strong>
         <% end_if %>
