@@ -4136,7 +4136,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false
     ): bool {
         if (! $resend) {
-            if ($this->OrderStep()->hasBeenSent($this)) {
+            if ($this->Status()->hasBeenSent($this)) {
                 return true;
             }
         }
