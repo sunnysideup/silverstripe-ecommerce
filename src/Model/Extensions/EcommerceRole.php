@@ -13,6 +13,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\HeaderField;
@@ -20,6 +21,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
@@ -39,6 +41,7 @@ use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\PermissionProvider\Api\PermissionProviderFactory;
 use Sunnysideup\PermissionProvider\Interfaces\PermissionProviderFactoryProvider;
 
@@ -207,12 +210,16 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
     public function getCustomerDetails(): string
     {
-        if ($this->getOwner()->exists()) {
-            $count = $this->getOwner()->Orders()->count();
+        $owner = $this->getOwner();
+        if ($owner->exists()) {
+            $count = $owner->getOrders()->count();
+            $countCompleted = $owner->getCompletedOrders()->count();
 
-            return $this->getOwner()->FirstName . ' ' . $this->getOwner()->Surname .
+            return $owner->FirstName . ' ' . $owner->Surname .
                 ', ' . $this->getOwner()->Email .
-                ' (' . _t('Member.PREVIOUS_ORDER_COUNT', 'previous orders') . ': ' . $count . ')';
+                ' (' . _t('Member.MEMBER_ORDER_COUNT', 'orders') . ': ' . $count .
+                ', ' . _t('Member.MEMBER_ORDER_COUNT_COMPLETED', 'completed') . ': '.$countCompleted.
+                ')';
         }
 
         return 'no customer';
@@ -469,6 +476,12 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         return Order::get()->filter(['MemberID' => $this->getOwner()->ID]);
     }
 
+    public function getCompletedOrders()
+    {
+        $orderSteps = OrderStep::get()->filter(['ShowAsCompletedOrder' => true])->columnUnique();
+        return $this->getOrders()->filter(['StatusID' => $orderSteps]);
+    }
+
     public function CancelledOrders()
     {
         return $this->getCancelledOrders();
@@ -516,18 +529,16 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function updateCMSFields(FieldList $fields)
     {
-        $orderField = $fields->dataFieldByName('Orders.Member');
-        if ($orderField) {
-            if ($orderField instanceof GridField) {
-                $config = GridFieldConfig_RecordEditor::create();
-                $config->removeComponentsByType(GridFieldDeleteAction::class);
-                $config->removeComponentsByType(GridFieldAddNewButton::class);
-                $config->removeComponentsByType(GridFieldFilterHeader::class);
-                $orderField->setConfig($config);
-                $orderField->setList($this->getOrders());
-            }
+        $owner = $this->getOwner();
+        if ($owner->ID && $this->getOrders()->exists()) {
+            $orderField = GridField::create(
+                'OrdersNice',
+                'Orders',
+                $this->getOrders(),
+                GridFieldConfig_RecordViewer::create()
+            );
         } else {
-            $orderField = new HiddenField('Orders', 'Orders');
+            $orderField = new ReadonlyField('OrdersNice', 'Orders', 'no orders');
         }
 
         $cancelledOrdersField = $fields->dataFieldByName('CancelledOrders.CancelledBy');
