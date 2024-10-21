@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
+use SilverStripe\Assets\Image;
 
 /**
  * Selects all products without an image.
@@ -30,6 +31,13 @@ class EcommerceSideReportProductsNoImage extends Report
      */
     protected function getEcommerceWhere($params = null): string
     {
-        return '"Product"."ImageID" IS NULL OR "Product"."ImageID" <= 0';
+        $check = Product::get()->filter(['ImageID:GreaterThan' => 0])->columnUnique('ImageID');
+        foreach ($check as $id) {
+            $image = Image::get()->byID($id);
+            if ($image && $image->exists()) {
+                $alwaysInclude[] = $id;
+            }
+        }
+        return '"Product"."ID" NOT IN (' . implode(',', $alwaysInclude) . ')';
     }
 }

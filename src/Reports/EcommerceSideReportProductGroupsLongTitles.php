@@ -25,7 +25,7 @@ class EcommerceSideReportProductGroupsLongTitles extends Report
      */
     public function title()
     {
-        return _t('EcommerceSideReport.PRODUCT_GROUPS_LONG_TITLES', 'E-commerce: Product Groups: Long Titles');
+        return _t('EcommerceSideReport.PRODUCT_GROUPS_LONG_TITLES', 'E-commerce: Categories: Long Titles');
     }
 
     protected function getEcommerceWhere($params = null): string
