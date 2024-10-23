@@ -46,6 +46,7 @@ class ProductSearchFilter extends BaseApplyer
     private const OPTIONS_FOR_SORT = [
         self::KEY_FOR_SORTER => [
             'Title' => 'Most Relevant',
+            // this is replaced by the actual IDs in order or relevance, see apply method
             'SQL' => [
                 'ShowInSearch' => 1,
             ],
