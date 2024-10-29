@@ -6,6 +6,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
+use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
@@ -96,6 +97,9 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
                     See Payments tab for more details.
                 '
             );
+            /**
+             * @var EcommercePayment $lastPayment
+             */
             $lastPayment = $order->Payments()->last();
             if ($lastPayment) {
                 $fields->addFieldsToTab(
