@@ -536,13 +536,14 @@ const EcomCart = {
   addAjaxificationOfProductList: function () {
     if (EcomCart.ajaxifyProductList) {
       window
-        .jQuery(EcomCart.ajaxifiedListHolderSelector)
+        .jQuery('body')
         .on(
           'click',
           EcomCart.ajaxifiedListAdjusterSelectors + ' a',
           function (event) {
             event.preventDefault()
-            var url = window.jQuery(this).attr('href')
+            var currentEl = jQuery(this)
+            var url = currentEl.attr('href')
             window.jQuery.ajax({
               beforeSend: function () {
                 window
@@ -598,11 +599,15 @@ const EcomCart = {
                     scrollTop:
                       window
                         .jQuery(EcomCart.ajaxifiedListHolderSelector)
-                        .offset().top - 150
+                        .offset().top - 160
                   },
                   500
                 )
-
+                currentEl
+                  .closest(EcomCart.ajaxifiedListAdjusterSelectors)
+                  .find('a.current')
+                  .removeClass('current')
+                currentEl.addClass('current')
                 //fire an event to inform that data on the page has changed
                 const event = new Event('paginationchange')
                 window.dispatchEvent(event)
