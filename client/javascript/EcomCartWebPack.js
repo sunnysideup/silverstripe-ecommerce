@@ -547,6 +547,24 @@ const EcomCart = {
             })
           }
         )
+      window
+        .jQuery('body')
+        .on(
+          'change',
+          EcomCart.ajaxifiedListAdjusterSelectors + ' select',
+          function (event) {
+            event.preventDefault()
+            const currentEl = jQuery(this)
+            const url = currentEl.find(':selected').data('link')
+            EcomCart.ajaxLoadProductList(url, function () {
+              const holder = currentEl.closest(
+                EcomCart.ajaxifiedListAdjusterSelectors
+              )
+              holder.find('a.current').removeClass('current')
+              holder.find('a[href="' + url + '"]').addClass('current')
+            })
+          }
+        )
 
       // fix for back button
       window.onpopstate = function (e) {
@@ -557,6 +575,7 @@ const EcomCart = {
   },
 
   ajaxLoadProductList: function (url, callBack) {
+    url = EcomCart.mergeUrlParams(url)
     window.jQuery.ajax({
       beforeSend: function () {
         window
@@ -622,6 +641,19 @@ const EcomCart = {
       },
       url: url
     })
+  },
+
+  mergeUrlParams: function (newUrl) {
+    const base = new URL(newUrl, window.location.origin) // Temporary full URL with origin
+    const oldParams = new URL(window.location.href).searchParams
+
+    oldParams.forEach((value, key) => {
+      if (!base.searchParams.has(key)) {
+        base.searchParams.set(key, value) // Add only if not in new URL
+      }
+    })
+
+    return base.pathname + base.search // Return path and query only
   },
 
   // #################################
