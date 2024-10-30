@@ -463,12 +463,6 @@ const EcomCart = {
     EcomCart.initColorboxDialog()
     EcomCart.setChanges(EcomCart.initialData, '')
     // allow ajax product list back and forth:
-    window.onpopstate = function (e) {
-      if (e.state) {
-        window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(e.state.html)
-        document.title = e.state.pageTitle
-      }
-    }
   },
 
   /**
@@ -544,79 +538,90 @@ const EcomCart = {
             event.preventDefault()
             var currentEl = jQuery(this)
             var url = currentEl.attr('href')
-            window.jQuery.ajax({
-              beforeSend: function () {
-                window
-                  .jQuery(EcomCart.ajaxifiedListHolderSelector)
-                  .addClass(EcomCart.classToShowLoading)
-              },
-              // cache: false,
-              complete: function () {
-                window
-                  .jQuery(EcomCart.ajaxifiedListHolderSelector)
-                  .removeClass(EcomCart.classToShowLoading)
-              },
-              dataType: 'html',
-              error: function (jqXHR, textStatus, errorThrown) {
-                alert(
-                  'An error occurred (' +
-                    textStatus +
-                    ' ' +
-                    errorThrown +
-                    ')! I will try reloading the page now.'
-                )
-                window.location.href = url
-              },
-              success: function (data, textStatus, jqXHR) {
-                window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
-
-                // create history
-                var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
-                // create history
-                var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
-                window.history.pushState(
-                  {
-                    pageTitle: pageTitle
-                  },
-                  pageTitle,
-                  url
-                )
-
-                document.title = pageTitle
-                // update changes
-                // set changes also does the reinit
-                EcomCart.openAjaxCalls++
-                EcomCart.setChanges(EcomCart.initialData, '')
-                if (typeof EcomProducts !== 'undefined') {
-                  EcomProducts.reinit()
-                }
-                if (typeof EcomCart.ajaxifiedProductsCallBack === 'function') {
-                  EcomCart.ajaxifiedProductsCallBack()
-                }
-                // scroll to the top of the product list.
-                window.jQuery('html, body').animate(
-                  {
-                    scrollTop:
-                      window
-                        .jQuery(EcomCart.ajaxifiedListHolderSelector)
-                        .offset().top - 160
-                  },
-                  500
-                )
-                currentEl
-                  .closest(EcomCart.ajaxifiedListAdjusterSelectors)
-                  .find('a.current')
-                  .removeClass('current')
-                currentEl.addClass('current')
-                //fire an event to inform that data on the page has changed
-                const event = new Event('paginationchange')
-                window.dispatchEvent(event)
-              },
-              url: url
+            EcomCart.ajaxLoadProductList(url, function () {
+              currentEl
+                .closest(EcomCart.ajaxifiedListAdjusterSelectors)
+                .find('a.current')
+                .removeClass('current')
+              currentEl.addClass('current')
             })
           }
         )
+
+      // fix for back button
+      window.onpopstate = function (e) {
+        const newUrl = window.location.href
+        window.location.href = newUrl
+      }
     }
+  },
+
+  ajaxLoadProductList: function (url, callBack) {
+    window.jQuery.ajax({
+      beforeSend: function () {
+        window
+          .jQuery(EcomCart.ajaxifiedListHolderSelector)
+          .addClass(EcomCart.classToShowLoading)
+      },
+      // cache: false,
+      complete: function () {
+        window
+          .jQuery(EcomCart.ajaxifiedListHolderSelector)
+          .removeClass(EcomCart.classToShowLoading)
+      },
+      dataType: 'html',
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(
+          'An error occurred (' +
+            textStatus +
+            ' ' +
+            errorThrown +
+            ')! I will try reloading the page now.'
+        )
+        window.location.href = url
+      },
+      success: function (data, textStatus, jqXHR) {
+        window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
+
+        // create history
+        var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
+        // create history
+        var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
+        window.history.pushState(
+          {
+            pageTitle: pageTitle
+          },
+          pageTitle,
+          url
+        )
+
+        document.title = pageTitle
+        // update changes
+        // set changes also does the reinit
+        EcomCart.openAjaxCalls++
+        EcomCart.setChanges(EcomCart.initialData, '')
+        if (typeof EcomProducts !== 'undefined') {
+          EcomProducts.reinit()
+        }
+        if (typeof EcomCart.ajaxifiedProductsCallBack === 'function') {
+          EcomCart.ajaxifiedProductsCallBack()
+        }
+        // scroll to the top of the product list.
+        window.jQuery('html, body').animate(
+          {
+            scrollTop:
+              window.jQuery(EcomCart.ajaxifiedListHolderSelector).offset().top -
+              160
+          },
+          500
+        )
+        callBack()
+        //fire an event to inform that data on the page has changed
+        const event = new Event('paginationchange')
+        window.dispatchEvent(event)
+      },
+      url: url
+    })
   },
 
   // #################################
