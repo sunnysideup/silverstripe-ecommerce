@@ -289,7 +289,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
-        $sort = $this->Config()->get('group_filter_candidates_sort');
+        $sort = $this->config()->get('group_filter_candidates_sort');
         if (is_array($sort)) {
             $list = $list->sort($sort);
         } else {
