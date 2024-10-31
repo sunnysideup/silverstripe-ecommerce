@@ -448,6 +448,7 @@ const EcomCart = {
     EcomCart.changeCountryFieldSwap()
     // ajaxify product list
     EcomCart.addAjaxificationOfProductList()
+    EcomCart.addSelectForSmallerSpaces()
     // cart buttons
     if (EcomCart.ajaxButtonsOn) {
       // make sure that "add to cart" links are updated with AJAX
@@ -529,42 +530,85 @@ const EcomCart = {
    */
   addAjaxificationOfProductList: function () {
     if (EcomCart.ajaxifyProductList) {
-      window
-        .jQuery('body')
-        .on(
-          'click',
-          EcomCart.ajaxifiedListAdjusterSelectors + ' a',
-          function (event) {
+      document.body.addEventListener(
+        'click',
+        function (event) {
+          const target = event.target.closest(
+            EcomCart.ajaxifiedListAdjusterSelectors + ' a'
+          )
+
+          if (target) {
             event.preventDefault()
-            var currentEl = jQuery(this)
-            var url = currentEl.attr('href')
-            EcomCart.ajaxLoadProductList(url, function () {
-              currentEl
-                .closest(EcomCart.ajaxifiedListAdjusterSelectors)
-                .find('a.current')
-                .removeClass('current')
-              currentEl.addClass('current')
-            })
-          }
-        )
-      window
-        .jQuery('body')
-        .on(
-          'change',
-          EcomCart.ajaxifiedListAdjusterSelectors + ' select',
-          function (event) {
-            event.preventDefault()
-            const currentEl = jQuery(this)
-            const url = currentEl.find(':selected').data('link')
-            EcomCart.ajaxLoadProductList(url, function () {
+
+            const currentEl = target // already a native DOM element
+            const url = currentEl.getAttribute('href')
+            const dataResetFor = currentEl.getAttribute('data-reset-for')
+
+            EcomCart.ajaxLoadProductList(url, dataResetFor, () => {
+              // Step 1: Find the closest ancestor matching the selector
               const holder = currentEl.closest(
                 EcomCart.ajaxifiedListAdjusterSelectors
               )
-              holder.find('a.current').removeClass('current')
-              holder.find('a[href="' + url + '"]').addClass('current')
+              // console.log('Holder:', holder) // Debug: Check if holder is found
+
+              if (holder) {
+                // Step 2: Remove 'current' class from links
+                const currentLink = holder.querySelector('a.current')
+                if (currentLink) {
+                  currentLink.classList.remove('current')
+                } else {
+                  // console.log('No link with class "current" found')
+                }
+
+                // Step 3: Set the select value
+                const select = holder.querySelector('select')
+                // console.log('Select element set to:', select, url) // Debug: Check if select element exists
+
+                if (select) {
+                  // Check if the select has an option with the given value
+                  const optionExists = Array.from(select.options).some(
+                    option => option.value === url
+                  )
+                  if (optionExists) {
+                    select.value = url
+                    // console.log('Select value set to:', select.value) // Verify the value is set
+                  }
+                } else {
+                  // console.log('No select element found')
+                }
+              }
+
+              // Step 4: Add 'current' class to `currentEl`
+              currentEl.classList.add('current')
+              // console.log('currentEl classList:', currentEl.classList) // Verify 'current' class is added
             })
           }
+        },
+        true
+      )
+      document.body.addEventListener('change', function (event) {
+        const target = event.target.closest(
+          EcomCart.ajaxifiedListAdjusterSelectors + ' select'
         )
+
+        if (target) {
+          event.preventDefault()
+
+          const currentEl = target // already a native DOM element
+          const url = currentEl.value
+          const selectedOption = currentEl.options[currentEl.selectedIndex]
+          const dataResetFor = selectedOption.getAttribute('data-reset-for')
+          EcomCart.ajaxLoadProductList(url, dataResetFor, () => {
+            const holder = currentEl.closest(
+              EcomCart.ajaxifiedListAdjusterSelectors
+            )
+            holder.querySelectorAll('a.current').forEach(link => {
+              link.classList.remove('current')
+            })
+            holder.querySelector(`a[href='${url}']`).classList.add('current')
+          })
+        }
+      })
 
       // fix for back button
       window.onpopstate = function (e) {
@@ -574,8 +618,9 @@ const EcomCart = {
     }
   },
 
-  ajaxLoadProductList: function (url, callBack) {
-    url = EcomCart.mergeUrlParams(url)
+  ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
+    // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
+    myUrl = EcomCart.mergeUrlParams(myUrl, dataResetFor)
     window.jQuery.ajax({
       beforeSend: function () {
         window
@@ -597,7 +642,7 @@ const EcomCart = {
             errorThrown +
             ')! I will try reloading the page now.'
         )
-        window.location.href = url
+        window.location.href = myUrl
       },
       success: function (data, textStatus, jqXHR) {
         window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
@@ -611,7 +656,7 @@ const EcomCart = {
             pageTitle: pageTitle
           },
           pageTitle,
-          url
+          myUrl
         )
 
         document.title = pageTitle
@@ -634,22 +679,75 @@ const EcomCart = {
           },
           500
         )
-        callBack()
+        myCallBack()
         //fire an event to inform that data on the page has changed
         const event = new Event('paginationchange')
         window.dispatchEvent(event)
       },
-      url: url
+      url: myUrl
     })
   },
 
-  mergeUrlParams: function (newUrl) {
+  addSelectForSmallerSpaces: function () {
+    const filterSortLinks = document.querySelectorAll(
+      EcomCart.ajaxifiedListAdjusterSelectors
+    )
+    filterSortLinks.forEach(group => {
+      const list = group.querySelector('ul')
+      if (!list) {
+        // console.error('No list found in group', group)
+        return
+      }
+      const maxLength = group.getAttribute('data-max-ul-count') ?? 3
+      const listItems = list.getElementsByTagName('li')
+      if (listItems.length < 2) {
+        group.classList.add('ajaxified-hide')
+        return
+      }
+      const dropdownContainer = group.querySelector('.dropdown-container')
+      if (!dropdownContainer) {
+        return
+      }
+      const dropdown = dropdownContainer.querySelector('.dropdown')
+
+      // Add list items to the select dropdown
+      Array.from(listItems).forEach(item => {
+        const link = item.querySelector('a')
+        const url = new URL(link.href)
+        const pathAndQuery = url.pathname + url.search
+        const dataResetFor = link.getAttribute('data-reset-for')
+        if (link) {
+          const option = document.createElement('option')
+          option.textContent = link.textContent
+          option.value = pathAndQuery
+          if (dataResetFor) {
+            option.setAttribute('data-reset-for', dataResetFor)
+          }
+          if (link.classList.contains('current')) {
+            option.selected = true
+          }
+          dropdown.appendChild(option)
+        }
+      })
+
+      // Check if list has more than maxLength items
+      const shouldShowDropdown = listItems.length > maxLength
+      group.classList.add('ajaxified-has-both')
+      list.classList.toggle('ajaxified-show', !shouldShowDropdown)
+      list.classList.toggle('ajaxified-hide', shouldShowDropdown)
+      dropdownContainer.classList.toggle('ajaxified-show', shouldShowDropdown)
+      dropdownContainer.classList.toggle('ajaxified-hide', !shouldShowDropdown)
+    })
+  },
+
+  mergeUrlParams: function (newUrl, dataResetFor) {
     const base = new URL(newUrl, window.location.origin) // Temporary full URL with origin
     const oldParams = new URL(window.location.href).searchParams
 
     oldParams.forEach((value, key) => {
-      if (!base.searchParams.has(key)) {
-        base.searchParams.set(key, value) // Add only if not in new URL
+      // Only add old params if not in the new URL and not in dataResetFor
+      if (!base.searchParams.has(key) && key !== dataResetFor) {
+        base.searchParams.set(key, value)
       }
     })
 
@@ -664,19 +762,7 @@ const EcomCart = {
    * adds the "add to cart" ajax functionality to links.
    * @param String withinSelector: area where these links can be found, the more specific the better (faster)
    */
-  addAddLinks: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .not(EcomCart.excludedPagesSelector)
-      .on('click', EcomCart.addLinkSelector, function () {
-        var url = window.jQuery(this).attr('href')
-        if (EcomCart.productListIsFromCachedSource) {
-          url += '&cached=1'
-        }
-        EcomCart.getChanges(url, null, this)
-        return false
-      })
-  },
+  addAddLinks: function (withinSelector) {},
 
   /**
    * add ajax functionality to "remove from cart" links
@@ -801,9 +887,9 @@ const EcomCart = {
     // change to switch
     // add loadingElement to data return
     // clean up documentation at the top of the document
-    if (EcomCart.debug) {
-      console.debug('------------- SET CHANGES -----------')
-    }
+    // if (EcomCart.debug) {
+    //   console.debug('------------- SET CHANGES -----------')
+    // }
     if (changes.reload) {
       window.location = window.location
       return
@@ -817,17 +903,17 @@ const EcomCart = {
           var parameter = change.p
           var value = EcomCart.escapeHTML(change.v)
           // class OR id
-          if (EcomCart.debug) {
-            console.debug(
-              'type' +
-                type +
-                ', selector: ' +
-                selector +
-                ', parameter:' +
-                parameter +
-                ', value'
-            )
-          }
+          // if (EcomCart.debug) {
+          //   console.debug(
+          //     'type' +
+          //       type +
+          //       ', selector: ' +
+          //       selector +
+          //       ', parameter:' +
+          //       parameter +
+          //       ', value'
+          //   )
+          // }
           if (type == 'class' || type == 'id') {
             var additionalSelectors = ''
             if (typeof EcomCart.synonyms[selector] !== 'undefined') {
@@ -862,13 +948,13 @@ const EcomCart = {
               window.jQuery(selector).attr(parameter, value)
             }
             if (selector == '.number_of_items') {
-              if (EcomCart.debug) {
-                console.debug('doing .number_of_items')
-              }
+              // if (EcomCart.debug) {
+              //   console.debug('doing .number_of_items')
+              // }
               var numericValue = parseFloat(value)
-              if (EcomCart.debug) {
-                console.debug('value ' + numericValue)
-              }
+              // if (EcomCart.debug) {
+              //   console.debug('value ' + numericValue)
+              // }
               EcomCart.cartHasItems = numericValue > 0 ? true : false
               // update cart menu items
               window
@@ -942,21 +1028,21 @@ const EcomCart = {
             // we go through all the ones that are marked as 'inCart' already
             // as part of this we check if they are still incart
             // and as part of this process, we add the "inCart" where needed
-            if (EcomCart.debug) {
-              console.debug('starting replaceclass process')
-            }
+            // if (EcomCart.debug) {
+            //   console.debug('starting replaceclass process')
+            // }
             window.jQuery('.' + parameter).each(function (i, el) {
               var id = window.jQuery(el).attr('id')
-              if (EcomCart.debug) {
-                console.debug('checking ' + id)
-              }
+              // if (EcomCart.debug) {
+              //   console.debug('checking ' + id)
+              // }
               var inCart = false
               for (var i = 0; i < selector.length; i++) {
-                if (EcomCart.debug) {
-                  console.debug(
-                    "testing: '" + selector[i] + "' AGAINST '" + id + "'"
-                  )
-                }
+                // if (EcomCart.debug) {
+                //   console.debug(
+                //     "testing: '" + selector[i] + "' AGAINST '" + id + "'"
+                //   )
+                // }
                 if (id == selector[i]) {
                   inCart = true
                   // DO NOT REMOVE IT SO THAT WE CAN USE IT IN THE FUTURE
