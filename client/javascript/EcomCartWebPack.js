@@ -757,15 +757,27 @@ const EcomCart = {
   },
 
   mergeUrlParams: function (newUrl, dataResetFor) {
-    const base = new URL(newUrl, window.location.origin) // Temporary full URL with origin
+    const base = new URL(newUrl, window.location.origin)
     const oldParams = new URL(window.location.href).searchParams
+
+    let onlyStartChanged = true
 
     oldParams.forEach((value, key) => {
       // Only add old params if not in the new URL and not in dataResetFor
       if (!base.searchParams.has(key) && key !== dataResetFor) {
         base.searchParams.set(key, value)
+      } else if (base.searchParams.get(key) !== value) {
+        // If any variable other than 'start' is different, flag it
+        if (key !== 'start') {
+          onlyStartChanged = false
+        }
       }
     })
+
+    // If any variable other than 'start' has changed, delete 'start'
+    if (!onlyStartChanged) {
+      base.searchParams.delete('start')
+    }
 
     return base.pathname + base.search // Return path and query only
   },
