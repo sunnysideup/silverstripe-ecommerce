@@ -5,7 +5,7 @@
             <li class="$FirstLast standardFilters"><a href="$Link" class="$LinkingMode">$Name<% if First %><% else %> ($Count)<% end_if %></a></li>
         <% end_loop %><% end_if %>
         <% if ProductGroupFilterLinks %><% loop ProductGroupFilterLinks %>
-        <li class="$FirstLast alsoShowFilters"><a href="$Link" class="$LinkingMode">$Title ($Count)</a></li>
+        <li class="$FirstLast alsoShowFilters"><a href="$Link" class="$LinkingMode"<% if $IsResetFor %> data-reset-for="$ResetFor"<% end_if %>>$Title ($Count)</a></li>
         <% end_loop %><% end_if %>
     </ul>
 </div>
