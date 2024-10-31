@@ -769,11 +769,9 @@ const EcomCart = {
     // Track if there’s exactly one change and if that change is 'start'
     let changeCount = 0
     let onlyStartChanged = true
-
     allKeys.forEach(key => {
       const oldValue = oldParams.get(key)
       const newValue = base.searchParams.get(key)
-
       if (oldValue !== newValue) {
         changeCount++
         if (key !== 'start') {
@@ -783,8 +781,9 @@ const EcomCart = {
     })
 
     // If there’s more than one change or the only change isn’t 'start', delete 'start'
-    if (changeCount > 1 || !onlyStartChanged) {
+    if (changeCount > 1 || onlyStartChanged === false) {
       base.searchParams.delete('start')
+      oldParams.delete('start')
     }
 
     // Merge old params that aren't in base and aren't dataResetFor
