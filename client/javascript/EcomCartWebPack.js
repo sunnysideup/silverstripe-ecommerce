@@ -611,10 +611,12 @@ const EcomCart = {
       })
 
       // fix for back button
-      window.onpopstate = function (e) {
-        const newUrl = window.location.href
-        window.location.href = newUrl
-      }
+    }
+
+    // always do the popstate
+    window.onpopstate = function (e) {
+      const newUrl = window.location.href
+      window.location.href = newUrl
     }
   },
 
