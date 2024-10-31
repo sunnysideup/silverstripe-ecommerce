@@ -615,12 +615,26 @@ const EcomCart = {
 
     // always do the popstate
     window.onpopstate = function (e) {
-      const newUrl = window.location.href
-      window.location.href = newUrl
+      if (EcomCart.hasAjaxProductLoad) {
+        const newUrl = window.location.href
+        window.location.href = newUrl
+      }
     }
+    window.addEventListener('beforeunload', () => {
+      if (EcomCart.hasAjaxProductLoad) {
+        const url = new URL(window.location.href)
+        url.searchParams.set('nocache', Date.now()) // Add or update `reload` parameter
+
+        // Update history state with modified URL
+        window.history.replaceState(null, '', url.toString())
+      }
+    })
   },
 
+  hasAjaxProductLoad: false,
+
   ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
+    EcomCart.hasAjaxProductLoad = true
     // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
     myUrl = EcomCart.mergeUrlParams(myUrl, dataResetFor)
     window.jQuery.ajax({
