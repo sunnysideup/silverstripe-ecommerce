@@ -760,22 +760,21 @@ const EcomCart = {
     const base = new URL(newUrl, window.location.origin)
     const oldParams = new URL(window.location.href).searchParams
 
-    let onlyStartChanged = true
+    // Combine all keys from both old and new params, excluding dataResetFor
+    const allKeys = new Set(
+      [
+        ...Array.from(oldParams.keys()),
+        ...Array.from(base.searchParams.keys())
+      ].filter(key => key !== dataResetFor)
+    )
 
-    oldParams.forEach((value, key) => {
-      // Only add old params if not in the new URL and not in dataResetFor
-      if (!base.searchParams.has(key) && key !== dataResetFor) {
-        base.searchParams.set(key, value)
-      } else if (base.searchParams.get(key) !== value) {
-        // If any variable other than 'start' is different, flag it
-        if (key !== 'start') {
-          onlyStartChanged = false
-        }
-      }
-    })
+    // Find keys with different values between old and new URLs
+    const changedKeys = Array.from(allKeys).filter(
+      key => oldParams.get(key) !== base.searchParams.get(key)
+    )
 
-    // If any variable other than 'start' has changed, delete 'start'
-    if (!onlyStartChanged) {
+    // If any parameter other than 'start' has changed, delete 'start'
+    if (changedKeys.some(key => key !== 'start')) {
       base.searchParams.delete('start')
     }
 
