@@ -14,7 +14,7 @@ class ProductFilter extends BaseApplyer
      */
     private static $options = [
         BaseApplyer::DEFAULT_NAME => [
-            'Title' => 'All Products (default)',
+            'Title' => 'All',
             'SQL' => [
                 'ShowInSearch' => 1,
             ],
