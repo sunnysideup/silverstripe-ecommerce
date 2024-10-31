@@ -773,6 +773,13 @@ const EcomCart = {
       key => oldParams.get(key) !== base.searchParams.get(key)
     )
 
+    // Merge missing old params into base, except for dataResetFor
+    oldParams.forEach((value, key) => {
+      if (!base.searchParams.has(key) && key !== dataResetFor) {
+        base.searchParams.set(key, value)
+      }
+    })
+
     // If any parameter other than 'start' has changed, delete 'start'
     if (changedKeys.some(key => key !== 'start')) {
       base.searchParams.delete('start')
