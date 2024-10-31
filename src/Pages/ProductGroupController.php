@@ -414,14 +414,44 @@ class ProductGroupController extends PageController
         return $this->getFinalProductList()->getRawCountCached();
     }
 
+    public function StartLimit(): int
+    {
+        return ($this->pageStart()) + 1;
+    }
+
+    public function StopLimit(): int
+    {
+        $v = $this->StartLimit() + $this->Products()?->getPageLength() - 1;
+        $totalCount = $this->TotalCount();
+        if ($v > $totalCount) {
+            $v = $totalCount;
+        }
+        return (int) $v;
+    }
+
     public function getCurrentPageNumber(): int
     {
-        $pageStart = (int) $this->request->getVar('start');
+        $pageStart = $this->pageStart();
         if ($pageStart) {
-            return (int) ($pageStart / $this->getProductsPerPage()) + 1;
+            return (int) ($pageStart / $this->getProductsPerPageCalculated()) + 1;
         }
 
         return 1;
+    }
+
+    public function getProductsPerPageCalculated(): int
+    {
+        if ($this->IsShowFullList()) {
+            // there is still pagination, but we show more of them.
+            return $this->getProductsPerPage() * 4;
+        } else {
+            return $this->getProductsPerPage();
+        }
+    }
+
+    protected function pageStart(): int
+    {
+        return (int) $this->request->getVar('start');
     }
 
     public function getUserPreferencesTitle(string $type, ?string $key): string
@@ -910,12 +940,7 @@ class ProductGroupController extends PageController
         $obj = null;
         if ($list->exists()) {
             $obj = PaginatedList::create($list, $this->request);
-            if ($this->IsShowFullList()) {
-                // there is still pagination, but we show more of them.
-                $obj->setPageLength($this->getProductsPerPage() * 2);
-            } else {
-                $obj->setPageLength($this->getProductsPerPage());
-            }
+            $obj->setPageLength($this->getProductsPerPageCalculated());
         }
 
         return $obj;
