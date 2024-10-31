@@ -761,29 +761,38 @@ const EcomCart = {
     const oldParams = new URL(window.location.href).searchParams
 
     // Combine all keys from both old and new params, excluding dataResetFor
-    const allKeys = new Set(
-      [
-        ...Array.from(oldParams.keys()),
-        ...Array.from(base.searchParams.keys())
-      ].filter(key => key !== dataResetFor)
-    )
+    const allKeys = new Set([
+      ...Array.from(oldParams.keys()),
+      ...Array.from(base.searchParams.keys())
+    ])
 
-    // Find keys with different values between old and new URLs
-    const changedKeys = Array.from(allKeys).filter(
-      key => oldParams.get(key) !== base.searchParams.get(key)
-    )
+    // Track if there’s exactly one change and if that change is 'start'
+    let changeCount = 0
+    let onlyStartChanged = true
 
-    // Merge missing old params into base, except for dataResetFor
+    allKeys.forEach(key => {
+      const oldValue = oldParams.get(key)
+      const newValue = base.searchParams.get(key)
+
+      if (oldValue !== newValue) {
+        changeCount++
+        if (key !== 'start') {
+          onlyStartChanged = false
+        }
+      }
+    })
+
+    // If there’s more than one change or the only change isn’t 'start', delete 'start'
+    if (changeCount > 1 || !onlyStartChanged) {
+      base.searchParams.delete('start')
+    }
+
+    // Merge old params that aren't in base and aren't dataResetFor
     oldParams.forEach((value, key) => {
       if (!base.searchParams.has(key) && key !== dataResetFor) {
         base.searchParams.set(key, value)
       }
     })
-
-    // If any parameter other than 'start' has changed, delete 'start'
-    if (changedKeys.some(key => key !== 'start')) {
-      base.searchParams.delete('start')
-    }
 
     return base.pathname + base.search // Return path and query only
   },
