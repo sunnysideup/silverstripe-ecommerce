@@ -620,15 +620,15 @@ const EcomCart = {
         window.location.href = newUrl
       }
     }
-    window.addEventListener('beforeunload', () => {
-      if (EcomCart.hasAjaxProductLoad) {
-        const url = new URL(window.location.href)
-        url.searchParams.set('nocache', Date.now()) // Add or update `reload` parameter
+    // window.addEventListener('beforeunload', () => {
+    //   if (EcomCart.hasAjaxProductLoad) {
+    //     const url = new URL(window.location.href)
+    //     url.searchParams.set('nocache', Date.now()) // Add or update `reload` parameter
 
-        // Update history state with modified URL
-        window.history.replaceState(null, '', url.toString())
-      }
-    })
+    //     // Update history state with modified URL
+    //     window.history.replaceState(null, '', url.toString())
+    //   }
+    // })
   },
 
   hasAjaxProductLoad: false,
@@ -636,7 +636,7 @@ const EcomCart = {
   ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
     EcomCart.hasAjaxProductLoad = true
     // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
-    myUrl = EcomCart.mergeUrlParams(myUrl, dataResetFor)
+    myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
     window.jQuery.ajax({
       beforeSend: function () {
         window
@@ -672,7 +672,7 @@ const EcomCart = {
             pageTitle: pageTitle
           },
           pageTitle,
-          myUrl
+          EcomCart.removeAjaxParam(myUrl)
         )
 
         document.title = pageTitle
@@ -756,7 +756,7 @@ const EcomCart = {
     })
   },
 
-  mergeUrlParams: function (newUrl, dataResetFor) {
+  mergeUrlParamsForAjax: function (newUrl, dataResetFor) {
     const base = new URL(newUrl, window.location.origin)
     const oldParams = new URL(window.location.href).searchParams
 
@@ -780,8 +780,13 @@ const EcomCart = {
       }
     })
 
-    // If there’s more than one change or the only change isn’t 'start', delete 'start'
-    if (changeCount > 1 || onlyStartChanged === false) {
+    // Remove 'start' if there's more than one change, if the only change isn't 'start',
+    // or if 'start' is zero
+    if (
+      changeCount > 1 ||
+      onlyStartChanged === false ||
+      base.searchParams.get('start') === '0'
+    ) {
       base.searchParams.delete('start')
       oldParams.delete('start')
     }
@@ -792,8 +797,15 @@ const EcomCart = {
         base.searchParams.set(key, value)
       }
     })
+    base.searchParams.set('ajax', 1)
 
     return base.pathname + base.search // Return path and query only
+  },
+
+  removeAjaxParam: function (url) {
+    const urlObj = new URL(url, window.location.origin)
+    urlObj.searchParams.delete('ajax')
+    return urlObj.toString()
   },
 
   // #################################
@@ -804,7 +816,19 @@ const EcomCart = {
    * adds the "add to cart" ajax functionality to links.
    * @param String withinSelector: area where these links can be found, the more specific the better (faster)
    */
-  addAddLinks: function (withinSelector) {},
+  addAddLinks: function (withinSelector) {
+    window
+      .jQuery(withinSelector)
+      .not(EcomCart.excludedPagesSelector)
+      .on('click', EcomCart.addLinkSelector, function () {
+        var url = window.jQuery(this).attr('href')
+        if (EcomCart.productListIsFromCachedSource) {
+          url += '&cached=1'
+        }
+        EcomCart.getChanges(url, null, this)
+        return false
+      })
+  },
 
   /**
    * add ajax functionality to "remove from cart" links
