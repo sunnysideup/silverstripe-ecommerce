@@ -521,10 +521,10 @@ class UserPreference
                     }
                     $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $title = $group->MenuTitle;
-
+                    $crumb = $group->getProductGroupBreadcrumb();
                     if ($prevGroup && trim($prevGroup->Title) === trim($group->Title)) {
                         if ($prevGroup->ParentID !== $group->ParentID) {
-                            $title = $group->getProductGroupBreadcrumb(). ' - ' . $title;
+                            $title = $crumb. ' - ' . $title;
                             $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb. ' - ' . $prevGroup->Title;
                         }
                     }
@@ -534,7 +534,7 @@ class UserPreference
                                 'ID' => $group->ID,
                                 'ClassName' => $group->ClassName,
                                 'Title' => $title,
-                                'ProductGroupBreadcrumb' => $group->getProductGroupBreadcrumb(),
+                                'ProductGroupBreadcrumb' => $crumb,
                                 'Current' => $isCurrent,
                                 'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
                                 'LinkingMode' => $isCurrent ? 'current' : 'link',
