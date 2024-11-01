@@ -108,8 +108,8 @@ class ProductGroup extends Page
         'DisplayStyle' => 'Varchar(20)',
         'UseImageForProducts' => 'Boolean',
         'AlternativeProductGroupNames' => 'Varchar(255)', //To ensure they are also find for other names in search
-        'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'ProductGroupBreadcrumb' => 'Varchar(255)', //Name for look-up lists
+        'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
     ];
 
     private static $has_one = [
@@ -747,11 +747,18 @@ class ProductGroup extends Page
             ->setNotAllowedClassNames(ProductGroupSearchPage::class)
             ->run();
         $parentsTitle = $obj->getParentsTitle();
-        $parentSortArray = $obj->getParentSortArray();
 
         //setting fields with new values!
         $this->ProductGroupBreadcrumb = $parentsTitle;
         $this->FullSiteTreeSort = (int) implode('', $obj->getParentSortArray());
+    }
+
+    public function getProductGroupBreadcrumb(): string
+    {
+        if (empty($this->ProductGroupBreadcrumb)) {
+            return $this->Parent()->Title;
+        }
+        return $this->ProductGroupBreadcrumb;
     }
 
     public function onBeforeUnpublish()
