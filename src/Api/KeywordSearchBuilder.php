@@ -55,11 +55,14 @@ class KeywordSearchBuilder
      */
     protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data')
     {
+
         $this->ifStatement = '';
         //make three levels of search
-        $fullPhrase = preg_replace('#\s+#', ' ', (string) $phrase);
-        $wordAsArray = explode(' ', $fullPhrase);
-
+        $fullPhrase = trim(preg_replace('#\s+#', ' ', (string) $phrase));
+        if (strlen($fullPhrase) < 2) {
+            return '"ID" < 0';
+        }
+        $wordAsArray = array_filter(explode(' ', $fullPhrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
         $hasWordArray = false;
@@ -67,6 +70,10 @@ class KeywordSearchBuilder
             $hasWordArray = true;
             $searchStringArray = [];
             foreach ($wordAsArray as $word) {
+                $word = trim($word);
+                if (strlen($word) < 2) {
+                    continue;
+                }
                 $searchStringArray[] = "\"_FF_FIELD_GOES_HERE_\" LIKE '%{$word}%'";
             }
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
