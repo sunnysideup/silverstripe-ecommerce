@@ -32,13 +32,9 @@ class EcommerceSideReportProductGroupsNoImage extends Report
      */
     protected function getEcommerceWhere($params = null): string
     {
-        $check = ProductGroup::get()->filter(['ImageID:GreaterThan' => 0])->columnUnique('ImageID');
-        foreach ($check as $id) {
-            $image = Image::get()->byID($id);
-            if ($image && $image->exists()) {
-                $alwaysInclude[] = $id;
-            }
-        }
-        return '"ProductGroup"."ID" NOT IN (' . implode(',', $alwaysInclude) . ')';
+        $ok = ProductGroup::get()->filter(['ImageID:GreaterThan' => 0])
+            ->innerJoin('File', '"File"."ID" = "ProductGroup"."ImageID"')
+            ->columnUnique();
+        return '"ProductGroup"."ID" NOT IN (' . implode(',', $ok) . ')';
     }
 }

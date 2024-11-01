@@ -31,13 +31,9 @@ class EcommerceSideReportProductsNoImage extends Report
      */
     protected function getEcommerceWhere($params = null): string
     {
-        $check = Product::get()->filter(['ImageID:GreaterThan' => 0])->columnUnique('ImageID');
-        foreach ($check as $id) {
-            $image = Image::get()->byID($id);
-            if ($image && $image->exists()) {
-                $alwaysInclude[] = $id;
-            }
-        }
-        return '"Product"."ID" NOT IN (' . implode(',', $alwaysInclude) . ')';
+        $ok = Product::get()->filter(['ImageID:GreaterThan' => 0])
+            ->innerJoin('File', '"File"."ID" = "Product"."ImageID"')
+            ->columnUnique();
+        return '"Product"."ID" NOT IN (' . implode(',', $ok) . ')';
     }
 }
