@@ -470,6 +470,8 @@ class UserPreference
         return null;
     }
 
+    protected static $links_per_type_cache = [];
+
     /**
      * full list of options with Links that know about "current".
      *
@@ -479,89 +481,104 @@ class UserPreference
      */
     public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
-        $options = $this->getOptions($type);
-        $actions = $this->getActions($type);
-        $actionCount = $actions ? $actions->count() : 0;
-        $isGroupSegmentStyle = $actionCount > 0;
-        $isNonGroupSegmentStyle = count($options) > 1;
-        $list = new ArrayList();
-        if ($isGroupSegmentStyle) {
-            if (! $currentKey) {
-                $currentKey = $this->getCurrentUserPreferencesParams($type);
-            }
+        $cacheKey = $type . $currentKey . $ajaxify;
+        if (! isset(self::$links_per_type_cache[$cacheKey])) {
 
-            $isCurrent = ! (bool) $currentKey;
-            $previousClassName = '';
-            $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
-            foreach ($actions as $group) {
-                if ($group->ClassName !== $previousClassName) {
+            $options = $this->getOptions($type);
+            $actions = $this->getActions($type);
+            $actionCount = $actions ? $actions->count() : 0;
+            $isGroupSegmentStyle = $actionCount > 0;
+            $isNonGroupSegmentStyle = count($options) > 1;
+            $list = new ArrayList();
+            if ($isGroupSegmentStyle) {
+                if (! $currentKey) {
+                    $currentKey = $this->getCurrentUserPreferencesParams($type);
+                }
+
+                $isCurrent = ! (bool) $currentKey;
+                $previousClassName = '';
+                $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
+                $prevGroup = null;
+                foreach ($actions as $group) {
+                    if ($group->ClassName !== $previousClassName) {
+                        $previousClassName = $group->ClassName;
+                        $obj = new ArrayData(
+                            [
+                                'ID' => 0,
+                                'ClassName' => null,
+                                'Title' => _t('ProductGroup.ALL', 'All').' ' .$group->i18n_plural_name() , //
+                                'Current' => $isCurrent,
+                                'Link' => $this->getLinkTemplate('', $type, '', true),
+                                'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
+                                'Ajaxify' => $ajaxify,
+                                'Image' => null,
+                                'Key' => '',
+                                'ResetFor' => $getVar,
+                                'IsResetFor' => true,
+                            ]
+                        );
+                        $list->push($obj);
+                    }
+                    $isCurrent = $currentKey === $group->FilterForGroupSegment();
+                    $title = $group->MenuTitle;
+
+                    if ($prevGroup && trim($prevGroup->Title) === trim($group->Title)) {
+                        if ($prevGroup->ParentID !== $group->ParentID) {
+                            $title = $group->getProductGroupBreadcrumb(). ' - ' . $title;
+                            $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb. ' - ' . $prevGroup->Title;
+                        }
+                    }
+                    foreach (array_keys($options) as $key) {
+                        $obj = new ArrayData(
+                            [
+                                'ID' => $group->ID,
+                                'ClassName' => $group->ClassName,
+                                'Title' => $title,
+                                'ProductGroupBreadcrumb' => $group->getProductGroupBreadcrumb(),
+                                'Current' => $isCurrent,
+                                'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
+                                'LinkingMode' => $isCurrent ? 'current' : 'link',
+                                'Ajaxify' => $ajaxify,
+                                'Image' => $group->Image(),
+                                'Key' => $key,
+                                'IsResetFor' => false,
+                                'ResetFor' => '',
+                            ]
+                        );
+                        $list->push($obj);
+                    }
+                    $prevGroup = $obj;
                     $previousClassName = $group->ClassName;
-                    $obj = new ArrayData(
-                        [
-                            'ID' => 0,
-                            'ClassName' => null,
-                            'Title' => _t('ProductGroup.ALL', 'All').' ' .$group->i18n_plural_name() , //
-                            'Current' => $isCurrent,
-                            'Link' => $this->getLinkTemplate('', $type, '', true),
-                            'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
-                            'Ajaxify' => $ajaxify,
-                            'Image' => null,
-                            'Key' => '',
-                            'ResetFor' => $getVar,
-                            'IsResetFor' => true,
-                        ]
-                    );
+                }
+            } elseif ($isNonGroupSegmentStyle && $type !== 'GROUPFILTER') {
+                if (! $currentKey) {
+                    $currentKey = $this->getCurrentUserPreferencesKey($type);
+                }
+                $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
+                foreach ($options as $key => $data) {
+                    $isCurrent = $currentKey === $key;
+                    $isResetFor = $key === BaseApplyer::DEFAULT_NAME;
+                    $resetFor = $isResetFor ? $type : '';
+                    $data = [
+                        'Title' => $data['Title'],
+                        'Current' => $isCurrent,
+                        //todo: fix this!!!!
+                        'Link' => $this->getLinkTemplate('', $type, $key),
+                        'LinkingMode' => $isCurrent ? 'current' : 'link',
+                        'Ajaxify' => $ajaxify,
+                        'Key' => $key,
+                        'GetVar' => $getVar,
+                        'IsResetFor' => $isResetFor,
+                        'ResetFor' => $isResetFor ? $getVar : '',
+                    ];
+
+                    $obj = new ArrayData($data);
                     $list->push($obj);
                 }
-                $isCurrent = $currentKey === $group->FilterForGroupSegment();
-
-                foreach (array_keys($options) as $key) {
-                    $obj = new ArrayData(
-                        [
-                            'ID' => $group->ID,
-                            'ClassName' => $group->ClassName,
-                            'Title' => $group->MenuTitle,
-                            'Current' => $isCurrent,
-                            'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
-                            'LinkingMode' => $isCurrent ? 'current' : 'link',
-                            'Ajaxify' => $ajaxify,
-                            'Image' => $group->Image(),
-                            'Key' => $key,
-                            'IsResetFor' => false,
-                            'ResetFor' => '',
-                        ]
-                    );
-                    $list->push($obj);
-                }
-                $previousClassName = $group->ClassName;
             }
-        } elseif ($isNonGroupSegmentStyle && $type !== 'GROUPFILTER') {
-            if (! $currentKey) {
-                $currentKey = $this->getCurrentUserPreferencesKey($type);
-            }
-            $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
-            foreach ($options as $key => $data) {
-                $isCurrent = $currentKey === $key;
-                $isResetFor = $key === BaseApplyer::DEFAULT_NAME;
-                $resetFor = $isResetFor ? $type : '';
-                $data = [
-                    'Title' => $data['Title'],
-                    'Current' => $isCurrent,
-                    //todo: fix this!!!!
-                    'Link' => $this->getLinkTemplate('', $type, $key),
-                    'LinkingMode' => $isCurrent ? 'current' : 'link',
-                    'Ajaxify' => $ajaxify,
-                    'Key' => $key,
-                    'GetVar' => $getVar,
-                    'IsResetFor' => $isResetFor,
-                    'ResetFor' => $isResetFor ? $getVar : '',
-                ];
-
-                $obj = new ArrayData($data);
-                $list->push($obj);
-            }
+            self::$links_per_type_cache[$cacheKey] = $list;
         }
-        return $list;
+        return self::$links_per_type_cache[$cacheKey];
     }
 
     /**
