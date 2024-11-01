@@ -765,14 +765,13 @@ const EcomCart = {
       ...Array.from(oldParams.keys()),
       ...Array.from(base.searchParams.keys())
     ])
-
     // Track if there’s exactly one change and if that change is 'start'
     let changeCount = 0
     let onlyStartChanged = true
     allKeys.forEach(key => {
       const oldValue = oldParams.get(key)
       const newValue = base.searchParams.get(key)
-      if (oldValue !== newValue) {
+      if (oldValue !== newValue && key !== 'ajax') {
         changeCount++
         if (key !== 'start') {
           onlyStartChanged = false
@@ -782,11 +781,7 @@ const EcomCart = {
 
     // Remove 'start' if there's more than one change, if the only change isn't 'start',
     // or if 'start' is zero
-    if (
-      changeCount > 1 ||
-      onlyStartChanged === false ||
-      base.searchParams.get('start') === '0'
-    ) {
+    if (changeCount > 1 || onlyStartChanged === false) {
       base.searchParams.delete('start')
       oldParams.delete('start')
     }
@@ -798,6 +793,9 @@ const EcomCart = {
       }
     })
     base.searchParams.set('ajax', 1)
+    if (base.searchParams.get('start') === '0') {
+      base.searchParams.delete('start')
+    }
 
     return base.pathname + base.search // Return path and query only
   },
