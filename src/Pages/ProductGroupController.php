@@ -527,7 +527,12 @@ class ProductGroupController extends PageController
 
     public function getGroupFilterHeader(): string
     {
-        return _t('Ecommerce.FILTER_BY_CATEGORY', 'Filter by Category');
+        $heading = _t('Ecommerce.FILTER_BY_CATEGORY', 'Filter by Category');
+        $extendedHeading = $this->extend('getGroupFilterHeader', $extendedHeading);
+        if (is_array($extendedHeading) && count($extendedHeading)) {
+            $extendedHeading = $extendedHeading[0];
+        }
+        return $extendedHeading ?: $heading;
     }
 
     public function getFilterHeader(): string
