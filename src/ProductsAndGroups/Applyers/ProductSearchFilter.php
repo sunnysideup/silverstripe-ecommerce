@@ -132,7 +132,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected $maximumNumberOfResults = 0;
 
-    protected $productsForGroups;
+    protected $matchingGroups;
 
     /**
      * results for groups.
@@ -221,7 +221,7 @@ class ProductSearchFilter extends BaseApplyer
                 }
                 //not sure why we need this, but keeping for now.
                 self::$groupCache = $this->productGroupIds;
-                self::$groupListCache = $this->productsForGroups;
+                self::$groupListCache = $this->matchingGroups;
                 $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
                 $sorter = ArrayMethods::create_sort_statement_from_id_array(
                     $this->getProductIds(),
@@ -274,7 +274,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function getHasResults(): bool
     {
-        return count($this->productIds) > 1 || count($this->productGroupIds) > 1;
+        return count($this->productIds) > 0 || count($this->productGroupIds) > 0;
     }
 
     public function getDebugOutputString(): string
@@ -291,7 +291,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function setBaseListForGroups($baseListForGroups): self
     {
-        $this->productsForGroups = $baseListForGroups;
+        $this->matchingGroups = $baseListForGroups;
 
         return $this;
     }
@@ -342,7 +342,7 @@ class ProductSearchFilter extends BaseApplyer
         //product groups
         $tmpVar = $this->baseClassNameForGroups;
         $filter = ['ID' => ArrayMethods::filter_array($this->productGroupIds), 'ShowInSearch' => 1];
-        $this->productsForGroups = $tmpVar::get()->filter($filter);
+        $this->matchingGroups = $tmpVar::get()->filter($filter);
     }
 
     //#######################################
@@ -364,15 +364,18 @@ class ProductSearchFilter extends BaseApplyer
 
         //defining some variables
 
-        //KEYWORD SEARCH - only bother if we have any keywords and results at all ...
-        if ($this->products->exists()) {
-            if (! empty($this->rawData['Keyword']) && strlen((string) $this->rawData['Keyword']) > 1) {
-                $this->runKeywordSearch();
-            } else {
-                // add directly to results
-                $this->addToResults($this->products);
-            }
+        if ($this->HasKeywordSearch()) {
+            $this->runKeywordSearch();
+        } else {
+            // add directly to results
+            $this->addToResults($this->products);
+            $this->matchingGroups = $this->matchingGroups->filter(['ID' => -1]);
         }
+    }
+
+    protected function HasKeywordSearch(): bool
+    {
+        return ! empty($this->rawData['Keyword']) && strlen((string) $this->rawData['Keyword']) > 1;
     }
 
     protected function runKeywordSearch()
@@ -509,14 +512,14 @@ class ProductSearchFilter extends BaseApplyer
     {
         if ($this->debug) {
             $this->debugOutput('<hr />');
-            $this->debugOutput('<h3>PRODUCT GROUP SEARCH ' . $this->productsForGroups->count() . '</h3>');
+            $this->debugOutput('<h3>PRODUCT GROUP SEARCH ' . $this->matchingGroups->count() . '</h3>');
         }
 
         $count = 0;
         // work out fields to search
 
         // work out searches
-        $filterIds = $this->productsForGroups->columnUnique();
+        $filterIds = $this->matchingGroups->columnUnique();
         $where = '';
         if ($this->getProductListIsFiltered()) {
             $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
@@ -524,15 +527,19 @@ class ProductSearchFilter extends BaseApplyer
                 $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
             }
         }
-        $ids = $this->getSearchApi()->getProductGroupResults(
-            $this->keywordPhrase,
-            $where
-        );
-        if ($this->debug) {
-            $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of ' . $where . '</pre>');
+        if ($this->keywordPhrase) {
+            $ids = $this->getSearchApi()->getProductGroupResults(
+                $this->keywordPhrase,
+                $where
+            );
+            if ($this->debug) {
+                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of ' . $where . '</pre>');
+            }
+        } else {
+            $ids = [-1 => -1];
         }
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
-        $this->productsForGroups = $this->productsForGroups
+        $this->matchingGroups = $this->matchingGroups
             ->filter(['ID' => ArrayMethods::filter_array($ids), 'ShowInSearch' => 1])
             ->orderBy($sortStatement)
         ;
@@ -560,7 +567,7 @@ class ProductSearchFilter extends BaseApplyer
         }
         // immediate redirect?
         if ($listToAdd->exists()) {
-            $sort = $this->Config()->get('in_group_sort_sql');
+            $sort = $this->config()->get('in_group_sort_sql');
             $listToAdd = $listToAdd
                 ->limit($this->maxToAdd())
                 ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)])
@@ -627,17 +634,17 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function createBaseList()
     {
-        if (! $this->productsForGroups instanceof DataList) {
-            $this->productsForGroups = $this->finalProductList->getParentGroups();
+        if (! $this->matchingGroups instanceof DataList) {
+            $this->matchingGroups = $this->finalProductList->getParentGroups();
         }
-        if (! $this->productsForGroups->exists()) {
+        if (! $this->matchingGroups->exists()) {
             $tmpVar = $this->baseClassNameForGroups;
-            $this->productsForGroups = $tmpVar::get();
+            $this->matchingGroups = $tmpVar::get();
         }
         if ($this->debug) {
             $this->debugOutput('<hr />');
             $this->debugOutput('<h3>BASE LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->products) . '</pre>');
-            $this->debugOutput('<h3>BASE GROUP LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->productsForGroups) . '</pre>');
+            $this->debugOutput('<h3>BASE GROUP LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->matchingGroups) . '</pre>');
         }
     }
 
