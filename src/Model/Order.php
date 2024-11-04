@@ -183,7 +183,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\ArrayList (ArrayData)|null
      */
-    protected static $_modifier_form_cache;
+    protected static array $_modifier_form_cache = [];
 
     // 1. CMS STUFF
 
@@ -564,7 +564,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function getModifierForms(Controller $optionalController = null, Validator $optionalValidator = null)
     {
-        if (null === self::$_modifier_form_cache) {
+        if (empty(self::$_modifier_form_cache[$this->ID])) {
             $formsDone = [];
             $arrayList = new ArrayList();
             $modifiers = $this->Modifiers();
@@ -587,10 +587,10 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
 
-            self::$_modifier_form_cache = $arrayList;
+            self::$_modifier_form_cache[$this->ID] = $arrayList;
         }
 
-        return self::$_modifier_form_cache;
+        return self::$_modifier_form_cache[$this->ID];
     }
 
     /**
