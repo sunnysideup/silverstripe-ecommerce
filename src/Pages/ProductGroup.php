@@ -753,12 +753,20 @@ class ProductGroup extends Page
         $this->FullSiteTreeSort = (int) implode('', $obj->getParentSortArray());
     }
 
-    public function getProductGroupBreadcrumb(): string
+    public function getProductGroupBreadcrumbCalculated(): string
     {
         if (empty($this->ProductGroupBreadcrumb)) {
-            return $this->Parent()->Title;
+            if ($this->ParentID) {
+                $p = $this->Parent();
+                if ($p && $p->exists()) {
+                    return $this->Parent()->Title;
+                }
+            }
         }
-        return $this->ProductGroupBreadcrumb;
+        if (empty($this->ProductGroupBreadcrumb)) {
+            $this->ProductGroupBreadcrumb = '';
+        }
+        return (string) $this->ProductGroupBreadcrumb;
     }
 
     public function onBeforeUnpublish()

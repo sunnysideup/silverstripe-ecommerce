@@ -521,7 +521,7 @@ class UserPreference
                     }
                     $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $title = $group->MenuTitle;
-                    $crumb = $group->getProductGroupBreadcrumb();
+                    $crumb = $group->getProductGroupBreadcrumbCalculated();
                     if ($prevGroup && trim($prevGroup->Title) === trim($group->Title)) {
                         if ($prevGroup->ParentID !== $group->ParentID) {
                             $title = $crumb. ' - ' . $title;
