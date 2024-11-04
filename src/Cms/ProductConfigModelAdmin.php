@@ -30,7 +30,7 @@ class ProductConfigModelAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $menu_title = 'Product Details';
+    private static $menu_title = 'Product Categories';
 
     /**
      * standard SS variable.
