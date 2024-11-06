@@ -459,7 +459,7 @@ class ProductSearchFilter extends BaseApplyer
             // work out fields to search
             $where = '';
             if ($this->getProductListIsFiltered()) {
-                $where = 'ProductID IN (' . implode(', ', $this->products->columnUnique()) . ')';
+                $where = 'ProductID IN (' . implode(', ', ArrayMethods::filter_array($this->products->columnUnique())) . ')';
             }
             $ids = $this->getSearchApi()->getProductResults(
                 $this->keywordPhrase,
