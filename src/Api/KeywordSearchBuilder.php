@@ -80,6 +80,8 @@ class KeywordSearchBuilder
         }
 
         $count = 0;
+
+        $strPositionAddonPrimaryField = $this->strPositionPhrase($fullPhrase, $primaryField);
         // Title: exact match with Field, e.g. Title equals "AAAA BBBB"
         $this->addIfStatement(++$count, '"' . $primaryField . "\" = '{$fullPhrase}'");
 
@@ -87,16 +89,22 @@ class KeywordSearchBuilder
         $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase} %'");
 
         // Title: contains full string without extra characters, e.g. Title equals "* AAAA BBBB *" (note space!)
-        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase} %'");
+        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '% {$fullPhrase} %'", $strPositionAddonPrimaryField);
+
+        // // Title: contains full string without extra characters, e.g. Title equals "*AAAA BBBB *" (note space!)
+        // $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase} %'", $strPositionAddon);
 
         // Title: contains full string, e.g. Title equals "*AAAA BBBB*"
-        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase}%'");
+        $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase}%'", $strPositionAddonPrimaryField);
 
         // Content starts with full string without extra characters, e.g. Content equals "AAAA BBBB *"
         $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '{$fullPhrase} %'");
 
-        // Content contains full string without extra characters, e.g. Content equals "*AAAA BBBB *" (note space!)
-        $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase} %'");
+        // Content contains full string without extra characters, e.g. Content equals "* AAAA BBBB *" (note space!)
+        $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '% {$fullPhrase} %'");
+
+        // // Content contains full string without extra characters, e.g. Content equals "*AAAA BBBB *" (note space!)
+        // $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase} %'");
 
         // Content contains full string, e.g. Content equals "*AAAA BBBB*"
         $this->addIfStatement(++$count, '"' . $secondaryField . "\" LIKE '%{$fullPhrase}%'");
@@ -111,9 +119,14 @@ class KeywordSearchBuilder
         $this->addEndIfStatement($count);
     }
 
-    protected function addIfStatement(int $count, string $where)
+    protected function strPositionPhrase(string $fullPhrase, string $field): string
     {
-        $this->ifStatement .= ' IF(' . $where . ', ' . $count . ', ';
+        return '+ (POSITION(\'' . $fullPhrase . '\' IN "' . $field . '") / LENGTH("' . $field . '"))';
+    }
+
+    protected function addIfStatement(int $count, string $where, string $secondaryCount = '')
+    {
+        $this->ifStatement .= ' IF(' . $where . ', ( ' . $count . ' ' . $secondaryCount . ' ), ';
     }
 
     protected function addEndIfStatement($count)
