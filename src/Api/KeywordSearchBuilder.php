@@ -121,7 +121,7 @@ class KeywordSearchBuilder
 
     protected function strPositionPhrase(string $fullPhrase, string $field): string
     {
-        return '+ (POSITION(\'' . $fullPhrase . '\' IN "' . $field . '") / LENGTH("' . $field . '"))';
+        return '+ (POSITION(\'' . $fullPhrase . '\' IN "' . $field . '") / (LENGTH("' . $field . '") + 1))';
     }
 
     protected function addIfStatement(int $count, string $where, string $secondaryCount = '')
