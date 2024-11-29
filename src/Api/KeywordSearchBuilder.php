@@ -67,7 +67,6 @@ class KeywordSearchBuilder
         $searchStringAND = '';
         $hasWordArray = false;
         if (count($wordAsArray) > 1) {
-            $hasWordArray = true;
             $searchStringArray = [];
             foreach ($wordAsArray as $word) {
                 $word = trim($word);
@@ -77,6 +76,7 @@ class KeywordSearchBuilder
                 $searchStringArray[] = "\"_FF_FIELD_GOES_HERE_\" LIKE '%{$word}%'";
             }
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
+            $hasWordArray = count($searchStringArray) > 0;
         }
 
         $count = 0;
