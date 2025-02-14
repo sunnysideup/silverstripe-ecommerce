@@ -100,12 +100,13 @@ class ProductSearchForm extends Form
         $fields = FieldList::create();
         //turn of security to allow caching of the form:
         $fields->push(
-            $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
+            TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
                 ->setAttribute('autocomplete', 'off')
                 ->setAttribute('autocorrect', 'off')
+                ->setAttribute('auto-capitalization', 'off')
                 ->setAttribute('spellcheck', 'false')
+                ->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'))
         );
-        $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         if ($this->config()->get('include_price_filters')) {
             $fields->push(
                 CompositeField::create(
