@@ -101,6 +101,9 @@ class ProductSearchForm extends Form
         //turn of security to allow caching of the form:
         $fields->push(
             $keywordField = TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
+                ->setAttribute('autocomplete', 'off')
+                ->setAttribute('autocorrect', 'off')
+                ->setAttribute('spellcheck', 'false')
         );
         $keywordField->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'));
         if ($this->config()->get('include_price_filters')) {
@@ -326,7 +329,6 @@ class ProductSearchForm extends Form
     protected function checkForInternalItemID()
     {
         return $this->checkForOneInner($this->getProductClassName(), ['InternalItemID' => $this->rawData['Keyword']]);
-
     }
 
     protected function checkForOneProductTitleMatch()
@@ -352,5 +354,4 @@ class ProductSearchForm extends Form
 
         return false;
     }
-
 }
