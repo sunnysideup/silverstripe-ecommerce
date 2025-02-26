@@ -47,6 +47,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -699,8 +700,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
                     $count = Order::get()
                         ->Filter(['StatusID' => (int) $key])
-                        ->count()
-                    ;
+                        ->count();
                     if ($count < 1) {
                         //do nothing
                     } else {
@@ -983,7 +983,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             $fields->addFieldToTab(
                 'Root.Main',
-                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html.$otherHTML),
+                LiteralField::create('getPrintLinkANDgetPackingSlipLink', $html . $otherHTML),
             );
 
             //add order here as well.
@@ -2790,6 +2790,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public function getRetrieveLink()
     {
+
         //important to recalculate! - recalculate = true
         if ($this->IsSubmitted(true)) {
             //add session ID if not added yet...
@@ -2797,7 +2798,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $this->write();
             }
 
-            return Director::AbsoluteURL(
+            $s = Director::AbsoluteURL(
                 Controller::join_links(
                     OrderConfirmationPage::find_link(),
                     'retrieveorder',
@@ -2805,15 +2806,16 @@ class Order extends DataObject implements EditableEcommerceObject
                     $this->ID
                 )
             );
+        } else {
+            $s = Director::AbsoluteURL(
+                Controller::join_links(
+                    OrderConfirmationPage::find_link(),
+                    'loadorder',
+                    $this->ID
+                )
+            );
         }
-
-        return Director::AbsoluteURL(
-            Controller::join_links(
-                OrderConfirmationPage::find_link(),
-                'loadorder',
-                $this->ID
-            )
-        );
+        return str_replace('stage=Stage', '', $s);
     }
 
     public function ShareLink()
@@ -3264,8 +3266,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null === $this->totalItemsCache || $recalculate || self::get_needs_recalculating($this->ID)) {
             $this->totalItemsCache = OrderItem::get()
                 ->where('"OrderAttribute"."OrderID" = ' . $this->ID . ' AND "OrderItem"."Quantity" > 0')
-                ->count()
-            ;
+                ->count();
         }
 
         return (int) $this->totalItemsCache;
@@ -3593,8 +3594,7 @@ class Order extends DataObject implements EditableEcommerceObject
 
             $this->submittedLogCache = $className::get()
                 ->Filter(['OrderID' => $this->ID])
-                ->Last()
-            ;
+                ->Last();
         }
         return $this->submittedLogCache;
     }
@@ -4168,19 +4168,19 @@ class Order extends DataObject implements EditableEcommerceObject
             if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
                 $from = Email::config()->admin_email;
                 if (!filter_var($from, FILTER_VALIDATE_EMAIL)) {
-                    $from = 'no-reply@ '.Director::host();
+                    $from = 'no-reply@ ' . Director::host();
                 }
             }
             if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
                 $to = Email::config()->admin_email;
                 if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
-                    $to = 'no-reply@ '.Director::host();
+                    $to = 'no-reply@ ' . Director::host();
                 }
             }
             if ($replyTo && !filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
                 $replyTo = Email::config()->admin_email;
                 if (!filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
-                    $replyTo = 'no-reply@ '.Director::host();
+                    $replyTo = 'no-reply@ ' . Director::host();
                 }
             }
             if (!class_exists($emailClassName)) {
@@ -4420,5 +4420,11 @@ class Order extends DataObject implements EditableEcommerceObject
         $object->Emails_serialized = serialize($this->Emails());
 
         return $object;
+    }
+
+    protected function forceLive()
+    {
+        Versioned::set_reading_mode('Stage.Live');
+        Versioned::set_stage(Versioned::LIVE);
     }
 }
