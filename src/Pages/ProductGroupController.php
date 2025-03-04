@@ -160,8 +160,7 @@ class ProductGroupController extends PageController
                     ->applyFilter($this->getCurrentUserPreferencesKey('FILTER'), $this->getCurrentUserPreferencesParams('FILTER'))
                     ->applySorter($this->getCurrentUserPreferencesKey('SORT'), $this->getCurrentUserPreferencesParams('SORT'))
                     ->applyDisplayer($this->getCurrentUserPreferencesKey('DISPLAY'), $this->getCurrentUserPreferencesParams('DISPLAY'))
-                    ->getProducts()
-                ;
+                    ->getProducts();
                 $this->setCachedProductList($this->productList);
             }
         }
@@ -720,7 +719,7 @@ class ProductGroupController extends PageController
     }
 
 
-    protected function createLinkFromProductList($link): string
+    public function createLinkFromProductList($link): string
     {
         /** @var DataList $list */
         $list = $this->getProductList();
@@ -988,8 +987,7 @@ class ProductGroupController extends PageController
             $this->userPreferencesObject = Injector::inst()->get($className)
                 ->setRootGroup($this->dataRecord)
                 ->setRootGroupController($this)
-                ->setRequest($this->getRequest())
-            ;
+                ->setRequest($this->getRequest());
         }
 
         return $this->userPreferencesObject;
