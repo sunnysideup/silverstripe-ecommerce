@@ -719,7 +719,7 @@ class ProductGroupController extends PageController
     }
 
 
-    protected function createLinkFromProductList($link): string
+    public function createLinkFromProductList($link): string
     {
         /** @var DataList $list */
         $list = $this->getProductList();
