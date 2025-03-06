@@ -146,7 +146,7 @@ class ProductGroupController extends PageController
     /**
      * get the unpaginated list. Only set once.
      *
-     * @return DataList
+     * @return DataList|ArrayList
      */
     public function getProductList()
     {
@@ -160,8 +160,7 @@ class ProductGroupController extends PageController
                     ->applyFilter($this->getCurrentUserPreferencesKey('FILTER'), $this->getCurrentUserPreferencesParams('FILTER'))
                     ->applySorter($this->getCurrentUserPreferencesKey('SORT'), $this->getCurrentUserPreferencesParams('SORT'))
                     ->applyDisplayer($this->getCurrentUserPreferencesKey('DISPLAY'), $this->getCurrentUserPreferencesParams('DISPLAY'))
-                    ->getProducts()
-                ;
+                    ->getProducts();
                 $this->setCachedProductList($this->productList);
             }
         }
@@ -988,8 +987,7 @@ class ProductGroupController extends PageController
             $this->userPreferencesObject = Injector::inst()->get($className)
                 ->setRootGroup($this->dataRecord)
                 ->setRootGroupController($this)
-                ->setRequest($this->getRequest())
-            ;
+                ->setRequest($this->getRequest());
         }
 
         return $this->userPreferencesObject;
