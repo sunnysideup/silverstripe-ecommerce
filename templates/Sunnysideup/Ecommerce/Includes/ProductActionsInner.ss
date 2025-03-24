@@ -10,15 +10,15 @@
 <% else %>
 <ul class="$AJAXDefinitions.ProductListItemClassName <% if IsInCart %>$AJAXDefinitions.ProductListItemInCartClassName<% else %>$AJAXDefinitions.ProductListItemNotInCartClassName<% end_if %>" id="$AJAXDefinitions.UniqueIdentifier">
     <li class="removeLink">
-        <a class="goToCartLink btn action" href="$EcomConfig.CheckoutLink" title="<% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %>">
+        <a class="goToCartLink btn action" href="$EcomConfig.CheckoutLink" title="<% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %>" rel="nofollow">
             <span class="removeLink goToCartLink"><% _t("Product.GOTOCHECKOUTLINK","Go to the checkout") %></span>
         </a>
-        <a class="ajaxBuyableRemove ajaxRemoveFromCartLink" href="$RemoveAllLink" title="<% _t("Product.REMOVELINK","Remove from Cart") %>">
+        <a class="ajaxBuyableRemove ajaxRemoveFromCartLink" href="$RemoveAllLink" title="<% _t("Product.REMOVELINK","Remove from Cart") %>" rel="nofollow">
             <span class="removeLink"><% _t("Product.REMOVELINK","Remove from Cart") %></span>
         </a>
     </li>
     <li class="addLink">
-        <a class="ajaxBuyableAdd btn action ajaxAddToCartLink" href="$AddLink" title="<% _t("Product.ADDLINK","Add to Cart") %>">
+        <a class="ajaxBuyableAdd btn action ajaxAddToCartLink" href="$AddLink" title="<% _t("Product.ADDLINK","Add to Cart") %>" rel="nofollow">
             <span class="addLink"><% _t("Product.ADDLINK","Add to Cart") %></span>
         </a>
     </li>

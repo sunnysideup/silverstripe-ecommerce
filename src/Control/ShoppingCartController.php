@@ -45,10 +45,10 @@ class ShoppingCartController extends Controller
      * @var array
      */
     protected $methodsRequiringSecurityID = [
-        'additem',
-        'removeitem',
-        'removeallitem',
-        'removeallitemandedit',
+        // 'additem', // actions could be cached
+        // 'removeitem', // actions could be cached
+        // 'removeallitem', // actions could be cached
+        // 'removeallitemandedit', // actions could be cached
         'removemodifier',
         'addmodifier',
         'copyorder',
@@ -332,7 +332,7 @@ class ShoppingCartController extends Controller
      */
     public function addreferral(HTTPRequest $request)
     {
-        if($this->cart) {
+        if ($this->cart) {
             return $this->cart->addReferral($this->parameters(true));
         }
         return -1;
