@@ -30,28 +30,32 @@ class Sanitizer
         return $data;
     }
 
-    public static function html_array_to_text(array $array)
+    public static function html_array_to_text(array $array): string
     {
-        return self::html_to_text(implode('; ', $array));
+        foreach ($array as $key => $value) {
+            $array[$key] = trim(self::html_to_text($value));
+        }
+        $array = array_filter($array);
+        return (string) implode('; ', $array);
     }
 
-    public static function html_to_text($html)
+    public static function html_to_text($html): string
     {
-        return
-            strtolower(
-                trim(
-                    preg_replace(
-                        '#\s+#',
-                        ' ',
-                        strip_tags(
-                            str_replace(
-                                '<',
-                                ' <',
-                                (string) $html
-                            )
+        return (string)
+        strtolower(
+            trim(
+                preg_replace(
+                    '#\s+#',
+                    ' ',
+                    strip_tags(
+                        str_replace(
+                            '<',
+                            ' <',
+                            (string) $html
                         )
                     )
                 )
-            );
+            )
+        );
     }
 }
