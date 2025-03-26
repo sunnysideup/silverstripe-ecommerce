@@ -387,7 +387,7 @@ class Product extends Page implements BuyableModel
                 new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
                 new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
                 HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
-                ->setRows(3),
+                    ->setRows(3),
                 new CheckboxField('HasPhysicalDispatch', _t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch')),
             ]
         );
@@ -493,12 +493,12 @@ class Product extends Page implements BuyableModel
                         ' . $mySearchDetail->Data . '
                     </p>
                     <p>
-                        <a href="' . $mySearchDetail->CMSEditLink() . '">See Search Keywords Recorded</a>
+                        <a href="' . $mySearchDetail->CMSEditLink() . '">See Search Keywords Recorded (last updated: ' . $mySearchDetail->LastEdited . ')</a>
                     </p>';
                 } else {
                     $searchDetails = '
                     <p class="message warning">
-                        No search data is recorded
+                        No search data is recorded.
                     </p>';
                 }
                 $fields->addFieldsToTab(
