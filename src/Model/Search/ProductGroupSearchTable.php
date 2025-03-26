@@ -11,6 +11,7 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
 
 /**
  * This dataobject
@@ -24,6 +25,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class ProductGroupSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
+    use SearchTableTrait;
     protected static $already_removed_cache = [];
     private static $table_name = 'ProductGroupSearchTable';
 
@@ -36,9 +38,6 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
         'ProductGroup' => ProductGroup::class,
     ];
 
-    private static $create_table_options = [
-        MySQLSchemaManager::ID => 'ENGINE=MyISAM',
-    ];
 
     private static $indexes = [
         'UniqueProduct' => [
@@ -63,6 +62,7 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
 
     private static $summary_fields = [
         'Title' => 'Name',
+        'LastEdited' => 'Last Edited',
     ];
 
     /**
@@ -121,32 +121,5 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
                 self::$already_removed_cache[$productGroup->ID] = true;
             }
         }
-    }
-
-    /**
-     * link to edit the record.
-     *
-     * @param null|string $action - e.g. edit
-     *
-     * @return string
-     */
-    public function CMSEditLink($action = null)
-    {
-        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
-    }
-
-    public function canEdit($member = null)
-    {
-        return false;
-    }
-
-    public function canCreate($member = null, $context = [])
-    {
-        return false;
-    }
-
-    public function canDelete($member = null)
-    {
-        return false;
     }
 }

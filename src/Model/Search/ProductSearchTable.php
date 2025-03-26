@@ -11,6 +11,7 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
 
 /**
  * This dataobject
@@ -24,6 +25,8 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class ProductSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
+    use SearchTableTrait;
+
     protected static $already_removed_cache = [];
     private static $table_name = 'ProductSearchTable';
 
@@ -36,9 +39,6 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
         'Product' => Product::class,
     ];
 
-    private static $create_table_options = [
-        MySQLSchemaManager::ID => 'ENGINE=MyISAM',
-    ];
 
     private static $indexes = [
         'UniqueProduct' => [
@@ -63,6 +63,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
     private static $summary_fields = [
         'Title' => 'Name',
+        'LastEdited' => 'Last Edited',
     ];
 
     /**
@@ -83,7 +84,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
     {
         if (Security::database_is_ready()) {
             $tables = DB::table_list();
-            if (in_array('ProductGroupSearchTable', $tables, true)) {
+            if (in_array('ProductSearchTable', $tables, true)) {
                 DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
                 DB::query(
                     '
@@ -121,32 +122,5 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
                 self::$already_removed_cache[$product->ID] = true;
             }
         }
-    }
-
-    /**
-     * link to edit the record.
-     *
-     * @param null|string $action - e.g. edit
-     *
-     * @return string
-     */
-    public function CMSEditLink($action = null)
-    {
-        return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
-    }
-
-    public function canEdit($member = null)
-    {
-        return false;
-    }
-
-    public function canCreate($member = null, $context = [])
-    {
-        return false;
-    }
-
-    public function canDelete($member = null)
-    {
-        return true;
     }
 }
