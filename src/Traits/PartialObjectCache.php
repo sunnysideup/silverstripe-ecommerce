@@ -9,8 +9,11 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
  * To make this trait work, you will need to add a method `getFieldsToCache` to
  * any object that you are adding this to.
  */
+
+
 trait PartialObjectCache
 {
+
     /**
      * @var bool
      */
@@ -120,7 +123,6 @@ trait PartialObjectCache
                 return $this->partialCacheGetFieldsToCacheCustom();
             }
         }
-
-        return self::PARTIAL_CACHE_FIELDS_TO_CACHE;
+        return [];
     }
 }

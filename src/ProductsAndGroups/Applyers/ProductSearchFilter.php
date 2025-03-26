@@ -40,6 +40,11 @@ class ProductSearchFilter extends BaseApplyer
         'baseListOwner',
     ];
 
+    public function partialCacheGetFieldsToCache(): array
+    {
+        return static::PARTIAL_CACHE_FIELDS_TO_CACHE;
+    }
+
     /**
      * @var array<string, array<string, array<string, int>|bool|string>>
      */
@@ -214,7 +219,6 @@ class ProductSearchFilter extends BaseApplyer
                 $outcome = $this->partialCacheApplyVariablesFromCache($hash);
                 if ($outcome && ! $this->debug) {
                     $this->runFullProcessFromCache();
-
                 } else {
                     $this->runFullProcess();
                     $this->partialCacheSetCacheForHash($hash);
@@ -541,8 +545,7 @@ class ProductSearchFilter extends BaseApplyer
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
         $this->matchingGroups = $this->matchingGroups
             ->filter(['ID' => ArrayMethods::filter_array($ids), 'ShowInSearch' => 1])
-            ->orderBy($sortStatement)
-        ;
+            ->orderBy($sortStatement);
         $this->productGroupIds = $ids;
         if ($this->debug) {
             $this->debugOutput('<h3>PRODUCT GROUP SEARCH: ' . count($this->productGroupIds) . '</h3>');
@@ -570,13 +573,11 @@ class ProductSearchFilter extends BaseApplyer
             $sort = $this->config()->get('in_group_sort_sql');
             $listToAdd = $listToAdd
                 ->limit($this->maxToAdd())
-                ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)])
-            ;
+                ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)]);
             if (is_array($sort)) {
                 $listToAdd = $listToAdd->sort($sort);
             } else {
                 $listToAdd = $listToAdd->orderBy($sort);
-
             }
             $customMethod = $this->Config()->get('custom_id_method_to_retrieve_products');
             if (! $customMethod) {
