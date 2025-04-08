@@ -22,7 +22,6 @@ if (document.getElementById('OrderPrintAndMail')) {
       })
     }
   }
-
   jQuery(() => {
     EcomPrintAndMail.init()
   })

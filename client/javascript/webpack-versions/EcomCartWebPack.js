@@ -42,13 +42,6 @@
  *
  **/
 
-const originalSetTimeout = window.setTimeout
-window.setTimeout = function (...args) {
-  console.log('setTimeout called from:')
-  console.trace()
-  return originalSetTimeout.apply(this, args)
-}
-
 window.joinUrlWithSlash = function (...strings) {
   const hasQuery = strings.some(str => str.includes('?'))
   return strings
@@ -86,6 +79,7 @@ const EcomCart = {
       }
     })
   },
+
   /**
    * Set to TRUE to see debug info.
    * @var Boolean
@@ -462,7 +456,6 @@ const EcomCart = {
    * initialises all the ajax functionality
    */
   init: function () {
-    console.trace()
     if (typeof window.EcomCartOptions !== 'undefined') {
       for (var key in window.EcomCartOptions) {
         if (window.EcomCartOptions.hasOwnProperty(key)) {
@@ -470,7 +463,6 @@ const EcomCart = {
         }
       }
     }
-
     // make sure that country and region changes are applied to Shopping Cart
     EcomCart.countryAndRegionUpdates()
     // setup an area where the user can change their country / region
@@ -987,7 +979,6 @@ const EcomCart = {
       window.location = window.location
       return
     }
-    console.log()
     if (EcomCart.openAjaxCalls <= 0) {
       Object.entries(changes).forEach(([selector, values]) => {
         EcomCart.applyData(selector, values)
@@ -1083,8 +1074,8 @@ const EcomCart = {
   }
 }
 
+window.EcomCart = EcomCart
+
 jQuery(() => {
   EcomCart.init()
 })
-
-window.EcomCart = EcomCart

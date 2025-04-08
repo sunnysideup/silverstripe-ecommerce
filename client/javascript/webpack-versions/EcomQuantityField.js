@@ -9,8 +9,9 @@
 if (typeof require === 'undefined') {
   var MyEcomCart = EcomCart
 }
-if (document.getElementsByClassName('.ecomquantityfield').length) {
-  var EcomQuantityField = {
+
+if (document.getElementsByClassName('ecomquantityfield').length) {
+  const EcomQuantityField = {
     //todo: make more specific! some selector that holds true for all cart holders.
     hidePlusAndMinues: true,
 
@@ -261,4 +262,7 @@ if (document.getElementsByClassName('.ecomquantityfield').length) {
         .css('border', '3px solid red')
     }
   }
+  jQuery(() => {
+    EcomQuantityField.init()
+  })
 }

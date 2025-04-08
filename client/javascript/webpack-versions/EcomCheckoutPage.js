@@ -5,6 +5,8 @@
  *
  **/
 if (document.getElementById('Checkout')) {
+  EcomCheckoutPage.init()
+
   const EcomCheckoutPage = {
     nextPreviousOverviewListSelector: 'ol.steps a',
 

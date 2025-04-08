@@ -18,6 +18,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
+use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceClassNameOrTypeDropdownField;
@@ -768,48 +769,29 @@ class OrderModifier extends OrderAttribute
         //TableValue is a database value
         // $tableValue = DBField::create_field('Currency', $this->TableValue)->Nice();
         if ($this->HideInAjaxUpdate()) {
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableID(),
-                'p' => 'hide',
-                'v' => 1,
+            $js['#' . $ajaxObject->TableID()] = [
+                'class' => CartResponseAsArray::HIDE_CLASS,
+                'removeClass' => CartResponseAsArray::SHOW_CLASS,
             ];
         } else {
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableID(),
-                'p' => 'hide',
-                'v' => 0,
+            $js['#' . $ajaxObject->TableID()] = [
+                'class' => CartResponseAsArray::SHOW_CLASS,
+                'removeClass' => CartResponseAsArray::HIDE_CLASS,
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->getTableTitle(),
+            $js['#' . $ajaxObject->TableTitleID()] = [
+                'html' => $this->getTableTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->CartTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->getCartTitle(),
+            $js['#' . $ajaxObject->CartTitleID()] = [
+                'html' => $this->getCartTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableSubTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->getTableSubTitle(),
+            $js['#' . $ajaxObject->TableSubTitleID()] = [
+                'html' => $this->getTableSubTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->CartSubTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->getCartSubTitle(),
+            $js['#' . $ajaxObject->CartSubTitleID()] = [
+                'html' => $this->getCartSubTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableTotalID(),
-                'p' => 'innerHTML',
-                'v' => $total,
+            $js['#' . $ajaxObject->TableTotalID()] = [
+                'html' => $total,
             ];
         }
 

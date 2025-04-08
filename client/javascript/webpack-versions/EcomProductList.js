@@ -1,64 +1,6 @@
-/**
- * @description: update Cart using AJAX (JSON data source)
- * as well as making any "add to cart" and "remove from cart" links
- * work with AJAX (if setup correctly)
- * @author nicolaas @ sunny side up . co . nz
- *
- * in short, the way this works is that a bunch of items on the page
- * are set up to interact with the shopping cart:
- * - country selector
- * - region selector
- * - add to cart buttons
- * - remove from cart buttons
- *
- * If any of these form fields / buttons are clicked / changed
- * data is requested from the server.
- *
- * When the data returns, it is processed and its 'instruction'
- * are applied. Instructions can be:
- *
- * type = "id" | "class"
- *     parameter = innerHTML => update innerHTML
- *     parameter = hide => show/hide, using "hideForNow" class
- *      parameter = anything else =>  update attribute
- * WITH name:
- *  - update attribute (e.g. update value for quantity field using the field's name)
- * WITH dropdownArray
- *  - update dropdown
- * WITH rows:
- *  - add / delete TO BE IMPLEMENTED
- *
- *
- * It is recommended that you adjust the IDs / class names / names / dropdown identifiers
- * in your html rather than trying to change what is being returned (although this is possible too).
- *
- * To see what is returns can be done as follows:
- * 1. log in with administrator credentials
- * 2. browse to:
- * @http://www.yoursite.com/shoppingcart/test/
- *
- * NOTE: for your own ajax needs, you can also JUST access the cart, like this:
- * http://www.yourseite.com/shoppingcart/showcart/
- *
- **/
+import EcomUrlUtils from './EcomUrlUtils.js'
 
-const originalSetTimeout = window.setTimeout
-window.setTimeout = function (...args) {
-  console.log('setTimeout called from:')
-  console.trace()
-  return originalSetTimeout.apply(this, args)
-}
-
-window.joinUrlWithSlash = function (...strings) {
-  const hasQuery = strings.some(str => str.includes('?'))
-  return strings
-    .map(str => str.replace(/\/+$/, ''))
-    .join('/')
-    .replace(/([^:]\/)\/+/g, '$1')
-    .replace(hasQuery ? /\/+(\?|$)/ : /\/+$/, '$1')
-}
-
-const EcomCart = {
+const EcomProductList = {
   /**
    * Applies fetched data to DOM elements matching a selector.
    * @param {string} selector - CSS selector for target elements.
@@ -96,209 +38,6 @@ const EcomCart = {
   },
 
   /**
-   * selector to identify input field for selecting country.
-   */
-  shoppingCartURLSegment: 'shoppingcart',
-  set_shoppingCartURLSegment: function (s) {
-    this.shoppingCartURLSegment = s
-  },
-
-  /**
-   * this is a collection of dom elements that hold the item causing the change
-   * we retain this here so that we can add a loading class to it and,
-   * on return, we can remove it.
-   * Because it is an array, each clicked element can be individually given
-   * the loading class and also removed when its particular request returns.
-   */
-  loadingSelectors: [],
-
-  /**
-   * tells us the number of ajax calls that are currently awaiting
-   * processing
-   * @var Int
-   */
-  openAjaxCalls: 0,
-
-  /**
-   * are there any items in the cart
-   * @var Boolean
-   */
-  cartHasItems: false,
-
-  /**
-   * This is the data that we start with (which may be contained in the original HTML)
-   * @var Array
-   */
-  initialData: [],
-  set_initialData: function (a) {
-    this.initialData = a
-  },
-
-  /**
-   *  array of callbacks to call after update
-   *
-   * @type Array
-   */
-  reinitCallbacks: [],
-
-  // #################################
-  // COUNTRY + REGION SELECTION
-  // #################################
-
-  /**
-   * selector to identify the area in which the country + region selection takes place
-   * @todo: can we make this more specific?
-   */
-  countryAndRegionRootSelector: 'body',
-  set_countryAndRegionRootSelector: function (s) {
-    this.countryAndRegionRootSelector = s
-  },
-
-  /**
-   * selector to identify input field for selecting country.
-   */
-  ajaxCountryFieldSelector: 'select.ajaxCountryField',
-  set_ajaxCountryFieldSelector: function (s) {
-    this.ajaxCountryFieldSelector = s
-  },
-
-  /**
-   * selector to identify input field for selecting region.
-   */
-  ajaxRegionFieldSelector: 'select.ajaxRegionField',
-  set_ajaxRegionFieldSelector: function (s) {
-    this.ajaxRegionFieldSelector = s
-  },
-
-  // #################################
-  // UPDATING THE CART - CLASSES USED
-  // #################################
-
-  /**
-   * class used to show cart data is being updated.
-   */
-  classToShowLoading: 'loading',
-  set_classToShowLoading: function (s) {
-    this.classToShowLoading = s
-  },
-
-  /**
-   * class used to 'lock' the page while cart updates are being processed.
-   */
-  classToShowPageIsUpdating: 'ecomCartIsUpdating',
-  set_classToShowPageIsUpdating: function (s) {
-    this.classToShowPageIsUpdating = s
-  },
-
-  /**
-   * the class used to show add/remove buyable buttons
-   */
-  showClass: 'show',
-  set_showClass: function (s) {
-    this.showClass = s
-  },
-
-  /**
-   * the class used to hide add/remove buyable buttons
-   */
-  hideClass: 'hide',
-  set_hideClass: function (s) {
-    this.hideClass = s
-  },
-
-  /**
-   * a method called before the update
-   * params for onBeforeUpdate:
-   * url, params, EcomCart.setChanges
-   * EcomCart.set_onBeforeUpdate(function(url, params, setChanges) {alert("before");});
-   */
-  onBeforeUpdate: null,
-  set_onBeforeUpdate: function (f) {
-    this.onBeforeUpdate = f
-  },
-
-  /**
-   * a method called after the update
-   * params for onAfterUpdate:
-   * changes, status
-   * EcomCart.set_onAfterUpdate(function(change, status) {alert("after");});
-   */
-  onAfterUpdate: null,
-  set_onAfterUpdate: function (f) {
-    this.onAfterUpdate = f
-  },
-
-  /**
-   * @var Array
-   * Synonyms are used in the update to also update
-   * They take the form of:
-   * Selector (e.g. MyCart) => Other Selectors
-   * It updates the Other Selectors at the same time as it updates the Selector
-   * e.g. Order_DB_302_Total => ".TotalAmounts"
-   * As most of the core selctors are dynamic, they should be set at runtime.
-   */
-  synonyms: [],
-  set_synonyms: function (a) {
-    this.synonyms = a
-  },
-  add_synonym: function (key, value) {
-    this.synonyms[key] = value
-  },
-  remove_synonym: function (key) {
-    this.synonyms.splice(key, 1)
-  },
-
-  // #################################
-  // ITEMS (OR LACK OF) IN THE CART
-  // #################################
-
-  /**
-   * selector of the dom elements shown when there are no items in cart.
-   */
-  selectorShowOnZeroItems: '.showOnZeroItems',
-  set_selectorShowOnZeroItems: function (s) {
-    this.selectorShowOnZeroItems = s
-  },
-
-  /**
-   * selector of the dom elements that is hidden on zero items.
-   */
-  selectorHideOnZeroItems: '.hideOnZeroItems',
-  set_selectorHideOnZeroItems: function (s) {
-    this.selectorHideOnZeroItems = s
-  },
-
-  /**
-   * selector for the item rows.
-   */
-  selectorItemRows: 'tr.orderitem',
-  set_selectorItemRows: function (s) {
-    this.selectorItemRows = s
-  },
-
-  /**
-   * the selector used to identify "remove from cart" links within the cart.
-   */
-  removeCartSelector: '.ajaxRemoveFromCart',
-  set_removeCartSelector: function (s) {
-    this.removeCartSelector = s
-  },
-
-  // #################################
-  // AJAX CART LINKS OUTSIDE THE CART
-  // #################################
-
-  /**
-   * turn on / off the ajax buttons outside of the cart
-   * (e.g. add this product to cart, delete from cart)
-   * @var Boolean
-   */
-  ajaxButtonsOn: true,
-  set_ajaxButtonsOn: function (b) {
-    this.ajaxButtonsOn = b
-  },
-
-  /**
    * Can the Product List be updated using AJAX?
    *
    * @var Boolean
@@ -318,64 +57,6 @@ const EcomCart = {
    * @var Boolean
    */
   productListIsFromCachedSource: true,
-
-  /**
-   * NOTE: set to empty string to bypass confirmation step
-   */
-  confirmDeleteText:
-    'Are you sure you would like to remove this item from your cart?',
-  set_confirmDeleteText: function (s) {
-    this.confirmDeleteText = s
-  },
-
-  /**
-   * the area in which the ajax links can be found.
-   */
-  ajaxLinksAreaSelector: 'body',
-  set_ajaxLinksAreaSelector: function (v) {
-    this.ajaxLinksAreaSelector = v
-  },
-
-  /**
-   * the selector used to identify links that add buyables to the cart
-   */
-  addLinkSelector: '.ajaxBuyableAdd',
-  set_addLinkSelector: function (s) {
-    this.addLinkSelector = s
-  },
-
-  /**
-   * the selector used to identify links that add buyables to the cart
-   */
-  excludedPagesSelector: '.no-ajax-buttons',
-  set_excludedPagesSelector: function (s) {
-    this.excludedPagesSelector = s
-  },
-
-  /**
-   * the selector used to identify links that remove buyables from the cart
-   * (outside the cart itself)
-   */
-  removeLinkSelector: '.ajaxBuyableRemove',
-  set_removeLinkSelector: function (s) {
-    this.removeLinkSelector = s
-  },
-
-  /**
-   * the selector used to identify any buyable holder within a cart
-   */
-  orderItemHolderSelector: '.orderItemHolder',
-  set_orderItemHolderSelector: function (s) {
-    this.removeLinkSelector = s
-  },
-
-  /**
-   * the selector used to identify the cart related menu items (e.g. cart / checkout)
-   */
-  cartMenuLinksSelector: '.cartlink',
-  set_cartMenuLinksSelector: function (s) {
-    this.cartMenuLinksSelector = s
-  },
 
   // #################################
   // AJAX PRODUCT LINKS
@@ -424,36 +105,6 @@ const EcomCart = {
   // DIALOGUE POP-UP BOX
   // #################################
 
-  /**
-   * the selector used to identify any links that open a pop-up dialogue
-   * the syntax is as follows:
-   * <a href="#colorboxDialogCart" class="colorboxDialog" rel="">show cart</a>
-   * <div id="colorboxDialogCart">content for pop-up</div> (this line is optional)
-   */
-  colorboxDialogSelector: '.colorboxDialog',
-  set_colorboxDialogSelector: function (s) {
-    this.colorboxDialogSelector = s
-  },
-
-  /**
-   * The options set for the colorbox dialogue, see: https://github.com/jackmoore/colorbox
-   * @var Int
-   */
-  colorboxDialogOptions: {
-    height: '95%',
-    width: '95%',
-    maxHeight: '95%',
-    maxWidth: '95%',
-    loadingClass: 'loading',
-    iframe: true,
-    onOpen: function (event) {
-      EcomCart.reinit(true)
-    }
-  },
-  set_colorboxDialogOptions: function (o) {
-    this.colorboxDialogOptions = o
-  },
-
   // #################################
   // INIT AND RESET FUNCTIONS
   // #################################
@@ -462,19 +113,6 @@ const EcomCart = {
    * initialises all the ajax functionality
    */
   init: function () {
-    console.trace()
-    if (typeof window.EcomCartOptions !== 'undefined') {
-      for (var key in window.EcomCartOptions) {
-        if (window.EcomCartOptions.hasOwnProperty(key)) {
-          this[key] = window.EcomCartOptions[key]
-        }
-      }
-    }
-
-    // make sure that country and region changes are applied to Shopping Cart
-    EcomCart.countryAndRegionUpdates()
-    // setup an area where the user can change their country / region
-    EcomCart.changeCountryFieldSwap()
     // ajaxify product list
     EcomCart.addAjaxificationOfProductList()
     EcomCart.addSelectForSmallerSpaces()
@@ -490,67 +128,7 @@ const EcomCart = {
     // EcomCart.updateForZeroVSOneOrMoreRows(); is only required after changes are made
     // because HTML loads the right stuff by default.
     // EcomCart.updateForZeroVSOneOrMoreRows();
-    EcomCart.initColorboxDialog()
-    EcomCart.setChanges(EcomCart.initialData, '')
     // allow ajax product list back and forth:
-  },
-
-  /**
-   * runs everytime the cart is updated
-   * @param Boolean changes applied? have changes been applied in the meantime.
-   */
-  reinit: function (changesApplied) {
-    // hide or show "zero items" information
-    if (changesApplied) {
-      EcomCart.updateForZeroVSOneOrMoreRows()
-    }
-    for (var i = 0; i < EcomCart.reinitCallbacks.length; i++) {
-      EcomCart.reinitCallbacks[i]()
-    }
-  },
-
-  // #################################
-  // COUNTRY AND REGION CHANGES
-  // #################################
-
-  /**
-   * sets the functions for updating country and region
-   */
-  countryAndRegionUpdates: function () {
-    window
-      .jQuery(EcomCart.countryAndRegionRootSelector)
-      .on('change', EcomCart.ajaxCountryFieldSelector, function () {
-        var url = EcomCart.createUrl('setcountry', this.value)
-        EcomCart.getChanges(url, null, this)
-      })
-    window
-      .jQuery(EcomCart.countryAndRegionRootSelector)
-      .on('change', EcomCart.ajaxRegionFieldSelector, function () {
-        var url = EcomCart.createUrl('setregion', this.value)
-        EcomCart.getChanges(url, null, this)
-      })
-  },
-
-  /**
-   * gets the options from the main country field and presents them as options for the user
-   * to select a new country.
-   */
-  changeCountryFieldSwap: function () {
-    window
-      .jQuery(EcomCart.countryAndRegionRootSelector)
-      .on(
-        'change',
-        EcomCart.selectorChangeCountryFieldHolder + ' select',
-        function () {
-          var val = window
-            .jQuery(EcomCart.selectorChangeCountryFieldHolder + ' select')
-            .val()
-          window.jQuery(EcomCart.ajaxCountryFieldSelector).val(val)
-          var url = EcomCart.createUrl('setcountry', val)
-          EcomCart.getChanges(url, null, this)
-          window.jQuery(EcomCart.selectorChangeCountryLink).click()
-        }
-      )
   },
 
   /**
@@ -665,7 +243,7 @@ const EcomCart = {
   ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
     EcomCart.hasAjaxProductLoad = true
     // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
-    myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
+    myUrl = EcomUrlUtils.mergeUrlParamsForAjax(myUrl, dataResetFor)
     window.jQuery.ajax({
       beforeSend: function () {
         window
@@ -783,50 +361,6 @@ const EcomCart = {
       dropdownContainer.classList.toggle('ajaxified-show', shouldShowDropdown)
       dropdownContainer.classList.toggle('ajaxified-hide', !shouldShowDropdown)
     })
-  },
-
-  mergeUrlParamsForAjax: function (newUrl, dataResetFor) {
-    const base = new URL(newUrl, window.location.origin)
-    const oldParams = new URL(window.location.href).searchParams
-
-    // Combine all keys from both old and new params, excluding dataResetFor
-    const allKeys = new Set([
-      ...Array.from(oldParams.keys()),
-      ...Array.from(base.searchParams.keys())
-    ])
-    // Track if there’s exactly one change and if that change is 'start'
-    let changeCount = 0
-    let onlyStartChanged = true
-    allKeys.forEach(key => {
-      const oldValue = oldParams.get(key)
-      const newValue = base.searchParams.get(key)
-      if (oldValue !== newValue && key !== 'ajax') {
-        changeCount++
-        if (key !== 'start') {
-          onlyStartChanged = false
-        }
-      }
-    })
-
-    // Remove 'start' if there's more than one change, if the only change isn't 'start',
-    // or if 'start' is zero
-    if (changeCount > 1 || onlyStartChanged === false) {
-      base.searchParams.delete('start')
-      oldParams.delete('start')
-    }
-
-    // Merge old params that aren't in base and aren't dataResetFor
-    oldParams.forEach((value, key) => {
-      if (!base.searchParams.has(key) && key !== dataResetFor) {
-        base.searchParams.set(key, value)
-      }
-    })
-    base.searchParams.set('ajax', 1)
-    if (base.searchParams.get('start') === '0') {
-      base.searchParams.delete('start')
-    }
-
-    return base.pathname + base.search // Return path and query only
   },
 
   removeAjaxParam: function (url) {
@@ -956,15 +490,15 @@ const EcomCart = {
    * @return String
    */
   createUrl: function (method, variable) {
-    let url = window.joinUrlWithSlash(
+    let url = EcomUrlUtils.joinUrlWithSlash(
       window.jQuery('base').attr('href'),
       EcomCart.shoppingCartURLSegment
     )
     if (method) {
-      url = window.joinUrlWithSlash(url, method)
+      url = EcomUrlUtils.joinUrlWithSlash(url, method)
     }
     if (variable) {
-      url = window.joinUrlWithSlash(url, variable)
+      url = EcomUrlUtils.joinUrlWithSlash(url, variable)
     }
     return url
   },
@@ -987,7 +521,6 @@ const EcomCart = {
       window.location = window.location
       return
     }
-    console.log()
     if (EcomCart.openAjaxCalls <= 0) {
       Object.entries(changes).forEach(([selector, values]) => {
         EcomCart.applyData(selector, values)
@@ -1084,7 +617,5 @@ const EcomCart = {
 }
 
 jQuery(() => {
-  EcomCart.init()
+  EcomProductList.init()
 })
-
-window.EcomCart = EcomCart

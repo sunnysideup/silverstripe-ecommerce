@@ -4,7 +4,7 @@
  * @todoset up a readonly system
  *
  **/
-if (document.getElementsByClassName('div.password.field.text').length) {
+if (document.querySelectorAll('div.password.field.text').length) {
   const EcomPasswordField = {
     chars: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz',
 
@@ -110,6 +110,7 @@ if (document.getElementsByClassName('div.password.field.text').length) {
       return randomstring
     }
   }
+
   jQuery(() => {
     EcomPasswordField.init()
   })

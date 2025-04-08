@@ -74,10 +74,8 @@ if (
       }
     }
   }
-
-  window.jQuery(EcomPayment.paymentFieldSelector).hide()
-
   jQuery(() => {
     EcomPayment.init()
   })
+  window.jQuery(EcomPayment.paymentFieldSelector).hide()
 }

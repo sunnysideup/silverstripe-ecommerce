@@ -1,12 +1,5 @@
-import jQuery from 'jquery'
-
 /**
- * @author Nicolaas [at] sunnysideup.co.nz
- *
- * This helps with the OrderForm Address
- *
- *
- * @todoset up a readonly system
+ * @todo set up a readonly system
  *
  **/
 if (document.getElementById('OrderFormAddress_OrderFormAddress')) {

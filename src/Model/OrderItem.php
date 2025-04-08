@@ -25,6 +25,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use SilverStripe\CMS\Model\SiteTree;
+use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\OrderItem
@@ -305,7 +306,7 @@ class OrderItem extends OrderAttribute
                         $buyableLink .= '<a href="' . $buyable->CMSEditLink() . '">' . $this->getBuyableFullName() . '</a>';
                     } else {
                         $buyableLink .= $this->getBuyableFullName()
-                        . _t('OrderItem.NO_LONGER_AVAILABLE', ' - NO LONGER AVAILABLE');
+                            . _t('OrderItem.NO_LONGER_AVAILABLE', ' - NO LONGER AVAILABLE');
                     }
                 } else {
                     $buyableLink .= _t('OrderItem.BUYABLE_NOT_FOUND', 'item not found');
@@ -395,54 +396,32 @@ class OrderItem extends OrderAttribute
 
         $ajaxObject = $this->AJAXDefinitions();
         if ($this->Quantity) {
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableID(),
-                'p' => 'hide',
-                'v' => 0,
+            $js['#' . $ajaxObject->TableID()] = [
+                'class' => CartResponseAsArray::SHOW_CLASS,
+                'removeClass' => CartResponseAsArray::HIDE_CLASS,
             ];
-            $js[] = [
-                't' => 'name',
-                's' => $ajaxObject->QuantityFieldName(),
-                'p' => 'value',
-                'v' => $this->Quantity,
+            $js['[name="' . $ajaxObject->QuantityFieldName() . '"]'] = [
+                'value' => $this->Quantity,
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->getTableTitle(),
+            $js['#' . $ajaxObject->TableTitleID()] = [
+                'html' => $this->getTableTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->CartTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->CartTitle(),
+            $js['#' . $ajaxObject->CartTitleID()] = [
+                'html' => $this->CartTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableSubTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->TableSubTitle(),
+            $js['#' . $ajaxObject->TableSubTitleID()] = [
+                'html' => $this->TableSubTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->CartSubTitleID(),
-                'p' => 'innerHTML',
-                'v' => $this->CartSubTitle(),
+            $js['#' . $ajaxObject->CartSubTitleID()] = [
+                'html' => $this->CartSubTitle(),
             ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableTotalID(),
-                'p' => 'innerHTML',
-                'v' => $total,
+            $js['#' . $ajaxObject->TableTotalID()] = [
+                'html' => $total,
             ];
         } else {
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableID(),
-                'p' => 'hide',
-                'v' => 1,
+            $js['#' . $ajaxObject->TableID()] = [
+                'class' => CartResponseAsArray::HIDE_CLASS,
+                'removeClass' => CartResponseAsArray::SHOW_CLASS,
             ];
         }
 

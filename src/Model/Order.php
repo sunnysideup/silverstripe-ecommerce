@@ -3861,35 +3861,20 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         $ajaxObject = $this->AJAXDefinitions();
-        $js[] = [
-            't' => 'id',
-            's' => $ajaxObject->TableSubTotalID(),
-            'p' => 'innerHTML',
-            'v' => $subTotal,
+        $js['#' . $ajaxObject->TableSubTotalID()] = [
+            'html' => $subTotal,
         ];
-        $js[] = [
-            't' => 'id',
-            's' => $ajaxObject->TableTotalID(),
-            'p' => 'innerHTML',
-            'v' => $total,
+        $js['#' . $ajaxObject->TableTotalID()] = [
+            'html' => $total,
         ];
-        $js[] = [
-            't' => 'class',
-            's' => $ajaxObject->TotalItemsClassName(),
-            'p' => 'innerHTML',
-            'v' => $this->TotalItems(),
+        $js['.' . $ajaxObject->TotalItemsClassName()] = [
+            'html' => $this->TotalItems(),
         ];
-        $js[] = [
-            't' => 'class',
-            's' => $ajaxObject->TotalItemsTimesQuantityClassName(),
-            'p' => 'innerHTML',
-            'v' => $this->TotalItemsTimesQuantity(),
+        $js['.' . $ajaxObject->TotalItemsTimesQuantityClassName()] = [
+            'html' => $this->TotalItemsTimesQuantity(),
         ];
-        $js[] = [
-            't' => 'class',
-            's' => $ajaxObject->ExpectedCountryClassName(),
-            'p' => 'innerHTML',
-            'v' => $this->ExpectedCountryName(),
+        $js['.' . $ajaxObject->ExpectedCountryClassName()] = [
+            'html' => $this->ExpectedCountryName(),
         ];
 
         return $js;

@@ -17,6 +17,13 @@ class CartResponseAsArray
         self::$forceReload = true;
     }
 
+    public const HIDE_CLASS = 'hide';
+    public const SHOW_CLASS = 'show';
+
+    public const REMOVE_LINK_CLASS = 'removeLink';
+    public const ADD_LINK_CLASS = 'addLink';
+    public const PRODUCT_ACTIONS_CLASS = 'productActions';
+
     public static function implode_messages(?array $messages = null): string
     {
         //merge messages
@@ -29,7 +36,7 @@ class CartResponseAsArray
         return $messagesImploded;
     }
 
-    public static function return_cart_array(array $messages = [], ?array $additionalData = null, $status = 'success'): array
+    public static function return_cart_array(?array $messages = [], ?array $additionalData = null, ?string $status = 'success'): array
     {
 
         Config::modify()->set(SSViewer::class, 'source_file_comments', false);
@@ -47,7 +54,7 @@ class CartResponseAsArray
 
         //must be first
         if (isset($_REQUEST['loadingindex'])) {
-            $js[] = [
+            $js['body'] = [
                 't' => 'loadingindex',
                 'v' => $_REQUEST['loadingindex'],
             ];
@@ -55,7 +62,14 @@ class CartResponseAsArray
 
         //order items
 
-        $inCartArray = [];
+        $js['.' . self::PRODUCT_ACTIONS_CLASS . ' .' . self::REMOVE_LINK_CLASS] = [
+            'class' => self::HIDE_CLASS,
+            'removeClass' => self::SHOW_CLASS,
+        ];
+        $js['.' . self::PRODUCT_ACTIONS_CLASS . ' .' . self::ADD_LINK_CLASS] = [
+            'class' => self::SHOW_CLASS,
+            'removeClass' => self::HIDE_CLASS,
+        ];
         $items = $currentOrder->Items();
         if ($items->exists()) {
             foreach ($items as $item) {
@@ -64,19 +78,18 @@ class CartResponseAsArray
                 if ($buyable) {
                     //products in cart
                     //HACK TO INCLUDE PRODUCT IN PRODUCT VARIATION
-                    $inCartArray[] = $buyable->Product()->AJAXDefinitions()->UniqueIdentifier();
+                    $js['#' . $buyable->Product()->AJAXDefinitions()->UniqueIdentifier() . ' .' . self::REMOVE_LINK_CLASS] = [
+                        'class' => self::SHOW_CLASS,
+                        'removeClass' => self::HIDE_CLASS,
+                    ];
+                    $js['#' . $buyable->Product()->AJAXDefinitions()->UniqueIdentifier() . ' .' . self::ADD_LINK_CLASS] = [
+                        'class' => self::HIDE_CLASS,
+                        'removeClass' => self::SHOW_CLASS,
+                    ];
                 }
             }
         }
 
-        //in cart items
-        $js[] = [
-            't' => 'replaceclass',
-            's' => $inCartArray,
-            'p' => $currentOrder->AJAXDefinitions()->ProductListItemClassName(),
-            'v' => $currentOrder->AJAXDefinitions()->ProductListItemInCartClassName(),
-            'without' => $currentOrder->AJAXDefinitions()->ProductListItemNotInCartClassName(),
-        ];
 
         //order modifiers
         $modifiers = $currentOrder->Modifiers();
@@ -90,69 +103,32 @@ class CartResponseAsArray
         $js = $currentOrder->updateForAjax($js);
 
         //messages
-        $messagesImploded = self::implode_messages($messages);
-        if (is_array($messages)) {
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableMessageID(),
-                'p' => 'innerHTML',
-                'v' => $messagesImploded,
-                'isOrderMessage' => true,
-            ];
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableMessageID(),
-                'p' => 'hide',
-                'v' => 0,
-            ];
-        } else {
-            $js[] = [
-                't' => 'id',
-                's' => $ajaxObject->TableMessageID(),
-                'p' => 'hide',
-                'v' => 1,
-            ];
-        }
-
+        $messagesImploded = trim(self::implode_messages($messages));
+        $id = '#' . $ajaxObject->TableMessageID();
+        $js[$id] = [
+            'html' => $messagesImploded,
+            'class' => $messagesImploded ? 'show' : 'hide',
+        ];
         //TO DO: set it up in such a way that it specifically requests one of these
         $templates = EcommerceConfig::get(CartResponse::class, 'cart_responses_required');
         foreach ($templates as $idMethod => $template) {
             $selector = $ajaxObject->{$idMethod}();
-            $classOrID = 'id';
-            if (false !== stripos($selector, 'class')) {
-                $classOrID = 'class';
+            $classOrID = '#';
+            if (false !== stripos($idMethod, 'class')) {
+                $classOrID = '.';
             }
-            $js[] = [
-                't' => $classOrID,
-                's' => $selector,
-                'p' => 'innerHTML',
-                //note the space is a hack to return something!
-                'v' => ' ' . $currentOrder->RenderWith($template),
+            $js[$classOrID . $selector] = [
+                'html' => ' ' . $currentOrder->RenderWith($template),
             ];
         }
         //now can check if it needs to be reloaded
         if (self::$forceReload) {
-            $js = [
-                'reload' => 1,
-            ];
-        } else {
-            $js[] = [
-                'reload' => 0,
-            ];
+            $js['body'] = ['callback' => 'window.location.reload();'];
+            self::$forceReload = false;
         }
-
         //merge and return
         if (is_array($additionalData) && count($additionalData)) {
             $js = array_merge($js, $additionalData);
-        }
-        //TODO: remove doubles?
-        //turn HTMLText (et al.) objects into text
-        foreach ($js as $key => $node) {
-            if (isset($node['v'])) {
-                if ($node['v'] instanceof DBField) {
-                    $js[$key]['v'] = $node['v']->forTemplate();
-                }
-            }
         }
         return $js;
     }

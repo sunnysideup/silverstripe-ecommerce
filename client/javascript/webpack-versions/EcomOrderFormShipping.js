@@ -1,3 +1,4 @@
+import jQuery from 'jquery'
 /**
  *@author nicolaas[at]sunnysideup.co.nz
  * This adds functionality to the shipping address section of the checkout form
@@ -559,8 +560,8 @@ if (document.getElementById('OrderFormAddress_OrderFormAddress')) {
       window.jQuery(el).val(oldValue)
     }
   }
+
   jQuery(() => {
     EcomOrderFormWithShippingAddress.init()
-    EcomOrderFormWithShippingAddress.removeEmailFromShippingCityHack()
   })
 }

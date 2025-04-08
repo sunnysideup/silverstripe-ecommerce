@@ -1,5 +1,3 @@
-import jQuery from 'jquery'
-
 /**
  * @author Nicolaas [at] sunnysideup.co.nz
  * adds JS functionality to the OrderForm
@@ -12,7 +10,7 @@ import jQuery from 'jquery'
  *
  **/
 if (document.getElementById('OrderForm_OrderForm')) {
-  const EcomOrderForm = {
+  var EcomOrderForm = {
     orderFormSelector: '#OrderForm_OrderForm',
 
     loadingClass: 'loading',
@@ -40,40 +38,40 @@ if (document.getElementById('OrderForm_OrderForm')) {
     clicked: false,
 
     init: function () {
-      jQuery(document).on(
-        'click',
-        EcomOrderForm.submitButtonSelector,
-        function (e) {
+      window.window
+        .jQuery(document)
+        .on('click', EcomOrderForm.submitButtonSelector, function (e) {
           if (!EcomOrderForm.TandCcheck()) {
             e.preventDefault()
           }
           if (EcomOrderForm.clicked) {
             e.preventDefault()
           }
-        }
-      )
+        })
       EcomOrderForm.ajaxifyForm()
       EcomOrderForm.TandCclick()
     },
 
     TandCclick: function () {
-      jQuery(EcomOrderForm.termsAndConditionsLinkSelector).attr(
-        'target',
-        'termsandconditions'
-      )
+      window.window
+        .jQuery(EcomOrderForm.termsAndConditionsLinkSelector)
+        .attr('target', 'termsandconditions')
     },
 
     TandCcheck: function () {
       if (EcomOrderForm.TermsAndConditionsMessage) {
         if (
-          jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).length === 1
+          window.window.jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector)
+            .length === 1
         ) {
           if (
-            !jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).is(
-              ':checked'
-            )
+            !window.window
+              .jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector)
+              .is(':checked')
           ) {
-            jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector).focus()
+            window.window
+              .jQuery(EcomOrderForm.termsAndConditionsCheckBoxSelector)
+              .focus()
             window.alert(EcomOrderForm.TermsAndConditionsMessage)
             return false
           }
@@ -83,23 +81,19 @@ if (document.getElementById('OrderForm_OrderForm')) {
     },
 
     ajaxifyForm: function () {
-      jQuery(document).on(
-        'submit',
-        EcomOrderForm.orderFormSelector,
-        function (e) {
+      window.window
+        .jQuery(document)
+        .on('submit', EcomOrderForm.orderFormSelector, function (e) {
           EcomOrderForm.clicked = true
           setTimeout(function () {
-            jQuery(EcomOrderForm.submitButtonSelector)
+            window.window
+              .jQuery(EcomOrderForm.submitButtonSelector)
               .parent()
               .addClass(EcomOrderForm.loadingClass)
               .text(EcomOrderForm.processingMessage)
-            jQuery(EcomOrderForm.submitButtonSelector).hide()
+            window.window.jQuery(EcomOrderForm.submitButtonSelector).hide()
           }, 100)
-        }
-      )
+        })
     }
   }
-  jQuery(() => {
-    EcomOrderForm.init()
-  })
 }
