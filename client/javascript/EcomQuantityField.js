@@ -36,11 +36,8 @@ if (document.getElementsByClassName('ecomquantityfield').length) {
 
     lastValue: [],
 
-    EcomCart: null,
-
     init: function () {
-      this.EcomCart = EcomCart
-      this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
+      EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
       //make sure it only runs if needed...
       if (window.jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
         window
@@ -181,14 +178,7 @@ if (document.getElementsByClassName('ecomquantityfield').length) {
                   // no double-encoded ampersands
                   url = url.replace('&amp;', '&')
 
-                  if (typeof EcomQuantityField.EcomCart !== 'undefined') {
-                    EcomQuantityField.EcomCart.getChanges(url, null, this)
-                  } else if (typeof EcomCart !== 'undefined') {
-                    EcomCart.getChanges(url, null, this)
-                  } else {
-                    alert('Sorry, changes could not be saved.')
-                    window.location = url
-                  }
+                  EcomCart.getChanges(url, null, this)
                 }
               }
             }

@@ -8,8 +8,6 @@ import EcomCart from './EcomCart'
  **/
 
 const EcomProducts = {
-  EcomCart: null,
-
   //see: http://www.jacklmoore.com/colorbox/
   colorboxDialogOptions_addVariations: {
     height: '95%',
@@ -20,7 +18,7 @@ const EcomProducts = {
     iframe: false,
     model: true,
     onComplete: function (event) {
-      EcomProducts.EcomCart.reinit()
+      EcomCart.reinit()
     }
   },
 
@@ -40,7 +38,6 @@ const EcomProducts = {
   closeClass: 'close',
 
   init: function () {
-    EcomProducts.EcomCart = EcomCart
     //pop-up for selections
     jQuery(document).on(
       'click',
