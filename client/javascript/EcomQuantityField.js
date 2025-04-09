@@ -39,12 +39,7 @@ if (document.getElementsByClassName('.ecomquantityfield').length) {
     EcomCart: null,
 
     init: function () {
-      if (typeof EcomCart === 'undefined' && typeof require !== 'undefined') {
-        // var EcomCart = require("./EcomCart");
-        this.EcomCart = window.EcomCart
-      } else {
-        this.EcomCart = EcomCart
-      }
+      this.EcomCart = EcomCart
       this.EcomCart.reinitCallbacks.push(EcomQuantityField.reinit)
       //make sure it only runs if needed...
       if (window.jQuery(EcomQuantityField.delegateRootSelector).length > 0) {
