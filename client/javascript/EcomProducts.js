@@ -1,17 +1,13 @@
+import EcomCart from './EcomCart'
+
 /**
  * @description:
  * This class provides extra functionality for the
  * Product and ProductGroup Page.
  * @author nicolaas @ sunny side up . co . nz
  **/
-;(function ($) {
-  $(document).ready(function () {
-    EcomProducts.init()
-    EcomProducts.reinit()
-  })
-})(window.jQuery)
 
-EcomProducts = {
+const EcomProducts = {
   EcomCart: null,
 
   //see: http://www.jacklmoore.com/colorbox/
@@ -24,12 +20,6 @@ EcomProducts = {
     iframe: false,
     model: true,
     onComplete: function (event) {
-      if (typeof EcomCart === 'undefined') {
-        // var EcomCart = require("./EcomCart");
-        EcomProducts.EcomCart = EcomCart.EcomCart
-      } else {
-        EcomProducts.EcomCart = EcomCart
-      }
       EcomProducts.EcomCart.reinit()
     }
   },
@@ -50,39 +40,41 @@ EcomProducts = {
   closeClass: 'close',
 
   init: function () {
+    EcomProducts.EcomCart = EcomCart
     //pop-up for selections
-    window
-      .jQuery(document)
-      .on('click', EcomProducts.selectVariationSelector, function (e) {
+    jQuery(document).on(
+      'click',
+      EcomProducts.selectVariationSelector,
+      function (e) {
         EcomProducts.colorboxDialogOptions_addVariations.href = window
           .jQuery(this)
           .attr('href')
         EcomProducts.colorboxDialogOptions_addVariations.open = true
-        window.jQuery.colorbox(EcomProducts.colorboxDialogOptions_addVariations)
+        jQuery.colorbox(EcomProducts.colorboxDialogOptions_addVariations)
         return false
-      })
+      }
+    )
     //pop-up for images
-    window
-      .jQuery(document)
-      .on('click', EcomProducts.imagePopupSelector, function (e) {
-        EcomProducts.imagePopupSelector.href = window.jQuery(this).attr('href')
-        EcomProducts.imagePopupSelector.open = true
-        window.jQuery.colorbox(EcomProducts.imagePopupSelector)
-        return false
-      })
+    jQuery(document).on('click', EcomProducts.imagePopupSelector, function (e) {
+      EcomProducts.imagePopupSelector.href = jQuery(this).attr('href')
+      EcomProducts.imagePopupSelector.open = true
+      jQuery.colorbox(EcomProducts.imagePopupSelector)
+      return false
+    })
     //filter sort display tabs
-    window
-      .jQuery(document)
-      .on('click', EcomProducts.openCloseSectionLinkSelector, function (event) {
+    jQuery(document).on(
+      'click',
+      EcomProducts.openCloseSectionLinkSelector,
+      function (event) {
         event.preventDefault()
         var id = EcomProducts.findID(this)
         //close the others that are open if the current one is about to open ...
-        if (window.jQuery(this).hasClass(EcomProducts.closeClass)) {
+        if (jQuery(this).hasClass(EcomProducts.closeClass)) {
           window
             .jQuery(EcomProducts.openCloseSectionLinkSelector)
             .each(function (i, el) {
-              if (window.jQuery(el).hasClass(EcomProducts.openClass)) {
-                window.jQuery(el).click()
+              if (jQuery(el).hasClass(EcomProducts.openClass)) {
+                jQuery(el).trigger('click')
               }
             })
         }
@@ -95,26 +87,32 @@ EcomProducts = {
           .slideToggle()
           .toggleClass(EcomProducts.closeClass)
           .toggleClass(EcomProducts.openClass)
-      })
+      }
+    )
   },
 
   reinit: function () {
     var thereIsOnlyOne = false
-    if (window.jQuery(EcomProducts.openCloseSectionLinkSelector).length == 1) {
+    if (jQuery(EcomProducts.openCloseSectionLinkSelector).length === 1) {
       thereIsOnlyOne = true
     }
-    window.jQuery('.close.openCloseSection').css('display', 'none')
+    jQuery('.close.openCloseSection').css('display', 'none')
     if (thereIsOnlyOne) {
-      window.jQuery(EcomProducts.openCloseSectionLinkSelector).click()
+      jQuery(EcomProducts.openCloseSectionLinkSelector).trigger('click')
     }
   },
 
   findID: function (el) {
-    var id = window.jQuery(el).attr('href')
+    var id = jQuery(el).attr('href')
     var idLength = id.length
     var hashPosition = id.indexOf('#')
-    return id.substr(id.indexOf('#'), idLength - hashPosition)
+    return id.slice(id.indexOf('#'), id.length - hashPosition)
   }
 }
 
-window.jQuery(EcomProducts.openCloseSectionSelector).css('display', 'none')
+jQuery(EcomProducts.openCloseSectionSelector).css('display', 'none')
+
+jQuery(() => {
+  EcomProducts.init()
+  EcomProducts.reinit()
+})

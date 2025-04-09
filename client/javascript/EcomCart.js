@@ -42,12 +42,13 @@
  *
  **/
 
-const originalSetTimeout = window.setTimeout
-window.setTimeout = function (...args) {
-  console.log('setTimeout called from:')
-  console.trace()
-  return originalSetTimeout.apply(this, args)
-}
+// const originalSetTimeout = window.setTimeout
+// window.setTimeout = function (...args) {
+//   // console.log('setTimeout called with args:', args)
+//   // console.log('setTimeout called from:')
+//   console.trace()
+//   return originalSetTimeout.apply(this, args)
+// }
 
 window.joinUrlWithSlash = function (...strings) {
   const hasQuery = strings.some(str => str.includes('?'))
@@ -462,7 +463,7 @@ const EcomCart = {
    * initialises all the ajax functionality
    */
   init: function () {
-    console.trace()
+    // get variables!
     if (typeof window.EcomCartOptions !== 'undefined') {
       for (var key in window.EcomCartOptions) {
         if (window.EcomCartOptions.hasOwnProperty(key)) {
@@ -548,7 +549,7 @@ const EcomCart = {
           window.jQuery(EcomCart.ajaxCountryFieldSelector).val(val)
           var url = EcomCart.createUrl('setcountry', val)
           EcomCart.getChanges(url, null, this)
-          window.jQuery(EcomCart.selectorChangeCountryLink).click()
+          window.jQuery(EcomCart.selectorChangeCountryLink).trigger('click')
         }
       )
   },
@@ -1083,8 +1084,4 @@ const EcomCart = {
   }
 }
 
-jQuery(() => {
-  EcomCart.init()
-})
-
-window.EcomCart = EcomCart
+export default EcomCart

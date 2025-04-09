@@ -69,7 +69,7 @@ if (document.querySelectorAll('div.password.field.text').length) {
               return false
             }
           )
-        window.jQuery(EcomPasswordField.choosePasswordLinkSelector).click()
+        window.jQuery(EcomPasswordField.choosePasswordLinkSelector)
       }
 
       window.jQuery('form').on('click', '.btn-toolbar input', function () {
@@ -95,7 +95,7 @@ if (document.querySelectorAll('div.password.field.text').length) {
       })
       //show passwords straight away IF there is an error
       if (window.jQuery(EcomPasswordField.errorMessageSelector).length) {
-        window.jQuery(EcomPasswordField.choosePasswordLinkSelector).click()
+        window.jQuery(EcomPasswordField.choosePasswordLinkSelector)
       }
     },
 

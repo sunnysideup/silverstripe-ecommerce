@@ -1,3 +1,4 @@
+import EcomCart from './EcomCart'
 /**
  * @description: update cart using AJAX
  * This JS attaches to the Quantity Field.
@@ -6,11 +7,8 @@
  *
  */
 
-if (typeof require === 'undefined') {
-  var MyEcomCart = EcomCart
-}
 if (document.getElementsByClassName('.ecomquantityfield').length) {
-  var EcomQuantityField = {
+  const EcomQuantityField = {
     //todo: make more specific! some selector that holds true for all cart holders.
     hidePlusAndMinues: true,
 
@@ -38,7 +36,7 @@ if (document.getElementsByClassName('.ecomquantityfield').length) {
 
     lastValue: [],
 
-    EcomCart: {},
+    EcomCart: null,
 
     init: function () {
       if (typeof EcomCart === 'undefined' && typeof require !== 'undefined') {

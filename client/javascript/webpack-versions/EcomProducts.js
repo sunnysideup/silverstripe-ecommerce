@@ -82,7 +82,7 @@ EcomProducts = {
             .jQuery(EcomProducts.openCloseSectionLinkSelector)
             .each(function (i, el) {
               if (window.jQuery(el).hasClass(EcomProducts.openClass)) {
-                window.jQuery(el).click()
+                window.jQuery(el)
               }
             })
         }
@@ -105,7 +105,7 @@ EcomProducts = {
     }
     window.jQuery('.close.openCloseSection').css('display', 'none')
     if (thereIsOnlyOne) {
-      window.jQuery(EcomProducts.openCloseSectionLinkSelector).click()
+      window.jQuery(EcomProducts.openCloseSectionLinkSelector)
     }
   },
 

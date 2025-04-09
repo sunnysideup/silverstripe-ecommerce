@@ -64,9 +64,12 @@ if (
         // if an option has already been selected make sure it stays selected
         window
           .jQuery(EcomPayment.paymentInputsSelectorParent + ' input:checked')
-          .click()
+          .trigger('click')
       } else {
-        window.jQuery(EcomPayment.paymentInputsSelector).first().click()
+        window
+          .jQuery(EcomPayment.paymentInputsSelector)
+          .first()
+          .trigger('click')
       }
 
       if (window.jQuery(EcomPayment.paymentInputsSelector).length === 1) {

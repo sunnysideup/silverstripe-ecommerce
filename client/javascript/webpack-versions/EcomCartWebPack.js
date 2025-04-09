@@ -540,7 +540,7 @@ const EcomCart = {
           window.jQuery(EcomCart.ajaxCountryFieldSelector).val(val)
           var url = EcomCart.createUrl('setcountry', val)
           EcomCart.getChanges(url, null, this)
-          window.jQuery(EcomCart.selectorChangeCountryLink).click()
+          window.jQuery(EcomCart.selectorChangeCountryLink)
         }
       )
   },
