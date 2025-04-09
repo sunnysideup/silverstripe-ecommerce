@@ -130,6 +130,11 @@ class CartResponseAsArray
         if (is_array($additionalData) && count($additionalData)) {
             $js = array_merge($js, $additionalData);
         }
+        foreach ($js as $key => $value) {
+            if (isset($value['html']) && is_object($value['html'])) {
+                $js[$key]['html'] = $value['html']->forTemplate();
+            }
+        }
         return $js;
     }
 }
