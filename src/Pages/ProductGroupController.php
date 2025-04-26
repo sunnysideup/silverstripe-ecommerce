@@ -541,12 +541,12 @@ class ProductGroupController extends PageController
 
     public function getSortHeader(): string
     {
-        return _t('Ecommerce.SORT', 'SORT');
+        return _t('Ecommerce.SORT', 'Sort');
     }
 
     public function getDisplayHeader(): string
     {
-        return _t('Ecommerce.DISPLAY', 'Presentation');
+        return _t('Ecommerce.DISPLAY', 'Display');
     }
 
     /**
