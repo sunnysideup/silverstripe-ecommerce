@@ -33,7 +33,7 @@ class ProductSearchFilter extends BaseApplyer
     /**
      * @var string[]
      */
-    private const PARTIAL_CACHE_FIELDS_TO_CACHE = [
+    protected const PARTIAL_CACHE_FIELDS_TO_CACHE = [
         'rawData',
         'productIds',
         'productGroupIds',
