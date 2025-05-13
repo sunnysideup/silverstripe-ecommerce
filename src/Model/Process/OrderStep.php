@@ -373,12 +373,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     public function i18n_singular_name()
     {
-        return _t('OrderStep.ORDERSTEP', 'Order Step');
+        return $this->Config()->get('defaults')['Name'] ?? _t('OrderStep.ORDERSTEP', 'Order Step');
     }
 
     public function i18n_plural_name()
     {
-        return _t('OrderStep.ORDERSTEPS', 'Order Steps');
+        return $this->Config()->get('defaults')['Name'] ?? _t('OrderStep.ORDERSTEP', 'Order Step');
     }
 
     /**
@@ -452,8 +452,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $badorderStatus = Order::get()
             ->leftJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
             ->where('"OrderStep"."ID" IS NULL AND "StatusID" > 0')
-            ->column('StatusID')
-        ;
+            ->column('StatusID');
         if (is_array($badorderStatus)) {
             return array_unique(array_values($badorderStatus));
         }
@@ -787,8 +786,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ]
             )
             ->exclude(['ID' => (int) $this->ID])
-            ->First()
-        ;
+            ->First();
         if ($anotherOrderStepWithSameNameOrCode) {
             $result->addError(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
         }
@@ -995,8 +993,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     'OrderStepID' => $this->ID,
                 ]
             )
-            ->exists()
-        ;
+            ->exists();
     }
 
     /**
@@ -1265,8 +1262,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         } else {
             $exists = Order::get()
                 ->filter(['StatusID' => (int) $this->ID])
-                ->exists()
-            ;
+                ->exists();
             if ($exists) {
                 return false;
             }
@@ -1485,8 +1481,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
                     ->orderBy('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
                     ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
-                    ->first()
-                ;
+                    ->first();
             }
             if ($order) {
                 return OrderConfirmationPage::get_email_link(
@@ -1519,8 +1514,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $descr1 = _t('OrderStep.DELAY_VALUE', 'Order Step, for any order, will run');
             $descr2 = $field->ago();
             $descr3 = $this->DeferFromSubmitTime ?
-                    _t('OrderStep.FROM_ORDER_SUBMIT_TIME', 'from the order being submitted') :
-                    _t('OrderStep.FROM_START_OF_ORDSTEP', 'from the order arriving on this step');
+                _t('OrderStep.FROM_ORDER_SUBMIT_TIME', 'from the order being submitted') :
+                _t('OrderStep.FROM_START_OF_ORDSTEP', 'from the order arriving on this step');
 
             return $descr0 . ' ' . $descr1 . ' <span style="color: #338DC1">' . $descr2 . '</span> ' . $descr3 . '.';
         }
