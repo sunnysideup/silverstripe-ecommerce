@@ -153,7 +153,7 @@ class ProductGroup extends Page
         'Title' => 'Category',
         'NumberOfProductsIncAlsoShow' => 'Products',
         'Children.Count' => 'Child Categories',
-        'ProductBreadcrumb' => 'Breadcrumb',
+        'ProductGroupBreadcrumb' => 'Breadcrumb',
     ];
 
     private static $searchable_fields = [
@@ -280,7 +280,8 @@ class ProductGroup extends Page
             'Root.Images',
             [
                 ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')),
-                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
+                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
+                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
             ]
         );
 
@@ -419,8 +420,7 @@ class ProductGroup extends Page
             if ($hasDuplicates) {
                 DB::alteration_message('found duplicates for ' . $urlSegment, 'deleted');
                 $checkForDuplicatesURLSegments = ProductGroup::get()
-                    ->filter(['URLSegment' => $urlSegment])
-                ;
+                    ->filter(['URLSegment' => $urlSegment]);
 
                 if ($checkForDuplicatesURLSegments->exists()) {
                     $count = 0;
@@ -969,5 +969,4 @@ class ProductGroup extends Page
         }
         return null;
     }
-
 }
