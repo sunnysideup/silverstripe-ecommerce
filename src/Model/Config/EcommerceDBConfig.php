@@ -610,8 +610,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         );
         $fields->addFieldsToTab(
             'Root.Payments',
-            [
-            ]
+            []
         );
         $fields->addFieldsToTab(
             'Root.Emails',
@@ -694,9 +693,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     public static function is_buyable(?string $className = null): bool
     {
-        if($className) {
+        if ($className) {
             $className = ClassHelpers::unsanitise_class_name($className);
-            if(class_exists($className)) {
+            if (class_exists($className)) {
                 $implementorsArray = class_implements($className);
                 return is_array($implementorsArray) && !empty($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true);
             }
@@ -803,7 +802,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Returns the default image or a dummy one if it does not exists.
      *
-     * @return string
+     * @return Image
      */
     public function DefaultImage()
     {
@@ -907,8 +906,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($this->UseThisOne) {
             $configs = EcommerceDBConfig::get()
                 ->Filter(['UseThisOne' => 1])
-                ->Exclude(['ID' => $this->ID])
-            ;
+                ->Exclude(['ID' => $this->ID]);
             if ($configs->exists()) {
                 foreach ($configs as $config) {
                     $config->UseThisOne = 0;
@@ -919,8 +917,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 
         $configs = EcommerceDBConfig::get()
             ->Filter(['Title' => $this->Title])
-            ->Exclude(['ID' => $this->ID])
-        ;
+            ->Exclude(['ID' => $this->ID]);
         if ($configs->exists()) {
             foreach ($configs as $config) {
                 $config->Title .= '_' . $config->ID;
