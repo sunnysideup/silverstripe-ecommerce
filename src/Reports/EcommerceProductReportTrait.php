@@ -12,6 +12,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 trait EcommerceProductReportTrait
@@ -43,11 +44,11 @@ trait EcommerceProductReportTrait
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
+        Versioned::set_stage(Versioned::DRAFT);
         $className = ($params['ProductType'] ?? '');
         if (! $className) {
             $className = $this->dataClass;
         }
-
         $list = $className::get();
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
