@@ -281,7 +281,6 @@ class ProductGroup extends Page
             [
                 ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')),
                 CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
-                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
             ]
         );
 
@@ -969,4 +968,5 @@ class ProductGroup extends Page
         }
         return null;
     }
+
 }

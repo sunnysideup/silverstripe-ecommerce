@@ -146,6 +146,8 @@ class Product extends Page implements BuyableModel
         'ShortDescription' => 'Varchar(255)', //For use in lists.
         'AlternativeProductNames' => 'Varchar(255)', //To ensure they are also find for other names in search
         'UseImageForProducts' => 'Boolean', //For use in lists.
+        'Popularity' => 'Float', //For use in lists.
+        'PopularityRank' => 'Int', //For use in lists.
     ];
 
     private static $has_one = [
@@ -188,6 +190,8 @@ class Product extends Page implements BuyableModel
         'AllowPurchase' => true,
         'FullName' => true,
         'Price' => true,
+        'Popularity' => true,
+        'PopularityRank' => true,
     ];
 
     private static $many_many_extraFields = [
@@ -288,6 +292,7 @@ class Product extends Page implements BuyableModel
             'ProductBreadcrumb' => 'Breadcrumb',
             'Price.Nice' => 'Price',
             'AllowPurchaseNice' => 'For Sale',
+            'PopularityRank' => 'Popularity',
         ];
     }
 
@@ -454,6 +459,22 @@ class Product extends Page implements BuyableModel
                 ]
             );
         }
+
+        $fields->addFieldsToTab(
+            'Root.Orders',
+            [
+                ReadonlyField::create(
+                    'Popularity',
+                    _t('Product.POPULARITY', 'Popularity Score'),
+                )
+                    ->setDescription(_t('Product.POPULARITY_SCORE_DESCRIPTION', 'This is a calculated value based on the number of times this product has been sold with more weight given to more recently sold items.')),
+                ReadonlyField::create(
+                    'Popularity',
+                    _t('Product.POPULARITY_RANK', 'Popularity Rank'),
+                )
+                    ->setDescription(_t('Product.POPULARITY_RANK_DESCRIPTION', 'This is the rank among all products. 1 = most popular, 2 = second most popular, etc.')),
+            ]
+        );
 
         if ($config->ShowFullDetailsForProducts) {
             if ($this->exists()) {
