@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Member;
 
 /**
@@ -249,4 +250,6 @@ interface BuyableModel
     public function getMinValueInOrder();
 
     public function getMaxValueInOrder();
+
+    public function SalesOrderItems(): DataList;
 }
