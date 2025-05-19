@@ -20,6 +20,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
@@ -390,7 +391,7 @@ class Product extends Page implements BuyableModel
             'Root.Details',
             [
                 new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
-                new TextField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
+                new TextareaField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
                 HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
                     ->setRows(3),
                 new CheckboxField('HasPhysicalDispatch', _t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch')),
