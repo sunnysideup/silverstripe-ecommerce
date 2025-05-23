@@ -147,8 +147,8 @@ class Product extends Page implements BuyableModel
         'ShortDescription' => 'Varchar(255)', //For use in lists.
         'AlternativeProductNames' => 'Varchar(255)', //To ensure they are also find for other names in search
         'UseImageForProducts' => 'Boolean', //For use in lists.
-        'Popularity' => 'Float', //For use in lists.
-        'PopularityRank' => 'Int', //For use in lists.
+        'Popularity' => 'Float', //For actual value
+        'PopularityRank' => 'Int', //For fast sorting
     ];
 
     private static $has_one = [
@@ -191,7 +191,6 @@ class Product extends Page implements BuyableModel
         'AllowPurchase' => true,
         'FullName' => true,
         'Price' => true,
-        'Popularity' => true,
         'PopularityRank' => true,
     ];
 
