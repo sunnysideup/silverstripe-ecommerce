@@ -102,8 +102,6 @@ class ProductSearchForm extends Form
         $fields->push(
             TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
                 ->setAttribute('autocomplete', 'off')
-                ->setAttribute('autocorrect', 'off')
-                ->setAttribute('auto-capitalization', 'off')
                 ->setAttribute('spellcheck', 'false')
                 ->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'))
         );
