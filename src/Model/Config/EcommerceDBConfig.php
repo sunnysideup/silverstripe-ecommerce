@@ -76,6 +76,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'UseThisOne' => 'Boolean',
         'ShopClosed' => 'Boolean',
         'ShopPricesAreTaxExclusive' => 'Boolean',
+        'DefaultTaxRate' => 'Float',
         'InvoiceTitle' => 'Varchar(200)',
         'InvoiceMessage' => 'HTMLText',
         'PackingSlipTitle' => 'Varchar(200)',
@@ -190,6 +191,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'UseThisOne' => true,
         'ShopClosed' => false,
         'ShopPricesAreTaxExclusive' => false,
+        'DefaultTaxRate' => 0.15, // 15% GST
         'InvoiceTitle' => 'Invoice',
         'InvoiceMessage' => '<p>Thank you for your order</p>',
         'PackingSlipTitle' => 'Package Contents',
@@ -432,6 +434,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'UseThisOne' => _t('EcommerceDBConfig.USETHISONE', 'Use these configuration settings'),
             'ShopClosed' => _t('EcommerceDBConfig.SHOPCLOSED', 'Shop Closed'),
             'ShopPricesAreTaxExclusive' => _t('EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE', 'Shop prices are tax exclusive'),
+            'DefaultTaxRate' => _t('EcommerceDBConfig.DEFAULTTAXRATE', 'Default Tax Rate'),
             'InvoiceTitle' => _t('EcommerceDBConfig.INVOICETITLE', 'Default Email title'),
             'InvoiceMessage' => _t('EcommerceDBConfig.INVOICEMESSAGE', 'Default Email Message'),
             'PackingSlipTitle' => _t('EcommerceDBConfig.PACKING_SLIP_TITLE', 'Packing slip title'),
@@ -471,6 +474,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'Title' => _t('EcommerceDBConfig.TITLE_DESCRIPTION', 'For internal use only.'),
             'UseThisOne' => _t('EcommerceDBConfig.USETHISONE_DESCRIPTION', 'You can create several setting records so that you can switch between configurations.'),
             'ShopPricesAreTaxExclusive' => _t('EcommerceDBConfig.SHOPPRICESARETAXEXCLUSIVE_DESCRIPTION', 'If this option is NOT ticked, it is assumed that prices are tax inclusive.'),
+            'DefaultTaxRate' => _t('EcommerceDBConfig.DEFAULTTAXRATE_DESCRIPTION', 'For a 10% tax, please enter 0.1.'),
             'ReceiptEmail' => _t('EcommerceDBConfig.RECEIPTEMAIL_DESCRIPTION_DESCRIPTION', 'e.g. sales@app.com, you can also use something like: "Our Shop Name Goes Here" &lt;sales@app.com&gt;'),
             'AllowFreeProductPurchase' => _t('EcommerceDBConfig.ALLOWFREEPRODUCTPURCHASE_DESCRIPTION', 'This is basically a protection to disallow sales of products that do not have a price entered yet. '),
             'CurrenciesExplanation' => _t('EcommerceDBConfig.CURRENCIESEXPLANATION_DESCRIPTION', 'Explain how the user can switch between currencies and how the exchange rates are worked out.'),
@@ -564,6 +568,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             'Root.Pricing',
             [
                 new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
+                (new NumericField('DefaultTaxRate', $fieldLabels['DefaultTaxRate']))
+                    ->setScale(null),
                 new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
                 new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation']),
             ]
