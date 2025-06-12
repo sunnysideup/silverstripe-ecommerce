@@ -164,6 +164,7 @@ class ProductGroup extends Page
     private static $casting = [
         'NumberOfProducts' => 'Int',
         'NumberOfProductsIncAlsoShow' => 'Int',
+        'FullName' => 'Varchar',
     ];
 
     private static $default_child = Product::class;
@@ -672,6 +673,14 @@ class ProductGroup extends Page
     }
 
     /**
+     * the number of direct descendants.
+     */
+    public function getFullName(): string
+    {
+        return $this->Title . ' (' . $this->getProductGroupBreadcrumbCalculated() . ')';
+    }
+
+    /**
      * Returns the full sortFilterDisplayNames set, a subset, or one value
      * by either type (e.g. FILTER) or variable (e.g dbFieldName)
      * or both.
@@ -968,5 +977,4 @@ class ProductGroup extends Page
         }
         return null;
     }
-
 }
