@@ -22,11 +22,10 @@ class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
     public function run($request)
     {
         $allowedArray = EcommerceCountry::get()
-            ->filter(['DoNotAllowSales' => 0])
-        ;
+            ->filter(['DoNotAllowSales' => 0]);
         if ($allowedArray->exists()) {
             foreach ($allowedArray as $obj) {
-                $obj->DoNotAllowSales = 1;
+                $obj->DoNotAllowSales = true;
                 $obj->write();
                 DB::alteration_message('Disallowing sales to ' . $obj->Name);
             }
