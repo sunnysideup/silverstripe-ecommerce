@@ -156,7 +156,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         }
     }
 
-    public static function apply_default_filter_to_products($list): SS_List
+    public static function apply_default_filter_to_products($list): SS_List|Datalist
     {
         $filter = Config::inst()->get(self::class, 'default_product_filter');
         if (EcommerceConfig::inst()->OnlyShowProductsThatCanBePurchased) {
@@ -296,8 +296,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $list = $list->orderBy($sort);
         }
         return $list
-            ->exclude(['ID' => $this->getParentGroupIds()])
-        ;
+            ->exclude(['ID' => $this->getParentGroupIds()]);
     }
 
     //#################################################
@@ -447,8 +446,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         //Vardump::now(get_class($obj));
         $this->products = $applyer
             ->apply(BaseApplyer::DEFAULT_NAME, $this->searchString)
-            ->getProducts()
-        ;
+            ->getProducts();
         //Vardump::now($this->products);
 
         return $this;
@@ -529,8 +527,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->blockedProductsIds
             ));
             $this->products = $this->products
-                ->exclude(['ID' => self::$excluded_products])
-            ;
+                ->exclude(['ID' => self::$excluded_products]);
         }
 
         return $this;
