@@ -5,7 +5,7 @@
         <tr>
             <th scope="col" class="left titleCol"><% _t("Order.PRODUCT","Product") %></th>
             <th scope="col" class="center quantityCol"><% _t("Order.QUANTITY", "Quantity") %></th>
-            <th scope="col" class="right priceCol"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
+            <th scope="col" class="right priceCol"><% _t("Order.PRICE","Price") %></th>
             <th scope="col" class="right totalCol"><% _t("Order.TOTALPRICE","Total") %></th>
             <th scope="col" class="right emptyCell deleteCol"></th>
         </tr>
