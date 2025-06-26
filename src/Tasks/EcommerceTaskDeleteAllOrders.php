@@ -16,16 +16,9 @@ use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
-/**
- * @description (see $this->description)
- *
- * @author: Nicolaas [at] Sunny Side Up .co.nz
- * @package: ecommerce
- * @sub-package: tasks
- */
 class EcommerceTaskDeleteAllOrders extends BuildTask
 {
-    public $verbose = false;
+    public bool $verbose = false;
 
     protected $title = 'Deletes all orders - CAREFUL!';
 
@@ -33,8 +26,8 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 
 
     /**
-     *key = table where OrderID is saved
-     *value = table where LastEdited is saved.
+     * key = table where OrderID is saved
+     * value = table where LastEdited is saved.
      */
     private static $linked_objects_array = [
         'OrderAttribute' => OrderAttribute::class,
@@ -124,13 +117,11 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                 $unlinkedObjects = $classWithLastEdited::get();
                 if ($classWithLastEdited !== $classWithOrderID) {
                     $unlinkedObjects = $unlinkedObjects
-                        ->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"{$classWithOrderID}\".\"ID\"")
-                    ;
+                        ->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"{$classWithOrderID}\".\"ID\"");
                 }
                 $unlinkedObjects = $unlinkedObjects
                     ->where($where)
-                    ->leftJoin('Order', "\"Order\".\"ID\" = \"{$classWithOrderID}\".\"OrderID\"")
-                ;
+                    ->leftJoin('Order', "\"Order\".\"ID\" = \"{$classWithOrderID}\".\"OrderID\"");
 
                 if ($unlinkedObjects->exists()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {
