@@ -409,8 +409,8 @@ class UserPreference
             if ($this->rootGroupController->HasSort()) {
                 $secondaryTitle .= $this->addToTitle(
                     _t('Sunnysideup\\Ecommerce\\ProductsAndGroups\\Settings.SORTED_BY', 'by') .
-                    ' ' .
-                    $this->rootGroupController->getCurrentSortTitle()
+                        ' ' .
+                        $this->rootGroupController->getCurrentSortTitle()
                 );
             }
 
@@ -500,13 +500,14 @@ class UserPreference
                 $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
                 $prevGroup = null;
                 foreach ($actions as $group) {
+                    $obj = null;
                     if ($group->ClassName !== $previousClassName) {
                         $previousClassName = $group->ClassName;
                         $obj = new ArrayData(
                             [
                                 'ID' => 0,
                                 'ClassName' => null,
-                                'Title' => _t('ProductGroup.ALL', 'All').' ' .$group->i18n_plural_name() , //
+                                'Title' => _t('ProductGroup.ALL', 'All') . ' ' . $group->i18n_plural_name(), //
                                 'Current' => $isCurrent,
                                 'Link' => $this->getLinkTemplate('', $type, '', true),
                                 'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
@@ -524,8 +525,8 @@ class UserPreference
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
                     if ($prevGroup && trim($prevGroup->Title) === trim($group->Title)) {
                         if ($prevGroup->ParentID !== $group->ParentID) {
-                            $title = $crumb. ' - ' . $title;
-                            $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb. ' - ' . $prevGroup->Title;
+                            $title = $crumb . ' - ' . $title;
+                            $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                         }
                     }
                     foreach (array_keys($options) as $key) {
