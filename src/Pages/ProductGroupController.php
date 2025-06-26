@@ -960,7 +960,11 @@ class ProductGroupController extends PageController
         return $this->getUserPreferencesClass()->IsShowFullList();
     }
 
-    protected function getSearchApplyer(): BaseApplyer|ProductSearchFilter
+    /**
+     *
+     * @return BaseApplyer|ProductSearchFilter
+     */
+    protected function getSearchApplyer()
     {
         return $this->getFinalProductList()->getApplyer('SEARCHFILTER');
     }
