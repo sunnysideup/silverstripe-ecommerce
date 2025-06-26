@@ -46,7 +46,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page1->Content = $content . '<p>You may also notice that we have checked it as a featured product and it will be displayed on the main Products page.</p>';
             $page1->URLSegment = 'example-product';
             $page1->ParentID = $productGroup1->ID;
-            $page1->Price = '15.00';
+            $page1->Price = 15.00;
             $page1->FeaturedProduct = true;
             $page1->writeToStage(Versioned::DRAFT);
             $page1->publish(Versioned::DRAFT, 'Live');
@@ -57,7 +57,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page2->Content = $content;
             $page2->URLSegment = 'example-product-2';
             $page2->ParentID = $productGroup1->ID;
-            $page2->Price = '25.00';
+            $page2->Price = 25.00;
             $page2->writeToStage(Versioned::DRAFT);
             $page2->publish(Versioned::DRAFT, 'Live');
             DB::alteration_message("Product page 'Example product 2' created", 'created');
