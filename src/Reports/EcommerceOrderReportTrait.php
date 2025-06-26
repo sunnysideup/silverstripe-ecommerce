@@ -46,7 +46,6 @@ trait EcommerceProductGroupReportTrait
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
         /**
-         * @var
          * SELECT BillingAddress.PostalCode, COUNT(Order.ID) AS OrderCount, COUNT(`Order`.ID) AS TotalSalesCount
          * FROM `Order`
          * INNER JOIN BillingAddress ON `Order`.BillingAddressID = BillingAddress.ID
