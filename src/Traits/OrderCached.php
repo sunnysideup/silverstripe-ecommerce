@@ -28,7 +28,7 @@ trait OrderCached
     }
 
     /**
-     * @return Order|null;
+     * @return Order|null
      */
     public function getOrderCached(?bool $forceNew = false): ?Order
     {
