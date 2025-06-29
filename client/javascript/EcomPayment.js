@@ -34,7 +34,7 @@ if (
 
       var paymentInputs = window.jQuery(EcomPayment.paymentInputsSelector)
       var methodFields = window.jQuery(EcomPayment.paymentFieldSelector)
-      methodFields.hide()
+      // methodFields.hide()
 
       paymentInputs.each(function (e) {
         if (window.jQuery(this).attr('checked') === true) {
@@ -66,11 +66,25 @@ if (
           .jQuery(EcomPayment.paymentInputsSelectorParent + ' input:checked')
           .trigger('click')
       } else {
-        window
-          .jQuery(EcomPayment.paymentInputsSelector)
-          .first()
-          .trigger('click')
+        // window
+        //   .jQuery(EcomPayment.paymentInputsSelector)
+        //   .first()
+        //   .trigger('click')
       }
+      jQuery(EcomPayment.paymentFieldSelector).click(function (e) {
+        e.stopPropagation()
+        const cls = Array.from(this.classList).find(c =>
+          c.startsWith('methodFields_')
+        )
+        const result = cls ? cls.replace('methodFields_', '') : null
+        if (result) {
+          window
+            .jQuery(EcomPayment.paymentInputsSelector)
+            .filter(`[value="${result}"]`)
+            .prop('checked', true)
+            .trigger('click')
+        }
+      })
 
       if (window.jQuery(EcomPayment.paymentInputsSelector).length === 1) {
         window.jQuery(EcomPayment.paymentInputsSelectorParent).hide()
@@ -78,7 +92,7 @@ if (
     }
   }
 
-  window.jQuery(EcomPayment.paymentFieldSelector).hide()
+  // window.jQuery(EcomPayment.paymentFieldSelector).hide()
 
   jQuery(() => {
     EcomPayment.init()
