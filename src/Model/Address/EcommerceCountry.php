@@ -460,7 +460,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function find_title($code)
     {
         $code = strtoupper((string) $code);
-        $options = self::get_country_dropdown($showAllCountries = true);
+        if (! $code) {
+            $code = self::get_country_default();
+        }
+        $options = self::get_country_dropdown(true);
         // check if code was provided, and is found in the country array
         if (isset($options[$code])) {
             return $options[$code];
@@ -521,7 +524,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_country($recalculate = false, $orderID = 0)
     {
         //get order ID
-        if(! $orderID) {
+        if (! $orderID) {
             $orderID = ShoppingCart::current_order_id($orderID);
         }
         $countryCode = self::get_country_cache($orderID);
@@ -676,8 +679,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                     ->filter([
                         'DoNotAllowSales' => 1,
                         'Code' => $countryCode,
-                    ])
-                ;
+                    ]);
                 if ($countries->exists()) {
                     self::$_allow_sales_cache[$orderID] = false;
                 }
