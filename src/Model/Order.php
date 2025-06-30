@@ -2578,7 +2578,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return $extended;
         }
 
-        if ($this->IsPaid() || $this->IsCancelled() || $this->PaymentIsPending()) {
+        if ($this->IsPaid() || $this->IsCancelled()) {
             return false;
         }
 
