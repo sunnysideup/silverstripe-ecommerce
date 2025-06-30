@@ -599,6 +599,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             );
         } else {
             $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
+            $fields->removeByName(['DeferTimeInSeconds', 'DeferFromSubmitTime']);
         }
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(

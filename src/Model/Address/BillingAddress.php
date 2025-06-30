@@ -45,7 +45,7 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @property int $RegionID
  * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion Region()
  * @method \Sunnysideup\Ecommerce\Model\Order Order()
-  */
+ */
 class BillingAddress extends OrderAddress
 {
     /**
@@ -285,7 +285,7 @@ class BillingAddress extends OrderAddress
             HeaderField::create(
                 'BillingDetails',
                 $headerTitle,
-                3
+                2
             )
                 ->setAttribute('data-title-with-shipping-address', _t('BillingAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
                 ->setAttribute('data-title-with-shipping-address_default', $headerTitle)
@@ -333,7 +333,7 @@ class BillingAddress extends OrderAddress
             //$billingFields->push(new HiddenField('Address2', "NOT SET", "NOT SET"));
             //$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
         }
-        if(EcommerceConfig::get(BillingAddress::class, 'show_company_name')) {
+        if (EcommerceConfig::get(BillingAddress::class, 'show_company_name')) {
             $billingFields->push(
                 (new TextField('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company Name  (if applicable)')))
             );

@@ -67,14 +67,14 @@ class CartPage extends Page
      * @var array
      */
     private static $defaults = [
-        'ContinueShoppingLabel' => 'continue shopping',
-        'ProceedToCheckoutLabel' => 'proceed to checkout',
-        'ShowAccountLabel' => 'view account details',
-        'CurrentOrderLinkLabel' => 'view current order',
-        'LoginToOrderLinkLabel' => 'you must log in to view this order',
-        'SaveOrderLinkLabel' => 'save current order',
-        'DeleteOrderLinkLabel' => 'delete this order',
-        'LoadOrderLinkLabel' => 'finalise this order',
+        'ContinueShoppingLabel' => 'Continue shopping',
+        'ProceedToCheckoutLabel' => 'Proceed to checkout',
+        'ShowAccountLabel' => 'View account details',
+        'CurrentOrderLinkLabel' => 'View current order',
+        'LoginToOrderLinkLabel' => 'You must log in to view this order',
+        'SaveOrderLinkLabel' => 'Save current order',
+        'DeleteOrderLinkLabel' => 'Delete this order',
+        'LoadOrderLinkLabel' => 'Finalise this order',
         'NoItemsInOrderMessage' => '<p>You do not have any items in your current order.</p>',
         'NonExistingOrderMessage' => '<p>Sorry, the order you are trying to open does not exist.</p>',
     ];
@@ -235,7 +235,6 @@ class CartPage extends Page
     public static function new_order_link($orderID)
     {
         return Controller::join_links(self::find_link(), 'startneworder', $orderID);
-
     }
 
     /**

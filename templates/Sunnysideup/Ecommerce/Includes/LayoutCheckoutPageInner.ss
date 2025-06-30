@@ -14,7 +14,7 @@
 <% if CanShowStep(orderitems) %>
 <div id="OrderItemsOuter" class="checkoutStep">
 
-    <% if StepsContentHeading(1) %><h2 class="orderStepHeading">$StepsContentHeading(1)</h2><% end_if %>
+    <% if StepsContentHeading(1) %><h1 class="orderStepHeading">$StepsContentHeading(1)</h1><% end_if %>
     <% if StepsContentAbove(1) %><p class="above headerFooterDescription">$StepsContentAbove(1)</p><% end_if %>
     <% with Order %><% include Sunnysideup\Ecommerce\Includes\Order_Content_Editable %><% end_with %>
     <% include Sunnysideup\Ecommerce\Includes\Order_Content_Editable_ModifierForms %>
@@ -42,7 +42,7 @@
     </div>
     <% end_if %>
 
-    <% if StepsContentHeading(2) %><h2 class="orderStepHeading">$StepsContentHeading(2)</h2><% end_if %>
+    <% if StepsContentHeading(2) %><h1 class="orderStepHeading">$StepsContentHeading(2)</h1><% end_if %>
     <% if StepsContentAbove(2) %><p class="above headerFooterDescription">$StepsContentAbove(2)</p><% end_if %>
     <div id="OrderFormAddressHolder">$OrderFormAddress</div>
     <% if StepsContentBelow(2) %><p class="below headerFooterDescription">$StepsContentBelow(2)</p><% end_if %>
@@ -71,7 +71,7 @@
     <% end_if %>
 
 
-    <% if StepsContentHeading(3) %><h2 class="orderStepHeading">$StepsContentHeading(3)</h2><% end_if %>
+    <% if StepsContentHeading(3) %><h1 class="orderStepHeading">$StepsContentHeading(3)</h1><% end_if %>
     <% if StepsContentAbove(3) %><p class="above headerFooterDescription">$StepsContentAbove(3)</p><% end_if %>
     <% with Order %>
         <% include Sunnysideup\Ecommerce\Includes\Order_Addresses %>

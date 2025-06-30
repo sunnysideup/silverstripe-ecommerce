@@ -1,3 +1,4 @@
+<h2>Order Details</h2>
 <table id="InformationTable" class="infotable readonly">
     <thead>
         <tr>

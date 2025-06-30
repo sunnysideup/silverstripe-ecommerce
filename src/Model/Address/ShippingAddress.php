@@ -266,7 +266,11 @@ class ShippingAddress extends OrderAddress
         $fields = parent::getEcommerceFields();
         if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
             $shippingFieldsHeader = new CompositeField(
-                new HeaderField('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 3),
+                new HeaderField(
+                    'SendGoodsToADifferentAddress',
+                    _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'),
+                    2
+                ),
                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
             );
 
@@ -309,7 +313,7 @@ class ShippingAddress extends OrderAddress
                 //$shippingFields->push(new HiddenField('ShippingCity'));
             }
 
-            if(EcommerceConfig::get(ShippingAddress::class, 'show_company_name')) {
+            if (EcommerceConfig::get(ShippingAddress::class, 'show_company_name')) {
                 $shippingFields->push(
                     (new TextField('ShippingCompanyName', _t('ShippingAddress.COMPANY_NAME', 'Company Name (if applicable)')))
                 );
@@ -344,9 +348,9 @@ class ShippingAddress extends OrderAddress
 
     public function setFieldsToMatchBillingAddress()
     {
-        foreach(array_keys($this->config()->get('db')) as $fieldName) {
+        foreach (array_keys($this->config()->get('db')) as $fieldName) {
             $alsoFieldName = str_replace('Shipping', '', $fieldName);
-            if($alsoFieldName !== $fieldName) {
+            if ($alsoFieldName !== $fieldName) {
                 $this->$alsoFieldName = $this->$fieldName;
             }
         }

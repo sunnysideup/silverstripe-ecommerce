@@ -218,7 +218,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             return $owner->FirstName . ' ' . $owner->Surname .
                 ', ' . $this->getOwner()->Email .
                 ' (' . _t('Member.MEMBER_ORDER_COUNT', 'orders') . ': ' . $count .
-                ', ' . _t('Member.MEMBER_ORDER_COUNT_COMPLETED', 'completed') . ': '.$countCompleted.
+                ', ' . _t('Member.MEMBER_ORDER_COUNT_COMPLETED', 'completed') . ': ' . $countCompleted .
                 ')';
         }
 
@@ -674,7 +674,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                         . '</p>'
                 );
             } elseif (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') || $mustCreateAccount) {
-                $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 3);
+                $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.SETUPYOURACCOUNT', 'Create an account'), 2);
                 //dont allow people to purchase without creating a password
                 $loginDetailsDescription = new LiteralField(
                     'AccountInfo',
@@ -683,7 +683,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                         . '</p>'
                 );
             } else {
-                $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.CREATEANACCONTOPTIONAL', 'Create an account (optional)'), 3);
+                $loginDetailsHeader = new HeaderField('CreateAnAccount', _t('OrderForm.CREATEANACCONTOPTIONAL', 'Create an account (optional)'), 2);
                 //allow people to purchase without creating a password
                 $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<div class="choose-password-holder"><a href="#Password" datano="' . Convert::raw2att(_t('Account.DO_NOT_CREATE_ACCOUNT', 'do not create account')) . '" class="choosePassword passwordToggleLink">choose a password</a></div>');
                 $loginDetailsDescription = new LiteralField(

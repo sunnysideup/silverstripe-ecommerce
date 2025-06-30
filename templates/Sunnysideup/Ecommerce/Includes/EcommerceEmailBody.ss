@@ -71,7 +71,6 @@
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_OrderStatusLogs %>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_PickUpOrDeliveryNote %>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_Addresses %>
-                                                    <h2>Order Summary</h2>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_Content %>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_Payments %>
                                                     <% include Sunnysideup\Ecommerce\Includes\Order_OutstandingTotal %>

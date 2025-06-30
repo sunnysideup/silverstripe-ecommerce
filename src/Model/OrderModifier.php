@@ -844,7 +844,7 @@ class OrderModifier extends OrderAttribute
     {
         $name = $this->ClassName . 'Heading';
         if ($this->Heading()) {
-            return new HeaderField($name, $this->Heading(), 4);
+            return new HeaderField($name, $this->Heading(), 2);
         }
 
         return new LiteralField($name, '<!-- EmptyHeading -->');
