@@ -7,9 +7,7 @@
     </tbody>
 </table>
 <% if $IsPaid %>
-    <p class="paidNote"><% _t("Order.PAIDNOTE","This order has been paid in full.") %></p>
 <% else_if $IsCancelled %>
-    <p class="paidNote"><% _t("Order.CANCELLEDNOTE","This order has been cancelled.") %></p>
 <% else_if $PaymentIsPending %>
     <p class="paidNote"><% _t("Order.OUTSTANDINGNOTE","This order has a pending payment.") %>
         <a href="$Link#PaymentForm">
@@ -19,7 +17,7 @@
 <% else %>
     <p class="paidNote">
     <% _t("Order.OUTSTANDINGNOTE","This order has an outstanding balance.") %>
-    <a href="$Link#PaymentForm">
+    <a href="$Link#OrderFormPayment_PaymentForm">
         <% _t("Order.PAYNOW","Pay now") %>
     </a>.
     </p>
