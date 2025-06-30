@@ -115,7 +115,7 @@ class OrderFormAddress extends Form
             HeaderField::create(
                 'AddressFieldsMemberHeading',
                 _t('OrderFormAddress.Address_Fields_Member_Heading', 'Your Personal Details'),
-                3
+                2
             )
         );
         //find member
@@ -136,7 +136,7 @@ class OrderFormAddress extends Form
         if ($this->orderMember) {
             $memberFields = $this->orderMember->getEcommerceFields();
             $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
-            if($this->loggedInMember) {
+            if ($this->loggedInMember) {
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
             }
             $addressFieldsMember->merge($memberFields);
@@ -150,7 +150,7 @@ class OrderFormAddress extends Form
         $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
 
         // remove email field if member is logged in as they can not change it here!
-        if($this->loggedInMember) {
+        if ($this->loggedInMember) {
             $requiredFields = array_values(array_diff($requiredFields, ['Email']));
         }
         //HACK: move phone to member fields ..
@@ -172,7 +172,7 @@ class OrderFormAddress extends Form
                 HeaderField::create(
                     'HasShippingAddressHeader',
                     _t('OrderFormAddress.HAS_SHIPPING_ADDRESS_HEADER', 'Delivery Option'),
-                    3
+                    2
                 )
             );
             $useShippingAddress = $this->order ? $this->order->UseShippingAddress : 0;
@@ -261,13 +261,13 @@ class OrderFormAddress extends Form
                     new LiteralField(
                         'LoginNote',
                         '<p class="message good">' . _t('Account.LOGGEDIN', 'You are logged in as ') .
-                        Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
-                        Convert::raw2xml($this->loggedInMember->Surname) .
-                        ' (' . Convert::raw2xml($this->loggedInMember->Email) . ').' .
-                        ' <a href="/Security/logout/">' .
-                        _t('Account.LOGOUTNOW', 'Log out?') .
-                        '</a>' .
-                        '</p>'
+                            Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
+                            Convert::raw2xml($this->loggedInMember->Surname) .
+                            ' (' . Convert::raw2xml($this->loggedInMember->Email) . ').' .
+                            ' <a href="/Security/logout/">' .
+                            _t('Account.LOGOUTNOW', 'Log out?') .
+                            '</a>' .
+                            '</p>'
                     )
                 );
             }
@@ -278,9 +278,9 @@ class OrderFormAddress extends Form
                             new LiteralField(
                                 'OrderAddedTo',
                                 '<p class="message good">' .
-                                _t('Account.ORDERADDEDTO', 'Order will be added to ') .
-                                Convert::raw2xml($this->orderMember->Email) .
-                                ').</p>'
+                                    _t('Account.ORDERADDEDTO', 'Order will be added to ') .
+                                    Convert::raw2xml($this->orderMember->Email) .
+                                    ').</p>'
                             )
                         );
                     }
@@ -712,7 +712,7 @@ class OrderFormAddress extends Form
     {
 
         // logged in member is shop admin and members are updateable...
-        if($this->loggedInUserIsAdmin()) {
+        if ($this->loggedInUserIsAdmin()) {
             return false;
         }
 
@@ -720,10 +720,10 @@ class OrderFormAddress extends Form
         $newMember = $this->memberShouldBeCreated($data) ||
             $this->newlyCreatedMemberID;
 
-        if($this->loggedInMember && !$this->orderMember) {
+        if ($this->loggedInMember && !$this->orderMember) {
             return false;
         }
-        if($this->orderMemberAndLoggedInMemberAreDifferent()) {
+        if ($this->orderMemberAndLoggedInMemberAreDifferent()) {
             return false;
         }
 
@@ -790,7 +790,7 @@ class OrderFormAddress extends Form
                 ->First()
             ;
         } else {
-            if($this->loggedInMember && $this->loggedInMember->Email) {
+            if ($this->loggedInMember && $this->loggedInMember->Email) {
                 // all good
             }
         }

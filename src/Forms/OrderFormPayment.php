@@ -9,6 +9,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormPaymentValidator;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
@@ -28,6 +29,17 @@ class OrderFormPayment extends Form
         );
         if ($returnToLink) {
             $fields->push(new HiddenField('returntolink', '', Convert::raw2att($returnToLink)));
+        }
+        if ($order->PaymentIsPending()) {
+            $fields->push(
+                new LiteralField(
+                    'PaymentIsPending',
+                    '<p class="message warning">' . _t(
+                        'OrderForm.PAYMENTISPENDING',
+                        'Your payment is awaiting confirmation. If you haven\'t completed a payment yet, you may proceed with an alternative payment now.'
+                    ) . '</p>'
+                )
+            );
         }
         $bottomFields = new CompositeField();
         $bottomFields->addExtraClass('bottomOrder');

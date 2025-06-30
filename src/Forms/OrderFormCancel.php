@@ -29,7 +29,7 @@ class OrderFormCancel extends Form
     {
         $fields = new FieldList(
             [
-                new HeaderField('CancelOrderHeading', _t('OrderForm.CANCELORDER', 'Changed your mind?'), 3),
+                new HeaderField('CancelOrderHeading', _t('OrderForm.CANCELORDER', 'Changed your mind?'), 2),
                 new TextField('CancellationReason', _t('OrderForm.CANCELLATIONREASON', 'Reason for cancellation')),
                 new HiddenField('OrderID', '', $order->ID),
             ]
