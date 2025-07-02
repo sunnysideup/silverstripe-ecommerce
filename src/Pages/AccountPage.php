@@ -268,7 +268,7 @@ class AccountPage extends Page
         $memberID = (int) Security::getCurrentUser()?->ID;
         if (! $memberID) {
             //set t
-            $memberID = rand(0, 1000000) * -1;
+            $memberID = rand() * -1;
         }
         if ($memberID) {
             return Order::get()
