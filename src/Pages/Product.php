@@ -1179,8 +1179,8 @@ class Product extends Page implements BuyableModel
     {
         $cacheKey = '';
         $price = null;
-        if ($this->AllowPriceCaching()) {
-            $cacheKey = 'ppc_' . $this->ID;
+        if ($this->AllowPriceCaching() && $forceRecalculation === false) {
+            $cacheKey = 'ppcpw_' . $this->getPriceCacheKey();
             if (EcommerceCache::inst()->hasCache($cacheKey)) {
                 $price = (float) EcommerceCache::inst()->retrieve($cacheKey, true);
             }
@@ -1191,7 +1191,6 @@ class Product extends Page implements BuyableModel
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
-
             $updatedPrice = $this->extend('updateCalculatedPrice', $price);
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
@@ -1207,6 +1206,11 @@ class Product extends Page implements BuyableModel
         }
 
         return $price;
+    }
+
+    public function getPriceCacheKey(): string
+    {
+        return $this->ID . '_' . $this->Version . '_' . (Security::getCurrentUser() ? Security::getCurrentUser()->ID : 0);
     }
 
     /**
