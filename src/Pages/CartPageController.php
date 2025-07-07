@@ -733,12 +733,12 @@ class CartPageController extends PageController
         $obj = Injector::inst()->get(SendLoginToken::class);
         $outcome = $obj->send($email, $backURL, $request);
         $message =  _t(
-                'CartPage.LOGINLINKSENT',
-                'If you\'ve shopped with us before, a login link has been sent to your email.'
-            );
+            'CartPage.LOGINLINKSENT',
+            'If you\'ve shopped with us before, a login link has been sent to your email.'
+        );
         if (!Director::isLive()) {
-            $message . = $outcome ? ' - SENT!' ' - NOT SENT!';
-        } 
+            $message .= $outcome ? ' - SENT!' : ' - NOT SENT!';
+        }
         return $message;
     }
 }
