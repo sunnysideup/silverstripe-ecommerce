@@ -41,7 +41,8 @@
     "sunnysideup/model-admin-many-tabs": "dev-master",
     "sunnysideup/email_address_database_field": "dev-master",
     "sunnysideup/silverstripe-ajax-select-field": "dev-master",
-    "sunnysideup/yes-no-any-filter": "dev-master"
+    "sunnysideup/yes-no-any-filter": "dev-master",
+    "firesphere/magiclogin": "^0.6.2"
   },
   "suggest": {
     "sunnysideup/flush": "Better, faster output for tasks",
