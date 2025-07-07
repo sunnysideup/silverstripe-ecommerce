@@ -47,8 +47,7 @@ class ShopAccountFormValidator extends RequiredFields
                 //can't be taken
                 $otherMembersWithSameEmail = Member::get()
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
-                    ->exclude(['ID' => $loggedInMemberID])
-                ;
+                    ->exclude(['ID' => $loggedInMemberID]);
                 if ($otherMembersWithSameEmail->exists()) {
                     //we allow existing email
                     // if we are currently NOT logged in
@@ -58,8 +57,8 @@ class ShopAccountFormValidator extends RequiredFields
                     } else {
                         $message = _t(
                             'Account.ALREADYTAKEN',
-                            '{uniqueFieldValue} is already taken by another member. Please log in or use another {uniqueFieldName}.',
-                            ['uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => $uniqueFieldName]
+                            '{uniqueFieldValue} is not available. Please log in or use another {uniqueFieldName}.',
+                            ['uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => strtolower($uniqueFieldName)]
                         );
                         $this->validationError(
                             $uniqueFieldName,
@@ -91,19 +90,19 @@ class ShopAccountFormValidator extends RequiredFields
                 );
                 $valid = false;
             }
-            $letterCount = strlen( (string) $data['PasswordCheck1']);
+            $letterCount = strlen((string) $data['PasswordCheck1']);
             $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
             if ($letterCount > 0 && $letterCount < $minLength) {
                 $this->validationError(
                     'PasswordCheck1',
-                    _t('Account.PASSWORDMINIMUMLENGTH', 'Password does not meet minimum standards.'),
+                    _t('Account.PASSWORDMINIMUMLENGTH', 'Password does not meet minimum standards. It must be at least {minLength} characters long.', ['minLength' => $minLength]),
                     'required'
                 );
                 $valid = false;
             }
         }
         if (isset($data['FirstName'])) {
-            if (strlen( (string) $data['FirstName']) < 2) {
+            if (strlen((string) $data['FirstName']) < 2) {
                 $this->validationError(
                     'FirstName',
                     _t('Account.NOFIRSTNAME', 'Please enter your first name.'),
@@ -113,7 +112,7 @@ class ShopAccountFormValidator extends RequiredFields
             }
         }
         if (isset($data['Surname'])) {
-            if (strlen( (string) $data['Surname']) < 2) {
+            if (strlen((string) $data['Surname']) < 2) {
                 $this->validationError(
                     'Surname',
                     _t('Account.NOSURNAME', 'Please enter your surname.'),
