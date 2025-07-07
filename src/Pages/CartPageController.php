@@ -11,6 +11,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -728,8 +729,12 @@ class CartPageController extends PageController
 
     public function sendloginlink(HTTPRequest $request)
     {
-        $email = $request->postVar('email');
-        $backURL = $request->postVar('backurl');
+        $email = $request->requestVar('email');
+        $backURL = $request->requestVar('backurl');
+        $securityToken = $request->requestVar('securitytoken');
+        if (SecurityToken::inst()->checkRequest($request)) {
+            return $this->httpError(400, 'Invalid security token');
+        }
         $obj = Injector::inst()->get(SendLoginToken::class);
         $outcome = $obj->send($email, $backURL, $request);
         $message =  _t(
