@@ -25,8 +25,14 @@ if (document.getElementById('OrderFormAddress_OrderFormAddress_Email')) {
           }).then(response => {
             console.log(response)
             if (response.ok) {
-              field.parentElement.classList.add('login-link-sent')
-              field.title = response.text()
+              return response.text().then(text => {
+                field.parentElement.classList.add('login-link-sent')
+                const span = document.createElement('span')
+                span.className = 'message good'
+                span.textContent = text
+
+                field.parentElement.insertAdjacentElement('afterend', span)
+              })
             }
           })
         })
