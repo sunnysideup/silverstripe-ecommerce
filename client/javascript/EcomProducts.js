@@ -101,7 +101,6 @@ const EcomProducts = {
 
   findID: function (el) {
     var id = jQuery(el).attr('href')
-    var idLength = id.length
     var hashPosition = id.indexOf('#')
     return id.slice(id.indexOf('#'), id.length - hashPosition)
   }
