@@ -4,14 +4,15 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTP;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
@@ -79,6 +80,7 @@ class CartPageController extends PageController
         'showorder',
         'share',
         'LoginForm',
+        'sendloginlink'
     ];
 
     /**
@@ -722,5 +724,21 @@ class CartPageController extends PageController
     protected function onlyShowUnsubmittedOrders()
     {
         return true;
+    }
+
+    public function sendloginlink(HTTPRequest $request)
+    {
+        $email = $request->postVar('email');
+        $backURL = $request->postVar('backurl');
+        $obj = Injector::inst()->get(SendLoginToken::class);
+        $outcome = $obj->send($email, $backURL, $request);
+        $message =  _t(
+                'CartPage.LOGINLINKSENT',
+                'If you\'ve shopped with us before, a login link has been sent to your email.'
+            );
+        if (!Director::isLive()) {
+            $message . = $outcome ? ' - SENT!' ' - NOT SENT!';
+        } 
+        return $message;
     }
 }
