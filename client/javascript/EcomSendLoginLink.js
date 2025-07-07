@@ -12,14 +12,20 @@ if (document.getElementById('OrderFormAddress_OrderFormAddress_Email')) {
         field.addEventListener('change', event => {
           const loginLink = field.dataset.loginLink
           const email = field.value
+          const params = new URLSearchParams()
+          params.append('email', email)
+          params.append('backurl', window.location.href)
 
           fetch(loginLink, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: email,
-              backurl: window.location.href
-            })
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params
+          }).then(response => {
+            console.log(response)
+            if (response.ok) {
+              field.parentElement.classList.add('login-link-sent')
+              field.title = response.text()
+            }
           })
         })
       })
