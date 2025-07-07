@@ -273,6 +273,11 @@ class CartPage extends Page
         return self::get_order_link($orderID);
     }
 
+    public function SendLoginLinkLink()
+    {
+        return $this->Link('sendloginlink');
+    }
+
     /**
      * tells us if the current page is part of e-commerce.
      *
