@@ -138,6 +138,9 @@ class OrderFormAddress extends Form
             $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
             if ($this->loggedInMember) {
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
+            } else {
+                $memberFields->dataFieldByName('Email')
+                    ->setAttribute('data-login-link', $controller->SendLoginLinkLink());
             }
             $addressFieldsMember->merge($memberFields);
         }
