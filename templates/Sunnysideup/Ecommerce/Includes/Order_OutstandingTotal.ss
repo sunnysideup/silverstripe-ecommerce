@@ -11,7 +11,7 @@
 <% else_if $PaymentIsPending %>
     <p class="paidNote">
         <% _t("Order.OUTSTANDINGNOTE","This order has a pending payment.") %>
-        <a href="$Link#PaymentForm"><% _t("Order.PAYADDTIONALPAYMENTNOW","Make alternative payment now") %></a>.
+        <a href="$Link#PaymentForm"><% _t("Order.PAYADDTIONALPAYMENTNOW","Make an alternative payment now") %></a>.
     </p>
 <% else %>
     <p class="paidNote">
