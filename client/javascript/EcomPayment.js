@@ -32,45 +32,33 @@ if (
           '#OrderFormPayment_PaymentForm_PaymentMethod'
       }
 
-      var paymentInputs = window.jQuery(EcomPayment.paymentInputsSelector)
-      var methodFields = window.jQuery(EcomPayment.paymentFieldSelector)
+      const paymentInputs = window.jQuery(EcomPayment.paymentInputsSelector)
+      const methodFields = window.jQuery(EcomPayment.paymentFieldSelector)
       // methodFields.hide()
 
+      // if a payment method is already selected, show the fields for that one
       paymentInputs.each(function (e) {
         if (window.jQuery(this).attr('checked') === true) {
+          methodFields.removeClass('active')
           window
             .jQuery(
               EcomPayment.paymentMethodPrefix +
                 window.jQuery(this).attr('value')
             )
-            .show()
+            .addClass('active')
         }
       })
 
+      //
       paymentInputs.click(function (e) {
-        methodFields.hide()
+        methodFields.removeClass('active')
         window
           .jQuery(
             EcomPayment.paymentMethodPrefix + window.jQuery(this).attr('value')
           )
-          .show()
+          .addClass('active')
       })
 
-      if (
-        window.jQuery(
-          EcomPayment.paymentInputsSelectorParent + ' input:radio:checked'
-        ).length
-      ) {
-        // if an option has already been selected make sure it stays selected
-        window
-          .jQuery(EcomPayment.paymentInputsSelectorParent + ' input:checked')
-          .trigger('click')
-      } else {
-        // window
-        //   .jQuery(EcomPayment.paymentInputsSelector)
-        //   .first()
-        //   .trigger('click')
-      }
       jQuery(EcomPayment.paymentFieldSelector).click(function (e) {
         e.stopPropagation()
         const cls = Array.from(this.classList).find(c =>
@@ -86,8 +74,25 @@ if (
         }
       })
 
+      window.jQuery(EcomPayment.paymentInputsSelectorParent).hide()
       if (window.jQuery(EcomPayment.paymentInputsSelector).length === 1) {
-        window.jQuery(EcomPayment.paymentInputsSelectorParent).hide()
+      }
+
+      // select pre-selected or first payment method
+      if (
+        window.jQuery(
+          EcomPayment.paymentInputsSelectorParent + ' input:radio:checked'
+        ).length
+      ) {
+        // if an option has already been selected make sure it stays selected
+        window
+          .jQuery(EcomPayment.paymentInputsSelectorParent + ' input:checked')
+          .trigger('click')
+      } else {
+        window
+          .jQuery(EcomPayment.paymentInputsSelector)
+          .first()
+          .trigger('click')
       }
     }
   }
