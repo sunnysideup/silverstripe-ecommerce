@@ -11,10 +11,12 @@ if (document.getElementById('OrderFormAddress_OrderFormAddress_Email')) {
       document.querySelectorAll('[data-login-link]').forEach(field => {
         field.addEventListener('change', event => {
           const loginLink = field.dataset.loginLink
+          const securityToken = field.dataset.securityToken
           const email = field.value
           const params = new URLSearchParams()
           params.append('email', email)
           params.append('backurl', window.location.href)
+          params.append('securitytoken', securityToken)
 
           fetch(loginLink, {
             method: 'POST',
