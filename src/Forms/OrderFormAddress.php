@@ -19,6 +19,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -140,7 +141,8 @@ class OrderFormAddress extends Form
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
             } else {
                 $memberFields->dataFieldByName('Email')
-                    ->setAttribute('data-login-link', $controller->SendLoginLinkLink());
+                    ->setAttribute('data-login-link', $controller->SendLoginLinkLink())
+                    ->setAttribute('data-security-token', SecurityToken::inst()->getValue());
             }
             $addressFieldsMember->merge($memberFields);
         }
