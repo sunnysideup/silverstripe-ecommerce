@@ -1,10 +1,7 @@
 ---
 Name: ecommerce
 ---
-SilverStripe\Control\Controller:
-  extensions:
-    - Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension
-SilverStripe\Forms\Form:
+SilverStripe\Control\RequestHandler:
   extensions:
     - Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension
 
@@ -15,7 +12,7 @@ SilverStripe\Dev\DevelopmentAdmin:
     ecommerce:
       controller: Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
       links:
-        ecommerce: 'The home page for everything e-commerce'
+        ecommerce: "The home page for everything e-commerce"
 SilverStripe\Security\Member:
   extensions:
     - Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole

@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extension;
+use SilverStripe\ErrorPage\ErrorPage;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -32,6 +33,22 @@ class ErrorPageExtension extends Extension
             $response = new HTTPResponse();
             $response->redirect(Director::absoluteURL($dest), '302');
 
+            throw new HTTPResponse_Exception($response);
+        }
+    }
+    /**
+     * @param HTTPRequest $request
+     *
+     * @throws HTTPResponse_Exception
+     */
+    public function onBeforeHTTPError403($request)
+    {
+        $errorPage = ErrorPage::response_for(403);
+        if ($errorPage) {
+            $response = new HTTPResponse();
+            $response->setStatusCode(403);
+            $response->setBody($errorPage->getBody());
+            $response->addHeader('X-Error-Page', '403');
             throw new HTTPResponse_Exception($response);
         }
     }
