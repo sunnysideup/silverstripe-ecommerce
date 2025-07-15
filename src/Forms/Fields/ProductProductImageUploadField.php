@@ -112,7 +112,7 @@ class ProductProductImageUploadField extends UploadField
     public function __construct($name, $title = null, SS_List $items = null, DataObjectInterface $callingObject = null)
     {
         parent::__construct($name, $title, $items);
-        $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'png']);
+        $this->getValidator()->setAllowedExtensions(['gif', 'jpg', 'png', 'webp', 'jpeg', 'svg']);
         /** @var DataObject $callingObject */
         if ($callingObject && $callingObject->hasMethod('getFolderName')) {
             $this->setFolderName($callingObject->getFolderName());
