@@ -248,7 +248,7 @@ trait EcommerceProductReportTrait
                     'ID' => $list->columnUnique('ParentID'),
                 ])
                 ->sort('Title')
-                ->map('ID', 'Title')
+                ->map('ID', 'ProductGroupBreadcrumb')
                 ->toArray();
         }
         return [];
