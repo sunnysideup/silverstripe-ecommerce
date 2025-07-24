@@ -14,6 +14,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 trait EcommerceProductReportTrait
 {
@@ -45,17 +46,31 @@ trait EcommerceProductReportTrait
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
         Versioned::set_stage(Versioned::DRAFT);
+
+        // data class
         $className = ($params['ProductType'] ?? '');
         if (! $className) {
             $className = $this->dataClass;
         }
         $list = $className::get();
+
+        // filter
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
             if (! empty($filter)) {
                 $list = $list->filter($filter);
             }
         }
+
+        // fancy filter
+        if ($this->hasMethod('getEcommerceWhere')) {
+            $where = $this->getEcommerceWhere();
+            if (! empty($where)) {
+                $list = $list->where($where);
+            }
+        }
+
+        //sort
         $sort = null;
         if ($this->hasMethod('getEcommerceSort')) {
             $sort = $this->getEcommerceSort();
@@ -69,13 +84,7 @@ trait EcommerceProductReportTrait
             }
         }
 
-        if ($this->hasMethod('getEcommerceWhere')) {
-            $where = $this->getEcommerceWhere();
-            if (! empty($where)) {
-                $list = $list->where($where);
-            }
-        }
-
+        // final change to update
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
@@ -113,7 +122,10 @@ trait EcommerceProductReportTrait
         if ($createdInTheLastXDays) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
-
+        $parentID = intval(($params['ParentID'] ?? 0));
+        if ($parentID) {
+            $list = $list->filter(['ParentID' => $parentID]);
+        }
 
         return $list;
     }
@@ -140,7 +152,7 @@ trait EcommerceProductReportTrait
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Title'),
                 'link' => true,
             ],
-            'Price' => [
+            'Price.Nice' => [
                 'title' => _t('EcommerceSideReport.PRICE', 'Price'),
                 'link' => true,
             ],
@@ -150,7 +162,6 @@ trait EcommerceProductReportTrait
     public function parameterFields()
     {
         $fields = FieldList::create();
-        $productTypes = $this->getProductTypes();
         $fields->push(
             FieldGroup::create(
                 'Optional Filters',
@@ -185,8 +196,13 @@ trait EcommerceProductReportTrait
                 DropdownField::create(
                     'ProductType',
                     'Product Type',
-                    $productTypes
+                    $this->getProductTypes()
                 ),
+                DropdownField::create(
+                    'ParentID',
+                    'Category',
+                    $this->getProductGroups()
+                )->setEmptyString('-- Any Category --'),
             )->addExtraClass('stacked')
         );
         $fields->recursiveWalk(
@@ -198,6 +214,10 @@ trait EcommerceProductReportTrait
                 $field->addExtraClass('no-change-track'); // ignore in changetracker
             }
         );
+
+        if ($this->hasMethod('updateParameterFields')) {
+            $this->updateParameterFields($fields);
+        }
 
         return $fields;
     }
@@ -211,6 +231,21 @@ trait EcommerceProductReportTrait
         }
 
         return $newArray;
+    }
+
+    protected function getProductGroups(): array
+    {
+        $list = $this->sourceRecords();
+        if ($list->exists()) {
+            return ProductGroup::get()
+                ->filter([
+                    'ID' => $list->columnUnique('ParentID'),
+                ])
+                ->sort('Title')
+                ->map('ID', 'Title')
+                ->toArray();
+        }
+        return [];
     }
 
     // public function getReportField()
