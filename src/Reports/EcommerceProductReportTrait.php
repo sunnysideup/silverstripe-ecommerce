@@ -12,6 +12,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -152,9 +153,14 @@ trait EcommerceProductReportTrait
                 'title' => _t('EcommerceSideReport.BUYABLE_NAME', 'Title'),
                 'link' => true,
             ],
-            'Price.Nice' => [
+            'Price' => [
                 'title' => _t('EcommerceSideReport.PRICE', 'Price'),
-                'link' => true,
+                'formatting' => function ($value, $item) {
+                    return (intval($value) ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
+                },
+                'csvFormatting' => function ($value, $item) {
+                    return (intval($value) ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
+                },
             ],
         ];
     }
