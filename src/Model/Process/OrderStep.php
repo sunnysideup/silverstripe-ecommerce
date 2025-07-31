@@ -581,7 +581,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
                     'Root.Queue',
-                    $deferTimeInSecondsField = CheckboxField::create(
+                    CheckboxField::create(
                         'DeferFromSubmitTime',
                         _t('OrderStep.DeferFromSubmitTime', 'Calculated from submit time?')
                     )
@@ -1357,6 +1357,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $this->DeferTimeInSeconds = strtotime('+' . $this->DeferTimeInSeconds);
             if ($this->DeferTimeInSeconds > 0) {
                 $this->DeferTimeInSeconds -= time();
+            } else {
+                $this->DeferTimeInSeconds = 0;
             }
         }
         $this->Code = strtoupper((string) $this->Code);
