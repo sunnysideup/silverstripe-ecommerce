@@ -202,6 +202,13 @@ class UserPreference
         return $this;
     }
 
+    protected bool $isSearch = false;
+
+    protected function getIsSearch(): bool
+    {
+        return $this->isSearch;
+    }
+
     /**
      * Checks out a bunch of $_GET variables that are used to work out user
      * preferences.
@@ -221,7 +228,6 @@ class UserPreference
     public function saveUserPreferences(?array $overrideArray = []): self
     {
         $sortFilterDisplayNames = $this->rootGroupController->getSortFilterDisplayValues();
-        $isSearch = false;
         foreach ($sortFilterDisplayNames as $type => $oneTypeArray) {
             $getVariableName = $oneTypeArray['getVariable'];
             if (isset($overrideArray[$type])) {
@@ -240,12 +246,14 @@ class UserPreference
                         }
                     }
                 } elseif ('SEARCHFILTER' === $type) {
-                    $isSearch = true;
                     $newPreference = [
                         'key' => BaseApplyer::DEFAULT_NAME,
                         'params' => $newPreference,
                         'title' => 'Search Results',
                     ];
+                    if (!empty($newPreference['params'])) {
+                        $this->isSearch = true;
+                    }
                 }
             } else {
                 $newPreference = $this->userPreferences[$type];
@@ -606,7 +614,7 @@ class UserPreference
                 }
                 if ($type === $myType) {
                     if ($hideCurrentValue) {
-                    } elseif (trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)) {
+                    } elseif ($this->getIsSearch() || trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)) {
                         $getVars[$values['getVariable']] = $value;
                     } else {
                         $params = $this->getCurrentUserPreferencesParams($myType);
