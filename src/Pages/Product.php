@@ -24,6 +24,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -58,6 +59,7 @@ use Sunnysideup\Vardump\ArrayToTable;
 use Exception;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
@@ -278,9 +280,13 @@ class Product extends Page implements BuyableModel
      */
     private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
-    public function AdditionalImages()
+    public function AdditionalImages(): ManyManyList|UnsavedRelationList
     {
-        return $this->getManyManyComponents('AdditionalImages')->orderBy('Product_AdditionalImages.ImageSort ASC');
+        $list = $this->getManyManyComponents('AdditionalImages');
+        if ($list->exists()) {
+            return $list->orderBy('Product_AdditionalImages.ImageSort ASC');
+        }
+        return $list;
     }
 
     public function SummaryFields()
