@@ -2,21 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\CurrencyField;
-use SilverStripe\Forms\DropdownField;
+
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\TextField;
-use Sunnysideup\Ecommerce\Model\Order;
-use Sunnysideup\Ecommerce\Pages\Product;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 
-trait EcommerceProductGroupReportTrait
+trait EcommerceOrderReportTrait
 {
     /**
      * not sure if this is used in SS3.
@@ -45,87 +39,82 @@ trait EcommerceProductGroupReportTrait
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
-        /**
-         * SELECT BillingAddress.PostalCode, COUNT(Order.ID) AS OrderCount, COUNT(`Order`.ID) AS TotalSalesCount
-         * FROM `Order`
-         * INNER JOIN BillingAddress ON `Order`.BillingAddressID = BillingAddress.ID
-         * WHERE  `Order`.Created >= '2024-01-01'
-         * GROUP BY BillingAddress.PostalCode
-         * ORDER BY TotalSalesCount DESC;
-         */
-        $className = Order::class;
+        Versioned::set_stage(Versioned::DRAFT);
+        $className = $this->dataClass;
         $list = $className::get();
-        if ($this->hasMethod('getEcommerceFilter')) {
-            $filter = $this->getEcommerceFilter();
-            if (! empty($filter)) {
-                $list = $list->filter($filter);
-            }
-        }
-        $sort = null;
-        if ($this->hasMethod('getEcommerceSort')) {
-            $sort = $this->getEcommerceSort();
-            if (empty($sort)) {
-                $sort = ['Title' => 'ASC'];
-            }
-            if (is_array($sort)) {
-                $list = $list->sort($sort);
-            } else {
-                $list = $list->orderBy($sort);
-            }
+        // if ($this->hasMethod('getEcommerceFilter')) {
+        //     $filter = $this->getEcommerceFilter();
+        //     if (! empty($filter)) {
+        //         $list = $list->filter($filter);
+        //     }
+        // }
+        // $sort = null;
+        // if ($this->hasMethod('getEcommerceSort')) {
+        //     $sort = $this->getEcommerceSort();
+        //     if (empty($sort)) {
+        //         $sort = ['OrderStatusLogSubmitted.ID' => 'DESC'];
+        //     }
+        //     if (is_array($sort)) {
+        //         $list = $list->sort($sort);
+        //     } else {
+        //         $list = $list->orderBy($sort);
+        //     }
+        // }
+
+        // if ($this->hasMethod('getEcommerceWhere')) {
+        //     $where = $this->getEcommerceWhere();
+        //     if (! empty($where)) {
+        //         $list = $list->where($where);
+        //     }
+        // }
+
+        // if ($this->hasMethod('updateEcommerceList')) {
+        //     $list = $this->updateEcommerceList($list);
+        // }
+
+        $logs = OrderStatusLogSubmitted::get();
+
+        $startDate = $params['StartDate'] ?? null;
+        if (empty($startDate)) {
+            $startDate = date('Y-m-d 00:00:00', strtotime('-1 month'));
         }
 
-        if ($this->hasMethod('getEcommerceWhere')) {
-            $where = $this->getEcommerceWhere();
-            if (! empty($where)) {
-                $list = $list->where($where);
-            }
+        if ($startDate) {
+            $logs = $logs->filter([
+                'Created:GreaterThanOrEqual' => date('Y-m-d 00:00:00', strtotime($startDate))
+            ]);
         }
 
-        if ($this->hasMethod('updateEcommerceList')) {
-            $list = $this->updateEcommerceList($list);
+        $endDate = $params['EndDate'] ?? null;
+        if ($endDate) {
+            $logs = $logs->filter([
+                'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime($endDate))
+            ]);
         }
 
-        $title = (string) Convert::raw2sql($params['Title'] ?? '');
-        if ($title) {
-            $list = $list->filterAny(['Title:PartialMatch' => $title, 'AlternativeProductGroupNames:PartialMatch' => $title]);
-        }
-
-        $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
-        if ($createdInTheLastXDays) {
-            $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
-        }
+        $list = $list->filter(['ID' => $logs->column('OrderID')]);
 
         return $list;
     }
 
-    /**
-     * @return array
-     */
-    public function columns()
-    {
-        return [
-            'City' => [
-                'title' => _t('EcommerceSideReport.CITY', 'City'),
-                'link' => true,
-            ],
-        ];
-    }
+    // /**
+    //  * @return array
+    //  */
+    // public function columns() {}
 
     public function parameterFields()
     {
         $fields = FieldList::create();
-        $productTypes = $this->getProductGroupTypes();
         $fields->push(
             FieldGroup::create(
                 'Optional Filters',
-                TextField::create(
-                    'Title',
-                    'Keyword',
+                DateField::create(
+                    'StartDate',
+                    'From Date',
                 ),
-                NumericField::create(
-                    'CreatedInTheLastXDays',
-                    'Created less than ... days ago?',
-                    ''
+                DateField::create(
+                    'EndDate',
+                    'Until Date',
                 ),
             )->addExtraClass('stacked')
         );
