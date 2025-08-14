@@ -4,10 +4,13 @@ namespace Sunnysideup\Ecommerce\Reports;
 
 
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Model\OrderPaymentStatus;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 
 trait EcommerceOrderReportTrait
@@ -92,6 +95,20 @@ trait EcommerceOrderReportTrait
             ]);
         }
 
+        $isPaid = $params['IsPaid'] ?? null;
+        if ('' !== $isPaid) {
+            if ('yes' === $isPaid) {
+                $orderIds = OrderPaymentStatus::get()
+                    ->filter(['IsPaid' => true])
+                    ->columnUnique('OrderID');
+            } else {
+                $orderIds = OrderPaymentStatus::get()
+                    ->filter(['IsPaid' => false])
+                    ->columnUnique('OrderID');
+            }
+            $list = $list->filter(['ID' => $orderIds]);
+        }
+
         $list = $list->filter(['ID' => $logs->column('OrderID')]);
 
         return $list;
@@ -115,6 +132,33 @@ trait EcommerceOrderReportTrait
                 DateField::create(
                     'EndDate',
                     'Until Date',
+                ),
+                DropdownField::create(
+                    'IsPaid',
+                    'Is Paid',
+                    [
+                        '' => 'All',
+                        'yes' => 'Yes',
+                        'no' => 'No',
+                    ]
+                ),
+                DropdownField::create(
+                    'IsCancelled',
+                    'Is Cancelled',
+                    [
+                        '' => 'All',
+                        'yes' => 'Yes',
+                        'no' => 'No',
+                    ]
+                ),
+                TextField::create(
+                    'CustomerDetails',
+                    'Customer Details',
+
+                ),
+                TextField::create(
+                    'ProductDetails',
+                    'Product Details',
                 ),
             )->addExtraClass('stacked')
         );

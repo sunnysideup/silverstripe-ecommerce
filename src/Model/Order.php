@@ -1674,13 +1674,18 @@ class Order extends DataObject implements EditableEcommerceObject
         return (bool) $this->MyStep()->ShowAsCompletedOrder;
     }
 
+    public function IsPaid(): bool
+    {
+        return (bool) $this->getIsPaid();
+    }
+
     /**
      * Has the order been paid?
      * TODO: why do we check if there is a total at all?
      *
      * @return bool
      */
-    public function IsPaid()
+    public function getIsPaid(): bool
     {
         if ($this->IsSubmitted()) {
             // also see: maximum_ignorable_sales_payments_difference
@@ -1695,12 +1700,12 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function IsPaidNice()
+    public function IsPaidNice(): string
     {
         return $this->getIsPaidNice();
     }
 
-    public function getIsPaidNice()
+    public function getIsPaidNice(): string
     {
         return $this->IsPaid() ? 'yes' : 'no';
     }
@@ -3155,12 +3160,12 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return float
      */
-    public function TotalOutstanding()
+    public function TotalOutstanding(): float
     {
         return $this->getTotalOutstanding();
     }
 
-    public function getTotalOutstanding()
+    public function getTotalOutstanding(): float
     {
         if ($this->IsSubmitted()) {
             $total = $this->Total();
@@ -3174,7 +3179,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return floatval($outstanding);
         }
 
-        return 0;
+        return floatval(0);
     }
 
     /**
@@ -3182,7 +3187,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function TotalOutstandingAsCurrencyObject()
     {
-        return DBField::create_field('Currency', $this->TotalOutstanding());
+        return DBCurrency::create_field('Currency', $this->TotalOutstanding());
     }
 
     /**
@@ -3201,12 +3206,12 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @return float
      */
-    public function TotalPaid()
+    public function TotalPaid(): float
     {
         return $this->getTotalPaid();
     }
 
-    public function getTotalPaid()
+    public function getTotalPaid(): float
     {
         $paid = 0;
         /** @var DataList $payments */
@@ -3225,7 +3230,7 @@ class Order extends DataObject implements EditableEcommerceObject
             $reverseExchange = 1 / $this->ExchangeRate;
         }
 
-        return $paid * $reverseExchange;
+        return floatval($paid * $reverseExchange);
     }
 
     /**
@@ -3279,7 +3284,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function MoreThanOneItemInCart($recalculate = false)
+    public function MoreThanOneItemInCart($recalculate = false): bool
     {
         return $this->TotalItems($recalculate) > 1;
     }
@@ -3296,7 +3301,7 @@ class Order extends DataObject implements EditableEcommerceObject
         return $this->getTotalItemsTimesQuantity($recalculate);
     }
 
-    public function getTotalItemsTimesQuantity($recalculate = false)
+    public function getTotalItemsTimesQuantity($recalculate = false): float
     {
         if (null === $this->totalItemsTimesQuantityCache || $recalculate || self::get_needs_recalculating($this->ID)) {
             //to do, why do we check if you can edit ????
@@ -3311,7 +3316,7 @@ class Order extends DataObject implements EditableEcommerceObject
             )->value();
         }
 
-        return $this->totalItemsTimesQuantityCache - 0;
+        return floatval($this->totalItemsTimesQuantityCache - 0);
     }
 
     /**
@@ -3373,7 +3378,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function IsSeparateShippingAddress()
+    public function IsSeparateShippingAddress(): bool
     {
         return $this->ShippingAddressID && $this->UseShippingAddress;
     }
