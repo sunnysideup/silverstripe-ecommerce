@@ -171,11 +171,11 @@ class QuickUpdates extends Controller
         parent::init();
         $allowedActions = $this->Config()->get('allowed_actions');
         $securityCheck = $allowedActions['index'] ?? 'ADMIN';
-        if(! Permission::check($securityCheck)) {
-            return Security::permissionFailure($this);
+        if (! Permission::check($securityCheck)) {
+            Security::permissionFailure($this);
         }
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
-        if(get_class($this) === QuickUpdates::class) {
+        if (get_class($this) === QuickUpdates::class) {
             return $this->httpError(404, 'Please choose a specific update.');
         }
     }
@@ -190,7 +190,7 @@ class QuickUpdates extends Controller
         $product = Product::get()->byID($id);
         if ($product) {
             $source = [$product->ID => $product->FullName];
-            if($offerRemoveOption) {
+            if ($offerRemoveOption) {
                 $source = [-1 * $product->ID => '--- remove ---'] + $source;
             }
             return DropdownField::create(
@@ -206,9 +206,8 @@ class QuickUpdates extends Controller
 
             $list = Product::get()
                 ->filter(['AllowPurchase' => true])
-                ->sort(['InternalItemID' => 'ASC'])
-            ;
-            if($query) {
+                ->sort(['InternalItemID' => 'ASC']);
+            if ($query) {
                 $query =  Convert::raw2sql($query);
                 $filter = [
                     'Title:PartialMatch' => $query,
@@ -256,8 +255,7 @@ class QuickUpdates extends Controller
         $products = Product::get()
             ->filter(['AllowPurchase' => true])
             ->sort(['Price' =>  'DESC'])
-            ->limit($this->getMaxItems())
-        ;
+            ->limit($this->getMaxItems());
         $products = $this->isIncludedInListForProductSqlChanges($products);
 
         return $products;
@@ -267,5 +265,4 @@ class QuickUpdates extends Controller
     {
         return $list;
     }
-
 }
