@@ -249,6 +249,7 @@ trait EcommerceProductReportTrait
             return ProductGroup::get()
                 ->filter([
                     'ID' => $list->columnUnique('ParentID'),
+                    'ShowInMenus' => true,
                 ])
                 ->sort('Title')
                 ->map('ID', 'ProductGroupBreadcrumb')
