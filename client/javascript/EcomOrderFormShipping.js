@@ -38,7 +38,7 @@ if (document.getElementById('OrderFormAddress_OrderFormAddress')) {
      * selector for shipping form section
      * @var string
      */
-    shippingSectionSelector: '.shippingFieldsHeader, .shippingFields',
+    shippingSectionSelector: '.CompositeField.leftOrderShipping',
 
     /**
      * selector for the checkbox that shows wheter or not
