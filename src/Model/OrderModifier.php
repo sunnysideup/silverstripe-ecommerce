@@ -348,15 +348,14 @@ class OrderModifier extends OrderAttribute
      */
     public function runUpdate($recalculate = false)
     {
+        $this->checkField('Name', $recalculate);
+        $this->checkField('CalculatedTotal', $recalculate);
+        $this->checkField('TableValue', $recalculate);
+        $this->checkField('Type', $recalculate);
+        if ($this->mustUpdate && $this->canBeUpdated()) {
+            $this->write();
+        }
         if (!$this->IsRemoved()) {
-            $this->checkField('Name', $recalculate);
-            $this->checkField('CalculatedTotal', $recalculate);
-            $this->checkField('TableValue', $recalculate);
-            $this->checkField('Type', $recalculate);
-            if ($this->mustUpdate && $this->canBeUpdated()) {
-                $this->write();
-            }
-
             $this->runningTotal += $this->CalculatedTotal;
         }
 
