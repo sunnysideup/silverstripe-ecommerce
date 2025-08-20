@@ -245,17 +245,26 @@ trait EcommerceProductReportTrait
     protected function getProductGroups(): array
     {
         $list = $this->sourceRecords();
+        $array = [];
         if ($list->exists()) {
-            return ProductGroup::get()
+            $list = ProductGroup::get()
                 ->filter([
                     'ID' => $list->columnUnique('ParentID'),
-                    'ShowInMenus' => true,
-                ])
-                ->sort('Title')
-                ->map('ID', 'ProductGroupBreadcrumb')
+                    'ShowInSearch' => true,
+                ]);
+            $array = $list
+                ->map('ID', 'FullName')
                 ->toArray();
+            $backupList = $list
+                ->map('ID', 'Title')
+                ->toArray();
+            foreach ($array as $key => $value) {
+                if (empty($value)) {
+                    $array[$key] = $backupList[$key];
+                }
+            }
         }
-        return [];
+        return asort($array, SORT_NATURAL | SORT_FLAG_CASE) ? $array : [];
     }
 
     // public function getReportField()
