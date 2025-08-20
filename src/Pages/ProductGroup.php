@@ -771,9 +771,7 @@ class ProductGroup extends Page
                 }
             }
         }
-        if (empty($this->ProductGroupBreadcrumb)) {
-            $this->ProductGroupBreadcrumb = '';
-        }
+
         return (string) $this->ProductGroupBreadcrumb;
     }
 
