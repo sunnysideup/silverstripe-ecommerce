@@ -61,6 +61,14 @@ class CheckoutPageController extends CartPageController
     ];
 
     /**
+     *
+     * e.g. ?foo=bar
+     * OR #mycart
+     * @var string
+     */
+    private static string $anchor_to_add_to_checkout_steps = '';
+
+    /**
      * @var array
      */
     private static $ajaxify_steps = [];
