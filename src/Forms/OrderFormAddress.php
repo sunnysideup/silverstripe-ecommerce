@@ -368,7 +368,7 @@ class OrderFormAddress extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
@@ -379,6 +379,8 @@ class OrderFormAddress extends Form
 
             return true;
         }
+        $this->controller->redirectBack();
+        return false;
     }
 
     /**
@@ -392,7 +394,7 @@ class OrderFormAddress extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest Request object for this action
+     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
