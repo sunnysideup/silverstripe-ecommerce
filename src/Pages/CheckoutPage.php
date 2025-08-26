@@ -190,6 +190,7 @@ class CheckoutPage extends CartPage
         $nextStep = null;
         $link = self::find_link();
         if ($link) {
+            $anchor = EcommerceConfig::get(CheckoutPageController::class, 'anchor_to_add_to_checkout_steps');
             $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
             if (in_array($currentStep, $steps, true)) {
                 $key = array_search($currentStep, $steps, true);
@@ -211,7 +212,7 @@ class CheckoutPage extends CartPage
             }
 
             if ($nextStep) {
-                return Controller::join_links($link, 'checkoutstep', $nextStep);
+                return Controller::join_links($link, 'checkoutstep', $nextStep) .  $anchor;
             }
 
             return $link;
