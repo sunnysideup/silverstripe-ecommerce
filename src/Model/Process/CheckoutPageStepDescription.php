@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -37,8 +38,8 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
 
     private static $db = [
         'Heading' => 'Varchar',
-        'Above' => 'Text',
-        'Below' => 'Text',
+        'Above' => 'HTMLText',
+        'Below' => 'HTMLText',
         'Code' => 'Varchar(100)',
     ];
 
@@ -221,17 +222,17 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('Description', new TextareaField('Description', _t('Checkout.DESCRIPTION', 'Description')));
-        $fields->replaceField('Above', new TextareaField('Above', _t('Checkout.ABOVE', 'Top of section note')));
-        $fields->replaceField('Below', new TextareaField('Below', _t('Checkout.BELOW', 'Bottom of section note')));
+        $fields->replaceField('Above', new HTMLEditorField('Above', _t('Checkout.ABOVE', 'Top of section note')));
+        $fields->replaceField('Below', new HTMLEditorField('Below', _t('Checkout.BELOW', 'Bottom of section note')));
+        $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $fields->replaceField(
             'Code',
             DropdownField::create(
                 'Code',
                 'Code',
                 array_combine(
-                    EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps'),
-                    EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps')
+                    $steps,
+                    $steps
                 )
             )
         );
@@ -276,8 +277,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         if (is_array($steps) && count($steps)) {
             $idArray = [];
             $addCodeSteps = CheckoutPageStepDescription::get()
-                ->where('"Code" = \'\' OR "Code" IS NULL')
-            ;
+                ->where('"Code" = \'\' OR "Code" IS NULL');
 
             $stepsToAdd = $steps;
             if ($addCodeSteps->exists()) {
