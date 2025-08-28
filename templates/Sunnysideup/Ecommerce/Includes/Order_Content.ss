@@ -1,4 +1,3 @@
-<h2>Order items</h2>
 <table id="InformationTable" class="infotable readonly">
     <thead>
         <tr>
