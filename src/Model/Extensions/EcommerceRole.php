@@ -661,7 +661,10 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 if ($this->getOwner()->Password) {
                     $passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD', 'New Password'));
                     $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD', 'Confirm New Password'));
-                    $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '<a href="#Password"  datano="' . Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')) . '"  class="updatePasswordLink passwordToggleLink secondary-button" rel="Password">' . _t('Account.UPDATE_PASSWORD', 'Update Password') . '</a>');
+                    $updatePasswordLinkField = new LiteralField(
+                        'UpdatePasswordLink',
+                        '<a href="#Password"  datano="' . Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')) . '"  class="updatePasswordLink passwordToggleLink secondary-button" rel="Password">' . _t('Account.UPDATE_PASSWORD', 'Update Password') . '</a>'
+                    );
                 }
                 //if they dont have a password then we now force them to create one.
                 //the fields of which are added further down the line...
