@@ -283,9 +283,12 @@ class OrderFormAddress extends Form
                             new LiteralField(
                                 'OrderAddedTo',
                                 '<p class="message good">' .
-                                    _t('Account.ORDERADDEDTO', 'Order will be added to ') .
+                                    _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
+                                    ' ' .
                                     Convert::raw2xml($this->orderMember->Email) .
-                                    ').</p>'
+                                    ' ' .
+                                    _t('Account.AS_IDENTIFIER', 'as identifier') .
+                                    '</p>'
                             )
                         );
                     }
