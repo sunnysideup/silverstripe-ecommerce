@@ -8,6 +8,7 @@ use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
@@ -225,16 +226,10 @@ class CheckoutPageController extends CartPageController
      *
      * @return string
      */
-    public function StepsContentAbove($number)
+    public function StepsContentAbove($number): DBHTMLText
     {
-        $do = $this->CheckoutSteps($number);
-        if ($do) {
-            return $do->Above;
-        }
-
-        return '';
+        return $this->aboveBelowContent($number, 'Above');
     }
-
     /**
      * returns the bottom of the page content for the Checkout Step.
      *
@@ -242,14 +237,20 @@ class CheckoutPageController extends CartPageController
      *
      * @return string
      */
-    public function StepsContentBelow($number)
+    public function StepsContentBelow($number): DBHTMLText
+    {
+        return $this->aboveBelowContent($number, 'Below');
+    }
+
+    protected function aboveBelowContent($number, $fieldName)
     {
         $do = $this->CheckoutSteps($number);
+        $v = '';
         if ($do) {
-            return $do->Below;
+            $v = $do->$fieldName;
         }
 
-        return '';
+        return DBHTMLText::create_field('HTMLText', $v);
     }
 
     /**
