@@ -15,10 +15,10 @@
 <div id="OrderItemsOuter" class="checkoutStep">
 
     <% if StepsContentHeading(1) %><h1 class="orderStepHeading">$StepsContentHeading(1)</h1><% end_if %>
-    <% if StepsContentAbove(1) %><p class="above headerFooterDescription">$StepsContentAbove(1)</p><% end_if %>
+    <% if StepsContentAbove(1) %><div class="above checkout-text-holders headerFooterDescription">$StepsContentAbove(1)</div><% end_if %>
     <% with Order %><% include Sunnysideup\Ecommerce\Includes\Order_Content_Editable %><% end_with %>
     <% include Sunnysideup\Ecommerce\Includes\Order_Content_Editable_ModifierForms %>
-    <% if StepsContentBelow(1) %><p class="below headerFooterDescription">$StepsContentBelow(1)</p><% end_if %>
+    <% if StepsContentBelow(1) %><div class="below checkout-text-holders headerFooterDescription">$StepsContentBelow(1)</div><% end_if %>
 
     <% if HasCheckoutSteps %>
     <div class="checkoutStepPrevNextHolder next">
@@ -43,9 +43,9 @@
     <% end_if %>
 
     <% if StepsContentHeading(2) %><h1 class="orderStepHeading">$StepsContentHeading(2)</h1><% end_if %>
-    <% if StepsContentAbove(2) %><p class="above headerFooterDescription">$StepsContentAbove(2)</p><% end_if %>
+    <% if StepsContentAbove(2) %><div class="above checkout-text-holders headerFooterDescription">$StepsContentAbove(2)</div><% end_if %>
     <div id="OrderFormAddressHolder">$OrderFormAddress</div>
-    <% if StepsContentBelow(2) %><p class="below headerFooterDescription">$StepsContentBelow(2)</p><% end_if %>
+    <% if StepsContentBelow(2) %><div class="below checkout-text-holders headerFooterDescription">$StepsContentBelow(2)</div><% end_if %>
 <!-- there is no next link here, because the member will have to submit the form -->
 </div>
 <% end_if %>
@@ -72,13 +72,13 @@
 
 
     <% if StepsContentHeading(3) %><h1 class="orderStepHeading">$StepsContentHeading(3)</h1><% end_if %>
-    <% if StepsContentAbove(3) %><p class="above headerFooterDescription">$StepsContentAbove(3)</p><% end_if %>
+    <% if StepsContentAbove(3) %><div class="above checkout-text-holders headerFooterDescription">$StepsContentAbove(3)</div><% end_if %>
     <% with Order %>
         <% include Sunnysideup\Ecommerce\Includes\Order_Addresses %>
         <% include Sunnysideup\Ecommerce\Includes\Order_Content %>
     <% end_with %>
     <div id="OrderFormHolder">$OrderForm</div>
-    <% if StepsContentBelow(3) %><p class="below headerFooterDescription">$StepsContentBelow(3)</p><% end_if %>
+    <% if StepsContentBelow(3) %><div class="below checkout-text-holders headerFooterDescription">$StepsContentBelow(3)</div><% end_if %>
 
 </div>
 
@@ -86,4 +86,4 @@
 
 
 <% end_if %>
-<% if Content %><div id="ContentHolder">$Content</div><% end_if %>
+<% if Content %><div id="ContentHolder checkout-text-holders">$Content</div><% end_if %>
