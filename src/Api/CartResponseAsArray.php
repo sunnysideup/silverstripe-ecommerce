@@ -112,13 +112,27 @@ class CartResponseAsArray
         //TO DO: set it up in such a way that it specifically requests one of these
         $templates = EcommerceConfig::get(CartResponse::class, 'cart_responses_required');
         foreach ($templates as $idMethod => $template) {
+            $minNumberOfItems = 0;
+            if (is_array($template)) {
+                $template = $template['template'] ?? null;
+                $minNumberOfItems = $template['min_number_of_items'] ?? 0;
+            }
+            if (! $template) {
+                continue;
+            }
             $selector = $ajaxObject->{$idMethod}();
             $classOrID = '#';
             if (false !== stripos($idMethod, 'class')) {
                 $classOrID = '.';
             }
+            if ($minNumberOfItems && $items->count() < $minNumberOfItems) {
+                $data = '';
+            } else {
+                $data = ' ' . $currentOrder->RenderWith($template);
+            }
+
             $js[$classOrID . $selector] = [
-                'html' => ' ' . $currentOrder->RenderWith($template),
+                'html' => $data,
             ];
         }
         //now can check if it needs to be reloaded
