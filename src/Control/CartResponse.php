@@ -29,6 +29,15 @@ class CartResponse extends EcommerceResponse
 
 
     /**
+     * can also be:
+     * ```php
+     * private static $cart_responses_required = [
+     *     'SideBarCartID' => [
+     *         'template' => 'Sidebar_Cart_Inner',
+     *         'min_number_of_items' => 5,
+     *     ],
+     * ];
+     * ```
      * @var array
      */
     private static $cart_responses_required = [
