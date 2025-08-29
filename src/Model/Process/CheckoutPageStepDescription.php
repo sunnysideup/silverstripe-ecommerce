@@ -321,11 +321,11 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     {
         switch ($code) {
             case 'orderitems':
-                return _t('CheckoutPage.ORDERITEMS', 'Order items');
+                return _t('CheckoutPage.ORDERITEMS', 'Order Details');
             case 'orderformaddress':
-                return _t('CheckoutPage.ORDERFORMADDRESS', 'Your details');
+                return _t('CheckoutPage.ORDERFORMADDRESS', 'Your Details');
             case 'orderconfirmationandpayment':
-                return _t('CheckoutPage.ORDERCONFIRMATIONANDPAYMENT', 'Confirm and pay');
+                return _t('CheckoutPage.ORDERCONFIRMATIONANDPAYMENT', 'Confirm and Pay');
         }
 
         return $code;
