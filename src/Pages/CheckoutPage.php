@@ -6,6 +6,7 @@ use Page;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
@@ -148,7 +149,13 @@ class CheckoutPage extends CartPage
             return $page->Link($action);
         }
 
-        user_error('No Checkout Page has been created - it is recommended that you create this page type for correct functioning of E-commerce.', E_USER_NOTICE);
+        $page = DataObject::get_one(
+            ErrorPage::class,
+            ['ErrorCode' => '404']
+        );
+        if ($page) {
+            return $page->Link();
+        }
 
         return '404-checkout-page';
     }

@@ -767,9 +767,13 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * @return string (URLSegment)
      */
-    public function CheckoutLink(): string
+    public function CheckoutLink(?string $action = null): string
     {
-        return CheckoutPage::find_link();
+        $order = ShoppingCart::current_order();
+        if($order) {
+            return $order->CheckoutLink($action);
+        }
+        return CheckoutPage::find_link($action);
     }
 
     /**

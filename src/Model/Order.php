@@ -3762,22 +3762,10 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string (URLSegment)
      */
-    public function CheckoutLink()
+    public function CheckoutLink(?string $action = null)
     {
-        $page = DataObject::get_one(CheckoutPage::class);
-        if ($page) {
-            return $page->Link();
-        }
 
-        $page = DataObject::get_one(
-            ErrorPage::class,
-            ['ErrorCode' => '404']
-        );
-        if ($page) {
-            return $page->Link();
-        }
-
-        return '404-no-order-found';
+        return CheckoutPage::find_link($action);
     }
 
     /**

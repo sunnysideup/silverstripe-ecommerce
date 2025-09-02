@@ -905,9 +905,9 @@ class OrderItem extends OrderAttribute
     /**
      * @return string (URLSegment)
      */
-    public function CheckoutLink()
+    public function CheckoutLink(?string $action = null)
     {
-        return CheckoutPage::find_link();
+        return $this->Order()->CheckoutLink($action);
     }
 
     //# Often Overloaded functions ##
