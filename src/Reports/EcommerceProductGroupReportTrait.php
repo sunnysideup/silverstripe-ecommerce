@@ -50,6 +50,22 @@ trait EcommerceProductGroupReportTrait
         }
 
         $list = $className::get();
+
+
+        $title = (string) Convert::raw2sql($params['Title'] ?? '');
+        if ($title) {
+            $list = $list->filterAny(['Title:PartialMatch' => $title, 'AlternativeProductGroupNames:PartialMatch' => $title]);
+        }
+
+        $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
+        if ($changedInTheLastXDays) {
+            $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
+        }
+
+        $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
+        if ($createdInTheLastXDays) {
+            $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
+        }
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
             if (! empty($filter)) {
@@ -79,22 +95,6 @@ trait EcommerceProductGroupReportTrait
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
-
-        $title = (string) Convert::raw2sql($params['Title'] ?? '');
-        if ($title) {
-            $list = $list->filterAny(['Title:PartialMatch' => $title, 'AlternativeProductGroupNames:PartialMatch' => $title]);
-        }
-
-        $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
-        if ($changedInTheLastXDays) {
-            $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
-        }
-
-        $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
-        if ($createdInTheLastXDays) {
-            $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
-        }
-
         return $list;
     }
 
@@ -170,6 +170,4 @@ trait EcommerceProductGroupReportTrait
 
         return $newArray;
     }
-
-
 }

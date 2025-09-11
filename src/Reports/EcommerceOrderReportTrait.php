@@ -8,6 +8,7 @@ use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 
 trait EcommerceOrderReportTrait
@@ -41,36 +42,7 @@ trait EcommerceOrderReportTrait
     {
         Versioned::set_stage(Versioned::DRAFT);
         $className = $this->dataClass;
-        $list = $className::get();
-        // if ($this->hasMethod('getEcommerceFilter')) {
-        //     $filter = $this->getEcommerceFilter();
-        //     if (! empty($filter)) {
-        //         $list = $list->filter($filter);
-        //     }
-        // }
-        // $sort = null;
-        // if ($this->hasMethod('getEcommerceSort')) {
-        //     $sort = $this->getEcommerceSort();
-        //     if (empty($sort)) {
-        //         $sort = ['OrderStatusLogSubmitted.ID' => 'DESC'];
-        //     }
-        //     if (is_array($sort)) {
-        //         $list = $list->sort($sort);
-        //     } else {
-        //         $list = $list->orderBy($sort);
-        //     }
-        // }
-
-        // if ($this->hasMethod('getEcommerceWhere')) {
-        //     $where = $this->getEcommerceWhere();
-        //     if (! empty($where)) {
-        //         $list = $list->where($where);
-        //     }
-        // }
-
-        // if ($this->hasMethod('updateEcommerceList')) {
-        //     $list = $this->updateEcommerceList($list);
-        // }
+        $list = Order::get();
 
         $logs = OrderStatusLogSubmitted::get();
 
@@ -94,6 +66,40 @@ trait EcommerceOrderReportTrait
 
         $list = $list->filter(['ID' => $logs->column('OrderID')]);
 
+        // filter
+        if ($this->hasMethod('getEcommerceFilter')) {
+            $filter = $this->getEcommerceFilter();
+            if (! empty($filter)) {
+                $list = $list->filter($filter);
+            }
+        }
+
+        // fancy filter
+        if ($this->hasMethod('getEcommerceWhere')) {
+            $where = $this->getEcommerceWhere();
+            if (! empty($where)) {
+                $list = $list->where($where);
+            }
+        }
+
+        //sort
+        $sort = null;
+        if ($this->hasMethod('getEcommerceSort')) {
+            $sort = $this->getEcommerceSort();
+            if (empty($sort)) {
+                $sort = ['Title' => 'ASC'];
+            }
+            if (is_array($sort)) {
+                $list = $list->sort($sort);
+            } else {
+                $list = $list->orderBy($sort);
+            }
+        }
+
+        // final change to update
+        if ($this->hasMethod('updateEcommerceList')) {
+            $list = $this->updateEcommerceList($list);
+        }
         return $list;
     }
 

@@ -58,35 +58,6 @@ trait EcommerceProductReportTrait
         }
         $list = $className::get();
 
-        // filter
-        if ($this->hasMethod('getEcommerceFilter')) {
-            $filter = $this->getEcommerceFilter();
-            if (! empty($filter)) {
-                $list = $list->filter($filter);
-            }
-        }
-
-        // fancy filter
-        if ($this->hasMethod('getEcommerceWhere')) {
-            $where = $this->getEcommerceWhere();
-            if (! empty($where)) {
-                $list = $list->where($where);
-            }
-        }
-
-        //sort
-        $sort = null;
-        if ($this->hasMethod('getEcommerceSort')) {
-            $sort = $this->getEcommerceSort();
-            if (empty($sort)) {
-                $sort = ['Title' => 'ASC'];
-            }
-            if (is_array($sort)) {
-                $list = $list->sort($sort);
-            } else {
-                $list = $list->orderBy($sort);
-            }
-        }
 
         // final change to update
         if ($this->hasMethod('updateEcommerceList')) {
@@ -131,6 +102,35 @@ trait EcommerceProductReportTrait
             $list = $list->filter(['ParentID' => $parentID]);
         }
 
+        // filter
+        if ($this->hasMethod('getEcommerceFilter')) {
+            $filter = $this->getEcommerceFilter();
+            if (! empty($filter)) {
+                $list = $list->filter($filter);
+            }
+        }
+
+        // fancy filter
+        if ($this->hasMethod('getEcommerceWhere')) {
+            $where = $this->getEcommerceWhere();
+            if (! empty($where)) {
+                $list = $list->where($where);
+            }
+        }
+
+        //sort
+        $sort = null;
+        if ($this->hasMethod('getEcommerceSort')) {
+            $sort = $this->getEcommerceSort();
+            if (empty($sort)) {
+                $sort = ['Title' => 'ASC'];
+            }
+            if (is_array($sort)) {
+                $list = $list->sort($sort);
+            } else {
+                $list = $list->orderBy($sort);
+            }
+        }
         return $list;
     }
 
