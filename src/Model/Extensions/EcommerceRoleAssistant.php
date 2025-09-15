@@ -86,8 +86,5 @@ class EcommerceRoleAssistant implements PermissionProviderFactoryProvider
             ->setSort(100)
             ->CreateGroupAndMember()
         ;
-
-
-        return $group;
     }
 }
