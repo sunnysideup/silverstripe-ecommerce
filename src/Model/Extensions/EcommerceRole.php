@@ -182,30 +182,24 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
     public static function permission_provider_factory_runner(): Group
     {
-        $gorupCode = EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_code');
-        $group = Group::get()->filter(['Code' => $gorupCode])->first();
-        if (!$group) {
-            return PermissionProviderFactory::inst()
-                ->setParentGroup(EcommerceRole::get_category())
-                ->setEmail(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email'))
-                ->setFirstName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name'))
-                ->setSurname(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname'))
-                ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
-                ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
-                ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
-                ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
-                ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
-                ->setDescription(
-                    _t(
-                        'EcommerceRole.ADMINISTRATORS_HELP',
-                        'Shop Manager - can edit everything to do with the e-commerce application.'
-                    )
+        return PermissionProviderFactory::inst()
+            ->setParentGroup(EcommerceRole::get_category())
+            ->setEmail(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_email'))
+            ->setFirstName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_first_name'))
+            ->setSurname(EcommerceConfig::get(EcommerceRole::class, 'admin_group_user_surname'))
+            ->setCode(EcommerceConfig::get(EcommerceRole::class, 'admin_group_code'))
+            ->setGroupName(EcommerceConfig::get(EcommerceRole::class, 'admin_group_name'))
+            ->setPermissionCode(EcommerceConfig::get(EcommerceRole::class, 'admin_permission_code'))
+            ->setRoleTitle(EcommerceConfig::get(EcommerceRole::class, 'admin_role_title'))
+            ->setPermissionArray(EcommerceConfig::get(EcommerceRole::class, 'admin_role_permission_codes'))
+            ->setDescription(
+                _t(
+                    'EcommerceRole.ADMINISTRATORS_HELP',
+                    'Shop Manager - can edit everything to do with the e-commerce application.'
                 )
-                ->setSort(99)
-                ->CreateGroup($member = null);
-        }
-
-        return $group;
+            )
+            ->setSort(99)
+            ->CreateGroup($member = null);
     }
 
     public function getCustomerDetails(): string
