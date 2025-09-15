@@ -199,7 +199,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 )
             )
             ->setSort(99)
-            ->CreateGroup($member = null);
+            ->CreateGroupAndMember();
     }
 
     public function getCustomerDetails(): string
