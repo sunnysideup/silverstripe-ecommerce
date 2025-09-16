@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
 <head>
     <% base_tag %>
+    <meta name="robots" content="noindex, nofollow">
     $MetaTags
     <link rel="shortcut icon" href="/favicon.ico" />
     <title><% _t('PRINT_ALL_INVOICES', 'Print Invoices for Selected Orders') %></title>

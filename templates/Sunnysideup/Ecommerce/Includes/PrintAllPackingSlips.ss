@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title><% _t('PRINT_ALL_PACKING_SLIPS', 'Print Packing Slips for Selected Orders') %></title>
 </head>
