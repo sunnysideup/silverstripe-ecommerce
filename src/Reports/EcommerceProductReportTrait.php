@@ -139,7 +139,7 @@ trait EcommerceProductReportTrait
      */
     public function columns()
     {
-        return [
+        $array = [
             'InternalItemID' => [
                 'title' => _t('EcommerceSideReport.PRODUCT_TYPE', 'Code'),
                 'link' => true,
@@ -166,6 +166,10 @@ trait EcommerceProductReportTrait
                 },
             ],
         ];
+        if ($this->hasMethod('updateEcommerceReportColumns')) {
+            $array = $this->updateEcommerceReportColumns($array);
+        }
+        return $array;
     }
 
     public function parameterFields()
