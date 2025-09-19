@@ -184,6 +184,7 @@ class Product extends Page implements BuyableModel
         'CalculatedPriceAsMoney' => 'Money',
         'AllowPurchaseNice' => 'Varchar',
         'ProductType' => 'Varchar',
+        'SoldCount' => 'Int',
     ];
 
     private static $indexes = [
@@ -935,6 +936,14 @@ class Product extends Page implements BuyableModel
                 'BuyableClassName' => $this->ClassName,
             ]
         );
+    }
+
+    public function SoldCount(?array $filter = []): int
+    {
+        if ($filter && is_array($filter) && count($filter)) {
+            return (int) $this->SalesRecord()->filter($filter)->sum('Quantity');
+        }
+        return (int) $this->SalesRecord()->sum('Quantity');
     }
 
     /**
