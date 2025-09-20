@@ -623,7 +623,7 @@ class OrderItem extends OrderAttribute
      *
      * @return DataObject (\Sunnysideup\Ecommerce\Model\Sunnysideup\Ecommerce\Interfaces\BuyableModel)
      */
-    public function getBuyable($current = false)
+    public function getBuyable(bool $current = false)
     {
         $currentOrVersion = $current ? 'current' : 'version';
         $order = $this->getOrderCached();
