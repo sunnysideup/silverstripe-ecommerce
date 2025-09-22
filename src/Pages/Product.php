@@ -1525,11 +1525,12 @@ class Product extends Page implements BuyableModel
     protected function getProductSearchTableDataValues(): array
     {
         return [
-            $this->InternalItemID,
-            $this->Title,
-            $this->ProductBreadcrumb,
-            $this->ShortDescription,
-            $this->Content,
+            (string) $this->Title,
+            str_replace(',', '', (string) $this->AlternativeProductNames),
+            (string) $this->InternalItemID,
+            (string) $this->ProductBreadcrumb,
+            (string) $this->ShortDescription,
+            (string) $this->Content,
         ];
     }
 
