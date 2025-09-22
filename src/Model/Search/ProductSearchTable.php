@@ -98,15 +98,14 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
 
     public static function add_product($product, array $dataAsArray, ?bool $onlyShowProductsThatCanBePurchased = true)
     {
-        $dataAsString = Sanitizer::html_array_to_text($dataAsArray);
         if ($product->ID && $product->ShowInSearch && (! $onlyShowProductsThatCanBePurchased || $product->AllowPurchase)) {
             $filter = ['ProductID' => $product->ID];
             $obj = ProductSearchTable::get()->filter($filter)->first();
             if (! $obj) {
                 $obj = ProductSearchTable::create($filter);
             }
-            $obj->Title = Sanitizer::html_to_text($product->Title . ' ' . $product->AlternativeProductNames);
-            $obj->Data = $dataAsString;
+            $obj->Title = Sanitizer::html_to_text($product->Title);
+            $obj->Data = Sanitizer::html_array_to_text_limit_words($dataAsArray);
             $obj->write();
         } else {
             self::remove_product($product);

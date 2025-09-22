@@ -740,12 +740,7 @@ class ProductGroup extends Page
     public function onAfterPublish()
     {
         parent::onAfterPublish();
-        if (Config::inst()->get(ProductSearchFilter::class, 'use_product_search_table')) {
-            ProductGroupSearchTable::add_product_group(
-                $this,
-                $this->getProductSearchTableDataValues()
-            );
-        }
+        $this->addToSearchTable();
     }
 
     protected function onBeforeWrite()
@@ -948,8 +943,9 @@ class ProductGroup extends Page
     protected function getProductSearchTableDataValues(): array
     {
         return [
-            $this->Title,
-            $this->Content,
+            (string) $this->Title,
+            (string) $this->AlternativeProductGroupNames,
+            (string) $this->Content,
         ];
     }
 

@@ -97,15 +97,14 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
 
     public static function add_product_group($productGroup, array $dataAsArray)
     {
-        $dataAsString = Sanitizer::html_array_to_text($dataAsArray);
         if ($productGroup->ID && $productGroup->ShowInSearch) {
             $filter = ['ProductGroupID' => $productGroup->ID];
             $obj = ProductGroupSearchTable::get()->filter($filter)->first();
             if (! $obj) {
                 $obj = ProductGroupSearchTable::create($filter);
             }
-            $obj->Title = Sanitizer::html_to_text($productGroup->Title . ' ' . $productGroup->AlternativeProductGroupNames);
-            $obj->Data = $dataAsString;
+            $obj->Title = Sanitizer::html_to_text($productGroup->Title);
+            $obj->Data = Sanitizer::html_array_to_text_limit_words($dataAsArray);
             $obj->write();
         } else {
             self::remove_product_group($productGroup);
