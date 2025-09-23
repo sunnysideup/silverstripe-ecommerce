@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunnysideuo\Ecommerce\Model\Process;
+namespace Sunnysideuo\Ecommerce\Model\Process\OrderSteps;
 
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
