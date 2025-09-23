@@ -8,6 +8,7 @@ use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Versioned\Versioned;
+use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 
@@ -63,8 +64,8 @@ trait EcommerceOrderReportTrait
                 'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime($endDate))
             ]);
         }
-
-        $list = $list->filter(['ID' => $logs->column('OrderID')]);
+        $ids = ArrayMethods::filter_array($logs->column('OrderID'));
+        $list = $list->filter(['ID' => $ids]);
 
         // filter
         if ($this->hasMethod('getEcommerceFilter')) {
