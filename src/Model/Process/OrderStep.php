@@ -640,6 +640,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
             $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             $htmlEditorField->setRows(3);
+            $orderEmaiLRecordsField = $fields->dataFieldByName('OrderEmailRecords');
+            if ($orderEmaiLRecordsField) {
+                $config = $orderEmaiLRecordsField->getConfig();
+                $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
+                $config->removeComponentsByType(GridFieldDeleteAction::class);
+            }
         } else {
             $fields->removeFieldFromTab('Root', 'OrderEmailRecords');
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
@@ -1431,7 +1437,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $subject = (string) $this->CalculatedEmailSubject($order);
             }
             $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
-
+            if (! $useAlternativeEmail) {
+                $adminOnlyOrToEmail = (bool) $adminOnlyOrToEmail;
+            }
             //this is NOT an admin EMAIL
             if ($this->hasCustomerMessage() || $useAlternativeEmail) {
                 if (!$emailClassName) {
@@ -1539,9 +1547,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    protected function canBeDefered()
+    protected function canBeDefered(): bool
     {
-        return $this->hasCustomerMessage();
+        return $this->hasCustomerMessage() || $this->DeferTimeInSeconds > 0;
     }
 
     protected function NextOrderStep()
