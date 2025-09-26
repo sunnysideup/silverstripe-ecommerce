@@ -5,14 +5,32 @@
  * (if they have shopped with us before)
  **/
 
-if (document.getElementById('OrderFormAddress_OrderFormAddress_Email')) {
+if (
+  document.getElementById('OrderFormAddress_OrderFormAddress_Email') &&
+  1 === 2
+) {
   const EcomSendLoginLink = {
     init () {
       document.querySelectorAll('[data-login-link]').forEach(field => {
         field.addEventListener('change', event => {
           const loginLink = field.dataset.loginLink
           const securityToken = field.dataset.securityToken
-          const email = field.value
+          const email = field.value.trim()
+          if (!email) return
+
+          // Check localStorage throttle (10 minutes)
+          const storageKey = `loginLinkSent:${email}`
+          const lastSent = localStorage.getItem(storageKey)
+          const now = Date.now()
+          const tenMinutes = 10 * 60 * 1000
+
+          if (lastSent && now - parseInt(lastSent, 10) < tenMinutes) {
+            console.log(
+              `Login link already sent for ${email} in the last 10 minutes.`
+            )
+            return
+          }
+
           const params = new URLSearchParams()
           params.append('email', email)
           params.append('BackURL', window.location.href)
@@ -25,12 +43,14 @@ if (document.getElementById('OrderFormAddress_OrderFormAddress_Email')) {
           }).then(response => {
             console.log(response)
             if (response.ok) {
+              // Save throttle timestamp
+              localStorage.setItem(storageKey, now.toString())
+
               return response.text().then(text => {
                 field.parentElement.classList.add('login-link-sent')
                 const span = document.createElement('span')
                 span.className = 'message good'
                 span.textContent = text
-
                 field.parentElement.insertAdjacentElement('afterend', span)
               })
             }
