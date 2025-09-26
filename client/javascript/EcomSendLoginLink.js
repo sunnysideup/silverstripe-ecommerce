@@ -25,9 +25,6 @@ if (
           const tenMinutes = 10 * 60 * 1000
 
           if (lastSent && now - parseInt(lastSent, 10) < tenMinutes) {
-            console.log(
-              `Login link already sent for ${email} in the last 10 minutes.`
-            )
             return
           }
 
@@ -41,7 +38,6 @@ if (
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: params
           }).then(response => {
-            console.log(response)
             if (response.ok) {
               // Save throttle timestamp
               localStorage.setItem(storageKey, now.toString())
