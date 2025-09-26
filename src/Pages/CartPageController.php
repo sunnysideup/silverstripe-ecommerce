@@ -731,19 +731,18 @@ class CartPageController extends PageController
     {
         $email = $request->requestVar('email');
         $backURL = $request->requestVar('BackURL');
-        $securityToken = $request->requestVar('securitytoken');
         if (SecurityToken::inst()->checkRequest($request)) {
             return $this->httpError(400, 'Invalid security token');
         }
         $obj = Injector::inst()->get(SendLoginToken::class);
-        $outcome = $obj->send($email, $backURL, $request);
+        $obj->send($email, $backURL, $request);
         $message =  _t(
             'CartPage.LOGINLINKSENT',
-            'If you\'ve shopped with us before, a login link has been sent to your email.'
+            'If you\'ve shopped with us before, a login link has been sent to your email.
+            If you like you can use this to log-in and access your order history.
+            If you haven\'t shopped with us before, please proceed to checkout as a guest or create an account.',
         );
-        if (!Director::isLive()) {
-            $message .= $outcome ? ' - SENT!' : ' - NOT SENT!';
-        }
+
         return $message;
     }
 }
