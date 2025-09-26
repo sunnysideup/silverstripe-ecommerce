@@ -213,26 +213,30 @@ class OrderFormAddress extends Form
         }
 
         //create holder
-        $allLeftFields = CompositeField::create();
-        $allLeftFields->addExtraClass('leftOrder');
+        $allLeftFields = CompositeField::create()
+            ->setName('AllLeftFields')
+            ->addExtraClass('allLeftOrder');
 
         //member fields holder
-        $leftFieldsMember = CompositeField::create($addressFieldsMember);
-        $leftFieldsMember->addExtraClass('leftOrderMember');
+        $leftFieldsMember = CompositeField::create($addressFieldsMember)
+            ->addExtraClass('leftOrderMember');
 
         //creating shipping fields holder
-        $leftFieldsShipping = CompositeField::create($addressFieldsShipping)->setName('ShippingFields');
-        $leftFieldsShipping->addExtraClass('leftOrderShipping');
+        $leftFieldsShipping = CompositeField::create($addressFieldsShipping)
+            ->setName('ShippingFields')
+            ->addExtraClass('leftOrderShipping');
 
         //creating billing fields holder
-        $leftFieldsBilling = CompositeField::create($addressFieldsBilling)->setName('BillingFields');
-        $leftFieldsBilling->addExtraClass('leftOrderBilling');
+        $leftFieldsBilling = CompositeField::create($addressFieldsBilling)
+            ->setName('BillingFields')
+            ->addExtraClass('leftOrderBilling');
 
         //adding member fields ...
         $allLeftFields->push($leftFieldsMember);
         if ($useShippingAddressField) {
-            $leftFieldsShippingOptions = CompositeField::create($useShippingAddressField)->setName('ShippingAddressSelector');
-            $leftFieldsShippingOptions->addExtraClass('leftOrderShippingOptions');
+            $leftFieldsShippingOptions = CompositeField::create($useShippingAddressField)
+                ->setName('ShippingAddressSelector')
+                ->addExtraClass('leftOrderShippingOptions');
             $allLeftFields->push($leftFieldsShippingOptions);
         }
         if ($shippingAddressFirst) {
