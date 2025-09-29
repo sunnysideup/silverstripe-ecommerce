@@ -104,6 +104,9 @@ class KeywordSearchBuilder
             // Title: starts with full string without extra characters, e.g. Title equals "AAAA BBBB *" (note space!)
             $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase} %'");
 
+            // Title: starts with full string without extra characters, e.g. Title equals "AAAA BBBB *" (note space!)
+            $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase}%'");
+
             // Title: contains full string without extra characters, e.g. Title equals "* AAAA BBBB *" (note space!)
             $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '% {$fullPhrase} %'", $strPosition);
 
