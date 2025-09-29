@@ -6,6 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\GetVariables;
@@ -195,7 +196,10 @@ class ProductSearchFilter extends BaseApplyer
      *
      * @var array
      */
-    private static $in_group_sort_sql = ['Price' => 'DESC', 'ID' => 'DESC'];
+    private static $in_group_sort_sql = [
+        'Price' => 'DESC',
+        'ID' => 'DESC'
+    ];
 
     public static function keyword_sanitised(?string $string = ''): string
     {
@@ -702,7 +706,9 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function getSearchApi()
     {
-        return Injector::inst()->get(KeywordSearchBuilder::class);
+        return
+            Injector::inst()->get(KeywordSearchBuilder::class)
+            ->setDebug($this->debug);
     }
 
     protected function getHashBasedOnRawData(): string
