@@ -274,6 +274,13 @@ abstract class BaseApplyer
         return $sql;
     }
 
+    /**
+     *
+     * returns true when it has already been applied
+     * @param mixed $key
+     * @param mixed $params
+     * @return bool
+     */
     protected function applyStart(?string $key = null, $params = null): bool
     {
         if (! isset($this->baseClassNameForBuyables)) {
