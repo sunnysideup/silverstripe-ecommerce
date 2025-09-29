@@ -33,6 +33,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
     private static $db = [
         'Title' => 'Varchar(255)',
         'Data' => 'Varchar(2048)',
+        'Boost' => 'Decimal(4,2)',
     ];
 
     private static $has_one = [
