@@ -151,6 +151,7 @@ class Product extends Page implements BuyableModel
         'UseImageForProducts' => 'Boolean', //For use in lists.
         'Popularity' => 'Float', //For actual value
         'PopularityRank' => 'Int', //For fast sorting
+        'SearchBoost' => 'Decimal(4,2)',
     ];
 
     private static $has_one = [
@@ -532,6 +533,14 @@ class Product extends Page implements BuyableModel
                 $fields->addFieldsToTab(
                     'Root.Search',
                     [
+                        NumericField::create('SearchBoost', 'Search Boost')
+                            ->setDescription(
+                                '
+                                Higher boost means product will appear more up-front in search results.
+                                Zero is the default.
+                                Negative numbers make it less likely to appear.'
+                            )
+                            ->setScale(2),
                         LiteralField::create(
                             'SearchDetails',
                             $searchDetails
@@ -1683,5 +1692,10 @@ class Product extends Page implements BuyableModel
             $alternativeClassName = static::class;
         }
         return $this->stageTable($this->getSchema()->tableName($alternativeClassName), Versioned::get_stage());
+    }
+
+    public function getSearchBoostCalculated(): ?int
+    {
+        return $this->SearchBoost;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Search;
 
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -10,6 +12,7 @@ use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
+use Sunnysideup\Ecommerce\Interfaces\GenericProductSearchBooster;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
 
@@ -107,6 +110,11 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
             }
             $obj->Title = Sanitizer::html_to_text($product->Title);
             $obj->Data = Sanitizer::html_array_to_text_limit_words($dataAsArray);
+            $obj->Boost = $product->getSearchBoostCalculated() ?: 0;
+            $generalBoosts = self::generic_boosts();
+            foreach ($generalBoosts as $boostClass) {
+                $obj->Boost += $boostClass->getBoostValueForProduct($product) ?: 0;
+            }
             $obj->write();
         } else {
             self::remove_product($product);
@@ -122,5 +130,22 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
                 self::$already_removed_cache[$product->ID] = true;
             }
         }
+    }
+
+    protected static array $_generic_boosts;
+
+    protected static function generic_boosts(): array
+    {
+        if (! isset(self::$_generic_boosts)) {
+            self::$_generic_boosts = [];
+            $classes = ClassInfo::implementorsOf(GenericProductSearchBooster::class);
+            foreach ($classes as $class) {
+                $instance = Injector::inst()->get($class);
+                if ($instance instanceof GenericProductSearchBooster) {
+                    self::$_generic_boosts[] = $instance;
+                }
+            }
+        }
+        return self::$_generic_boosts;
     }
 }
