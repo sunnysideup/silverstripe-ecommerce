@@ -68,6 +68,8 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected $debug = false;
 
+    protected $debugKeywords = false;
+
     /**
      * Is this product list filtered or can we rely on Product::get()->filter(['ShowInSearch']).
      *
@@ -215,7 +217,9 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $this->debug = ! empty($_GET['showdebug']) && (Director::isDev() || Permission::check('ADMIN'));
+        $allowDebug = (Director::isDev() || Permission::check('ADMIN'));
+        $this->debug = ! empty($_GET['showdebug']) && $allowDebug;
+        $this->debugKeywords = ! empty($_GET['showdebugkeywords']) && $allowDebug;
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
@@ -706,9 +710,8 @@ class ProductSearchFilter extends BaseApplyer
 
     protected function getSearchApi()
     {
-        return
-            Injector::inst()->get(KeywordSearchBuilder::class)
-            ->setDebug($this->debug);
+        return Injector::inst()->get(KeywordSearchBuilder::class)
+            ->setDebug($this->debugKeywords);
     }
 
     protected function getHashBasedOnRawData(): string
