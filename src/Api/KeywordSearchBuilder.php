@@ -72,6 +72,7 @@ class KeywordSearchBuilder
     {
 
         $this->ifStatement = '';
+        $this->startIfStatement();
         //make three levels of search
         $fullPhrase = trim(preg_replace('#\s+#', ' ', (string) $phrase));
         if (strlen($fullPhrase) < 2) {
@@ -98,27 +99,24 @@ class KeywordSearchBuilder
 
         foreach ([$primaryField, $secondaryField] as $field) {
             $strPosition = $this->strPositionPhrase($fullPhrase, $field);
-            // Title: exact match with Field, e.g. Title equals "AAAA BBBB"
-            $this->addIfStatement(++$count, '"' . $primaryField . "\" = '{$fullPhrase}'");
+            if ($field === $primaryField) {
+                // Title: exact match with Field, e.g. Title equals "AAAA BBBB"
+                $this->addIfStatement(++$count, '"' . $field . "\" = '{$fullPhrase}'");
+            }
 
-            // Title: starts with full string without extra characters, e.g. Title equals "AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase} %'");
+            // Title: starts with full string and then space, e.g. Title equals "AAAA BBBB *" (note space!)
+            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '{$fullPhrase} %'");
 
-            // Title: starts with full string without extra characters, e.g. Title equals "AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '{$fullPhrase}%'");
+            // Title: contains full string with spaces around it, e.g. Title equals "* AAAA BBBB *" (note space!)
+            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '% {$fullPhrase} %'", $strPosition);
 
-            // Title: contains full string without extra characters, e.g. Title equals "* AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '% {$fullPhrase} %'", $strPosition);
-
-            // // Title: contains full string without extra characters, e.g. Title equals "*AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $primaryField . "\" LIKE '%{$fullPhrase} %'", $strPosition);
+            // // Title: contains full string without space around it "*AAAA BBBB*"
+            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '%{$fullPhrase}%'", $strPosition);
             if ($hasWordArray) {
-                foreach ([$primaryField, $secondaryField] as $field) {
-                    $this->addIfStatement(
-                        ++$count,
-                        str_replace('_FF_FIELD_GOES_HERE_', $field, $searchStringAND),
-                    );
-                }
+                $this->addIfStatement(
+                    ++$count,
+                    str_replace('_FF_FIELD_GOES_HERE_', $field, $searchStringAND),
+                );
             }
         }
 
@@ -127,7 +125,18 @@ class KeywordSearchBuilder
 
     protected function strPositionPhrase(string $fullPhrase, string $field): string
     {
-        return '+ (POSITION(\'' . $fullPhrase . '\' IN "' . $field . '") / (LENGTH("' . $field . '") + 1))';
+
+        $divisor = 5;
+        return '  +
+            (
+                1 - (
+                    MATCH ("' . $field . '") AGAINST (\'' . Convert::raw2sql($fullPhrase) . '\' IN NATURAL LANGUAGE MODE) ) / ' . $divisor . '
+            )';
+    }
+
+    protected function startIfStatement()
+    {
+        $this->ifStatement .= '(';
     }
 
     protected function addIfStatement(int $count, string $where, string $secondaryCount = '')
@@ -137,7 +146,7 @@ class KeywordSearchBuilder
 
     protected function addEndIfStatement($count)
     {
-        $this->ifStatement .= '999' . str_repeat(')', $count) . ' AS gp';
+        $this->ifStatement .= '999' . str_repeat(')', $count) . ') - "Boost" AS gp';
     }
 
     protected function createSql(string $table, string $idField, string $phrase, string $where, $limit): string
@@ -153,16 +162,12 @@ class KeywordSearchBuilder
             SELECT
                 "' . $idField . '",
                 ' . $titleField . '
-                ' . $this->ifStatement . ',
-                MATCH ("Title") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS scoreA,
-                MATCH ("Data") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) AS scoreB
+                ' . $this->ifStatement . '
             FROM "' . $table . '"
             ' . $where . '
             HAVING gp < 999
             ORDER BY
-                gp ASC,
-                scoreA DESC,
-                scoreB DESC
+                gp ASC
             LIMIT ' . $limit . ';';
     }
 
