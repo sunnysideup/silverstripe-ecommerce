@@ -129,6 +129,7 @@ class ProductSearchForm extends Form
 
         if (Director::isDev() || Permission::check('ADMIN')) {
             $fields->push(CheckboxField::create('showdebug', 'Debug Search'));
+            $fields->push(CheckboxField::create('showdebugkeywords', 'Debug Keywords'));
         }
         // actions
         $actions = FieldList::create(
