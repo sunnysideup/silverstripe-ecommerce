@@ -538,7 +538,10 @@ class Product extends Page implements BuyableModel
                                 '
                                 Higher boost means product will appear more up-front in search results.
                                 Zero is the default.
-                                Negative numbers make it less likely to appear.'
+                                Negative numbers make it less likely to appear.
+                                Use sparingly! If you use it enter a number between -5 and 5 only.
+                                For example 3 is a good number to get a badly peforming product near the front.
+                                '
                             )
                             ->setScale(2),
                         LiteralField::create(
