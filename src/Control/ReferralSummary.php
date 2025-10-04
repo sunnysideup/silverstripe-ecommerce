@@ -93,14 +93,15 @@ class ReferralSummaryAdmin extends LeftAndMain
             $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
 
             $fields = FieldList::create(
-                HeaderField::create('Heading', 'Referral Summary', 3),
+                HeaderField::create('Heading', 'Sales Referrals', 3),
                 LiteralField::create(
                     'Instructions',
                     '<p class="message warning">Use this report to see how well your marketing campaigns are doing.
-                These are raw numbers only so take them with a grain of salt.
-                They require interpretation and common sense.
-                </p>'
+                    These are raw numbers only so take them with a grain of salt.
+                    They require interpretation and common sense.
+                    </p>'
                 ),
+                HeaderField::create('DataSelectionHeader', 'Select Data', 3),
                 CompositeField::create(
                     DateField::create('DateFrom', 'Date From')->setValue($defaultFrom),
                     DateField::create('DateUntil', 'Date Until')->setValue($defaultUntil),
@@ -153,7 +154,7 @@ class ReferralSummaryAdmin extends LeftAndMain
 
             );
             $actions = FieldList::create(
-                FormAction::create('doRunReport', 'Run')
+                FormAction::create('doRunReport', 'Create report')
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-outline-primary'),
             );
@@ -188,7 +189,7 @@ class ReferralSummaryAdmin extends LeftAndMain
         if ($this->getRequest()->httpMethod() === 'GET' && $this->getRequest()->getVar('action_doRunReport')) {
             $resultsHtml = $this->buildResultsHtml($form->getData());
             $form->Fields()->insertBefore(
-                'DateFrom',
+                'DataSelectionHeader',
                 LiteralField::create('Results', $resultsHtml)
             );
         }
@@ -374,8 +375,10 @@ class ReferralSummaryAdmin extends LeftAndMain
 
     protected function arrayToTableWithBars(array $array, string $statistic): string
     {
+        $html = '<h2>Results</h2>';
         if (!count($array)) {
-            return '<p class=\'message warning\'>no data</p>';
+            $html .= '<p class=\'message warning\'>no data</p>';
+            return $html;
         }
 
         // find max of selected statistic
@@ -390,10 +393,10 @@ class ReferralSummaryAdmin extends LeftAndMain
 
         $escapeFN = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
 
-        $html = '
+        $html .= '
         <style>
             .ReferralSummaryAdmin .form__field-holder  {max-width: 100%!important;}
-            .ref-table { border-collapse: collapse; margin: 2rem 0; width: 100%; }
+            .ref-table { border-collapse: collapse; margin-bottom: 4rem; width: 100%; }
             .ref-table th, .ref-table td { padding: 6px 8px; border: 1px solid #ddd; font-size: 12px; min-width: 150px; max-width: 400px; }
             .ref-table td, .ref-table td * { overflow-wrap: anywhere; }
             .ref-table th { background: #f5f5f5; text-align: center; }
