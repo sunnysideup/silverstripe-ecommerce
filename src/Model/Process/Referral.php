@@ -378,9 +378,11 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public function AttachData()
     {
-        $change = $this->Processed ? false : true;
-        $this->Processed = true;
         $order = $this->getOrderCached();
+        $stale = strtotime($this->Created) < strtotime('-180 days') ? true : false;
+        if ($stale) {
+            $change = true;
+        }
         if ($order) {
             if (!$this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
@@ -410,6 +412,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             }
         }
         if ($change) {
+            $this->Processed = true;
             $this->write();
         }
     }

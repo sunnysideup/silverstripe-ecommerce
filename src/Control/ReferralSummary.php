@@ -2,148 +2,315 @@
 
 declare(strict_types=1);
 
-namespace Sunnysideup\Ecommerce\Control;
+namespace Sunnysideup\Ecommerce\Admin;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use SilverStripe\Control\Controller;
-use SilverStripe\Core\Environment;
-use SilverStripe\ORM\DB;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Process\Referral;
 
-/**
- * Class \Sunnysideup\Ecommerce\Control\QuickUpdates
- *
- */
-class ReferralSummary extends Controller
+class ReferralSummaryAdmin extends LeftAndMain
 {
-    private static $url_segment = 'admin/ecommerce/referral-summary';
+    private static string $url_segment = 'referral-summary';
+    private static string $menu_title = 'Referral Summary';
+    private static int $menu_priority = -9999; // adjust if needed
+    private static string $menu_icon_class = 'font-icon-chart-line';
+    private static array $required_permission_codes = ['ADMIN'];
 
-    private static $allowed_actions = [
-        'prepdata' => 'ADMIN',
-        'showdata' => 'ADMIN',
+    private static $reporting_periods = [
+        'Day' => 'Day',
+        'Week' => 'Week',
+        'Month' => 'Month',
+        'Quarter' => 'Quarter',
+        'Year' => 'Year',
+        'AllTime' => 'AllTime',
     ];
 
+    private static $stats_to_report_on = [
+        'NumberOfClicks' => 'Number Of Clicks',
+        'NumberOfClicksIntoOrders' => 'Clicks → Orders',
+        'TotalOrderAmountInvoiced' => 'Total Invoiced',
+        'TotalOrderAmountPaid' => 'Total Paid',
+        'AverageClicksIntoOrders' => 'Avg Clicks → Orders',
+        'AverageOrderAmountPaidPerClick' => 'Avg Paid / Order',
+    ];
 
+    private static $formatting_rules = [
+        'NumberOfClicks' => 'Number',
+        'NumberOfClicksIntoOrders' => 'Number',
+        'TotalOrderAmountInvoiced' => 'Currency',
+        'TotalOrderAmountPaid' => 'Currency',
+        'AverageClicksIntoOrders' => 'Number',
+        'AverageOrderAmountPaidPerClick' => 'Currency',
+    ];
 
-    private static $max_days_of_interest = 720;
-    private static $recalculate_days_for_prep_data = 180;
+    private static $default_form_values = [
+        'DateFrom' => '',
+        'DateUntil' => '',
+        'Keyword' => '',
+        'OrderType' => 'Completed',
+        'BreakdownBy' => 'Week',
+        'ShowFrom' => 'No',
+        'ShowSource' => 'No',
+        'ShowMedium' => 'No',
+        'ShowCampaign' => 'No',
+        'Statistic' => 'TotalOrderAmountPaid',
+    ];
 
-    public function index($request) {}
+    protected array $myFormData = [];
 
-    protected function init()
+    /** route actions */
+    private static array $allowed_actions = [
+        'EditForm' => 'ADMIN',
+        'doRunReport' => 'ADMIN',
+        'doPrepData' => 'ADMIN',
+    ];
+
+    /** config */
+    private static int $max_days_of_interest = 720;
+    private static int $recalculate_days_for_prep_data = 180;
+
+    public function getEditForm($id = null, $fields = null): Form
     {
-        parent::init();
-        Environment::increaseTimeLimitTo(600);
-        $allowedActions = $this->Config()->get('allowed_actions');
-        $securityCheck = $allowedActions['index'] ?? 'ADMIN';
-        if (!Permission::check($securityCheck)) {
-            return Security::permissionFailure($this);
+
+        if ($this->getRequest()->getSession()->get('ReferralSummaryAdminDataPrepped')) {
+            $today = new DateTimeImmutable('today');
+            $defaultFrom  = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
+            $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
+
+            $fields = FieldList::create(
+                HeaderField::create('Heading', 'Referral Summary', 3),
+                LiteralField::create(
+                    'Instructions',
+                    '<p class="message warning">Use this report to see how well your marketing campaigns are doing.
+                These are raw numbers only so take them with a grain of salt.
+                They require interpretation and common sense.
+                </p>'
+                ),
+                CompositeField::create(
+                    DateField::create('DateFrom', 'Date From')->setValue($defaultFrom),
+                    DateField::create('DateUntil', 'Date Until')->setValue($defaultUntil),
+                ),
+                TextField::create(
+                    'Keyword',
+                    'Keyword (in From, Source, Medium, Campaign - optional)',
+                    $this->myFormData['Keyword'] ?? ''
+                ),
+                DropdownField::create(
+                    'OrderType',
+                    'Order Type',
+                    [
+                        'Uncompleted' => 'Uncompleted',
+                        'Completed' => 'Completed',
+                        'All' => 'All',
+                    ]
+                )->setValue($this->myFormData['OrderType'] ?? $this->getDefaultFormValue('OrderType')),
+                DropdownField::create(
+                    'BreakdownBy',
+                    'Reporting Period',
+                    $this->config()->get('reporting_periods')
+                )->setValue($this->myFormData['BreakdownBy'] ?? $this->getDefaultFormValue('BreakdownBy')),
+                DropdownField::create(
+                    'ShowFrom',
+                    'Breakdown By Company',
+                    ['No' => 'No', 'Yes' => 'Yes']
+                )->setValue($this->myFormData['ShowFrom'] ?? $this->getDefaultFormValue('ShowFrom')),
+                DropdownField::create(
+                    'ShowSource',
+                    'Breakdown By Source',
+                    ['No' => 'No', 'Yes' => 'Yes']
+                )->setValue($this->myFormData['ShowSource'] ?? $this->getDefaultFormValue('ShowSource')),
+                DropdownField::create(
+                    'ShowMedium',
+                    'Breakdown By Medium',
+                    ['No' => 'No', 'Yes' => 'Yes']
+                )->setValue($this->myFormData['ShowMedium'] ?? $this->getDefaultFormValue('ShowMedium')),
+                DropdownField::create(
+                    'ShowCampaign',
+                    'Breakdown By Campaign',
+                    ['No' => 'No', 'Yes' => 'Yes']
+                )->setValue($this->myFormData['ShowCampaign'] ?? $this->getDefaultFormValue('ShowCampaign')),
+                DropdownField::create(
+                    'Statistic',
+                    'Statistic (single focus)',
+                    $this->config()->get('stats_to_report_on')
+
+                )->setValue($this->myFormData['Statistic'] ?? $this->getDefaultFormValue('Statistic'))
+
+            );
+            $actions = FieldList::create(
+                FormAction::create('doRunReport', 'Run')
+                    ->setUseButtonTag(true)
+                    ->addExtraClass('btn-outline-primary'),
+            );
+        } else {
+            $actions = FieldList::create(
+                FormAction::create('doPrepData', 'Prepare Data (you may need to click this more than once)')
+                    ->setUseButtonTag(true)
+                    ->addExtraClass('btn-outline-warning')
+            );
+            $fields = FieldList::create(
+                CompositeField::create(
+                    HeaderField::create('Heading', 'Referral Summary - Data Preparation', 3),
+                    LiteralField::create(
+                        'Instructions',
+                        '<p class="message warning">To speed up the reporting process, we need to prepare the data first.
+                        This is a one-off process that may take a while depending on how much data you have.
+                        Please click the button below to start the process.
+                        If you have a lot of data, you may need to click it more than once.
+                        </p>'
+                    )
+                )
+            );
         }
-        $this->printMenu();
+
+
+        $form = Form::create($this, 'EditForm', $fields, $actions)
+            ->addExtraClass('panel panel--padded panel--scrollable cms-content-view');
+        // $form->setTemplate('LeftAndMain_EditForm');
+        $form->setFormMethod('get');
+
+        // if we have posted, render results below the form
+        if ($this->getRequest()->httpMethod() === 'GET' && $this->getRequest()->getVar('action_doRunReport')) {
+            $resultsHtml = $this->buildResultsHtml($form->getData());
+            $form->Fields()->insertBefore(
+                'DateFrom',
+                LiteralField::create('Results', $resultsHtml)
+            );
+        }
+
+        return $form;
     }
 
-    public function prepdata($request)
+    public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
     {
-        $daysAgo = $this->config()->get('recalculate_days_for_prep_data');
-        $refs = Referral::get()->filterAny(
-            [
-                "Created:GreaterThan" => date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59',
-                'Processed' => 0,
-            ]
-        );
+        $limit = 999;
+        $daysAgo = (int) $this->config()->get('recalculate_days_for_prep_data');
+        $filter = [
+            'Created:GreaterThan' => date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59',
+            'Processed' => 0,
+        ];
+        $refs = Referral::get()->filterAny($filter)
+            ->limit($limit);
         foreach ($refs as $ref) {
             $ref->AttachData();
         }
-        return $this->redirect($this->Link('showdata'));
+        $refsCount = Referral::get()->filterAny($filter)->count();
+        if ($refsCount < $limit) {
+            $this->getRequest()->getSession()->set('ReferralSummaryAdminDataPrepped', true);
+        }
+        return $this->redirectBack();
     }
 
-    public function showdata($request)
+    public function doRunReport(array $data, Form $form)
     {
-        echo $this->renderReportForm($this->request->getVars());
-        echo $this->renderResults($this->request->getVars());
+        // simply re-render form with results block
+        $this->myFormData = $data;
+        $form->loadDataFrom($data);
+        return [];
     }
 
+    /** ---------- helpers ---------- */
 
-
-    protected function renderResults(array $getVars): void
+    protected function buildResultsHtml(array $vars): string
     {
-        // --- read & validate inputs -------------------------------------------
         $isYmd = static fn(string $s): bool => (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
 
         $today = new DateTimeImmutable('today');
-        $defaultDateFrom  = $today->modify('-3 months')->format('Y-m-d');
-        $defaultDateUntil = $today->modify('-1 week')->format('Y-m-d');
+        $defaultFrom  = $today->modify('-3 months')->format('Y-m-d');
+        $defaultUntil = $today->modify('-1 week')->format('Y-m-d');
 
-        $dateFrom  = isset($getVars['DateFrom'])  && is_string($getVars['DateFrom'])  && $isYmd($getVars['DateFrom'])  ? $getVars['DateFrom']  : $defaultDateFrom;
-        $dateUntil = isset($getVars['DateUntil']) && is_string($getVars['DateUntil']) && $isYmd($getVars['DateUntil']) ? $getVars['DateUntil'] : $defaultDateUntil;
+        $dateFrom  = isset($vars['DateFrom']) && is_string($vars['DateFrom']) && $isYmd($vars['DateFrom']) ? $vars['DateFrom'] : $defaultFrom;
+        $dateUntil = isset($vars['DateUntil']) && is_string($vars['DateUntil']) && $isYmd($vars['DateUntil']) ? $vars['DateUntil'] : $defaultUntil;
 
-        $orderType = $getVars['OrderType'] ?? 'Completed';
-        if (!in_array($orderType, ['Uncompleted', 'Completed', 'All'], true)) {
-            $orderType = 'Completed';
-        }
+        $orderType = in_array(($vars['OrderType'] ?? $this->getDefaultFormValue('OrderType')), ['Uncompleted', 'Completed', 'All'], true)
+            ? $vars['OrderType']
+            : $this->getDefaultFormValue('OrderType');
 
-        $includeFrom     = (($getVars['ShowFrom'] ?? 'No') === 'Yes');
-        $includeSource    = (($getVars['ShowSource'] ?? 'No') === 'Yes');
-        $includeMedium    = (($getVars['ShowMedium'] ?? 'No') === 'Yes');
-        $includeCampaign   = (($getVars['ShowCampaign'] ?? 'No') === 'Yes');
-        if ($includeCampaign) {
-            $includeFrom = true; // preserve your original rule
-        }
+        $includeFrom = (($vars['ShowFrom'] ?? 'No') === 'Yes');
+        $includeSource = (($vars['ShowSource'] ?? 'No') === 'Yes');
+        $includeMedium = (($vars['ShowMedium'] ?? 'No') === 'Yes');
+        $includeCampaign = (($vars['ShowCampaign'] ?? 'No') === 'Yes');
 
-        $breakdownBy = $getVars['BreakdownBy'] ?? 'Week';
-        if (!in_array($breakdownBy, ['Day', 'Week', 'Quarter', 'Year', 'AllTime'], true)) {
-            $breakdownBy = 'Week';
-        }
 
-        // --- date key formatter ------------------------------------------------
+        $periods = (array) $this->config()->get('reporting_periods');
+        $breakdownBy = isset($periods[$vars['BreakdownBy'] ?? '']) ? $vars['BreakdownBy'] : $this->getDefaultFormValue('BreakdownBy');
+
+        $stats = (array) $this->config()->get('stats_to_report_on');
+        $statistic = isset($stats[$vars['Statistic'] ?? '']) ? $vars['Statistic'] : $this->getDefaultFormValue('Statistic');
+
         $formatKey = static function (DateTimeInterface $dt, string $mode): array {
             return match ($mode) {
-                'Day'      => [$dt->format('Y-m-d'),         $dt->format('Y-m-d')],
-                'Week'     => [$dt->format('o-\WW'),         $dt->format('o-\WW')],
-                'Quarter'  => [
+                'Day' => [$dt->format('Y-m-d'), $dt->format('Y-m-d')],
+                'Week' => [$dt->format('o-\WW'), $dt->format('o-\WW')],
+                'Month' => [$dt->format('Y-m'), $dt->format('Y-m')],
+                'Quarter' => [
                     $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
                     $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
                 ],
-                'Year'     => [$dt->format('Y'),             $dt->format('Y')],
-                'AllTime'  => ['AllTime',                    'AllTime'],
+                'Year' => [$dt->format('Y'), $dt->format('Y')],
+                'AllTime' => ['AllTime', 'AllTime'],
             };
         };
 
-        // --- base query --------------------------------------------------------
         $filters = [
             'Created:GreaterThanOrEqual' => $dateFrom . ' 00:00:00',
-            'Created:LessThanOrEqual'    => $dateUntil . ' 23:59:59',
+            'Created:LessThanOrEqual' => $dateUntil . ' 23:59:59',
         ];
         if ($orderType === 'Completed') {
             $filters['IsSubmitted'] = 1;
         } elseif ($orderType === 'Uncompleted') {
             $filters['IsSubmitted'] = 0;
         }
+        if (!empty($vars['Keyword'])) {
+            $keywordFilters = [];
+            $keyword = $vars['Keyword'];
+            $keywordFilters['From:PartialMatch'] = $keyword;
+            $keywordFilters['Source:PartialMatch'] = $keyword;
+            $keywordFilters['Medium:PartialMatch'] = $keyword;
+            $keywordFilters['Campaign:PartialMatch'] = $keyword;
+            $idList = Referral::get()
+                ->filterAny($keywordFilters)
+                ->column('ID');
+            if (count($idList)) {
+                $filters['ID'] = $idList;
+            } else {
+                $filters['ID'] = 0;
+            }
+        }
 
-        /** @var \SilverStripe\ORM\DataList $refs */
         $refs = Referral::get()
             ->filter($filters)
             ->sort(['ID' => 'DESC'])
             ->limit(999999);
 
-        // --- aggregation -------------------------------------------------------
         $list = [];
 
         foreach ($refs as $ref) {
-            /** @var Referral $ref */
             $createdTs = strtotime((string) $ref->Created);
-            $created   = (new DateTimeImmutable())->setTimestamp($createdTs);
+            $created = (new DateTimeImmutable())->setTimestamp($createdTs);
 
             [$dateKey, $dateLabel] = $breakdownBy === 'AllTime'
-                ? ['AllTime', $dateFrom . ' .. ' . $dateUntil]
+                ? ['AllTime', $dateFrom . ' ... ' . $dateUntil]
                 : $formatKey($created, $breakdownBy);
 
-            $from     = $ref->From ?: 'none';
-            $source   = $ref->Source ?: 'none';
-            $medium   = $ref->Medium ?: 'none';
+            $from = $ref->From ?: 'none';
+            $source = $ref->Source ?: 'none';
+            $medium = $ref->Medium ?: 'none';
             $campaign = $ref->Campaign ?: 'none';
 
             $key = $dateKey;
@@ -187,194 +354,114 @@ class ReferralSummary extends Controller
 
             $list[$key]['NumberOfClicks']++;
 
-            $hasSubmittedOrder = (bool) $ref->IsSubmitted;
-            if ($hasSubmittedOrder) {
+            if ((bool) $ref->IsSubmitted) {
                 $list[$key]['NumberOfClicksIntoOrders']++;
                 $list[$key]['TotalOrderAmountInvoiced'] += (float) $ref->AmountInvoiced;
-                $list[$key]['TotalOrderAmountPaid']     += (float) $ref->AmountPaid;
+                $list[$key]['TotalOrderAmountPaid'] += (float) $ref->AmountPaid;
             }
 
-            // running averages
-            $clicks    = (int) $list[$key]['NumberOfClicks'];
+            $clicks = (int) $list[$key]['NumberOfClicks'];
             $intoOrder = (int) $list[$key]['NumberOfClicksIntoOrders'];
 
-            $list[$key]['AverageClicksIntoOrders']        = $clicks > 0    ? round($intoOrder / $clicks, 2) : 0.0;
+            $list[$key]['AverageClicksIntoOrders'] = $clicks > 0 ? round($intoOrder / $clicks, 2) : 0.0;
             $list[$key]['AverageOrderAmountPaidPerClick'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountInvoiced'] / $intoOrder, 2) : 0.0;
         }
 
         ksort($list, SORT_NATURAL);
 
-        echo $this->arrayToTable($list);
+        return $this->arrayToTableWithBars($list, (string) $statistic);
     }
 
-    protected function printMenu()
+    protected function arrayToTableWithBars(array $array, string $statistic): string
     {
-        $function = $this->request->param('Action');
-        $title = '';
-        if ($function !== 'prepdata' || $function === 'showdata') {
-            $title = $menuList[$function] ?? '- Please <a href="/' . $this->Link('prepdata') . '">prep data</a> and then select a report';
-        }
-        echo '<h1>Referral Summary' . $title . '</h1>';
-    }
-
-    protected function renderReportForm(array $getVars): string
-    {
-        $isYmd = static fn(string $s): bool => (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
-
-        $today = new DateTimeImmutable('today');
-        $defaultDateFrom  = $today->modify('-3 months')->format('Y-m-d');
-        $defaultDateUntil = $today->modify('-1 week')->format('Y-m-d');
-
-        $dateFrom  = isset($getVars['DateFrom'])  && is_string($getVars['DateFrom'])  && $isYmd($getVars['DateFrom'])  ? $getVars['DateFrom']  : $defaultDateFrom;
-        $dateUntil = isset($getVars['DateUntil']) && is_string($getVars['DateUntil']) && $isYmd($getVars['DateUntil']) ? $getVars['DateUntil'] : $defaultDateUntil;
-
-        $orderType  = ($getVars['OrderType'] ?? 'Completed');
-        if (!in_array($orderType, ['Uncompleted', 'Completed', 'All'], true)) {
-            $orderType = 'Completed';
+        if (!count($array)) {
+            return '<p class=\'message warning\'>no data</p>';
         }
 
-        $showFrom = ($getVars['ShowFrom'] ?? 'No');
-        if (!in_array($showFrom, ['Yes', 'No'], true)) {
-            $showFrom = 'No';
-        }
-
-        $showSource = ($getVars['ShowSource'] ?? 'No');
-        if (!in_array($showSource, ['Yes', 'No'], true)) {
-            $showSource = 'No';
-        }
-
-        $showMedium = ($getVars['ShowMedium'] ?? 'No');
-        if (!in_array($showMedium, ['Yes', 'No'], true)) {
-            $showMedium = 'No';
-        }
-
-        $showCampaign = ($getVars['ShowCampaign'] ?? 'No'); // keeping your field name
-        if (!in_array($showCampaign, ['Yes', 'No'], true)) {
-            $showCampaign = 'No';
-        }
-
-        $breakdownBy = ($getVars['BreakdownBy'] ?? 'Week');
-        if (!in_array($breakdownBy, ['Day', 'Week', 'Quarter', 'Year', 'AllTime'], true)) {
-            $breakdownBy = 'Week';
-        }
-
-        $sel = static fn(string $cur, string $val): string => $cur === $val ? ' selected' : '';
-
-        $hDateFrom  = htmlspecialchars($dateFrom, ENT_QUOTES);
-        $hDateUntil = htmlspecialchars($dateUntil, ENT_QUOTES);
-
-        return
-            '<form id=\'reportForm\' method=\'get\'>' .
-
-            '<label for=\'DateFrom\'>Date From</label>' .
-            '<input type=\'date\' id=\'DateFrom\' name=\'DateFrom\' value=\'' . $hDateFrom . '\' required>' .
-            '<hr />' .
-            '<label for=\'DateUntil\'>Date Until</label>' .
-            '<input type=\'date\' id=\'DateUntil\' name=\'DateUntil\' value=\'' . $hDateUntil . '\' required>' .
-            '<hr />' .
-            '<label for=\'OrderType\'>Order Type</label>' .
-            '<select id=\'OrderType\' name=\'OrderType\'>' .
-            '<option value=\'Uncompleted\'' . $sel($orderType, 'Uncompleted') . '>Uncompleted</option>' .
-            '<option value=\'Completed\''   . $sel($orderType, 'Completed')   . '>Completed</option>' .
-            '<option value=\'All\''         . $sel($orderType, 'All')         . '>All</option>' .
-            '</select>' .
-            '<hr />' .
-            '<label for=\'ShowFrom\'>Breakdown By Company</label>' .
-            '<select id=\'ShowFrom\' name=\'ShowFrom\'>' .
-            '<option value=\'Yes\'' . $sel($showFrom, 'Yes') . '>Yes</option>' .
-            '<option value=\'No\''  . $sel($showFrom, 'No')  . '>No</option>' .
-            '</select>' .
-            '<hr />' .
-            '<label for=\'ShowSource\'>Breakdown By Source</label>' .
-            '<select id=\'ShowSource\' name=\'ShowSource\'>' .
-            '<option value=\'Yes\'' . $sel($showSource, 'Yes') . '>Yes</option>' .
-            '<option value=\'No\''  . $sel($showSource, 'No')  . '>No</option>' .
-            '</select>' .
-            '<hr />' .
-            '<label for=\'ShowMedium\'>Breakdown By Medium</label>' .
-            '<select id=\'ShowMedium\' name=\'ShowMedium\'>' .
-            '<option value=\'Yes\'' . $sel($showMedium, 'Yes') . '>Yes</option>' .
-            '<option value=\'No\''  . $sel($showMedium, 'No')  . '>No</option>' .
-            '</select>' .
-            '<hr />' .
-            '<label for=\'ShowCampaign\'>Breakdown By Campaign</label>' .
-            '<select id=\'ShowCampaign\' name=\'ShowCampaign\'>' .
-            '<option value=\'Yes\'' . $sel($showCampaign, 'Yes') . '>Yes</option>' .
-            '<option value=\'No\''  . $sel($showCampaign, 'No')  . '>No</option>' .
-            '</select>' .
-            '<hr />' .
-            '<label for=\'BreakdownBy\'>Reporting Period</label>' .
-            '<select id=\'BreakdownBy\' name=\'BreakdownBy\'>' .
-            '<option value=\'Day\''     . $sel($breakdownBy, 'Day')     . '>Day</option>' .
-            '<option value=\'Week\''    . $sel($breakdownBy, 'Week')    . '>Week</option>' .
-            '<option value=\'Quarter\'' . $sel($breakdownBy, 'Quarter') . '>Quarter</option>' .
-            '<option value=\'Year\''    . $sel($breakdownBy, 'Year')    . '>Year</option>' .
-            '<option value=\'AllTime\'' . $sel($breakdownBy, 'AllTime') . '>AllTime</option>' .
-            '</select>' .
-            '<hr />' .
-            '<button type=\'submit\'>Run</button>' .
-            '</form>';
-    }
-
-    protected function arrayToTable(array $array): string
-    {
-        if (count($array)) {
-            $html = '
-            <style>
-                table {
-                    border-collapse: collapse;
-                    margin: 4rem auto;
-                    width: 80%;
-
-                }
-                th, td {
-                    padding: 5px;
-                    text-align: right;
-                    width: 16.666;
-                }
-                th {
-                    background-color: #eee;
-                    text-align: center;
-                }
-                td {
-                    font-size: 10px;
-                }
-                td.string {
-                    text-align: left;
-                }
-                h3 {
-                    text-align: center;
-                }
-            </style>
-            <table border="1">';
-
-            // Header row
-            $html .= '<thead><tr>';
-            foreach ($array[array_key_first($array)] as $key => $value) {
-                $html .= '<th colspan="1">' . $this->camelCaseToWords($key) . '</th>';
+        // find max of selected statistic
+        $max = 0.0;
+        foreach ($array as $row) {
+            $val = (float) ($row[$statistic] ?? 0);
+            if ($val > $max) {
+                $max = $val;
             }
-            $html .= '</tr><thead><tbody>';
-
-            // Data rows
-            foreach ($array as $row) {
-                $html .= '<tr>';
-                foreach ($row as $cell) {
-                    $isNumber = is_numeric($cell);
-                    $html .= '<td class="' . ($isNumber ? 'number' : 'string') . '">' . str_replace('|', ' | ', (string) $cell) . '</td>';
-                }
-                $html .= '</tr>';
-            }
-
-            $html .= '</tbody></table>';
-        } else {
-            $html = '<p class="message warning">no data</p>';
         }
+        $max = $max > 0 ? $max : 1.0;
+
+        $escapeFN = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
+
+        $html = '
+        <style>
+            .ReferralSummaryAdmin .form__field-holder  {max-width: 100%!important;}
+            .ref-table { border-collapse: collapse; margin: 2rem 0; width: 100%; }
+            .ref-table th, .ref-table td { padding: 6px 8px; border: 1px solid #ddd; font-size: 12px; min-width: 150px; max-width: 400px; }
+            .ref-table td, .ref-table td * { overflow-wrap: anywhere; }
+            .ref-table th { background: #f5f5f5; text-align: center; }
+            .ref-string { text-align: left; }
+            .ref-num { text-align: right; white-space: nowrap; }
+            .ref-bar { height: 6px; background: #9aa0a6; margin-top: 4px; border-radius: 3px; }
+            .ref-stat-col { min-width: 180px; }
+        </style>
+        <table class=\'ref-table\'>';
+
+        // header
+        $first = reset($array);
+        $html .= '<thead><tr>';
+        $headerkeys = $this->config()->get('stats_to_report_on');
+        $formattingRules = $this->config()->get('formatting_rules');
+        foreach ($first as $key => $cell) {
+            $isStat =  ((string) $key === $statistic);
+            $isHeader = !$isStat && !isset($headerkeys[$key]);
+            $label = $this->camelCaseToWords((string) $key);
+            if ($isStat) {
+                $extra = $isStat ? ' class=\'ref-stat-col\'' : '';
+                $html .= '<th' . $extra . '>' . $escapeFN($label) . '</th>';
+            } elseif ($isHeader) {
+                $html .= '<th>' . $escapeFN((string) $label) . '</th>';
+            }
+        }
+        $html .= '</tr></thead><tbody>';
+
+        // rows
+        foreach ($array as $row) {
+            $html .= '<tr>';
+            foreach ($row as $key => $cell) {
+                $isStat =  ((string) $key === $statistic);
+                $isHeader = !$isStat && !isset($headerkeys[$key]);
+                if ($isStat) {
+                    $format = $formattingRules[$key] ?? 'String';
+                    $val = (float) $cell;
+                    $width = (int) round(($val / $max) * 100, 0);
+                    if ($format === 'Currency') {
+                        $label = 'NZD' . number_format((float) $cell, 0);
+                    } elseif ($format === 'Number') {
+                        $label = number_format((float) $cell, 0);
+                    } else {
+                        $label = (string) $cell;
+                    }
+                    $html .= '<td class=\'ref-num\'>'
+                        . $escapeFN((string) $label)
+                        . '<div class=\'ref-bar\' style=\'width:' . $width . '%\'></div>'
+                        . '</td>';
+                } elseif ($isHeader) {
+                    $html .= '<td class=\'ref-string\'>' . $escapeFN((string) $cell) . '</td>';
+                }
+            }
+            $html .= '</tr>';
+        }
+
+        $html .= '</tbody></table>';
+
         return $html;
     }
 
     public function camelCaseToWords(string $string): string
     {
-        $string = preg_replace('/(?<!^)[A-Z]/', ' $0', $string);
-        return $string;
+        return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', (string) $string);
+    }
+
+    protected function getDefaultFormValue(string $key): string
+    {
+        return $this->config()->get('default_form_values')[$key] ?? '';
     }
 }

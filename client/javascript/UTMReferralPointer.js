@@ -167,7 +167,7 @@ const sendToServer = utmData => {
     const fromUrl = getUTMParameters()
     saveFirstTouch(fromUrl)
   }
-  if (hasUTMParameters() && window.LinkToSendReferral) {
+  if (window.LinkToSendReferral && hasUTMParameters()) {
     const utmAndMeta = loadFromStorage(true) // include meta for server
     if (Object.keys(utmAndMeta).length) sendToServer(utmAndMeta)
   }
