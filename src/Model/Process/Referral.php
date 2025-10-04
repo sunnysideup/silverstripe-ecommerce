@@ -73,6 +73,11 @@ class Referral extends DataObject implements EditableEcommerceObject
             $list = Config::inst()->get(Referral::class, 'referral_sources');
             $source = [];
             $from = [];
+            $metaData = [
+                'LandingUrl' => $params['_landingUrl'] ?? '',
+                'Referrer' => $params['_referrer'] ?? '',
+                'CapturedAt' => $params['_capturedAt'] ?? '',
+            ];
             foreach ($list as $getVar => $name) {
                 if (isset($params[$getVar])) {
                     $val = $params[$getVar];
@@ -101,6 +106,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             }
             $ref->Source = implode(' | ', array_filter(array_unique($source)));
             $ref->From = implode(' | ', array_filter(array_unique($from)));
+            $ref->MetaData = json_encode($metaData);
             $ref->write();
         }
         return null;
@@ -114,6 +120,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     private static $table_name = 'Referral';
 
     private static $db = [
+        'MetaData' => 'Text', // json encoded array
         'From' => 'Varchar(100)',
         'Source' => 'Varchar(100)',
         'Medium' => 'Varchar(100)',
