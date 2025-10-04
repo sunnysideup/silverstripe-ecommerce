@@ -1,99 +1,174 @@
 const getVarsToExpect = [
+  // Standard UTM
   'utm_source',
   'utm_medium',
   'utm_campaign',
   'utm_term',
   'utm_content',
-  'fbclid',
-  'gad',
+
+  // Google Ads / Analytics
   'gclid',
   'gclsrc',
-  'twclid',
-  'gid',
+  'gad',
+  'gbraid',
+  'wbraid',
+  'dclid',
+
+  // Facebook / Meta
+  'fbclid',
   'fb_clickid',
+  'fbc',
+  'fbp',
+
+  // Microsoft / Bing
+  'msclkid',
+
+  // TikTok
+  'ttclid',
+
+  // Twitter / X
   'twclid',
+
+  // LinkedIn
+  'li_fat_id',
+
+  // Pinterest
+  'epik',
+
+  // Snapchat
+  'sccid',
+
+  // Generic / Affiliate / Referral
+  'ref',
   'rf',
-  'subid',
-  'referral_code',
   'referrer',
-  'direct',
+  'referral',
+  'referral_code',
+  'affid',
+  'affsource',
+  'aff_sub',
+  'aff_sub2',
+  'aff_sub3',
+  'aff_sub4',
+  'aff_sub5',
+  'subid',
+  'sub_id',
+  'partner',
+  'partnerid',
+  'cid',
+  'campaignid',
+  'adid',
+  'creative',
+  'clickid',
+
+  // Channel grouping
   'organic',
+  'direct',
   'social',
   'email',
+  'push',
   'other'
 ]
 
-function getUTMParameters () {
-  // console.log('getting params from url')
+// one-bucket storage key
+const storageKey = `${window.location.host}.utm_data`
+
+const hasUTMParameters = () => {
+  try {
+    const raw = localStorage.getItem(storageKey)
+    if (!raw) return false
+    const obj = JSON.parse(raw)
+    return Object.keys(obj).some(k => getVarsToExpect.includes(k) && obj[k])
+  } catch {
+    return false
+  }
+}
+
+const metaKeys = ['_capturedAt', '_landingUrl', '_referrer']
+
+// write-once save incl. meta
+const saveFirstTouch = data => {
+  if (!hasUTMParameters() && Object.keys(data).length) {
+    const meta = {
+      _capturedAt: new Date().toISOString(),
+      _landingUrl: window.location.href,
+      _referrer: document.referrer || ''
+    }
+    saveToStorage({ ...data, ...meta })
+  }
+}
+
+const getUTMParameters = () => {
   const params = new URLSearchParams(window.location.search)
-  const utmParams = {}
-  getVarsToExpect.forEach(param => {
-    if (params.has(param)) {
-      utmParams[param] = params.get(param)
+  const found = {}
+  getVarsToExpect.forEach(k => {
+    if (params.has(k)) {
+      const v = params.get(k)
+      if (v != null && v !== '') found[k] = v
     }
   })
-  return utmParams
+  return found
 }
 
-function saveToLocalStorage (data) {
-  for (const key in data) {
-    localStorage.setItem(key, data[key])
+const loadFromStorage = (includeMeta = false) => {
+  try {
+    const raw = localStorage.getItem(storageKey)
+    if (!raw) return {}
+    const obj = JSON.parse(raw)
+    if (includeMeta) return obj
+
+    // default: only UTM/trackers
+    const filtered = {}
+    getVarsToExpect.forEach(k => {
+      if (obj?.[k]) filtered[k] = obj[k]
+    })
+    return filtered
+  } catch {
+    return {}
   }
 }
 
-function getUTMDataFromLocalStorage () {
-  // console.log('getting data from local storage')
-  const utmData = {}
-  getVarsToExpect.forEach(param => {
-    const value = localStorage.getItem(param)
-    if (value) {
-      utmData[param] = value
-    }
-  })
-  return utmData
-}
-
-function clearLocalStorage () {
-  // console.log('clearing local storage')
-  getVarsToExpect.forEach(param => {
-    localStorage.removeItem(param)
-  })
-}
-
-function sendUTMDataToServer (utmData) {
-  // console.log('sending to server')
-  const baseTag = document.querySelector('base')
-  let baseHref = baseTag ? baseTag.getAttribute('href') : null
-
-  if (baseHref) {
-    // Remove trailing slash if it exists
-    baseHref = baseHref.endsWith('/') ? baseHref.slice(0, -1) : baseHref
-    const queryParams = new URLSearchParams(utmData).toString()
-    const url = `${baseHref}/shoppingcart/addreferral?${queryParams}`
-
-    fetch(url)
-      .then(response => response.text())
-      .then(data => {
-        // console.log(data)
-        if (parseInt(data) > 0) {
-          clearLocalStorage()
-        }
-      })
-      .catch(error => console.error('Error:', error))
+const saveToStorage = data => {
+  try {
+    const existing = loadFromStorage()
+    const merged = { ...existing, ...data }
+    localStorage.setItem(storageKey, JSON.stringify(merged))
+  } catch {
+    /* ignore */
   }
 }
 
-const searchParams = window.location.search
-const itemsToCheck = getVarsToExpect
-
-// Main execution
-let utmParams = getUTMParameters()
-if (Object.keys(utmParams).length > 0) {
-  saveToLocalStorage(utmParams)
-} else {
-  utmParams = getUTMDataFromLocalStorage()
+const clearStorage = () => {
+  try {
+    localStorage.removeItem(storageKey)
+  } catch {
+    /* ignore */
+  }
 }
 
-if (Object.keys(utmParams).length > 0) {
-  sendUTMDataToServer(utmParams)
+const sendToServer = utmData => {
+  if (!window.LinkToSendReferral) return
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 15000)
+  const query = new URLSearchParams(utmData).toString()
+  const url = `${window.LinkToSendReferral}?${query}`
+  fetch(url, { signal: controller.signal })
+    .then(r => r.text())
+    .then(t => {
+      if (Number.parseInt(t, 10) > 0) clearStorage()
+    })
+    .catch(() => {})
+    .finally(() => clearTimeout(timeout))
 }
+
+// ---- main
+;(() => {
+  if (!hasUTMParameters()) {
+    const fromUrl = getUTMParameters()
+    saveFirstTouch(fromUrl)
+  }
+  if (hasUTMParameters() && window.LinkToSendReferral) {
+    const utmAndMeta = loadFromStorage(true) // include meta for server
+    if (Object.keys(utmAndMeta).length) sendToServer(utmAndMeta)
+  }
+})()

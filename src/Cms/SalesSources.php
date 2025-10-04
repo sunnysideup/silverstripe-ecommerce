@@ -13,7 +13,7 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminProcess
  *
  */
-class SalesAdminProcess extends ModelAdmin
+class SalesSources extends ModelAdmin
 {
     use EcommerceModelAdminTrait;
 
@@ -29,14 +29,14 @@ class SalesAdminProcess extends ModelAdmin
      *
      * @var string
      */
-    private static $url_segment = 'sales-process';
+    private static $url_segment = 'sales-sources';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    private static $menu_title = 'Sales Process';
+    private static $menu_title = 'Sales Sources';
 
     /**
      * standard SS variable.
@@ -44,8 +44,9 @@ class SalesAdminProcess extends ModelAdmin
      * @var array
      */
     private static $managed_models = [
+        Referral::class,
         OrderFeedback::class,
-        OrderProcessQueue::class,
+
     ];
 
     /**
@@ -60,7 +61,7 @@ class SalesAdminProcess extends ModelAdmin
      *
      * @var string
      */
-    private static $required_permission_codes = 'CMS_ACCESS_SalesAdminProcess';
+    private static $required_permission_codes = 'CMS_ACCESS_SalesSources';
 
     /**
      * standard SS variable.
@@ -72,7 +73,5 @@ class SalesAdminProcess extends ModelAdmin
     protected function init()
     {
         parent::init();
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomBuyableSelectField.js');
-        Requirements::css('sunnysideup/ecommerce: client/css/OrderStepField.css');
     }
 }

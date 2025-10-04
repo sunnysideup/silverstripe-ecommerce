@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Control;
 
+use DateTimeImmutable;
+use DateTimeInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DB;
@@ -19,41 +23,13 @@ class ReferralSummary extends Controller
 
     private static $allowed_actions = [
         'prepdata' => 'ADMIN',
-        'perday' => 'ADMIN',
-        'perdaypersource' => 'ADMIN',
-        'perdaypercampaign' => 'ADMIN',
-        'perweek' => 'ADMIN',
-        'perweekpersource' => 'ADMIN',
-        'perweekpercampaign' => 'ADMIN',
-        'permonth' => 'ADMIN',
-        'permonthpersource' => 'ADMIN',
-        'permonthpercampaign' => 'ADMIN',
-        'peryear' => 'ADMIN',
-        'peryearpersource' => 'ADMIN',
-        'peryearpercampaign' => 'ADMIN',
-        'clearoldentries' => 'ADMIN',
+        'showdata' => 'ADMIN',
     ];
 
-    private static $menu_list = [
-        'prepdata' => 'prepare data',
-        'perday' => 'per day',
-        'perdaypersource' => 'per day per source',
-        'perdaypercampaign' => 'per day per campaign',
-        'perweek' => 'per week',
-        'perweekpersource' => 'per week per source',
-        'perweekpercampaign' => 'per week per campaign',
-        'permonth' => 'per month',
-        'permonthpersource' => 'per month per source',
-        'permonthpercampaign' => 'per month per campaign',
-        'peryear' => 'per year',
-        'peryearpersource' => 'per year per source',
-        'peryearpercampaign' => 'per year per campaign',
-        'clearoldentries' => 'delete old data',
-    ];
 
 
     private static $max_days_of_interest = 720;
-    private static $recalculate_days_for_prep_data = 60;
+    private static $recalculate_days_for_prep_data = 180;
 
     public function index($request) {}
 
@@ -63,166 +39,286 @@ class ReferralSummary extends Controller
         Environment::increaseTimeLimitTo(600);
         $allowedActions = $this->Config()->get('allowed_actions');
         $securityCheck = $allowedActions['index'] ?? 'ADMIN';
-        if(!Permission::check($securityCheck)) {
+        if (!Permission::check($securityCheck)) {
             return Security::permissionFailure($this);
         }
         $this->printMenu();
-
-    }
-
-    public function clearoldentries($request)
-    {
-        $daysAgo = $this->config()->get('max_days_of_interest');
-        $objects = Referral::get()->filter("Created:LessThan", date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59');
-        foreach($objects as $object) {
-            $object->delete();
-        }
-        die('done');
     }
 
     public function prepdata($request)
     {
         $daysAgo = $this->config()->get('recalculate_days_for_prep_data');
-        $refs = Referral::get()->filter("Created:GreaterThan", date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59');
-        foreach($refs as $ref) {
+        $refs = Referral::get()->filterAny(
+            [
+                "Created:GreaterThan" => date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59',
+                'Processed' => 0,
+            ]
+        );
+        foreach ($refs as $ref) {
             $ref->AttachData();
         }
-        die('done');
+        return $this->redirect($this->Link('showdata'));
     }
 
-    public function perday($request)
+    public function showdata($request)
     {
-        return $this->listInner('Y-m-d', false, false);
+        echo $this->renderReportForm($this->request->getVars());
+        echo $this->renderResults($this->request->getVars());
     }
 
-    public function perdaypersource($request)
-    {
-        return $this->listInner('Y-m-d', true, false);
-    }
 
-    public function perdaypercampaign($request)
-    {
-        return $this->listInner('Y-m-d', false, true);
-    }
 
-    public function perweek($request)
+    protected function renderResults(array $getVars): void
     {
-        return $this->listInner('Y-W', false, false);
-    }
+        // --- read & validate inputs -------------------------------------------
+        $isYmd = static fn(string $s): bool => (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
 
-    public function perweekpersource($request)
-    {
-        return $this->listInner('Y-W', true, false);
-    }
+        $today = new DateTimeImmutable('today');
+        $defaultDateFrom  = $today->modify('-3 months')->format('Y-m-d');
+        $defaultDateUntil = $today->modify('-1 week')->format('Y-m-d');
 
-    public function perweekpercampaign($request)
-    {
-        return $this->listInner('Y-W', false, true);
-    }
+        $dateFrom  = isset($getVars['DateFrom'])  && is_string($getVars['DateFrom'])  && $isYmd($getVars['DateFrom'])  ? $getVars['DateFrom']  : $defaultDateFrom;
+        $dateUntil = isset($getVars['DateUntil']) && is_string($getVars['DateUntil']) && $isYmd($getVars['DateUntil']) ? $getVars['DateUntil'] : $defaultDateUntil;
 
-    public function permonth($request)
-    {
-        return $this->listInner('Y-m', false, false);
-    }
-
-    public function permonthpersource($request)
-    {
-        return $this->listInner('Y-m', true, false);
-    }
-
-    public function permonthpercampaign($request)
-    {
-        return $this->listInner('Y-m', false, true);
-    }
-
-    public function peryear($request)
-    {
-        return $this->listInner('Y', false, false);
-    }
-
-    public function peryearpersource($request)
-    {
-        return $this->listInner('Y', true, false);
-    }
-
-    public function peryearpercampaign($request)
-    {
-        return $this->listInner('Y', false, true);
-    }
-
-    protected function listInner(string $dateFormat, bool $includeFrom, bool $includeCampaign)
-    {
-
-        $refs = Referral::get()->sort(['ID' => 'DESC'])->limit(999999);
-        $list = [];
-        if($includeCampaign) {
-            $includeFrom = true;
+        $orderType = $getVars['OrderType'] ?? 'Completed';
+        if (!in_array($orderType, ['Uncompleted', 'Completed', 'All'], true)) {
+            $orderType = 'Completed';
         }
-        foreach($refs as $ref) {
-            $date = date($dateFormat, strtotime($ref->Created));
-            $campaign =  $ref->getFullCode();
-            $from =  $ref->From;
-            $key = $date;
-            if($includeFrom) {
+
+        $includeFrom     = (($getVars['ShowFrom'] ?? 'No') === 'Yes');
+        $includeSource    = (($getVars['ShowSource'] ?? 'No') === 'Yes');
+        $includeMedium    = (($getVars['ShowMedium'] ?? 'No') === 'Yes');
+        $includeCampaign   = (($getVars['ShowCampaign'] ?? 'No') === 'Yes');
+        if ($includeCampaign) {
+            $includeFrom = true; // preserve your original rule
+        }
+
+        $breakdownBy = $getVars['BreakdownBy'] ?? 'Week';
+        if (!in_array($breakdownBy, ['Day', 'Week', 'Quarter', 'Year', 'AllTime'], true)) {
+            $breakdownBy = 'Week';
+        }
+
+        // --- date key formatter ------------------------------------------------
+        $formatKey = static function (DateTimeInterface $dt, string $mode): array {
+            return match ($mode) {
+                'Day'      => [$dt->format('Y-m-d'),         $dt->format('Y-m-d')],
+                'Week'     => [$dt->format('o-\WW'),         $dt->format('o-\WW')],
+                'Quarter'  => [
+                    $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
+                    $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
+                ],
+                'Year'     => [$dt->format('Y'),             $dt->format('Y')],
+                'AllTime'  => ['AllTime',                    'AllTime'],
+            };
+        };
+
+        // --- base query --------------------------------------------------------
+        $filters = [
+            'Created:GreaterThanOrEqual' => $dateFrom . ' 00:00:00',
+            'Created:LessThanOrEqual'    => $dateUntil . ' 23:59:59',
+        ];
+        if ($orderType === 'Completed') {
+            $filters['IsSubmitted'] = 1;
+        } elseif ($orderType === 'Uncompleted') {
+            $filters['IsSubmitted'] = 0;
+        }
+
+        /** @var \SilverStripe\ORM\DataList $refs */
+        $refs = Referral::get()
+            ->filter($filters)
+            ->sort(['ID' => 'DESC'])
+            ->limit(999999);
+
+        // --- aggregation -------------------------------------------------------
+        $list = [];
+
+        foreach ($refs as $ref) {
+            /** @var Referral $ref */
+            $createdTs = strtotime((string) $ref->Created);
+            $created   = (new DateTimeImmutable())->setTimestamp($createdTs);
+
+            [$dateKey, $dateLabel] = $breakdownBy === 'AllTime'
+                ? ['AllTime', $dateFrom . ' .. ' . $dateUntil]
+                : $formatKey($created, $breakdownBy);
+
+            $from     = $ref->From ?: 'none';
+            $source   = $ref->Source ?: 'none';
+            $medium   = $ref->Medium ?: 'none';
+            $campaign = $ref->Campaign ?: 'none';
+
+            $key = $dateKey;
+            if ($includeFrom) {
                 $key .= '|' . $from;
             }
-            if($includeCampaign) {
+            if ($includeSource) {
+                $key .= '|' . $source;
+            }
+            if ($includeMedium) {
+                $key .= '|' . $medium;
+            }
+            if ($includeCampaign) {
                 $key .= '|' . $campaign;
             }
+
             if (!isset($list[$key])) {
-                $list[$key]['Date'] = $date;
-                if($includeFrom) {
-                    $list[$key]['From'] = $from;
+                $row = ['Date' => $dateLabel];
+                if ($includeFrom) {
+                    $row['Company'] = $from;
                 }
-                if($includeCampaign) {
-                    $list[$key]['Campaign'] = $campaign;
+                if ($includeSource) {
+                    $row['Source'] = $source;
                 }
-                $list[$key] +=
-                    [
-                        'NumberOfClicks' => 0,
-                        'NumberOfClicksIntoOrders' => 0,
-                        'TotalOrderAmountInvoiced' => 0,
-                        'TotalOrderAmountPaid' => 0,
-                        'AverageClicksIntoOrders' => 0,
-                        'AverageOrderAmountPaidPerClick' => 0,
-                    ];
+                if ($includeMedium) {
+                    $row['Medium'] = $medium;
+                }
+                if ($includeCampaign) {
+                    $row['Campaign'] = $campaign;
+                }
+                $row += [
+                    'NumberOfClicks' => 0,
+                    'NumberOfClicksIntoOrders' => 0,
+                    'TotalOrderAmountInvoiced' => 0.0,
+                    'TotalOrderAmountPaid' => 0.0,
+                    'AverageClicksIntoOrders' => 0.0,
+                    'AverageOrderAmountPaidPerClick' => 0.0,
+                ];
+                $list[$key] = $row;
             }
-            $hasSubmittedOrder = $ref->IsSubmitted;
-            $amountInvoiced = $ref->AmountInvoiced;
-            $amountPaid = $ref->AmountPaid;
+
             $list[$key]['NumberOfClicks']++;
 
+            $hasSubmittedOrder = (bool) $ref->IsSubmitted;
             if ($hasSubmittedOrder) {
                 $list[$key]['NumberOfClicksIntoOrders']++;
-                $list[$key]['TotalOrderAmountInvoiced'] += $amountInvoiced;
-                $list[$key]['TotalOrderAmountPaid'] += $amountPaid;
+                $list[$key]['TotalOrderAmountInvoiced'] += (float) $ref->AmountInvoiced;
+                $list[$key]['TotalOrderAmountPaid']     += (float) $ref->AmountPaid;
             }
 
-            // Update percentages and averages for each date
-            $list[$key]['AverageClicksIntoOrders'] = ($list[$key]['NumberOfClicks'] > 0) ? round($list[$key]['NumberOfClicksIntoOrders'] / $list[$key]['NumberOfClicks'], 2) : 0;
-            $list[$key]['AverageOrderAmountPaidPerClick'] = ($list[$key]['NumberOfClicksIntoOrders'] > 0) ? round($list[$key]['TotalOrderAmountInvoiced'] / $list[$key]['NumberOfClicksIntoOrders'], 2) : 0;
+            // running averages
+            $clicks    = (int) $list[$key]['NumberOfClicks'];
+            $intoOrder = (int) $list[$key]['NumberOfClicksIntoOrders'];
 
+            $list[$key]['AverageClicksIntoOrders']        = $clicks > 0    ? round($intoOrder / $clicks, 2) : 0.0;
+            $list[$key]['AverageOrderAmountPaidPerClick'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountInvoiced'] / $intoOrder, 2) : 0.0;
         }
-        ksort($list);
+
+        ksort($list, SORT_NATURAL);
+
         echo $this->arrayToTable($list);
     }
 
     protected function printMenu()
     {
-        $menuList = $this->Config()->get('menu_list');
         $function = $this->request->param('Action');
-        $title = $menuList[$function] ?? 'Please <a href="/' . $this->Link('prepdata') . '">prep data</a> and then select a report';
-        echo '<h1>Referral Summary - ' . $title . '</h1><ul>';
-        foreach($menuList as $key => $value) {
-            echo '<li><a href="/' . $this->Config()->get('url_segment') . '/' . $key . '">' . $value . '</a></li>';
+        $title = '';
+        if ($function !== 'prepdata' || $function === 'showdata') {
+            $title = $menuList[$function] ?? '- Please <a href="/' . $this->Link('prepdata') . '">prep data</a> and then select a report';
         }
-        echo '</ul><h3>' . $title . '</h3>';
+        echo '<h1>Referral Summary' . $title . '</h1>';
+    }
 
+    protected function renderReportForm(array $getVars): string
+    {
+        $isYmd = static fn(string $s): bool => (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
+
+        $today = new DateTimeImmutable('today');
+        $defaultDateFrom  = $today->modify('-3 months')->format('Y-m-d');
+        $defaultDateUntil = $today->modify('-1 week')->format('Y-m-d');
+
+        $dateFrom  = isset($getVars['DateFrom'])  && is_string($getVars['DateFrom'])  && $isYmd($getVars['DateFrom'])  ? $getVars['DateFrom']  : $defaultDateFrom;
+        $dateUntil = isset($getVars['DateUntil']) && is_string($getVars['DateUntil']) && $isYmd($getVars['DateUntil']) ? $getVars['DateUntil'] : $defaultDateUntil;
+
+        $orderType  = ($getVars['OrderType'] ?? 'Completed');
+        if (!in_array($orderType, ['Uncompleted', 'Completed', 'All'], true)) {
+            $orderType = 'Completed';
+        }
+
+        $showFrom = ($getVars['ShowFrom'] ?? 'No');
+        if (!in_array($showFrom, ['Yes', 'No'], true)) {
+            $showFrom = 'No';
+        }
+
+        $showSource = ($getVars['ShowSource'] ?? 'No');
+        if (!in_array($showSource, ['Yes', 'No'], true)) {
+            $showSource = 'No';
+        }
+
+        $showMedium = ($getVars['ShowMedium'] ?? 'No');
+        if (!in_array($showMedium, ['Yes', 'No'], true)) {
+            $showMedium = 'No';
+        }
+
+        $showCampaign = ($getVars['ShowCampaign'] ?? 'No'); // keeping your field name
+        if (!in_array($showCampaign, ['Yes', 'No'], true)) {
+            $showCampaign = 'No';
+        }
+
+        $breakdownBy = ($getVars['BreakdownBy'] ?? 'Week');
+        if (!in_array($breakdownBy, ['Day', 'Week', 'Quarter', 'Year', 'AllTime'], true)) {
+            $breakdownBy = 'Week';
+        }
+
+        $sel = static fn(string $cur, string $val): string => $cur === $val ? ' selected' : '';
+
+        $hDateFrom  = htmlspecialchars($dateFrom, ENT_QUOTES);
+        $hDateUntil = htmlspecialchars($dateUntil, ENT_QUOTES);
+
+        return
+            '<form id=\'reportForm\' method=\'get\'>' .
+
+            '<label for=\'DateFrom\'>Date From</label>' .
+            '<input type=\'date\' id=\'DateFrom\' name=\'DateFrom\' value=\'' . $hDateFrom . '\' required>' .
+            '<hr />' .
+            '<label for=\'DateUntil\'>Date Until</label>' .
+            '<input type=\'date\' id=\'DateUntil\' name=\'DateUntil\' value=\'' . $hDateUntil . '\' required>' .
+            '<hr />' .
+            '<label for=\'OrderType\'>Order Type</label>' .
+            '<select id=\'OrderType\' name=\'OrderType\'>' .
+            '<option value=\'Uncompleted\'' . $sel($orderType, 'Uncompleted') . '>Uncompleted</option>' .
+            '<option value=\'Completed\''   . $sel($orderType, 'Completed')   . '>Completed</option>' .
+            '<option value=\'All\''         . $sel($orderType, 'All')         . '>All</option>' .
+            '</select>' .
+            '<hr />' .
+            '<label for=\'ShowFrom\'>Breakdown By Company</label>' .
+            '<select id=\'ShowFrom\' name=\'ShowFrom\'>' .
+            '<option value=\'Yes\'' . $sel($showFrom, 'Yes') . '>Yes</option>' .
+            '<option value=\'No\''  . $sel($showFrom, 'No')  . '>No</option>' .
+            '</select>' .
+            '<hr />' .
+            '<label for=\'ShowSource\'>Breakdown By Source</label>' .
+            '<select id=\'ShowSource\' name=\'ShowSource\'>' .
+            '<option value=\'Yes\'' . $sel($showSource, 'Yes') . '>Yes</option>' .
+            '<option value=\'No\''  . $sel($showSource, 'No')  . '>No</option>' .
+            '</select>' .
+            '<hr />' .
+            '<label for=\'ShowMedium\'>Breakdown By Medium</label>' .
+            '<select id=\'ShowMedium\' name=\'ShowMedium\'>' .
+            '<option value=\'Yes\'' . $sel($showMedium, 'Yes') . '>Yes</option>' .
+            '<option value=\'No\''  . $sel($showMedium, 'No')  . '>No</option>' .
+            '</select>' .
+            '<hr />' .
+            '<label for=\'ShowCampaign\'>Breakdown By Campaign</label>' .
+            '<select id=\'ShowCampaign\' name=\'ShowCampaign\'>' .
+            '<option value=\'Yes\'' . $sel($showCampaign, 'Yes') . '>Yes</option>' .
+            '<option value=\'No\''  . $sel($showCampaign, 'No')  . '>No</option>' .
+            '</select>' .
+            '<hr />' .
+            '<label for=\'BreakdownBy\'>Reporting Period</label>' .
+            '<select id=\'BreakdownBy\' name=\'BreakdownBy\'>' .
+            '<option value=\'Day\''     . $sel($breakdownBy, 'Day')     . '>Day</option>' .
+            '<option value=\'Week\''    . $sel($breakdownBy, 'Week')    . '>Week</option>' .
+            '<option value=\'Quarter\'' . $sel($breakdownBy, 'Quarter') . '>Quarter</option>' .
+            '<option value=\'Year\''    . $sel($breakdownBy, 'Year')    . '>Year</option>' .
+            '<option value=\'AllTime\'' . $sel($breakdownBy, 'AllTime') . '>AllTime</option>' .
+            '</select>' .
+            '<hr />' .
+            '<button type=\'submit\'>Run</button>' .
+            '</form>';
     }
 
     protected function arrayToTable(array $array): string
     {
-        if(count($array)) {
+        if (count($array)) {
             $html = '
             <style>
                 table {
@@ -264,7 +360,7 @@ class ReferralSummary extends Controller
                 $html .= '<tr>';
                 foreach ($row as $cell) {
                     $isNumber = is_numeric($cell);
-                    $html .= '<td class="' . ($isNumber ? 'number' : 'string') . '">' . str_replace('|', ' | ', $cell) . '</td>';
+                    $html .= '<td class="' . ($isNumber ? 'number' : 'string') . '">' . str_replace('|', ' | ', (string) $cell) . '</td>';
                 }
                 $html .= '</tr>';
             }
@@ -281,5 +377,4 @@ class ReferralSummary extends Controller
         $string = preg_replace('/(?<!^)[A-Z]/', ' $0', $string);
         return $string;
     }
-
 }

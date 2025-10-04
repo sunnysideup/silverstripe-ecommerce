@@ -53,63 +53,57 @@ class Referral extends DataObject implements EditableEcommerceObject
         'social' => 'Social Media',
         'email' => 'Email Marketing',
         'other' => 'Other Referral Source',
+        'google' => 'Google Other',
+        'facebook' => 'Facebook Other',
+        'chatgpt.com' => 'ChatGPT Other',
     ];
+
 
     public static function add_referral(Order $order, ?array $params): ?int
     {
-        if(!empty($params) && count($params) > 0) {
+        if (!empty($params) && count($params) > 0) {
             $filter = [
                 'OrderID' => $order->ID,
             ];
             $ref = DataObject::get_one(Referral::class, $filter);
-            if(!$ref) {
+            if (!$ref) {
                 $ref = Referral::create($filter);
             }
             $params = Convert::raw2sql($params);
             $list = Config::inst()->get(Referral::class, 'referral_sources');
             $source = [];
-            foreach(array_keys($list) as $getVar) {
-                if(isset($params[$getVar])) {
+            $from = [];
+            foreach ($list as $getVar => $name) {
+                if (isset($params[$getVar])) {
+                    $val = $params[$getVar];
+                    $from[] = $name;
                     switch ($getVar) {
                         case 'utm_source':
-                            $source[] = $params[$getVar];
+                            $source[] = $val;
                             break;
                         case 'utm_medium':
-                            $ref->Medium = $params[$getVar];
+                            $ref->Medium = $val;
                             break;
                         case 'utm_campaign':
-                            $ref->Campaign = $params[$getVar];
+                            $ref->Campaign = $val;
                             break;
                         case 'utm_term':
-                            $ref->Term = $params[$getVar];
+                            $ref->Term = $val;
                             break;
                         case 'utm_content':
-                            $ref->Content = $params[$getVar];
+                            $ref->Content = $val;
                             break;
                         default:
-                            $source[] = $params[$getVar] . ' (' . $getVar . ')';
+                            $source[] = $val . ' (' . $getVar . ')';
                             break;
                     }
                 }
             }
-            $ref->Source = implode(' | ', $source);
-            $ref->From = implode(' | ', self::workOutFrom($params));
+            $ref->Source = implode(' | ', array_filter(array_unique($source)));
+            $ref->From = implode(' | ', array_filter(array_unique($from)));
             $ref->write();
-
         }
         return null;
-    }
-
-    protected static function workOutFrom(array $params): array
-    {
-        $from = [];
-        $list = Config::inst()->get(Referral::class, 'referral_sources');
-        foreach($list as $getVar => $name) {
-            if(isset($params[$getVar])) {
-                $from[] = $name;
-            }
-        }
-        return array_unique($from);
     }
 
     /**
@@ -120,6 +114,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     private static $table_name = 'Referral';
 
     private static $db = [
+        'From' => 'Varchar(100)',
         'Source' => 'Varchar(100)',
         'Medium' => 'Varchar(100)',
         'Campaign' => 'Varchar(100)',
@@ -128,12 +123,13 @@ class Referral extends DataObject implements EditableEcommerceObject
         'IsSubmitted' => 'Boolean',
         'AmountInvoiced' => 'Currency',
         'AmountPaid' => 'Currency',
+        'Processed' => 'Boolean',
     ];
 
     private static $field_labels_right = [
         'Source' => 'Identifies the source of the traffic (e.g., google, newsletter)',
         'Medium' => 'The medium used to share the link (e.g., email, cpc)',
-        'Campaign' => 'The specific campaign or promotion (e.g., spring_sale',
+        'Campaign' => 'The specific campaign or promotion (e.g., spring_sale)',
     ];
 
     /**
@@ -355,26 +351,23 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public function getFromAfterwards(): string
     {
-        if($this->From) {
+        if ($this->From) {
             return $this->From;
         } else {
             $txt = $this->getFullCode();
-            if (strpos($txt, 'Google Ads') !== false || strpos($txt, 'Google Source') !== false || strpos($txt, 'Google Campaign') !== false) {
-                $medium = 'Google Ads';
-            } elseif (strpos($txt, 'Facebook Ads') !== false) {
-                $medium = 'Facebook Ads';
-            } elseif (strpos($txt, 'Twitter Ads') !== false) {
-                $medium = 'Twitter Ads';
-            } else {
-                $medium = 'Other';
+            $list = [];
+            foreach (Config::inst()->get(Referral::class, 'referral_sources') as $key => $name) {
+                if (strpos($txt, $key) !== false) {
+                    $list[] = $name;
+                }
             }
-            return $medium;
         }
+        return $list ? implode(' | ', array_filter(array_unique($list))) : 'Other';
     }
 
     public function getFullCode(): string
     {
-        return implode('|', array_filter([$this->Source,  $this->Medium , $this->Campaign]));
+        return implode('|', array_filter([$this->Source,  $this->Medium, $this->Campaign]));
     }
 
 
@@ -385,41 +378,39 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public function AttachData()
     {
-        $change = false;
+        $change = $this->Processed ? false : true;
+        $this->Processed = true;
         $order = $this->getOrderCached();
-        if($order) {
-            if(!$this->IsSubmitted) {
+        if ($order) {
+            if (!$this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
-                if($this->IsSubmitted) {
+                if ($this->IsSubmitted) {
                     $change = true;
                 }
             }
-            if($this->IsSubmitted) {
-                if(!$this->AmountInvoiced) {
+            if ($this->IsSubmitted) {
+                if (!$this->AmountInvoiced) {
                     $this->AmountInvoiced = $order->getTotal();
-                    if($this->AmountInvoiced) {
+                    if ($this->AmountInvoiced) {
                         $change = true;
                     }
                 }
-                if(!$this->AmountPaid) {
+                if (!$this->AmountPaid) {
                     $this->AmountPaid = $order->getTotalPaid();
-                    if($this->AmountPaid) {
+                    if ($this->AmountPaid) {
                         $change = true;
                     }
                 }
             }
         }
-        if(!$this->From) {
+        if (!$this->From) {
             $this->From = $this->getFromAfterwards();
-            if($this->From) {
+            if ($this->From) {
                 $change = true;
             }
         }
-        if($change) {
+        if ($change) {
             $this->write();
         }
-
     }
-
-
 }

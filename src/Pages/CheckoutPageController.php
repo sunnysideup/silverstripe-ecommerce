@@ -11,6 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
+use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\OrderFormAddress;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
@@ -309,12 +310,7 @@ class CheckoutPageController extends CartPageController
      */
     public function IsFinalStep()
     {
-        $finalStep = $this->currentStep;
-        foreach ($this->steps as $finalStep) {
-            //do nothing...
-        }
-
-        return $this->currentStep === $finalStep;
+        return $this->currentStep === $this->steps[array_key_last($this->steps)];
     }
 
     /**
@@ -339,27 +335,11 @@ class CheckoutPageController extends CartPageController
     {
         parent::init();
 
-        Requirements::themedCSS('client/css/CheckoutPage');
-        $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
-        if (is_array($ajaxifyArray) && count($ajaxifyArray)) {
-            foreach ($ajaxifyArray as $js) {
-                Requirements::javascript($js);
-            }
-        }
-        Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
-        Requirements::customScript(
-            '
-            if (typeof EcomOrderForm != "undefined") {
-                EcomOrderForm.set_TermsAndConditionsMessage(\'' . Convert::raw2js($this->TermsAndConditionsMessage) . '\');
-            }',
-            'TermsAndConditionsMessage'
-        );
+
         $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $this->currentStep = $this->request->Param('ID');
-        if ($this->currentStep && in_array($this->currentStep, $this->steps, true)) {
-            //do nothing
-        } else {
-            $this->currentStep = array_shift($this->steps);
+        if (!($this->currentStep && in_array($this->currentStep, $this->steps, true))) {
+            $this->currentStep = $this->steps[array_key_first($this->steps)];
         }
         //redirect to current order -
         // this is only applicable when people submit order (start to pay)
@@ -372,6 +352,28 @@ class CheckoutPageController extends CartPageController
         }
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
+        }
+        if ($this->IsFinalStep()) {
+            Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
+            Requirements::customScript(
+                'window.LinkToSendReferral = \'' . $this->getLinkToSendReferral() . '\';',
+                'LinkToSendReferral'
+            );
+
+            Requirements::customScript(
+                '
+            if (typeof EcomOrderForm !== "undefined") {
+                EcomOrderForm.set_TermsAndConditionsMessage(\'' . Convert::raw2js($this->TermsAndConditionsMessage) . '\');
+            }',
+                'TermsAndConditionsMessage'
+            );
+        }
+        Requirements::themedCSS('client/css/CheckoutPage');
+        $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
+        if (is_array($ajaxifyArray) && count($ajaxifyArray)) {
+            foreach ($ajaxifyArray as $js) {
+                Requirements::javascript($js);
+            }
         }
     }
 
@@ -412,5 +414,10 @@ class CheckoutPageController extends CartPageController
         //has step xxx been completed? if not go back one?
         //extend
         //reset current step if different
+    }
+
+    protected function getLinkToSendReferral()
+    {
+        return ShoppingCartController::add_referral_link();
     }
 }

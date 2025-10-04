@@ -114,7 +114,6 @@ class ShoppingCartController extends Controller
         user_error(_t('Order.NOCARTINITIALISED', 'no cart initialised'), E_USER_NOTICE);
 
         return $this->goToErrorPage();
-        user_error(_t('Order.NOCARTINITIALISED', 'no 404 page available'), E_USER_ERROR);
     }
 
     // CONTROLLER LINKS
@@ -259,6 +258,17 @@ class ShoppingCartController extends Controller
     public static function delete_order_link($orderID, array $parameters = [])
     {
         return self::create_link('deleteorder/' . $orderID . '/' . self::params_to_get_string($parameters));
+    }
+
+    /**
+    /**
+     * @param mixed $orderID
+     *
+     * @return string
+     */
+    public static function add_referral_link()
+    {
+        return self::create_link('addreferral');
     }
 
     /**
