@@ -38,6 +38,16 @@ const getVarsToExpect = [
   // Snapchat
   'sccid',
 
+  // Campaign Monitor
+  'cm_mc_uid',
+  'cm_mc_mid',
+
+  // Mailchimp
+  'mc_cid', // Campaign ID
+  'mc_eid', // Unique subscriber ID
+  'mc_tc', // (sometimes for tracking click source)
+  'mc_id', // Older campaigns occasionally use this
+
   // Generic / Affiliate / Referral
   'ref',
   'rf',
