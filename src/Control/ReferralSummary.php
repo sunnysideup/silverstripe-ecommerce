@@ -200,7 +200,7 @@ class ReferralSummaryAdmin extends LeftAndMain
                 )->setValue($this->myFormData['ShowContent'] ?? $this->getDefaultFormValue('ShowContent')),
                 DropdownField::create(
                     'Statistic',
-                    'Statistic (single focus)',
+                    'Statistic',
                     $this->config()->get('stats_to_report_on')
 
                 )->setValue($this->myFormData['Statistic'] ?? $this->getDefaultFormValue('Statistic'))
