@@ -27,7 +27,7 @@ use Sunnysideup\Ecommerce\Model\Process\Referral;
 class ReferralSummaryAdmin extends LeftAndMain
 {
 
-    public static function do_data_prep(?int $limit = 3000): ?bool
+    public static function do_data_prep(?int $limit = 1000): ?bool
     {
         $daysAgoDelete = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'max_days_of_interest');
 
@@ -42,19 +42,24 @@ class ReferralSummaryAdmin extends LeftAndMain
         }
 
         $daysAgoStale = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'recalculate_days_for_prep_data');
+        $tsStale = strtotime('-' . $daysAgoStale . ' days');
         $filter = [
-            'Created:GreaterThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59',
+            'Created:GreaterThan' => date('Y-m-d', $tsStale) . ' 23:59:59',
             'Processed' => 0,
         ];
         $refs = Referral::get()->filterAny($filter)
             ->sort('ID', 'DESC')
             ->limit($limit);
         foreach ($refs as $ref) {
+            if (!$ref->OrderID) {
+                $ref->delete();
+                continue;
+            }
             $ref->AttachData($daysAgoStale);
         }
         // old items more than six months old should be processed.
         $filter2 = [
-            'Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59',
+            'Created:LessThan' => date('Y-m-d', $tsStale) . ' 23:59:59',
             'Processed' => 0,
         ];
         $refsCount = Referral::get()->filter($filter2)->count();
@@ -81,21 +86,17 @@ class ReferralSummaryAdmin extends LeftAndMain
     ];
 
     private static $stats_to_report_on = [
-        'NumberOfClicks' => 'Number Of Clicks',
-        'NumberOfClicksIntoOrders' => 'Clicks → Orders',
-        'TotalOrderAmountInvoiced' => 'Total Invoiced',
+        'NumberOfClicks' => 'Number of Clicks',
+        'NumberOfOrders' => 'Number of Orders',
         'TotalOrderAmountPaid' => 'Total Paid',
-        'AverageClicksIntoOrders' => 'Avg Clicks → Orders',
-        'AverageOrderAmountPaidPerClick' => 'Avg Paid / Order',
+        'AverageOrderAmount' => 'Avg Paid / Order',
     ];
 
     private static $formatting_rules = [
         'NumberOfClicks' => 'Number',
-        'NumberOfClicksIntoOrders' => 'Number',
-        'TotalOrderAmountInvoiced' => 'Currency',
+        'NumberOfOrders' => 'Number',
         'TotalOrderAmountPaid' => 'Currency',
-        'AverageClicksIntoOrders' => 'Number',
-        'AverageOrderAmountPaidPerClick' => 'Currency',
+        'AverageOrderAmount' => 'Currency',
     ];
 
     private static $default_form_values = [
@@ -330,6 +331,9 @@ class ReferralSummaryAdmin extends LeftAndMain
             $keywordFilters['Source:PartialMatch'] = $keyword;
             $keywordFilters['Medium:PartialMatch'] = $keyword;
             $keywordFilters['Campaign:PartialMatch'] = $keyword;
+            $keywordFilters['Term:PartialMatch'] = $keyword;
+            $keywordFilters['Content:PartialMatch'] = $keyword;
+            $keywordFilters['Referrer:PartialMatch'] = $keyword;
             $idList = Referral::get()
                 ->filterAny($keywordFilters)
                 ->column('ID');
@@ -390,10 +394,8 @@ class ReferralSummaryAdmin extends LeftAndMain
                 }
                 $row += [
                     'NumberOfClicks' => 0,
-                    'NumberOfClicksIntoOrders' => 0,
-                    'TotalOrderAmountInvoiced' => 0.0,
+                    'NumberOfOrders' => 0,
                     'TotalOrderAmountPaid' => 0.0,
-                    'AverageClicksIntoOrders' => 0.0,
                     'AverageOrderAmountPaidPerClick' => 0.0,
                 ];
                 $list[$key] = $row;
@@ -402,16 +404,13 @@ class ReferralSummaryAdmin extends LeftAndMain
             $list[$key]['NumberOfClicks']++;
 
             if ((bool) $ref->IsSubmitted) {
-                $list[$key]['NumberOfClicksIntoOrders']++;
-                $list[$key]['TotalOrderAmountInvoiced'] += (float) $ref->AmountInvoiced;
+                $list[$key]['NumberOfOrders']++;
                 $list[$key]['TotalOrderAmountPaid'] += (float) $ref->AmountPaid;
             }
 
-            $clicks = (int) $list[$key]['NumberOfClicks'];
-            $intoOrder = (int) $list[$key]['NumberOfClicksIntoOrders'];
+            $intoOrder = (int) $list[$key]['NumberOfOrders'];
 
-            $list[$key]['AverageClicksIntoOrders'] = $clicks > 0 ? round($intoOrder / $clicks, 2) : 0.0;
-            $list[$key]['AverageOrderAmountPaidPerClick'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountInvoiced'] / $intoOrder, 2) : 0.0;
+            $list[$key]['AverageOrderAmountPaidPerClick'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountPaid'] / $intoOrder, 2) : 0.0;
         }
 
         ksort($list, SORT_NATURAL);

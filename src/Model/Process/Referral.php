@@ -188,6 +188,18 @@ class Referral extends DataObject implements EditableEcommerceObject
         'CapturedAt' => 'Date',
     ];
 
+    private static $indexes = [
+        'Source' => true,
+        'Medium' => true,
+        'Campaign' => true,
+        'IsSubmitted' => true,
+        'Processed' => true,
+        'Created' => true,
+        'Term' => true,
+        'Content' => true,
+        'Referrer' => true,
+    ];
+
     private static $field_labels_right = [
         'Source' => 'Identifies the source of the traffic (e.g., google, newsletter)',
         'Medium' => 'The medium used to share the link (e.g., email, cpc)',
