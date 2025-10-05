@@ -18,6 +18,7 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
@@ -121,7 +122,7 @@ class ReferralSummaryAdmin extends LeftAndMain
     /** route actions */
     private static array $allowed_actions = [
         'EditForm' => 'ADMIN',
-        'doRunReport' => 'ADMIN',
+        'dorunreport' => 'ADMIN',
         'doPrepData' => 'ADMIN',
     ];
 
@@ -131,8 +132,8 @@ class ReferralSummaryAdmin extends LeftAndMain
 
     public function getEditForm($id = null, $fields = null): Form
     {
-
-        if ($this->getRequest()->getSession()->get('ReferralSummaryAdminDataPrepped')) {
+        $request = $this->getRequest();
+        if ($request->getSession()->get('ReferralSummaryAdminDataPrepped')) {
             $today = new DateTimeImmutable('today');
             $defaultFrom  = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
             $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
@@ -141,16 +142,18 @@ class ReferralSummaryAdmin extends LeftAndMain
                 HeaderField::create('Heading', 'Sales Referrals', 3),
                 LiteralField::create(
                     'Instructions',
-                    '<p class="message warning">Use this report to see how well your marketing campaigns are doing.
-                    These are raw numbers only so take them with a grain of salt.
-                    They require interpretation and common sense.
+                    '<p class="message warning">
+                        Use this report to see how well your marketing campaigns are doing.
+                        These are raw numbers only so take them with a grain of salt.
+                        <br />
+                        They only include orders with a referrer set (not all orders have this data).
                     </p>'
                 ),
                 HeaderField::create('DataSelectionHeader', 'Select Data', 3),
-                CompositeField::create(
+                FieldGroup::create(
                     DateField::create('DateFrom', 'Date From')->setValue($defaultFrom),
                     DateField::create('DateUntil', 'Date Until')->setValue($defaultUntil),
-                ),
+                )->setTitle('Date Range'),
                 TextField::create(
                     'Keyword',
                     'Keyword',
@@ -158,7 +161,7 @@ class ReferralSummaryAdmin extends LeftAndMain
                 ),
                 DropdownField::create(
                     'OrderType',
-                    'Order Type',
+                    'Order Status',
                     [
                         'Uncompleted' => 'Uncompleted',
                         'Completed' => 'Completed',
@@ -171,52 +174,54 @@ class ReferralSummaryAdmin extends LeftAndMain
                     $this->config()->get('reporting_periods')
                 )->setValue($this->myFormData['BreakdownBy'] ?? $this->getDefaultFormValue('BreakdownBy')),
                 DropdownField::create(
-                    'ShowFrom',
-                    'Breakdown By Company',
-                    ['No' => 'No', 'Yes' => 'Yes']
-                )->setValue($this->myFormData['ShowFrom'] ?? $this->getDefaultFormValue('ShowFrom')),
-                DropdownField::create(
-                    'ShowSource',
-                    'Breakdown By Source',
-                    ['No' => 'No', 'Yes' => 'Yes']
-                )->setValue($this->myFormData['ShowSource'] ?? $this->getDefaultFormValue('ShowSource')),
-                DropdownField::create(
-                    'ShowMedium',
-                    'Breakdown By Medium',
-                    ['No' => 'No', 'Yes' => 'Yes']
-                )->setValue($this->myFormData['ShowMedium'] ?? $this->getDefaultFormValue('ShowMedium')),
-                DropdownField::create(
-                    'ShowCampaign',
-                    'Breakdown By Campaign',
-                    ['No' => 'No', 'Yes' => 'Yes']
-                )->setValue($this->myFormData['ShowCampaign'] ?? $this->getDefaultFormValue('ShowCampaign')),
-                DropdownField::create(
-                    'ShowTerm',
-                    'Breakdown By Term',
-                    ['No' => 'No', 'Yes' => 'Yes']
-                )->setValue($this->myFormData['ShowTerm'] ?? $this->getDefaultFormValue('ShowTerm')),
-                DropdownField::create(
-                    'ShowContent',
-                    'Breakdown By Content',
-                    ['No' => 'No', 'Yes' => 'Yes']
-                )->setValue($this->myFormData['ShowContent'] ?? $this->getDefaultFormValue('ShowContent')),
-                DropdownField::create(
                     'Statistic',
                     'Statistic',
                     $this->config()->get('stats_to_report_on')
 
-                )->setValue($this->myFormData['Statistic'] ?? $this->getDefaultFormValue('Statistic'))
+                )->setValue($this->myFormData['Statistic'] ?? $this->getDefaultFormValue('Statistic')),
+
+                FieldGroup::create(
+                    DropdownField::create(
+                        'ShowFrom',
+                        'Company',
+                        ['No' => 'No', 'Yes' => 'Yes']
+                    )->setValue($this->myFormData['ShowFrom'] ?? $this->getDefaultFormValue('ShowFrom')),
+                    DropdownField::create(
+                        'ShowSource',
+                        'Source',
+                        ['No' => 'No', 'Yes' => 'Yes']
+                    )->setValue($this->myFormData['ShowSource'] ?? $this->getDefaultFormValue('ShowSource')),
+                    DropdownField::create(
+                        'ShowMedium',
+                        'Medium',
+                        ['No' => 'No', 'Yes' => 'Yes']
+                    )->setValue($this->myFormData['ShowMedium'] ?? $this->getDefaultFormValue('ShowMedium')),
+                    DropdownField::create(
+                        'ShowCampaign',
+                        'Campaign',
+                        ['No' => 'No', 'Yes' => 'Yes']
+                    )->setValue($this->myFormData['ShowCampaign'] ?? $this->getDefaultFormValue('ShowCampaign')),
+                    DropdownField::create(
+                        'ShowTerm',
+                        'Term',
+                        ['No' => 'No', 'Yes' => 'Yes']
+                    )->setValue($this->myFormData['ShowTerm'] ?? $this->getDefaultFormValue('ShowTerm')),
+                    DropdownField::create(
+                        'ShowContent',
+                        'Content',
+                        ['No' => 'No', 'Yes' => 'Yes']
+                    )->setValue($this->myFormData['ShowContent'] ?? $this->getDefaultFormValue('ShowContent')),
+                )
+                    ->setTitle('Breakdown Options'),
 
             );
             $actions = FieldList::create(
-                FormAction::create('doRunReport', 'Create report')
-                    ->setUseButtonTag(true)
+                FormAction::create('dorunreport', 'Create report')
                     ->addExtraClass('btn-outline-primary'),
             );
         } else {
             $actions = FieldList::create(
                 FormAction::create('doPrepData', 'Prepare Data (you may need to click this more than once)')
-                    ->setUseButtonTag(true)
                     ->addExtraClass('btn-outline-warning')
             );
             $fields = FieldList::create(
@@ -235,19 +240,18 @@ class ReferralSummaryAdmin extends LeftAndMain
         }
 
 
-        $form = Form::create($this, 'EditForm', $fields, $actions)
-            ->addExtraClass('panel panel--padded panel--scrollable cms-content-view');
-        // $form->setTemplate('LeftAndMain_EditForm');
-        $form->setFormMethod('get');
-
         // if we have posted, render results below the form
-        if ($this->getRequest()->httpMethod() === 'GET' && $this->getRequest()->getVar('action_doRunReport')) {
-            $resultsHtml = $this->buildResultsHtml($form->getData());
-            $form->Fields()->insertBefore(
+        if ($request->getVar('action_dorunreport')) {
+            $resultsHtml = $this->buildResultsHtml($request->getVars());
+            $fields->insertBefore(
                 'DataSelectionHeader',
                 LiteralField::create('Results', $resultsHtml)
             );
         }
+
+        $form = Form::create($this, 'EditForm', $fields, $actions)
+            ->addExtraClass('panel panel--padded panel--scrollable cms-content-view ')
+            ->setFormMethod('GET');
 
         return $form;
     }
@@ -266,7 +270,7 @@ class ReferralSummaryAdmin extends LeftAndMain
         return $this->redirectBack();
     }
 
-    public function doRunReport(array $data, Form $form)
+    public function dorunreport(array $data, Form $form)
     {
         // simply re-render form with results block
         $this->myFormData = $data;
@@ -499,7 +503,7 @@ class ReferralSummaryAdmin extends LeftAndMain
                     $val = (float) $cell;
                     $width = (int) round(($val / $max) * 100, 0);
                     if ($format === 'Currency') {
-                        $label = 'NZD' . number_format((float) $cell, 0);
+                        $label = '$' . number_format((float) $cell, 0);
                     } elseif ($format === 'Number') {
                         $label = number_format((float) $cell, 0);
                     } else {
