@@ -86,17 +86,17 @@ class ReferralSummaryAdmin extends LeftAndMain
     ];
 
     private static $stats_to_report_on = [
-        'NumberOfClicks' => 'Number of Clicks',
+        'NumberOfClicks' => 'Number of Clicks (recent only - may not be tracked!)',
         'NumberOfOrders' => 'Number of Orders',
         'TotalOrderAmountPaid' => 'Total Paid',
-        'AverageOrderAmount' => 'Avg Paid / Order',
+        'AverageOrderAmountPaidPerOrder' => 'Avg Paid / Order',
     ];
 
     private static $formatting_rules = [
         'NumberOfClicks' => 'Number',
         'NumberOfOrders' => 'Number',
         'TotalOrderAmountPaid' => 'Currency',
-        'AverageOrderAmount' => 'Currency',
+        'AverageOrderAmountPaidPerOrder' => 'Currency',
     ];
 
     private static $default_form_values = [
@@ -151,7 +151,7 @@ class ReferralSummaryAdmin extends LeftAndMain
                 ),
                 TextField::create(
                     'Keyword',
-                    'Keyword (in From, Source, Medium, Campaign - optional)',
+                    'Keyword',
                     $this->myFormData['Keyword'] ?? ''
                 ),
                 DropdownField::create(
@@ -293,6 +293,8 @@ class ReferralSummaryAdmin extends LeftAndMain
         $includeSource = (($vars['ShowSource'] ?? 'No') === 'Yes');
         $includeMedium = (($vars['ShowMedium'] ?? 'No') === 'Yes');
         $includeCampaign = (($vars['ShowCampaign'] ?? 'No') === 'Yes');
+        $includeTerm = (($vars['ShowTerm'] ?? 'No') === 'Yes');
+        $includeContent = (($vars['ShowContent'] ?? 'No') === 'Yes');
 
 
         $periods = (array) $this->config()->get('reporting_periods');
@@ -377,6 +379,12 @@ class ReferralSummaryAdmin extends LeftAndMain
             if ($includeCampaign) {
                 $key .= '|' . $campaign;
             }
+            if ($includeTerm) {
+                $key .= '|' . ($ref->Term ?: 'none');
+            }
+            if ($includeContent) {
+                $key .= '|' . ($ref->Content ?: 'none');
+            }
 
             if (!isset($list[$key])) {
                 $row = ['Date' => $dateLabel];
@@ -392,11 +400,17 @@ class ReferralSummaryAdmin extends LeftAndMain
                 if ($includeCampaign) {
                     $row['Campaign'] = $campaign;
                 }
+                if ($includeTerm) {
+                    $row['Term'] = $ref->Term ?: 'none';
+                }
+                if ($includeContent) {
+                    $row['Content'] = $ref->Content ?: 'none';
+                }
                 $row += [
                     'NumberOfClicks' => 0,
                     'NumberOfOrders' => 0,
                     'TotalOrderAmountPaid' => 0.0,
-                    'AverageOrderAmountPaidPerClick' => 0.0,
+                    'AverageOrderAmountPaidPerOrder' => 0.0,
                 ];
                 $list[$key] = $row;
             }
@@ -410,7 +424,7 @@ class ReferralSummaryAdmin extends LeftAndMain
 
             $intoOrder = (int) $list[$key]['NumberOfOrders'];
 
-            $list[$key]['AverageOrderAmountPaidPerClick'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountPaid'] / $intoOrder, 2) : 0.0;
+            $list[$key]['AverageOrderAmountPaidPerOrder'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountPaid'] / $intoOrder, 2) : 0.0;
         }
 
         ksort($list, SORT_NATURAL);
