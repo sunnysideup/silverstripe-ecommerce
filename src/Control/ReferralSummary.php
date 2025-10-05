@@ -88,6 +88,7 @@ class ReferralSummaryAdmin extends LeftAndMain
     private static $stats_to_report_on = [
         'NumberOfClicks' => 'Number of Clicks (recent only - may not be tracked!)',
         'NumberOfOrders' => 'Number of Orders',
+        'TotalOrderAmountInvoiced' => 'Total Invoiced',
         'TotalOrderAmountPaid' => 'Total Paid',
         'AverageOrderAmountPaidPerOrder' => 'Avg Paid / Order',
     ];
@@ -95,6 +96,7 @@ class ReferralSummaryAdmin extends LeftAndMain
     private static $formatting_rules = [
         'NumberOfClicks' => 'Number',
         'NumberOfOrders' => 'Number',
+        'TotalOrderAmountInvoiced' => 'Currency',
         'TotalOrderAmountPaid' => 'Currency',
         'AverageOrderAmountPaidPerOrder' => 'Currency',
     ];
@@ -111,7 +113,7 @@ class ReferralSummaryAdmin extends LeftAndMain
         'ShowCampaign' => 'No',
         'ShowTerm' => 'No',
         'ShowContent' => 'No',
-        'Statistic' => 'TotalOrderAmountPaid',
+        'Statistic' => 'TotalOrderAmountInvoiced',
     ];
 
     protected array $myFormData = [];
@@ -409,6 +411,7 @@ class ReferralSummaryAdmin extends LeftAndMain
                 $row += [
                     'NumberOfClicks' => 0,
                     'NumberOfOrders' => 0,
+                    'TotalOrderAmountInvoiced' => 0.0,
                     'TotalOrderAmountPaid' => 0.0,
                     'AverageOrderAmountPaidPerOrder' => 0.0,
                 ];
@@ -419,6 +422,7 @@ class ReferralSummaryAdmin extends LeftAndMain
 
             if ((bool) $ref->IsSubmitted) {
                 $list[$key]['NumberOfOrders']++;
+                $list[$key]['TotalOrderAmountInvoiced'] += (float) $ref->AmountInvoiced;
                 $list[$key]['TotalOrderAmountPaid'] += (float) $ref->AmountPaid;
             }
 
