@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
@@ -418,6 +419,6 @@ class CheckoutPageController extends CartPageController
 
     protected function getLinkToSendReferral()
     {
-        return ShoppingCartController::add_referral_link();
+        return Director::absoluteURL(ShoppingCartController::add_referral_link());
     }
 }

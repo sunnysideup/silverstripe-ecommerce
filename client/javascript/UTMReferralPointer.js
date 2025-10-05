@@ -101,7 +101,7 @@ const saveFirstTouch = data => {
   if (!hasUTMParameters() && Object.keys(data).length) {
     const meta = {
       _capturedAt: new Date().toISOString(),
-      _landingUrl: window.location.href,
+      _landingUrl: window.location.pathname,
       _referrer: document.referrer || ''
     }
     saveToStorage({ ...data, ...meta })
@@ -165,20 +165,31 @@ const sendToServer = utmData => {
   fetch(url, { signal: controller.signal })
     .then(r => r.text())
     .then(t => {
+      alert(t)
       if (Number.parseInt(t, 10) > 0) clearStorage()
     })
-    .catch(() => {})
+    .catch(() => {
+      console.warn('Failed to send UTM data to server')
+    })
     .finally(() => clearTimeout(timeout))
 }
 
-// ---- main
-;(() => {
-  if (!hasUTMParameters()) {
+document.addEventListener('DOMContentLoaded', () => {
+  console.log(`Storage key: ${storageKey}`)
+  console.log(`Has UTM parameters: ${hasUTMParameters()}`)
+  console.log('Stored UTM data:', loadFromStorage(true))
+  console.log(
+    window.LinkToSendReferral
+      ? `Link to send referral: ${window.LinkToSendReferral}`
+      : 'No link to send referral set'
+  )
+  const hasUTMParametersVal = hasUTMParameters()
+  // only save first touch
+  if (!hasUTMParametersVal) {
     const fromUrl = getUTMParameters()
     saveFirstTouch(fromUrl)
-  }
-  if (window.LinkToSendReferral && hasUTMParameters()) {
+  } else if (window.LinkToSendReferral) {
     const utmAndMeta = loadFromStorage(true) // include meta for server
     if (Object.keys(utmAndMeta).length) sendToServer(utmAndMeta)
   }
-})()
+})

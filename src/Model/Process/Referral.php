@@ -31,35 +31,98 @@ class Referral extends DataObject implements EditableEcommerceObject
 {
     use OrderCached;
 
-    private static $referral_sources = [
-        'gid' => 'Google Ads',
-        'utm_source' => 'Google Tracked',
-        'utm_medium' => 'Google Tracked',
-        'utm_campaign' => 'Google Tracked',
-        'utm_term' => 'Google Tracked',
-        'utm_content' => 'Google Tracked',
-        'gclid' => 'Google Ads',
-        'gclsrc' => 'Google Source',
-        'gad' => 'Google Campaign',
-        'fbclid' => 'Facebook Ads',
-        'fb_clickid' => 'Facebook Ads',
-        'twclid' => 'Twitter Ads',
-        'rf' => 'Affiliate Marketing',
-        'subid' => 'Affiliate Marketing',
-        'referral_code' => 'Custom',
-        'referrer' => 'Custom',
-        'direct' => 'Direct Traffic',
-        'organic' => 'Organic Search',
-        'social' => 'Social Media',
-        'email' => 'Email Marketing',
-        'other' => 'Other Referral Source',
-        'google' => 'Google Other',
-        'facebook' => 'Facebook Other',
-        'chatgpt.com' => 'ChatGPT Other',
+    private static array $referral_sources = [
+        // UTM
+        'utm_source'   => ['Name' => 'Google Tracked', 'Field' => 'Source'],
+        'utm_medium'   => ['Name' => 'Google Tracked', 'Field' => 'Medium'],
+        'utm_campaign' => ['Name' => 'Google Tracked', 'Field' => 'Campaign'],
+        'utm_term'     => ['Name' => 'Google Tracked', 'Field' => 'Term'],
+        'utm_content'  => ['Name' => 'Google Tracked', 'Field' => 'Content'],
+
+        // Google Ads / Analytics
+        'gclid'   => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
+        'gclsrc'  => ['Name' => 'Google Source', 'Field' => 'Source'],
+        'gad'     => ['Name' => 'Google Campaign', 'Field' => 'Campaign'],
+        'gbraid'  => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
+        'wbraid'  => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
+        'dclid'   => ['Name' => 'Google Display', 'Field' => 'Campaign'],
+
+        // Facebook / Meta
+        'fbclid'     => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
+        'fb_clickid' => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
+        'fbc'        => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
+        'fbp'        => ['Name' => 'Facebook Ads', 'Field' => 'Source'],
+
+        // Microsoft / Bing
+        'msclkid' => ['Name' => 'Microsoft Ads', 'Field' => 'Campaign'],
+
+        // TikTok
+        'ttclid' => ['Name' => 'TikTok Ads', 'Field' => 'Campaign'],
+
+        // Twitter / X
+        'twclid' => ['Name' => 'Twitter Ads', 'Field' => 'Campaign'],
+
+        // LinkedIn
+        'li_fat_id' => ['Name' => 'LinkedIn Ads', 'Field' => 'Campaign'],
+
+        // Pinterest
+        'epik' => ['Name' => 'Pinterest Ads', 'Field' => 'Campaign'],
+
+        // Snapchat
+        'sccid' => ['Name' => 'Snapchat Ads', 'Field' => 'Campaign'],
+
+        // Campaign Monitor
+        'cm_mc_uid' => ['Name' => 'Campaign Monitor', 'Field' => 'Source'],
+        'cm_mc_mid' => ['Name' => 'Campaign Monitor', 'Field' => 'Campaign'],
+
+        // Mailchimp
+        'mc_cid' => ['Name' => 'Mailchimp', 'Field' => 'Campaign'],
+        'mc_eid' => ['Name' => 'Mailchimp', 'Field' => 'Source'],
+        'mc_tc'  => ['Name' => 'Mailchimp', 'Field' => 'Campaign'],
+        'mc_id'  => ['Name' => 'Mailchimp', 'Field' => 'Campaign'],
+
+        // Generic / Affiliate / Referral
+        'ref'            => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
+        'rf'             => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
+        'referrer'       => ['Name' => 'Referral', 'Field' => 'Source'],
+        'referral'       => ['Name' => 'Referral', 'Field' => 'Source'],
+        'referral_code'  => ['Name' => 'Referral', 'Field' => 'Source'],
+        'affid'          => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
+        'affsource'      => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
+        'aff_sub'        => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'aff_sub2'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'aff_sub3'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'aff_sub4'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'aff_sub5'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'subid'          => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'sub_id'         => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
+        'partner'        => ['Name' => 'Partner Marketing', 'Field' => 'Source'],
+        'partnerid'      => ['Name' => 'Partner Marketing', 'Field' => 'Source'],
+        'cid'            => ['Name' => 'Campaign', 'Field' => 'Campaign'],
+        'campaignid'     => ['Name' => 'Campaign', 'Field' => 'Campaign'],
+        'adid'           => ['Name' => 'Advertising', 'Field' => 'Campaign'],
+        'creative'       => ['Name' => 'Advertising', 'Field' => 'Content'],
+        'clickid'        => ['Name' => 'Advertising', 'Field' => 'Campaign'],
+
+        // Channel grouping
+        'organic' => ['Name' => 'Organic Search', 'Field' => 'Medium'],
+        'direct'  => ['Name' => 'Direct Traffic', 'Field' => 'Medium'],
+        'social'  => ['Name' => 'Social Media', 'Field' => 'Medium'],
+        'email'   => ['Name' => 'Email Marketing', 'Field' => 'Medium'],
+        'push'    => ['Name' => 'Push Notifications', 'Field' => 'Medium'],
+        'other'   => ['Name' => 'Other Referral Source', 'Field' => 'Medium'],
+
+        // Custom
     ];
 
 
-    public static function add_referral(Order $order, ?array $params): ?int
+    private static $basic_searches = [
+        'google'      => ['Name' => 'Google Other', 'Field' => 'From'],
+        'facebook'    => ['Name' => 'Facebook Other', 'Field' => 'From'],
+        'chatgpt.com' => ['Name' => 'ChatGPT Other', 'Field' => 'From'],
+    ];
+
+    public static function add_referral(Order $order, ?array $params = []): ?int
     {
         if (!empty($params) && count($params) > 0) {
             $filter = [
@@ -71,43 +134,33 @@ class Referral extends DataObject implements EditableEcommerceObject
             }
             $params = Convert::raw2sql($params);
             $list = Config::inst()->get(Referral::class, 'referral_sources');
-            $source = [];
+            $ref->LandingUrl = $params['_landingUrl'] ?? '';
+            $ref->Referrer = $params['_referrer'] ?? '';
+            $ref->CapturedAt = $params['_capturedAt'] ?? '';
+            $fieldValues = [];
             $from = [];
-            $metaData = [
-                'LandingUrl' => $params['_landingUrl'] ?? '',
-                'Referrer' => $params['_referrer'] ?? '',
-                'CapturedAt' => $params['_capturedAt'] ?? '',
-            ];
-            foreach ($list as $getVar => $name) {
+            foreach ($list as $getVar => $getVarDetails) {
+                $name = $getVarDetails['Name'] ?? $getVar;
+                $field = $getVarDetails['Field'] ?? '';
                 if (isset($params[$getVar])) {
                     $val = $params[$getVar];
                     $from[] = $name;
-                    switch ($getVar) {
-                        case 'utm_source':
-                            $source[] = $val;
-                            break;
-                        case 'utm_medium':
-                            $ref->Medium = $val;
-                            break;
-                        case 'utm_campaign':
-                            $ref->Campaign = $val;
-                            break;
-                        case 'utm_term':
-                            $ref->Term = $val;
-                            break;
-                        case 'utm_content':
-                            $ref->Content = $val;
-                            break;
-                        default:
-                            $source[] = $val . ' (' . $getVar . ')';
-                            break;
+                    if ($field === null) {
+                        $field = 'Source';
+                        $val .= ' (' . $name . ')';
                     }
+                    if (!isset($fieldValues[$field])) {
+                        $fieldValues[$field] = [];
+                    }
+                    $fieldValues[$field][] = $val;
                 }
             }
-            $ref->Source = implode(' | ', array_filter(array_unique($source)));
-            $ref->From = implode(' | ', array_filter(array_unique($from)));
-            $ref->MetaData = json_encode($metaData);
+            foreach ($fieldValues as $field => $val) {
+                $ref->$field = implode(' | ', array_filter(array_unique($val)));
+            }
+            $ref->From = $from ? implode(' | ', array_filter(array_unique($from))) : 'Other';
             $ref->write();
+            return 1;
         }
         return null;
     }
@@ -120,7 +173,6 @@ class Referral extends DataObject implements EditableEcommerceObject
     private static $table_name = 'Referral';
 
     private static $db = [
-        'MetaData' => 'Text', // json encoded array
         'From' => 'Varchar(100)',
         'Source' => 'Varchar(100)',
         'Medium' => 'Varchar(100)',
@@ -131,6 +183,9 @@ class Referral extends DataObject implements EditableEcommerceObject
         'AmountInvoiced' => 'Currency',
         'AmountPaid' => 'Currency',
         'Processed' => 'Boolean',
+        'LandingUrl' => 'Varchar(255)',
+        'Referrer' => 'Varchar(255)',
+        'CapturedAt' => 'Date',
     ];
 
     private static $field_labels_right = [
@@ -361,11 +416,12 @@ class Referral extends DataObject implements EditableEcommerceObject
         if ($this->From) {
             return $this->From;
         } else {
+            $source = Config::inst()->get(Referral::class, 'basic_searches');
             $txt = $this->getFullCode();
             $list = [];
-            foreach (Config::inst()->get(Referral::class, 'referral_sources') as $key => $name) {
+            foreach ($source as $key => $getVarDetails) {
                 if (strpos($txt, $key) !== false) {
-                    $list[] = $name;
+                    $list[] = $getVarDetails['Name'];
                 }
             }
         }
@@ -374,7 +430,7 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public function getFullCode(): string
     {
-        return implode('|', array_filter([$this->Source,  $this->Medium, $this->Campaign]));
+        return implode('|', array_filter([$this->Source,  $this->Medium, $this->Campaign, $this->Term, $this->Content]));
     }
 
 
@@ -383,31 +439,32 @@ class Referral extends DataObject implements EditableEcommerceObject
         parent::onBeforeWrite();
     }
 
-    public function AttachData()
+    public function AttachData(?int $daysAgo = 180): void
     {
-        $order = $this->getOrderCached();
-        $stale = strtotime($this->Created) < strtotime('-180 days') ? true : false;
+        $processed = $this->Processed;
+        $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
         if ($stale) {
-            $change = true;
+            $processed = true;
         }
+        $order = $this->getOrderCached();
         if ($order) {
             if (!$this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
                 if ($this->IsSubmitted) {
-                    $change = true;
+                    $processed = true;
                 }
             }
             if ($this->IsSubmitted) {
                 if (!$this->AmountInvoiced) {
                     $this->AmountInvoiced = $order->getTotal();
                     if ($this->AmountInvoiced) {
-                        $change = true;
+                        $processed = true;
                     }
                 }
                 if (!$this->AmountPaid) {
                     $this->AmountPaid = $order->getTotalPaid();
                     if ($this->AmountPaid) {
-                        $change = true;
+                        $processed = true;
                     }
                 }
             }
@@ -415,10 +472,10 @@ class Referral extends DataObject implements EditableEcommerceObject
         if (!$this->From) {
             $this->From = $this->getFromAfterwards();
             if ($this->From) {
-                $change = true;
+                $processed = true;
             }
         }
-        if ($change) {
+        if ($processed) {
             $this->Processed = true;
             $this->write();
         }

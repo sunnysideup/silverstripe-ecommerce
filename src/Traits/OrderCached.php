@@ -62,9 +62,7 @@ trait OrderCached
             if (! empty($this->OrderID)) {
                 $this->orderCached = Order::get_order_cached($this->OrderID, $forceNew);
                 // if we have not set it before then we can set statusID
-                if ($this->orderCached && $this->orderCached->exists() && -1 === $this->orderCachedStatusID) {
-                    $this->orderCachedStatusID = $this->orderCached->StatusID;
-                }
+                $this->orderCachedStatusID = $this->orderCached->StatusID;
             }
         }
     }

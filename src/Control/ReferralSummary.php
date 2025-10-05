@@ -9,6 +9,7 @@ use DateTimeInterface;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -25,6 +26,45 @@ use Sunnysideup\Ecommerce\Model\Process\Referral;
 
 class ReferralSummaryAdmin extends LeftAndMain
 {
+
+    public static function do_data_prep(?int $limit = 3000): ?bool
+    {
+        $daysAgoDelete = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'max_days_of_interest');
+
+        $filter = [
+            'Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoDelete . ' days')) . ' 23:59:59',
+            'Processed' => 0,
+        ];
+        $refs = Referral::get()->filterAny($filter)
+            ->limit($limit);
+        foreach ($refs as $ref) {
+            $ref->delete();
+        }
+
+        $daysAgoStale = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'recalculate_days_for_prep_data');
+        $filter = [
+            'Created:GreaterThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59',
+            'Processed' => 0,
+        ];
+        $refs = Referral::get()->filterAny($filter)
+            ->sort('ID', 'DESC')
+            ->limit($limit);
+        foreach ($refs as $ref) {
+            $ref->AttachData($daysAgoStale);
+        }
+        // old items more than six months old should be processed.
+        $filter2 = [
+            'Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59',
+            'Processed' => 0,
+        ];
+        $refsCount = Referral::get()->filter($filter2)->count();
+        if ($refsCount < $limit) {
+            return true;
+        }
+        return false;
+    }
+
+
     private static string $url_segment = 'referral-summary';
     private static string $menu_title = 'Referral Summary';
     private static int $menu_priority = -9999; // adjust if needed
@@ -68,6 +108,8 @@ class ReferralSummaryAdmin extends LeftAndMain
         'ShowSource' => 'No',
         'ShowMedium' => 'No',
         'ShowCampaign' => 'No',
+        'ShowTerm' => 'No',
+        'ShowContent' => 'No',
         'Statistic' => 'TotalOrderAmountPaid',
     ];
 
@@ -81,7 +123,7 @@ class ReferralSummaryAdmin extends LeftAndMain
     ];
 
     /** config */
-    private static int $max_days_of_interest = 720;
+    private static int $max_days_of_interest = 1080;
     private static int $recalculate_days_for_prep_data = 180;
 
     public function getEditForm($id = null, $fields = null): Form
@@ -146,6 +188,16 @@ class ReferralSummaryAdmin extends LeftAndMain
                     ['No' => 'No', 'Yes' => 'Yes']
                 )->setValue($this->myFormData['ShowCampaign'] ?? $this->getDefaultFormValue('ShowCampaign')),
                 DropdownField::create(
+                    'ShowTerm',
+                    'Breakdown By Term',
+                    ['No' => 'No', 'Yes' => 'Yes']
+                )->setValue($this->myFormData['ShowTerm'] ?? $this->getDefaultFormValue('ShowTerm')),
+                DropdownField::create(
+                    'ShowContent',
+                    'Breakdown By Content',
+                    ['No' => 'No', 'Yes' => 'Yes']
+                )->setValue($this->myFormData['ShowContent'] ?? $this->getDefaultFormValue('ShowContent')),
+                DropdownField::create(
                     'Statistic',
                     'Statistic (single focus)',
                     $this->config()->get('stats_to_report_on')
@@ -199,21 +251,15 @@ class ReferralSummaryAdmin extends LeftAndMain
 
     public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
     {
-        $limit = 999;
-        $daysAgo = (int) $this->config()->get('recalculate_days_for_prep_data');
-        $filter = [
-            'Created:GreaterThan' => date('Y-m-d', strtotime($daysAgo . ' days ago')) . ' 23:59:59',
-            'Processed' => 0,
-        ];
-        $refs = Referral::get()->filterAny($filter)
-            ->limit($limit);
-        foreach ($refs as $ref) {
-            $ref->AttachData();
-        }
-        $refsCount = Referral::get()->filterAny($filter)->count();
-        if ($refsCount < $limit) {
+        if (self::do_data_prep()) {
             $this->getRequest()->getSession()->set('ReferralSummaryAdminDataPrepped', true);
+            $message = 'Data preparation completed successfully.';
+            $type = 'good';
+        } else {
+            $message = 'Data preparation in progress. Please click the button again if needed.';
+            $type = 'warning';
         }
+        $form->sessionMessage($message, $type);
         return $this->redirectBack();
     }
 

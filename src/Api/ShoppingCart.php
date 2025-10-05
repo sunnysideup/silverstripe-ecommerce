@@ -66,6 +66,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCartCleanup;
  * @sub-package: control
  *
  */
+
 class ShoppingCart
 {
     use Extensible;
@@ -1174,15 +1175,14 @@ class ShoppingCart
 
     public function addReferral($params): int
     {
-        if (count($params)) {
+        $outcome = -1;
+        if (!empty($params)) {
             $order = $this->currentOrder();
             if ($order && $order->exists()) {
-                if (Referral::add_referral($order, $params)) {
-                    return $order->ID;
-                }
+                $outcome = Referral::add_referral($order, $params);
             }
         }
-        return -2;
+        return $outcome;
     }
 
     // UI MESSAGE HANDLING
