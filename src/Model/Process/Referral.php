@@ -456,6 +456,7 @@ class Referral extends DataObject implements EditableEcommerceObject
         $processed = $this->Processed;
         $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
         if ($stale) {
+            // by now we should have an order so even if we dont have an order it should still be marked as processed
             $processed = true;
         }
         $order = $this->getOrderCached();
@@ -491,5 +492,20 @@ class Referral extends DataObject implements EditableEcommerceObject
             $this->Processed = true;
             $this->write();
         }
+    }
+
+    public function IsStaleWithoutOrder(?int $daysAgo = 180): bool
+    {
+        $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
+        if ($stale) {
+            if (! $this->OrderID) {
+                return true;
+            }
+            $order = $this->getOrderCached();
+            if (!$order) {
+                return true;
+            }
+        }
+        return false;
     }
 }
