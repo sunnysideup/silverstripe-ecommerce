@@ -46,6 +46,7 @@ class Referral extends DataObject implements EditableEcommerceObject
         'gbraid'  => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
         'wbraid'  => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
         'dclid'   => ['Name' => 'Google Display', 'Field' => 'Campaign'],
+        'srsltid' => ['Name' => 'Google Merchant', 'Field' => 'Campaign'],
 
         // Facebook / Meta
         'fbclid'     => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
@@ -126,19 +127,21 @@ class Referral extends DataObject implements EditableEcommerceObject
     {
         if (!empty($params) && count($params) > 0) {
             $filter = [
-                'OrderID' => $order->ID,
+                'UniqueID' => ($params['_uniqueID'] ?? '') ?: $order->ID,
             ];
-            $ref = DataObject::get_one(Referral::class, $filter);
+            $ref = Referral::get()->filter($filter)->first();
             if (!$ref) {
                 $ref = Referral::create($filter);
             }
             $params = Convert::raw2sql($params);
-            $list = Config::inst()->get(Referral::class, 'referral_sources');
             $ref->LandingUrl = $params['_landingUrl'] ?? '';
             $ref->Referrer = $params['_referrer'] ?? '';
             $ref->CapturedAt = $params['_capturedAt'] ?? '';
+
+            // set fields based on config
             $fieldValues = [];
             $from = [];
+            $list = Config::inst()->get(Referral::class, 'referral_sources');
             foreach ($list as $getVar => $getVarDetails) {
                 $name = $getVarDetails['Name'] ?? $getVar;
                 $field = $getVarDetails['Field'] ?? '';
@@ -155,8 +158,8 @@ class Referral extends DataObject implements EditableEcommerceObject
                     $fieldValues[$field][] = $val;
                 }
             }
-            foreach ($fieldValues as $field => $val) {
-                $ref->$field = implode(' | ', array_filter(array_unique($val)));
+            foreach ($fieldValues as $field => $values) {
+                $ref->$field = implode(' | ', array_filter(array_unique($values)));
             }
             $ref->From = $from ? implode(' | ', array_filter(array_unique($from))) : 'Other';
             $ref->write();
@@ -173,6 +176,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     private static $table_name = 'Referral';
 
     private static $db = [
+        'UniqueID' => 'Varchar(36)',
         'From' => 'Varchar(100)',
         'Source' => 'Varchar(100)',
         'Medium' => 'Varchar(100)',
@@ -181,7 +185,6 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Content' => 'Varchar(100)',
         'IsSubmitted' => 'Boolean',
         'AmountInvoiced' => 'Currency',
-        'AmountPaid' => 'Currency',
         'Processed' => 'Boolean',
         'LandingUrl' => 'Varchar(255)',
         'Referrer' => 'Varchar(255)',
@@ -189,6 +192,10 @@ class Referral extends DataObject implements EditableEcommerceObject
     ];
 
     private static $indexes = [
+        'UniqueID' => [
+            'type' => 'unique',
+            'columns' => ['UniqueID'],
+        ],
         'Source' => true,
         'Medium' => true,
         'Campaign' => true,
@@ -241,7 +248,6 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Order.Title' => 'Order',
         'IsSubmitted.NiceAndColourfull' => 'Submitted',
         'AmountInvoiced' => 'Invoiced',
-        'AmountPaid' => 'Paid',
         'From' => 'From',
         'Source' => 'Source',
         'Medium' => 'Medium',
@@ -451,53 +457,46 @@ class Referral extends DataObject implements EditableEcommerceObject
         parent::onBeforeWrite();
     }
 
-    public function AttachData(?int $daysAgo = 180): void
+    public function ProcessReferral(?int $daysAgo = 180): void
     {
-        $processed = $this->Processed;
+        if ($this->Processed) {
+            return;
+        }
+        $save = false;
         $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
         if ($stale) {
             // by now we should have an order so even if we dont have an order it should still be marked as processed
             $processed = true;
+            $save = true;
         }
         $order = $this->getOrderCached();
         if ($order) {
             if (!$this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
-                if ($this->IsSubmitted) {
-                    $processed = true;
-                }
+                $save = true;
             }
             if ($this->IsSubmitted) {
                 if (!$this->AmountInvoiced) {
                     $this->AmountInvoiced = $order->getTotal();
-                    if ($this->AmountInvoiced) {
-                        $processed = true;
-                    }
-                }
-                if (!$this->AmountPaid) {
-                    $this->AmountPaid = $order->getTotalPaid();
-                    if ($this->AmountPaid) {
-                        $processed = true;
-                    }
+                    $save = true;
+                    $processed = true;
                 }
             }
         }
         if (!$this->From) {
             $this->From = $this->getFromAfterwards();
-            if ($this->From) {
-                $processed = true;
-            }
+            $save = true;
         }
-        if ($processed) {
-            $this->Processed = true;
+        if ($save) {
+            $this->Processed = $processed;
             $this->write();
         }
     }
 
     public function IsStaleWithoutOrder(?int $daysAgo = 180): bool
     {
-        $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
-        if ($stale) {
+        $isStale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
+        if ($isStale) {
             if (! $this->OrderID) {
                 return true;
             }

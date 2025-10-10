@@ -1,124 +1,35 @@
-const getVarsToExpect = [
-  // Standard UTM
-  'utm_source',
-  'utm_medium',
-  'utm_campaign',
-  'utm_term',
-  'utm_content',
-
-  // Google Ads / Analytics
-  'gclid',
-  'gclsrc',
-  'gad',
-  'gbraid',
-  'wbraid',
-  'dclid',
-
-  // Facebook / Meta
-  'fbclid',
-  'fb_clickid',
-  'fbc',
-  'fbp',
-
-  // Microsoft / Bing
-  'msclkid',
-
-  // TikTok
-  'ttclid',
-
-  // Twitter / X
-  'twclid',
-
-  // LinkedIn
-  'li_fat_id',
-
-  // Pinterest
-  'epik',
-
-  // Snapchat
-  'sccid',
-
-  // Campaign Monitor
-  'cm_mc_uid',
-  'cm_mc_mid',
-
-  // Mailchimp
-  'mc_cid', // Campaign ID
-  'mc_eid', // Unique subscriber ID
-  'mc_tc', // (sometimes for tracking click source)
-  'mc_id', // Older campaigns occasionally use this
-
-  // Generic / Affiliate / Referral
-  'ref',
-  'rf',
-  'referrer',
-  'referral',
-  'referral_code',
-  'affid',
-  'affsource',
-  'aff_sub',
-  'aff_sub2',
-  'aff_sub3',
-  'aff_sub4',
-  'aff_sub5',
-  'subid',
-  'sub_id',
-  'partner',
-  'partnerid',
-  'cid',
-  'campaignid',
-  'adid',
-  'creative',
-  'clickid',
-
-  // Channel grouping
-  'organic',
-  'direct',
-  'social',
-  'email',
-  'push',
-  'other'
-]
-
 // one-bucket storage key
-const storageKey = `${window.location.host}.utm_data`
+const storageKey = `${location.host}.utm_data`
+const metaKeys = new Set([
+  '_capturedAt',
+  '_landingUrl',
+  '_referrer',
+  '_uniqueID'
+])
+const expirationTime = 7776000000 // ~90 days
 
-const hasUTMParameters = () => {
+const parseQuery = () => {
+  const u = new URL(location.href)
+  // capture all query params as-is
+  return Object.fromEntries(u.searchParams.entries())
+}
+
+// add this helper
+// replace isExpired with millis-based check
+// expiry (millis)
+const isExpired = () => {
   try {
-    const raw = localStorage.getItem(storageKey)
-    if (!raw) return false
-    const obj = JSON.parse(raw)
-    return Object.keys(obj).some(k => getVarsToExpect.includes(k) && obj[k])
+    const { _capturedAt } = loadFromStorage(true)
+    if (!_capturedAt) return false
+    const t = new Date(_capturedAt).getTime()
+    return Number.isFinite(t) && Date.now() - t > expirationTime
   } catch {
     return false
   }
 }
 
-const metaKeys = ['_capturedAt', '_landingUrl', '_referrer']
-
-// write-once save incl. meta
-const saveFirstTouch = data => {
-  if (!hasUTMParameters() && Object.keys(data).length) {
-    const meta = {
-      _capturedAt: new Date().toISOString(),
-      _landingUrl: window.location.pathname,
-      _referrer: document.referrer || ''
-    }
-    saveToStorage({ ...data, ...meta })
-  }
-}
-
-const getUTMParameters = () => {
-  const params = new URLSearchParams(window.location.search)
-  const found = {}
-  getVarsToExpect.forEach(k => {
-    if (params.has(k)) {
-      const v = params.get(k)
-      if (v != null && v !== '') found[k] = v
-    }
-  })
-  return found
-}
+const hasOnlyMeta = obj => Object.keys(obj).every(k => metaKeys.has(k))
+const hasMoreThanMeta = obj => Object.keys(obj).some(k => !metaKeys.has(k))
 
 const loadFromStorage = (includeMeta = false) => {
   try {
@@ -126,25 +37,53 @@ const loadFromStorage = (includeMeta = false) => {
     if (!raw) return {}
     const obj = JSON.parse(raw)
     if (includeMeta) return obj
-
-    // default: only UTM/trackers
-    const filtered = {}
-    getVarsToExpect.forEach(k => {
-      if (obj?.[k]) filtered[k] = obj[k]
-    })
-    return filtered
+    // strip meta keys by default
+    return Object.fromEntries(
+      Object.entries(obj).filter(([k]) => !metaKeys.has(k))
+    )
   } catch {
     return {}
   }
 }
+const makeUUID = () =>
+  globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function'
+    ? globalThis.crypto.randomUUID()
+    : String(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER))
 
+const hasAnyParamsStored = () => {
+  if (isExpired()) {
+    clearStorage()
+    return false
+  }
+  const obj = loadFromStorage(true)
+  return typeof obj._uniqueID !== 'undefined' || hasMoreThanMeta(obj)
+}
+
+const saveFirstTouch = params => {
+  if (hasAnyParamsStored()) return
+
+  const hasParams = Object.keys(params).length > 0
+
+  let uniqueID = 'none'
+  if (hasParams) uniqueID = makeUUID()
+  const dataToSave = {
+    ...params,
+    _capturedAt: new Date().toISOString(),
+    _landingUrl: location.pathname,
+    _referrer: document.referrer || '',
+    _uniqueID: uniqueID
+  }
+
+  saveToStorage(dataToSave)
+}
 const saveToStorage = data => {
   try {
-    const existing = loadFromStorage()
-    const merged = { ...existing, ...data }
+    const existing = loadFromStorage(true)
+    // do not overwrite existing first-touch keys; only fill blanks
+    const merged = { ...data, ...existing }
     localStorage.setItem(storageKey, JSON.stringify(merged))
   } catch {
-    /* ignore */
+    /* ignore quota / JSON issues */
   }
 }
 
@@ -156,40 +95,51 @@ const clearStorage = () => {
   }
 }
 
-const sendToServer = utmData => {
+// helper: schedule without blocking rendering
+const runWhenIdle = cb =>
+  'requestIdleCallback' in window
+    ? requestIdleCallback(cb, { timeout: 2000 })
+    : setTimeout(cb, 0)
+
+// non-blocking send: prefer sendBeacon, else fetch keepalive
+const sendToServer = data => {
   if (!window.LinkToSendReferral) return
+
+  const url = window.LinkToSendReferral
+
+  // --- Fallback: async fetch with keepalive + success check ---
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 15000)
-  const query = new URLSearchParams(utmData).toString()
-  const url = `${window.LinkToSendReferral}?${query}`
-  fetch(url, { signal: controller.signal })
+
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    keepalive: true,
+    signal: controller.signal,
+    body: JSON.stringify(data)
+  })
     .then(r => r.text())
     .then(t => {
-      alert(t)
+      // Optional: handle your own success logic here
       if (Number.parseInt(t, 10) > 0) clearStorage()
     })
     .catch(() => {
-      console.warn('Failed to send UTM data to server')
+      console.warn('Failed to send referral data')
     })
     .finally(() => clearTimeout(timeout))
 }
 
+// boot: do the light work on DOM ready, defer network to idle
 document.addEventListener('DOMContentLoaded', () => {
-  console.log(`Storage key: ${storageKey}`)
-  console.log(`Has UTM parameters: ${hasUTMParameters()}`)
-  console.log('Stored UTM data:', loadFromStorage(true))
-  console.log(
-    window.LinkToSendReferral
-      ? `Link to send referral: ${window.LinkToSendReferral}`
-      : 'No link to send referral set'
-  )
-  const hasUTMParametersVal = hasUTMParameters()
-  // only save first touch
-  if (!hasUTMParametersVal) {
-    const fromUrl = getUTMParameters()
-    saveFirstTouch(fromUrl)
-  } else if (window.LinkToSendReferral) {
-    const utmAndMeta = loadFromStorage(true) // include meta for server
-    if (Object.keys(utmAndMeta).length) sendToServer(utmAndMeta)
+  if (isExpired()) clearStorage()
+
+  const params = parseQuery()
+  saveFirstTouch(params)
+
+  if (window.LinkToSendReferral && hasAnyParamsStored()) {
+    const all = loadFromStorage(true)
+    if (Object.keys(all).length && !hasOnlyMeta(all)) {
+      runWhenIdle(() => sendToServer(all))
+    }
   }
 })

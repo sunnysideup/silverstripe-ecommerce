@@ -24,52 +24,13 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Process\Referral;
+use Sunnysideup\Ecommerce\Model\Process\ReferralProcessLog;
+use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDoReferralDataPrep;
 
-class ReferralSummaryAdmin extends LeftAndMain
+class ReferralSummary extends LeftAndMain
 {
 
-    public static function do_data_prep(?int $limit = 1000): ?bool
-    {
-        $daysAgoDelete = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'max_days_of_interest') ?: (5 * 3600);
-
-        $filter = [
-            'Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoDelete . ' days')) . ' 23:59:59',
-            'Processed' => 0,
-        ];
-        $refs = Referral::get()->filterAny($filter)
-            ->limit($limit);
-        foreach ($refs as $ref) {
-            $ref->delete();
-        }
-
-        $daysAgoStale = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'recalculate_days_for_prep_data') ?: (180 * 3600);
-        $tsStale = strtotime('-' . $daysAgoStale . ' days');
-        // less than 180 days old items that have not been processed should be processed.
-        $filter = [
-            'Created:LessThan' => date('Y-m-d', $tsStale) . ' 23:59:59',
-            'Processed' => 0,
-        ];
-        $refs = Referral::get()->filterAny($filter)
-            ->sort('ID', 'DESC')
-            ->limit($limit);
-        foreach ($refs as $ref) {
-            $ref->AttachData($daysAgoStale);
-            if ($ref->IsStaleWithoutOrder($daysAgoStale)) {
-                // by now we should have an order so even if we dont have an order it should still be marked as processed
-                $ref->delete();
-            }
-        }
-        // old items more than six months old should be processed.
-        $filter2 = [
-            'Created:LessThan' => date('Y-m-d', $tsStale) . ' 23:59:59',
-            'Processed' => 0,
-        ];
-        $refsCount = Referral::get()->filter($filter2)->count();
-        if ($refsCount < $limit) {
-            return true;
-        }
-        return false;
-    }
+    private static float $max_time_between_processes = 1;
 
 
     private static string $url_segment = 'referral-summary';
@@ -91,16 +52,14 @@ class ReferralSummaryAdmin extends LeftAndMain
         'NumberOfClicks' => 'Number of Clicks (recent only - may not be tracked!)',
         'NumberOfOrders' => 'Number of Orders',
         'TotalOrderAmountInvoiced' => 'Total Invoiced',
-        'TotalOrderAmountPaid' => 'Total Paid',
-        'AverageOrderAmountPaidPerOrder' => 'Avg Paid / Order',
+        'AverageOrderAmountInvoicedPerOrder' => 'Avg Invoiced / Order',
     ];
 
     private static $formatting_rules = [
         'NumberOfClicks' => 'Number',
         'NumberOfOrders' => 'Number',
         'TotalOrderAmountInvoiced' => 'Currency',
-        'TotalOrderAmountPaid' => 'Currency',
-        'AverageOrderAmountPaidPerOrder' => 'Currency',
+        'AverageOrderAmountInvoicedPerOrder' => 'Currency',
     ];
 
     private static $default_form_values = [
@@ -127,14 +86,10 @@ class ReferralSummaryAdmin extends LeftAndMain
         'doPrepData' => 'ADMIN',
     ];
 
-    /** config */
-    private static int $max_days_of_interest = 1825; // about 5 years
-    private static int $recalculate_days_for_prep_data = 180;
-
     public function getEditForm($id = null, $fields = null): Form
     {
         $request = $this->getRequest();
-        if ($request->getSession()->get('ReferralSummaryAdminDataPrepped')) {
+        if (self::needs_processing() !== true) {
             $today = new DateTimeImmutable('today');
             $defaultFrom  = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
             $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
@@ -259,12 +214,20 @@ class ReferralSummaryAdmin extends LeftAndMain
 
     public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
     {
-        if (self::do_data_prep()) {
-            $this->getRequest()->getSession()->set('ReferralSummaryAdminDataPrepped', true);
+        if (self::needs_processing() !== true) {
+            $form->sessionMessage('Data preparation not needed.', 'good');
+            return $this->redirectBack();
+        }
+        $request = $this->getRequest();
+        $start = $request->getSession()->get('ReferralSummaryStart') ?? 0;
+        $limit = 500;
+        $task = new EcommerceTaskDoReferralDataPrep();
+        if ($task->doDataPrep($limit, $start, true)) {
+            $request->getSession()->set('ReferralSummaryStart', $start + $limit);
             $message = 'Data preparation completed successfully.';
             $type = 'good';
         } else {
-            $message = 'Data preparation in progress. Please click the button again if needed.';
+            $message = 'Data preparation in progress. Please click the button again to continue processing.';
             $type = 'warning';
         }
         $form->sessionMessage($message, $type);
@@ -417,8 +380,7 @@ class ReferralSummaryAdmin extends LeftAndMain
                     'NumberOfClicks' => 0,
                     'NumberOfOrders' => 0,
                     'TotalOrderAmountInvoiced' => 0.0,
-                    'TotalOrderAmountPaid' => 0.0,
-                    'AverageOrderAmountPaidPerOrder' => 0.0,
+                    'AverageOrderAmountInvoicedPerOrder' => 0.0,
                 ];
                 $list[$key] = $row;
             }
@@ -428,12 +390,11 @@ class ReferralSummaryAdmin extends LeftAndMain
             if ((bool) $ref->IsSubmitted) {
                 $list[$key]['NumberOfOrders']++;
                 $list[$key]['TotalOrderAmountInvoiced'] += (float) $ref->AmountInvoiced;
-                $list[$key]['TotalOrderAmountPaid'] += (float) $ref->AmountPaid;
             }
 
             $intoOrder = (int) $list[$key]['NumberOfOrders'];
 
-            $list[$key]['AverageOrderAmountPaidPerOrder'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountPaid'] / $intoOrder, 2) : 0.0;
+            $list[$key]['AverageOrderAmountInvoicedPerOrder'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountInvoiced'] / $intoOrder, 2) : 0.0;
         }
 
         ksort($list, SORT_NATURAL);
@@ -463,7 +424,7 @@ class ReferralSummaryAdmin extends LeftAndMain
 
         $html .= '
         <style>
-            .ReferralSummaryAdmin .form__field-holder  {max-width: 100%!important;}
+            .ReferralSummary .form__field-holder  {max-width: 100%!important;}
             .ref-table { border-collapse: collapse; margin-bottom: 4rem; width: 100%; }
             .ref-table th, .ref-table td { padding: 6px 8px; border: 1px solid #ddd; font-size: 12px; min-width: 150px; max-width: 400px; }
             .ref-table td, .ref-table td * { overflow-wrap: anywhere; }
@@ -534,5 +495,23 @@ class ReferralSummaryAdmin extends LeftAndMain
     protected function getDefaultFormValue(string $key): string
     {
         return $this->config()->get('default_form_values')[$key] ?? '';
+    }
+
+    public static function last_processed()
+    {
+        $ref = ReferralProcessLog::get()
+            ->filter(['Completed' => 1])
+            ->sort('ID', 'DESC')
+            ->first();
+        if ($ref) {
+            return $ref->LastEdited;
+        }
+        return '1 Jan 1970 00:00:00';
+    }
+
+    public static function needs_processing(): bool
+    {
+        $maxDays = (float) Config::inst()->get(ReferralSummary::class, 'max_time_between_processes') ?: 1.0;
+        return time() - strtotime((string) self::last_processed()) > $maxDays * 86400;
     }
 }
