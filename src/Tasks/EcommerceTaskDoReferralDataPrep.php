@@ -35,7 +35,7 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
     private static int $max_days_of_interest = 1825; // about 5 years
     private static int $recalculate_days_for_prep_data = 180;
 
-    public function doDataPrep(?int $limit = 99999999, $start = 0, ?bool $retainMessages = false): bool
+    public function doDataPrep(?int $limit = 99999999, ?int $start = 0, ?bool $retainMessages = false): bool
     {
         $this->retainMessages = $retainMessages;
         $this->messages = [];
