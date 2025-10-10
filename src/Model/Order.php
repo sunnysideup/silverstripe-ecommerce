@@ -2207,17 +2207,61 @@ class Order extends DataObject implements EditableEcommerceObject
         return $arrayList;
     }
 
-    protected $productIds = null;
+    protected ?array $buyableIdsAndClassNames = null;
+
+    public function BuyableIds(): array
+    {
+        $this->loadBuyableIdsAndClassNames();
+        return ($this->buyableIdsAndClassNames['IDs'] ?? []);
+    }
+
+    public function BuyableClassNames(): array
+    {
+        $this->loadBuyableIdsAndClassNames();
+        return ($this->buyableIdsAndClassNames['ClassNames'] ?? []);
+    }
+
+    protected function loadBuyableIdsAndClassNames(): void
+    {
+        if ($this->buyableIdsAndClassNames !== null) {
+            return;
+        }
+        $this->buyableIdsAndClassNames = [
+            'ClassNames' => $this->Items()->columnUnique('BuyableClassName'),
+            'IDs' => $this->Items()->columnUnique('BuyableID'),
+        ];
+    }
+
+    protected ?array $productIdsAndClassNames = null;
 
     public function ProductIds(): array
     {
-        if ($this->productIds === null) {
-            foreach ($this->Items() as $item) {
-                $product = $item->Product();
-                $this->productIds[$product->ID] = $product->ID;
+        $this->loadProductIdsAndClassNames();
+        return ($this->productIdsAndClassNames['IDs'] ?? []);
+    }
+
+    public function ProductClassNames(): array
+    {
+        $this->loadProductIdsAndClassNames();
+        return ($this->productIdsAndClassNames['ClassNames'] ?? []);
+    }
+
+    protected function loadProductIdsAndClassNames(): void
+    {
+        if ($this->productIdsAndClassNames !== null) {
+            return;
+        }
+        $this->productIdsAndClassNames = [
+            'ClassNames' => [],
+            'IDs' => [],
+        ];
+        foreach ($this->Items() as $item) {
+            $product = $item->Product();
+            if ($product && $product->exists()) {
+                $this->productIdsAndClassNames['ClassNames'][] = $product->ClassName;
+                $this->productIdsAndClassNames['IDs'][] = $product->ID;
             }
         }
-        return $this->productIds;
     }
 
     /**
