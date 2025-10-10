@@ -30,7 +30,7 @@ class ReferralSummaryAdmin extends LeftAndMain
 
     public static function do_data_prep(?int $limit = 1000): ?bool
     {
-        $daysAgoDelete = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'max_days_of_interest');
+        $daysAgoDelete = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'max_days_of_interest') ?: (5 * 3600);
 
         $filter = [
             'Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoDelete . ' days')) . ' 23:59:59',
@@ -42,21 +42,22 @@ class ReferralSummaryAdmin extends LeftAndMain
             $ref->delete();
         }
 
-        $daysAgoStale = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'recalculate_days_for_prep_data');
+        $daysAgoStale = (int) Config::inst()->get(ReferralSummaryAdmin::class, 'recalculate_days_for_prep_data') ?: (180 * 3600);
         $tsStale = strtotime('-' . $daysAgoStale . ' days');
+        // less than 180 days old items that have not been processed should be processed.
         $filter = [
-            'Created:GreaterThan' => date('Y-m-d', $tsStale) . ' 23:59:59',
+            'Created:LessThan' => date('Y-m-d', $tsStale) . ' 23:59:59',
             'Processed' => 0,
         ];
         $refs = Referral::get()->filterAny($filter)
             ->sort('ID', 'DESC')
             ->limit($limit);
         foreach ($refs as $ref) {
-            if (!$ref->OrderID) {
-                $ref->delete();
-                continue;
-            }
             $ref->AttachData($daysAgoStale);
+            if ($ref->IsStaleWithoutOrder($daysAgoStale)) {
+                // by now we should have an order so even if we dont have an order it should still be marked as processed
+                $ref->delete();
+            }
         }
         // old items more than six months old should be processed.
         $filter2 = [
@@ -127,7 +128,7 @@ class ReferralSummaryAdmin extends LeftAndMain
     ];
 
     /** config */
-    private static int $max_days_of_interest = 1080;
+    private static int $max_days_of_interest = 1825; // about 5 years
     private static int $recalculate_days_for_prep_data = 180;
 
     public function getEditForm($id = null, $fields = null): Form
