@@ -563,22 +563,28 @@ class UserPreference
                 if (! $currentKey) {
                     $currentKey = $this->getCurrentUserPreferencesKey($type);
                 }
-                $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
+                $sortFilterDisplayValues = $this->rootGroupController->getSortFilterDisplayValues();
+                $getVar = $sortFilterDisplayValues[$type]['getVariable'] ?? '';
+                $dbFieldName = $sortFilterDisplayValues[$type]['dbFieldName'] ?? '';
+                if ($dbFieldName) {
+                    $default = $this->rootGroup->getSortFilterDisplayValueDefault($dbFieldName, BaseApplyer::DEFAULT_NAME);
+                } else {
+                    $default = BaseApplyer::DEFAULT_NAME;
+                }
                 foreach ($options as $key => $data) {
                     $isCurrent = $currentKey === $key;
-                    $isResetFor = $key === BaseApplyer::DEFAULT_NAME;
-                    $resetFor = $isResetFor ? $type : '';
+                    $isResetFor = $key === $default;
+                    $resetFor = $isResetFor ? $getVar : '';
                     $data = [
                         'Title' => $data['Title'],
                         'Current' => $isCurrent,
-                        //todo: fix this!!!!
                         'Link' => $this->getLinkTemplate('', $type, $key),
                         'LinkingMode' => $isCurrent ? 'current' : 'link',
                         'Ajaxify' => $ajaxify,
                         'Key' => $key,
                         'GetVar' => $getVar,
                         'IsResetFor' => $isResetFor,
-                        'ResetFor' => $isResetFor ? $getVar : '',
+                        'ResetFor' => $resetFor,
                     ];
 
                     $obj = new ArrayData($data);
