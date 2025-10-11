@@ -147,12 +147,13 @@ class Referral extends DataObject implements EditableEcommerceObject
             $fieldValues = [];
             $from = [];
             $list = Config::inst()->get(Referral::class, 'referral_sources');
-            foreach ($list as $getVar => $getVarDetails) {
-                $name = $getVarDetails['Name'] ?? $getVar;
+            unset($params['_uniqueID'], $params['_landingUrl'], $params['_referrer'], $params['_capturedAt']);
+            foreach ($params as $key => $val) {
+                $getVarDetails = $list[$key] ?? null;
+                $name = $getVarDetails['Name'] ?? $key;
                 $field = $getVarDetails['Field'] ?? '';
-                $val = $params[$getVar];
                 $from[] = $name;
-                if ($field === '') {
+                if (!$field) {
                     $field = 'Source';
                     $val .= ' (' . $name . ')';
                 }
