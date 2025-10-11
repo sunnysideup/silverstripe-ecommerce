@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -136,8 +138,11 @@ class Referral extends DataObject implements EditableEcommerceObject
             $params = Convert::raw2sql($params);
             $ref->LandingUrl = $params['_landingUrl'] ?? '';
             $ref->Referrer = $params['_referrer'] ?? '';
-            $ref->CapturedAt = $params['_capturedAt'] ?? '';
-
+            if (!empty($params['_capturedAt'])) {
+                $date = new DateTimeImmutable($params['_capturedAt'], new DateTimeZone('UTC'));
+                $localDate = $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                $ref->CapturedAt = $localDate->format('Y-m-d H:i:s');
+            }
             // set fields based on config
             $fieldValues = [];
             $from = [];
@@ -145,25 +150,23 @@ class Referral extends DataObject implements EditableEcommerceObject
             foreach ($list as $getVar => $getVarDetails) {
                 $name = $getVarDetails['Name'] ?? $getVar;
                 $field = $getVarDetails['Field'] ?? '';
-                if (isset($params[$getVar])) {
-                    $val = $params[$getVar];
-                    $from[] = $name;
-                    if ($field === null) {
-                        $field = 'Source';
-                        $val .= ' (' . $name . ')';
-                    }
-                    if (!isset($fieldValues[$field])) {
-                        $fieldValues[$field] = [];
-                    }
-                    $fieldValues[$field][] = $val;
+                $val = $params[$getVar];
+                $from[] = $name;
+                if ($field === '') {
+                    $field = 'Source';
+                    $val .= ' (' . $name . ')';
                 }
+                if (!isset($fieldValues[$field])) {
+                    $fieldValues[$field] = [];
+                }
+                $fieldValues[$field][] = $val;
             }
             foreach ($fieldValues as $field => $values) {
                 $ref->$field = implode(' | ', array_filter(array_unique($values)));
             }
             $ref->From = $from ? implode(' | ', array_filter(array_unique($from))) : 'Other';
             $ref->write();
-            return 1;
+            return $ref->ID;
         }
         return null;
     }
@@ -188,7 +191,7 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Processed' => 'Boolean',
         'LandingUrl' => 'Varchar(255)',
         'Referrer' => 'Varchar(255)',
-        'CapturedAt' => 'Date',
+        'CapturedAt' => 'Datetime',
     ];
 
     private static $indexes = [
@@ -463,6 +466,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             return;
         }
         $save = false;
+        $processed = false;
         $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
         if ($stale) {
             // by now we should have an order so even if we dont have an order it should still be marked as processed
