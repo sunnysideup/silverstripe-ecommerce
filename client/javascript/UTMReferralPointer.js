@@ -101,32 +101,54 @@ const runWhenIdle = cb =>
     ? requestIdleCallback(cb, { timeout: 2000 })
     : setTimeout(cb, 0)
 
+// Flatten data to URLSearchParams (arrays -> repeated keys)
+const toParams = obj => {
+  const p = new URLSearchParams()
+  for (const [k, v] of Object.entries(obj || {})) {
+    if (v == null) continue
+    if (Array.isArray(v)) v.forEach(x => p.append(k, String(x)))
+    else if (typeof v === 'object')
+      p.append(k, JSON.stringify(v)) // no deep expansion
+    else p.append(k, String(v))
+  }
+  return p
+}
+
 // non-blocking send: prefer sendBeacon, else fetch keepalive
-const sendToServer = data => {
+async function sendToServer (data) {
   if (!window.LinkToSendReferral) return
-
   const url = window.LinkToSendReferral
+  const params = toParams(data)
 
-  // --- Fallback: async fetch with keepalive + success check ---
+  // Try to survive page close
+  if (document.visibilityState === 'hidden' && navigator.sendBeacon) {
+    const body = new Blob([params.toString()], {
+      type: 'application/x-www-form-urlencoded;charset=UTF-8'
+    })
+    if (navigator.sendBeacon(url, body)) clearStorage?.()
+    return
+  }
+
+  // Normal path with timeout + abort
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 15000)
-
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    keepalive: true,
-    signal: controller.signal,
-    body: JSON.stringify(data)
-  })
-    .then(r => r.text())
-    .then(t => {
-      // Optional: handle your own success logic here
-      if (Number.parseInt(t, 10) > 0) clearStorage()
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: params, // fetch sets Content-Type to x-www-form-urlencoded
+      signal: controller.signal
     })
-    .catch(() => {
-      console.warn('Failed to send referral data')
-    })
-    .finally(() => clearTimeout(timeout))
+    const text = await res.text()
+    if (Number.parseInt(text, 10) > 0) {
+      clearStorage()
+    } else {
+      console.warn('Server did not accept referral data:', text)
+    }
+  } catch (err) {
+    console.warn('Failed to send referral data:', err?.name || err)
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 // boot: do the light work on DOM ready, defer network to idle
