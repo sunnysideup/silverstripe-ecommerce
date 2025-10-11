@@ -457,6 +457,11 @@ class ProductGroup extends Page
         return (int) $this->recursiveValue('NumberOfProductsPerPage', $default);
     }
 
+    public function getSortFilterDisplayValueDefault(string $dbFieldName, ?string $default = BaseApplyer::DEFAULT_NAME): string
+    {
+        return (string) $this->recursiveValue($dbFieldName, $default);
+    }
+
     /**
      * work out the recursive value in the Database for SORT / FILTER / DISPLAY.
      *
