@@ -20,6 +20,7 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Sunnysideup\Ecommerce\Model\Process\Referral;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
@@ -65,6 +66,7 @@ class SalesAdminExtras extends ModelAdmin
         BillingAddress::class,
         ShippingAddress::class,
         EcommercePayment::class,
+        Referral::class,
     ];
 
     /**
@@ -117,8 +119,7 @@ class SalesAdminExtras extends ModelAdmin
             $list = $list
                 ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
                 ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-                ->where('"OrderStatusLog"."ClassName" = ' . Convert::raw2sql($submittedOrderStatusLogClassName, true))
-            ;
+                ->where('"OrderStatusLog"."ClassName" = ' . Convert::raw2sql($submittedOrderStatusLogClassName, true));
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
