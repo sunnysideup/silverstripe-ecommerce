@@ -343,9 +343,9 @@ class ShoppingCartController extends Controller
     public function addreferral(HTTPRequest $request)
     {
         if ($this->cart) {
-            return $this->cart->addReferral($this->parameters(true));
+            return $this->cart->addReferral($this->parameters(false));
         }
-        return -1;
+        return -2;
     }
 
     /**
