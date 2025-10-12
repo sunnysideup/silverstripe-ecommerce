@@ -69,17 +69,15 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
             }
         }
         $missedOnes = Product::get()
-            ->where("\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''")
-        ;
+            ->where("\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''");
         if ($missedOnes->exists()) {
             DB::alteration_message('ERROR: could not updated all Product.FullSiteTreeSort numbers!', 'deleted');
         } else {
             DB::alteration_message('All Product.FullSiteTreeSort have been updated');
         }
         $examples = Product::get()
-            ->orderBy(DB::get_conn()->random())
-            ->limit(3)
-        ;
+            ->shuffle()
+            ->limit(3);
         if ($examples->exists()) {
             foreach ($examples as $key => $example) {
                 DB::alteration_message("EXAMPLE #{$key}: " . $example->Title . ': <strong>' . $example->FullSiteTreeSort . '</strong>');

@@ -1485,7 +1485,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($this->getEmailClassName()) {
             $order = Order::get()
                 ->filter(['StatusID' => $this->ID])
-                ->orderBy(DB::get_conn()->random())
+                ->shuffle()
                 ->first();
             if (!$order) {
                 $order = Order::get()
