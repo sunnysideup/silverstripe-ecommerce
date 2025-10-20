@@ -35,7 +35,6 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
         //IMPORTANT!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
         Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
-        $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $lastOrderStep = DataObject::get_one(
             OrderStep::class,
             '',
@@ -43,7 +42,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
             ['Sort' => 'DESC']
         );
         if ($lastOrderStep) {
-            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(Created) < ' . strtotime((string) self::AGO_STATEMENT);
+            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(LastEdited) < ' . strtotime((string) self::AGO_STATEMENT);
             $count = DB::query("
                 SELECT COUNT (\"Order\".\"ID\")
                 FROM \"Order\"

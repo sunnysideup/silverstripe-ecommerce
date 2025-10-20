@@ -127,7 +127,7 @@ class ProductSearchForm extends Form
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
         );
 
-        if (Director::isDev() || Permission::check('ADMIN')) {
+        if (Director::isDev()) {
             $fields->push(CheckboxField::create('showdebug', 'Debug Search'));
             $fields->push(CheckboxField::create('showdebugkeywords', 'Debug Keywords'));
         }
