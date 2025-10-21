@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sunnysideup\Ecommerce\Admin;
+namespace Sunnysideup\Ecommerce\Cms;
 
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -30,8 +30,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDoReferralDataPrep;
 class ReferralSummary extends LeftAndMain
 {
 
-    private static float $max_time_between_processes = 1;
-
+    private static float $max_days_between_processing = 1;
 
     private static string $url_segment = 'referral-summary';
     private static string $menu_title = 'Referral Summary';
@@ -511,7 +510,8 @@ class ReferralSummary extends LeftAndMain
 
     public static function needs_processing(): bool
     {
-        $maxDays = (float) Config::inst()->get(ReferralSummary::class, 'max_time_between_processes') ?: 1.0;
-        return time() - strtotime((string) self::last_processed()) > $maxDays * 86400;
+        $maxDays = (float) Config::inst()->get(ReferralSummary::class, 'max_days_between_processing') ?: 1.0;
+        $maxSeconds = $maxDays * 86400;
+        return time() - strtotime((string) self::last_processed()) > $maxSeconds;
     }
 }

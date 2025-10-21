@@ -1,7 +1,7 @@
 ---
 Name: ecommerce_routes
 Before:
-  - '#adminroutes'
+  - "#adminroutes"
 ---
 SilverStripe\Control\Director:
   rules:
@@ -13,4 +13,4 @@ SilverStripe\Control\Director:
     admin/ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
     ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\OrderModifierFormController
     admin/ecommerce/quick-updates//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\QuickUpdates
-    admin/ecommerce/referral-summary//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\ReferralSummary
+    # admin/ecommerce/referral-summary//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Cms\ReferralSummary

@@ -500,7 +500,7 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public function IsStaleWithoutOrder(?int $daysAgo = 180): bool
     {
-        $isStale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
+        $isStale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days');
         if ($isStale) {
             if (! $this->OrderID) {
                 return true;
