@@ -251,7 +251,7 @@ class Referral extends DataObject implements EditableEcommerceObject
         'Created' => 'When',
         'Order.Title' => 'Order',
         'IsSubmitted.NiceAndColourfull' => 'Submitted',
-        'AmountInvoiced' => 'Invoiced',
+        'AmountInvoiced' => 'Invoice Amount',
         'From' => 'From',
         'Source' => 'Source',
         'Medium' => 'Medium',
