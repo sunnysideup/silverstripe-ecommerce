@@ -92,7 +92,6 @@ class ReferralSummary extends LeftAndMain
             $today = new DateTimeImmutable('today');
             $defaultFrom  = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
             $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
-
             $fields = FieldList::create(
                 HeaderField::create('Heading', 'Sales Referrals', 3),
                 LiteralField::create(

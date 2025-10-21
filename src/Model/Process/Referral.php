@@ -461,14 +461,14 @@ class Referral extends DataObject implements EditableEcommerceObject
         parent::onBeforeWrite();
     }
 
-    public function ProcessReferral(?int $daysAgo = 180): void
+    public function ProcessReferral(?int $daysAgo = 365): void
     {
         if ($this->Processed) {
             return;
         }
         $save = false;
         $processed = false;
-        $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days') ? true : false;
+        $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days');
         if ($stale) {
             // by now we should have an order so even if we dont have an order it should still be marked as processed
             $processed = true;
@@ -505,8 +505,8 @@ class Referral extends DataObject implements EditableEcommerceObject
             if (! $this->OrderID) {
                 return true;
             }
-            $order = $this->getOrderCached();
-            if (!$order) {
+            $amountInvoiced = floatval($this->AmountInvoiced);
+            if ($amountInvoiced <= 0.01) {
                 return true;
             }
         }
