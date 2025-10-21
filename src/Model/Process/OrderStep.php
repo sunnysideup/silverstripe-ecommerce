@@ -543,7 +543,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $fields = parent::getCMSFields();
         //replacing
-        if ($this->canBeDefered()) {
+        if ($this->canBeDeferred()) {
             $queueField = $fields->dataFieldByName('OrderProcessQueueEntries');
             $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
             if ($queueField) {
@@ -1354,7 +1354,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
         }
-        if (!$this->canBeDefered()) {
+        if (!$this->canBeDeferred()) {
             $this->DeferTimeInSeconds = 0;
             $this->DeferFromSubmitTime = 0;
         } elseif (is_numeric($this->DeferTimeInSeconds)) {
@@ -1519,7 +1519,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     protected function humanReadeableDeferTimeInSeconds(): ?string
     {
-        if ($this->canBeDefered()) {
+        if ($this->canBeDeferred()) {
             $field = DBField::create_field('DBDatetime', strtotime('+ ' . $this->DeferTimeInSeconds . ' seconds'));
             $descr0 = _t('OrderStep.THE', 'The') . ' ' . '<span style="color: #338DC1">' . $this->getTitle() . '</span>';
             $descr1 = _t('OrderStep.DELAY_VALUE', 'Order Step, for any order, will run');
@@ -1547,7 +1547,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    protected function canBeDefered(): bool
+    protected function canBeDeferred(): bool
     {
         return $this->hasCustomerMessage() || $this->DeferTimeInSeconds > 0;
     }
