@@ -1538,7 +1538,7 @@ class Product extends Page implements BuyableModel
     {
         return [
             (string) $this->Title,
-            str_replace(',', '', (string) $this->AlternativeProductNames),
+            implode(' ', $this->AlternativeNamesUnique()),
             (string) $this->InternalItemID,
             (string) $this->ProductBreadcrumb,
             (string) $this->ShortDescription,
@@ -1682,11 +1682,35 @@ class Product extends Page implements BuyableModel
             $list = array_filter(array_filter(explode(',', (string) $this->AlternativeProductNames), 'trim'));
             $al = ArrayList::create();
             foreach ($list as $name) {
-                $al->push(ArrayData::create(['Title' => DBField::create_field('Varchar', $name)]));
+                $al->push(ArrayData::create(['Title' => trim($name)]));
             }
             return $al;
         }
         return null;
+    }
+
+    public function AlternativeNamesUnique(): array
+    {
+        $altNames = str_replace(', ', ' ', (string) $this->AlternativeProductNames);
+        $altNamesArray = array_unique(
+            array_map(
+                'trim',
+                explode(' ', $altNames)
+            )
+        );
+        if ($altNamesArray) {
+            return $altNamesArray;
+        }
+        return [];
+    }
+    public function AlternativeNamesUniqueAsArrayList(): ArrayList
+    {
+        $list = $this->AlternativeNamesUnique();
+        $arrayList = new ArrayList();
+        foreach ($list as $name) {
+            $arrayList->push(ArrayData::create(['Title' => $name]));
+        }
+        return $arrayList;
     }
 
     public function stageTableDefault(?string $alternativeClassName = null): string

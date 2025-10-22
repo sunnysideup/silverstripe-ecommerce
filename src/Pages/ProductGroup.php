@@ -949,7 +949,7 @@ class ProductGroup extends Page
     {
         return [
             (string) $this->Title,
-            (string) $this->AlternativeProductGroupNames,
+            implode(' ', $this->AlternativeNamesUnique()),
             (string) $this->Content,
         ];
     }
@@ -975,5 +975,29 @@ class ProductGroup extends Page
             return $al;
         }
         return null;
+    }
+
+    public function AlternativeNamesUnique(): array
+    {
+        $altNames = str_replace(', ', ' ', (string) $this->AlternativeProductGroupNames);
+        $altNamesArray = array_unique(
+            array_map(
+                'trim',
+                explode(' ', $altNames)
+            )
+        );
+        if ($altNamesArray) {
+            return $altNamesArray;
+        }
+        return [];
+    }
+    public function AlternativeNamesUniqueAsArrayList(): ArrayList
+    {
+        $list = $this->AlternativeNamesUnique();
+        $arrayList = new ArrayList();
+        foreach ($list as $name) {
+            $arrayList->push(ArrayData::create(['Title' => $name]));
+        }
+        return $arrayList;
     }
 }
