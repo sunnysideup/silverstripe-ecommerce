@@ -146,7 +146,7 @@ class Product extends Page implements BuyableModel
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ProductBreadcrumb' => 'Varchar(255)', //Name for look-up lists
-        'ShortDescription' => 'Varchar(255)', //For use in lists.
+        'ShortDescription' => 'Varchar(600)', //For use in lists.
         'AlternativeProductNames' => 'Varchar(255)', //To ensure they are also find for other names in search
         'UseImageForProducts' => 'Boolean', //For use in lists.
         'Popularity' => 'Float', //For actual value
@@ -1703,14 +1703,14 @@ class Product extends Page implements BuyableModel
         }
         return [];
     }
-    public function AlternativeNamesUniqueAsArrayList(): ArrayList
+    public function AlternativeNamesUniqueAsArrayList(): ?ArrayList
     {
         $list = $this->AlternativeNamesUnique();
         $arrayList = new ArrayList();
         foreach ($list as $name) {
             $arrayList->push(ArrayData::create(['Title' => $name]));
         }
-        return $arrayList;
+        return $arrayList->count() > 1 ? $arrayList : null;
     }
 
     public function stageTableDefault(?string $alternativeClassName = null): string
