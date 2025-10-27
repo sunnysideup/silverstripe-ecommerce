@@ -719,13 +719,19 @@ class ProductGroupController extends PageController
     }
 
 
-    public function createLinkFromProductList($link): string
+    public function createLinkFromProductList($link, ?array $filter = [], ?bool $noReturnIfNoVars = false): string
     {
         /** @var DataList $list */
         $list = $this->getProductList();
+        if ($filter && count($filter)) {
+            $list = $list->filter($filter);
+        }
         if ($list && $list->exists()) {
             $vars =  implode(',', $list->column('InternalItemID'));
         } else {
+            if ($noReturnIfNoVars) {
+                return '';
+            }
             $vars = '';
         }
         if (strpos($link, '?') === false) {
