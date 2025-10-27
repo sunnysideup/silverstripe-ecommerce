@@ -3734,17 +3734,27 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getCustomerStatus($withDetail = true)
     {
         $str = '';
-        if ($this->MyStep()->ShowAsUncompletedOrder) {
+        $step = $this->MyStep();
+        if(! $step) {
+            return 'error';
+        }
+        if ($this->getIsCancelled()) {
+            $str = _t('Order.CANCELLED', 'Cancelled');
+            return $str;
+        }
+        if ($step->ShowAsUncompletedOrder) {
             $str = _t('Order.UNCOMPLETED', 'Uncompleted');
-        } elseif ($this->MyStep()->ShowAsInProcessOrder) {
+        } elseif ($step->ShowAsInProcessOrder) {
             $str = _t('Order.IN_PROCESS', 'In Process');
-        } elseif ($this->MyStep()->ShowAsCompletedOrder) {
+        } elseif ($step->ShowAsCompletedOrder) {
             $str = _t('Order.COMPLETED', 'Completed');
         }
 
         if ($withDetail) {
-            if (!$this->HideStepFromCustomer) {
-                $str .= ' (' . $this->MyStep()->Name . ')';
+            if ($step->ShowAsInProcessOrder) {
+                if (!$this->HideStepFromCustomer) {
+                    $str .= ' (' . $step->Name . ')';
+                }
             }
         }
 
