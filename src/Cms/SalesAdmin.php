@@ -41,7 +41,7 @@ class SalesAdmin extends ModelAdmin
      *
      * @var string
      */
-    private static $url_segment = 'sales';
+    private static $url_segment = 'current-sales';
 
     /**
      * standard SS variable.
@@ -134,8 +134,7 @@ class SalesAdmin extends ModelAdmin
                                 'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),
                                 'CancelledByID:GreaterThan' => 0,
                             ]
-                        )
-                    ;
+                        );
 
                     // $list = $list->sort(['OrderStatusLog.ID' => 'DESC']);
                     self::$_list_cache_orders = $list;
