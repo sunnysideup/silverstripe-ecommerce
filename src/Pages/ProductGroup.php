@@ -991,13 +991,13 @@ class ProductGroup extends Page
         }
         return [];
     }
-    public function AlternativeNamesUniqueAsArrayList(): ArrayList
+    public function AlternativeNamesUniqueAsArrayList(): ?ArrayList
     {
         $list = $this->AlternativeNamesUnique();
         $arrayList = new ArrayList();
         foreach ($list as $name) {
             $arrayList->push(ArrayData::create(['Title' => $name]));
         }
-        return $arrayList;
+        return $arrayList->count() > 1 ? $arrayList : null;
     }
 }
