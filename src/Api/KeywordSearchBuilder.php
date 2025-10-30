@@ -7,6 +7,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
+use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 
 class KeywordSearchBuilder
 {
@@ -90,14 +91,14 @@ class KeywordSearchBuilder
 
             return;
         }
+        $phrase = $this->cleanPhrase($phrase);
         $this->ifStatement = '';
         $this->startIfStatement();
         //make three levels of search
-        $fullPhrase = trim(preg_replace('#\s+#', ' ', (string) $phrase));
-        if (strlen($fullPhrase) < 2) {
+        if (strlen($phrase) < 2) {
             return '"ID" < 0';
         }
-        $wordAsArray = array_filter(explode(' ', $fullPhrase));
+        $wordAsArray = array_filter(explode(' ', $phrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
         $hasWordArray = false;
@@ -117,20 +118,20 @@ class KeywordSearchBuilder
         $count = 0;
 
         foreach ([$primaryField, $secondaryField] as $field) {
-            $strPosition = $this->strPositionPhrase($fullPhrase, $field);
+            $strPosition = $this->strPositionPhrase($phrase, $field);
             if ($field === $primaryField) {
                 // exact match with Field, e.g. Title equals "AAAA BBBB"
-                $this->addIfStatement(++$count, '"' . $field . "\" = '{$fullPhrase}'");
+                $this->addIfStatement(++$count, '"' . $field . "\" = '{$phrase}'");
             }
 
             // starts with full string and then space, e.g. Title equals "AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '{$fullPhrase} %'");
+            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '{$phrase} %'");
 
             // contains full string with spaces around it, e.g. Title equals "* AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '% {$fullPhrase} %'", $strPosition);
+            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '% {$phrase} %'", $strPosition);
 
             // contains full string without space around it "*AAAA BBBB*"
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '%{$fullPhrase}%'", $strPosition);
+            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '%{$phrase}%'", $strPosition);
             if ($hasWordArray) {
                 $this->addIfStatement(
                     ++$count,
@@ -144,14 +145,14 @@ class KeywordSearchBuilder
         self::$ifStatementCache = $this->ifStatement;
     }
 
-    protected function strPositionPhrase(string $fullPhrase, string $field): string
+    protected function strPositionPhrase(string $phrase, string $field): string
     {
 
         $divisor = 5;
         return '  +
             (
                 1 - (
-                    MATCH ("' . $field . '") AGAINST (\'' . Convert::raw2sql($fullPhrase) . '\' IN NATURAL LANGUAGE MODE) ) / ' . $divisor . '
+                    MATCH ("' . $field . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) ) / ' . $divisor . '
             )';
     }
 
@@ -282,5 +283,13 @@ class KeywordSearchBuilder
         // Sort by adjusted gp ascending
         usort($newRows, fn($a, $b) => $a['gp'] <=> $b['gp']);
         return $newRows;
+    }
+
+    protected function cleanPhrase(string $phrase): string
+    {
+        //remove special characters ...
+        // return ProductSearchFilter::keyword_sanitised($phrase);
+        // should be already done in ProductSearchFilter...
+        return $phrase;
     }
 }
