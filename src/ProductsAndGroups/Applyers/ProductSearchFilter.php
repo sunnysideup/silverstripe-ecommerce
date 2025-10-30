@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -39,6 +40,15 @@ class ProductSearchFilter extends BaseApplyer
         'productIds',
         'productGroupIds',
         'baseListOwner',
+    ];
+
+    private static array $allowed_get_vars = [
+        'showdebug',
+        'searchfilter',
+        'Keyword',
+        'MinimumPrice',
+        'MaximumPrice',
+        'OnlyThisSection',
     ];
 
     public function partialCacheGetFieldsToCache(): array
@@ -218,9 +228,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $allowDebug = (Director::isDev() || Permission::check('ADMIN'));
-        $this->debug = ! empty($_GET['showdebug']) && $allowDebug;
-        $this->debugKeywords = strpos($_GET['searchfilter'], 'showdebugkeywords~1') !== false && $allowDebug;
+        $this->setDebugs();
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
@@ -240,19 +248,25 @@ class ProductSearchFilter extends BaseApplyer
                     $this->getProductIds(),
                     $this->finalProductList->getBuyableClassName()
                 );
-            } else {
-                $sorter = ArrayMethods::create_sort_statement_from_id_array(
-                    [0 => 0],
-                    $this->finalProductList->getBuyableClassName()
-                );
+                $additionalSortOption = self::OPTIONS_FOR_SORT;
+                $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
+                ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
+                $this->applyEnd($key, $this->rawData);
             }
-            $additionalSortOption = self::OPTIONS_FOR_SORT;
-            $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
-            ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
-            $this->applyEnd($key, $this->rawData);
         }
 
         return $this;
+    }
+
+    protected function setDebugs()
+    {
+        if (Director::isDev() || Permission::check('ADMIN')) {
+            $getVars = Controller::curr()?->getRequest()?->getVars();
+            if ($getVars) {
+                $this->debug = ! empty($getVars['showdebug']);
+                $this->debugKeywords = isset($getVars['searchfilter']) && strpos($getVars['searchfilter'], 'showdebugkeywords~1') !== false;
+            }
+        }
     }
 
     public function getTitle(?string $key = '', $params = null): string
@@ -346,8 +360,14 @@ class ProductSearchFilter extends BaseApplyer
         } else {
             $this->rawData = $params;
         }
-
+        $this->rawData = $this->filterAllowedKeys($this->rawData);
         return parent::applyStart($key, $this->rawData);
+    }
+
+    protected function filterAllowedKeys(array $data): array
+    {
+        $allowed = $this->config()->get('allowed_get_vars');
+        return array_intersect_key($data, array_flip($allowed));
     }
 
     protected function runFullProcessFromCache()
