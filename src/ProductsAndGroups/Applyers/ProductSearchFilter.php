@@ -207,7 +207,8 @@ class ProductSearchFilter extends BaseApplyer
     {
         $string = Convert::raw2sql($string);
         $string = strtolower((string) $string);
-
+        $string = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', (string) $string);
+        $string = trim(preg_replace('#\s+#', ' ', (string) $string));
         return substr((string) $string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }
 
@@ -239,10 +240,15 @@ class ProductSearchFilter extends BaseApplyer
                     $this->getProductIds(),
                     $this->finalProductList->getBuyableClassName()
                 );
-                $additionalSortOption = self::OPTIONS_FOR_SORT;
-                $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
-                ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
+            } else {
+                $sorter = ArrayMethods::create_sort_statement_from_id_array(
+                    [0 => 0],
+                    $this->finalProductList->getBuyableClassName()
+                );
             }
+            $additionalSortOption = self::OPTIONS_FOR_SORT;
+            $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
+            ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
             $this->applyEnd($key, $this->rawData);
         }
 
@@ -587,7 +593,7 @@ class ProductSearchFilter extends BaseApplyer
             } else {
                 $listToAdd = $listToAdd->orderBy($sort);
             }
-            $customMethod = $this->Config()->get('custom_id_method_to_retrieve_products');
+            $customMethod = $this->config()->get('custom_id_method_to_retrieve_products');
             if (! $customMethod) {
                 //check that this is the right order!
                 $listToAdd = $listToAdd->columnUnique('ID');
