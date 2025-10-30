@@ -219,7 +219,7 @@ class ProductSearchFilter extends BaseApplyer
     {
         $allowDebug = (Director::isDev() || Permission::check('ADMIN'));
         $this->debug = ! empty($_GET['showdebug']) && $allowDebug;
-        $this->debugKeywords = ! empty($_GET['showdebugkeywords']) && $allowDebug;
+        $this->debugKeywords = strpos($_GET['searchfilter'], 'showdebugkeywords~1') !== false && $allowDebug;
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
