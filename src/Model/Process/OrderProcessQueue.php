@@ -327,9 +327,13 @@ class OrderProcessQueue extends DataObject
             LIMIT ' . $limit . ';
         ';
         $rows = DB::query($sql);
-        $orderIDs = [$id => $id];
-        foreach ($rows as $row) {
-            $orderIDs[$row['OrderID']] = $row['OrderID'];
+        $orderIDs = [-1 => -1];
+        if ($id) {
+            $orderIDs = [$id => $id];
+        } else {
+            foreach ($rows as $row) {
+                $orderIDs[$row['OrderID']] = $row['OrderID'];
+            }
         }
 
         return Order::get()
