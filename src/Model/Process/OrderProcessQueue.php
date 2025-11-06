@@ -253,8 +253,8 @@ class OrderProcessQueue extends DataObject
                     ++$myQueueObject->ProcessAttempts;
                     $myQueueObject->write();
                     $order->tryToFinaliseOrder(
-                        $tryAgain = false,
-                        $fromOrderQueue = true
+                        false,
+                        true
                     );
                     $newOrderStatusID = $order->StatusID;
                     if ($oldOrderStatusID !== $newOrderStatusID) {
@@ -284,11 +284,11 @@ class OrderProcessQueue extends DataObject
      *
      * @param Order $order
      */
-    public function getQueueObject($order)
+    public function getQueueObject($order): ?OrderProcessQueue
     {
         $filter = ['OrderID' => $order->ID];
-
-        return DataObject::get_one(OrderProcessQueue::class, $filter);
+        // do not use cache here!
+        return OrderProcessQueue::get()->filter($filter)->first();
     }
 
     /**

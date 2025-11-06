@@ -496,9 +496,9 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @var array[bool]
      */
-    protected static $_try_to_finalise_order_is_running = [];
+    protected static array $_try_to_finalise_order_is_running = [];
 
-    protected static $_try_to_finalise_order_count = [];
+    protected static array $_try_to_finalise_order_count = [];
 
     public static function set_order_cached(?Order $order)
     {
@@ -1406,7 +1406,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //if the order has been cancelled then we do not process it ...
             if ($this->CancelledByID) {
                 $this->Archive();
-
+                self::$_try_to_finalise_order_is_running[$this->ID] = false;
                 return;
             }
 
@@ -1417,9 +1417,11 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($myQueueObject) {
                 if ($fromOrderQueue) {
                     if (!$myQueueObject->InProcess) {
+                        self::$_try_to_finalise_order_is_running[$this->ID] = false;                        
                         return;
                     }
                 } else {
+                    self::$_try_to_finalise_order_is_running[$this->ID] = false;
                     return;
                 }
             }
@@ -1428,6 +1430,8 @@ class Order extends DataObject implements EditableEcommerceObject
             //of "isSubmitted"
             $this->getIsSubmitted(true);
             //status of order is being progressed
+
+            // ============ MOVING IT ALONG THE ORDER STEPS ==============
             $nextStatusID = $this->doNextStatus();
             // $timeTaken = microtime(true) - $previousTime;
             // DB::alteration_message($nextStatusID.' took '.$timeTaken);
@@ -1466,13 +1470,14 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return int (StatusID or false if the next status can not be "applied")
      */
-    public function doNextStatus(): int
+    public function doNextStatus(): int|bool
     {
         $startsWithID = (int) $this->StatusID;
-        if ($this->MyStep()->initStep($this)) {
-            if ($this->MyStep()->doStep($this)) {
+        $step = $this->MyStep();
+        if ($step->initStep($this)) {
+            if ($step->doStep($this)) {
                 /** @var null|OrderStep $nextOrderStepObject */
-                $nextOrderStepObject = $this->MyStep()->nextStep($this);
+                $nextOrderStepObject = $step->nextStep($this);
                 if ($nextOrderStepObject instanceof OrderStep) {
                     if ((int) $startsWithID === (int) $nextOrderStepObject->ID) {
                         user_error('Recursive order step!');
@@ -1485,7 +1490,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -3735,7 +3740,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $str = '';
         $step = $this->MyStep();
-        if(! $step) {
+        if (! $step) {
             return 'error';
         }
         if ($this->getIsCancelled()) {
