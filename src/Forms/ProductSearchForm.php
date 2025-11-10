@@ -84,10 +84,10 @@ class ProductSearchForm extends Form
             $getVars = array_merge($getVars, $data);
         }
         $defaults = [];
-        $defaults['Keyword'] = $getVars['Keyword'] ?? '';
-        $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? 0;
-        $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? 0;
-        $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? 0;
+        $defaults['Keyword'] = $getVars['Keyword'] ?? $getVars['keyword']  ?? '';
+        $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? $getVars['minimumprice'] ?? 0;
+        $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? $getVars['maximumprice'] ?? 0;
+        $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? $getVars['onlythissection'] ?? 0;
         $defaults = [
             'Keyword' => Convert::raw2att($defaults['Keyword']),
             'MinimumPrice' => (float) str_replace(', ', '', (string) $defaults['MinimumPrice']),
