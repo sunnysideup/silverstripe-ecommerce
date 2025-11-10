@@ -213,7 +213,7 @@ class ProductSearchForm extends Form
     public function doProductSearchForm($data, $form)
     {
         $this->rawData = $data;
-        $this->rawData['Keyword'] = $data['Keyword'] ?? '';
+        $this->rawData['Keyword'] = $data['Keyword'] ?? $data['keyword'] ?? '';
         $this->rawData['Keyword'] = ProductSearchFilter::keyword_sanitised($this->rawData['Keyword']);
         SearchHistory::add_entry($this->rawData['Keyword']);
         $this->runFullProcessInner($data);

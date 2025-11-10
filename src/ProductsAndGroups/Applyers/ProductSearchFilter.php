@@ -283,7 +283,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function getLastSearchPhrase(): string
     {
-        return $this->rawData['Keyword'] ?? '';
+        return $this->rawData['Keyword'] ?? $this->rawData['keyword'] ?? '';
     }
 
     public function getProductIds(): array
