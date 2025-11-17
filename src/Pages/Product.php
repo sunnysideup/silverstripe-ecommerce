@@ -186,6 +186,7 @@ class Product extends Page implements BuyableModel
         'AllowPurchaseNice' => 'Varchar',
         'ProductType' => 'Varchar',
         'SoldCount' => 'Int',
+        'InternalItemIDCalculated' => 'Varchar',
     ];
 
     private static $indexes = [
@@ -1724,5 +1725,12 @@ class Product extends Page implements BuyableModel
     public function getSearchBoostCalculated(): ?int
     {
         return $this->SearchBoost;
+    }
+
+    public function getInternalItemIDCalculated(): ?string
+    {
+        $v = (string) $this->InternalItemID;
+        $this->extend('updateInternalItemIDCalculated', $v);
+        return $v;
     }
 }
