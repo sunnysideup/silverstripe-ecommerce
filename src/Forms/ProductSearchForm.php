@@ -102,8 +102,8 @@ class ProductSearchForm extends Form
         $fields->push(
             TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
                 ->setAttribute('autocomplete', 'off')
-                // ->setAttribute('autocorrect', 'off')
-                // ->setAttribute('auto-capitalization', 'off')
+                ->setAttribute('autocorrect', 'off')
+                ->setAttribute('auto-capitalization', 'off')
                 ->setAttribute('spellcheck', 'false')
                 ->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'))
         );
@@ -149,6 +149,11 @@ class ProductSearchForm extends Form
         $this->disableSecurityToken();
         //extensions need to be set after __construct
         //extension point
+        $this
+            ->setAttribute('autocomplete', 'off')
+            ->setAttribute('autocorrect', 'off')
+            ->setAttribute('auto-capitalization', 'off')
+            ->setAttribute('spellcheck', 'false');
         $this->extend('updateProductSearchForm', $this);
 
         return $this;
