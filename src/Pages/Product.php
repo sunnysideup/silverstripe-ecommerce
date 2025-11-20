@@ -678,6 +678,9 @@ class Product extends Page implements BuyableModel
         $allParentsArray = [];
 
         foreach ($directParents as $parent) {
+            /**
+             * @var Sitetree $obj
+             */
             $obj = $parent;
             $allParentsArray[$obj->ID] = $obj->ID;
 
