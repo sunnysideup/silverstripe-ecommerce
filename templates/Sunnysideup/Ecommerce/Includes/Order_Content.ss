@@ -18,7 +18,7 @@
                 <% else %>
                     <span class="tableTitle">$TableTitle</span>
                 <% end_if %>
-                <span class="tableSubTitle">$TableSubTitle.RAW</span>
+                <span class="tableSubTitle">$TableSubTitle</span>
             </td>
             <td class="center quantity">$Quantity</td>
             <td class="right unitprice">$UnitPriceAsMoney.NiceDefaultFormat</td>
