@@ -84,8 +84,8 @@ class ProductOrderItem extends OrderItem
 
     public function getTableTitle(): string
     {
-        if($this->priceHasBeenFixed()) {
-            if($this->Name) {
+        if ($this->priceHasBeenFixed()) {
+            if ($this->Name) {
                 return (string) $this->Name;
             }
         }
@@ -117,18 +117,10 @@ class ProductOrderItem extends OrderItem
         return trim($tableTitle);
     }
 
-    /**
-     * @return string
-     */
-    public function TableSubTitle(): string
-    {
-        return $this->getTableSubTitle();
-    }
-
     public function getTableSubTitle(): string
     {
-        if($this->priceHasBeenFixed()) {
-            if($this->TableSubTitleFixed) {
+        if ($this->priceHasBeenFixed()) {
+            if ($this->TableSubTitleFixed) {
                 return (string) $this->TableSubTitleFixed;
             }
         }
