@@ -5,11 +5,13 @@ namespace Sunnysideup\Ecommerce\Model\Process;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
@@ -680,6 +682,13 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ),
             ]
         );
+        $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
+        $exportButton->setExportColumns($this->getExportFieldsForOrder());
+        $fields->dataFieldByName('Orders')
+            ->getConfig()
+            ->addComponent(
+                $exportButton
+            );
 
         return $fields;
     }
@@ -1651,5 +1660,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     protected function myDescription()
     {
         return _t('OrderStep.DESCRIPTION', 'No description has been provided for this step.');
+    }
+
+    protected function getExportFieldsForOrder() : array
+    {
+        $v = Config::inst()->get(Order::class, 'csv_export_fields');
+        if(is_array($v)) {
+            return $v;
+        }
+        return Config::inst()->get(Order::class, 'summary_fields');
     }
 }

@@ -126,7 +126,7 @@ class ShippingAddress extends OrderAddress
      * @return array
      */
     private static $casting = [
-        'ShippingFullCountryName' => 'Varchar(200)',
+        'ShippingFullCountryName' => 'Varchar'
     ];
 
     /**
@@ -354,5 +354,10 @@ class ShippingAddress extends OrderAddress
                 $this->$alsoFieldName = $this->$fieldName;
             }
         }
+    }
+
+    public function fieldPrefix(): string
+    {
+        return 'Shipping';
     }
 }

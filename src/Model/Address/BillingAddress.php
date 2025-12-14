@@ -363,6 +363,12 @@ class BillingAddress extends OrderAddress
         return $this->Config()->get('required_fields');
     }
 
+    public function fieldPrefix(): string
+    {
+        return '';
+    }
+
+
     /*
      * standard SS method
      * sets the country to the best known country {@link EcommerceCountry}

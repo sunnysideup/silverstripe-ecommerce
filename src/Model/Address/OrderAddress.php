@@ -93,6 +93,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     private static $casting = [
         'FullName' => 'Text',
         'FullString' => 'Text',
+        'FullAddress' => 'Text',
+        'FullPhone' => 'Text',
         'JSONData' => 'Text',
     ];
 
@@ -365,6 +367,84 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         SetThemed::end();
 
         return $html;
+    }
+
+
+    /**
+     *
+     * @return string
+     */
+    public function FullAddress(): string
+    {
+        return $this->getFullAddress();
+    }
+
+    public function getFullAddress(): string
+    {
+        $prefix = $this->fieldPrefix();
+        $fields = [
+            [
+                $prefix . 'Prefix',
+                $prefix . 'FirstName',
+                $prefix . 'Surname',
+            ],
+            [
+                $prefix . 'CompanyName',
+            ],
+            [
+                $prefix . 'Address',
+            ],
+            [
+                $prefix . 'Address2',
+            ],
+            [
+                $prefix . 'City',
+                $prefix . 'ShippingRegionCode',
+                $prefix . 'ShippingPostalCode',
+            ],
+            [
+                $prefix . 'Country',
+            ]
+        ];
+        $addressParts = [];
+        foreach ($fields as $fields) {
+            $addressPartsInner = [];
+            foreach ($fields as $field) {
+                $value = trim((string) $this->{$field});
+                if ($value) {
+                    $addressPartsInner[] = Convert::raw2xml($value);
+                }
+            }
+            if (! empty($addressPartsInner)) {
+                $addressParts[] = implode(' ', $addressPartsInner);
+            }
+        }
+        return implode('; ', $addressParts);
+    }
+
+
+    /**
+     *
+     * @return string
+     */
+    public function FullPhone(): string
+    {
+        return $this->getFullPhone();
+    }
+
+    public function getFullPhone(): string
+    {
+        $prefix = $this->fieldPrefix();
+        $field = $prefix . 'Phone';
+        $number = trim((string) $this->{$field});
+        $length = strlen($number);
+        $groups = [];
+
+        for ($i = 0; $i < $length; $i += 3) {
+            $groups[] = substr($number, $i, 3);
+        }
+
+        return implode(' ', $groups);
     }
 
     /**
@@ -721,9 +801,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     public function setFieldsToMatchBillingAddress()
     {
-        foreach(array_keys($this->config()->get('db')) as $fieldName) {
+        foreach (array_keys($this->config()->get('db')) as $fieldName) {
             $alsoFieldName = str_replace('Shipping', '', $fieldName);
-            if($alsoFieldName !== $fieldName) {
+            if ($alsoFieldName !== $fieldName) {
                 $this->$alsoFieldName = $this->$fieldName;
             }
         }

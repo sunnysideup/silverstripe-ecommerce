@@ -448,16 +448,19 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     private static $csv_export_fields = [
-        'Created' => 'Created',
-        'LastEdited' => 'Last Updated',
         'Title' => 'Title',
-        'Member.Email' => 'Email',
+        'Member.CustomerDetails' => 'Customer',
+        'Member.Email' => 'Customer Email',
+        'TotalItemsTimesQuantity' => 'Number of Items',
+        'OrderItemsSummaryNice' => 'Order Items',
+        'DeliveryAddress.FullAddress' => 'Delivery Address',
+        'CustomerOrderNote' => 'Customer Note',
+        'DeliveryAddress.FullPhone' => 'Delivery Phone',
         'TotalAsMoney' => 'Total',
-        'CurrencyUsed.Code' => 'Currency',
-        'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
         'IsCancelledNice' => 'Cancelled',
-        'CancelledBy.Email' => 'Cancelled By',
+        'Status.Title' => 'Do Next',
+        'CMSEditLinkAbsolute' => 'Open In CMS',
     ];
 
     /**
@@ -742,6 +745,11 @@ class Order extends DataObject implements EditableEcommerceObject
             $obj = Injector::inst()->get(SalesAdminExtras::class);
         }
         return $obj->getCMSEditLinkForManagedDataObject($this);
+    }
+
+    public function CMSEditLinkAbsolute($action = null)
+    {
+        return Director::absoluteURL($this->CMSEditLink($action));
     }
 
     /**
@@ -1417,7 +1425,7 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($myQueueObject) {
                 if ($fromOrderQueue) {
                     if (!$myQueueObject->InProcess) {
-                        self::$_try_to_finalise_order_is_running[$this->ID] = false;                        
+                        self::$_try_to_finalise_order_is_running[$this->ID] = false;
                         return;
                     }
                 } else {
@@ -1904,6 +1912,14 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $member;
+    }
+
+    public function DeliveryAddress()
+    {
+        if ($this->IsSeparateShippingAddress()) {
+            return $this->ShippingAddress();
+        }
+        return $this->BillingAddress();
     }
 
     /**
