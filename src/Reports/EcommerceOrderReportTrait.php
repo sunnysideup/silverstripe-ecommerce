@@ -2,15 +2,20 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Order;
+use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
+use Sunnysideup\Ecommerce\Pages\Product;
 
 trait EcommerceOrderReportTrait
 {
@@ -64,6 +69,19 @@ trait EcommerceOrderReportTrait
                 'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime($endDate))
             ]);
         }
+
+        $product = $params['ProductID'] ?? null;
+        if ($product) {
+            $productID = (int) $product;
+            $product = Product::get()->byID($productID);
+            if ($product) {
+                $orderItems = OrderItem::get()->filter(['BuyableID' => $product->ID]);
+                $productOrderIDs = $orderItems->columnUnique('OrderID');
+                $logs = $logs->filter(['OrderID' => $productOrderIDs]);
+            }
+        }
+
+
         $ids = ArrayMethods::filter_array($logs->column('OrderID'));
         $list = $list->filter(['ID' => $ids]);
 
@@ -123,7 +141,12 @@ trait EcommerceOrderReportTrait
                     'EndDate',
                     'Until Date',
                 ),
-            )->addExtraClass('stacked')
+                DropdownField::create(
+                    'ProductID',
+                    'Product',
+                    Product::get()->map('ID', 'FullName')->toArray()
+                )->setEmptyString('-- Any Product --'),
+            )->addExtraClass('stacked'),
         );
         $fields->recursiveWalk(
             function (FormField $field) {
@@ -136,5 +159,23 @@ trait EcommerceOrderReportTrait
         );
 
         return $fields;
+    }
+
+    public function getReportField()
+    {
+        $field = parent::getReportField();
+        $config = $field->getConfig();
+        $config->getComponentByType(GridFieldExportButton::class)
+            ->setExportColumns($this->getExportFields());
+        return $field;
+    }
+
+    public function getExportFields(): array
+    {
+        $v = Config::inst()->get(Order::class, 'csv_export_fields');
+        if (is_array($v)) {
+            return $v;
+        }
+        return Config::inst()->get(Order::class, 'summary_fields');
     }
 }

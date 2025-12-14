@@ -57,6 +57,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
 use Exception;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ManyManyList;
@@ -487,15 +489,19 @@ class Product extends Page implements BuyableModel
 
         if ($config->ShowFullDetailsForProducts) {
             if ($this->exists()) {
+                // $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
+                // $exportButton->setExportColumns($this->getExportFieldsForOrder());
+
                 $fields->addFieldsToTab(
                     'Root.Orders',
                     [
                         GridField::create(
                             'SalesOrderItems',
                             'Sales Record',
-                            $orderItems = $this->SalesOrderItems()
+                            $this->SalesOrderItems()
                                 ->sort(['ID' => 'DESC']),
                             GridFieldConfig_RecordViewer::create()
+                                //->addComponent($exportButton)
                         )
                             ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),
                     ]
@@ -1735,5 +1741,14 @@ class Product extends Page implements BuyableModel
         $v = (string) $this->InternalItemID;
         $this->extend('updateInternalItemIDCalculated', $v);
         return $v;
+    }
+
+    protected function getExportFieldsForOrder(): array
+    {
+        $v = Config::inst()->get(Order::class, 'csv_export_fields');
+        if (is_array($v)) {
+            return $v;
+        }
+        return Config::inst()->get(Order::class, 'summary_fields');
     }
 }
