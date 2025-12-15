@@ -461,6 +461,21 @@ class Order extends DataObject implements EditableEcommerceObject
         'IsCancelledNice' => 'Cancelled',
         'Status.Title' => 'Do Next',
         'CMSEditLinkAbsolute' => 'Open In CMS',
+        'DeliveryAddress.CourierName' => 'Name',
+        'DeliveryAddress.CourierCompany' => 'Company',
+        'DeliveryAddress.CourierTelephone' => 'Telephone',
+        'DeliveryAddress.CourierCode' => 'Code',
+        'DeliveryAddress.CourierBuilding' => 'Building',
+        'DeliveryAddress.CourierStreet' => 'Street',
+        'DeliveryAddress.CourierSuburb' => 'Suburb',
+        'DeliveryAddress.CourierTown' => 'Town',
+        'DeliveryAddress.CourierPostCode' => 'PostCode',
+        'DeliveryAddress.CourierState' => 'State',
+        'DeliveryAddress.CourierCountry' => 'Country',
+        'DeliveryAddress.CourierCountryCode' => 'CountryCode',
+        'CustomerOrderNote' => 'Instructions',
+        'DeliveryAddress.CourierCarrier' => 'Carrier',
+        'DeliveryAddress.CourierSignatureRequired' => 'SignatureRequired',
     ];
 
     /**

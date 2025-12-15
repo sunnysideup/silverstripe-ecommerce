@@ -246,14 +246,14 @@ class ShippingAddress extends OrderAddress
      *
      * @return string
      */
-    public function ShippingFullCountryName()
+    public function ShippingFullCountryName(): string
     {
         return $this->getShippingFullCountryName();
     }
 
-    public function getShippingFullCountryName()
+    public function getShippingFullCountryName(): string
     {
-        return EcommerceCountry::find_title($this->ShippingCountry);
+        return (string) parent::getFullCountryName();
     }
 
     /**

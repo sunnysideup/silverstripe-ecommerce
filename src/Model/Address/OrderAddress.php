@@ -91,10 +91,22 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * standard SS static definition.
      */
     private static $casting = [
-        'FullName' => 'Text',
-        'FullString' => 'Text',
-        'FullAddress' => 'Text',
-        'FullPhone' => 'Text',
+        'FullName' => 'Varchar',
+        'FullString' => 'Varchar',
+        'FullAddress' => 'Varchar',
+        'FullPhone' => 'Varchar',
+        'FullCountryName' => 'Varchar',
+        'CourierName' => 'Varchar',
+        'CourierCompany' => 'Varchar',
+        'CourierStreet' => 'Varchar',
+        'CourierSuburb' => 'Varchar',
+        'CourierTown' => 'Varchar',
+        'CourierPostCode' => 'Varchar',
+        'CourierState' => 'Varchar',
+        'CourierCountry' => 'Varchar',
+        'CourierCountryCode' => 'Varchar',
+        'CourierCarrier' => 'Varchar',
+        'CourierSignatureRequired' => 'Varchar',
         'JSONData' => 'Text',
     ];
 
@@ -310,8 +322,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public function SetRegionFields($regionID)
     {
-        $regionField = $this->fieldPrefix() . 'RegionID';
-        $this->{$regionField} = $regionID;
+        $this->setFieldValueWithPrefix('RegionID', $regionID);
         $this->write();
     }
 
@@ -323,8 +334,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public function SetCountryFields($countryCode)
     {
-        $countryField = $this->fieldPrefix() . 'Country';
-        $this->{$countryField} = $countryCode;
+        $this->setFieldValueWithPrefix('Country', $countryCode);
         $this->write();
     }
 
@@ -336,12 +346,13 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     public function getFullName()
     {
-        $fieldNameField = $this->fieldPrefix() . 'FirstName';
-        $fieldFirst = $this->{$fieldNameField};
-        $lastNameField = $this->fieldPrefix() . 'Surname';
-        $fieldLast = $this->{$lastNameField};
-
-        return $fieldFirst . ' ' . $fieldLast;
+        $a = [];
+        $a[] = (string) $this->getFieldValueWithPrefix('Prefix');
+        $a[] = (string) $this->getFieldValueWithPrefix('FirstName');
+        $a[] = (string) $this->getFieldValueWithPrefix('Surname');
+        $a = array_map('trim', $a);
+        $a = array_filter($a);
+        return implode(' ', $a);
     }
 
     public function FullName()
@@ -434,9 +445,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     public function getFullPhone(): string
     {
-        $prefix = $this->fieldPrefix();
-        $field = $prefix . 'Phone';
-        $number = trim((string) $this->{$field});
+        $number = trim((string) $this->getFieldValueWithPrefix('Phone'));
         $length = strlen($number);
         $groups = [];
 
@@ -445,6 +454,22 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
 
         return implode(' ', $groups);
+    }
+
+    /**
+     * method for casted variable.
+     *
+     * @return string
+     */
+    public function FullCountryName(): string
+    {
+        return $this->getFullCountryName();
+    }
+
+    public function getFullCountryName(): string
+    {
+        $v = $this->getFieldValueWithPrefix('Country');
+        return (string) EcommerceCountry::find_title($v);
     }
 
     /**
@@ -799,6 +824,28 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return 'Shipping';
     }
 
+    /**
+     * @param string $fieldName
+     * @return mixed
+
+     */
+    public function getFieldValueWithPrefix(string $fieldName)
+    {
+        $fieldName = $this->fieldPrefix() . $fieldName;
+        return $this->{$fieldName};
+    }
+
+    /**
+     * @param string $fieldName
+     * @return mixed
+
+     */
+    public function setFieldValueWithPrefix(string $fieldName, $value)
+    {
+        $fieldName = $this->fieldPrefix() . $fieldName;
+        $this->{$fieldName} = $value;
+    }
+
     public function setFieldsToMatchBillingAddress()
     {
         foreach (array_keys($this->config()->get('db')) as $fieldName) {
@@ -807,5 +854,111 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 $this->$alsoFieldName = $this->$fieldName;
             }
         }
+    }
+
+    public function CourierName(): string
+    {
+        $v = $this->extendDetails('updateCourierName');
+        if ($v !== null) {
+            return $v;
+        }
+        return (string) $this->getFullName();
+    }
+    public function CourierCompany()
+    {
+        $v = $this->extendDetails('updateCourierCompany');
+        if ($v !== null) {
+            return $v;
+        }
+        return (string) $this->getFieldValueWithPrefix('CompanyName');
+    }
+    public function CourierTelephone()
+    {
+        $v = $this->extendDetails('updateCourierTelephone');
+        if ($v !== null) {
+            return $v;
+        }
+        return (string) $this->getFullPhone();
+    }
+    public function CourierCode()
+    {
+        $v = $this->extendDetails('updateCourierCode');
+        if ($v !== null) {
+            return $v;
+        }
+        return '';
+    }
+    public function CourierBuilding()
+    {
+        $v = $this->extendDetails('updateCourierBuilding');
+        if ($v !== null) {
+            return $v;
+        }
+        return '';
+    }
+    public function CourierStreet(): string
+    {
+        $v = $this->extendDetails('updateCourierStreet');
+        if ($v !== null) {
+            return $v;
+        }
+        return (string) $this->getFieldValueWithPrefix('Address');
+    }
+    public function CourierSuburb(): string
+    {
+        return (string) $this->getFieldValueWithPrefix('Address2');
+    }
+    public function CourierTown(): string
+    {
+        return (string) $this->getFieldValueWithPrefix('City');
+    }
+    public function CourierPostCode(): string
+    {
+        $v = $this->extendDetails('updateCourierPostCode');
+        if ($v !== null) {
+            return $v;
+        }
+        return (string) $this->getFieldValueWithPrefix('PostalCode');
+    }
+    public function CourierState(): string
+    {
+        return (string) $this->getFieldValueWithPrefix('RegionCode');
+    }
+    public function CourierCountry(): string
+    {
+        return (string) $this->getFullCountryName();
+    }
+    public function CourierCountryCode()
+    {
+        return (string) $this->getFieldValueWithPrefix('Country');
+    }
+    public function CourierCarrier()
+    {
+        $v = $this->extendDetails('updateCourierCarrier');
+        if ($v !== null) {
+            return $v;
+        }
+        return 'STANDARD';
+    }
+
+    public function CourierSignatureRequired()
+    {
+        $v = $this->extendDetails('updateCourierSignatureRequired');
+        if ($v !== null) {
+            return $v;
+        }
+        return 'YES';
+    }
+
+    protected function extendDetails(string $extensionName): string|null
+    {
+        $v = $this->extend($extensionName);
+        if (is_array($v) && count($v)) {
+            return implode(', ', $v);;
+        }
+        if (is_string($v) && strlen($v)) {
+            return $v;
+        }
+        return null;
     }
 }

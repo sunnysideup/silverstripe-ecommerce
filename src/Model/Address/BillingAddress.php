@@ -142,15 +142,6 @@ class BillingAddress extends OrderAddress
      *
      * @return array
      */
-    private static $casting = [
-        'FullCountryName' => 'Varchar',
-    ];
-
-    /**
-     * standard SS variable.
-     *
-     * @return array
-     */
     private static $searchable_fields = [
         'OrderID' => [
             'field' => NumericField::class,
@@ -235,20 +226,7 @@ class BillingAddress extends OrderAddress
         return _t('BillingAddress.BILLINGADDRESSES', 'Billing Addresses');
     }
 
-    /**
-     * method for casted variable.
-     *
-     * @return string
-     */
-    public function FullCountryName()
-    {
-        return $this->getFullCountryName();
-    }
 
-    public function getFullCountryName()
-    {
-        return EcommerceCountry::find_title($this->Country);
-    }
 
     /**
      * @return \SilverStripe\Forms\FieldList
