@@ -448,16 +448,33 @@ class Order extends DataObject implements EditableEcommerceObject
     ];
 
     private static $csv_export_fields = [
-        'Created' => 'Created',
-        'LastEdited' => 'Last Updated',
         'Title' => 'Title',
-        'Member.Email' => 'Email',
+        'Member.CustomerDetails' => 'Customer',
+        'TotalItemsTimesQuantity' => 'Number of Items',
+        'OrderItemsSummaryNice' => 'Order Items',
+        'DeliveryAddress.FullAddress' => 'Delivery Address',
+        'DeliveryAddress.FullPhone' => 'Delivery Phone',
         'TotalAsMoney' => 'Total',
-        'CurrencyUsed.Code' => 'Currency',
-        'TotalItemsTimesQuantity' => 'Units',
         'IsPaidNice' => 'Paid',
         'IsCancelledNice' => 'Cancelled',
-        'CancelledBy.Email' => 'Cancelled By',
+        'Status.Title' => 'Do Next',
+        'CMSEditLinkAbsolute' => 'Open In CMS',
+        'DeliveryAddress.CourierName' => 'Name',
+        'DeliveryAddress.CourierCompany' => 'Company',
+        'Member.Email' => 'Email',
+        'DeliveryAddress.CourierTelephone' => 'Telephone',
+        'DeliveryAddress.CourierCode' => 'Code',
+        'DeliveryAddress.CourierBuilding' => 'Building',
+        'DeliveryAddress.CourierStreet' => 'Street',
+        'DeliveryAddress.CourierSuburb' => 'Suburb',
+        'DeliveryAddress.CourierTown' => 'Town',
+        'DeliveryAddress.CourierPostCode' => 'PostCode',
+        'DeliveryAddress.CourierState' => 'State',
+        'DeliveryAddress.CourierCountry' => 'Country',
+        'DeliveryAddress.CourierCountryCode' => 'CountryCode',
+        'CustomerOrderNote' => 'Instructions',
+        'DeliveryAddress.CourierCarrier' => 'Carrier',
+        'DeliveryAddress.CourierSignatureRequired' => 'SignatureRequired',
     ];
 
     /**
@@ -496,9 +513,9 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * @var array[bool]
      */
-    protected static $_try_to_finalise_order_is_running = [];
+    protected static array $_try_to_finalise_order_is_running = [];
 
-    protected static $_try_to_finalise_order_count = [];
+    protected static array $_try_to_finalise_order_count = [];
 
     public static function set_order_cached(?Order $order)
     {
@@ -742,6 +759,11 @@ class Order extends DataObject implements EditableEcommerceObject
             $obj = Injector::inst()->get(SalesAdminExtras::class);
         }
         return $obj->getCMSEditLinkForManagedDataObject($this);
+    }
+
+    public function CMSEditLinkAbsolute($action = null)
+    {
+        return Director::absoluteURL($this->CMSEditLink($action));
     }
 
     /**
@@ -1406,7 +1428,7 @@ class Order extends DataObject implements EditableEcommerceObject
             //if the order has been cancelled then we do not process it ...
             if ($this->CancelledByID) {
                 $this->Archive();
-
+                self::$_try_to_finalise_order_is_running[$this->ID] = false;
                 return;
             }
 
@@ -1417,9 +1439,11 @@ class Order extends DataObject implements EditableEcommerceObject
             if ($myQueueObject) {
                 if ($fromOrderQueue) {
                     if (!$myQueueObject->InProcess) {
+                        self::$_try_to_finalise_order_is_running[$this->ID] = false;
                         return;
                     }
                 } else {
+                    self::$_try_to_finalise_order_is_running[$this->ID] = false;
                     return;
                 }
             }
@@ -1428,6 +1452,8 @@ class Order extends DataObject implements EditableEcommerceObject
             //of "isSubmitted"
             $this->getIsSubmitted(true);
             //status of order is being progressed
+
+            // ============ MOVING IT ALONG THE ORDER STEPS ==============
             $nextStatusID = $this->doNextStatus();
             // $timeTaken = microtime(true) - $previousTime;
             // DB::alteration_message($nextStatusID.' took '.$timeTaken);
@@ -1466,13 +1492,14 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return int (StatusID or false if the next status can not be "applied")
      */
-    public function doNextStatus(): int
+    public function doNextStatus(): int|bool
     {
         $startsWithID = (int) $this->StatusID;
-        if ($this->MyStep()->initStep($this)) {
-            if ($this->MyStep()->doStep($this)) {
+        $step = $this->MyStep();
+        if ($step->initStep($this)) {
+            if ($step->doStep($this)) {
                 /** @var null|OrderStep $nextOrderStepObject */
-                $nextOrderStepObject = $this->MyStep()->nextStep($this);
+                $nextOrderStepObject = $step->nextStep($this);
                 if ($nextOrderStepObject instanceof OrderStep) {
                     if ((int) $startsWithID === (int) $nextOrderStepObject->ID) {
                         user_error('Recursive order step!');
@@ -1485,7 +1512,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -1899,6 +1926,14 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         return $member;
+    }
+
+    public function DeliveryAddress()
+    {
+        if ($this->IsSeparateShippingAddress()) {
+            return $this->ShippingAddress();
+        }
+        return $this->BillingAddress();
     }
 
     /**
@@ -3735,7 +3770,7 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $str = '';
         $step = $this->MyStep();
-        if(! $step) {
+        if (! $step) {
             return 'error';
         }
         if ($this->getIsCancelled()) {

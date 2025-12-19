@@ -68,7 +68,7 @@ class OrderModifierForm extends Form
         $this->extend('updateValidator', $optionalValidator);
         $this->setValidator($optionalValidator);
 
-        $this->setAttribute('autocomplete', 'off');
+        // $this->setAttribute('autocomplete', 'off');
         Requirements::themedCSS('client/css/' . ClassInfo::shortName(self::class));
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');

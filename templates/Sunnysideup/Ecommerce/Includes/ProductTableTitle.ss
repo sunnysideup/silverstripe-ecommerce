@@ -1,2 +1,2 @@
 <%-- NO HTML ALLOWED HERE! --%>
-$Title.RAW<% if $InternalItemID %><span class="internal-item-id"> ($InternalItemID)</span><% end_if %>
+$Title.RAW<% if $InternalItemID %><span class="internal-item-id"> ($InternalItemIDCalculated)</span><% end_if %>

@@ -102,12 +102,12 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * @var array
      */
     private static $casting = [
-        'TableSubTitleNOHTML' => 'Text',
-        'TableTitle' => 'HTMLText',
         'CartTitle' => 'HTMLText',
         'CartSubTitle' => 'HTMLText',
-        'CalculatedTotalAsMoney' => 'Money',
         'TableTitle' => 'HTMLText',
+        'TableSubTitle' => 'HTMLText',
+        'TableSubTitleNOHTML' => 'Text',
+        'CalculatedTotalAsMoney' => 'Money',
     ];
 
     /**
@@ -419,8 +419,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getTableTitle(): string
     {
-        if($this->priceHasBeenFixed()) {
-            if($this->Name) {
+        if ($this->priceHasBeenFixed()) {
+            if ($this->Name) {
                 return (string) $this->Name;
             }
         }
@@ -444,22 +444,15 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         return $this->getTableTitle();
     }
 
-    /**
-     * the sub title for the order item or order modifier.
-     *
-     * @return string
-     */
     public function TableSubTitle(): string
     {
-        return $this->getTableSubTitle();
+        return (string) $this->getTableSubTitle();
     }
 
     public function getTableSubTitle(): string
     {
-        if($this->priceHasBeenFixed()) {
-            if($this->TableSubTitleFixed) {
-                return (string) $this->TableSubTitleFixed;
-            }
+        if ($this->priceHasBeenFixed()) {
+            return (string) $this->TableSubTitleFixed;
         }
         return (string) '';
     }
@@ -532,9 +525,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if ($this->priceHasBeenFixed()) {
-            //do nothing ...
-        } else {
+        if (! $this->priceHasBeenFixed()) {
             if ($this->OrderAttributeGroupID) {
                 $group = $this->OrderAttributeGroup();
                 if ($group) {
@@ -543,7 +534,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             }
             $this->TableSubTitleFixed = $this->getTableSubTitle();
         }
-
     }
 
     /**

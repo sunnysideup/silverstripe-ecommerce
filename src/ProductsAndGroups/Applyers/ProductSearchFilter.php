@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -39,6 +40,15 @@ class ProductSearchFilter extends BaseApplyer
         'productIds',
         'productGroupIds',
         'baseListOwner',
+    ];
+
+    private static array $allowed_get_vars = [
+        'showdebug',
+        'searchfilter',
+        'Keyword',
+        'MinimumPrice',
+        'MaximumPrice',
+        'OnlyThisSection',
     ];
 
     public function partialCacheGetFieldsToCache(): array
@@ -207,7 +217,8 @@ class ProductSearchFilter extends BaseApplyer
     {
         $string = Convert::raw2sql($string);
         $string = strtolower((string) $string);
-
+        $string = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', (string) $string);
+        $string = trim(preg_replace('#\s+#', ' ', (string) $string));
         return substr((string) $string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }
 
@@ -217,9 +228,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function apply(?string $key = null, $params = null): self
     {
-        $allowDebug = (Director::isDev() || Permission::check('ADMIN'));
-        $this->debug = ! empty($_GET['showdebug']) && $allowDebug;
-        $this->debugKeywords = ! empty($_GET['showdebugkeywords']) && $allowDebug;
+        $this->setDebugs();
         if (! $this->applyStart($key, $params)) {
             if (is_array($this->rawData) && count($this->rawData)) {
                 // we need to keep this hash
@@ -242,11 +251,22 @@ class ProductSearchFilter extends BaseApplyer
                 $additionalSortOption = self::OPTIONS_FOR_SORT;
                 $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
                 ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
+                $this->applyEnd($key, $this->rawData);
             }
-            $this->applyEnd($key, $this->rawData);
         }
 
         return $this;
+    }
+
+    protected function setDebugs()
+    {
+        if (Director::isDev() || Permission::check('ADMIN')) {
+            $getVars = Controller::curr()?->getRequest()?->getVars();
+            if ($getVars) {
+                $this->debug = ! empty($getVars['showdebug']);
+                $this->debugKeywords = isset($getVars['searchfilter']) && strpos($getVars['searchfilter'], 'showdebugkeywords~1') !== false;
+            }
+        }
     }
 
     public function getTitle(?string $key = '', $params = null): string
@@ -263,7 +283,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     public function getLastSearchPhrase(): string
     {
-        return $this->rawData['Keyword'] ?? '';
+        return $this->rawData['Keyword'] ?? $this->rawData['keyword'] ?? '';
     }
 
     public function getProductIds(): array
@@ -340,8 +360,14 @@ class ProductSearchFilter extends BaseApplyer
         } else {
             $this->rawData = $params;
         }
-
+        $this->rawData = $this->filterAllowedKeys($this->rawData);
         return parent::applyStart($key, $this->rawData);
+    }
+
+    protected function filterAllowedKeys(array $data): array
+    {
+        $allowed = $this->config()->get('allowed_get_vars');
+        return array_intersect_key($data, array_flip($allowed));
     }
 
     protected function runFullProcessFromCache()
@@ -587,7 +613,7 @@ class ProductSearchFilter extends BaseApplyer
             } else {
                 $listToAdd = $listToAdd->orderBy($sort);
             }
-            $customMethod = $this->Config()->get('custom_id_method_to_retrieve_products');
+            $customMethod = $this->config()->get('custom_id_method_to_retrieve_products');
             if (! $customMethod) {
                 //check that this is the right order!
                 $listToAdd = $listToAdd->columnUnique('ID');

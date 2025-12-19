@@ -71,7 +71,11 @@ class GetVariables
                     Config::inst()->get(static::class, 'ampersand_alternative'),
                     $subString
                 );
-                $items = explode(Config::inst()->get(static::class, 'equal_alternative'), $subString);
+                $items = explode(
+                    Config::inst()->get(static::class, 'equal_alternative'),
+                    $subString,
+                    2
+                );
                 if (count($items) === 2) {
                     list($key, $value) = $items;
                     $key = str_replace(

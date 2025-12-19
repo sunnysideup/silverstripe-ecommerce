@@ -84,10 +84,10 @@ class ProductSearchForm extends Form
             $getVars = array_merge($getVars, $data);
         }
         $defaults = [];
-        $defaults['Keyword'] = $getVars['Keyword'] ?? '';
-        $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? 0;
-        $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? 0;
-        $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? 0;
+        $defaults['Keyword'] = $getVars['Keyword'] ?? $getVars['keyword']  ?? '';
+        $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? $getVars['minimumprice'] ?? 0;
+        $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? $getVars['maximumprice'] ?? 0;
+        $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? $getVars['onlythissection'] ?? 0;
         $defaults = [
             'Keyword' => Convert::raw2att($defaults['Keyword']),
             'MinimumPrice' => (float) str_replace(', ', '', (string) $defaults['MinimumPrice']),
@@ -102,8 +102,8 @@ class ProductSearchForm extends Form
         $fields->push(
             TextField::create('Keyword', _t('ProductSearchForm.KEYWORDS', 'Keywords'), $defaults['Keyword'])
                 ->setAttribute('autocomplete', 'off')
-                // ->setAttribute('autocorrect', 'off')
-                // ->setAttribute('auto-capitalization', 'off')
+                ->setAttribute('autocorrect', 'off')
+                ->setAttribute('auto-capitalization', 'off')
                 ->setAttribute('spellcheck', 'false')
                 ->setAttribute('placeholder', _t('ProductSearchForm.KEYWORD_PLACEHOLDER', 'search products ...'))
         );
@@ -149,6 +149,11 @@ class ProductSearchForm extends Form
         $this->disableSecurityToken();
         //extensions need to be set after __construct
         //extension point
+        $this
+            ->setAttribute('autocomplete', 'off')
+            ->setAttribute('autocorrect', 'off')
+            ->setAttribute('auto-capitalization', 'off')
+            ->setAttribute('spellcheck', 'false');
         $this->extend('updateProductSearchForm', $this);
 
         return $this;
@@ -213,7 +218,7 @@ class ProductSearchForm extends Form
     public function doProductSearchForm($data, $form)
     {
         $this->rawData = $data;
-        $this->rawData['Keyword'] = $data['Keyword'] ?? '';
+        $this->rawData['Keyword'] = $data['Keyword'] ?? $data['keyword'] ?? '';
         $this->rawData['Keyword'] = ProductSearchFilter::keyword_sanitised($this->rawData['Keyword']);
         SearchHistory::add_entry($this->rawData['Keyword']);
         $this->runFullProcessInner($data);

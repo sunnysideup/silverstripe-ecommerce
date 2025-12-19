@@ -43,7 +43,8 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
         $filter = ['Completed' => 0];
         $obj = ReferralProcessLog::get()->filter($filter)->first();
         if (! $obj) {
-            $obj = ReferralProcessLog::create()->write();
+            $obj = ReferralProcessLog::create();
+            $obj->write();
         }
 
         $this->deleteOldReferrals($limit);
