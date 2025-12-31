@@ -3016,6 +3016,7 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getTitle($dateFormat = null, $includeName = false)
     {
         if ($this->exists()) {
+            $titleArray = [];
             if (null === $dateFormat) {
                 $dateFormat = EcommerceConfig::get(Order::class, 'date_format_for_title');
             }
@@ -3024,7 +3025,7 @@ class Order extends DataObject implements EditableEcommerceObject
                 $includeName = EcommerceConfig::get(Order::class, 'include_customer_name_in_title');
             }
 
-            $title = $this->i18n_singular_name() . ' #' . $this->ID;
+            $titleArray[] = $this->i18n_singular_name() . ' #' . $this->ID;
             if ($dateFormat) {
                 $submissionLog = $this->SubmissionLog();
                 if ($submissionLog) {
@@ -3035,7 +3036,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     $placed = _t('Order.STARTED', 'started');
                 }
 
-                $title .= ' - ' . $placed . ' ' . $dateObject->Format($dateFormat);
+                $titleArray[] = ' - ' . $placed . ' ' . $dateObject->Format($dateFormat);
             }
 
             $name = '';
@@ -3071,17 +3072,17 @@ class Order extends DataObject implements EditableEcommerceObject
                 }
             }
 
-            $title .= $name;
+            $titleArray[] = $name;
         } else {
-            $title = _t('Order.NEW', 'New') . ' ' . $this->i18n_singular_name();
+            $titleArray[] = _t('Order.NEW', 'New') . ' ' . $this->i18n_singular_name();
         }
 
-        $extendedTitle = $this->extend('updateTitle', $title);
+        $extendedTitle = $this->extend('updateTitle', $titleArray);
         if (null !== $extendedTitle && is_array($extendedTitle) && count($extendedTitle)) {
-            $title = implode('; ', $extendedTitle);
+            $titleArray = array_merge($titleArray, $extendedTitle);
         }
 
-        return $title;
+        return implode(' - ', $titleArray);
     }
 
     public function OrderItemsSummaryNice()
