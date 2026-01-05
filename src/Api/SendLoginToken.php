@@ -2,17 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
-use Firesphere\MagicLogin\Config\TokenConfig;
-use Firesphere\MagicLogin\Controllers\TokenLoginHandler;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Cookie;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Security\Member;
 use Sunnysideup\OneTimeCode\OneTimeCodeApi;
 
 class SendLoginToken
