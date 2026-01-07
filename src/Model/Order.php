@@ -3036,12 +3036,12 @@ class Order extends DataObject implements EditableEcommerceObject
                     $placed = _t('Order.STARTED', 'started');
                 }
 
-                $titleArray[] = ' - ' . $placed . ' ' . $dateObject->Format($dateFormat);
+                $titleArray[] = $placed . ' ' . $dateObject->Format($dateFormat);
             }
 
             $name = '';
             if ($this->CancelledByID) {
-                $name = ' - ' . _t('Order.CANCELLED', 'CANCELLED');
+                $name = _t('Order.CANCELLED', 'CANCELLED');
             }
 
             if ($includeName) {
@@ -3050,7 +3050,7 @@ class Order extends DataObject implements EditableEcommerceObject
                     if ($this->BillingAddressID) {
                         $billingAddress = $this->BillingAddress();
                         if ($billingAddress && $billingAddress->exists()) {
-                            $name = ' - ' . $by . ' ' . $billingAddress->Prefix . ' ' . $billingAddress->FirstName . ' ' . $billingAddress->Surname;
+                            $name = $by . ' ' . $billingAddress->Prefix . ' ' . $billingAddress->FirstName . ' ' . $billingAddress->Surname;
                         }
                     }
                 }
@@ -3065,7 +3065,7 @@ class Order extends DataObject implements EditableEcommerceObject
                                     $memberName = _t('Order.ANONYMOUS', 'anonymous');
                                 }
 
-                                $name = ' - ' . $by . ' ' . $memberName;
+                                $name = $by . ' ' . $memberName;
                             }
                         }
                     }
@@ -3081,7 +3081,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if (null !== $extendedTitle && is_array($extendedTitle) && count($extendedTitle)) {
             $titleArray = array_merge($titleArray, $extendedTitle);
         }
-
+        $titleArray = array_filter($titleArray);
         return implode(' - ', $titleArray);
     }
 
