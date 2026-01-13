@@ -1,7 +1,7 @@
 <% if UseShippingAddress %>
     <% if ShippingAddress %>
         <% with ShippingAddress %>
-<address class="addressSection" id="ShippingAddressSection">
+<address class="addressSection <% $IsSeparateShippingAddress %>separate-shipping-address<% end_if %>" id="ShippingAddressSection">
     <% include Sunnysideup\Ecommerce\Includes\Order_AddressShippingInner %>
 </address>
         <% end_with %>
@@ -13,7 +13,7 @@
 <% else %>
     <% if BillingAddressID %>
         <% with BillingAddress %>
-<address class="addressSection" id="ShippingAddressSection">
+<address class="addressSection <% $IsSeparateShippingAddress %>separate-shipping-address<% end_if %>" id="BillingAddressSection">
 <% include Sunnysideup\Ecommerce\Includes\Order_AddressBillingInner %>
 </address>
         <% end_with %>
