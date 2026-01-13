@@ -646,14 +646,14 @@ class CartPageController extends PageController
             //log out
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (Security::getCurrentUser()) {
-                if ($this->isOrderConfirmationPage()) {
-                    $this->actionLinks->push(new ArrayData([
-                        'Title' => _t('CartPage.LOGOUT', 'log out'),
-                        'Link' => '/Security/logout/',
-                    ]));
-                }
-            }
+            // if (Security::getCurrentUser()) {
+            //     if ($this->isOrderConfirmationPage()) {
+            //         $this->actionLinks->push(new ArrayData([
+            //             'Title' => _t('CartPage.LOGOUT', 'log out'),
+            //             'Link' => '/Security/logout/',
+            //         ]));
+            //     }
+            // }
 
             //no items
             if ($this->currentOrder) {

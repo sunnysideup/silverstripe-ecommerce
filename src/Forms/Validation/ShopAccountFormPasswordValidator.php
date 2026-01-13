@@ -20,6 +20,8 @@ class ShopAccountFormPasswordValidator
             if ($data['PasswordCheck1'] === $data['PasswordCheck2']) {
                 return Convert::raw2sql($data['PasswordCheck1']);
             }
+        } elseif (isset($data['PasswordCheck1'])) {
+            return Convert::raw2sql($data['PasswordCheck1']);
         }
 
         return '';

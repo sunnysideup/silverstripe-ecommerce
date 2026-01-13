@@ -42,7 +42,8 @@
     "sunnysideup/email_address_database_field": "dev-master",
     "sunnysideup/silverstripe-ajax-select-field": "dev-master",
     "sunnysideup/yes-no-any-filter": "dev-master",
-    "firesphere/magiclogin": "^0.6.2"
+    "sunnysideup/branded-login-screen": "dev-main",
+    "sunnysideup/one-time-code-authentication": "dev-main"
   },
   "suggest": {
     "sunnysideup/flush": "Better, faster output for tasks",

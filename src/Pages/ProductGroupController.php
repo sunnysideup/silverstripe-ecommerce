@@ -33,6 +33,8 @@ use Sunnysideup\Vardump\Vardump;
  */
 class ProductGroupController extends PageController
 {
+    private static $ajaxify_product_list = true;
+
     /**
      * the exact list of products that is going to be shown (excluding pagination).
      *
@@ -235,7 +237,7 @@ class ProductGroupController extends PageController
      */
     public function ProductGroupListAreAjaxified(): bool
     {
-        return true;
+        return (bool) Config::inst()->get(ProductGroup::class, 'ajaxify_product_list');
     }
 
     /**

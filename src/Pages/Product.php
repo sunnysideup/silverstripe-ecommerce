@@ -140,6 +140,7 @@ class Product extends Page implements BuyableModel
         'Price' => 'Currency',
         'Weight' => 'Float',
         'HasPhysicalDispatch' => 'Boolean(1)',
+        'UseParentImage' => 'Boolean(1)',
         'Model' => 'Varchar(30)',
         'Quantifier' => 'Varchar(30)',
         'FeaturedProduct' => 'Boolean',
@@ -389,7 +390,7 @@ class Product extends Page implements BuyableModel
             [
                 UploadField::create('Image', _t('Product.IMAGE', 'Product Image'))
                     ->setFolderName($this->getFolderName()),
-                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product'),
+                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product, if more specific image is not available'),
                 $this->getAdditionalImagesField(),
                 $this->getAdditionalImagesMessage(),
                 $this->getAdditionalFilesField(),
@@ -501,7 +502,7 @@ class Product extends Page implements BuyableModel
                             $this->SalesOrderItems()
                                 ->sort(['ID' => 'DESC']),
                             GridFieldConfig_RecordViewer::create()
-                                //->addComponent($exportButton)
+                            //->addComponent($exportButton)
                         )
                             ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),
                     ]
