@@ -120,6 +120,7 @@ class OrderItem extends OrderAttribute
      *            stardard SS definition
      */
     private static $casting = [
+        'MoreThanOne' => 'Boolean',
         'UnitPrice' => 'Currency',
         'UnitPriceAsMoney' => 'Money',
         'Total' => 'Currency',
@@ -479,6 +480,15 @@ class OrderItem extends OrderAttribute
         self::$calculated_buyable_price = [];
     }
 
+    public function MoreThanOne($recalculate = false)
+    {
+        return $this->get_extensions($recalculate);
+    }
+
+    public function getMoreThanOne($recalculate = false)
+    {
+        return $this->Quantity > 1;
+    }
     public function UnitPrice($recalculate = false)
     {
         return $this->getUnitPrice($recalculate);
@@ -1068,5 +1078,16 @@ class OrderItem extends OrderAttribute
         }
 
         return $array;
+    }
+
+    public function Classes(): string
+    {
+        $classes = parent::Classes();
+        if ($this->getMoreThanOne()) {
+            $classes .= ' more-than-one';
+        } else {
+            $classes .= ' just-one';
+        }
+        return $classes;
     }
 }

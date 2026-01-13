@@ -359,7 +359,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function Classes()
+    public function Classes(): string
     {
         $class = static::class;
         $classes = [];
