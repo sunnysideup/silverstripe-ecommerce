@@ -909,4 +909,11 @@ class OrderModifier extends OrderAttribute
     {
         return $this->Type ?? 'Other';
     }
+
+    public function Classes(): string
+    {
+        $classes = parent::Classes();
+        $classes .= 'type-is-' . strtolower($this->LiveType());
+        return $classes;
+    }
 }
