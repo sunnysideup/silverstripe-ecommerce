@@ -1,4 +1,4 @@
-<div class="itemTitleAndSubTitle">
+<div class="itemTitleAndSubTitle $Classes">
     <% if Link %>
         <a id="$AJAXDefinitions.TableTitleID" href="$BuyableLink">$TableTitle</a>
     <% else %>
