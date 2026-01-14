@@ -371,8 +371,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if (is_a($this, EcommerceConfigClassNames::getName(OrderItem::class))) {
             $classes[] = strtolower((string) $this->BuyableClassName);
         }
-
-        return implode(' ', $classes);
+        $slugs = array_map(
+            fn(string $className): string => strtolower(str_replace('\\', '-', ltrim($className, '\\'))),
+            $classes
+        );
+        return implode(' ', $slugs);
     }
 
     /**
