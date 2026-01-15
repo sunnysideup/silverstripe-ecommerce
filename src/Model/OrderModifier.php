@@ -898,7 +898,7 @@ class OrderModifier extends OrderAttribute
      * This function is always called to determine the
      * amount this modifier needs to charge or deduct - if any.
      *
-     * @return \SilverStripe\ORM\FieldType\DBCurrency
+     * @return float
      */
     protected function LiveCalculatedTotal()
     {
