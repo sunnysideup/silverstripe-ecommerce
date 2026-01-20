@@ -55,7 +55,7 @@
         <tr class="gap total summary">
             <th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
             <td class="right total grandTotal">
-                <span class="value">$TotalAsMoney.NiceDefaultFormat</span>
+                <strong class="value">$TotalAsMoney.NiceDefaultFormat</strong>
             </td>
         </tr>
     </tfoot>
