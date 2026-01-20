@@ -217,8 +217,9 @@ class ProductSearchFilter extends BaseApplyer
     {
         $string = Convert::raw2sql($string);
         $string = strtolower((string) $string);
-        $string = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', (string) $string);
-        $string = trim(preg_replace('#\s+#', ' ', (string) $string));
+        $string = preg_replace('/[^\p{L}\p{N}\s\-\._\/\+\#\(\)\:]/u', ' ', (string) $string);
+        $string = preg_replace('/\s+/u', ' ', $string);
+        $string = trim($string);
         return substr((string) $string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }
 
