@@ -45,7 +45,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     private static $field_labels = [
         'Search' => 'Search Alias (e.g. nz)',
         'Replace' => 'Actual Search Phrase (e.g. new zealand)',
-        'ReplaceWholePhrase' => 'Replace Whole Phrase Only',
+        'ReplaceWholePhrase' => 'The search must match the whole phrase exactly',
     ];
 
     /**
@@ -195,7 +195,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         $fields->dataFieldByName('Search')
             ->setDescription(
                 'e.g. Sonny<br />' .
-                'You can enter more than one search phrase and separate by: ' . $this->Config()->get('separator') . ''
+                    'You can enter more than one search phrase and separate by: ' . $this->Config()->get('separator') . ''
             )
         ;
         $fields->dataFieldByName('Replace')
@@ -213,6 +213,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         //all lower case and make replace double spaces
         $this->Search = trim(preg_replace('#\s+#', ' ', strtolower((string) $this->Search)));
         $searchArray = [];
+        // we make sure that there are no spaces before or after the separator!
         foreach (explode(',', (string) $this->Search) as $term) {
             $searchArray[] = trim((string) $term);
         }

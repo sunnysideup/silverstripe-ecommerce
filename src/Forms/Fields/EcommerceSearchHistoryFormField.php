@@ -149,9 +149,9 @@ class EcommerceSearchHistoryFormField extends LiteralField
         <div id="SearchHistoryTableForCMS">
             <h3>
                 Search Phrases'
-                . ($this->minimumCount > 1 ? ', entered at least ' . $this->minimumCount . ' times' : '')
-                . ($this->maxRows < 1000 ? ', limited to ' . $this->maxRows . ' entries, ' : '')
-                . ' between ' . date('j-M-Y', strtotime('-' . $totalNumberOfDaysBack . ' days')) . ' and ' . date('j-M-Y', strtotime('-' . $this->endingDaysBack . ' days')) . '
+            . ($this->minimumCount > 1 ? ', entered at least ' . $this->minimumCount . ' times' : '')
+            . ($this->maxRows < 1000 ? ', limited to ' . $this->maxRows . ' entries, ' : '')
+            . ' between ' . date('j-M-Y', strtotime('-' . $totalNumberOfDaysBack . ' days')) . ' and ' . date('j-M-Y', strtotime('-' . $this->endingDaysBack . ' days')) . '
             </h3>';
         $count = 0;
         if ($data->numRecords()) {
@@ -218,7 +218,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
         if ($this->showMoreLink) {
             $content .= '
             <p>
-                <a href="/dev/tasks/EcommerceTaskReviewSearches/">Query more resuts</a>
+                <a href="/dev/tasks/EcommerceTaskReviewSearches/">Query more results</a>
             </p>';
         }
 
