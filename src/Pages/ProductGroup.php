@@ -60,6 +60,8 @@ use Sunnysideup\Vardump\Vardump;
  */
 class ProductGroup extends Page
 {
+    private static bool $ajaxify_product_list = true;
+
     protected $baseProductList;
 
     protected static $filterForCandidateCategoriesCache = [];
