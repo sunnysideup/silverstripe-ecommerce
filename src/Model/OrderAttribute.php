@@ -359,7 +359,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function Classes()
+    public function Classes(): string
     {
         $class = static::class;
         $classes = [];
@@ -371,8 +371,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if (is_a($this, EcommerceConfigClassNames::getName(OrderItem::class))) {
             $classes[] = strtolower((string) $this->BuyableClassName);
         }
-
-        return implode(' ', $classes);
+        $slugs = array_map(
+            fn(string $className): string => strtolower(str_replace('\\', '-', ltrim($className, '\\'))),
+            $classes
+        );
+        return implode(' ', $slugs);
     }
 
     /**

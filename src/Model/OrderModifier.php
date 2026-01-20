@@ -898,7 +898,7 @@ class OrderModifier extends OrderAttribute
      * This function is always called to determine the
      * amount this modifier needs to charge or deduct - if any.
      *
-     * @return \SilverStripe\ORM\FieldType\DBCurrency
+     * @return float
      */
     protected function LiveCalculatedTotal()
     {
@@ -908,5 +908,12 @@ class OrderModifier extends OrderAttribute
     protected function LiveType()
     {
         return $this->Type ?? 'Other';
+    }
+
+    public function Classes(): string
+    {
+        $classes = parent::Classes();
+        $classes .= 'type-is-' . strtolower($this->LiveType());
+        return $classes;
     }
 }

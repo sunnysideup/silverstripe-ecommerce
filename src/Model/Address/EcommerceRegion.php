@@ -410,8 +410,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     {
         $defaultArray = [];
         $regions = EcommerceRegion::get()
-            ->Exclude(['DoNotAllowSales' => 1])
-        ;
+            ->Exclude(['DoNotAllowSales' => 1]);
         $defaultRegion = EcommerceCountry::get_country_id();
         if ($defaultRegion) {
             $regions = $regions->Filter(['CountryID' => EcommerceCountry::get_country_id()]);

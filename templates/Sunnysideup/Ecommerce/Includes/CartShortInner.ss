@@ -6,7 +6,7 @@ If you are not using this snippet then theme it and remove its content to speed 
 -->
 <div class="cartShortInner">
 <% if Items %>
-    <table id="InformationTable" class="editable infotable">
+    <table class="information-table editable infotable">
         <tbody>
     <% loop Items %>
         <% if ShowInTable %>
