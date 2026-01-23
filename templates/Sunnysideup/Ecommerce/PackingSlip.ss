@@ -23,7 +23,7 @@
     <% end_with %>
 </div>
 <div id="PackingSlipNote">$PackingSlipNote</div>
-<script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
+<script>if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 
 
 <% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageFooter %>

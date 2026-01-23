@@ -355,7 +355,7 @@ CartResponse:
 
 </div>
 
-<script type="text/javascript">
+<script>
 
 
 

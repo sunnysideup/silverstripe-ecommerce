@@ -25,6 +25,6 @@
         </div>
         <hr class="multi-print-separator"/>
     <% end_loop %>
-    <script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
+    <script>if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 </body>
 </html>

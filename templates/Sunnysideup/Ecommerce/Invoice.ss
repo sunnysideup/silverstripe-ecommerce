@@ -8,7 +8,7 @@
         <% include Sunnysideup\Ecommerce\Includes\Order_FeedbackFormLink %>
     <% end_with %>
 </div>
-<script type="text/javascript">if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
+<script>if (window ==window.top) {window.setTimeout(function(){window.print();}, 1000);}</script>
 
 
 <% include Sunnysideup\Ecommerce\Includes\HeaderAndFooter\BasicPageFooter %>
