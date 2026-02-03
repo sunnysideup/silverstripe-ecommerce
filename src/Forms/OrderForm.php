@@ -56,7 +56,7 @@ class OrderForm extends Form
 
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
-            $bottomFields->push(new HeaderField('PaymentHeader', _t('OrderForm.PAYMENT', 'Payment'), 2));
+            $bottomFields->push(new HeaderField('PaymentHeader', _t('OrderForm.SELECT_PAYMENT', 'Select Payment Option'), 2));
             $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
