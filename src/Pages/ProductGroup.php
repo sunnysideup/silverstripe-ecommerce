@@ -922,7 +922,6 @@ class ProductGroup extends Page
                     } elseif ($outcome) {
                         $value = $outcome;
                     } else {
-                        print_r($outcome);
                         user_error($fieldNameOrMethod . ' is empty');
                     }
                 }
