@@ -50,13 +50,12 @@ trait EcommerceProductReportTrait
 
         // data class
         $className = ($params['ProductType'] ?? '');
-        if (! $className) {
+        if ($className && class_exists($className)) {
+            $list = $className::get()->filter(['ClassName' => $className]);
+        } else {
             $className = $this->dataClass;
+            $list = $className::get();
         }
-        if (! class_exists($className)) {
-            $className = Product::class;
-        }
-        $list = $className::get();
 
 
         // final change to update
