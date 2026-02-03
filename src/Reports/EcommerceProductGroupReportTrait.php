@@ -45,12 +45,12 @@ trait EcommerceProductGroupReportTrait
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
         $className = ($params['ProductGroupType'] ?? '');
-        if (! $className) {
+        if ($className && class_exists($className)) {
+            $list = $className::get()->filter(['ClassName' => $className]);
+        } else {
             $className = $this->dataClass;
+            $list = $className::get();
         }
-
-        $list = $className::get();
-
 
         $title = (string) Convert::raw2sql($params['Title'] ?? '');
         if ($title) {
