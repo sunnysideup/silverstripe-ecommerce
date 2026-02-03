@@ -390,12 +390,18 @@ class Product extends Page implements BuyableModel
             [
                 UploadField::create('Image', _t('Product.IMAGE', 'Product Image'))
                     ->setFolderName($this->getFolderName()),
-                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product, if more specific image is not available'),
+                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product (if no image is uploaded)'),
                 $this->getAdditionalImagesField(),
                 $this->getAdditionalImagesMessage(),
                 $this->getAdditionalFilesField(),
             ]
         );
+
+        $parent = $this->getParent();
+        if ($parent && $parent instanceof ProductGroup && (bool) $parent->UseImageForProducts !== true) {
+            $fields->removeByName('UseParentImage');
+        }
+
 
         // details
         $fields->addFieldsToTab(
