@@ -616,7 +616,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         );
         $fields->addFieldsToTab(
             'Root.Payments',
-            []
+            [
+                LiteralField::create(
+                    'PaymentMethodsExplanation',
+                    '<p>
+                        Payment methods are determined by the payment modules you have installed. Any required payment configuration can be found here.
+                    </p>'
+                ),
+            ]
         );
         $fields->addFieldsToTab(
             'Root.Emails',
