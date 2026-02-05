@@ -633,21 +633,21 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $this->getOrderStepsField(),
             ]
         );
-        $fields->addFieldsToTab(
-            'Root.Advanced',
-            [
-                new LiteralField(
-                    'ReviewHardcodedSettings',
-                    '<p>
-                        Your developer has pre-set some configurations for you.
-                        You can
-                        <a href="/dev/ecommerce/ecommercetaskcheckconfiguration" data-popup="true">review these settings</a>
-                        but you will need to ask your developer to change them if they are not right.
-                        The reason they can not be set is that changing them can break your application.
-                    </p>'
-                ),
-            ]
-        );
+        // $fields->addFieldsToTab(
+        //     'Root.Advanced',
+        //     [
+        //         new LiteralField(
+        //             'ReviewHardcodedSettings',
+        //             '<p>
+        //                 Your developer has pre-set some configurations for you.
+        //                 You can
+        //                 <a href="/dev/ecommerce/ecommercetaskcheckconfiguration" data-popup="true">review these settings</a>
+        //                 but you will need to ask your developer to change them if they are not right.
+        //                 The reason they can not be set is that changing them can break your application.
+        //             </p>'
+        //         ),
+        //     ]
+        // );
 
         foreach ($fields->dataFields() as $field) {
             if (isset($fieldDescriptions[$field->getName()])) {
@@ -770,7 +770,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function CheckoutLink(?string $action = null): string
     {
         $order = ShoppingCart::current_order();
-        if($order) {
+        if ($order) {
             return $order->CheckoutLink($action);
         }
         return CheckoutPage::find_link($action);
