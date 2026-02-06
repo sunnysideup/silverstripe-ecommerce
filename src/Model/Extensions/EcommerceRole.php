@@ -811,8 +811,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         $orders = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders);
 
         return $orders
-            ->Filter(['MemberID' => $this->getOwner()->ID])
-            ->First();
+            ->sort(['OrderStatusLog.ID' => 'DESC'])
+            ->filter(['MemberID' => $this->getOwner()->ID])
+            ->first();
     }
 
     /**
