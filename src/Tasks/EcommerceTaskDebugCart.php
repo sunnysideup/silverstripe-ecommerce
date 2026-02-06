@@ -26,7 +26,7 @@ class EcommerceTaskDebugCart extends BuildTask
         $fields = Config::inst()->get($obj->ClassName, 'db');
 
         //db
-        if (count($fields)) {
+        if (count($fields) > 0) {
             foreach ($fields as $key => $type) {
                 $value = self::cleanup_value($type, $obj->{$key});
                 $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
@@ -35,7 +35,7 @@ class EcommerceTaskDebugCart extends BuildTask
 
         //casted variables
         $fields = Config::inst()->get($obj->ClassName, 'casting', Config::UNINHERITED);
-        if (count($fields)) {
+        if (count($fields) > 0) {
             foreach ($fields as $key => $type) {
                 $method = $key;
                 if ($obj->hasMethod($method)) {
@@ -51,15 +51,13 @@ class EcommerceTaskDebugCart extends BuildTask
 
         //has_one
         $fields = Config::inst()->get($obj->ClassName, 'has_one', Config::UNINHERITED);
-        if (count($fields)) {
+        if (count($fields) > 0) {
             foreach ($fields as $key => $type) {
                 $value = '';
                 $field = $key . 'ID';
                 $object = $obj->{$key}();
-                if ($object) {
-                    if ($object && $object->exists()) {
-                        $value = ', ' . $object->getTitle();
-                    }
+                if ($object && ($object && $object->exists())) {
+                    $value = ', ' . $object->getTitle();
                 }
                 $html .= "<li><b>{$key} ({$type}):</b> " . $obj->{$field} . $value . ' </li>';
             }

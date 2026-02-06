@@ -135,12 +135,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public function setAlternativeSort($sort): self
     {
         if ($sort) {
-            if (is_array($sort)) {
-                $this->products = $this->products->sort($sort);
-            } else {
-                $this->products = $this->products->orderBy($sort);
-
-            }
+            $this->products = is_array($sort) ? $this->products->sort($sort) : $this->products->orderBy($sort);
         }
 
         return $this;
@@ -262,7 +257,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
      */
     public function getFilterForCandidateCategoriesFiltered()
     {
-        if (empty($this->filterForCandidateCategoryIdsFiltered)) {
+        if ($this->filterForCandidateCategoryIdsFiltered === []) {
             $ids1 = $this->getAlsoShowParentsFiltered()->columnUnique();
             $ids2 = $this->getAlsoShowProductsProductGroupInclusiveFiltered()->columnUnique();
             $ids3 = $this->getParentGroupsBasedOnProductsFiltered()->columnUnique();
@@ -271,11 +266,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
 
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIdsFiltered(), true);
         $sort = $this->Config()->get('group_filter_candidates_sort');
-        if (is_array($sort)) {
-            $list = $list->sort($sort);
-        } else {
-            $list = $list->orderBy($sort);
-        }
+        $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         return $list
             ->exclude(['ID' => $this->getParentGroupIds()])
         ;

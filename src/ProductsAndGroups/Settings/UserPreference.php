@@ -237,7 +237,7 @@ class UserPreference
                 if ('GROUPFILTER' === $type) {
                     if ($newPreference) {
                         $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
-                        if ($otherProductGroup) {
+                        if ($otherProductGroup instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup) {
                             $newPreference = [
                                 'key' => BaseApplyer::DEFAULT_NAME,
                                 'params' => $otherProductGroup->FilterForGroupSegment(),
@@ -382,7 +382,7 @@ class UserPreference
         //todo: add to config
 
         if (! $this->secondaryTitleHasBeenAdded) {
-            if (trim($secondaryTitle)) {
+            if (trim($secondaryTitle) !== '' && trim($secondaryTitle) !== '0') {
                 $secondaryTitle = $this->addToTitle($secondaryTitle);
             }
 
@@ -531,11 +531,9 @@ class UserPreference
                     $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $title = $group->MenuTitle;
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
-                    if ($prevGroup && trim($prevGroup->Title) === trim($group->Title)) {
-                        if ($prevGroup->ParentID !== $group->ParentID) {
-                            $title = $crumb . ' - ' . $title;
-                            $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
-                        }
+                    if ($prevGroup && trim($prevGroup->Title) === trim($group->Title) && $prevGroup->ParentID !== $group->ParentID) {
+                        $title = $crumb . ' - ' . $title;
+                        $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                     }
                     foreach (array_keys($options) as $key) {
                         $obj = new ArrayData(
@@ -618,20 +616,8 @@ class UserPreference
                     //keep current value
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
-                if ($type === $myType) {
-                    if ($hideCurrentValue) {
-                    } elseif ($this->getIsSearch() || trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)) {
-                        $getVars[$values['getVariable']] = $value;
-                    } else {
-                        $params = $this->getCurrentUserPreferencesParams($myType);
-                        if (! empty($params)) {
-                            if (is_array($params)) {
-                                $params = implode(',', $params);
-                            }
-
-                            $getVars[$values['getVariable']] = $params;
-                        }
-                    }
+                if ($type === $myType && (!$hideCurrentValue && ($this->getIsSearch() || trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)))) {
+                    $getVars[$values['getVariable']] = $value;
                 }
             }
 
@@ -747,8 +733,8 @@ class UserPreference
      */
     protected function addToTitle(string $toAdd): string
     {
-        $toAdd = trim((string) $toAdd);
-        $length = strlen((string) $toAdd);
+        $toAdd = trim($toAdd);
+        $length = strlen($toAdd);
 
         if ($length > 0) {
             $pipe = _t('ProductGroup.TITLE_SEPARATOR', ' | ');

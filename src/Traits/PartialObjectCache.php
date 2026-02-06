@@ -33,7 +33,7 @@ trait PartialObjectCache
         $variables = [];
         foreach ($this->partialCacheGetFieldsToCache() as $variable) {
             $value = $this->{$variable};
-            if (is_object($value) && $value instanceof DataObject) {
+            if ($value instanceof DataObject) {
                 if (! empty($value->ClassName) && ! empty($value->ID)) {
                     $variables[$variable]['ClassName'] = $value->ClassName;
                     $variables[$variable]['ID'] = $value->ID;
@@ -118,10 +118,8 @@ trait PartialObjectCache
 
     protected function partialCacheGetFieldsToCache(): array
     {
-        if (method_exists($this, 'hasMethod')) {
-            if ($this->hasMethod('partialCacheGetFieldsToCacheCustom')) {
-                return $this->partialCacheGetFieldsToCacheCustom();
-            }
+        if (method_exists($this, 'hasMethod') && $this->hasMethod('partialCacheGetFieldsToCacheCustom')) {
+            return $this->partialCacheGetFieldsToCacheCustom();
         }
         return [];
     }

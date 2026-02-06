@@ -42,7 +42,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
             ['Sort' => 'DESC']
         );
         if ($lastOrderStep) {
-            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(LastEdited) < ' . strtotime((string) self::AGO_STATEMENT);
+            $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(LastEdited) < ' . strtotime(self::AGO_STATEMENT);
             $count = DB::query("
                 SELECT COUNT (\"Order\".\"ID\")
                 FROM \"Order\"

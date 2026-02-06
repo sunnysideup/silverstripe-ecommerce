@@ -266,11 +266,11 @@ class AccountPage extends Page
     protected function pastOrdersSelection()
     {
         $memberID = (int) Security::getCurrentUser()?->ID;
-        if (! $memberID) {
+        if ($memberID === 0) {
             //set t
             $memberID = rand() * -1;
         }
-        if ($memberID) {
+        if ($memberID !== 0) {
             return Order::get()
                 ->where(
                     '"Order"."MemberID" = ' . $memberID . '

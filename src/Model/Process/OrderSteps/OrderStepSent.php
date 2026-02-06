@@ -173,7 +173,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     {
         $log = $this->RelevantLogEntry($order);
         if ($log) {
-            return (bool) ($log->Sent || $log->BypassSendingGoods);
+            return $log->Sent || $log->BypassSendingGoods;
         }
 
         return false;

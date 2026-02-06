@@ -28,7 +28,7 @@ class OrderStepField extends DatalessField
      */
     public function __construct($name, Order $order, Member $member = null)
     {
-        if (! $member) {
+        if (!$member instanceof \SilverStripe\Security\Member) {
             $member = $order->Member();
         }
         if (! $member) {
@@ -55,10 +55,8 @@ class OrderStepField extends DatalessField
                     continue;
                 }
                 $description = '';
-                if ($member->IsShopAdmin()) {
-                    if ($orderStep->Description) {
-                        $description = ' title="' . Convert::raw2att($orderStep->Description) . '" ';
-                    }
+                if ($member->IsShopAdmin() && $orderStep->Description) {
+                    $description = ' title="' . Convert::raw2att($orderStep->Description) . '" ';
                 }
                 $class = '';
                 if ($orderStep->ID === $currentStep->ID) {

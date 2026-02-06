@@ -38,10 +38,10 @@ class ProductGroupFilter extends BaseApplyer
         }
         if (! isset(self::$get_group_from_get_variable_store[$getVar])) {
             self::$get_group_from_get_variable_store[$getVar] = null;
-            if (is_string($getVar) && false !== strpos($getVar, '.')) {
+            if (false !== strpos($getVar, '.')) {
                 $parts = explode('.', $getVar);
                 $groupId = (int) $parts[1];
-                if ($groupId) {
+                if ($groupId !== 0) {
                     self::$get_group_from_get_variable_store[$getVar] = ProductGroup::get_by_id($groupId);
                 }
             }
@@ -68,10 +68,8 @@ class ProductGroupFilter extends BaseApplyer
                 $filter = ['ID' => ArrayMethods::filter_array($newIDs)];
             }
 
-            if ($filter) {
-                if ($this->products->exists()) {
-                    $this->products = $this->products->filter($filter);
-                }
+            if ($filter && $this->products->exists()) {
+                $this->products = $this->products->filter($filter);
             }
             $this->applyEnd($key, $params);
         }
@@ -82,7 +80,7 @@ class ProductGroupFilter extends BaseApplyer
     public function getTitle(?string $key = '', $params = null): string
     {
         $groupId = $this->findGroupId($params);
-        $group = ProductGroup::get_by_id((int) $groupId - 0);
+        $group = ProductGroup::get_by_id($groupId);
         if ($group) {
             return $group->MenuTitle;
         }

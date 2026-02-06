@@ -18,7 +18,7 @@ trait OrderCached
 
     public function setOrderCached(?Order $order = null)
     {
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $this->orderCached = $order;
             $this->orderCachedStatusID = $order->StatusID;
             $this->setOrderCachedStatically();
@@ -27,9 +27,6 @@ trait OrderCached
         return $this;
     }
 
-    /**
-     * @return Order|null
-     */
     public function getOrderCached(?bool $forceNew = false): ?Order
     {
         $this->getOrderCachedStaticallyIfNeeded($forceNew);
@@ -57,13 +54,11 @@ trait OrderCached
      */
     private function getOrderCachedStaticallyIfNeeded(?bool $forceNew = false)
     {
-        if (! $this->orderCached) {
-            // we need to have an order ID
-            if (! empty($this->OrderID)) {
-                $this->orderCached = Order::get_order_cached($this->OrderID, $forceNew);
-                // if we have not set it before then we can set statusID
-                $this->orderCachedStatusID = (int) $this->orderCached?->StatusID;
-            }
+        // we need to have an order ID
+        if (!$this->orderCached && ! empty($this->OrderID)) {
+            $this->orderCached = Order::get_order_cached($this->OrderID, $forceNew);
+            // if we have not set it before then we can set statusID
+            $this->orderCachedStatusID = (int) $this->orderCached?->StatusID;
         }
     }
 }

@@ -281,7 +281,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     public function getFilterForCandidateCategories(): DataList
     {
-        if (empty($this->filterForCandidateCategoryIds)) {
+        if ($this->filterForCandidateCategoryIds === []) {
             $ids1 = $this->getAlsoShowParents()->columnUnique();
             $ids2 = $this->getAlsoShowProductsProductGroupInclusive()->columnUnique();
             $this->filterForCandidateCategoryIds = array_merge($ids1, $ids2);
@@ -290,11 +290,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
         // print_r($idsAll);
         $list = $this->turnIdListIntoProductGroups($this->getFilterForCandidateCategoryIds(), true);
         $sort = $this->config()->get('group_filter_candidates_sort');
-        if (is_array($sort)) {
-            $list = $list->sort($sort);
-        } else {
-            $list = $list->orderBy($sort);
-        }
+        $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         return $list
             ->exclude(['ID' => $this->getParentGroupIds()]);
     }
@@ -395,11 +391,9 @@ class BaseProductList extends AbstractProductsAndGroupsList
     //#################################################
     // BUILDERS
     //#################################################
-
     /**
      * key method for cache
      * create a starting point.
-     * @return self
      */
     protected function buildDefaultList(): self
     {
@@ -412,7 +406,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     /**
      * key method for cache
      * add default filters.
-     * @return self
      */
     protected function applyDefaultFilters(): self
     {
@@ -438,7 +431,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
 
     /**
      * key method for cache (called from applyGroupOrSearchFilter)
-     * @return self
      */
     protected function applySearchFilter(): self
     {
@@ -503,7 +495,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
      *
      * We all make a record of all the products that are in the current list
      * For efficiency sake, we do both these things at the same time.
-     * @return self
      */
     protected function removeExcludedProducts(): self
     {

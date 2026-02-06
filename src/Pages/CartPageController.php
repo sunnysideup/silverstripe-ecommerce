@@ -149,7 +149,7 @@ class CartPageController extends PageController
             $sc = ShoppingCart::singleton();
             $order = $sc->currentOrder();
             foreach ($buyables as $buyable) {
-                $details = explode(',', (string) $buyable);
+                $details = explode(',', $buyable);
                 if (3 === count($details)) {
                     $className = $details[0];
                     $className = class_exists($className) ? $className : null;
@@ -235,11 +235,9 @@ class CartPageController extends PageController
      */
     public function deleteorder(HTTPRequest $request)
     {
-        if (!$this->CurrentOrderIsInCart()) {
-            if ($this->currentOrder->canDelete()) {
-                $this->currentOrder->delete();
-                self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
-            }
+        if (!$this->CurrentOrderIsInCart() && $this->currentOrder->canDelete()) {
+            $this->currentOrder->delete();
+            self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
         }
 
         self::set_message(_t('CartPage.ORDERNOTDELETED', 'Order could not be deleted.'));
@@ -309,11 +307,9 @@ class CartPageController extends PageController
      */
     public function CanEditOrder()
     {
-        if ($this->currentOrder) {
-            if ($this->currentOrder->canEdit()) {
-                if ($this->currentOrder->getTotalItems()) {
-                    return true;
-                }
+        if ($this->currentOrder && $this->currentOrder->canEdit()) {
+            if ($this->currentOrder->getTotalItems()) {
+                return true;
             }
         }
 
@@ -329,10 +325,8 @@ class CartPageController extends PageController
     {
         $viewingRealCurrentOrder = false;
         $realCurrentOrder = ShoppingCart::current_order();
-        if ($this->currentOrder && $realCurrentOrder) {
-            if ($realCurrentOrder->ID === $this->currentOrder->ID) {
-                $viewingRealCurrentOrder = true;
-            }
+        if ($this->currentOrder && $realCurrentOrder && $realCurrentOrder->ID === $this->currentOrder->ID) {
+            $viewingRealCurrentOrder = true;
         }
 
         return $viewingRealCurrentOrder;
@@ -381,7 +375,7 @@ class CartPageController extends PageController
         //WE HAVE THIS FOR SUBMITTING FORMS!
         if (isset($_REQUEST['OrderID'])) {
             $orderID = (int) $_REQUEST['OrderID'];
-            if ($orderID) {
+            if ($orderID !== 0) {
                 $this->currentOrder = Order::get_order_cached((int) $orderID);
             }
         } elseif ($this->request && $this->request->param('ID') && $this->request->param('Action')) {
@@ -414,10 +408,8 @@ class CartPageController extends PageController
 
         if (!$this->currentOrder) {
             $this->currentOrder = ShoppingCart::current_order();
-            if ($this->currentOrder) {
-                if ($this->currentOrder->IsSubmitted()) {
-                    $this->overrideCanView = true;
-                }
+            if ($this->currentOrder && $this->currentOrder->IsSubmitted()) {
+                $this->overrideCanView = true;
             }
         }
 
@@ -461,6 +453,7 @@ class CartPageController extends PageController
         } else {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
         }
+        return null;
     }
 
     /**
@@ -507,127 +500,105 @@ class CartPageController extends PageController
             $currentUserID = Security::getCurrentUser()?->ID;
 
             //Continue Shopping
-            if (property_exists($this, 'ContinueShoppingLabel') && null !== $this->ContinueShoppingLabel && $this->ContinueShoppingLabel) {
-                if ($viewingRealCurrentOrder) {
-                    if ($this->isCartPage()) {
-                        $continueLink = $this->ContinueShoppingLink();
-                        if ($continueLink) {
-                            $this->actionLinks->push(
-                                ArrayData::create(
-                                    [
-                                        'Title' => $this->ContinueShoppingLabel,
-                                        'Link' => $continueLink,
-                                    ]
-                                )
-                            );
-                        }
+            if (property_exists($this, 'ContinueShoppingLabel') && null !== $this->ContinueShoppingLabel && $this->ContinueShoppingLabel && $viewingRealCurrentOrder) {
+                if ($this->isCartPage()) {
+                    $continueLink = $this->ContinueShoppingLink();
+                    if ($continueLink) {
+                        $this->actionLinks->push(
+                            ArrayData::create(
+                                [
+                                    'Title' => $this->ContinueShoppingLabel,
+                                    'Link' => $continueLink,
+                                ]
+                            )
+                        );
                     }
                 }
             }
 
             //Proceed To CheckoutLabel
-            if (property_exists($this, 'ProceedToCheckoutLabel') && null !== $this->ProceedToCheckoutLabel && $this->ProceedToCheckoutLabel) {
-                if ($viewingRealCurrentOrder) {
-                    if ($this->isCartPage()) {
-                        $checkoutPageLink = CheckoutPage::find_link();
-                        if ($checkoutPageLink && $this->currentOrder && $this->currentOrder->getTotalItems()) {
-                            $this->actionLinks->push(new ArrayData([
-                                'Title' => $this->ProceedToCheckoutLabel,
-                                'Link' => $checkoutPageLink,
-                            ]));
-                        }
+            if (property_exists($this, 'ProceedToCheckoutLabel') && null !== $this->ProceedToCheckoutLabel && $this->ProceedToCheckoutLabel && $viewingRealCurrentOrder) {
+                if ($this->isCartPage()) {
+                    $checkoutPageLink = CheckoutPage::find_link();
+                    if ($checkoutPageLink && $this->currentOrder && $this->currentOrder->getTotalItems()) {
+                        $this->actionLinks->push(new ArrayData([
+                            'Title' => $this->ProceedToCheckoutLabel,
+                            'Link' => $checkoutPageLink,
+                        ]));
                     }
                 }
             }
 
             //view account details
-            if (property_exists($this, 'ShowAccountLabel') && null !== $this->ShowAccountLabel && $this->ShowAccountLabel) {
-                if ($this->isOrderConfirmationPage() || $this->isCartPage()) {
-                    if (AccountPage::find_link()) {
-                        if ($currentUserID) {
-                            $this->actionLinks->push(new ArrayData([
-                                'Title' => $this->ShowAccountLabel,
-                                'Link' => AccountPage::find_link(),
-                            ]));
-                        }
-                    }
+            if (property_exists($this, 'ShowAccountLabel') && null !== $this->ShowAccountLabel && $this->ShowAccountLabel && ($this->isOrderConfirmationPage() || $this->isCartPage())) {
+                if (AccountPage::find_link() && $currentUserID) {
+                    $this->actionLinks->push(new ArrayData([
+                        'Title' => $this->ShowAccountLabel,
+                        'Link' => AccountPage::find_link(),
+                    ]));
                 }
             }
 
             //go to current order
-            if (property_exists($this, 'CurrentOrderLinkLabel') && null !== $this->CurrentOrderLinkLabel && $this->CurrentOrderLinkLabel) {
-                if ($this->isCartPage()) {
-                    if (!$viewingRealCurrentOrder) {
-                        $this->actionLinks->push(new ArrayData([
-                            'Title' => $this->CurrentOrderLinkLabel,
-                            'Link' => ShoppingCart::current_order()->Link(),
-                        ]));
-                    }
+            if (property_exists($this, 'CurrentOrderLinkLabel') && null !== $this->CurrentOrderLinkLabel && $this->CurrentOrderLinkLabel && $this->isCartPage()) {
+                if (!$viewingRealCurrentOrder) {
+                    $this->actionLinks->push(new ArrayData([
+                        'Title' => $this->CurrentOrderLinkLabel,
+                        'Link' => ShoppingCart::current_order()->Link(),
+                    ]));
                 }
             }
 
             //Save order - we assume only current ones can be saved.
-            if (property_exists($this, 'SaveOrderLinkLabel') && null !== $this->SaveOrderLinkLabel && $this->SaveOrderLinkLabel) {
-                if ($viewingRealCurrentOrder) {
-                    if ($currentUserID && $this->currentOrder->MemberID === $currentUserID) {
-                        if ($this->isCartPage()) {
-                            if ($this->currentOrder && $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted()) {
-                                $this->actionLinks->push(new ArrayData([
-                                    'Title' => $this->SaveOrderLinkLabel,
-                                    'Link' => $this->Link('saveorder') . '/' . $this->currentOrder->ID . '/',
-                                ]));
-                            }
-                        }
+            if (property_exists($this, 'SaveOrderLinkLabel') && null !== $this->SaveOrderLinkLabel && $this->SaveOrderLinkLabel && $viewingRealCurrentOrder) {
+                if ($currentUserID && $this->currentOrder->MemberID === $currentUserID && $this->isCartPage()) {
+                    if ($this->currentOrder && $this->currentOrder->getTotalItems() && !$this->currentOrder->IsSubmitted()) {
+                        $this->actionLinks->push(new ArrayData([
+                            'Title' => $this->SaveOrderLinkLabel,
+                            'Link' => $this->Link('saveorder') . '/' . $this->currentOrder->ID . '/',
+                        ]));
                     }
                 }
             }
 
             //load order
-            if (property_exists($this, 'LoadOrderLinkLabel') && null !== $this->LoadOrderLinkLabel && $this->LoadOrderLinkLabel) {
-                if ($this->isCartPage() && $this->currentOrder) {
-                    if (!$viewingRealCurrentOrder) {
-                        $this->actionLinks->push(new ArrayData([
-                            'Title' => $this->LoadOrderLinkLabel,
-                            'Link' => $this->Link('loadorder') . '/' . $this->currentOrder->ID . '/',
-                        ]));
-                    }
+            if (property_exists($this, 'LoadOrderLinkLabel') && null !== $this->LoadOrderLinkLabel && $this->LoadOrderLinkLabel && ($this->isCartPage() && $this->currentOrder)) {
+                if (!$viewingRealCurrentOrder) {
+                    $this->actionLinks->push(new ArrayData([
+                        'Title' => $this->LoadOrderLinkLabel,
+                        'Link' => $this->Link('loadorder') . '/' . $this->currentOrder->ID . '/',
+                    ]));
                 }
             }
 
             //delete order
-            if (property_exists($this, 'DeleteOrderLinkLabel') && null !== $this->DeleteOrderLinkLabel && $this->DeleteOrderLinkLabel) {
-                if ($this->isCartPage() && $this->currentOrder) {
-                    if (!$viewingRealCurrentOrder) {
-                        $this->actionLinks->push(new ArrayData([
-                            'Title' => $this->DeleteOrderLinkLabel,
-                            'Link' => $this->Link('deleteorder') . '/' . $this->currentOrder->ID . '/',
-                        ]));
-                    }
+            if (property_exists($this, 'DeleteOrderLinkLabel') && null !== $this->DeleteOrderLinkLabel && $this->DeleteOrderLinkLabel && ($this->isCartPage() && $this->currentOrder)) {
+                if (!$viewingRealCurrentOrder) {
+                    $this->actionLinks->push(new ArrayData([
+                        'Title' => $this->DeleteOrderLinkLabel,
+                        'Link' => $this->Link('deleteorder') . '/' . $this->currentOrder->ID . '/',
+                    ]));
                 }
             }
 
             //Start new order
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (property_exists($this, 'StartNewOrderLinkLabel') && null !== $this->StartNewOrderLinkLabel && $this->StartNewOrderLinkLabel) {
-                if ($this->isOrderConfirmationPage()) {
-                    $this->actionLinks->push(new ArrayData([
-                        'Title' => $this->StartNewOrderLinkLabel,
-                        'Link' => CartPage::new_order_link($this->currentOrder->ID),
-                    ]));
-                }
+            if (property_exists($this, 'StartNewOrderLinkLabel') && null !== $this->StartNewOrderLinkLabel && $this->StartNewOrderLinkLabel && $this->isOrderConfirmationPage()) {
+                $this->actionLinks->push(new ArrayData([
+                    'Title' => $this->StartNewOrderLinkLabel,
+                    'Link' => CartPage::new_order_link($this->currentOrder->ID),
+                ]));
             }
 
             //copy order
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
-            if (property_exists($this, 'CopyOrderLinkLabel') && null !== $this->CopyOrderLinkLabel && $this->CopyOrderLinkLabel) {
-                if ($this->isOrderConfirmationPage() && $this->currentOrder->ID) {
-                    $this->actionLinks->push(new ArrayData([
-                        'Title' => $this->CopyOrderLinkLabel,
-                        'Link' => OrderConfirmationPage::copy_order_link($this->currentOrder->ID),
-                    ]));
-                }
+            if (property_exists($this, 'CopyOrderLinkLabel') && null !== $this->CopyOrderLinkLabel && $this->CopyOrderLinkLabel && ($this->isOrderConfirmationPage() && $this->currentOrder->ID)) {
+                $this->actionLinks->push(new ArrayData([
+                    'Title' => $this->CopyOrderLinkLabel,
+                    'Link' => OrderConfirmationPage::copy_order_link($this->currentOrder->ID),
+                ]));
             }
 
             //actions from modifiers
@@ -736,13 +707,12 @@ class CartPageController extends PageController
         }
         $obj = Injector::inst()->get(SendLoginToken::class);
         $obj->send($email, $backURL, $request);
-        $message =  _t(
+
+        return _t(
             'CartPage.LOGINLINKSENT',
             'If you\'ve shopped with us before, a login link has been sent to your email.
             If you like you can use this to log-in and access your order history.
             If you haven\'t shopped with us before, please proceed to checkout as a guest or create an account.',
         );
-
-        return $message;
     }
 }

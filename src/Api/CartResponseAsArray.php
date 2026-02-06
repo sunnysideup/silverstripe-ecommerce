@@ -107,7 +107,7 @@ class CartResponseAsArray
         $id = '#' . $ajaxObject->TableMessageID();
         $js[$id] = [
             'html' => $messagesImploded,
-            'class' => $messagesImploded ? 'show' : 'hide',
+            'class' => $messagesImploded !== '' && $messagesImploded !== '0' ? 'show' : 'hide',
         ];
         //TO DO: set it up in such a way that it specifically requests one of these
         $templates = EcommerceConfig::get(CartResponse::class, 'cart_responses_required');
@@ -125,11 +125,7 @@ class CartResponseAsArray
             if (false !== stripos($idMethod, 'class')) {
                 $classOrID = '.';
             }
-            if ($minNumberOfItems && $items->count() < $minNumberOfItems) {
-                $data = '';
-            } else {
-                $data = ' ' . $currentOrder->RenderWith($template);
-            }
+            $data = $minNumberOfItems && $items->count() < $minNumberOfItems ? '' : ' ' . $currentOrder->RenderWith($template);
 
             $js[$classOrID . $selector] = [
                 'html' => $data,

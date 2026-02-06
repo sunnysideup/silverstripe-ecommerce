@@ -243,7 +243,7 @@ class OrderFeedback extends DataObject implements EditableEcommerceObject
     {
         $string = $this->Created;
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $string .= ' (' . $order->getTitle() . ')';
         }
         $string .= ' - ' . $this->Rating;

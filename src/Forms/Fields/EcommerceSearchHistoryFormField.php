@@ -66,14 +66,14 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function setNumberOfDays(int $days): self
     {
-        $this->numberOfDays = (int) $days;
+        $this->numberOfDays = $days;
 
         return $this;
     }
 
     public function setMinimumCount(int $count): self
     {
-        $this->minimumCount = (int) $count;
+        $this->minimumCount = $count;
 
         return $this;
     }
@@ -87,7 +87,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
 
     public function setEndingDaysBack(int $count): self
     {
-        $this->endingDaysBack = (int) $count;
+        $this->endingDaysBack = $count;
 
         return $this;
     }
@@ -199,7 +199,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                                 <a href="' . $link . '">' . $title . '</a>
                             </td>
                             <td style="background-color: silver;  padding: 5px; width: 70%">
-                                <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #004D40; color: #fff;">' . trim((string) $array[0]) . '</div>
+                                <div style="width: ' . $multipliedWidthInPercentage . '%; background-color: #004D40; color: #fff;">' . trim($array[0]) . '</div>
                             </td>
                             <td style="background-color: silver; width: 20px">
                                 <a href="' . $debugLink . '">☕</a>

@@ -109,15 +109,13 @@ class StoreAdmin extends ModelAdmin
         $form = parent::getEditForm($id, $fields);
         if (singleton($this->modelClass) instanceof EcommerceDBConfig) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
-            if ($gridField) {
-                if ($gridField instanceof GridField) {
-                    $config = $gridField->getConfig();
-                    $config->removeComponentsByType(GridFieldExportButton::class);
-                    $config->removeComponentsByType(GridFieldPrintButton::class);
-                    $config->removeComponentsByType(GridFieldImportButton::class);
-                    $config->removeComponentsByType(GridFieldFilterHeader::class);
-                    $config->removeComponentsByType(GridFieldSortableHeader::class);
-                }
+            if ($gridField && $gridField instanceof GridField) {
+                $config = $gridField->getConfig();
+                $config->removeComponentsByType(GridFieldExportButton::class);
+                $config->removeComponentsByType(GridFieldPrintButton::class);
+                $config->removeComponentsByType(GridFieldImportButton::class);
+                $config->removeComponentsByType(GridFieldFilterHeader::class);
+                $config->removeComponentsByType(GridFieldSortableHeader::class);
             }
         }
 

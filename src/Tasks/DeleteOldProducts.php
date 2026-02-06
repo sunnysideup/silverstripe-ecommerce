@@ -39,7 +39,7 @@ class DeleteOldProducts extends BuildTask
     public function getListOfCandidates(): array
     {
         $ids = [];
-        $cutOfTs = strtotime('-' . $this->Config()->get('last_sold_days_ago') . ' days');
+        strtotime('-' . $this->Config()->get('last_sold_days_ago') . ' days');
         $products = Product::get()->filter(['AllowPurchase' => false]);
         foreach ($products as $product) {
             if (! $product->hasBeenSold()) {

@@ -139,7 +139,7 @@ class EcommercePaymentController extends Controller
         if (!$id && isset($_REQUEST['OrderID'])) {
             $id = (int) $_REQUEST['OrderID'];
         }
-        if ($id) {
+        if ($id !== 0) {
             $order = Order::get_by_id_if_can_view($id);
             if ($order) {
                 $this->currentOrder = $order;

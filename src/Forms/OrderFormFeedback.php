@@ -32,7 +32,7 @@ class OrderFormFeedback extends Form
 
         $newValues = [];
         foreach ($values as $value) {
-            $value = trim((string) $value);
+            $value = trim($value);
             $newValues[Convert::raw2att($value)] = $value;
         }
         $fields = FieldList::create(

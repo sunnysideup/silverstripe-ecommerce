@@ -66,7 +66,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
         return $this->sendEmailForStep(
             $order,
             (string) $subject = $this->EmailSubject,
-            (string) $message = '',
+            $message = '',
             $resend = false,
             $adminOnlyOrToEmail = true,
             $this->getEmailClassName()

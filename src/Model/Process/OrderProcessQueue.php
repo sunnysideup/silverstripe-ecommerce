@@ -225,14 +225,14 @@ class OrderProcessQueue extends DataObject
     public function process(?Order $order = null)
     {
         //find variables
-        if (! $order) {
+        if (!$order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $order = $this->getOrderCached();
             $myQueueObject = $this;
         } else {
             $myQueueObject = $this->getQueueObject($order);
         }
         //delete if order is gone ...
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             //if order has moved already ... delete
             if (
                 $order->IsCancelled() ||
@@ -246,7 +246,7 @@ class OrderProcessQueue extends DataObject
             ) {
                 $message = 'Order has already moved on.';
                 $myQueueObject->delete();
-            } elseif ($myQueueObject) {
+            } elseif ($myQueueObject instanceof \Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue) {
                 if ($myQueueObject->isReadyToGo()) {
                     $oldOrderStatusID = $order->StatusID;
                     $myQueueObject->InProcess = true;

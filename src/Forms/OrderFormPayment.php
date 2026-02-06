@@ -49,7 +49,7 @@ class OrderFormPayment extends Form
                 $bottomFields->push($paymentField);
             }
             $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
-            if ($paymentRequiredFields) {
+            if ($paymentRequiredFields !== []) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }
         } else {
@@ -90,7 +90,7 @@ class OrderFormPayment extends Form
         $SQLData = Convert::raw2sql($data);
         if (isset($SQLData['OrderID'])) {
             $orderID = (int) $SQLData['OrderID'];
-            if ($orderID) {
+            if ($orderID !== 0) {
                 $order = Order::get_order_cached((int) $orderID);
                 if ($order && $order->canPay()) {
                     $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();

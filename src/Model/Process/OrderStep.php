@@ -386,8 +386,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * returns all the order steps
      * that the admin should / can edit
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     public static function admin_manageable_steps(): DataList
     {
@@ -398,8 +396,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * returns all the order steps
      * that the admin can not edit...
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     public static function non_admin_manageable_steps(): DataList
     {
@@ -408,8 +404,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * Basically any order that is submitted.
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     public static function admin_reviewable_steps(): DataList
     {
@@ -419,8 +413,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     /**
      * order steps that the admin generally should not look at.
-     *
-     * @return \SilverStripe\ORM\DataList
      */
     public static function non_admin_reviewable_steps(): DataList
     {
@@ -446,8 +438,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * return StatusIDs (orderstep IDs) from orders that are bad....
      * (basically StatusID values that do not exist).
-     *
-     * @return array
      */
     public static function bad_order_step_ids(): array
     {
@@ -856,7 +846,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function nextStep(Order $order): ?OrderStep
     {
         $conditions = $this->Config()->get('step_logic_conditions');
-        if (count($conditions)) {
+        if (count($conditions) > 0) {
             foreach ($conditions as $method => $classNameOrTrue) {
                 $outcome = $this->{$method}($order);
                 if (true === $outcome) {
@@ -883,7 +873,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function nextStepObject(): ?OrderStep
     {
         $sort = (int) $this->Sort;
-        if (!$sort) {
+        if ($sort === 0) {
             $sort = 0;
         }
         $where = '"OrderStep"."Sort" >  ' . $sort;
@@ -942,7 +932,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function hasNotPassed($code)
     {
-        return (bool) !$this->hasPassed($code, true);
+        return !$this->hasPassed($code, true);
     }
 
     /**
@@ -1130,7 +1120,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function RelevantLogEntry(Order $order)
     {
-        if ($this->getRelevantLogEntryClassName()) {
+        if ($this->getRelevantLogEntryClassName() !== '' && $this->getRelevantLogEntryClassName() !== '0') {
             return $this->RelevantLogEntries($order)
                 ->sort(['ID' => 'DESC'])
                 ->first();
@@ -1170,7 +1160,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function RelevantLogEntries(Order $order)
     {
         $className = $this->getRelevantLogEntryClassName();
-        if ($className) {
+        if ($className !== '' && $className !== '0') {
             return $className::get()->filter(
                 [
                     'OrderID' => $order->ID,
@@ -1314,7 +1304,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     {
         $html = '<h2>Moving to next step</h2><ul>';
         $array = $this->Config()->get('step_logic_conditions');
-        if (count($array)) {
+        if (count($array) > 0) {
             foreach ($array as $method => $classNameOrTrue) {
                 $nextStep = true === $classNameOrTrue ? $this->nextStepObject() : $classNameOrTrue::get()->first();
                 if ($nextStep) {
@@ -1327,18 +1317,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $html .= '<li>Rules are not defined here.</li>';
         }
 
-        $html .= '</ul>';
-
-        return $html;
+        return $html . '</ul>';
     }
 
     protected function hasStepConditions(): bool
     {
-        if (!empty($this->Config()->get('step_logic_conditions'))) {
-            return true;
-        }
-
-        return false;
+        return !empty($this->Config()->get('step_logic_conditions'));
     }
 
     protected function yesOrNoNiceHelper(?bool $bool): string
@@ -1430,8 +1414,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * @param bool        $resend
      * @param bool|string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
      * @param string      $emailClassName
-     *
-     * @return bool
      */
     protected function sendEmailForStep(
         Order $order,
@@ -1441,9 +1423,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $adminOnlyOrToEmail = false,
         ?string $emailClassName = ''
     ): bool {
-        if (false === (bool) $this->hasBeenSent($order) || true === (bool) $resend) {
+        if (false === (bool) $this->hasBeenSent($order) || (bool) $resend) {
             if (!$subject) {
-                $subject = (string) $this->CalculatedEmailSubject($order);
+                $subject = $this->CalculatedEmailSubject($order);
             }
             $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
             if (! $useAlternativeEmail) {
@@ -1469,14 +1451,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.') . '<br /><br /><br /><br />' . $message;
                 $outcome = $order->sendAdminNotification(
-                    (string) $emailClassName,
-                    (string) $subject,
-                    (string) $message,
+                    $emailClassName,
+                    $subject,
+                    $message,
                     $resend
                 );
             }
 
-            return (bool) ($outcome || Director::isDev());
+            return $outcome || Director::isDev();
         }
 
         return true;
@@ -1553,8 +1535,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * we should be able to delay it.
      *
      * This method can be overridden in any orderstep
-     *
-     * @return bool
      */
     protected function canBeDeferred(): bool
     {
@@ -1582,64 +1562,62 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $orderStepsToInclude = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
         $codesToInclude = self::get_codes_for_order_steps_to_include();
         $indexNumber = 0;
-        if ($orderStepsToInclude && count($orderStepsToInclude)) {
-            if ($codesToInclude && count($codesToInclude)) {
-                foreach ($codesToInclude as $className => $code) {
-                    $className = (string) $className;
-                    $code = strtoupper((string) $code);
-                    $filter = ['ClassName' => $className, 'Code' => $code];
-                    $indexNumber += 10;
-                    $itemCountCounts = OrderStep::get()->filterAny($filter)->count();
-                    if (1 === $itemCountCounts) {
-                        //always reset code
-                        $obj = DataObject::get_one(
-                            OrderStep::class,
-                            $filter,
-                            $cacheDataObjectGetOne = false
-                        );
-                        if ($obj && $obj instanceof OrderStep) {
-                            if ($obj->Code !== $code) {
-                                $obj->Code = $code;
-                                $obj->write();
-                            }
-                            if ($obj->ClassName !== $className) {
-                                $obj->ClassName = $className;
-                                $obj->write();
-                            }
-                            //replace default description
-                            $parentObj = singleton(OrderStep::class);
-                            if ($obj->Description === $parentObj->myDescription()) {
-                                $obj->Description = $obj->myDescription();
-                                $obj->write();
-                            }
-                            //check sorting order
-                            if ($obj->Sort !== $indexNumber) {
-                                $obj->Sort = $indexNumber;
-                                $obj->write();
-                            }
-                        }
-                    } else {
-                        $oldObjects = OrderStep::get()->filterAny($filter);
-                        foreach ($oldObjects as $oldObject) {
-                            DB::alteration_message('DELETING ' . $oldObject->Title . ' as this now appears obsolete', 'deleted');
-                            $oldObject->delete();
-                        }
-
-                        $obj = $className::create($filter);
-                        $obj->Code = $code;
-                        $obj->Description = $obj->myDescription();
-                        $obj->Sort = $indexNumber;
-                        $obj->write();
-                        DB::alteration_message("Created \"{$code}\" as {$className}.", 'created');
-                    }
+        if ($orderStepsToInclude && count($orderStepsToInclude) && ($codesToInclude && count($codesToInclude))) {
+            foreach ($codesToInclude as $className => $code) {
+                $className = (string) $className;
+                $code = strtoupper((string) $code);
+                $filter = ['ClassName' => $className, 'Code' => $code];
+                $indexNumber += 10;
+                $itemCountCounts = OrderStep::get()->filterAny($filter)->count();
+                if (1 === $itemCountCounts) {
+                    //always reset code
                     $obj = DataObject::get_one(
                         OrderStep::class,
                         $filter,
                         $cacheDataObjectGetOne = false
                     );
-                    if (!$obj) {
-                        user_error("There was an error in creating the {$code} OrderStep", E_USER_NOTICE);
+                    if ($obj && $obj instanceof OrderStep) {
+                        if ($obj->Code !== $code) {
+                            $obj->Code = $code;
+                            $obj->write();
+                        }
+                        if ($obj->ClassName !== $className) {
+                            $obj->ClassName = $className;
+                            $obj->write();
+                        }
+                        //replace default description
+                        $parentObj = singleton(OrderStep::class);
+                        if ($obj->Description === $parentObj->myDescription()) {
+                            $obj->Description = $obj->myDescription();
+                            $obj->write();
+                        }
+                        //check sorting order
+                        if ($obj->Sort !== $indexNumber) {
+                            $obj->Sort = $indexNumber;
+                            $obj->write();
+                        }
                     }
+                } else {
+                    $oldObjects = OrderStep::get()->filterAny($filter);
+                    foreach ($oldObjects as $oldObject) {
+                        DB::alteration_message('DELETING ' . $oldObject->Title . ' as this now appears obsolete', 'deleted');
+                        $oldObject->delete();
+                    }
+
+                    $obj = $className::create($filter);
+                    $obj->Code = $code;
+                    $obj->Description = $obj->myDescription();
+                    $obj->Sort = $indexNumber;
+                    $obj->write();
+                    DB::alteration_message("Created \"{$code}\" as {$className}.", 'created');
+                }
+                $obj = DataObject::get_one(
+                    OrderStep::class,
+                    $filter,
+                    $cacheDataObjectGetOne = false
+                );
+                if (!$obj) {
+                    user_error("There was an error in creating the {$code} OrderStep", E_USER_NOTICE);
                 }
             }
         }

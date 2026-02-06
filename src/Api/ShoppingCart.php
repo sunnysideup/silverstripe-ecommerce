@@ -188,7 +188,7 @@ class ShoppingCart
 
         if (ClassHelpers::check_for_instance_of($orderOrOrderID, Order::class, false)) {
             $orderID = $orderOrOrderID->ID;
-        } elseif ((int) $orderOrOrderID) {
+        } elseif ((int) $orderOrOrderID !== 0) {
             $orderID = (int) $orderOrOrderID;
         }
 
@@ -234,7 +234,7 @@ class ShoppingCart
      */
     public function currentOrder(?int $recurseCount = 0, ?Order $order = null)
     {
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $this->order = $order;
         }
 
@@ -242,7 +242,7 @@ class ShoppingCart
             if (! $this->order) {
                 $this->order = self::session_order();
                 $loggedInMember = Security::getCurrentUser();
-                if ($this->order) {
+                if ($this->order instanceof \Sunnysideup\Ecommerce\Model\Order) {
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {
                         $this->order = null;
@@ -315,10 +315,8 @@ class ShoppingCart
                         $firstStep = DataObject::get_one(OrderStep::class);
                         if ($firstStep) {
                             $previousOrderFromMember = Order::get()->filter(['MemberID' => $loggedInMember->ID, 'StatusID' => [$firstStep->ID, 0]])->first();
-                            if ($previousOrderFromMember) {
-                                if ($previousOrderFromMember->canView()) {
-                                    $this->order = $previousOrderFromMember;
-                                }
+                            if ($previousOrderFromMember && $previousOrderFromMember->canView()) {
+                                $this->order = $previousOrderFromMember;
                             }
                         }
                     }
@@ -382,8 +380,6 @@ class ShoppingCart
      * Allows access to the current order from anywhere in the code..
      *
      * @param Order $order (optional)
-     *
-     * @return string
      */
     public function Link(?Order $order = null): string
     {
@@ -632,13 +628,6 @@ class ShoppingCart
             if ($item) {
                 //do nothing
             } else {
-                //otherwise create a new item
-                if (! $buyable instanceof BuyableModel) {
-                    $this->addMessage(_t('ShoppingCart.ITEMNOTFOUND', 'Item is not buyable.'), 'bad');
-
-                    return false;
-                }
-
                 $className = $buyable->classNameForOrderItem();
 
                 $item = new $className();
@@ -653,7 +642,7 @@ class ShoppingCart
                 }
             }
 
-            if ($parameters) {
+            if ($parameters !== []) {
                 $item->Parameters = $parameters;
             }
 
@@ -718,7 +707,7 @@ class ShoppingCart
     public function clear()
     {
         //we keep this here so that a flush can be added...
-        set_time_limit(1 * 60);
+        set_time_limit(60);
         self::$_singletoncart = null;
         $this->order = null;
         $this->messages = [];
@@ -730,7 +719,7 @@ class ShoppingCart
         }
 
         $memberID = (int) Security::getCurrentUser()?->ID;
-        if ($memberID) {
+        if ($memberID !== 0) {
             $orders = Order::get()->filter(['MemberID' => $memberID]);
             if ($orders->exists()) {
                 foreach ($orders as $order) {
@@ -908,7 +897,7 @@ class ShoppingCart
                         'OrderID' => $oldOrder->ID,
                     ]);
 
-                    if (count($items)) {
+                    if (count($items) > 0) {
                         $newOrder = $this->CopyBuyablesToNewOrder($newOrder, $items);
                     }
 
@@ -1013,8 +1002,6 @@ class ShoppingCart
      * sets region in order so that modifiers can be recalculated, etc...
      *
      * @param int|string $regionID you can use the ID or the code
-     *
-     * @return bool
      */
     public function setRegion($regionID): bool
     {
@@ -1034,8 +1021,6 @@ class ShoppingCart
      * sets the display currency for the cart.
      *
      * @param string $currencyCode
-     *
-     * @return bool
      */
     public function setCurrency($currencyCode): bool
     {
@@ -1197,7 +1182,7 @@ class ShoppingCart
         $sessionVariableName = $this->sessionVariableName('Messages');
         $messages = [];
         $session = $this->getSession();
-        if ($session) {
+        if ($session instanceof \SilverStripe\Control\Session) {
             //get old messages
             $messages = unserialize((string) $session->get($sessionVariableName));
             //clear old messages
@@ -1263,7 +1248,7 @@ class ShoppingCart
 
         //TODO: handle passing a message back to a form->sessionMessage
         $this->StoreMessagesInSession();
-        if ($form) {
+        if ($form instanceof \SilverStripe\Forms\Form) {
             // now we can (re)calculate the order
             $form->sessionMessage($message, $status);
             // let the form controller do the redirectback or whatever else is needed.
@@ -1348,7 +1333,7 @@ class ShoppingCart
     protected function parametersToSQL(array $parameters = [])
     {
         $defaultParamFilters = EcommerceConfig::get(ShoppingCart::class, 'default_param_filters');
-        if (! count($defaultParamFilters)) {
+        if (count($defaultParamFilters) === 0) {
             return '';
             //no use for this if there are not parameters defined
         }

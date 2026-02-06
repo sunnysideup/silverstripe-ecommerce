@@ -230,11 +230,9 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             $this->_canView = false;
             if ($this->OrderID) {
                 $o = $this->getOrderCached();
-                if ($o) {
-                    if ($o->exists()) {
-                        if ($o->canView($member)) {
-                            $this->_canView = true;
-                        }
+                if ($o instanceof \Sunnysideup\Ecommerce\Model\Order && $o->exists()) {
+                    if ($o->canView($member)) {
+                        $this->_canView = true;
                     }
                 }
             }
@@ -356,8 +354,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * orderattribute".
      *
      * Used by the templates and for ajax updating functionality.
-     *
-     * @return string
      */
     public function Classes(): string
     {
@@ -412,8 +408,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Return a name of what this attribute is
      * called e.g. "Product 21" or "Discount".
-     *
-     * @return string
      */
     public function TableTitle(): string
     {
@@ -422,10 +416,8 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getTableTitle(): string
     {
-        if ($this->priceHasBeenFixed()) {
-            if ($this->Name) {
-                return (string) $this->Name;
-            }
+        if ($this->priceHasBeenFixed() && $this->Name) {
+            return (string) $this->Name;
         }
         return (string) $this->i18n_singular_name();
     }
@@ -434,8 +426,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Return a name of what this attribute is
      * called e.g. "Product 21" or "Discount"
      * Cart is a short version of table.
-     *
-     * @return string
      */
     public function CartTitle(): string
     {
@@ -449,7 +439,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function TableSubTitle(): string
     {
-        return (string) $this->getTableSubTitle();
+        return $this->getTableSubTitle();
     }
 
     public function getTableSubTitle(): string
@@ -457,13 +447,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if ($this->priceHasBeenFixed()) {
             return (string) $this->TableSubTitleFixed;
         }
-        return (string) '';
+        return '';
     }
 
     /**
      * the sub title for the order item or order modifier.
-     *
-     * @return string
      */
     public function TableSubTitleNOHTML(): string
     {
@@ -472,14 +460,12 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getTableSubTitleNOHTML(): string
     {
-        return (string) str_replace("\n", '', strip_tags((string) $this->getTableSubTitle()));
+        return str_replace("\n", '', strip_tags($this->getTableSubTitle()));
     }
 
     /**
      * the sub title for the order item or order modifier.
      * Cart is a short version of table.
-     *
-     * @return string
      */
     public function CartSubTitle(): string
     {
@@ -488,7 +474,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
 
     public function getCartSubTitle(): string
     {
-        return (string) $this->TableSubTitle();
+        return $this->TableSubTitle();
     }
 
     /**

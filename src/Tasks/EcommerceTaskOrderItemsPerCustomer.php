@@ -79,7 +79,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
             $ordersCountExists = $orders->exists();
         }
         unset($orders);
-        if ($fileData) {
+        if ($fileData !== '' && $fileData !== '0') {
             HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         } else {
             user_error('No records found', E_USER_ERROR);

@@ -262,7 +262,7 @@ class ProductGroupSchema
     {
         $className = $classNameOrType;
         $betterClassName = $this->getApplyerClassName($classNameOrType);
-        if ($betterClassName) {
+        if ($betterClassName !== '' && $betterClassName !== '0') {
             $className = $betterClassName;
         }
         if (empty(self::$applyerCache[$className])) {

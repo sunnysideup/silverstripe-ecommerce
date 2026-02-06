@@ -53,7 +53,7 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
 
 
         $count = Referral::get()->count();
-        $finished = ($count <=  ($start + $limit) ? true : false);
+        $finished = ($count <=  ($start + $limit));
         if ($obj) {
             $obj->Completed = $finished;
             $obj->write();

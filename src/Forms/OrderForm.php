@@ -62,7 +62,7 @@ class OrderForm extends Form
                 $bottomFields->push($paymentField);
             }
             $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
-            if (! empty($paymentRequiredFields)) {
+            if ($paymentRequiredFields !== []) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }
         } else {

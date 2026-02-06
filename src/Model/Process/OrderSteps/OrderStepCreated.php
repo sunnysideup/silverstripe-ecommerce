@@ -63,11 +63,9 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     {
         if (! $order->MemberID) {
             $member = Security::getCurrentUser();
-            if ($member) {
-                if (! $member->IsShopAdmin()) {
-                    $order->MemberID = $member->ID();
-                    $order->write();
-                }
+            if ($member && ! $member->IsShopAdmin()) {
+                $order->MemberID = $member->ID();
+                $order->write();
             }
         }
 
@@ -78,7 +76,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     {
         $count = $order->TotalItems();
 
-        return $count > 0 ? true : false;
+        return $count > 0;
     }
 
     /**
@@ -95,7 +93,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
             $label = _t('OrderStep.SUBMITNOW', 'Submit Now');
             $msg = _t('OrderStep.MUSTDOSUBMITRECORD', '<p>Tick the box below to submit this order.</p>');
             $problems = [];
-            if (! $order->getTotalItems()) {
+            if ($order->getTotalItems() === 0) {
                 $problems[] = 'There are no --- Order Items (products) --- associated with this order.';
             }
 
@@ -128,7 +126,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
 
             $fields->addFieldToTab('Root.Next', new HeaderField('CreateSubmitRecordHeader', $header, 3));
             $fields->addFieldToTab('Root.Next', new LiteralField('CreateSubmitRecordMessage', $msg));
-            if (! $problems) {
+            if ($problems === []) {
                 $fields->addFieldToTab('Root.Next', new CheckboxField('SubmitOrderViaCMS', $label));
             }
         }

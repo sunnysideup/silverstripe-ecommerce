@@ -199,11 +199,9 @@ abstract class OrderStepController extends Controller
                 $sessionID = Convert::raw2sql($this->request->param('OtherID'));
             }
 
-            self::$_order = Order::get_order_cached((int) $id);
-            if (self::$_order) {
-                if ($this->secureHash(self::$_order) !== $sessionID) {
-                    self::$_order = null;
-                }
+            self::$_order = Order::get_order_cached($id);
+            if (self::$_order instanceof \Sunnysideup\Ecommerce\Model\Order && $this->secureHash(self::$_order) !== $sessionID) {
+                self::$_order = null;
             }
         }
 
@@ -219,6 +217,7 @@ abstract class OrderStepController extends Controller
         if ($order) {
             return '?OrderID=' . $order->ID . '&OrderSessionID=' . self::secure_hash($order);
         }
+        return null;
     }
 
     /**

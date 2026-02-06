@@ -215,7 +215,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         $searchArray = [];
         // we make sure that there are no spaces before or after the separator!
         foreach (explode(',', (string) $this->Search) as $term) {
-            $searchArray[] = trim((string) $term);
+            $searchArray[] = trim($term);
         }
         $this->Search = implode(',', $searchArray);
         $this->Replace = strtolower((string) $this->Replace);

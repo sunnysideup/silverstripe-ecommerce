@@ -165,23 +165,21 @@ class SalesAdmin extends ModelAdmin
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
-            if ($gridField) {
-                if ($gridField instanceof GridField) {
-                    $config = $gridField->getConfig();
-                    // export button
-                    $exportButton = new GridFieldExportSalesButton('buttons-before-left');
-                    $exportButton->setExportColumns($this->getExportFields());
-                    $config->addComponent($exportButton);
-                    //print invoices
-                    $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
-                    $config->addComponent($printAllInvoices);
-                    //print packing slip
-                    $printAllPackingSlips = new GridFieldPrintAllPackingSlipsButton('buttons-before-left');
-                    $config->addComponent($printAllPackingSlips);
-                    //per row ...
-                    $config->addComponent(new GridFieldPrintInvoiceButton());
-                    // $config->addComponent(new GridFieldPrintPackingSlipButton());
-                }
+            if ($gridField && $gridField instanceof GridField) {
+                $config = $gridField->getConfig();
+                // export button
+                $exportButton = new GridFieldExportSalesButton('buttons-before-left');
+                $exportButton->setExportColumns($this->getExportFields());
+                $config->addComponent($exportButton);
+                //print invoices
+                $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
+                $config->addComponent($printAllInvoices);
+                //print packing slip
+                $printAllPackingSlips = new GridFieldPrintAllPackingSlipsButton('buttons-before-left');
+                $config->addComponent($printAllPackingSlips);
+                //per row ...
+                $config->addComponent(new GridFieldPrintInvoiceButton());
+                // $config->addComponent(new GridFieldPrintPackingSlipButton());
             }
         }
 
@@ -215,10 +213,10 @@ class SalesAdmin extends ModelAdmin
 
                 $id = $this->getCurrentRecordId();
                 //todo: find actual id.
-                if ($id) {
+                if ($id !== 0) {
                     $ids[$id] = $id;
                 }
-                if (count($ids)) {
+                if (count($ids) > 0) {
                     $arrayOfTabs[$key] = [
                         'TabName' => 'tab' . $key,
                         'Title' => $bracket,

@@ -84,10 +84,8 @@ class ProductOrderItem extends OrderItem
 
     public function getTableTitle(): string
     {
-        if ($this->priceHasBeenFixed()) {
-            if ($this->Name) {
-                return (string) $this->Name;
-            }
+        if ($this->priceHasBeenFixed() && $this->Name) {
+            return (string) $this->Name;
         }
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         $product = $this->Product();
@@ -119,10 +117,8 @@ class ProductOrderItem extends OrderItem
 
     public function getTableSubTitle(): string
     {
-        if ($this->priceHasBeenFixed()) {
-            if ($this->TableSubTitleFixed) {
-                return (string) $this->TableSubTitleFixed;
-            }
+        if ($this->priceHasBeenFixed() && $this->TableSubTitleFixed) {
+            return (string) $this->TableSubTitleFixed;
         }
         $tableSubTitle = '';
         $product = $this->Product();

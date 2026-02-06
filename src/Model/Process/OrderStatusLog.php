@@ -282,7 +282,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
 
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             //Order Status Logs are so basic, anyone can edit them
             if (OrderStatusLog::class === $this->ClassName) {
                 return $order->canView($member);
@@ -355,13 +355,11 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 EcommerceRole::list_of_admins(true)
             )
         );
-        if ($this->AuthorID) {
-            if ($this->Author() && $this->Author()->exists()) {
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    $fields->dataFieldByName('AuthorID')->performReadonlyTransformation()
-                );
-            }
+        if ($this->AuthorID && ($this->Author() && $this->Author()->exists())) {
+            $fields->addFieldToTab(
+                'Root.Main',
+                $fields->dataFieldByName('AuthorID')->performReadonlyTransformation()
+            );
         }
 
         //OrderID Field

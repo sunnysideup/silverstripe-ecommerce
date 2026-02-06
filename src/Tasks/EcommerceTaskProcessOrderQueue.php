@@ -41,7 +41,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
         }
-        $id = (int) $request?->getVar('id') - 0;
+        $id = (int) $request?->getVar('id');
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
         if (! $ordersinQueue->exists()) {
@@ -50,7 +50,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
             return;
         }
         echo '<h3>There are ' . $ordersinQueue->count() . ' in the queue, processing ' . $this->limit . ' now</h3>';
-        if ($id) {
+        if ($id !== 0) {
             echo '<h3>FORCING Order with ID: ' . $id . '</h3>';
             $ordersinQueue = $ordersinQueue->filter(['ID' => $id]);
         }

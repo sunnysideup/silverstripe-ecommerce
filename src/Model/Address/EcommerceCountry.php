@@ -411,10 +411,8 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             self::$_countries_from_db_cache[$key] = $array;
         }
 
-        if (count($array)) {
-            if ($addEmptyString) {
-                $array = ['', ' -- please select -- '] + $array;
-            }
+        if (count($array) > 0 && $addEmptyString) {
+            $array = ['', ' -- please select -- '] + $array;
         }
 
         return $array;
@@ -460,7 +458,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function find_title($code)
     {
         $code = strtoupper((string) $code);
-        if (! $code) {
+        if ($code === '' || $code === '0') {
             $code = self::get_country_default();
         }
         $options = self::get_country_dropdown(true);
@@ -586,7 +584,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     public static function get_country_from_mixed_var($var, $asCode = false)
     {
         if (is_string($var)) {
-            $var = strtoupper((string) $var);
+            $var = strtoupper($var);
             $var = DataObject::get_one(EcommerceCountry::class, ['Code' => $var]);
         } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get_by_id($var);

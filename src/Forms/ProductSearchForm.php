@@ -92,7 +92,7 @@ class ProductSearchForm extends Form
             'Keyword' => Convert::raw2att($defaults['Keyword']),
             'MinimumPrice' => (float) str_replace(', ', '', (string) $defaults['MinimumPrice']),
             'MaximumPrice' => (float) str_replace(', ', '', (string) $defaults['MaximumPrice']),
-            'OnlyThisSection' => (int) $defaults['OnlyThisSection'] ? 1 : 0,
+            'OnlyThisSection' => (int) $defaults['OnlyThisSection'] !== 0 ? 1 : 0,
         ];
         $this->rawData = $defaults;
 
@@ -247,10 +247,8 @@ class ProductSearchForm extends Form
         if (!empty($this->rawData['OnlyThisSection'])) {
             $doSearchAtAll = true;
         } elseif (!$this->checkForInternalItemID()) {
-            if (!$this->checkForOneProductTitleMatch()) {
-                if (!$this->checkForOneCategoryTitleMatch()) {
-                    $doSearchAtAll = true;
-                }
+            if (!$this->checkForOneProductTitleMatch() && !$this->checkForOneCategoryTitleMatch()) {
+                $doSearchAtAll = true;
             }
         }
         if ($doSearchAtAll) {

@@ -49,16 +49,16 @@ class OrderStatusLogForm extends Form
      */
     public function __construct(
         Controller $optionalController = null,
-        $name,
-        FieldList $fields,
-        FieldList $actions,
+        $name = null,
+        ?FieldList $fields = null,
+        ?FieldList $actions = null,
         Validator $optionalValidator = null
     ) {
-        if (! $optionalController) {
+        if (!$optionalController instanceof \SilverStripe\Control\Controller) {
             $controllerClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (! $optionalValidator) {
+        if (!$optionalValidator instanceof \SilverStripe\Forms\Validator) {
             $validatorClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }

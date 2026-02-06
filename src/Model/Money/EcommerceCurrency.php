@@ -407,7 +407,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $price = $price->getValue();
         }
 
-        if (!$order) {
+        if (!$order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $order = ShoppingCart::current_order();
         }
 
@@ -415,12 +415,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         if (Config::inst()->get('show_currency_at_all')) {
             $currency = $order->CurrencyUsed();
             $currencyCode = $currency->Code;
-            if ($order) {
-                if ($order->HasAlternativeCurrency()) {
-                    $exchangeRate = $order->ExchangeRate;
-                    if ($exchangeRate && 1 !== $exchangeRate) {
-                        $price = $exchangeRate * $price;
-                    }
+            if ($order && $order->HasAlternativeCurrency()) {
+                $exchangeRate = $order->ExchangeRate;
+                if ($exchangeRate && 1 !== $exchangeRate) {
+                    $price = $exchangeRate * $price;
                 }
             }
 
@@ -589,10 +587,8 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
 
     public function getIsDefault()
     {
-        if ($this->exists()) {
-            if (!$this->Code) {
-                user_error('This currency (ID = ' . $this->ID . ') does not have a code ');
-            }
+        if ($this->exists() && !$this->Code) {
+            user_error('This currency (ID = ' . $this->ID . ') does not have a code ');
         }
 
         return strtoupper((string) $this->Code) === strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));

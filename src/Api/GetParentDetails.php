@@ -85,10 +85,10 @@ class GetParentDetails
         $parentTitleArray = [];
         while ($obj && $obj->ParentID) {
 
-            $obj = $expectedParentClassName::get_by_id((int) $obj->ParentID - 0);
+            $obj = $expectedParentClassName::get_by_id((int) $obj->ParentID);
             if ($obj) {
                 $this->parentSortArray[] = sprintf('%05d', $obj->$sortField);
-                if (! empty($this->notAllowedClassNames) > 0) {
+                if (($this->notAllowedClassNames !== []) > 0) {
                     foreach ($this->notAllowedClassNames as $notAllowedClassName) {
                         if (is_a($obj, EcommerceConfigClassNames::getName($notAllowedClassName))) {
                             $obj = null;
@@ -96,7 +96,7 @@ class GetParentDetails
                         }
                     }
                 }
-                if (! empty($this->allowedClassNames) === 0) {
+                if (($this->allowedClassNames !== []) === 0) {
                     foreach ($this->allowedClassNames as $allowedClassName) {
                         if (is_a($obj, EcommerceConfigClassNames::getName($allowedClassName))) {
                             $parentTitleArray[] = $obj->Title;

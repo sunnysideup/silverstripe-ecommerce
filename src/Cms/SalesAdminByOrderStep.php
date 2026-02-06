@@ -39,7 +39,7 @@ class SalesAdminByOrderStep extends SalesAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        $fields = $form->Fields();
+        $form->Fields();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
             $brackets = OrderStep::admin_manageable_steps()->map('ID', 'Title')->toArray();
@@ -65,9 +65,5 @@ class SalesAdminByOrderStep extends SalesAdmin
     public function getManagedModels()
     {
         return parent::getManagedModels();
-
-        return [
-            Order::class,
-        ];
     }
 }

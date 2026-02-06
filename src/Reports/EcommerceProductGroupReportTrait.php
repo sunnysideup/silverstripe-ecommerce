@@ -58,12 +58,12 @@ trait EcommerceProductGroupReportTrait
         }
 
         $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
-        if ($changedInTheLastXDays) {
+        if ($changedInTheLastXDays !== 0) {
             $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
         }
 
         $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
-        if ($createdInTheLastXDays) {
+        if ($createdInTheLastXDays !== 0) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
         if ($this->hasMethod('getEcommerceFilter')) {
@@ -78,11 +78,7 @@ trait EcommerceProductGroupReportTrait
             if (empty($sort)) {
                 $sort = ['Title' => 'ASC'];
             }
-            if (is_array($sort)) {
-                $list = $list->sort($sort);
-            } else {
-                $list = $list->orderBy($sort);
-            }
+            $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         }
 
         if ($this->hasMethod('getEcommerceWhere')) {

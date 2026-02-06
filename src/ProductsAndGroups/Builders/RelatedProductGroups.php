@@ -201,7 +201,7 @@ class RelatedProductGroups
         foreach ($children as $id) {
             $grandchildren = $this->getGroupsRecursive($currentDepth + 1, $id);
 
-            if ($grandchildren) {
+            if ($grandchildren !== []) {
                 $ids = array_merge($ids, $grandchildren);
             }
         }

@@ -57,5 +57,6 @@ class AccountPageController extends PageController
             return false;
         }
         Requirements::themedCSS('client/css/AccountPage');
+        return null;
     }
 }

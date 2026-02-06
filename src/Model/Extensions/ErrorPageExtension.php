@@ -63,9 +63,9 @@ class ErrorPageExtension extends Extension
         $path = '';
         $url = parse_url($request->getURL());
         if (isset($url['path'])) {
-            $path = str_replace('/', '', (string) $url['path']);
+            $path = str_replace('/', '', $url['path']);
         }
-        if ($path) {
+        if ($path !== '' && $path !== '0') {
             return Product::get()
                 ->filter(['InternalItemID' => Convert::raw2sql($path)])
                 ->first()

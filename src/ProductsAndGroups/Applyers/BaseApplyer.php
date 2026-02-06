@@ -70,8 +70,6 @@ abstract class BaseApplyer
      * e.g. only products or only mydataobject.
      *
      * leave blank to use the default
-     *
-     * @var string
      */
     protected string $baseClassNameForBuyables;
 
@@ -79,8 +77,6 @@ abstract class BaseApplyer
      * class name of the buyables to search
      * at this stage, you can only search one type of buyable at any one time
      * e.g. only products or only mydataobject.
-     *
-     * @var string
      */
     protected string $baseClassNameForGroups;
 
@@ -188,10 +184,8 @@ abstract class BaseApplyer
 
         $sql = $this->checkOption($key);
         if (is_array($sql)) {
-            if ([] !== $sql) {
-                foreach ($sql as $key => $item) {
-                    $sql[$key] = $this->sqlPlaceholderReplacer($item, $params);
-                }
+            foreach ($sql as $key => $item) {
+                $sql[$key] = $this->sqlPlaceholderReplacer($item, $params);
             }
         } else {
             $sql = $this->sqlPlaceholderReplacer($sql, $params);
@@ -279,7 +273,6 @@ abstract class BaseApplyer
      * returns true when it has already been applied
      * @param mixed $key
      * @param mixed $params
-     * @return bool
      */
     protected function applyStart(?string $key = null, $params = null): bool
     {

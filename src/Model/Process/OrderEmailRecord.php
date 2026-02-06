@@ -329,7 +329,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             // $createdOrderStatus = $statusOptions->First();
             $arrayOfStatusOptions = clone $statusOptions->map('ID', 'Title');
             $arrayOfStatusOptionsFinal = [];
-            if (count($arrayOfStatusOptions)) {
+            if (count($arrayOfStatusOptions) > 0) {
                 foreach ($arrayOfStatusOptions as $key => $value) {
                     if (isset($_GET['q']['OrderStepID'][$key])) {
                         $preSelected[$key] = $key;
@@ -371,7 +371,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     {
         $str = 'TO: ' . $this->To;
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $str .= ' - ' . $order->getTitle();
             $str .= ' - ' . $this->OrderStepNice();
         }

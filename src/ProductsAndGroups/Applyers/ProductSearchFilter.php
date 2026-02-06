@@ -220,7 +220,7 @@ class ProductSearchFilter extends BaseApplyer
         $string = preg_replace('/[^\p{L}\p{N}\s\-\._\/\+\#\(\)\:]/u', ' ', (string) $string);
         $string = preg_replace('/\s+/u', ' ', $string);
         $string = trim($string);
-        return substr((string) $string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
+        return substr($string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }
 
     /**
@@ -230,30 +230,28 @@ class ProductSearchFilter extends BaseApplyer
     public function apply(?string $key = null, $params = null): self
     {
         $this->setDebugs();
-        if (! $this->applyStart($key, $params)) {
-            if (is_array($this->rawData) && count($this->rawData)) {
-                // we need to keep this hash
-                $hash = $this->getHashBasedOnRawData();
-                $outcome = $this->partialCacheApplyVariablesFromCache($hash);
-                if ($outcome && ! $this->debug) {
-                    $this->runFullProcessFromCache();
-                } else {
-                    $this->runFullProcess();
-                    $this->partialCacheSetCacheForHash($hash);
-                }
-                //not sure why we need this, but keeping for now.
-                self::$groupCache = $this->productGroupIds;
-                self::$groupListCache = $this->matchingGroups;
-                $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
-                $sorter = ArrayMethods::create_sort_statement_from_id_array(
-                    $this->getProductIds(),
-                    $this->finalProductList->getBuyableClassName()
-                );
-                $additionalSortOption = self::OPTIONS_FOR_SORT;
-                $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
-                ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
-                $this->applyEnd($key, $this->rawData);
+        if (!$this->applyStart($key, $params) && (is_array($this->rawData) && count($this->rawData))) {
+            // we need to keep this hash
+            $hash = $this->getHashBasedOnRawData();
+            $outcome = $this->partialCacheApplyVariablesFromCache($hash);
+            if ($outcome && ! $this->debug) {
+                $this->runFullProcessFromCache();
+            } else {
+                $this->runFullProcess();
+                $this->partialCacheSetCacheForHash($hash);
             }
+            //not sure why we need this, but keeping for now.
+            self::$groupCache = $this->productGroupIds;
+            self::$groupListCache = $this->matchingGroups;
+            $this->products = $this->products->filter(['ID' => $this->getProductIds()]);
+            $sorter = ArrayMethods::create_sort_statement_from_id_array(
+                $this->getProductIds(),
+                $this->finalProductList->getBuyableClassName()
+            );
+            $additionalSortOption = self::OPTIONS_FOR_SORT;
+            $additionalSortOption[self::KEY_FOR_SORTER]['SQL'] = $sorter;
+            ProductSorter::setDefaultSortOrderFromFilter($additionalSortOption);
+            $this->applyEnd($key, $this->rawData);
         }
 
         return $this;
@@ -331,7 +329,7 @@ class ProductSearchFilter extends BaseApplyer
 
     public function setSearchKeyword(string $keyword): self
     {
-        $this->rawData['Keyword'] = urldecode((string) $keyword);
+        $this->rawData['Keyword'] = urldecode($keyword);
 
         return $this;
     }
@@ -447,12 +445,10 @@ class ProductSearchFilter extends BaseApplyer
 
         $this->rawData['OnlyThisSection'] = (bool) (int) ($this->rawData['OnlyThisSection'] ?? 0);
         //swapsies!
-        if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice']) {
-            if ($this->rawData['MaximumPrice'] > 0) {
-                $oldMin = $this->rawData['MinimumPrice'];
-                $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
-                $this->rawData['MaximumPrice'] = $oldMin;
-            }
+        if ($this->rawData['MinimumPrice'] > $this->rawData['MaximumPrice'] && $this->rawData['MaximumPrice'] > 0) {
+            $oldMin = $this->rawData['MinimumPrice'];
+            $this->rawData['MinimumPrice'] = $this->rawData['MaximumPrice'];
+            $this->rawData['MaximumPrice'] = $oldMin;
         }
     }
 
@@ -553,8 +549,6 @@ class ProductSearchFilter extends BaseApplyer
             $this->debugOutput('<hr />');
             $this->debugOutput('<h3>PRODUCT GROUP SEARCH ' . $this->matchingGroups->count() . '</h3>');
         }
-
-        $count = 0;
         // work out fields to search
 
         // work out searches
@@ -609,11 +603,7 @@ class ProductSearchFilter extends BaseApplyer
             $listToAdd = $listToAdd
                 ->limit($this->maxToAdd())
                 ->exclude(['ID' => ArrayMethods::filter_array($this->productIds)]);
-            if (is_array($sort)) {
-                $listToAdd = $listToAdd->sort($sort);
-            } else {
-                $listToAdd = $listToAdd->orderBy($sort);
-            }
+            $listToAdd = is_array($sort) ? $listToAdd->sort($sort) : $listToAdd->orderBy($sort);
             $customMethod = $this->config()->get('custom_id_method_to_retrieve_products');
             if (! $customMethod) {
                 //check that this is the right order!
@@ -625,10 +615,8 @@ class ProductSearchFilter extends BaseApplyer
                 } elseif (is_int($pageIdOrObject)) {
                     $id = $pageIdOrObject;
                 }
-                if (! empty($id)) {
-                    if ($this->addToResultsInner($id)) {
-                        return true;
-                    }
+                if (!empty($id) && $this->addToResultsInner($id)) {
+                    return true;
                 }
             }
         }
@@ -641,13 +629,11 @@ class ProductSearchFilter extends BaseApplyer
      */
     protected function addToResultsInner(int $id): bool
     {
-        if ($id) {
-            if (! in_array($id, $this->productIds, true)) {
-                ++$this->resultArrayPos;
-                $this->productIds[$this->resultArrayPos] = $id;
-                if ($this->weHaveEnoughResults()) {
-                    return true;
-                }
+        if ($id !== 0 && ! in_array($id, $this->productIds, true)) {
+            ++$this->resultArrayPos;
+            $this->productIds[$this->resultArrayPos] = $id;
+            if ($this->weHaveEnoughResults()) {
+                return true;
             }
         }
 

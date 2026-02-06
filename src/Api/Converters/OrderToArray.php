@@ -43,7 +43,7 @@ class OrderToArray extends OrderConverter
             ],
             'shipping' => [
                 'name' => $shipping->FirstName . ' ' . $shipping->Surname,
-                'line1' => trim((string) $shipping->CompanyName . ' '.$shipping->Address . ' ' . $shipping->Address2),
+                'line1' => trim($shipping->CompanyName . ' '.$shipping->Address . ' ' . $shipping->Address2),
                 'state' => $shipping->City,
                 'postcode' => $shipping->PostalCode,
                 'countryCode' => $shipping->Country,

@@ -234,21 +234,19 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
             $arrayOfModifiers = [];
         }
 
-        if ([] !== $arrayOfModifiers) {
-            foreach ($arrayOfModifiers as $className) {
-                $orderModifier_Descriptor = DataObject::get_one(
-                    OrderModifierDescriptor::class,
-                    ['ModifierClassName' => $className],
-                    $cacheDataObjectGetOne = false
-                );
-                if (! $orderModifier_Descriptor) {
-                    $modifier = Injector::inst()->get($className);
-                    $orderModifier_Descriptor = OrderModifierDescriptor::create();
-                    $orderModifier_Descriptor->ModifierClassName = $className;
-                    $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
-                    $orderModifier_Descriptor->write();
-                    DB::alteration_message('Creating description for ' . $className, 'created');
-                }
+        foreach ($arrayOfModifiers as $className) {
+            $orderModifier_Descriptor = DataObject::get_one(
+                OrderModifierDescriptor::class,
+                ['ModifierClassName' => $className],
+                $cacheDataObjectGetOne = false
+            );
+            if (! $orderModifier_Descriptor) {
+                $modifier = Injector::inst()->get($className);
+                $orderModifier_Descriptor = OrderModifierDescriptor::create();
+                $orderModifier_Descriptor->ModifierClassName = $className;
+                $orderModifier_Descriptor->Heading = $modifier->i18n_singular_name();
+                $orderModifier_Descriptor->write();
+                DB::alteration_message('Creating description for ' . $className, 'created');
             }
         }
 

@@ -315,16 +315,14 @@ class ProductGroup extends Page
 
         $config = EcommerceConfig::inst();
 
-        if ($config->ProductsAlsoInOtherGroups) {
-            if (!ClassHelpers::check_for_instance_of($this, ProductGroupSearchPage::class, false)) {
-                $fields->addFieldsToTab(
-                    'Root.OtherProductsShown',
-                    [
-                        HeaderField::create('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
-                        $this->getProductGroupsTable(),
-                    ]
-                );
-            }
+        if ($config->ProductsAlsoInOtherGroups && !ClassHelpers::check_for_instance_of($this, ProductGroupSearchPage::class, false)) {
+            $fields->addFieldsToTab(
+                'Root.OtherProductsShown',
+                [
+                    HeaderField::create('ProductGroupsHeader', _t('ProductGroup.OTHERPRODUCTSTOSHOW', 'Other products to show ...')),
+                    $this->getProductGroupsTable(),
+                ]
+            );
         }
 
         $fields->addFieldsToTab(
@@ -643,8 +641,6 @@ class ProductGroup extends Page
      * on the product page, but if one of the variations is added to the
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
-     *
-     * @return null|Image
      */
     public function BestAvailableImage(): ?Image
     {
@@ -765,12 +761,10 @@ class ProductGroup extends Page
 
     public function getProductGroupBreadcrumbCalculated(): string
     {
-        if (empty($this->ProductGroupBreadcrumb)) {
-            if ($this->ParentID) {
-                $p = $this->Parent();
-                if ($p && $p->exists()) {
-                    return $this->Parent()->Title;
-                }
+        if (empty($this->ProductGroupBreadcrumb) && $this->ParentID) {
+            $p = $this->Parent();
+            if ($p && $p->exists()) {
+                return $this->Parent()->Title;
             }
         }
 
@@ -987,7 +981,7 @@ class ProductGroup extends Page
                 explode(' ', $altNames)
             )
         );
-        if ($altNamesArray) {
+        if ($altNamesArray !== []) {
             return $altNamesArray;
         }
         return [];

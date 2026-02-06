@@ -196,7 +196,7 @@ class CheckoutPage extends CartPage
     {
         $nextStep = null;
         $link = self::find_link();
-        if ($link) {
+        if ($link !== '' && $link !== '0') {
             $anchor = EcommerceConfig::get(CheckoutPageController::class, 'anchor_to_add_to_checkout_steps');
             $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
             if (in_array($currentStep, $steps, true)) {
@@ -239,7 +239,7 @@ class CheckoutPage extends CartPage
     public static function get_checkout_order_link($orderID)
     {
         $link = self::find_link();
-        if ($link) {
+        if ($link !== '' && $link !== '0') {
             return Controller::join_links($link, 'showorder', $orderID);
         }
 
@@ -364,7 +364,6 @@ class CheckoutPage extends CartPage
 
     public function requireDefaultRecords()
     {
-        parent::requireDefaultRecords();
         if (SiteTree::config()->create_default_pages) {
             $checkoutPage = DataObject::get_one(CheckoutPage::class);
             if (! $checkoutPage) {

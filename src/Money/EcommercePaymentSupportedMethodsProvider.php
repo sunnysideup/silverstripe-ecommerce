@@ -55,13 +55,11 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
             $hideTestPaymentMethods = true;
         }
         $supportedMethods = EcommerceConfig::get(EcommercePayment::class, 'supported_methods');
-        if (count($supportedMethods)) {
-            if (ArrayLib::is_associative($supportedMethods)) {
-                if ($hideTestPaymentMethods) {
-                    foreach (array_keys($supportedMethods) as $methodClass) {
-                        if (is_subclass_of($methodClass, EcommercePaymentTest::class)) {
-                            unset($supportedMethods[$methodClass]);
-                        }
+        if (count($supportedMethods) > 0) {
+            if (ArrayLib::is_associative($supportedMethods) && $hideTestPaymentMethods) {
+                foreach (array_keys($supportedMethods) as $methodClass) {
+                    if (is_subclass_of($methodClass, EcommercePaymentTest::class)) {
+                        unset($supportedMethods[$methodClass]);
                     }
                 }
             }
@@ -111,7 +109,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
         if ($orderOrOrderId && $orderOrOrderId instanceof Order) {
             return $orderOrOrderId;
         }
-        if ((int) $orderOrOrderId) {
+        if ((int) $orderOrOrderId !== 0) {
             return Order::get_order_cached((int) $orderOrOrderId);
         }
 

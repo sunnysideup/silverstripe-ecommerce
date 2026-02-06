@@ -152,7 +152,6 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     /**
      * we need this function for logic. Important that we recalculate!
      * @param  Order $order
-     * @return bool
      */
     public function IsSubmitted($order): bool
     {

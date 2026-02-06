@@ -392,61 +392,59 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message('<h2>Checking one-to-one relationships</h2>.');
         }
 
-        if ([] !== $this->oneToOne) {
-            foreach ($this->oneToOne as $orderFieldName => $className) {
-                $tableName = Config::inst()->get($className, 'table_name');
-                if (! in_array($className, $this->oneToMany, true) && ! in_array($className, $this->manyToMany, true)) {
-                    if ($this->verbose) {
-                        $this->flush();
-                        DB::alteration_message("looking for {$className} objects without link to order.");
-                    }
+        foreach ($this->oneToOne as $orderFieldName => $className) {
+            $tableName = Config::inst()->get($className, 'table_name');
+            if (! in_array($className, $this->oneToMany, true) && ! in_array($className, $this->manyToMany, true)) {
+                if ($this->verbose) {
+                    $this->flush();
+                    DB::alteration_message("looking for {$className} objects without link to order.");
+                }
 
-                    $rows = DB::query("
+                $rows = DB::query("
                         SELECT \"{$tableName}\".\"ID\"
                         FROM \"{$tableName}\"
                             LEFT JOIN \"Order\"
                                 ON \"Order\".\"{$orderFieldName}\" = \"{$tableName}\".\"ID\"
                         WHERE \"Order\".\"ID\" IS NULL
                         LIMIT 0, " . $this->maximumNumberOfObjectsDeleted);
-                    //the code below is a bit of a hack, but because of the one-to-one relationship we
-                    //want to check both sides....
-                    $this->oneToOneIDArray = [];
-                    if ($rows) {
-                        foreach ($rows as $row) {
-                            $this->oneToOneIDArray[$row['ID']] = $row['ID'];
-                        }
+                //the code below is a bit of a hack, but because of the one-to-one relationship we
+                //want to check both sides....
+                $this->oneToOneIDArray = [];
+                if ($rows) {
+                    foreach ($rows as $row) {
+                        $this->oneToOneIDArray[$row['ID']] = $row['ID'];
                     }
+                }
 
-                    if ([] !== $this->oneToOneIDArray) {
-                        $unlinkedObjects = $className::get()
-                            ->filter(['ID' => $this->oneToOneIDArray])
-                        ;
-                        if ($unlinkedObjects->exists()) {
-                            foreach ($unlinkedObjects as $unlinkedObject) {
-                                if ($this->verbose) {
-                                    $this->flush();
-                                    DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
-                                }
-
-                                $this->deleteObject($unlinkedObject);
+                if ([] !== $this->oneToOneIDArray) {
+                    $unlinkedObjects = $className::get()
+                        ->filter(['ID' => $this->oneToOneIDArray])
+                    ;
+                    if ($unlinkedObjects->exists()) {
+                        foreach ($unlinkedObjects as $unlinkedObject) {
+                            if ($this->verbose) {
+                                $this->flush();
+                                DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
                             }
-                        } elseif ($this->verbose) {
-                            $this->flush();
-                            DB::alteration_message("No objects where found for {$className} even though there appear to be missing links.", 'created');
+
+                            $this->deleteObject($unlinkedObject);
                         }
                     } elseif ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("All references in Order to {$className} are valid.", 'created');
+                        DB::alteration_message("No objects where found for {$className} even though there appear to be missing links.", 'created');
                     }
+                } elseif ($this->verbose) {
+                    $this->flush();
+                    DB::alteration_message("All references in Order to {$className} are valid.", 'created');
+                }
 
-                    if ($this->verbose) {
-                        $this->flush();
-                        $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableName}\"")->value();
-                        $countUnlinkedOnes = DB::query("SELECT COUNT(\"{$tableName}\".\"ID\") FROM \"{$tableName}\" LEFT JOIN \"Order\" ON \"{$tableName}\".\"ID\" = \"Order\".\"{$orderFieldName}\" WHERE \"Order\".\"ID\" IS NULL")->value();
-                        DB::alteration_message("In total there are {$countAll} {$className} ({$orderFieldName}), of which there are {$countUnlinkedOnes} not linked to an order. ", 'created');
-                        if ($countUnlinkedOnes) {
-                            DB::alteration_message("There should be NO {$orderFieldName} ({$className}) without link to Order - un error is suspected", 'deleted');
-                        }
+                if ($this->verbose) {
+                    $this->flush();
+                    $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableName}\"")->value();
+                    $countUnlinkedOnes = DB::query("SELECT COUNT(\"{$tableName}\".\"ID\") FROM \"{$tableName}\" LEFT JOIN \"Order\" ON \"{$tableName}\".\"ID\" = \"Order\".\"{$orderFieldName}\" WHERE \"Order\".\"ID\" IS NULL")->value();
+                    DB::alteration_message("In total there are {$countAll} {$className} ({$orderFieldName}), of which there are {$countUnlinkedOnes} not linked to an order. ", 'created');
+                    if ($countUnlinkedOnes) {
+                        DB::alteration_message("There should be NO {$orderFieldName} ({$className}) without link to Order - un error is suspected", 'deleted');
                     }
                 }
             }
@@ -460,56 +458,54 @@ class EcommerceTaskCartCleanup extends BuildTask
             DB::alteration_message('<h2>Checking one-to-many relationships</h2>.');
         }
 
-        if ([] !== $this->oneToMany) {
-            foreach ($this->oneToMany as $classWithOrderID => $classWithLastEdited) {
-                $tableWithOrderID = Config::inst()->get($classWithOrderID, 'table_name');
-                if (! in_array($classWithLastEdited, $this->oneToOne, true) && ! in_array($classWithLastEdited, $this->manyToMany, true)) {
-                    if ($this->verbose) {
-                        $this->flush();
-                        DB::alteration_message('looking for ' . $tableWithOrderID . ' objects without link to order.');
-                    }
+        foreach ($this->oneToMany as $classWithOrderID => $classWithLastEdited) {
+            $tableWithOrderID = Config::inst()->get($classWithOrderID, 'table_name');
+            if (! in_array($classWithLastEdited, $this->oneToOne, true) && ! in_array($classWithLastEdited, $this->manyToMany, true)) {
+                if ($this->verbose) {
+                    $this->flush();
+                    DB::alteration_message('looking for ' . $tableWithOrderID . ' objects without link to order.');
+                }
 
-                    $rows = DB::query("
+                $rows = DB::query("
                         SELECT \"{$tableWithOrderID}\".\"ID\"
                         FROM \"{$tableWithOrderID}\"
                             LEFT JOIN \"Order\"
                                 ON \"Order\".\"ID\" = \"{$tableWithOrderID}\".\"OrderID\"
                         WHERE \"Order\".\"ID\" IS NULL
                         LIMIT 0, " . $this->maximumNumberOfObjectsDeleted);
-                    $this->oneToManyIDArray = [];
-                    if ($rows) {
-                        foreach ($rows as $row) {
-                            $this->oneToManyIDArray[$row['ID']] = $row['ID'];
-                        }
+                $this->oneToManyIDArray = [];
+                if ($rows) {
+                    foreach ($rows as $row) {
+                        $this->oneToManyIDArray[$row['ID']] = $row['ID'];
                     }
+                }
 
-                    if ([] !== $this->oneToManyIDArray) {
-                        $unlinkedObjects = $classWithLastEdited::get()
-                            ->filter(['ID' => $this->oneToManyIDArray])
-                        ;
-                        if ($unlinkedObjects->exists()) {
-                            foreach ($unlinkedObjects as $unlinkedObject) {
-                                if ($this->verbose) {
-                                    DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
-                                }
-
-                                $this->deleteObject($unlinkedObject);
+                if ([] !== $this->oneToManyIDArray) {
+                    $unlinkedObjects = $classWithLastEdited::get()
+                        ->filter(['ID' => $this->oneToManyIDArray])
+                    ;
+                    if ($unlinkedObjects->exists()) {
+                        foreach ($unlinkedObjects as $unlinkedObject) {
+                            if ($this->verbose) {
+                                DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
                             }
-                        } elseif ($this->verbose) {
-                            $this->flush();
-                            DB::alteration_message("{$classWithLastEdited} objects could not be found even though they were referenced.", 'deleted');
+
+                            $this->deleteObject($unlinkedObject);
                         }
                     } elseif ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("All {$classWithLastEdited} objects have a reference to a valid order.", 'created');
+                        DB::alteration_message("{$classWithLastEdited} objects could not be found even though they were referenced.", 'deleted');
                     }
+                } elseif ($this->verbose) {
+                    $this->flush();
+                    DB::alteration_message("All {$classWithLastEdited} objects have a reference to a valid order.", 'created');
+                }
 
-                    if ($this->verbose) {
-                        $this->flush();
-                        $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableWithOrderID}\"")->value();
-                        $countUnlinkedOnes = DB::query("SELECT COUNT(\"{$tableWithOrderID}\".\"ID\") FROM \"{$tableWithOrderID}\" LEFT JOIN \"Order\" ON \"{$tableWithOrderID}\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
-                        DB::alteration_message("In total there are {$countAll} {$classWithOrderID} ({$classWithLastEdited}), of which there are {$countUnlinkedOnes} not linked to an order. ", 'created');
-                    }
+                if ($this->verbose) {
+                    $this->flush();
+                    $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableWithOrderID}\"")->value();
+                    $countUnlinkedOnes = DB::query("SELECT COUNT(\"{$tableWithOrderID}\".\"ID\") FROM \"{$tableWithOrderID}\" LEFT JOIN \"Order\" ON \"{$tableWithOrderID}\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
+                    DB::alteration_message("In total there are {$countAll} {$classWithOrderID} ({$classWithLastEdited}), of which there are {$countUnlinkedOnes} not linked to an order. ", 'created');
                 }
             }
         }
@@ -545,12 +541,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             ->where($where)
             ->limit($this->maximumNumberOfObjectsDeleted)
         ;
-        if(is_array($this->sort)) {
-            $oldCarts = $oldCarts->sort($this->sort);
-        } else {
-            $oldCarts = $oldCarts->orderBy($this->sort);
-        }
-        $oldCarts = $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
-        return $oldCarts;
+        $oldCarts = is_array($this->sort) ? $oldCarts->sort($this->sort) : $oldCarts->orderBy($this->sort);
+        return $oldCarts->leftJoin(Config::inst()->get(Member::class, 'table_name'), $this->joinShort);
     }
 }

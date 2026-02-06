@@ -163,7 +163,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             unset($orders);
             $orders = $this->getMyOrders($idArray, $count, $offset);
         }
-        if ($fileData) {
+        if ($fileData !== '' && $fileData !== '0') {
             return $fileData;
         }
 

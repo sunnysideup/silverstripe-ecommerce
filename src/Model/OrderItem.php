@@ -298,7 +298,7 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('OrderAttributeGroupID');
 
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             if ($order->IsSubmitted()) {
                 $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
                 $buyable = $this->getBuyableCached();
@@ -439,11 +439,9 @@ class OrderItem extends OrderAttribute
         $buyable = $this->getBuyableCached(true);
 
         if ($buyable && $buyable->canPurchase()) {
-            if (property_exists($buyable, 'Version') && null !== $buyable->Version) {
-                if ($this->Version !== $buyable->Version) {
-                    $this->Version = $buyable->Version;
-                    $this->write();
-                }
+            if (property_exists($buyable, 'Version') && null !== $buyable->Version && $this->Version !== $buyable->Version) {
+                $this->Version = $buyable->Version;
+                $this->write();
             }
 
             $oldValue = $this->CalculatedTotal - 0;
@@ -637,11 +635,7 @@ class OrderItem extends OrderAttribute
     {
         $currentOrVersion = $current ? 'current' : 'version';
         $order = $this->getOrderCached();
-        if ($order && $order->IsSubmitted() && $current === false) {
-            $currentOrVersion = 'version';
-        } else {
-            $currentOrVersion = 'current';
-        }
+        $currentOrVersion = $order && $order->IsSubmitted() && $current === false ? 'version' : 'current';
 
         if (!isset($this->tempBuyableStore[$currentOrVersion])) {
             if (!$this->BuyableID) {
@@ -750,7 +744,6 @@ class OrderItem extends OrderAttribute
         }
 
         return 'ERROR: product not found';
-        user_error('No Buyable could be found for OrderItem with ID: ' . $this->ID, E_USER_NOTICE);
     }
 
     /**
@@ -850,10 +843,8 @@ class OrderItem extends OrderAttribute
         }
 
         $buyable = $this->getBuyableCached();
-        if ($buyable && $buyable->exists()) {
-            if ($buyable->ShortDescription) {
-                return $buyable->ShortDescription;
-            }
+        if ($buyable && $buyable->exists() && $buyable->ShortDescription) {
+            return $buyable->ShortDescription;
         }
 
         return _t('OrderItem.NA', 'n/a');
@@ -877,7 +868,7 @@ class OrderItem extends OrderAttribute
     public function getLink()
     {
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             return $order->Link();
         }
 
@@ -986,9 +977,8 @@ class OrderItem extends OrderAttribute
         $html .= '<ul>';
         $html .= '<li><b>Buyable Price:</b> ' . $this->getBuyableCached()->Price . ' </li>';
         $html .= '<li><b>Buyable Calculated Price:</b> ' . $this->getBuyableCached()->CalculatedPrice() . ' </li>';
-        $html .= '</ul>';
 
-        return $html;
+        return $html . '</ul>';
     }
 
     public function resetCache()
@@ -1020,11 +1010,9 @@ class OrderItem extends OrderAttribute
                 $this->OrderID = (int) Controller::curr()->getRequest()->getSession()->get('EcommerceOrderGETCMSHack');
             }
 
-            if (!$this->exists()) {
-                if ($buyable) {
-                    if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
-                        $this->setClassName($buyable->classNameForOrderItem());
-                    }
+            if (!$this->exists() && $buyable) {
+                if (OrderItem::class === $this->ClassName && OrderItem::class !== $this->BuyableClassName) {
+                    $this->setClassName($buyable->classNameForOrderItem());
                 }
             }
 
@@ -1054,11 +1042,9 @@ class OrderItem extends OrderAttribute
     {
         parent::onAfterWrite();
         $order = $this->getOrderCached();
-        if ($order) {
-            if (!$order->StatusID) {
-                //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
-                $order->init($recalculate = true);
-            }
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && !$order->StatusID) {
+            //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
+            $order->init($recalculate = true);
         }
     }
 

@@ -16,9 +16,6 @@ use SilverStripe\View\ArrayData;
  */
 abstract class ProductCollection
 {
-    /**
-     * @return ArrayList
-     */
     public function getArrayList(): ArrayList
     {
         $arrayList = ArrayList::create();
@@ -37,8 +34,6 @@ abstract class ProductCollection
     /**
      * Allows you to extend the array with additional information.
      * If there is no need to extend getBasicArray method, then just return that.
-     *
-     * @return array
      */
     abstract public function getArrayFull(?string $where = ''): array;
 

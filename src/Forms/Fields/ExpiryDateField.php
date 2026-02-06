@@ -79,7 +79,7 @@ class ExpiryDateField extends TextField
             $string = '';
             foreach ($this->value as $part) {
                 $part = str_pad($part, 2, '0', STR_PAD_LEFT);
-                $string .= trim((string) $part);
+                $string .= trim($part);
             }
 
             return $string;

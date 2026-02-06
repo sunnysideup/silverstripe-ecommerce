@@ -57,7 +57,7 @@ class EcommerceCodeFilter
         }
         $s = trim((string) $s);
         //check for other ones.
-        if ($s) {
+        if ($s !== '' && $s !== '0') {
             $count = 2;
             $code = $s;
             while ($isObject && $obj::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->exists()) {

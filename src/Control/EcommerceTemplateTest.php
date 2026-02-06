@@ -65,8 +65,6 @@ class EcommerceTemplateTest extends PageController
 
     /**
      * This is used for template-ty stuff.
-     *
-     * @return bool
      */
     public function IsEcommercePage(): bool
     {

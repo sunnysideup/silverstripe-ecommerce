@@ -88,7 +88,7 @@ class ReferralSummary extends LeftAndMain
     public function getEditForm($id = null, $fields = null): Form
     {
         $request = $this->getRequest();
-        if (self::needs_processing() !== true) {
+        if (!self::needs_processing()) {
             $today = new DateTimeImmutable('today');
             $defaultFrom  = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
             $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
@@ -203,16 +203,14 @@ class ReferralSummary extends LeftAndMain
             );
         }
 
-        $form = Form::create($this, 'EditForm', $fields, $actions)
+        return Form::create($this, 'EditForm', $fields, $actions)
             ->addExtraClass('panel panel--padded panel--scrollable cms-content-view ')
             ->setFormMethod('GET');
-
-        return $form;
     }
 
     public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
     {
-        if (self::needs_processing() !== true) {
+        if (!self::needs_processing()) {
             $form->sessionMessage('Data preparation not needed.', 'good');
             return $this->redirectBack();
         }
@@ -307,11 +305,7 @@ class ReferralSummary extends LeftAndMain
             $idList = Referral::get()
                 ->filterAny($keywordFilters)
                 ->column('ID');
-            if (count($idList)) {
-                $filters['ID'] = $idList;
-            } else {
-                $filters['ID'] = 0;
-            }
+            $filters['ID'] = count($idList) ? $idList : 0;
         }
 
         $refs = Referral::get()
@@ -390,7 +384,7 @@ class ReferralSummary extends LeftAndMain
                 $list[$key]['TotalOrderAmountInvoiced'] += (float) $ref->AmountInvoiced;
             }
 
-            $intoOrder = (int) $list[$key]['NumberOfOrders'];
+            $intoOrder = $list[$key]['NumberOfOrders'];
 
             $list[$key]['AverageOrderAmountInvoicedPerOrder'] = $intoOrder > 0 ? round($list[$key]['TotalOrderAmountInvoiced'] / $intoOrder, 2) : 0.0;
         }
@@ -404,8 +398,7 @@ class ReferralSummary extends LeftAndMain
     {
         $html = '<h2>Results</h2>';
         if (!count($array)) {
-            $html .= '<p class=\'message warning\'>no data</p>';
-            return $html;
+            return $html . '<p class=\'message warning\'>no data</p>';
         }
 
         // find max of selected statistic
@@ -447,7 +440,7 @@ class ReferralSummary extends LeftAndMain
                 $extra = $isStat ? ' class=\'ref-stat-col\'' : '';
                 $html .= '<th' . $extra . '>' . $escapeFN($label) . '</th>';
             } elseif ($isHeader) {
-                $html .= '<th>' . $escapeFN((string) $label) . '</th>';
+                $html .= '<th>' . $escapeFN($label) . '</th>';
             }
         }
         $html .= '</tr></thead><tbody>';
@@ -470,7 +463,7 @@ class ReferralSummary extends LeftAndMain
                         $label = (string) $cell;
                     }
                     $html .= '<td class=\'ref-num\'>'
-                        . $escapeFN((string) $label)
+                        . $escapeFN($label)
                         . '<div class=\'ref-bar\' style=\'width:' . $width . '%\'></div>'
                         . '</td>';
                 } elseif ($isHeader) {
@@ -480,14 +473,12 @@ class ReferralSummary extends LeftAndMain
             $html .= '</tr>';
         }
 
-        $html .= '</tbody></table>';
-
-        return $html;
+        return $html . '</tbody></table>';
     }
 
     public function camelCaseToWords(string $string): string
     {
-        return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', (string) $string);
+        return (string) preg_replace('/(?<!^)[A-Z]/', ' $0', $string);
     }
 
     protected function getDefaultFormValue(string $key): string

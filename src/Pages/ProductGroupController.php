@@ -153,7 +153,7 @@ class ProductGroupController extends PageController
     {
         if (! $this->productList) {
             $this->productList = $this->getCachedProductList();
-            if (! $this->productList) {
+            if (!$this->productList instanceof \SilverStripe\ORM\DataList) {
                 // make sure to apply search filter first.
                 $this->productList = $this->getFinalProductList()
                     ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
@@ -432,7 +432,7 @@ class ProductGroupController extends PageController
     public function getCurrentPageNumber(): int
     {
         $pageStart = $this->pageStart();
-        if ($pageStart) {
+        if ($pageStart !== 0) {
             return (int) ($pageStart / $this->getProductsPerPageCalculated()) + 1;
         }
 
@@ -584,8 +584,6 @@ class ProductGroupController extends PageController
     /**
      * Provides a DataList of links for filters products.
      * Note that this loses the special link values!
-     *
-     * @return DataList
      */
     public function GroupFilterLinksAsDataList(): DataList
     {
@@ -611,8 +609,7 @@ class ProductGroupController extends PageController
             $filter += ['ID' => $listIds];
         }
         $filterList = ProductGroup::get()->filter($filter)->columnUnique();
-        $list = $list->filter(['ID' => $filterList]);
-        return $list;
+        return $list->filter(['ID' => $filterList]);
     }
 
     /**
@@ -735,11 +732,7 @@ class ProductGroupController extends PageController
             }
             $vars = '';
         }
-        if (strpos($link, '?') === false) {
-            $glue = '?';
-        } else {
-            $glue = '&';
-        }
+        $glue = strpos($link, '?') === false ? '?' : '&';
         return $link . $glue . 'codes=' . $vars;
     }
 
@@ -832,8 +825,6 @@ class ProductGroupController extends PageController
     /**
      *
      * must be public!
-     * @param string $v
-     * @return void
      */
     public function setSecondaryTitle(string $v): static
     {

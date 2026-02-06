@@ -16,7 +16,7 @@ class SendLoginToken
 
     public function send(string $email, ?string $backURL = '', ?HTTPRequest $request = null): bool
     {
-        if (! $email) {
+        if ($email === '' || $email === '0') {
             return false;
         }
 

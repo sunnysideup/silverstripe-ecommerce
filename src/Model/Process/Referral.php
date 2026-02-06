@@ -127,7 +127,7 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public static function add_referral(Order $order, ?array $params = []): ?int
     {
-        if (!empty($params) && count($params) > 0) {
+        if ($params !== null && $params !== [] && count($params) > 0) {
             $filter = [
                 'UniqueID' => ($params['_uniqueID'] ?? '') ?: $order->ID,
             ];
@@ -165,7 +165,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             foreach ($fieldValues as $field => $values) {
                 $ref->$field = implode(' | ', array_filter(array_unique($values)));
             }
-            $ref->From = $from ? implode(' | ', array_filter(array_unique($from))) : 'Other';
+            $ref->From = $from !== [] ? implode(' | ', array_filter(array_unique($from))) : 'Other';
             $ref->write();
             return $ref->ID;
         }
@@ -425,12 +425,11 @@ class Referral extends DataObject implements EditableEcommerceObject
     {
         $string = $this->Created;
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $string .= ' (' . $order->getTitle() . ')';
         }
-        $string .= ' - ' . $this->Source;
 
-        return $string;
+        return $string . (' - ' . $this->Source);
     }
 
     public function getFromAfterwards(): string
@@ -447,7 +446,7 @@ class Referral extends DataObject implements EditableEcommerceObject
                 }
             }
         }
-        return $list ? implode(' | ', array_filter(array_unique($list))) : 'Other';
+        return $list !== [] ? implode(' | ', array_filter(array_unique($list))) : 'Other';
     }
 
     public function getFullCode(): string
@@ -475,17 +474,15 @@ class Referral extends DataObject implements EditableEcommerceObject
             $save = true;
         }
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             if (!$this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
                 $save = true;
             }
-            if ($this->IsSubmitted) {
-                if (!$this->AmountInvoiced) {
-                    $this->AmountInvoiced = $order->getTotal();
-                    $save = true;
-                    $processed = true;
-                }
+            if ($this->IsSubmitted && !$this->AmountInvoiced) {
+                $this->AmountInvoiced = $order->getTotal();
+                $save = true;
+                $processed = true;
             }
         }
         if (!$this->From) {

@@ -10,7 +10,6 @@ use SilverStripe\View\ViewableData;
 class EcommerceCMSButtonField extends LiteralField
 {
     /**
-     * @param string $name
      * @param mixed  $link      (string|ViewableData|FormField)
      * @param bool   $newWindow
      */

@@ -50,11 +50,11 @@ class OrderModifierForm extends Form
         FieldList $actions,
         Validator $optionalValidator = null
     ) {
-        if (! $optionalController) {
+        if (!$optionalController instanceof \SilverStripe\Control\Controller) {
             $controllerClassName = EcommerceConfig::get(OrderModifierForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (! $optionalValidator) {
+        if (!$optionalValidator instanceof \SilverStripe\Forms\Validator) {
             $validatorClassName = EcommerceConfig::get(OrderModifierForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }

@@ -85,10 +85,8 @@ class SearchHistory extends DataObject
     public static function add_entry(string $keywordString, ?int $productCount = 0, ?int $groupCount = 0): ?SearchHistory
     {
         $member = Security::getCurrentUser();
-        if ($member) {
-            if ($member->IsShopAdmin()) {
-                return null;
-            }
+        if ($member && $member->IsShopAdmin()) {
+            return null;
         }
         $obj = new SearchHistory();
         $obj->Title = $keywordString;

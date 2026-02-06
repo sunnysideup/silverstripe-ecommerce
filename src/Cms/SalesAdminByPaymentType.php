@@ -40,7 +40,7 @@ class SalesAdminByPaymentType extends SalesAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        $fields = $form->Fields();
+        $form->Fields();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
             $brackets = $this->getBrackets();
@@ -63,7 +63,7 @@ class SalesAdminByPaymentType extends SalesAdmin
 
     protected function getBrackets(): array
     {
-        $list = (array) EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
+        $list = EcommercePaymentSupportedMethodsProvider::supported_methods_basic_list();
         $newArray = [];
         foreach ($list as $key => $value) {
             $newArray[$this->classNameConverter($key)] = $value;

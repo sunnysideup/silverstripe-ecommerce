@@ -134,10 +134,8 @@ class OrderConfirmationPageController extends CartPageController
             $dos = CheckoutPageStepDescription::get()
                 ->where($where)
                 ->sort(['ID' => 'ASC']);
-            if ($number) {
-                if ($dos->exists()) {
-                    return $dos->First();
-                }
+            if ($number && $dos->exists()) {
+                return $dos->First();
             }
             $arrayList = new ArrayList([]);
             foreach ($dos as $do) {
@@ -286,10 +284,8 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function CancelForm()
     {
-        if ($this->Order()) {
-            if ($this->currentOrder->canCancel()) {
-                return OrderFormCancel::create($this, 'CancelForm', $this->currentOrder);
-            }
+        if ($this->Order() && $this->currentOrder->canCancel()) {
+            return OrderFormCancel::create($this, 'CancelForm', $this->currentOrder);
         }
         //once cancelled, you will be redirected to main page - hence we need this...
         if ($this->orderID) {
@@ -379,22 +375,20 @@ class OrderConfirmationPageController extends CartPageController
 
             // different classname
             $potentialClassName = str_replace('-', '\\', $request->param('OtherID'));
-            if (class_exists($potentialClassName)) {
-                if (is_a(singleton($potentialClassName), EcommerceConfigClassNames::getName(OrderEmail::class))) {
-                    $emailClassName = $potentialClassName;
-                }
+            if (class_exists($potentialClassName) && is_a(singleton($potentialClassName), EcommerceConfigClassNames::getName(OrderEmail::class))) {
+                $emailClassName = $potentialClassName;
             }
             $sendStepID = (int) $request->getVar('send');
             $testStepID = (int) $request->getVar('test');
             $stepID = 0;
-            if ($sendStepID) {
+            if ($sendStepID !== 0) {
                 $stepID = $sendStepID;
                 $isTest = false;
-            } elseif ($testStepID) {
+            } elseif ($testStepID !== 0) {
                 $stepID = $testStepID;
                 $isTest = true;
             }
-            if ($stepID) {
+            if ($stepID !== 0) {
                 $to = '';
                 if (Permission::check('ADMIN')) {
                     $to = (string) $request->getVar('to');
@@ -405,7 +399,7 @@ class OrderConfirmationPageController extends CartPageController
                     $message = $step->CalculatedCustomerMessage($this->currentOrder);
                     $emailClassName = $step->getEmailClassName();
                     $adminOnlyOrToEmail = $isTest;
-                    if ($to) {
+                    if ($to !== '' && $to !== '0') {
                         $to = filter_var($to, FILTER_SANITIZE_EMAIL);
                         if ($to) {
                             $adminOnlyOrToEmail = $to;
@@ -413,11 +407,7 @@ class OrderConfirmationPageController extends CartPageController
                         }
                     }
                     if (!$to) {
-                        if ($adminOnlyOrToEmail) {
-                            $email = 'site administrator';
-                        } else {
-                            $email = $this->currentOrder->getOrderEmail();
-                        }
+                        $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }
                     $outcome = $this->currentOrder->sendEmail(
@@ -460,10 +450,10 @@ class OrderConfirmationPageController extends CartPageController
         $sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
         if ($sessionOrderID) {
             $this->currentOrder = Order::get_order_cached((int) $sessionOrderID);
-            if ($this->currentOrder) {
+            if ($this->currentOrder instanceof \Sunnysideup\Ecommerce\Model\Order) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
-                $validUntil = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime') - 0;
+                $validUntil = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime');
                 if ($validUntil < time()) {
                     $this->clearRetrievalOrderID();
                     $this->overrideCanView = false;

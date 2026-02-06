@@ -47,7 +47,7 @@ class EcommerceMoney extends Extension
         $symbol = self::get_default_symbol($currency);
         if ($symbol && $currency) {
             $i = 0;
-            while ($i < mb_strlen((string) $symbol) && substr((string) $symbol, $i, 1) === substr((string) $currency, $i, 1)) {
+            while ($i < mb_strlen((string) $symbol) && substr((string) $symbol, $i, 1) === substr($currency, $i, 1)) {
                 ++$i;
             }
 

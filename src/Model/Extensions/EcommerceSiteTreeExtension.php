@@ -66,5 +66,6 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
                 return false;
             }
         }
+        return null;
     }
 }

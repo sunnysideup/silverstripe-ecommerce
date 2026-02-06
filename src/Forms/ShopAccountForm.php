@@ -47,7 +47,7 @@ class ShopAccountForm extends Form
                 '<span class="customerName">' . trim(Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname)) . '</span>, '
                 . '<a href="' . $clearCartAndLogoutLink . '">' . _t('Account.LOGOUT', 'Log out now?') .
                 '</a>';
-            if ($loginMessage) {
+            if ($loginMessage !== '0') {
                 $loginField = HTMLReadonlyField::create(
                     'LoggedInAsNote',
                     _t('Account.LOGGEDIN', 'You are currently logged in as '),

@@ -66,20 +66,19 @@ class EcommerceTaskReviewSearches extends BuildTask
     public function run($request)
     {
         $maxRows = (int) preg_replace('#[^\d.]#', '', (string) $request->getVar('maxrows'));
-        $maxRows = (int) ($maxRows - 0);
-        if (! $maxRows) {
+        if ($maxRows === 0) {
             $maxRows = $this->defaultMaxRows;
         }
         $days = (int) ($request->getVar('days') - 0);
-        if (! $days) {
+        if ($days === 0) {
             $days = $this->defaultDays;
         }
         $countMin = (int) ($request->getVar('min') - 0);
-        if (! $countMin) {
+        if ($countMin === 0) {
             $countMin = $this->defaultMinimum;
         }
         $endingDaysBack = (int) ($request->getVar('ago') - 0);
-        if (! $endingDaysBack) {
+        if ($endingDaysBack === 0) {
             $endingDaysBack = $this->endingDaysBack;
         }
         $field = EcommerceSearchHistoryFormField::create('stats', $this->title)

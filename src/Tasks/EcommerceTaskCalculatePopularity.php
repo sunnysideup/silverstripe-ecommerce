@@ -33,7 +33,6 @@ class EcommerceTaskCalculatePopularity extends BuildTask
      * 0.003 is a good number for a product that is popular for 3 months.
      * 0.001 is a good number for a product that is popular for 1 year.
      * 0.0001 is a good number for a product that is popular for 10 years.
-     * @var float
      */
     private static float $decay_rate = 0.003;
 
@@ -41,8 +40,6 @@ class EcommerceTaskCalculatePopularity extends BuildTask
      *
      * if true, the popularity will be set to the rank of the product
      * (1 = most popular, 2 = second most popular, etc).
-     *
-     * @var bool
      */
     private static bool $set_to_rank = true;
 

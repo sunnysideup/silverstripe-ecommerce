@@ -32,7 +32,7 @@ class EcommerceCountryVisitorCountryProvider implements EcommerceGEOipProvider
      */
     public function getCountry(string $ip = '')
     {
-        if (! $ip) {
+        if ($ip === '' || $ip === '0') {
             $ip = $this->getIP();
         }
         $class = $this->Config()->get('country_provider');

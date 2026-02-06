@@ -101,25 +101,21 @@ class ShopAccountFormValidator extends RequiredFields
                 $valid = false;
             }
         }
-        if (isset($data['FirstName'])) {
-            if (strlen((string) $data['FirstName']) < 2) {
-                $this->validationError(
-                    'FirstName',
-                    _t('Account.NOFIRSTNAME', 'Please enter your first name.'),
-                    'required'
-                );
-                $valid = false;
-            }
+        if (isset($data['FirstName']) && strlen((string) $data['FirstName']) < 2) {
+            $this->validationError(
+                'FirstName',
+                _t('Account.NOFIRSTNAME', 'Please enter your first name.'),
+                'required'
+            );
+            $valid = false;
         }
-        if (isset($data['Surname'])) {
-            if (strlen((string) $data['Surname']) < 2) {
-                $this->validationError(
-                    'Surname',
-                    _t('Account.NOSURNAME', 'Please enter your surname.'),
-                    'required'
-                );
-                $valid = false;
-            }
+        if (isset($data['Surname']) && strlen((string) $data['Surname']) < 2) {
+            $this->validationError(
+                'Surname',
+                _t('Account.NOSURNAME', 'Please enter your surname.'),
+                'required'
+            );
+            $valid = false;
         }
         $validExtended = $this->extend('updatePHP', $data, $this);
         if (false === $validExtended) {

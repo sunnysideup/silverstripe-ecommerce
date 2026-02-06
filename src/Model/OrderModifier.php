@@ -529,10 +529,8 @@ class OrderModifier extends OrderAttribute
      */
     public function ShowInTable(): bool
     {
-        if (!$this->baseRunUpdateCalled) {
-            if ($this->canBeUpdated()) {
-                user_error('While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier', E_USER_ERROR);
-            }
+        if (!$this->baseRunUpdateCalled && $this->canBeUpdated()) {
+            user_error('While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier', E_USER_ERROR);
         }
 
         return false;
@@ -820,8 +818,6 @@ class OrderModifier extends OrderAttribute
 
     /**
      * This method simply checks if a fields has changed and if it has changed it updates the field.
-     *
-     * @param string $fieldName
      */
     protected function checkField(string $fieldName, ?bool $recalculate = false)
     {
@@ -913,7 +909,6 @@ class OrderModifier extends OrderAttribute
     public function Classes(): string
     {
         $classes = parent::Classes();
-        $classes .= 'type-is-' . strtolower($this->LiveType());
-        return $classes;
+        return $classes . ('type-is-' . strtolower($this->LiveType()));
     }
 }

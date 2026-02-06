@@ -133,20 +133,18 @@ class SalesAdminExtras extends ModelAdmin
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
-            if ($gridField) {
-                if ($gridField instanceof GridField) {
-                    $config = $gridField->getConfig();
-                    $exportButton = new GridFieldExportSalesButton('buttons-before-left');
-                    $exportButton->setExportColumns($this->getExportFields());
-                    $config->addComponent($exportButton);
-                    $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
-                    $config->addComponent($printAllInvoices);
-                    $printAllPackingSlips = new GridFieldPrintAllPackingSlipsButton('buttons-before-left');
-                    $config->addComponent($printAllPackingSlips);
-                    //per row ...
-                    $config->addComponent(new GridFieldPrintInvoiceButton());
-                    // $config->addComponent(new GridFieldPrintPackingSlipButton());
-                }
+            if ($gridField && $gridField instanceof GridField) {
+                $config = $gridField->getConfig();
+                $exportButton = new GridFieldExportSalesButton('buttons-before-left');
+                $exportButton->setExportColumns($this->getExportFields());
+                $config->addComponent($exportButton);
+                $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
+                $config->addComponent($printAllInvoices);
+                $printAllPackingSlips = new GridFieldPrintAllPackingSlipsButton('buttons-before-left');
+                $config->addComponent($printAllPackingSlips);
+                //per row ...
+                $config->addComponent(new GridFieldPrintInvoiceButton());
+                // $config->addComponent(new GridFieldPrintPackingSlipButton());
             }
         }
 

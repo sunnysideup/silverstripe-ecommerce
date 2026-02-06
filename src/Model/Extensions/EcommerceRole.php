@@ -440,7 +440,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         return self::$shopAssistantMemberCache;
     }
 
-    protected static $_excluded_members_array = null;
+    protected static $_excluded_members_array;
 
     /**
      * @return array of Member IDs that may need to be excluded from order analysis, such as site administrators and shop assistants.
@@ -609,11 +609,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function SetPreferredCurrency(EcommerceCurrency $currency)
     {
-        if ($this->getOwner()->exists()) {
-            if ($currency && $currency->exists()) {
-                $this->getOwner()->PreferredCurrencyID = $currency->ID;
-                $this->getOwner()->write();
-            }
+        if ($this->getOwner()->exists() && ($currency && $currency->exists())) {
+            $this->getOwner()->PreferredCurrencyID = $currency->ID;
+            $this->getOwner()->write();
         }
     }
 
@@ -738,7 +736,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $loginDetailsField,
             );
 
-            if ($passwordDoubleCheckField) {
+            if ($passwordDoubleCheckField instanceof \SilverStripe\Forms\PasswordField) {
                 $fields->push($passwordDoubleCheckField);
             }
         }
@@ -763,10 +761,8 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         ];
         if (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
             $passwordFieldIsRequired = true;
-            if ($this->getOwner()->exists()) {
-                if ($this->getOwner()->Password) {
-                    $passwordFieldIsRequired = false;
-                }
+            if ($this->getOwner()->exists() && $this->getOwner()->Password) {
+                $passwordFieldIsRequired = false;
             }
         } else {
             $passwordFieldIsRequired = false;

@@ -140,22 +140,20 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     {
         parent::onBeforeWrite();
         $order = $this->getOrderCached();
-        if ($order) {
-            // todo: this needs work!
-            // $this->OrderAsString = $order->ConvertToString();
-            if (! $this->Total) {
-                $this->Total = $order->Total();
-                $this->SubTotal = $order->SubTotal();
-            }
+        // todo: this needs work!
+        // $this->OrderAsString = $order->ConvertToString();
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && ! $this->Total) {
+            $this->Total = $order->Total();
+            $this->SubTotal = $order->SubTotal();
         }
-        if (! (int) $this->SequentialOrderNumber) {
+        if ((int) $this->SequentialOrderNumber === 0) {
             $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') ?? 1;
             $id = null !== $this->ID ? (int) $this->ID : 0;
             $lastOne = DB::query("SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> $id")->value();
             if ($lastOne > 0) {
                 $this->SequentialOrderNumber = (int) $lastOne + 1;
             }
-            if ((int) $min && $this->SequentialOrderNumber < $min) {
+            if ($min && $this->SequentialOrderNumber < $min) {
                 $this->SequentialOrderNumber = $min;
             }
         }

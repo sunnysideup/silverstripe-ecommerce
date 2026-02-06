@@ -69,7 +69,7 @@ trait EcommerceProductReportTrait
         }
 
         $minPrice = (float) preg_replace('#[^0-9.\-]#', '', ($params['MinimumPrice'] ?? 0));
-        if ($minPrice) {
+        if ($minPrice !== 0.0) {
             $list = $list->filter(['Price:GreaterThan' => $minPrice]);
         }
 
@@ -88,16 +88,16 @@ trait EcommerceProductReportTrait
         }
 
         $changedInTheLastXDays = (int) ($params['ChangedInTheLastXDays'] ?? 0);
-        if ($changedInTheLastXDays) {
+        if ($changedInTheLastXDays !== 0) {
             $list = $list->where(['"LastEdited" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $changedInTheLastXDays . ' DAY)']);
         }
 
         $createdInTheLastXDays = (int) ($params['CreatedInTheLastXDays'] ?? 0);
-        if ($createdInTheLastXDays) {
+        if ($createdInTheLastXDays !== 0) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
         $parentID = intval(($params['ParentID'] ?? 0));
-        if ($parentID) {
+        if ($parentID !== 0) {
             $list = $list->filter(['ParentID' => $parentID]);
         }
 
@@ -124,11 +124,7 @@ trait EcommerceProductReportTrait
             if (empty($sort)) {
                 $sort = ['Title' => 'ASC'];
             }
-            if (is_array($sort)) {
-                $list = $list->sort($sort);
-            } else {
-                $list = $list->orderBy($sort);
-            }
+            $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         }
         return $list;
     }
@@ -158,10 +154,10 @@ trait EcommerceProductReportTrait
             'Price' => [
                 'title' => _t('EcommerceSideReport.PRICE', 'Price'),
                 'formatting' => function ($value, $item) {
-                    return (intval($value) ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
+                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
                 },
                 'csvFormatting' => function ($value, $item) {
-                    return (intval($value) ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
+                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
                 },
             ],
         ];

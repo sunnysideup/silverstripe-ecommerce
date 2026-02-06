@@ -73,7 +73,7 @@ class KeywordSearchBuilder
         return $this->keywordPhrase;
     }
 
-    protected static $ifStatementCache = null;
+    protected static $ifStatementCache;
 
     /**
      * creates three levels of searches that
@@ -89,7 +89,7 @@ class KeywordSearchBuilder
         if (!is_null(self::$ifStatementCache)) {
             $this->ifStatement = self::$ifStatementCache;
 
-            return;
+            return null;
         }
         $phrase = $this->cleanPhrase($phrase);
         $this->ifStatement = '';
@@ -143,6 +143,7 @@ class KeywordSearchBuilder
 
         $this->addEndIfStatement($count);
         self::$ifStatementCache = $this->ifStatement;
+        return null;
     }
 
     protected function strPositionPhrase(string $phrase, string $field): string
@@ -173,7 +174,7 @@ class KeywordSearchBuilder
 
     protected function createSql(string $table, string $idField, string $phrase, string $where, $limit): string
     {
-        if ($where) {
+        if ($where !== '' && $where !== '0') {
             $where = 'WHERE ' . $where;
         }
         $titleField = '';
@@ -248,9 +249,7 @@ class KeywordSearchBuilder
             $html .= '</tr>';
         }
 
-        $html .= '</tbody></table>';
-
-        return $html;
+        return $html . '</tbody></table>';
     }
 
     protected function addPriceAdjustment($results): array

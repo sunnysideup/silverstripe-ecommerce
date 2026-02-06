@@ -84,10 +84,8 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     {
         $this->Title = _t('OrderStatusLog.ORDERDISPATCHED', 'Order Dispatched');
         $this->DispatchedOn = date('Y-m-d');
-        if (Security::database_is_ready()) {
-            if (Security::getCurrentUser()) {
-                $this->DispatchedBy = Security::getCurrentUser()->getTitle();
-            }
+        if (Security::database_is_ready() && Security::getCurrentUser()) {
+            $this->DispatchedBy = Security::getCurrentUser()->getTitle();
         }
 
         return parent::populateDefaults();
@@ -131,7 +129,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     public function getFrontEndFields($params = null)
     {
         $order = $this->getOrderCached();
-        if($order) {
+        if($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $fields = FieldList::create(
                 [
                     ReadonlyField::create('CustomerInfo', 'Customer', $order->Member()->getCustomerDetails()),

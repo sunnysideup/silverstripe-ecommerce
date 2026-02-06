@@ -398,7 +398,7 @@ class Product extends Page implements BuyableModel
         );
 
         $parent = $this->getParent();
-        if ($parent && $parent instanceof ProductGroup && (bool) $parent->UseImageForProducts !== true) {
+        if ($parent && $parent instanceof ProductGroup && !(bool) $parent->UseImageForProducts) {
             $fields->removeByName('UseParentImage');
         }
 
@@ -494,39 +494,36 @@ class Product extends Page implements BuyableModel
             ]
         );
 
-        if ($config->ShowFullDetailsForProducts) {
-            if ($this->exists()) {
-                // $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
-                // $exportButton->setExportColumns($this->getExportFieldsForOrder());
-
-                $fields->addFieldsToTab(
-                    'Root.Orders',
-                    [
-                        GridField::create(
-                            'SalesOrderItems',
-                            'Sales Record',
-                            $this->SalesOrderItems()
-                                ->sort(['ID' => 'DESC']),
-                            GridFieldConfig_RecordViewer::create()
-                            //->addComponent($exportButton)
-                        )
-                            ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),
-                    ]
-                );
-
-                $fields->addFieldsToTab(
-                    'Root.History',
-                    [
-                        LiteralField::create(
-                            'ChangeHistory',
-                            ArrayToTable::convert($this->getHistoryData()) .
-                                '<p><a href="/admin/pages/history/show/' . $this->ID . '">Full History</a></p>'
-                        ),
-                    ]
-                );
-                $mySearchDetail = $this->ProductSearchTable();
-                if ($mySearchDetail && $mySearchDetail->exists()) {
-                    $searchDetails = '
+        if ($config->ShowFullDetailsForProducts && $this->exists()) {
+            // $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
+            // $exportButton->setExportColumns($this->getExportFieldsForOrder());
+            $fields->addFieldsToTab(
+                'Root.Orders',
+                [
+                    GridField::create(
+                        'SalesOrderItems',
+                        'Sales Record',
+                        $this->SalesOrderItems()
+                            ->sort(['ID' => 'DESC']),
+                        GridFieldConfig_RecordViewer::create()
+                        //->addComponent($exportButton)
+                    )
+                        ->setDescription('Includes unsold items in cart and cancelled orders, please check individual orders for details.'),
+                ]
+            );
+            $fields->addFieldsToTab(
+                'Root.History',
+                [
+                    LiteralField::create(
+                        'ChangeHistory',
+                        ArrayToTable::convert($this->getHistoryData()) .
+                            '<p><a href="/admin/pages/history/show/' . $this->ID . '">Full History</a></p>'
+                    ),
+                ]
+            );
+            $mySearchDetail = $this->ProductSearchTable();
+            if ($mySearchDetail && $mySearchDetail->exists()) {
+                $searchDetails = '
                     <h2>Title recorded (prioritised in search)</h2>
                     <p>
                         ' . $mySearchDetail->Title . '
@@ -538,33 +535,32 @@ class Product extends Page implements BuyableModel
                     <p>
                         <a href="' . $mySearchDetail->CMSEditLink() . '">See Search Keywords Recorded (last updated: ' . $mySearchDetail->LastEdited . ')</a>
                     </p>';
-                } else {
-                    $searchDetails = '
+            } else {
+                $searchDetails = '
                     <p class="message warning">
                         No search data is recorded.
                     </p>';
-                }
-                $fields->addFieldsToTab(
-                    'Root.Search',
-                    [
-                        NumericField::create('SearchBoost', 'Search Boost')
-                            ->setDescription(
-                                '
+            }
+            $fields->addFieldsToTab(
+                'Root.Search',
+                [
+                    NumericField::create('SearchBoost', 'Search Boost')
+                        ->setDescription(
+                            '
                                 Higher boost means product will appear more up-front in search results.
                                 Zero is the default.
                                 Negative numbers make it less likely to appear.
                                 Use sparingly! If you use it enter a number between -5 and 5 only.
                                 For example 3 is a good number to get a badly peforming product near the front.
                                 '
-                            )
-                            ->setScale(2),
-                        LiteralField::create(
-                            'SearchDetails',
-                            $searchDetails
-                        ),
-                    ]
-                );
-            }
+                        )
+                        ->setScale(2),
+                    LiteralField::create(
+                        'SearchDetails',
+                        $searchDetails
+                    ),
+                ]
+            );
         }
         $fields->addFieldsToTab(
             'Root.Main',
@@ -663,14 +659,10 @@ class Product extends Page implements BuyableModel
      */
     public function AllParentGroups(?bool $cached = true): ?DataList
     {
-        if ($cached) {
-            $otherGroupsArray = $this->ProductGroupIDsCached();
-        } else {
-            $otherGroupsArray = $this->ProductGroups()->columnUnique();
-        }
+        $otherGroupsArray = $cached ? $this->ProductGroupIDsCached() : $this->ProductGroups()->columnUnique();
         $ids = ArrayMethods::filter_array(array_merge([$this->ParentID], $otherGroupsArray));
 
-        if ($ids) {
+        if ($ids !== []) {
             return ProductGroup::get()->filter([
                 'ID' => $ids,
             ]);
@@ -814,10 +806,8 @@ class Product extends Page implements BuyableModel
     {
         /** @var Image $image */
         $image = $this->Image();
-        if ($image) {
-            if ($image->exists()) {
-                return $image->StripThumbnail();
-            }
+        if ($image && $image->exists()) {
+            return $image->StripThumbnail();
         }
 
         return '[' . _t('product.NOIMAGE', 'no image') . ']';
@@ -946,7 +936,7 @@ class Product extends Page implements BuyableModel
 
     public function HasBeenSold(): bool
     {
-        return (bool) $this->getHasBeenSold();
+        return $this->getHasBeenSold();
     }
 
     public function getHasBeenSold(): bool
@@ -1155,8 +1145,6 @@ class Product extends Page implements BuyableModel
      * returns the instance of EcommerceConfigAjax for use in templates.
      * In templates, it is used like this:
      * $EcommerceConfigAjax.TableID.
-     *
-     * @return EcommerceConfigAjaxDefinitions
      */
     public function AJAXDefinitions(): EcommerceConfigAjaxDefinitions
     {
@@ -1244,7 +1232,7 @@ class Product extends Page implements BuyableModel
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
-            if ($cacheKey) {
+            if ($cacheKey !== '' && $cacheKey !== '0') {
                 EcommerceCache::inst()->save($cacheKey, $price, true);
             }
         }
@@ -1296,7 +1284,7 @@ class Product extends Page implements BuyableModel
         }
 
         // check country
-        if (!$member) {
+        if (!$member instanceof \SilverStripe\Security\Member) {
             $member = Security::getCurrentUser();
         }
 
@@ -1421,7 +1409,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><hr />Cart<hr /></li>';
         $html .= '<li><b>Allow Purchase (DB Value):</b> ' . $this->AllowPurchaseNice() . ' </li>';
         $html .= '<li><b>Can Purchase (overal calculation):</b> ' . ($this->canPurchase() ? 'YES' : 'NO') . ' </li>';
-        $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed ? 'NO' : 'YES </li>';
+        $html .= '<li><b>Shop Open:</b> ' . $config->ShopClosed !== '' ? 'NO' : 'YES </li>';
         $html .= '<li><b>Extended Country Can Purchase:</b> ' . (null === $this->extendedCan('canPurchaseByCountry', null) ? 'no applicable' : ($this->extendedCan('canPurchaseByCountry', null) ? 'CAN PURCHASE' : 'CAN NOT PURCHASE')) . ' </li>';
         $html .= '<li><b>Allow sales to this country (' . EcommerceCountry::get_country() . '):</b> ' . (EcommerceCountry::allow_sales() ? 'YES' : 'NO') . ' </li>';
         $html .= '<li><b>Class Name for OrderItem:</b> ' . $this->classNameForOrderItem() . ' </li>';
@@ -1436,19 +1424,17 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->exists() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';
-        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
+        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() instanceof \SilverStripe\Assets\Image ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
         $productGroup = ProductGroup::get_by_id($this->ParentID);
         if ($productGroup) {
             $html .= '<li><hr />Product Example<hr /></li>';
             $html .= '<li><b>Product Group View:</b> <a href="' . $productGroup->Link() . '">' . $productGroup->Title . '</a> </li>';
             $html .= '<li><b>Product Group Debug:</b> <a href="' . $productGroup->Link('debug') . '">' . $productGroup->Title . '</a> </li>';
-            $html .= '<li><b>Product Group Admin:</b> <a href="' . '/admin/pages/edit/show/' . $productGroup->ID . '">' . $productGroup->Title . ' Admin</a> </li>';
-            $html .= '<li><b>Edit this Product:</b> <a href="' . '/admin/pages/edit/show/' . $this->ID . '">' . $this->Title . ' Admin</a> </li>';
+            $html .= '<li><b>Product Group Admin:</b> <a href="/admin/pages/edit/show/' . $productGroup->ID . '">' . $productGroup->Title . ' Admin</a> </li>';
+            $html .= '<li><b>Edit this Product:</b> <a href="/admin/pages/edit/show/' . $this->ID . '">' . $this->Title . ' Admin</a> </li>';
         }
 
-        $html .= '</ul>';
-
-        return $html;
+        return $html . '</ul>';
     }
 
     /**
@@ -1715,7 +1701,7 @@ class Product extends Page implements BuyableModel
                 explode(' ', $altNames)
             )
         );
-        if ($altNamesArray) {
+        if ($altNamesArray !== []) {
             return $altNamesArray;
         }
         return [];

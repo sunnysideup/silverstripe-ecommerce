@@ -67,7 +67,6 @@ class CheckoutPageController extends CartPageController
      *
      * e.g. ?foo=bar
      * OR #mycart
-     * @var string
      */
     private static string $anchor_to_add_to_checkout_steps = '';
 
@@ -181,7 +180,7 @@ class CheckoutPageController extends CartPageController
                         $completed = 0;
                         $completedClass = 'notCompleted';
                     } else {
-                        if ($completed) {
+                        if ($completed !== 0) {
                             $do->Link = Controller::join_links($this->Link('checkoutstep'), $do->Code);
                         }
                         $do->LinkingMode = "link {$completedClass}";
@@ -346,10 +345,8 @@ class CheckoutPageController extends CartPageController
         // this is only applicable when people submit order (start to pay)
         // and then return back
         $checkoutPageCurrentOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
-        if ($checkoutPageCurrentOrderID) {
-            if ($this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
-                $this->clearRetrievalOrderID();
-            }
+        if ($checkoutPageCurrentOrderID && $this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
+            $this->clearRetrievalOrderID();
         }
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);

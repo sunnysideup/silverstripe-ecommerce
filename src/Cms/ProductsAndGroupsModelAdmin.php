@@ -67,14 +67,12 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin
         $form = parent::getEditForm();
         if (is_subclass_of($this->modelClass, SiteTree::class) || SiteTree::class === $this->modelClass) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
-            if ($gridField) {
-                if ($gridField instanceof GridField) {
-                    $config = GridFieldEditOriginalPageConfig::create();
-                    $exportButton = new GridFieldExportButton('buttons-before-left');
-                    $exportButton->setExportColumns($this->getExportFields());
-                    $config->addComponent($exportButton);
-                    $gridField->setConfig($config);
-                }
+            if ($gridField && $gridField instanceof GridField) {
+                $config = GridFieldEditOriginalPageConfig::create();
+                $exportButton = new GridFieldExportButton('buttons-before-left');
+                $exportButton->setExportColumns($this->getExportFields());
+                $config->addComponent($exportButton);
+                $gridField->setConfig($config);
             }
         }
 

@@ -65,7 +65,7 @@ class GetVariables
         $array = explode(Config::inst()->get(static::class, 'ampersand_alternative'), $string);
         $newArray = [];
         foreach ($array as $subString) {
-            if ($subString) {
+            if ($subString !== '' && $subString !== '0') {
                 $string = str_replace(
                     Config::inst()->get(static::class, 'exception_for_comma'),
                     Config::inst()->get(static::class, 'ampersand_alternative'),

@@ -12,9 +12,6 @@ class Sanitizer
 {
     /**
      * removes sensitive data from data
-     *
-     * @param array $data
-     * @return array
      */
     public static function remove_from_data_array(array $data): array
     {
@@ -48,8 +45,8 @@ class Sanitizer
                 $array[$key] = trim(self::html_to_text((string) $value));
                 $value = $array[$key];
                 $seen = [];
-                if (!empty($value)) {
-                    foreach ($fromStringToWordArray((string)$value) as $w) {
+                if ($value !== '' && $value !== '0') {
+                    foreach ($fromStringToWordArray($value) as $w) {
                         if (!isset($seen[$w])) {
                             $seen[$w] = true;
                             $words[] = $w;
@@ -109,7 +106,7 @@ class Sanitizer
             $array[$key] = trim(self::html_to_text($value));
         }
         $array = array_filter($array);
-        return (string) implode(' ', $array);
+        return implode(' ', $array);
     }
 
     public static function html_to_text($html): string

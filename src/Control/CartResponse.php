@@ -93,9 +93,8 @@ class CartResponse extends EcommerceResponse
         $flag = Director::isDev() ? JSON_PRETTY_PRINT : 0;
         $json = json_encode($js, $flag);
         $json = preg_replace('/[\t\r\n]+/', ' ', $json);
-        $json = preg_replace('/\s{2,}/', ' ', $json);
 
 
-        return $json;
+        return preg_replace('/\s{2,}/', ' ', $json);
     }
 }

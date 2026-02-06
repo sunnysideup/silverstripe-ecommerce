@@ -84,7 +84,7 @@ class EcommerceSideReportDuplicatePages extends Report
             $list = $list->filter(['ClassName' => $classNameFilter]);
         }
         $array = $this->Config()->get('excluded_class_names');
-        if (count($array)) {
+        if (count($array) > 0) {
             $list = $list->exclude(['ClassName' => $array]);
         }
 

@@ -277,10 +277,8 @@ class EcommercePaymentFormSetupAndValidation
     {
         if (! $this->paymentObject) {
             $paymentClass = empty($data['PaymentMethod']) ? null : $data['PaymentMethod'];
-            if ($paymentClass) {
-                if (class_exists($paymentClass)) {
-                    $this->paymentObject = $paymentClass::create();
-                }
+            if ($paymentClass && class_exists($paymentClass)) {
+                $this->paymentObject = $paymentClass::create();
             }
         }
         if (! $this->paymentObject) {
@@ -353,14 +351,12 @@ class EcommercePaymentFormSetupAndValidation
         $year = (int) ('20' . substr((string) $monthYear, 2));
         $currentYear = (int) date('Y');
         $currentMonth = (int) date('m');
-        if (($month > 0 || $month < 13) && $year > 0) {
+        if ($year > 0) {
             if ($year > $currentYear) {
                 return true;
             }
-            if ($year === $currentYear) {
-                if ($currentMonth <= $month) {
-                    return true;
-                }
+            if ($year === $currentYear && $currentMonth <= $month) {
+                return true;
             }
         }
 
@@ -387,7 +383,7 @@ class EcommercePaymentFormSetupAndValidation
             if (is_numeric($cvv)) {
                 //Splits up the card number into various identifying lengths.
                 // $firstOne = substr((string) $cardNumber, 0, 1);
-                $firstTwo = substr((string) $cardNumber, 0, 2);
+                $firstTwo = substr($cardNumber, 0, 2);
 
                 //If the card is an American Express
                 if ('34' === $firstTwo || '37' === $firstTwo) {

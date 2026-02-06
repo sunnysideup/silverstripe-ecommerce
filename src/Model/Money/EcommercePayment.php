@@ -377,7 +377,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             return Controller::curr()->redirect(Controller::join_links(Director::absoluteBaseURL(), $this->AlternativeEndPoint));
         }
         $order = $this->getOrderCached();
-        if ($order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             return Controller::curr()->redirect($order->Link());
         }
         user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);

@@ -223,7 +223,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function fieldLabels($includerelations = true)
     {
-        $defaultLabels = parent::fieldLabels();
+        $defaultLabels = null;
         $newLabels = $this->customFieldLabels();
         $labels = array_merge($defaultLabels, $newLabels);
         $extendedArray = $this->extend('updateFieldLabels', $labels);
@@ -400,7 +400,6 @@ class OrderConfirmationPage extends CartPage
 
     public function requireDefaultRecords()
     {
-        parent::requireDefaultRecords();
         $checkoutPage = DataObject::get_one(CheckoutPage::class);
         if ($checkoutPage) {
             $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);

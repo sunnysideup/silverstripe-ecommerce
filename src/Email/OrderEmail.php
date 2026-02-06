@@ -158,7 +158,7 @@ abstract class OrderEmail extends Email
                 if ($memberEmail) {
                     $array = [$memberEmail];
                     $bcc = $this->getBcc();
-                    if ($bcc) {
+                    if ($bcc !== []) {
                         $array[] = $bcc;
                     }
                     $this->setBcc(implode(', ', $array));
@@ -217,12 +217,12 @@ abstract class OrderEmail extends Email
     {
         $emailString = '';
         if (is_string($email)) {
-            $emailString = (string) $email;
+            $emailString = $email;
         } elseif ($email instanceof Address) {
-            $emailString = (string) $email->toString();
+            $emailString = $email->toString();
         } elseif (is_array($email)) {
             foreach ($email as $address) {
-                if ($emailString) {
+                if ($emailString !== '' && $emailString !== '0') {
                     $emailString .= ', ';
                 }
                 $emailString .=  $this->emailToVarchar($address);

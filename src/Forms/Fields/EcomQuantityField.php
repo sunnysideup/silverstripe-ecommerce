@@ -210,7 +210,7 @@ class EcomQuantityField extends NumericField
     {
         $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
         $quantitylink = $this->getQuantityLink();
-        if ($quantitylink) {
+        if ($quantitylink !== '' && $quantitylink !== '0') {
             $attributes = [
                 'type' => 'hidden',
                 'class' => 'ajaxQuantityField_qtylink',
@@ -256,7 +256,7 @@ class EcomQuantityField extends NumericField
     protected function Quantity(): float
     {
         if ($this->orderItem) {
-            return floatval($this->orderItem->Quantity) - 0;
+            return floatval($this->orderItem->Quantity);
         }
 
         return 0;

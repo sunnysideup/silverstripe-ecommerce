@@ -567,10 +567,8 @@ class ShoppingCartController extends Controller
     {
         $orderID = (int) $request->param('ID');
         $order = Order::get_by_id_if_can_view($orderID);
-        if ($order) {
-            if ($order->canDelete()) {
-                $order->delete();
-            }
+        if ($order && $order->canDelete()) {
+            $order->delete();
         }
 
         return $this->redirectBack();
@@ -674,21 +672,19 @@ class ShoppingCartController extends Controller
 
         $buyableID = (int) $this->getRequest()->param('OtherID');
         $version = (int) $this->getRequest()->param('Version');
-        if ($buyableClassName && $buyableID) {
-            if (EcommerceDBConfig::is_buyable($buyableClassName)) {
-                $bestBuyable = $buyableClassName::get_by_id($buyableID);
-                if (Product::is_product_variation($bestBuyable)) {
-                    //todo: make this part of ProductVariation.
-                    $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
+        if ($buyableClassName && $buyableID && EcommerceDBConfig::is_buyable($buyableClassName)) {
+            $bestBuyable = $buyableClassName::get_by_id($buyableID);
+            if (Product::is_product_variation($bestBuyable)) {
+                //todo: make this part of ProductVariation.
+                $link = $bestBuyable->Link('filterforvariations/' . $buyableID . '/?version=' . $version . '/');
 
-                    return $this->redirect($link);
-                }
-                if ($bestBuyable) {
-                    //show singleton with old version
-                    $link = $bestBuyable->Link('viewversion/' . $version . '/');
+                return $this->redirect($link);
+            }
+            if ($bestBuyable) {
+                //show singleton with old version
+                $link = $bestBuyable->Link('viewversion/' . $version . '/');
 
-                    return $this->redirect($link);
-                }
+                return $this->redirect($link);
             }
         }
         $errorPage404 = DataObject::get_one(
@@ -876,10 +872,8 @@ class ShoppingCartController extends Controller
         if ($buyableClassName && $buyableID) {
             if (EcommerceDBConfig::is_buyable($buyableClassName)) {
                 $obj = $buyableClassName::get_by_id((int) $buyableID);
-                if ($obj) {
-                    if ($obj->ClassName === $buyableClassName) {
-                        return $obj;
-                    }
+                if ($obj && $obj->ClassName === $buyableClassName) {
+                    return $obj;
                 }
             } elseif (strpos($buyableClassName, OrderItem::class)) {
                 user_error('ClassName in URL should be buyable and not an orderitem', E_USER_NOTICE);

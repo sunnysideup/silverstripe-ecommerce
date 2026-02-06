@@ -225,10 +225,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (null === $this->_canView) {
             $this->_canView = false;
             $order = $this->getOrderCached();
-            if ($order) {
-                if ($order->canView($member)) {
-                    $this->_canView = true;
-                }
+            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canView($member)) {
+                $this->_canView = true;
             }
         }
 
@@ -258,11 +256,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (null === $this->_canEdit) {
             $this->_canEdit = false;
             $order = $this->getOrderCached();
-            if ($order) {
-                if ($order->canEdit($member)) {
-                    if (! $order->IsSubmitted()) {
-                        $this->_canEdit = true;
-                    }
+            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canEdit($member)) {
+                if (! $order->IsSubmitted()) {
+                    $this->_canEdit = true;
                 }
             }
         }
@@ -381,10 +377,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
 
-    /**
-     *
-     * @return string
-     */
     public function FullAddress(): string
     {
         return $this->getFullAddress();
@@ -422,11 +414,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             $addressPartsInner = [];
             foreach ($fields as $field) {
                 $value = trim((string) $this->{$field});
-                if ($value) {
+                if ($value !== '' && $value !== '0') {
                     $addressPartsInner[] = Convert::raw2xml($value);
                 }
             }
-            if (! empty($addressPartsInner)) {
+            if ($addressPartsInner !== []) {
                 $addressParts[] = implode(' ', $addressPartsInner);
             }
         }
@@ -434,10 +426,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
 
-    /**
-     *
-     * @return string
-     */
     public function FullPhone(): string
     {
         return $this->getFullPhone();
@@ -458,8 +446,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
     /**
      * method for casted variable.
-     *
-     * @return string
      */
     public function FullCountryName(): string
     {
@@ -553,11 +539,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         if ($this->exists()) {
             $order = $this->getOrderCached();
-            if ($order) {
-                if ($order->exists()) {
-                    if ($order->MemberID) {
-                        return Member::get_by_id($order->MemberID);
-                    }
+            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->exists()) {
+                if ($order->MemberID) {
+                    return Member::get_by_id($order->MemberID);
                 }
             }
         }
@@ -825,9 +809,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param string $fieldName
      * @return mixed
-
      */
     public function getFieldValueWithPrefix(string $fieldName)
     {
@@ -836,9 +818,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param string $fieldName
      * @return mixed
-
      */
     public function setFieldValueWithPrefix(string $fieldName, $value)
     {
@@ -878,7 +858,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
-        return (string) $this->getFullPhone();
+        return $this->getFullPhone();
     }
     public function CourierCode()
     {
@@ -926,7 +906,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
     public function CourierCountry(): string
     {
-        return (string) $this->getFullCountryName();
+        return $this->getFullCountryName();
     }
     public function CourierCountryCode()
     {

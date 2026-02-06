@@ -53,7 +53,7 @@ class SalesAdminByOrderSize extends SalesAdmin
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
-        $fields = $form->Fields();
+        $form->Fields();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $arrayOfTabs = [];
             $brackets = $this->Config()->get('brackets');
@@ -63,10 +63,8 @@ class SalesAdminByOrderSize extends SalesAdmin
                 $total = $order->getTotal();
                 $prevValue = 0;
                 foreach (array_keys($brackets) as $value) {
-                    if ($value) {
-                        if ($total >= $prevValue && $total < $value) {
-                            $arrayOfTabs[$value]['IDs'][$order->ID] = $order->ID;
-                        }
+                    if ($value && ($total >= $prevValue && $total < $value)) {
+                        $arrayOfTabs[$value]['IDs'][$order->ID] = $order->ID;
                     }
                     $prevValue = $value;
                 }

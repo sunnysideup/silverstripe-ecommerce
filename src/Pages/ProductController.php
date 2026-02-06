@@ -53,7 +53,7 @@ class ProductController extends PageController
      */
     public function viewversion(HTTPRequest $request)
     {
-        $version = (int) $request->param('ID') - 0;
+        $version = (int) $request->param('ID');
         $currentVersion = $this->Version;
         if ($currentVersion !== $version) {
             $record = $this->getVersionOfBuyable($this->ID, $version);
@@ -118,7 +118,7 @@ class ProductController extends PageController
     {
         if (! $this->IsInCart()) {
             $quantity = round($data['Quantity'], $this->QuantityDecimals());
-            if (! $quantity) {
+            if ($quantity === 0.0) {
                 $quantity = 1;
             }
             $product = Product::get_by_id($this->ID);
@@ -168,10 +168,8 @@ class ProductController extends PageController
         $array = $this->getListOfIDs();
         foreach ($array as $key => $id) {
             $id = (int) $id;
-            if ($id === $this->ID) {
-                if (isset($array[$key + 1])) {
-                    return Product::get_by_id((int) $array[$key + 1]);
-                }
+            if ($id === $this->ID && isset($array[$key + 1])) {
+                return Product::get_by_id((int) $array[$key + 1]);
             }
         }
 

@@ -29,7 +29,7 @@ abstract class OrderConverter
 
     public function __construct(?Order $order = null)
     {
-        if (null === $order) {
+        if (!$order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $order = ShoppingCart::current_order();
         }
         ClassHelpers::check_for_instance_of($order, Order::class);

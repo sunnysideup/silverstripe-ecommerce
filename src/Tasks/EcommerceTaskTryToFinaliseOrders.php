@@ -56,16 +56,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if (isset($_GET['limit'])) {
             $limit = (int) $_GET['limit'];
         }
-        if (! (int) $limit) {
+        if ((int) $limit === 0) {
             $limit = $this->limit;
         }
         $startAt = null;
         if (isset($_GET['startat'])) {
             $startAt = (int) $_GET['startat'];
         }
-        if (! (int) $startAt) {
+        if ((int) $startAt === 0) {
             $startAt = $this->getStart();
-            if (! $startAt) {
+            if ($startAt === 0) {
                 $startAt = 0;
             }
         }
@@ -88,12 +88,10 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
             ->exclude(['ID' => $ordersInQueueArray]);
         ;
         DB::alteration_message("<h1>In total there, are {$orders->count()} Orders to move</h1>");
-        $startAt = $this->tryToFinaliseOrders($orders, $limit, $startAt);
-        if (! $this->isCli()) {
-            if ($this->getStart()) {
-                DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
-                echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
-            }
+        $this->tryToFinaliseOrders($orders, $limit, $startAt);
+        if (!$this->isCli() && $this->getStart()) {
+            DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
+            echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
         }
     }
 

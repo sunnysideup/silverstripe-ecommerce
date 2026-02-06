@@ -47,7 +47,6 @@ trait EcommerceOrderReportTrait
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
         Versioned::set_stage(Versioned::DRAFT);
-        $className = $this->dataClass;
         $list = Order::get();
 
         $logs = OrderStatusLogSubmitted::get();
@@ -108,11 +107,7 @@ trait EcommerceOrderReportTrait
             if (empty($sort)) {
                 $sort = ['Title' => 'ASC'];
             }
-            if (is_array($sort)) {
-                $list = $list->sort($sort);
-            } else {
-                $list = $list->orderBy($sort);
-            }
+            $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         }
 
         // final change to update

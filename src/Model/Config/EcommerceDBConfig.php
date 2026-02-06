@@ -701,8 +701,6 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      * In EcomConfig we only list base classes.
      *
      * @param string $className - name of the class to be tested
-     *
-     * @return bool
      */
     public static function is_buyable(?string $className = null): bool
     {
@@ -710,7 +708,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
             $className = ClassHelpers::unsanitise_class_name($className);
             if (class_exists($className)) {
                 $implementorsArray = class_implements($className);
-                return is_array($implementorsArray) && !empty($implementorsArray) && in_array(BuyableModel::class, $implementorsArray, true);
+                return is_array($implementorsArray) && $implementorsArray !== [] && in_array(BuyableModel::class, $implementorsArray, true);
             }
         } else {
             user_error('No class name provided', E_USER_NOTICE);
@@ -825,10 +823,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     {
         if ($this->DefaultProductImageID) {
             $defaultImage = $this->DefaultProductImage();
-            if ($defaultImage) {
-                if ($defaultImage->exists()) {
-                    return $defaultImage;
-                }
+            if ($defaultImage && $defaultImage->exists()) {
+                return $defaultImage;
             }
         }
 

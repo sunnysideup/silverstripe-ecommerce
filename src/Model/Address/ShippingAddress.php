@@ -243,8 +243,6 @@ class ShippingAddress extends OrderAddress
 
     /**
      * returns the full name for the shipping country code saved.
-     *
-     * @return string
      */
     public function ShippingFullCountryName(): string
     {
@@ -253,7 +251,7 @@ class ShippingAddress extends OrderAddress
 
     public function getShippingFullCountryName(): string
     {
-        return (string) parent::getFullCountryName();
+        return parent::getFullCountryName();
     }
 
     /**

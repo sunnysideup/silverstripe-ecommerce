@@ -154,8 +154,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
 
     public function index()
     {
-        if (Director::is_cli()) {
-        } else {
+        if (!Director::is_cli()) {
             $renderer = new EcommerceDatabaseAdminDebugView();
             $renderer->renderHeader();
             $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());

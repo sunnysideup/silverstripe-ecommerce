@@ -18,7 +18,7 @@ class ProductMaximumPriceFilter extends ExactMatchFilter
     public function apply(DataQuery $query)
     {
         $value = floatval($this->getValue());
-        if ($value) {
+        if ($value !== 0.0) {
             $query->where('"Product"."Price" <= ' . $value);
         }
 

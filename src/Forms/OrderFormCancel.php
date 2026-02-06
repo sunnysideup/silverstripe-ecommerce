@@ -68,27 +68,22 @@ class OrderFormCancel extends Form
     {
         $SQLData = Convert::raw2sql($data);
         $member = Security::getCurrentUser();
-        if ($member) {
-            if (isset($SQLData['OrderID'])) {
-                $order = Order::get_order_cached((int) $SQLData['OrderID']);
-                if ($order) {
-                    if ($order->canCancel()) {
-                        $reason = '';
-                        if (isset($SQLData['CancellationReason'])) {
-                            $reason = $SQLData['CancellationReason'];
-                        }
-                        $order->Cancel($member, $reason);
-                        $form->sessionMessage(
-                            _t(
-                                'OrderForm.CANCELLED',
-                                'Order has been cancelled.'
-                            ),
-                            'good'
-                        );
-
-                        return $this->controller->redirectBack();
-                    }
+        if ($member && isset($SQLData['OrderID'])) {
+            $order = Order::get_order_cached((int) $SQLData['OrderID']);
+            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canCancel()) {
+                $reason = '';
+                if (isset($SQLData['CancellationReason'])) {
+                    $reason = $SQLData['CancellationReason'];
                 }
+                $order->Cancel($member, $reason);
+                $form->sessionMessage(
+                    _t(
+                        'OrderForm.CANCELLED',
+                        'Order has been cancelled.'
+                    ),
+                    'good'
+                );
+                return $this->controller->redirectBack();
             }
         }
         $form->sessionMessage(
