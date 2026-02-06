@@ -97,7 +97,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      */
     public function doStep(Order $order): bool
     {
-        if (!$this->IsSubmitted($order)) {
+        if (! $this->IsSubmitted($order)) {
             $className = $this->getRelevantLogEntryClassName();
             if (class_exists($className)) {
                 //add currency if needed.
@@ -118,7 +118,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                         $obj->OrderAsString = $order->ConvertToString();
                         $saved = true;
                     }
-                    if ($this->SaveOrderAsHTML || !$saved) {
+                    if ($this->SaveOrderAsHTML || ! $saved) {
                         $obj->OrderAsHTML = $order->ConvertToHTML();
                     }
                     $obj->write();
@@ -131,7 +131,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             $order->LastEdited = DBDatetime::now()->Rfc2822();
 
             //add member if needed...
-            if (!$order->MemberID) {
+            if (! $order->MemberID) {
                 //lets see if we can find a member
                 $request = Controller::curr()->getRequest();
                 $session = $request->getSession();

@@ -12,7 +12,6 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\ProductSearchModelAdmin
- *
  */
 class ProductSearchModelAdmin extends ModelAdmin
 {

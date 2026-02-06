@@ -8,8 +8,6 @@ interface EcommercePaymentSupportedMethodsProviderInterface
 {
     /**
      * how can the customer pay?
-     *
-     * @param Order $order
      */
     public function SupportedMethods(?Order $order = null): array;
 

@@ -2,9 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use ArrayAccess;
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -20,7 +18,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  *         ->setLabelFieldName('FullName') // optional
  *         ->setIdFieldName('ID') // optional
  *         ->setDataList(Product::get()->filter(['AllowPurchase' => true])->sort(['FullName' => 'ASC'])); // optional
- *
  */
 class ProductSelectField extends AjaxSelectField
 {
@@ -34,6 +31,7 @@ class ProductSelectField extends AjaxSelectField
 
         return $this;
     }
+
     protected string $labelFieldName = 'FullName';
 
     public function setLabelFieldName(string $labelFieldName): self
@@ -42,6 +40,7 @@ class ProductSelectField extends AjaxSelectField
 
         return $this;
     }
+
     protected string $idFieldName = 'ID';
 
     public function setIdFieldName(string $idFieldName): self
@@ -63,15 +62,15 @@ class ProductSelectField extends AjaxSelectField
 
                 return [
                     'id' => $page->$idFieldName,
-                    'title' => $page->$labelFieldName
+                    'title' => $page->$labelFieldName,
                 ];
             }
 
             $results = [];
             $products = $dataList;
-            $products = $products->filter([$labelFieldName.':PartialMatch' => $query]);
+            $products = $products->filter([$labelFieldName . ':PartialMatch' => $query]);
             foreach ($products as $product) {
-                $results[] = [ 'id' => $product->$idFieldName, 'title' => $product->$labelFieldName];
+                $results[] = ['id' => $product->$idFieldName, 'title' => $product->$labelFieldName];
             }
 
             return $results;

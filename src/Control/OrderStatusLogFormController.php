@@ -13,7 +13,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * This controller allows you to submit Log forms from anywhere on the site,
  * especially the cart / checkout page.
- *
  */
 class OrderStatusLogFormController extends Controller
 {

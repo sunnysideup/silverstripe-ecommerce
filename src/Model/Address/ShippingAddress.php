@@ -126,7 +126,7 @@ class ShippingAddress extends OrderAddress
      * @return array
      */
     private static $casting = [
-        'ShippingFullCountryName' => 'Varchar'
+        'ShippingFullCountryName' => 'Varchar',
     ];
 
     /**

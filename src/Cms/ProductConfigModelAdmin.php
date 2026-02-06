@@ -10,7 +10,6 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\ProductConfigModelAdmin
- *
  */
 class ProductConfigModelAdmin extends ModelAdmin
 {

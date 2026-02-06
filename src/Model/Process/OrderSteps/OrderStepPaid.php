@@ -12,7 +12,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepPaid
- *
  */
 class OrderStepPaid extends OrderStep implements OrderStepInterface
 {

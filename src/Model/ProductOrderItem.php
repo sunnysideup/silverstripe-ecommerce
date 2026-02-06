@@ -4,14 +4,12 @@ namespace Sunnysideup\Ecommerce\Model;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\ProductOrderItem
- *
  */
 class ProductOrderItem extends OrderItem
 {
@@ -80,7 +78,6 @@ class ProductOrderItem extends OrderItem
     {
         return $this->getTableTitle();
     }
-
 
     public function getTableTitle(): string
     {

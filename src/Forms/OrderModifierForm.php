@@ -40,8 +40,6 @@ class OrderModifierForm extends Form
      *NOTE: we semi-enforce using the OrderModifier_Controller here to deal with the submission of the OrderModifierForm
      * You can use your own modifiers or an extension of OrderModifier_Controller by setting the first parameter (optionalController)
      * to your own controller.
-     *
-     * @param Controller $optionalController
      */
     public function __construct(
         ?Controller $optionalController,
@@ -50,11 +48,11 @@ class OrderModifierForm extends Form
         FieldList $actions,
         Validator $optionalValidator = null
     ) {
-        if (!$optionalController instanceof \SilverStripe\Control\Controller) {
+        if (! $optionalController instanceof \SilverStripe\Control\Controller) {
             $controllerClassName = EcommerceConfig::get(OrderModifierForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (!$optionalValidator instanceof \SilverStripe\Forms\Validator) {
+        if (! $optionalValidator instanceof \SilverStripe\Forms\Validator) {
             $validatorClassName = EcommerceConfig::get(OrderModifierForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }

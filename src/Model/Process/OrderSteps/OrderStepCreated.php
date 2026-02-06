@@ -14,7 +14,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * This is the first Order Step.
- *
  */
 class OrderStepCreated extends OrderStep implements OrderStepInterface
 {

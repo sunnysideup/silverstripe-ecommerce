@@ -22,8 +22,6 @@ class EcommerceMoney extends Extension
     /**
      * returns the symbol for a currency, e.g. $.
      *
-     * @param string $currency
-     *
      * @return string
      */
     public static function get_default_symbol(?string $currency = 'NZD')
@@ -37,8 +35,6 @@ class EcommerceMoney extends Extension
     /**
      * returns the short symbol for a currency
      * This is shorter than the default one.
-     *
-     * @param string $currency
      *
      * @return string
      */
@@ -59,8 +55,6 @@ class EcommerceMoney extends Extension
 
     /**
      * returns the long symbol for a currency.
-     *
-     * @param string $currency
      *
      * @return string
      */

@@ -9,11 +9,10 @@ class GetParentDetails
 {
     use Injectable;
 
-
     public static function format_sort_numbers(mixed $number, int $groupSize = 5, string $delimiter = '-'): string
     {
         // Convert the number to a string
-        $numberStr = (string)$number;
+        $numberStr = (string) $number;
 
         // Calculate the number of leading zeroes needed
         $remainder = strlen($numberStr) % $groupSize;
@@ -33,8 +32,11 @@ class GetParentDetails
 
     // input
     protected string $expectedParentClassName;
+
     protected array $allowedClassNames;
+
     protected array $notAllowedClassNames;
+
     protected string $sortField = 'Sort';
 
     // output
@@ -66,12 +68,11 @@ class GetParentDetails
         return $this;
     }
 
-
     public function __construct(object $objectWithParentID, string $expectedParentClassName)
     {
         $this->expectedParentClassName = $expectedParentClassName;
         $this->objectWithParentID = $objectWithParentID;
-        if (!isset($this->objectWithParentID->ParentID)) {
+        if (! isset($this->objectWithParentID->ParentID)) {
             user_error('ParentID not set on object', E_USER_ERROR);
         }
     }
@@ -128,5 +129,4 @@ class GetParentDetails
     {
         return $this->parentSortArray;
     }
-
 }

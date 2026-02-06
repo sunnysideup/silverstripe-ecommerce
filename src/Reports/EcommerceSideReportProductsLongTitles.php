@@ -15,6 +15,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductsLongTitles extends Report
 {
     use EcommerceProductReportTrait;
+
     protected $dataClass = Product::class;
 
     private static $min_length = 100;

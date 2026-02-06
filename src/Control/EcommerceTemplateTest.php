@@ -3,8 +3,6 @@
 namespace Sunnysideup\Ecommerce\Control;
 
 use PageController;
-use SilverStripe\ORM\Connect\MySQLDatabase;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;

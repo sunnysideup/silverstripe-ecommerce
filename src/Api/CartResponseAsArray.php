@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\CartResponse;
@@ -18,10 +17,13 @@ class CartResponseAsArray
     }
 
     public const HIDE_CLASS = 'hide';
+
     public const SHOW_CLASS = 'show';
 
     public const REMOVE_LINK_CLASS = 'removeLink';
+
     public const ADD_LINK_CLASS = 'addLink';
+
     public const PRODUCT_ACTIONS_CLASS = 'productActions';
 
     public static function implode_messages(?array $messages = null): string
@@ -89,7 +91,6 @@ class CartResponseAsArray
                 }
             }
         }
-
 
         //order modifiers
         $modifiers = $currentOrder->Modifiers();

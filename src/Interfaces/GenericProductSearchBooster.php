@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
-
 use Sunnysideup\Ecommerce\Pages\Product;
 
 interface GenericProductSearchBooster

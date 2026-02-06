@@ -7,35 +7,33 @@ namespace Sunnysideup\Ecommerce\Cms;
 use DateTimeImmutable;
 use DateTimeInterface;
 use SilverStripe\Admin\LeftAndMain;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Security\Permission;
-use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Process\Referral;
 use Sunnysideup\Ecommerce\Model\Process\ReferralProcessLog;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDoReferralDataPrep;
 
 class ReferralSummary extends LeftAndMain
 {
-
     private static float $max_days_between_processing = 1;
 
     private static string $url_segment = 'referral-summary';
+
     private static string $menu_title = 'Referral Summary';
+
     private static int $menu_priority = -9999; // adjust if needed
+
     private static string $menu_icon_class = 'font-icon-chart-line';
+
     private static array $required_permission_codes = ['ADMIN'];
 
     private static $reporting_periods = [
@@ -78,7 +76,9 @@ class ReferralSummary extends LeftAndMain
 
     protected array $myFormData = [];
 
-    /** route actions */
+    /**
+     * route actions
+     */
     private static array $allowed_actions = [
         'EditForm' => 'ADMIN',
         'dorunreport' => 'ADMIN',
@@ -88,9 +88,9 @@ class ReferralSummary extends LeftAndMain
     public function getEditForm($id = null, $fields = null): Form
     {
         $request = $this->getRequest();
-        if (!self::needs_processing()) {
+        if (! self::needs_processing()) {
             $today = new DateTimeImmutable('today');
-            $defaultFrom  = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
+            $defaultFrom = $this->myFormData['DateFrom'] ?? $today->modify('-3 months')->format('Y-m-d');
             $defaultUntil = $this->myFormData['DateUntil'] ?? $today->modify('-1 week')->format('Y-m-d');
             $fields = FieldList::create(
                 HeaderField::create('Heading', 'Sales Referrals', 3),
@@ -131,9 +131,7 @@ class ReferralSummary extends LeftAndMain
                     'Statistic',
                     'Statistic',
                     $this->config()->get('stats_to_report_on')
-
                 )->setValue($this->myFormData['Statistic'] ?? $this->getDefaultFormValue('Statistic')),
-
                 FieldGroup::create(
                     DropdownField::create(
                         'ShowFrom',
@@ -167,7 +165,6 @@ class ReferralSummary extends LeftAndMain
                     )->setValue($this->myFormData['ShowContent'] ?? $this->getDefaultFormValue('ShowContent')),
                 )
                     ->setTitle('Breakdown Options'),
-
             );
             $actions = FieldList::create(
                 FormAction::create('dorunreport', 'Create report')
@@ -193,7 +190,6 @@ class ReferralSummary extends LeftAndMain
             );
         }
 
-
         // if we have posted, render results below the form
         if ($request->getVar('action_dorunreport')) {
             $resultsHtml = $this->buildResultsHtml($request->getVars());
@@ -210,7 +206,7 @@ class ReferralSummary extends LeftAndMain
 
     public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
     {
-        if (!self::needs_processing()) {
+        if (! self::needs_processing()) {
             $form->sessionMessage('Data preparation not needed.', 'good');
             return $this->redirectBack();
         }
@@ -238,17 +234,18 @@ class ReferralSummary extends LeftAndMain
         return [];
     }
 
-    /** ---------- helpers ---------- */
-
+    /**
+     * ---------- helpers ----------
+     */
     protected function buildResultsHtml(array $vars): string
     {
-        $isYmd = static fn(string $s): bool => (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
+        $isYmd = static fn (string $s): bool => (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
 
         $today = new DateTimeImmutable('today');
-        $defaultFrom  = $today->modify('-3 months')->format('Y-m-d');
+        $defaultFrom = $today->modify('-3 months')->format('Y-m-d');
         $defaultUntil = $today->modify('-1 week')->format('Y-m-d');
 
-        $dateFrom  = isset($vars['DateFrom']) && is_string($vars['DateFrom']) && $isYmd($vars['DateFrom']) ? $vars['DateFrom'] : $defaultFrom;
+        $dateFrom = isset($vars['DateFrom']) && is_string($vars['DateFrom']) && $isYmd($vars['DateFrom']) ? $vars['DateFrom'] : $defaultFrom;
         $dateUntil = isset($vars['DateUntil']) && is_string($vars['DateUntil']) && $isYmd($vars['DateUntil']) ? $vars['DateUntil'] : $defaultUntil;
 
         $orderType = in_array(($vars['OrderType'] ?? $this->getDefaultFormValue('OrderType')), ['Uncompleted', 'Completed', 'All'], true)
@@ -261,7 +258,6 @@ class ReferralSummary extends LeftAndMain
         $includeCampaign = (($vars['ShowCampaign'] ?? 'No') === 'Yes');
         $includeTerm = (($vars['ShowTerm'] ?? 'No') === 'Yes');
         $includeContent = (($vars['ShowContent'] ?? 'No') === 'Yes');
-
 
         $periods = (array) $this->config()->get('reporting_periods');
         $breakdownBy = isset($periods[$vars['BreakdownBy'] ?? '']) ? $vars['BreakdownBy'] : $this->getDefaultFormValue('BreakdownBy');
@@ -292,7 +288,7 @@ class ReferralSummary extends LeftAndMain
         } elseif ($orderType === 'Uncompleted') {
             $filters['IsSubmitted'] = 0;
         }
-        if (!empty($vars['Keyword'])) {
+        if (! empty($vars['Keyword'])) {
             $keywordFilters = [];
             $keyword = $vars['Keyword'];
             $keywordFilters['From:PartialMatch'] = $keyword;
@@ -348,7 +344,7 @@ class ReferralSummary extends LeftAndMain
                 $key .= '|' . ($ref->Content ?: 'none');
             }
 
-            if (!isset($list[$key])) {
+            if (! isset($list[$key])) {
                 $row = ['Date' => $dateLabel];
                 if ($includeFrom) {
                     $row['Company'] = $from;
@@ -397,7 +393,7 @@ class ReferralSummary extends LeftAndMain
     protected function arrayToTableWithBars(array $array, string $statistic): string
     {
         $html = '<h2>Results</h2>';
-        if (!count($array)) {
+        if (! count($array)) {
             return $html . '<p class=\'message warning\'>no data</p>';
         }
 
@@ -411,7 +407,7 @@ class ReferralSummary extends LeftAndMain
         }
         $max = $max > 0 ? $max : 1.0;
 
-        $escapeFN = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
+        $escapeFN = static fn (string $s): string => htmlspecialchars($s, ENT_QUOTES);
 
         $html .= '
         <style>
@@ -433,8 +429,8 @@ class ReferralSummary extends LeftAndMain
         $headerkeys = $this->config()->get('stats_to_report_on');
         $formattingRules = $this->config()->get('formatting_rules');
         foreach ($first as $key => $cell) {
-            $isStat =  ((string) $key === $statistic);
-            $isHeader = !$isStat && !isset($headerkeys[$key]);
+            $isStat = ((string) $key === $statistic);
+            $isHeader = ! $isStat && ! isset($headerkeys[$key]);
             $label = $this->camelCaseToWords((string) $key);
             if ($isStat) {
                 $extra = $isStat ? ' class=\'ref-stat-col\'' : '';
@@ -449,8 +445,8 @@ class ReferralSummary extends LeftAndMain
         foreach ($array as $row) {
             $html .= '<tr>';
             foreach ($row as $key => $cell) {
-                $isStat =  ((string) $key === $statistic);
-                $isHeader = !$isStat && !isset($headerkeys[$key]);
+                $isStat = ((string) $key === $statistic);
+                $isHeader = ! $isStat && ! isset($headerkeys[$key]);
                 if ($isStat) {
                     $format = $formattingRules[$key] ?? 'String';
                     $val = (float) $cell;

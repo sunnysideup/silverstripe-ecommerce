@@ -29,10 +29,14 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
     }
 
     private array $messages = [];
+
     private bool $retainMessages = false;
 
-    /** config */
+    /**
+     * config
+     */
     private static int $max_days_of_interest = 1825; // about 5 years
+
     private static int $recalculate_days_for_prep_data = 365;
 
     public function doDataPrep(?int $limit = 99999999, ?int $start = 0, ?bool $retainMessages = false): bool
@@ -51,9 +55,8 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
         $this->recalculateReferrals($limit, $start);
         $this->deleteStaleReferrals($limit, $start);
 
-
         $count = Referral::get()->count();
-        $finished = ($count <=  ($start + $limit));
+        $finished = ($count <= ($start + $limit));
         if ($obj) {
             $obj->Completed = $finished;
             $obj->write();
@@ -97,7 +100,7 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
         $daysAgoStale = (int) Config::inst()->get(self::class, 'recalculate_days_for_prep_data') ?: self::$max_days_of_interest;
         $refs = Referral::get()
             ->filterAny(['AmountInvoiced' => 0, 'OrderID' => 0])
-            ->filter(['Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59',])
+            ->filter(['Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59'])
             ->sort('ID', 'ASC')
             ->limit($limit, $start);
         foreach ($refs as $ref) {

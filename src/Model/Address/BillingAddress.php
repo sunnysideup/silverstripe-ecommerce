@@ -226,8 +226,6 @@ class BillingAddress extends OrderAddress
         return _t('BillingAddress.BILLINGADDRESSES', 'Billing Addresses');
     }
 
-
-
     /**
      * @return \SilverStripe\Forms\FieldList
      */
@@ -343,7 +341,6 @@ class BillingAddress extends OrderAddress
     {
         return '';
     }
-
 
     /*
      * standard SS method

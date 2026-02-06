@@ -6,12 +6,10 @@ use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
-use Sunnysideup\Ecommerce\Model\Process\Referral;
 use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminProcess
- *
  */
 class SalesAdminProcess extends ModelAdmin
 {

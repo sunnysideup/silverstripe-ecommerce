@@ -159,7 +159,7 @@ class RelatedProductGroups
             if (-2 === $maxRecursiveLevel) {
                 // NONE !
                 $this->groups = ProductGroup::get()->filter(['ID' => -1]);
-            // ALL !
+                // ALL !
             } elseif (-1 === $maxRecursiveLevel) {
                 $this->groups = ProductGroup::get();
             } elseif ($this->rootGroup) {

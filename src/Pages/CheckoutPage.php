@@ -164,8 +164,6 @@ class CheckoutPage extends CartPage
      * Returns the link or the Link to the Checkout page on this site
      * for the last step.
      *
-     * @param string $step
-     *
      * @return string (URLSegment)
      */
     public static function find_last_step_link(?string $step = ''): string
@@ -219,7 +217,7 @@ class CheckoutPage extends CartPage
             }
 
             if ($nextStep) {
-                return Controller::join_links($link, 'checkoutstep', $nextStep) .  $anchor;
+                return Controller::join_links($link, 'checkoutstep', $nextStep) . $anchor;
             }
 
             return $link;

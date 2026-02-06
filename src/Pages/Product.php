@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use Bummzack\SortableFile\Forms\SortableUploadField;
+use Exception;
 use Page;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
@@ -11,10 +12,12 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
@@ -22,12 +25,16 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Versioned\Versioned;
+use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -36,6 +43,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Dev\EcommerceCodeFilter;
@@ -56,15 +64,6 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
-use Exception;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\ManyManyList;
-use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigAjaxDefinitions;
 
 /**
  * This is a standard Product page-type with fields like
@@ -371,7 +370,7 @@ class Product extends Page implements BuyableModel
             ],
             'URLSegment'
         );
-        if ($config && !$config->AllowFreeProductPurchase) {
+        if ($config && ! $config->AllowFreeProductPurchase) {
             $price = $this->getCalculatedPrice();
             if (0 === $price) {
                 $link = $config->CMSEditLink();
@@ -398,10 +397,9 @@ class Product extends Page implements BuyableModel
         );
 
         $parent = $this->getParent();
-        if ($parent && $parent instanceof ProductGroup && !(bool) $parent->UseImageForProducts) {
+        if ($parent && $parent instanceof ProductGroup && ! (bool) $parent->UseImageForProducts) {
             $fields->removeByName('UseParentImage');
         }
-
 
         // details
         $fields->addFieldsToTab(
@@ -574,7 +572,7 @@ class Product extends Page implements BuyableModel
 
     public function getHistoryData(?string $code = '', ?int $limit = 50): array
     {
-        if (!$code) {
+        if (! $code) {
             $code = $this->InternalItemID;
         }
         $sql = '
@@ -767,7 +765,7 @@ class Product extends Page implements BuyableModel
      */
     public function ParentGroup()
     {
-        if (!isset(self::$parent_cache[$this->ID])) {
+        if (! isset(self::$parent_cache[$this->ID])) {
             self::$parent_cache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 
@@ -849,18 +847,18 @@ class Product extends Page implements BuyableModel
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
-        if (!$id) {
+        if (! $id) {
             $id = $this->ID;
         }
 
-        if (!$version) {
+        if (! $version) {
             $version = $this->Version;
         }
 
         //not sure why this is running via OrderItem...
 
         $obj = OrderItem::get_version($this->ClassName, $id, $version);
-        if (!$obj) {
+        if (! $obj) {
             $className = $this->ClassName;
             $obj = $className::get_by_id($id);
         }
@@ -1007,7 +1005,6 @@ class Product extends Page implements BuyableModel
     {
         return $this;
     }
-
 
     /**
      * alias.
@@ -1279,12 +1276,12 @@ class Product extends Page implements BuyableModel
         }
 
         // not sold at all
-        if (!$this->AllowPurchase) {
+        if (! $this->AllowPurchase) {
             return false;
         }
 
         // check country
-        if (!$member instanceof \SilverStripe\Security\Member) {
+        if (! $member instanceof \SilverStripe\Security\Member) {
             $member = Security::getCurrentUser();
         }
 
@@ -1294,13 +1291,13 @@ class Product extends Page implements BuyableModel
             return $extended;
         }
 
-        if (!EcommerceCountry::allow_sales()) {
+        if (! EcommerceCountry::allow_sales()) {
             return false;
         }
 
         if ($checkPrice) {
             $price = $this->getCalculatedPrice();
-            if (0 === $price && !$config->AllowFreeProductPurchase) {
+            if (0 === $price && ! $config->AllowFreeProductPurchase) {
                 return false;
             }
         }
@@ -1706,6 +1703,7 @@ class Product extends Page implements BuyableModel
         }
         return [];
     }
+
     public function AlternativeNamesUniqueAsArrayList(): ?ArrayList
     {
         $list = $this->AlternativeNamesUnique();
@@ -1718,7 +1716,7 @@ class Product extends Page implements BuyableModel
 
     public function stageTableDefault(?string $alternativeClassName = null): string
     {
-        if (!$alternativeClassName) {
+        if (! $alternativeClassName) {
             $alternativeClassName = static::class;
         }
         return $this->stageTable($this->getSchema()->tableName($alternativeClassName), Versioned::get_stage());

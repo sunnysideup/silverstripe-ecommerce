@@ -59,7 +59,7 @@ abstract class ProductCollection
     public function getSQL(?string $where = ''): string
     {
         $stage = '_Live'; // always live
-        if($where) {
+        if ($where) {
             $where = '(' . $where . ') AND ';
         }
         return '

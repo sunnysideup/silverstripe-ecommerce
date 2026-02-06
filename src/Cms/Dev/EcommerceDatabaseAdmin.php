@@ -13,7 +13,6 @@ use SilverStripe\View\ArrayData;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
- *
  */
 class EcommerceDatabaseAdmin extends TaskRunner
 {
@@ -154,7 +153,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
 
     public function index()
     {
-        if (!Director::is_cli()) {
+        if (! Director::is_cli()) {
             $renderer = new EcommerceDatabaseAdminDebugView();
             $renderer->renderHeader();
             $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());

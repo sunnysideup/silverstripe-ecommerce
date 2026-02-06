@@ -248,7 +248,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->levelOfProductsToShow;
     }
 
-
     public function setCacheKey(string $key): self
     {
         $this->cacheKey = $key;
@@ -387,7 +386,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
         return $this->blockedProductsIds;
     }
 
-
     //#################################################
     // BUILDERS
     //#################################################
@@ -469,7 +467,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
                 $this->alsoShowProductsIds,
                 $this->rootGroup->getProductsToBeIncludedFromOtherGroupsArray()
             );
-            /** @var DataList $childGroups  */
+            /** @var DataList $childGroups */
             $childGroups = $this->getGroups();
             if ($childGroups->exists()) {
                 foreach ($childGroups as $childGroup) {

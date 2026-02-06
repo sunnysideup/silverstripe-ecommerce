@@ -3,11 +3,9 @@
 namespace Sunnysideup\Ecommerce\Model\Search;
 
 use SilverStripe\Core\Flushable;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
-use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -26,7 +24,9 @@ use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
 class ProductGroupSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
     use SearchTableTrait;
+
     protected static $already_removed_cache = [];
+
     private static $table_name = 'ProductGroupSearchTable';
 
     private static $db = [
@@ -38,7 +38,6 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
     private static $has_one = [
         'ProductGroup' => ProductGroup::class,
     ];
-
 
     private static $indexes = [
         'UniqueProduct' => [

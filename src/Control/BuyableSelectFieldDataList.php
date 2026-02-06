@@ -8,7 +8,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
@@ -16,7 +15,6 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 
 /**
  * Class \Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
- *
  */
 class BuyableSelectFieldDataList extends Controller
 {

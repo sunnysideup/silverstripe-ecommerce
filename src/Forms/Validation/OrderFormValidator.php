@@ -29,15 +29,13 @@ class OrderFormValidator extends RequiredFields
     {
         $valid = parent::php($data);
         $checkoutPage = DataObject::get_one(CheckoutPage::class);
-        if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage && isset($data['ReadTermsAndConditions'])) {
-            if (! $data['ReadTermsAndConditions']) {
-                $this->validationError(
-                    'ReadTermsAndConditions',
-                    $checkoutPage->TermsAndConditionsMessage,
-                    'required'
-                );
-                $valid = false;
-            }
+        if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage && isset($data['ReadTermsAndConditions']) && ! $data['ReadTermsAndConditions']) {
+            $this->validationError(
+                'ReadTermsAndConditions',
+                $checkoutPage->TermsAndConditionsMessage,
+                'required'
+            );
+            $valid = false;
         }
         $order = ShoppingCart::current_order();
         if (! $order) {

@@ -23,7 +23,7 @@ class CsvFunctionality
         foreach ($rows as $row) {
             $output = [];
             foreach ($row as $field) {
-                if (!$field) {
+                if (! $field) {
                     $output[] = $enclosure . $field . $enclosure;
                 } elseif ($encloseAll || preg_match("/(?:{$delimiter_esc}|{$enclosure_esc}|\\s)/", $field)) {
                     // Enclose fields containing $delimiter, $enclosure or whitespace

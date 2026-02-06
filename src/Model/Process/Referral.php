@@ -35,94 +35,267 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     private static array $referral_sources = [
         // UTM
-        'utm_source'   => ['Name' => 'Google Tracked', 'Field' => 'Source'],
-        'utm_medium'   => ['Name' => 'Google Tracked', 'Field' => 'Medium'],
-        'utm_campaign' => ['Name' => 'Google Tracked', 'Field' => 'Campaign'],
-        'utm_term'     => ['Name' => 'Google Tracked', 'Field' => 'Term'],
-        'utm_content'  => ['Name' => 'Google Tracked', 'Field' => 'Content'],
+        'utm_source' => [
+            'Name' => 'Google Tracked',
+            'Field' => 'Source',
+        ],
+        'utm_medium' => [
+            'Name' => 'Google Tracked',
+            'Field' => 'Medium',
+        ],
+        'utm_campaign' => [
+            'Name' => 'Google Tracked',
+            'Field' => 'Campaign',
+        ],
+        'utm_term' => [
+            'Name' => 'Google Tracked',
+            'Field' => 'Term',
+        ],
+        'utm_content' => [
+            'Name' => 'Google Tracked',
+            'Field' => 'Content',
+        ],
 
         // Google Ads / Analytics
-        'gclid'   => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
-        'gclsrc'  => ['Name' => 'Google Source', 'Field' => 'Source'],
-        'gad'     => ['Name' => 'Google Campaign', 'Field' => 'Campaign'],
-        'gbraid'  => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
-        'wbraid'  => ['Name' => 'Google Ads', 'Field' => 'Campaign'],
-        'dclid'   => ['Name' => 'Google Display', 'Field' => 'Campaign'],
-        'srsltid' => ['Name' => 'Google Merchant', 'Field' => 'Campaign'],
+        'gclid' => [
+            'Name' => 'Google Ads',
+            'Field' => 'Campaign',
+        ],
+        'gclsrc' => [
+            'Name' => 'Google Source',
+            'Field' => 'Source',
+        ],
+        'gad' => [
+            'Name' => 'Google Campaign',
+            'Field' => 'Campaign',
+        ],
+        'gbraid' => [
+            'Name' => 'Google Ads',
+            'Field' => 'Campaign',
+        ],
+        'wbraid' => [
+            'Name' => 'Google Ads',
+            'Field' => 'Campaign',
+        ],
+        'dclid' => [
+            'Name' => 'Google Display',
+            'Field' => 'Campaign',
+        ],
+        'srsltid' => [
+            'Name' => 'Google Merchant',
+            'Field' => 'Campaign',
+        ],
 
         // Facebook / Meta
-        'fbclid'     => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
-        'fb_clickid' => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
-        'fbc'        => ['Name' => 'Facebook Ads', 'Field' => 'Campaign'],
-        'fbp'        => ['Name' => 'Facebook Ads', 'Field' => 'Source'],
+        'fbclid' => [
+            'Name' => 'Facebook Ads',
+            'Field' => 'Campaign',
+        ],
+        'fb_clickid' => [
+            'Name' => 'Facebook Ads',
+            'Field' => 'Campaign',
+        ],
+        'fbc' => [
+            'Name' => 'Facebook Ads',
+            'Field' => 'Campaign',
+        ],
+        'fbp' => [
+            'Name' => 'Facebook Ads',
+            'Field' => 'Source',
+        ],
 
         // Microsoft / Bing
-        'msclkid' => ['Name' => 'Microsoft Ads', 'Field' => 'Campaign'],
+        'msclkid' => [
+            'Name' => 'Microsoft Ads',
+            'Field' => 'Campaign',
+        ],
 
         // TikTok
-        'ttclid' => ['Name' => 'TikTok Ads', 'Field' => 'Campaign'],
+        'ttclid' => [
+            'Name' => 'TikTok Ads',
+            'Field' => 'Campaign',
+        ],
 
         // Twitter / X
-        'twclid' => ['Name' => 'Twitter Ads', 'Field' => 'Campaign'],
+        'twclid' => [
+            'Name' => 'Twitter Ads',
+            'Field' => 'Campaign',
+        ],
 
         // LinkedIn
-        'li_fat_id' => ['Name' => 'LinkedIn Ads', 'Field' => 'Campaign'],
+        'li_fat_id' => [
+            'Name' => 'LinkedIn Ads',
+            'Field' => 'Campaign',
+        ],
 
         // Pinterest
-        'epik' => ['Name' => 'Pinterest Ads', 'Field' => 'Campaign'],
+        'epik' => [
+            'Name' => 'Pinterest Ads',
+            'Field' => 'Campaign',
+        ],
 
         // Snapchat
-        'sccid' => ['Name' => 'Snapchat Ads', 'Field' => 'Campaign'],
+        'sccid' => [
+            'Name' => 'Snapchat Ads',
+            'Field' => 'Campaign',
+        ],
 
         // Campaign Monitor
-        'cm_mc_uid' => ['Name' => 'Campaign Monitor', 'Field' => 'Source'],
-        'cm_mc_mid' => ['Name' => 'Campaign Monitor', 'Field' => 'Campaign'],
+        'cm_mc_uid' => [
+            'Name' => 'Campaign Monitor',
+            'Field' => 'Source',
+        ],
+        'cm_mc_mid' => [
+            'Name' => 'Campaign Monitor',
+            'Field' => 'Campaign',
+        ],
 
         // Mailchimp
-        'mc_cid' => ['Name' => 'Mailchimp', 'Field' => 'Campaign'],
-        'mc_eid' => ['Name' => 'Mailchimp', 'Field' => 'Source'],
-        'mc_tc'  => ['Name' => 'Mailchimp', 'Field' => 'Campaign'],
-        'mc_id'  => ['Name' => 'Mailchimp', 'Field' => 'Campaign'],
+        'mc_cid' => [
+            'Name' => 'Mailchimp',
+            'Field' => 'Campaign',
+        ],
+        'mc_eid' => [
+            'Name' => 'Mailchimp',
+            'Field' => 'Source',
+        ],
+        'mc_tc' => [
+            'Name' => 'Mailchimp',
+            'Field' => 'Campaign',
+        ],
+        'mc_id' => [
+            'Name' => 'Mailchimp',
+            'Field' => 'Campaign',
+        ],
 
         // Generic / Affiliate / Referral
-        'ref'            => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
-        'rf'             => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
-        'referrer'       => ['Name' => 'Referral', 'Field' => 'Source'],
-        'referral'       => ['Name' => 'Referral', 'Field' => 'Source'],
-        'referral_code'  => ['Name' => 'Referral', 'Field' => 'Source'],
-        'affid'          => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
-        'affsource'      => ['Name' => 'Affiliate Marketing', 'Field' => 'Source'],
-        'aff_sub'        => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'aff_sub2'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'aff_sub3'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'aff_sub4'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'aff_sub5'       => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'subid'          => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'sub_id'         => ['Name' => 'Affiliate Marketing', 'Field' => 'Campaign'],
-        'partner'        => ['Name' => 'Partner Marketing', 'Field' => 'Source'],
-        'partnerid'      => ['Name' => 'Partner Marketing', 'Field' => 'Source'],
-        'cid'            => ['Name' => 'Campaign', 'Field' => 'Campaign'],
-        'campaignid'     => ['Name' => 'Campaign', 'Field' => 'Campaign'],
-        'adid'           => ['Name' => 'Advertising', 'Field' => 'Campaign'],
-        'creative'       => ['Name' => 'Advertising', 'Field' => 'Content'],
-        'clickid'        => ['Name' => 'Advertising', 'Field' => 'Campaign'],
+        'ref' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Source',
+        ],
+        'rf' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Source',
+        ],
+        'referrer' => [
+            'Name' => 'Referral',
+            'Field' => 'Source',
+        ],
+        'referral' => [
+            'Name' => 'Referral',
+            'Field' => 'Source',
+        ],
+        'referral_code' => [
+            'Name' => 'Referral',
+            'Field' => 'Source',
+        ],
+        'affid' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Source',
+        ],
+        'affsource' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Source',
+        ],
+        'aff_sub' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'aff_sub2' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'aff_sub3' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'aff_sub4' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'aff_sub5' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'subid' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'sub_id' => [
+            'Name' => 'Affiliate Marketing',
+            'Field' => 'Campaign',
+        ],
+        'partner' => [
+            'Name' => 'Partner Marketing',
+            'Field' => 'Source',
+        ],
+        'partnerid' => [
+            'Name' => 'Partner Marketing',
+            'Field' => 'Source',
+        ],
+        'cid' => [
+            'Name' => 'Campaign',
+            'Field' => 'Campaign',
+        ],
+        'campaignid' => [
+            'Name' => 'Campaign',
+            'Field' => 'Campaign',
+        ],
+        'adid' => [
+            'Name' => 'Advertising',
+            'Field' => 'Campaign',
+        ],
+        'creative' => [
+            'Name' => 'Advertising',
+            'Field' => 'Content',
+        ],
+        'clickid' => [
+            'Name' => 'Advertising',
+            'Field' => 'Campaign',
+        ],
 
         // Channel grouping
-        'organic' => ['Name' => 'Organic Search', 'Field' => 'Medium'],
-        'direct'  => ['Name' => 'Direct Traffic', 'Field' => 'Medium'],
-        'social'  => ['Name' => 'Social Media', 'Field' => 'Medium'],
-        'email'   => ['Name' => 'Email Marketing', 'Field' => 'Medium'],
-        'push'    => ['Name' => 'Push Notifications', 'Field' => 'Medium'],
-        'other'   => ['Name' => 'Other Referral Source', 'Field' => 'Medium'],
+        'organic' => [
+            'Name' => 'Organic Search',
+            'Field' => 'Medium',
+        ],
+        'direct' => [
+            'Name' => 'Direct Traffic',
+            'Field' => 'Medium',
+        ],
+        'social' => [
+            'Name' => 'Social Media',
+            'Field' => 'Medium',
+        ],
+        'email' => [
+            'Name' => 'Email Marketing',
+            'Field' => 'Medium',
+        ],
+        'push' => [
+            'Name' => 'Push Notifications',
+            'Field' => 'Medium',
+        ],
+        'other' => [
+            'Name' => 'Other Referral Source',
+            'Field' => 'Medium',
+        ],
 
         // Custom
     ];
 
-
     private static $basic_searches = [
-        'google'      => ['Name' => 'Google Other', 'Field' => 'From'],
-        'facebook'    => ['Name' => 'Facebook Other', 'Field' => 'From'],
-        'chatgpt.com' => ['Name' => 'ChatGPT Other', 'Field' => 'From'],
+        'google' => [
+            'Name' => 'Google Other',
+            'Field' => 'From',
+        ],
+        'facebook' => [
+            'Name' => 'Facebook Other',
+            'Field' => 'From',
+        ],
+        'chatgpt.com' => [
+            'Name' => 'ChatGPT Other',
+            'Field' => 'From',
+        ],
     ];
 
     public static function add_referral(Order $order, ?array $params = []): ?int
@@ -132,13 +305,13 @@ class Referral extends DataObject implements EditableEcommerceObject
                 'UniqueID' => ($params['_uniqueID'] ?? '') ?: $order->ID,
             ];
             $ref = Referral::get()->filter($filter)->first();
-            if (!$ref) {
+            if (! $ref) {
                 $ref = Referral::create($filter);
             }
             $params = Convert::raw2sql($params);
             $ref->LandingUrl = $params['_landingUrl'] ?? '';
             $ref->Referrer = $params['_referrer'] ?? '';
-            if (!empty($params['_capturedAt'])) {
+            if (! empty($params['_capturedAt'])) {
                 $date = new DateTimeImmutable($params['_capturedAt'], new DateTimeZone('UTC'));
                 $localDate = $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
                 $ref->CapturedAt = $localDate->format('Y-m-d H:i:s');
@@ -153,11 +326,11 @@ class Referral extends DataObject implements EditableEcommerceObject
                 $name = $getVarDetails['Name'] ?? $key;
                 $field = $getVarDetails['Field'] ?? '';
                 $from[] = $name;
-                if (!$field) {
+                if (! $field) {
                     $field = 'Source';
                     $val .= ' (' . $name . ')';
                 }
-                if (!isset($fieldValues[$field])) {
+                if (! isset($fieldValues[$field])) {
                     $fieldValues[$field] = [];
                 }
                 $fieldValues[$field][] = $val;
@@ -340,7 +513,7 @@ class Referral extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -454,7 +627,6 @@ class Referral extends DataObject implements EditableEcommerceObject
         return implode('|', array_filter([$this->Source,  $this->Medium, $this->Campaign, $this->Term, $this->Content]));
     }
 
-
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -475,17 +647,17 @@ class Referral extends DataObject implements EditableEcommerceObject
         }
         $order = $this->getOrderCached();
         if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
-            if (!$this->IsSubmitted) {
+            if (! $this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
                 $save = true;
             }
-            if ($this->IsSubmitted && !$this->AmountInvoiced) {
+            if ($this->IsSubmitted && ! $this->AmountInvoiced) {
                 $this->AmountInvoiced = $order->getTotal();
                 $save = true;
                 $processed = true;
             }
         }
-        if (!$this->From) {
+        if (! $this->From) {
             $this->From = $this->getFromAfterwards();
             $save = true;
         }

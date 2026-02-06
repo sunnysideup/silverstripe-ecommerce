@@ -7,7 +7,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogCancel
- *
  */
 class OrderStatusLogCancel extends OrderStatusLog
 {

@@ -76,7 +76,6 @@ class ProductSorter extends BaseApplyer
     /**
      * if the key is default and you provide a param of IDs then it sort by params.
      *
-     * @param string       $key
      * @param array|string $params additional param for sql
      *
      * @return array|string

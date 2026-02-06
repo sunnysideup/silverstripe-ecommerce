@@ -284,8 +284,6 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int $orderID
-     *
      * @return array
      */
     public static function get_for_current_order_only_show_regions(?int $orderID = 0)
@@ -308,8 +306,6 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int $orderID
-     *
      * @return array
      */
     public static function get_for_current_order_do_not_show_regions(?int $orderID = 0)

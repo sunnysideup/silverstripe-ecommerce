@@ -6,7 +6,6 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
@@ -116,8 +115,6 @@ abstract class AbstractProductsAndGroupsList
 
     /**
      * Is there more than x products.
-     *
-     * @param int $greaterThan
      */
     final public function hasMoreThanOne(?int $greaterThan = 1): bool
     {

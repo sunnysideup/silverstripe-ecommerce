@@ -71,7 +71,7 @@ class EcommerceTaskDebugCart extends BuildTask
     {
         switch ($type) {
             case 'HTMLText':
-                $value = substr(strip_tags( (string) $value), 0, 100);
+                $value = substr(strip_tags((string) $value), 0, 100);
 
                 break;
             case DBBoolean::class:

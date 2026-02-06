@@ -246,7 +246,6 @@ interface BuyableModel
      */
     public function canPurchase(Member $member = null, $checkPrice = true);
 
-
     public function getMinValueInOrder();
 
     public function getMaxValueInOrder();

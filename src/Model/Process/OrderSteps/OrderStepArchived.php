@@ -10,7 +10,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived
- *
  */
 class OrderStepArchived extends OrderStep implements OrderStepInterface
 {
@@ -76,6 +75,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
     {
         return _t('OrderStep.ARCHIVED_DESCRIPTION', 'This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.');
     }
+
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *

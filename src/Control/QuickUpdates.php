@@ -16,7 +16,6 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
@@ -26,7 +25,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Class \Sunnysideup\Ecommerce\Control\QuickUpdates
- *
  */
 class QuickUpdates extends Controller
 {
@@ -97,7 +95,7 @@ class QuickUpdates extends Controller
 
         $actions = new FieldList(
             [
-                FormAction::create('doform')->setTitle('Submit')
+                FormAction::create('doform')->setTitle('Submit'),
             ]
         );
 
@@ -165,7 +163,6 @@ class QuickUpdates extends Controller
         }
     }
 
-
     protected function init()
     {
         parent::init();
@@ -181,8 +178,6 @@ class QuickUpdates extends Controller
     }
 
     /**
-     * @param int $id
-     *
      * @return AjaxSelectField|DropdownField
      */
     protected function productLookupField(string $name, string $title, ?int $id = 0, ?bool $offerRemoveOption = false)
@@ -208,7 +203,7 @@ class QuickUpdates extends Controller
                 ->filter(['AllowPurchase' => true])
                 ->sort(['InternalItemID' => 'ASC']);
             if ($query) {
-                $query =  Convert::raw2sql($query);
+                $query = Convert::raw2sql($query);
                 $filter = [
                     'Title:PartialMatch' => $query,
                     'InternalItemID:PartialMatch' => $query,
@@ -254,7 +249,7 @@ class QuickUpdates extends Controller
     {
         $products = Product::get()
             ->filter(['AllowPurchase' => true])
-            ->sort(['Price' =>  'DESC'])
+            ->sort(['Price' => 'DESC'])
             ->limit($this->getMaxItems());
 
         return $this->isIncludedInListForProductSqlChanges($products);

@@ -33,7 +33,6 @@ use Sunnysideup\Vardump\Vardump;
  */
 class ProductGroupController extends PageController
 {
-
     /**
      * the exact list of products that is going to be shown (excluding pagination).
      *
@@ -153,7 +152,7 @@ class ProductGroupController extends PageController
     {
         if (! $this->productList) {
             $this->productList = $this->getCachedProductList();
-            if (!$this->productList instanceof \SilverStripe\ORM\DataList) {
+            if (! $this->productList instanceof \SilverStripe\ORM\DataList) {
                 // make sure to apply search filter first.
                 $this->productList = $this->getFinalProductList()
                     ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
@@ -174,8 +173,6 @@ class ProductGroupController extends PageController
      *
      * This is the call that is made from the template and has the actual final
      * products being shown.
-     *
-     * @return \SilverStripe\ORM\PaginatedList
      */
     public function Products(): ?PaginatedList
     {
@@ -564,7 +561,7 @@ class ProductGroupController extends PageController
     /**
      * Provides a ArrayList of links for filters products.
      *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, Object, Key))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, object, Key))
      */
     public function SearchFilterLinks(): ArrayList
     {
@@ -574,7 +571,7 @@ class ProductGroupController extends PageController
     /**
      * Provides an ArrayList of links for filters products.
      *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, Object, Key))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, object, Key))
      */
     public function GroupFilterLinks(): SS_List
     {
@@ -615,7 +612,7 @@ class ProductGroupController extends PageController
     /**
      * Provides a ArrayList of links for filters products.
      *
-     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, Object, Key))
+     * @return \SilverStripe\ORM\ArrayList( ArrayData(ID, ClassName, Title, Current, Link, LinkingMode, Ajaxify, object, Key))
      */
     public function FilterLinks(): ArrayList
     {
@@ -716,7 +713,6 @@ class ProductGroupController extends PageController
         return $this->getSearchApplyer()->getHasResults();
     }
 
-
     public function createLinkFromProductList($link, ?array $filter = [], ?bool $noReturnIfNoVars = false): string
     {
         /** @var DataList $list */
@@ -725,7 +721,7 @@ class ProductGroupController extends PageController
             $list = $list->filter($filter);
         }
         if ($list && $list->exists()) {
-            $vars =  implode(',', $list->column('InternalItemID'));
+            $vars = implode(',', $list->column('InternalItemID'));
         } else {
             if ($noReturnIfNoVars) {
                 return '';
@@ -823,7 +819,6 @@ class ProductGroupController extends PageController
     }
 
     /**
-     *
      * must be public!
      */
     public function setSecondaryTitle(string $v): static
@@ -959,7 +954,6 @@ class ProductGroupController extends PageController
     }
 
     /**
-     *
      * @return BaseApplyer|ProductSearchFilter
      */
     protected function getSearchApplyer()

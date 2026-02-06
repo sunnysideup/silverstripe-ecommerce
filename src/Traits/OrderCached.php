@@ -55,7 +55,7 @@ trait OrderCached
     private function getOrderCachedStaticallyIfNeeded(?bool $forceNew = false)
     {
         // we need to have an order ID
-        if (!$this->orderCached && ! empty($this->OrderID)) {
+        if (! $this->orderCached && ! empty($this->OrderID)) {
             $this->orderCached = Order::get_order_cached($this->OrderID, $forceNew);
             // if we have not set it before then we can set statusID
             $this->orderCachedStatusID = (int) $this->orderCached?->StatusID;

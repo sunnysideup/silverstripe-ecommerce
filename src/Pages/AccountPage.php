@@ -14,7 +14,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 
 /**
  * Class \Sunnysideup\Ecommerce\Pages\AccountPage
- *
  */
 class AccountPage extends Page
 {

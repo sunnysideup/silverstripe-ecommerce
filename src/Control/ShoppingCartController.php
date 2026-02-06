@@ -34,7 +34,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  *
  * Handles the modification of a shopping cart via http requests.
  * Provides links for making these modifications.
- *
  */
 class ShoppingCartController extends Controller
 {
@@ -262,7 +261,6 @@ class ShoppingCartController extends Controller
 
     /**
     /**
-     * @param mixed $orderID
      *
      * @return string
      */
@@ -791,7 +789,7 @@ class ShoppingCartController extends Controller
         } else {
             echo 'please <a href="Security/login/?BackURL=' . urlencode($this->config()->get('url_segment') . '/ajaxtest/') . '">log in</a> first.';
         }
-        if (!$request->isAjax()) {
+        if (! $request->isAjax()) {
             user_error('---- make sure to add ?ajax=1 to the URL ---');
         }
 
@@ -805,7 +803,7 @@ class ShoppingCartController extends Controller
         if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
             $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
             if ($savedSecurityID) {
-                if (!isset($_GET['SecurityID'])) {
+                if (! isset($_GET['SecurityID'])) {
                     $_GET['SecurityID'] = '';
                 }
                 if ($savedSecurityID) {
@@ -851,7 +849,7 @@ class ShoppingCartController extends Controller
     protected static function params_to_get_string(array $array)
     {
         $token = SecurityToken::inst();
-        if (!isset($array['SecurityID'])) {
+        if (! isset($array['SecurityID'])) {
             $array['SecurityID'] = $token->getValue();
         }
 
@@ -900,8 +898,6 @@ class ShoppingCartController extends Controller
 
     /**
      * Gets the request parameters.
-     *
-     * @param string $getpost - choose between obtaining the chosen parameters from GET or POST
      *
      * @return array
      */

@@ -7,7 +7,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
 use Symfony\Component\Mailer\MailerInterface;

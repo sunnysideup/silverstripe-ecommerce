@@ -64,7 +64,6 @@ class CheckoutPageController extends CartPageController
     ];
 
     /**
-     *
      * e.g. ?foo=bar
      * OR #mycart
      */
@@ -231,6 +230,7 @@ class CheckoutPageController extends CartPageController
     {
         return $this->aboveBelowContent($number, 'Above');
     }
+
     /**
      * returns the bottom of the page content for the Checkout Step.
      *
@@ -335,10 +335,9 @@ class CheckoutPageController extends CartPageController
     {
         parent::init();
 
-
         $this->steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $this->currentStep = $this->request->Param('ID');
-        if (!($this->currentStep && in_array($this->currentStep, $this->steps, true))) {
+        if (! ($this->currentStep && in_array($this->currentStep, $this->steps, true))) {
             $this->currentStep = $this->steps[array_key_first($this->steps)];
         }
         //redirect to current order -

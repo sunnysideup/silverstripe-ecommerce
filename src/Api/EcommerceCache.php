@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;

@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\ORM\DB;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -16,6 +15,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductsNoAlsoShowLink extends Report
 {
     use EcommerceProductReportTrait;
+
     protected $dataClass = Product::class;
 
     /**

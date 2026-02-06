@@ -125,10 +125,8 @@ class OrderFormAddress extends Form
         $this->loggedInMember = Security::getCurrentUser();
 
         //strange security situation...
-        if ($this->orderMember->exists() && $this->loggedInMember && $this->orderMember->ID !== $this->loggedInMember->ID) {
-            if (! $this->loggedInMember->IsShopAdmin()) {
-                $this->loggedInMember->logOut();
-            }
+        if ($this->orderMember->exists() && $this->loggedInMember && $this->orderMember->ID !== $this->loggedInMember->ID && ! $this->loggedInMember->IsShopAdmin()) {
+            $this->loggedInMember->logOut();
         }
 
         // member fields
@@ -276,21 +274,19 @@ class OrderFormAddress extends Form
                     )
                 );
             }
-            if ($this->orderMember->exists() && $this->loggedInMember) {
-                if ($this->loggedInMember->ID !== $this->orderMember->ID) {
-                    $rightFields->push(
-                        new LiteralField(
-                            'OrderAddedTo',
-                            '<p class="message good">' .
-                                _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
-                                ' ' .
-                                Convert::raw2xml($this->orderMember->Email) .
-                                ' ' .
-                                _t('Account.AS_IDENTIFIER', 'as identifier') .
-                                '</p>'
-                        )
-                    );
-                }
+            if ($this->orderMember->exists() && $this->loggedInMember && $this->loggedInMember->ID !== $this->orderMember->ID) {
+                $rightFields->push(
+                    new LiteralField(
+                        'OrderAddedTo',
+                        '<p class="message good">' .
+                            _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
+                            ' ' .
+                            Convert::raw2xml($this->orderMember->Email) .
+                            ' ' .
+                            _t('Account.AS_IDENTIFIER', 'as identifier') .
+                            '</p>'
+                    )
+                );
             }
         }
 
@@ -345,7 +341,6 @@ class OrderFormAddress extends Form
         $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
         $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
         $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
-
 
         //allow updating via decoration
         $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
@@ -544,13 +539,7 @@ class OrderFormAddress extends Form
     protected function orderHasFullyOperationalMember(): bool
     {
         //orderMember is Created in __CONSTRUCT
-        if ($this->orderMember && $this->orderMember->exists()) {
-            if ($this->orderMember->Password) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->orderMember && $this->orderMember->exists() && $this->orderMember->Password;
     }
 
     /**
@@ -644,7 +633,7 @@ class OrderFormAddress extends Form
 
                     //6. At this stage, if we dont have a member, we will create one!
                     //in case we still dont have a member AND we should create a member for every customer, then we do this below...
-                    if (!$this->orderMember instanceof \SilverStripe\Security\Member) {
+                    if (! $this->orderMember instanceof \SilverStripe\Security\Member) {
                         if ($this->debug) {
                             $this->debugArray[] = '6. No other member found';
                         }
@@ -694,7 +683,7 @@ class OrderFormAddress extends Form
         } else {
             // no other user exists with the email...
             // TRUE!
-            return !(bool) $this->anotherExistingMemberWithSameUniqueFieldValue($data);
+            return ! (bool) $this->anotherExistingMemberWithSameUniqueFieldValue($data);
         }
         //defaults to FALSE...
         return false;
@@ -722,7 +711,7 @@ class OrderFormAddress extends Form
         $newMember = $this->memberShouldBeCreated($data) ||
             $this->newlyCreatedMemberID;
 
-        if ($this->loggedInMember && !$this->orderMember) {
+        if ($this->loggedInMember && ! $this->orderMember) {
             return false;
         }
         if ($this->orderMemberAndLoggedInMemberAreDifferent()) {
@@ -750,7 +739,7 @@ class OrderFormAddress extends Form
      */
     protected function memberShouldBeLoggedIn(array $data)
     {
-        return !$this->loggedInMember && ($this->newlyCreatedMemberID > 0 && $this->validPasswordHasBeenEntered($data));
+        return ! $this->loggedInMember && ($this->newlyCreatedMemberID > 0 && $this->validPasswordHasBeenEntered($data));
     }
 
     protected function orderMemberAndLoggedInMemberAreDifferent()

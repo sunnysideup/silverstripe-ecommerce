@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -37,7 +33,6 @@ class EcommerceTaskCalculatePopularity extends BuildTask
     private static float $decay_rate = 0.003;
 
     /**
-     *
      * if true, the popularity will be set to the rank of the product
      * (1 = most popular, 2 = second most popular, etc).
      */
@@ -127,7 +122,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
             if ($popularity > 0) {
                 $count++;
             } else {
-                echo ". ";
+                echo '. ';
             }
             foreach (['', '_Live'] as $suffix) {
                 DB::query(

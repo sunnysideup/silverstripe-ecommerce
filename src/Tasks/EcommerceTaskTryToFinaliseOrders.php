@@ -6,18 +6,14 @@ use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -89,7 +85,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         ;
         DB::alteration_message("<h1>In total there, are {$orders->count()} Orders to move</h1>");
         $this->tryToFinaliseOrders($orders, $limit, $startAt);
-        if (!$this->isCli() && $this->getStart()) {
+        if (! $this->isCli() && $this->getStart()) {
             DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
             echo '<script type="text/javascript">window.setTimeout(function() {location.reload();}, 5000);</script>';
         }
@@ -147,21 +143,22 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     protected function setStart(int $startAt)
     {
-        if (!Director::is_cli()) {
+        if (! Director::is_cli()) {
             Controller::curr()->getRequest()->getSession()->set('EcommerceTaskTryToFinaliseOrdersStartAt', $startAt);
         }
     }
 
     protected function getStart(): int
     {
-        if (!Director::is_cli()) {
+        if (! Director::is_cli()) {
             return (int) Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrdersStartAt');
         }
         return 0;
     }
+
     protected function clearStart()
     {
-        if (!Director::is_cli()) {
+        if (! Director::is_cli()) {
             return Controller::curr()->getRequest()->getSession()->clear('EcommerceTaskTryToFinaliseOrdersStartAt');
         }
     }

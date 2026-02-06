@@ -18,7 +18,7 @@ class GridFieldConfigForProducts extends GridFieldConfig_RelationEditor
      */
     public function __construct($itemsPerPage = null, $className = Product::class)
     {
-        if (!$itemsPerPage) {
+        if (! $itemsPerPage) {
             $itemsPerPage = 100;
         }
         parent::__construct($itemsPerPage);

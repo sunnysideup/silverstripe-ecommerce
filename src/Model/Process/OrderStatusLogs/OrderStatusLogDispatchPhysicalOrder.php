@@ -4,9 +4,9 @@ namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
@@ -129,7 +129,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     public function getFrontEndFields($params = null)
     {
         $order = $this->getOrderCached();
-        if($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $fields = FieldList::create(
                 [
                     ReadonlyField::create('CustomerInfo', 'Customer', $order->Member()->getCustomerDetails()),
@@ -158,7 +158,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if (!$this->DispatchedOn) {
+        if (! $this->DispatchedOn) {
             $this->DispatchedOn = DBField::create_field(DBDate::class, date('Y-m-d'));
         }
     }

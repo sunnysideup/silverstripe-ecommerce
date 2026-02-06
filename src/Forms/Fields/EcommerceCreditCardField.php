@@ -93,7 +93,7 @@ class EcommerceCreditCardField extends TextField
         if (! $cardNumber && ! $this->Required()) {
             return true;
         }
-        for ($sum = 0, $i = strlen( $cardNumber) - 1; $i >= 0; --$i) {
+        for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; --$i) {
             $digit = (int) $cardNumber[$i];
             $sum += ($i % 2) === 0 ? array_sum(str_split($digit * 2)) : $digit;
         }

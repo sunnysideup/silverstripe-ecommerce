@@ -16,12 +16,9 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\ProductSearchFormValidator;
-use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
-use Sunnysideup\Ecommerce\Model\Search\ProductSearchTable;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -39,6 +36,7 @@ class ProductSearchForm extends Form
      * @var array
      */
     protected $rawData = [];
+
     /**
      * @var array
      */
@@ -84,7 +82,7 @@ class ProductSearchForm extends Form
             $getVars = array_merge($getVars, $data);
         }
         $defaults = [];
-        $defaults['Keyword'] = $getVars['Keyword'] ?? $getVars['keyword']  ?? '';
+        $defaults['Keyword'] = $getVars['Keyword'] ?? $getVars['keyword'] ?? '';
         $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? $getVars['minimumprice'] ?? 0;
         $defaults['MaximumPrice'] = $getVars['MaximumPrice'] ?? $getVars['maximumprice'] ?? 0;
         $defaults['OnlyThisSection'] = $getVars['OnlyThisSection'] ?? $getVars['onlythissection'] ?? 0;
@@ -230,7 +228,7 @@ class ProductSearchForm extends Form
         $this->saveDataToSession();
         foreach ($this->Fields()->dataFields() as $field) {
             $name = $field->getName();
-            if (!empty($this->rawData[$name])) {
+            if (! empty($this->rawData[$name])) {
                 $this->cleanedData[$name] = $this->rawData[$name];
             }
         }
@@ -244,16 +242,16 @@ class ProductSearchForm extends Form
         //you can add more details here in extensions of this form.
         $this->extend('updateProcessResults');
         $doSearchAtAll = false;
-        if (!empty($this->rawData['OnlyThisSection'])) {
+        if (! empty($this->rawData['OnlyThisSection'])) {
             $doSearchAtAll = true;
-        } elseif (!$this->checkForInternalItemID()) {
-            if (!$this->checkForOneProductTitleMatch() && !$this->checkForOneCategoryTitleMatch()) {
+        } elseif (! $this->checkForInternalItemID()) {
+            if (! $this->checkForOneProductTitleMatch() && ! $this->checkForOneCategoryTitleMatch()) {
                 $doSearchAtAll = true;
             }
         }
         if ($doSearchAtAll) {
             $link = $this->getResultsPageLink();
-            if (!strpos('?', $link)) {
+            if (! strpos('?', $link)) {
                 $link .= '?';
             } else {
                 $link .= '&';

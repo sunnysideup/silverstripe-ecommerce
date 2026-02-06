@@ -2,12 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use ArrayAccess;
-use SilverStripe\Core\Convert;
-use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\ORM\DataList;
-use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -21,7 +17,6 @@ use Sunnysideup\Ecommerce\Pages\Product;
  *         ->setLabelFieldName('FullName') // optional
  *         ->setIdFieldName('ID') // optional
  *         ->setDataList(Product::get()->filter(['AllowPurchase' => true])->sort(['FullName' => 'ASC'])); // optional
- *
  */
 class ProductSelectField2 extends SearchableDropdownField
 {

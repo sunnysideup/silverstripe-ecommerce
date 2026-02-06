@@ -89,7 +89,7 @@ class EcomQuantityField extends NumericField
         if ($object instanceof BuyableModel) {
             $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
-            if (!$this->orderItem) {
+            if (! $this->orderItem) {
                 $className = $object->classNameForOrderItem();
                 $this->orderItem = new $className($object->dataRecord, 0);
             }
@@ -102,7 +102,7 @@ class EcomQuantityField extends NumericField
             $this->parameters = $parameters;
         }
         $product = $object->Product();
-        if($product) {
+        if ($product) {
             $this->setMinValue($product->getMinValueInOrder());
             $this->setMaxValue($product->getMaxValueInOrder());
         }
@@ -125,8 +125,6 @@ class EcomQuantityField extends NumericField
 
     /**
      * set classes for field.  you can add or "overwrite".
-     *
-     * @param bool $overwrite
      */
     public function setMinValue(float $minValue): self
     {
@@ -137,8 +135,6 @@ class EcomQuantityField extends NumericField
 
     /**
      * set classes for field.  you can add or "overwrite".
-     *
-     * @param bool $overwrite
      */
     public function setMaxValue(float $maxValue): self
     {
@@ -183,7 +179,7 @@ class EcomQuantityField extends NumericField
     public function Field($properties = [])
     {
         $name = $this->getName();
-        if (!isset(self::$tabindex[$name])) {
+        if (! isset(self::$tabindex[$name])) {
             self::$tabindex[$name] = count(self::$tabindex) + 1;
         }
         $attributes = [

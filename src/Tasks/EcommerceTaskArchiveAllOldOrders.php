@@ -3,14 +3,12 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
-use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Symfony\Component\Mailer\MailerInterface;
 
@@ -26,6 +24,7 @@ use Symfony\Component\Mailer\MailerInterface;
 class EcommerceTaskArchiveAllOldOrders extends BuildTask
 {
     private const AGO_STATEMENT = '-6 months';
+
     protected $title = 'Archive all old orders';
 
     protected $description = "This task moves all orders to the 'Archived' (last) Order Step that were created " . self::AGO_STATEMENT;

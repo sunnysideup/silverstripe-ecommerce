@@ -18,7 +18,6 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\StoreAdmin
- *
  */
 class StoreAdmin extends ModelAdmin
 {

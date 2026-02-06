@@ -147,8 +147,8 @@ class OrderModifier extends OrderAttribute
             'field' => NumericField::class,
             'title' => 'Order Number',
         ],
-        "Name" => "PartialMatchFilter",
-        "TableSubTitle" => "PartialMatchFilter",
+        'Name' => 'PartialMatchFilter',
+        'TableSubTitle' => 'PartialMatchFilter',
         'TableValue' => 'PartialMatchFilter',
         'HasBeenRemoved' => 'ExactMatchFilter',
         'Type' => 'ExactMatchFilter',
@@ -355,7 +355,7 @@ class OrderModifier extends OrderAttribute
         if ($this->mustUpdate && $this->canBeUpdated()) {
             $this->write();
         }
-        if (!$this->IsRemoved()) {
+        if (! $this->IsRemoved()) {
             $this->runningTotal += $this->CalculatedTotal;
         }
 
@@ -434,7 +434,7 @@ class OrderModifier extends OrderAttribute
     public function ShowFormOutsideEditableOrderTable()
     {
         //extend in OrderModifier Extensions
-        return !$this->ShowFormInEditableOrderTable();
+        return ! $this->ShowFormInEditableOrderTable();
     }
 
     /**
@@ -529,7 +529,7 @@ class OrderModifier extends OrderAttribute
      */
     public function ShowInTable(): bool
     {
-        if (!$this->baseRunUpdateCalled && $this->canBeUpdated()) {
+        if (! $this->baseRunUpdateCalled && $this->canBeUpdated()) {
             user_error('While the order can be edited, you must call the runUpdate method everytime you get the details for this modifier', E_USER_ERROR);
         }
 
@@ -563,7 +563,7 @@ class OrderModifier extends OrderAttribute
             return true;
         }
 
-        return !$this->ShowInTable();
+        return ! $this->ShowInTable();
     }
 
     /**
@@ -865,7 +865,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if (!$this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
+        if (! $this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]

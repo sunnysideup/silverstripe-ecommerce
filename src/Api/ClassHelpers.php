@@ -35,7 +35,6 @@ class ClassHelpers
 
     /**
      * @param object $obj
-     * @param bool   $showError
      */
     public static function check_for_instance_of($obj, string $className, ?bool $showError = true): bool
     {

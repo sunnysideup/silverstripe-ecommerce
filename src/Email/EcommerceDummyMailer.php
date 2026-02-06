@@ -16,5 +16,4 @@ class EcommerceDummyMailer implements MailerInterface
     {
         // do nothing
     }
-
 }

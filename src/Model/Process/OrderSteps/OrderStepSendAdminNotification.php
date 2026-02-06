@@ -11,7 +11,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSendAdminNotification
- *
  */
 class OrderStepSendAdminNotification extends OrderStep implements OrderStepInterface
 {

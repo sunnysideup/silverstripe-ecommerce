@@ -12,7 +12,6 @@ use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentProcessin
 
 /**
  * Payment object representing a TEST = PENDING.
- *
  */
 class EcommercePaymentTestPending extends EcommercePaymentTest
 {

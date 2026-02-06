@@ -28,7 +28,6 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Address\OrderAddress
- *
  */
 class OrderAddress extends DataObject implements EditableEcommerceObject
 {
@@ -256,10 +255,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (null === $this->_canEdit) {
             $this->_canEdit = false;
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canEdit($member)) {
-                if (! $order->IsSubmitted()) {
-                    $this->_canEdit = true;
-                }
+            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canEdit($member) && ! $order->IsSubmitted()) {
+                $this->_canEdit = true;
             }
         }
 
@@ -376,7 +373,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return $html;
     }
 
-
     public function FullAddress(): string
     {
         return $this->getFullAddress();
@@ -407,7 +403,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             ],
             [
                 $prefix . 'Country',
-            ]
+            ],
         ];
         $addressParts = [];
         foreach ($fields as $fields) {
@@ -424,7 +420,6 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return implode('; ', $addressParts);
     }
-
 
     public function FullPhone(): string
     {
@@ -539,10 +534,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         if ($this->exists()) {
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->exists()) {
-                if ($order->MemberID) {
-                    return Member::get_by_id($order->MemberID);
-                }
+            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->exists() && $order->MemberID) {
+                return Member::get_by_id($order->MemberID);
             }
         }
 
@@ -844,6 +837,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return (string) $this->getFullName();
     }
+
     public function CourierCompany()
     {
         $v = $this->extendDetails('updateCourierCompany');
@@ -852,6 +846,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return (string) $this->getFieldValueWithPrefix('CompanyName');
     }
+
     public function CourierTelephone()
     {
         $v = $this->extendDetails('updateCourierTelephone');
@@ -860,6 +855,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return $this->getFullPhone();
     }
+
     public function CourierCode()
     {
         $v = $this->extendDetails('updateCourierCode');
@@ -868,6 +864,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return '';
     }
+
     public function CourierBuilding()
     {
         $v = $this->extendDetails('updateCourierBuilding');
@@ -876,6 +873,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return '';
     }
+
     public function CourierStreet(): string
     {
         $v = $this->extendDetails('updateCourierStreet');
@@ -884,14 +882,17 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return (string) $this->getFieldValueWithPrefix('Address');
     }
+
     public function CourierSuburb(): string
     {
         return (string) $this->getFieldValueWithPrefix('Address2');
     }
+
     public function CourierTown(): string
     {
         return (string) $this->getFieldValueWithPrefix('City');
     }
+
     public function CourierPostCode(): string
     {
         $v = $this->extendDetails('updateCourierPostCode');
@@ -900,18 +901,22 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         return (string) $this->getFieldValueWithPrefix('PostalCode');
     }
+
     public function CourierState(): string
     {
         return (string) $this->getFieldValueWithPrefix('RegionCode');
     }
+
     public function CourierCountry(): string
     {
         return $this->getFullCountryName();
     }
+
     public function CourierCountryCode()
     {
         return (string) $this->getFieldValueWithPrefix('Country');
     }
+
     public function CourierCarrier()
     {
         $v = $this->extendDetails('updateCourierCarrier');
@@ -934,7 +939,8 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $v = $this->extend($extensionName);
         if (is_array($v) && count($v)) {
-            return implode(', ', $v);;
+            return implode(', ', $v);
+            ;
         }
         if (is_string($v) && strlen($v)) {
             return $v;

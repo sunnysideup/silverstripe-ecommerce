@@ -63,6 +63,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     protected static $adminMemberCache;
 
     protected static $shopAssistantMemberCache;
+
     private static $max_count_of_members_in_array = 1500;
 
     private static $api_access = [
@@ -336,7 +337,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public static function current_member_is_shop_admin($member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         if ($member) {
@@ -355,7 +356,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public static function current_member_is_shop_assistant($member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         if ($member) {
@@ -374,7 +375,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public static function current_member_can_process_orders($member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         if ($member) {
@@ -630,7 +631,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . $this->getOwner()->dbObject('LastVisited') . '</p>');
         $fields->push($lastLogin);
         $group = self::get_customer_group();
-        if (!$group) {
+        if (! $group) {
             $group = new Group();
         }
         $headerField = HeaderField::create('MemberLinkFieldHeader', _t('Member.EDIT_CUSTOMER', 'Edit Customer'));
@@ -661,7 +662,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function getEcommerceFields($mustCreateAccount = false)
     {
-        if (!EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
+        if (! EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
             //if no accounts are made then we simply return the basics....
             $fields = new FieldList(
                 new TextField('FirstName', _t('EcommerceRole.FIRSTNAME', 'First Name')),
@@ -825,7 +826,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function LastOrder(?bool $includeUnsubmittedOrders = false)
     {
-        $onlySubmittedOrders = !$includeUnsubmittedOrders;
+        $onlySubmittedOrders = ! $includeUnsubmittedOrders;
         $orders = Order::get_datalist_of_orders_with_submit_record($onlySubmittedOrders);
 
         return $orders

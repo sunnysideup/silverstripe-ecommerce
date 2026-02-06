@@ -2,10 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Reports\Report;
-use Sunnysideup\Ecommerce\Pages\Product;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use SilverStripe\Assets\Image;
+use SilverStripe\Reports\Report;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * Selects all products without an image.
@@ -17,6 +16,7 @@ use SilverStripe\Assets\Image;
 class EcommerceSideReportProductGroupsNoImage extends Report
 {
     use EcommerceProductGroupReportTrait;
+
     protected $dataClass = ProductGroup::class;
 
     /**

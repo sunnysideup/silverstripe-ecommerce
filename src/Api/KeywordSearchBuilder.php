@@ -86,7 +86,7 @@ class KeywordSearchBuilder
      */
     protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data')
     {
-        if (!is_null(self::$ifStatementCache)) {
+        if (! is_null(self::$ifStatementCache)) {
             $this->ifStatement = self::$ifStatementCache;
 
             return null;
@@ -222,15 +222,14 @@ class KeywordSearchBuilder
         }
     }
 
-
     private function arrayToHtmlTable($rows): string
     {
         // use the keys of the first row as headers
         foreach ($rows as $firstRow) {
-            $headers = array_keys((array)$firstRow);
+            $headers = array_keys((array) $firstRow);
             break;
         }
-        if (!isset($headers)) {
+        if (! isset($headers)) {
             return '<p>No results</p>';
         }
         $html = '<table border="1" cellspacing="0" cellpadding="4">';
@@ -280,7 +279,7 @@ class KeywordSearchBuilder
         }
 
         // Sort by adjusted gp ascending
-        usort($newRows, fn($a, $b) => $a['gp'] <=> $b['gp']);
+        usort($newRows, fn ($a, $b) => $a['gp'] <=> $b['gp']);
         return $newRows;
     }
 

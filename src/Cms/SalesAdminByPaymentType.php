@@ -8,11 +8,11 @@ use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByPaymentType
- *
  */
 class SalesAdminByPaymentType extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByPaymentType';
+
     /**
      * standard SS variable.
      *
@@ -28,6 +28,7 @@ class SalesAdminByPaymentType extends SalesAdmin
     private static $menu_title = '... by Payment';
 
     private static $menu_priority = 3.114;
+
     /**
      * standard SS variable.
      *

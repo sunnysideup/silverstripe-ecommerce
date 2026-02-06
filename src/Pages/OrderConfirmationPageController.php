@@ -406,7 +406,7 @@ class OrderConfirmationPageController extends CartPageController
                             $email = $adminOnlyOrToEmail;
                         }
                     }
-                    if (!$to) {
+                    if (! $to) {
                         $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }

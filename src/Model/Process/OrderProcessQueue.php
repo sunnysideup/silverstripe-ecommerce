@@ -225,7 +225,7 @@ class OrderProcessQueue extends DataObject
     public function process(?Order $order = null)
     {
         //find variables
-        if (!$order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if (! $order instanceof \Sunnysideup\Ecommerce\Model\Order) {
             $order = $this->getOrderCached();
             $myQueueObject = $this;
         } else {

@@ -15,6 +15,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductsNoPrice extends Report
 {
     use EcommerceProductReportTrait;
+
     protected $dataClass = Product::class;
 
     /**
@@ -32,6 +33,4 @@ class EcommerceSideReportProductsNoPrice extends Report
     {
         return '"Product"."Price" IS NULL OR "Product"."Price" = 0 ';
     }
-
-
 }

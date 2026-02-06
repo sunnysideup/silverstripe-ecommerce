@@ -9,7 +9,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogArchived
- *
  */
 class OrderStatusLogArchived extends OrderStatusLog
 {

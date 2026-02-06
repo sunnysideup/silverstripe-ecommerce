@@ -12,7 +12,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepConfirmed
- *
  */
 class OrderStepConfirmed extends OrderStep implements OrderStepInterface
 {

@@ -24,7 +24,6 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 
     protected $description = 'Deletes all the orders and payments ever placed - CAREFULL!';
 
-
     /**
      * key = table where OrderID is saved
      * value = table where LastEdited is saved.

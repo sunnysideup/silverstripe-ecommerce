@@ -92,7 +92,7 @@ class ProductGroupFilter extends BaseApplyer
     {
         $group = $this->findGroup($filter);
 
-        return  $group && $group->exists() ? $group->ID : 0;
+        return $group && $group->exists() ? $group->ID : 0;
     }
 
     /**

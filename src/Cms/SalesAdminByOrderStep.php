@@ -7,11 +7,11 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminByOrderStep
- *
  */
 class SalesAdminByOrderStep extends SalesAdmin
 {
     private static $required_permission_codes = 'CMS_ACCESS_SalesAdminByOrderStep';
+
     /**
      * standard SS variable.
      *
@@ -27,6 +27,7 @@ class SalesAdminByOrderStep extends SalesAdmin
     private static $menu_title = '... by Step';
 
     private static $menu_priority = 3.113;
+
     /**
      * standard SS variable.
      *

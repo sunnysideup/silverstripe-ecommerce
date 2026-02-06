@@ -15,6 +15,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class EcommerceSideReportProductsWithDuplicateInternalItemIds extends Report
 {
     use EcommerceProductReportTrait;
+
     protected $dataClass = Product::class;
 
     /**

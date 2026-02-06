@@ -57,7 +57,6 @@ trait EcommerceProductReportTrait
             $list = $className::get();
         }
 
-
         // final change to update
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
@@ -154,10 +153,10 @@ trait EcommerceProductReportTrait
             'Price' => [
                 'title' => _t('EcommerceSideReport.PRICE', 'Price'),
                 'formatting' => function ($value, $item) {
-                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
+                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice() : 'n/a');
                 },
                 'csvFormatting' => function ($value, $item) {
-                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice()  : 'n/a');
+                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice() : 'n/a');
                 },
             ],
         ];

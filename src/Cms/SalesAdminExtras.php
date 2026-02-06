@@ -3,11 +3,9 @@
 namespace Sunnysideup\Ecommerce\Cms;
 
 use SilverStripe\Admin\ModelAdmin;
-use SilverStripe\Core\Convert;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\Requirements;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldExportSalesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllInvoicesButton;
 use Sunnysideup\Ecommerce\Forms\Gridfield\GridFieldPrintAllPackingSlipsButton;
@@ -25,7 +23,6 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdminExtras
- *
  */
 class SalesAdminExtras extends ModelAdmin
 {

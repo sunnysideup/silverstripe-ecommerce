@@ -7,14 +7,10 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\SiteConfig\SiteConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
-use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
 /**
@@ -130,29 +126,23 @@ abstract class OrderEmail extends Email
         return $this;
     }
 
-
-
     public function send(): void
     {
         $this->sendInner(false);
     }
-
 
     public function getBodyOnly(): string
     {
         return $this->sendInner(true);
     }
 
-    /**
-     *
-     */
     protected function sendInner(?bool $returnBodyOnly = false): ?string
     {
-        if (!$this->order) {
+        if (! $this->order) {
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
         $this->fixupSubject();
-        if (!$this->hasBeenSent() || ($this->resend)) {
+        if (! $this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
                 $memberEmail = self::get_from_email();
                 if ($memberEmail) {
@@ -183,7 +173,6 @@ abstract class OrderEmail extends Email
 
     }
 
-
     /**
      * @param resource|string|null $body
      *
@@ -199,12 +188,11 @@ abstract class OrderEmail extends Email
 
     protected function fixupSubject()
     {
-        if (!$this->getSubject()) {
+        if (! $this->getSubject()) {
             $this->setSubject(self::get_subject());
         }
         $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, (string) $this->getSubject()));
     }
-
 
     /**
      * converts an Email to A Varchar.
@@ -225,7 +213,7 @@ abstract class OrderEmail extends Email
                 if ($emailString !== '' && $emailString !== '0') {
                     $emailString .= ', ';
                 }
-                $emailString .=  $this->emailToVarchar($address);
+                $emailString .= $this->emailToVarchar($address);
             }
         }
         return trim(str_replace(['<', '>', '"', "'"], ' - ', $emailString));
@@ -260,7 +248,7 @@ abstract class OrderEmail extends Email
         $plainOnly = (bool) $plainOnly;
         parent::render($plainOnly);
         //moves CSS to inline CSS in email.
-        if (!$plainOnly) {
+        if (! $plainOnly) {
             $html = (string) ($this->getHtmlBody() ?: '');
             $this->setBody($html);
         }
@@ -268,9 +256,6 @@ abstract class OrderEmail extends Email
         return $this;
     }
 
-    /**
-     * @param mixed $result
-     */
     protected function createRecord(): OrderEmailRecord
     {
         $orderEmailRecord = OrderEmailRecord::create();

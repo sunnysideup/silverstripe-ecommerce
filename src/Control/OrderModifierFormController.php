@@ -12,7 +12,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * This controller allows you to submit modifier forms from anywhere on the site,
  * Most likely this will be from the the cart / checkout page.
- *
  */
 class OrderModifierFormController extends Controller
 {

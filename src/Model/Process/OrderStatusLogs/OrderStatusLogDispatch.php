@@ -6,7 +6,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogDispatch
- *
  */
 class OrderStatusLogDispatch extends OrderStatusLog
 {

@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\Reports\Report;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -16,6 +15,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 class EcommerceSideReportProductGroupsLongTitles extends Report
 {
     use EcommerceProductGroupReportTrait;
+
     protected $dataClass = ProductGroup::class;
 
     private static $min_length = 100;

@@ -36,6 +36,7 @@ class ErrorPageExtension extends Extension
             throw new HTTPResponse_Exception($response);
         }
     }
+
     /**
      * @param HTTPRequest $request
      *

@@ -5,8 +5,6 @@ namespace Sunnysideup\Ecommerce\Model;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -192,7 +190,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function canCreate($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -216,24 +214,22 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             return true;
         }
         if (null === $this->_canView) {
             $this->_canView = false;
             if ($this->OrderID) {
                 $o = $this->getOrderCached();
-                if ($o instanceof \Sunnysideup\Ecommerce\Model\Order && $o->exists()) {
-                    if ($o->canView($member)) {
-                        $this->_canView = true;
-                    }
+                if ($o instanceof \Sunnysideup\Ecommerce\Model\Order && $o->exists() && $o->canView($member)) {
+                    $this->_canView = true;
                 }
             }
         }
@@ -251,18 +247,18 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null)
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             return true;
         }
         if (null === $this->_canEdit) {
-            $this->_canEdit = !$this->priceHasBeenFixed();
+            $this->_canEdit = ! $this->priceHasBeenFixed();
         }
 
         return $this->_canEdit;
@@ -293,7 +289,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int  $orderID
      * @param bool $value
      */
     public static function set_price_has_been_fixed(?int $orderID = 0, $value = false)
@@ -303,8 +298,6 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @param int $orderID
-     *
      * @return null|bool
      */
     public static function get_price_has_been_fixed(?int $orderID = 0)
@@ -368,7 +361,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             $classes[] = strtolower((string) $this->BuyableClassName);
         }
         $slugs = array_map(
-            fn(string $className): string => strtolower(str_replace('\\', '-', ltrim($className, '\\'))),
+            fn (string $className): string => strtolower(str_replace('\\', '-', ltrim($className, '\\'))),
             $classes
         );
         return implode(' ', $slugs);

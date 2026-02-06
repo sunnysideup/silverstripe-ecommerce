@@ -33,19 +33,19 @@ class OrderFiltersAroundDateFilter extends ExactMatchFilter
 
         $date = new DBDate();
         $date->setValue(strtotime((string) $value));
-        if($date->getTimestamp() > 0) {
+        if ($date->getTimestamp() > 0) {
             $formattedDate = $date->format('Y-MM-d');
 
             $distanceFromToday = time() - strtotime((string) $value);
             $distanceFromTodayInDays = $distanceFromToday / 86400;
             $maxDays = 1;
             $maxDays += round($distanceFromTodayInDays / 30.5) * $this->additionalDaysPerMonth;
-            if($formattedDate) {
+            if ($formattedDate) {
                 $query->where('
                 (
-                    ABS(DATEDIFF("Order"."LastEdited", \''.$formattedDate.'\')) < ' . $maxDays . '
+                    ABS(DATEDIFF("Order"."LastEdited", \'' . $formattedDate . '\')) < ' . $maxDays . '
                     OR
-                    ABS(DATEDIFF("Order"."Created", \''.$formattedDate.'\')) < ' . $maxDays . '
+                    ABS(DATEDIFF("Order"."Created", \'' . $formattedDate . '\')) < ' . $maxDays . '
                 )
                 ');
             }

@@ -165,7 +165,6 @@ class EcommerceTaskCartCleanup extends BuildTask
      */
     private static $many_to_many_classes = [];
 
-
     /**
      * run in verbose mode.
      */

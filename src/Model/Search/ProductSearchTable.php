@@ -5,11 +5,9 @@ namespace Sunnysideup\Ecommerce\Model\Search;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
-use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Interfaces\GenericProductSearchBooster;
@@ -31,6 +29,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
     use SearchTableTrait;
 
     protected static $already_removed_cache = [];
+
     private static $table_name = 'ProductSearchTable';
 
     private static $db = [
@@ -42,7 +41,6 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
     private static $has_one = [
         'Product' => Product::class,
     ];
-
 
     private static $indexes = [
         'UniqueProduct' => [

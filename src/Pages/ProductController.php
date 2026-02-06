@@ -27,10 +27,9 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
  */
 class ProductController extends PageController
 {
-
     private static float $price_range_lower_multiplier = 0.85;
-    private static float $price_range_upper_multiplier = 1.15;
 
+    private static float $price_range_upper_multiplier = 1.15;
 
     /**
      * is this the current version?
@@ -250,8 +249,6 @@ class ProductController extends PageController
     {
         return $this->Parent()->Link() . '?searchfilter=MinimumPrice~' . $this->getLowerRange() . '...MaximumPrice~' . $this->getUpperRange() . '...OnlyThisSection~1';
     }
-
-
 
     protected function getLowerRange(): int
     {

@@ -35,7 +35,7 @@ class Sanitizer
             $s = trim($s);
             return $s === '' ? [] : (preg_split('/\s+/u', $s) ?: []);
         };
-        $fromWordArrayToString = static fn(array $w): string => implode(' ', $w);
+        $fromWordArrayToString = static fn (array $w): string => implode(' ', $w);
 
         // HTML -> words per part, enforce uniqueness per array item
         $parts = [];
@@ -47,7 +47,7 @@ class Sanitizer
                 $seen = [];
                 if ($value !== '' && $value !== '0') {
                     foreach ($fromStringToWordArray($value) as $w) {
-                        if (!isset($seen[$w])) {
+                        if (! isset($seen[$w])) {
                             $seen[$w] = true;
                             $words[] = $w;
                         }
@@ -57,9 +57,9 @@ class Sanitizer
             }
         }
 
-        $partLen  = static fn(array $w): int => mb_strlen($fromWordArrayToString($w));
+        $partLen = static fn (array $w): int => mb_strlen($fromWordArrayToString($w));
         $totalLen = static function (array $parts) use ($fromWordArrayToString): int {
-            $chunks = array_values(array_filter(array_map($fromWordArrayToString, $parts), fn($s) => $s !== ''));
+            $chunks = array_values(array_filter(array_map($fromWordArrayToString, $parts), fn ($s) => $s !== ''));
             if ($chunks === []) {
                 return 0;
             }
@@ -69,7 +69,6 @@ class Sanitizer
             }
             return $sum + (count($chunks) - 1);
         };
-
 
         while ($totalLen($parts, $glue) > ($maxChars ?? 2024)) {
             $idx = null;
@@ -93,7 +92,7 @@ class Sanitizer
                     $fromWordArrayToString,
                     $parts
                 ),
-                fn($s) => $s !== ''
+                fn ($s) => $s !== ''
             )
         );
 

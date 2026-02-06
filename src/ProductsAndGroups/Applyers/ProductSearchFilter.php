@@ -210,7 +210,7 @@ class ProductSearchFilter extends BaseApplyer
      */
     private static $in_group_sort_sql = [
         'Price' => 'DESC',
-        'ID' => 'DESC'
+        'ID' => 'DESC',
     ];
 
     public static function keyword_sanitised(?string $string = ''): string
@@ -230,7 +230,7 @@ class ProductSearchFilter extends BaseApplyer
     public function apply(?string $key = null, $params = null): self
     {
         $this->setDebugs();
-        if (!$this->applyStart($key, $params) && (is_array($this->rawData) && count($this->rawData))) {
+        if (! $this->applyStart($key, $params) && (is_array($this->rawData) && count($this->rawData))) {
             // we need to keep this hash
             $hash = $this->getHashBasedOnRawData();
             $outcome = $this->partialCacheApplyVariablesFromCache($hash);
@@ -615,7 +615,7 @@ class ProductSearchFilter extends BaseApplyer
                 } elseif (is_int($pageIdOrObject)) {
                     $id = $pageIdOrObject;
                 }
-                if (!empty($id) && $this->addToResultsInner($id)) {
+                if (! empty($id) && $this->addToResultsInner($id)) {
                     return true;
                 }
             }

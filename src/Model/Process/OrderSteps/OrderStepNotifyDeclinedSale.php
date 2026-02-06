@@ -11,8 +11,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
 class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterface
 {
-
-
     private static $table_name = 'OrderStepNotifyDeclinedSale';
 
     private static $db = [
@@ -48,7 +46,6 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
                     ),
             ]
         );
-
 
         return $fields;
     }
@@ -108,7 +105,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
 
     protected function isReadyToSend(Order $order): bool
     {
-        if (!isset(self::$is_ready_to_send_cache[$order->ID])) {
+        if (! isset(self::$is_ready_to_send_cache[$order->ID])) {
             if (! $this->WaitTimeInMinutes || $this->WaitTimeInMinutes < 1) {
                 $this->WaitTimeInMinutes = 60;
             }
@@ -129,7 +126,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
 
     protected function canByPassStep(Order $order): bool
     {
-        if (!isset(self::$cache_order_by_pass[$order->ID])) {
+        if (! isset(self::$cache_order_by_pass[$order->ID])) {
             self::$cache_order_by_pass[$order->ID] = true;
             if (empty($this->EmailRecipient) || $order->IsPaid()) {
                 // do nothing - we can by pass

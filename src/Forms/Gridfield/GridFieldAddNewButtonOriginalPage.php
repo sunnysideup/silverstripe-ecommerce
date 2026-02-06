@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;

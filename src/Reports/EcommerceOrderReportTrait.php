@@ -9,7 +9,6 @@ use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -58,14 +57,14 @@ trait EcommerceOrderReportTrait
 
         if ($startDate) {
             $logs = $logs->filter([
-                'Created:GreaterThanOrEqual' => date('Y-m-d 00:00:00', strtotime($startDate))
+                'Created:GreaterThanOrEqual' => date('Y-m-d 00:00:00', strtotime($startDate)),
             ]);
         }
 
         $endDate = $params['EndDate'] ?? null;
         if ($endDate) {
             $logs = $logs->filter([
-                'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime($endDate))
+                'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime($endDate)),
             ]);
         }
 
@@ -79,7 +78,6 @@ trait EcommerceOrderReportTrait
                 $logs = $logs->filter(['OrderID' => $productOrderIDs]);
             }
         }
-
 
         $ids = ArrayMethods::filter_array($logs->column('OrderID'));
         $list = $list->filter(['ID' => $ids]);

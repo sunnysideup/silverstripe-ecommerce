@@ -112,9 +112,6 @@ class UserPreference
         'MetaDescription',
     ];
 
-    /**
-     * @param bool $useSession
-     */
     public function setUseSession(string $type, ?bool $useSession): self
     {
         $this->useSession[$type] = $useSession;
@@ -140,9 +137,6 @@ class UserPreference
         return $array;
     }
 
-    /**
-     * @param bool $useSessionPerPage
-     */
     public function setUseSessionPerPage(string $type, ?bool $useSessionPerPage): self
     {
         $this->useSessionPerPage[$type] = $useSessionPerPage;
@@ -251,7 +245,7 @@ class UserPreference
                         'params' => $newPreference,
                         'title' => 'Search Results',
                     ];
-                    if (!empty($newPreference['params'])) {
+                    if (! empty($newPreference['params'])) {
                         $this->isSearch = true;
                     }
                 }
@@ -353,29 +347,26 @@ class UserPreference
             user_error('Must have page ID');
         }
 
-        return
-            implode(
-                '_',
-                [
-                    serialize($this->request->param('Action')),
-                    serialize($this->request->param('ID')),
-                    serialize($this->getCurrentUserPreferencesParams('GROUPFILTER')),
-                    serialize($this->getCurrentUserPreferencesKey('SORT')),
-                    serialize($this->getCurrentUserPreferencesKey('FILTER')),
-                    serialize($this->getCurrentUserPreferencesParams('SEARCHFILTER')),
-                    serialize($this->getCurrentUserPreferencesKey('DISPLAY')),
-                    $pageStart,
-                    $additionalKey,
-                    $pageId,
-                ]
-            );
+        return implode(
+            '_',
+            [
+                serialize($this->request->param('Action')),
+                serialize($this->request->param('ID')),
+                serialize($this->getCurrentUserPreferencesParams('GROUPFILTER')),
+                serialize($this->getCurrentUserPreferencesKey('SORT')),
+                serialize($this->getCurrentUserPreferencesKey('FILTER')),
+                serialize($this->getCurrentUserPreferencesParams('SEARCHFILTER')),
+                serialize($this->getCurrentUserPreferencesKey('DISPLAY')),
+                $pageStart,
+                $additionalKey,
+                $pageId,
+            ]
+        );
     }
 
     /**
      * Add a secondary title to the main title in case there is, for example, a
      * filter applied (e.g. Socks | MyBrand).
-     *
-     * @param string $secondaryTitle
      */
     public function addSecondaryTitle(?string $secondaryTitle = '')
     {
@@ -484,8 +475,6 @@ class UserPreference
      * full list of options with Links that know about "current".
      *
      * @param string $type       (SEARCHFILTER|GROUPFILTER|FILTER|SORT|DISPLAY)
-     * @param string $currentKey
-     * @param bool   $ajaxify
      */
     public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
@@ -616,7 +605,7 @@ class UserPreference
                     //keep current value
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
-                if ($type === $myType && (!$hideCurrentValue && ($this->getIsSearch() || trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)))) {
+                if ($type === $myType && (! $hideCurrentValue && ($this->getIsSearch() || trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)))) {
                     $getVars[$values['getVariable']] = $value;
                 }
             }

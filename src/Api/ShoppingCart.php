@@ -211,8 +211,6 @@ class ShoppingCart
      * set a specific order, other than the one from session ....
      *
      * @param Order $order
-     *
-     * @return Order
      */
     public function setOrder($order): Order|null
     {
@@ -1161,7 +1159,7 @@ class ShoppingCart
     public function addReferral($params): int
     {
         $outcome = -1;
-        if (!empty($params)) {
+        if (! empty($params)) {
             $order = $this->currentOrder();
             if ($order && $order->exists()) {
                 $outcome = Referral::add_referral($order, $params);
@@ -1244,7 +1242,6 @@ class ShoppingCart
 
             return $obj->ReturnCartData($this->getMessages());
         }
-
 
         //TODO: handle passing a message back to a form->sessionMessage
         $this->StoreMessagesInSession();

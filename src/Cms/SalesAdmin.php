@@ -21,7 +21,6 @@ use Sunnysideup\ModelAdminManyTabs\Api\TabsBuilder;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\SalesAdmin
- *
  */
 class SalesAdmin extends ModelAdmin
 {
@@ -128,7 +127,7 @@ class SalesAdmin extends ModelAdmin
                     $ordersinQueue = $queueObjectSingleton->OrdersInQueueThatAreNotReady();
 
                     $list = $list
-                        ->filter(['StatusID' => ArrayMethods::filter_array(OrderStep::admin_manageable_steps()->columnUnique()),])
+                        ->filter(['StatusID' => ArrayMethods::filter_array(OrderStep::admin_manageable_steps()->columnUnique())])
                         ->excludeAny(
                             [
                                 'ID' => ArrayMethods::filter_array($ordersinQueue->columnUnique()),

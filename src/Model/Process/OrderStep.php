@@ -408,7 +408,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function admin_reviewable_steps(): DataList
     {
         return OrderStep::get()
-            ->filter(['ShowAsUncompletedOrder' => false,]);
+            ->filter(['ShowAsUncompletedOrder' => false]);
     }
 
     /**
@@ -417,9 +417,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public static function non_admin_reviewable_steps(): DataList
     {
         return OrderStep::get()
-            ->exclude(['ShowAsUncompletedOrder' => true,]);
+            ->exclude(['ShowAsUncompletedOrder' => true]);
     }
-
 
     /**
      * @param bool $noCacheValues
@@ -428,7 +427,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function last_order_step($noCacheValues = false)
     {
-        if (!self::$_last_order_step_cache || $noCacheValues) {
+        if (! self::$_last_order_step_cache || $noCacheValues) {
             self::$_last_order_step_cache = OrderStep::get()->Last();
         }
 
@@ -511,7 +510,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function getMyCode()
     {
         $array = Config::inst()->get($this->ClassName, 'defaults', Config::UNINHERITED);
-        if (!isset($array['Code'])) {
+        if (! isset($array['Code'])) {
             user_error($this->ClassName . ' does not have a default code specified');
         }
 
@@ -644,7 +643,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $fields->removeFieldFromTab('Root.Main', 'CustomerMessage');
         }
         //adding
-        if (!$this->exists() || !$this->isDefaultStatusOption()) {
+        if (! $this->exists() || ! $this->isDefaultStatusOption()) {
             $fields->removeFieldFromTab('Root.Main', 'Code');
             $fields->addFieldToTab('Root.Main', new DropdownField('ClassName', _t('OrderStep.TYPE', 'Type'), self::get_not_created_codes_for_order_steps_to_include()), 'Name');
         }
@@ -932,7 +931,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function hasNotPassed($code)
     {
-        return !$this->hasPassed($code, true);
+        return ! $this->hasPassed($code, true);
     }
 
     /**
@@ -940,7 +939,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function isBefore(string $code): bool
     {
-        return !(bool) $this->hasPassed($code);
+        return ! (bool) $this->hasPassed($code);
     }
 
     /**
@@ -969,8 +968,6 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * Has an email been sent to the customer for this
      * order step.
      *"-10 days".
-     *
-     * @param bool $checkDateOfOrder
      *
      * @return bool
      */
@@ -1137,9 +1134,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     public function RelevantLogEntryFindOrMake(Order $order)
     {
         $log = $this->RelevantLogEntry($order);
-        if (!$log) {
+        if (! $log) {
             $className = $this->getRelevantLogEntryClassName();
-            if (!class_exists($className)) {
+            if (! class_exists($className)) {
                 $className = OrderStatusLog::class;
             }
             $log = $className::create();
@@ -1197,7 +1194,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function canView($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1238,7 +1235,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function canEdit($member = null, $context = [])
     {
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1276,7 +1273,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($this->isDefaultStatusOption()) {
             return false;
         }
-        if (!$member) {
+        if (! $member) {
             $member = Security::getCurrentUser();
         }
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1322,7 +1319,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
     protected function hasStepConditions(): bool
     {
-        return !empty($this->Config()->get('step_logic_conditions'));
+        return ! empty($this->Config()->get('step_logic_conditions'));
     }
 
     protected function yesOrNoNiceHelper(?bool $bool): string
@@ -1347,7 +1344,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
         }
-        if (!$this->canBeDeferred()) {
+        if (! $this->canBeDeferred()) {
             $this->DeferTimeInSeconds = 0;
             $this->DeferFromSubmitTime = 0;
         } elseif (is_numeric($this->DeferTimeInSeconds)) {
@@ -1408,12 +1405,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * return true if done already or mailed successfully now.
      *
-     * @param order       $order
-     * @param string      $subject
-     * @param string      $message
-     * @param bool        $resend
      * @param bool|string $adminOnlyOrToEmail you can set to false = send to customer, true: send to admin, or email = send to email
-     * @param string      $emailClassName
      */
     protected function sendEmailForStep(
         Order $order,
@@ -1424,7 +1416,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         ?string $emailClassName = ''
     ): bool {
         if (false === (bool) $this->hasBeenSent($order) || (bool) $resend) {
-            if (!$subject) {
+            if (! $subject) {
                 $subject = $this->CalculatedEmailSubject($order);
             }
             $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
@@ -1433,7 +1425,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             }
             //this is NOT an admin EMAIL
             if ($this->hasCustomerMessage() || $useAlternativeEmail) {
-                if (!$emailClassName) {
+                if (! $emailClassName) {
                     $emailClassName = $this->getEmailClassName();
                 }
                 $outcome = $order->sendEmail(
@@ -1445,7 +1437,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 );
             } else {
                 //ADMIN ONLY ....
-                if (!$emailClassName) {
+                if (! $emailClassName) {
                     $emailClassName = OrderErrorEmail::class;
                 }
                 //looks like we are sending an error, but we are just using this for notification
@@ -1478,7 +1470,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ->filter(['StatusID' => $this->ID])
                 ->shuffle()
                 ->first();
-            if (!$order) {
+            if (! $order) {
                 $order = Order::get()
                     ->where('"OrderStep"."Sort" >= ' . $this->Sort)
                     ->orderBy('IF("OrderStep"."Sort" > ' . $this->Sort . ', 0, 1) ASC, "OrderStep"."Sort" ASC, RAND() ASC')
@@ -1616,14 +1608,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $filter,
                     $cacheDataObjectGetOne = false
                 );
-                if (!$obj) {
+                if (! $obj) {
                     user_error("There was an error in creating the {$code} OrderStep", E_USER_NOTICE);
                 }
             }
         }
         $steps = OrderStep::get();
         foreach ($steps as $step) {
-            if (!$step->Description) {
+            if (! $step->Description) {
                 $step->Description = $step->myDescription();
                 $step->write();
             }
@@ -1640,10 +1632,10 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return _t('OrderStep.DESCRIPTION', 'No description has been provided for this step.');
     }
 
-    protected function getExportFieldsForOrder() : array
+    protected function getExportFieldsForOrder(): array
     {
         $v = Config::inst()->get(Order::class, 'csv_export_fields');
-        if(is_array($v)) {
+        if (is_array($v)) {
             return $v;
         }
         return Config::inst()->get(Order::class, 'summary_fields');

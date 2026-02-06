@@ -7,7 +7,6 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 
 trait SearchTableTrait
 {
-
     private static $create_table_options = [
         MySQLSchemaManager::ID => 'ENGINE=MyISAM',
     ];

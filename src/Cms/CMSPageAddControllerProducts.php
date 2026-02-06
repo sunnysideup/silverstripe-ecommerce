@@ -15,7 +15,6 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts
- *
  */
 class CMSPageAddControllerProducts extends CMSPageAddController
 {

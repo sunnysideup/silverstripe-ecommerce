@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Reports;
 
 use SilverStripe\Reports\Report;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Selects all products.
@@ -23,6 +22,4 @@ class EcommerceSideReportProductsAll extends Report
     {
         return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: Products: All');
     }
-
-
 }

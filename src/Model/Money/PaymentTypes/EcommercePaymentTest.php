@@ -6,7 +6,6 @@ use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 
 /**
  * Payment object representing a generic test payment.
- *
  */
 class EcommercePaymentTest extends EcommercePayment
 {

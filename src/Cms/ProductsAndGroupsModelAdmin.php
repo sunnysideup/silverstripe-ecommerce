@@ -12,7 +12,6 @@ use Sunnysideup\Ecommerce\Traits\EcommerceModelAdminTrait;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin
- *
  */
 class ProductsAndGroupsModelAdmin extends ModelAdmin
 {

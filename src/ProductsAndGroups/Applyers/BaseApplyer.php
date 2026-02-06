@@ -80,7 +80,6 @@ abstract class BaseApplyer
      */
     protected string $baseClassNameForGroups;
 
-
     private static $options = [];
 
     public function __construct($finalProductList = null)
@@ -103,7 +102,6 @@ abstract class BaseApplyer
      */
     abstract public function apply(?string $key = null, $params = null);
 
-
     public function setBaseClassNameForBuyables(string $s): self
     {
         $this->baseClassNameForBuyables = $s;
@@ -124,8 +122,6 @@ abstract class BaseApplyer
     }
 
     /**
-     *
-     *
      * @return DataList
      */
     public function getProducts()
@@ -219,7 +215,6 @@ abstract class BaseApplyer
      *
      * @param string $key         e.g. default
      * @param string $returnValue mixed
-     * @param string $defaultKey
      *
      * @return mixed
      */
@@ -269,7 +264,6 @@ abstract class BaseApplyer
     }
 
     /**
-     *
      * returns true when it has already been applied
      * @param mixed $key
      * @param mixed $params

@@ -10,10 +10,8 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
  * any object that you are adding this to.
  */
 
-
 trait PartialObjectCache
 {
-
     /**
      * @var bool
      */

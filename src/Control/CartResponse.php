@@ -3,13 +3,7 @@
 namespace Sunnysideup\Ecommerce\Control;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
-use Sunnysideup\Ecommerce\Api\ShoppingCart;
-use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * @description: returns the cart as JSON
@@ -26,7 +20,6 @@ class CartResponse extends EcommerceResponse
      * @var bool
      */
     protected $includeHeaders = true;
-
 
     /**
      * can also be:
@@ -93,7 +86,6 @@ class CartResponse extends EcommerceResponse
         $flag = Director::isDev() ? JSON_PRETTY_PRINT : 0;
         $json = json_encode($js, $flag);
         $json = preg_replace('/[\t\r\n]+/', ' ', $json);
-
 
         return preg_replace('/\s{2,}/', ' ', $json);
     }
