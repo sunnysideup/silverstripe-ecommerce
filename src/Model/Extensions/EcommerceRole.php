@@ -440,6 +440,28 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         return self::$shopAssistantMemberCache;
     }
 
+    protected static $_excluded_members_array = null;
+
+    /**
+     * @return array of Member IDs that may need to be excluded from order analysis, such as site administrators and shop assistants.
+     */
+    public static function get_excluded_members_array(): array
+    {
+        // return Permission::get_members_by_permission('CMS_ACCESS')->column('ID');
+        if (empty(self::$_excluded_members_array)) {
+            self::$_excluded_members_array = [-1 => -1];
+            $adminGroups = Permission::get_groups_by_permission(['ADMIN']);
+            foreach ($adminGroups as $group) {
+                self::$_excluded_members_array = array_merge(self::$_excluded_members_array, $group->Members()->columnUnique('ID'));
+            }
+            $shopAdminGroup = EcommerceRole::get_admin_group()->Members()->columnUnique('ID');
+            $assitantGroup = EcommerceRole::get_assistant_group()->Members()->columnUnique('ID');
+            self::$_excluded_members_array = array_merge(self::$_excluded_members_array, $shopAdminGroup, $assitantGroup);
+        }
+
+        return self::$_excluded_members_array;
+    }
+
     /**
      * you can't delete a Member with one or more orders.
      *
