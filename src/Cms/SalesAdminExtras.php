@@ -114,12 +114,7 @@ class SalesAdminExtras extends ModelAdmin
     {
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
-            $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
-            $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName($submittedOrderStatusLogClassName);
-            $list = $list
-                ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"')
-                ->where('"OrderStatusLog"."ClassName" = ' . Convert::raw2sql($submittedOrderStatusLogClassName, true));
+            $list = Order::get_datalist_of_orders_with_joined_submission_record($list);
         }
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {

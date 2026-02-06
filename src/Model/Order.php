@@ -7,6 +7,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Forms\CheckboxField;
@@ -651,21 +652,24 @@ class Order extends DataObject implements EditableEcommerceObject
      * You can retrieve this list and then add more to it (e.g. additional filters, additional joins, etc...).
      *
      * @param bool $onlySubmittedOrders    - only include Orders that have already been submitted
-     * @param bool $includeCancelledOrders - only include Orders that have already been submitted
+     * @param bool $includeCancelledOrders - only include Orders that have been cancelled
      *
      * @return \SilverStripe\ORM\DataList (Orders)
      */
-    public static function get_datalist_of_orders_with_submit_record(?bool $onlySubmittedOrders = true, ?bool $includeCancelledOrders = false)
+    public static function get_datalist_of_orders_with_submit_record(?bool $onlySubmittedOrders = true, ?bool $includeCancelledOrders = false, ?bool $includeSubmissionRecord = false): DataList
     {
-        $list = Order::get();
-        if (true === $onlySubmittedOrders) {
-            $list = self::get_datalist_of_orders_with_joined_submission_record($list);
+        if (true === (bool) $onlySubmittedOrders) {
+            // any order that has been submitted
+            $list = Order::get()->filter(['StatusID' => OrderStep::admin_reviewable_steps()->columnUnique()]);
         } else {
-            $list = $list->filter(['StatusID:GreaterThan' => 0]);
+            $list = Order::get()->filter(['StatusID:GreaterThan' => 0]);
         }
 
-        if (false === $includeCancelledOrders) {
+        if (false === (bool) $includeCancelledOrders) {
             $list = $list->filter(['CancelledByID' => 0]);
+        }
+        if (true === $includeSubmissionRecord) {
+            $list = self::get_datalist_of_orders_with_joined_submission_record($list);
         }
 
         return $list;
@@ -674,9 +678,14 @@ class Order extends DataObject implements EditableEcommerceObject
 
     public static function get_datalist_of_orders_with_joined_submission_record($list): DataList
     {
-        $ids = OrderStep::admin_reviewable_steps()->columnUnique();
-        return $list->filter(['StatusID' => $ids]);
+        $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
+        $submittedOrderStatusLogTableName = OrderStatusLog::getSchema()->tableName($submittedOrderStatusLogClassName);
+        return $list
+            ->LeftJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
+            ->LeftJoin($submittedOrderStatusLogTableName, '"OrderStatusLog"."ID" = "' . $submittedOrderStatusLogTableName . '"."ID"');
     }
+
+
 
     /**
      * Determine which properties on the DataObject are
