@@ -535,13 +535,11 @@ class CartPageController extends PageController
             }
 
             //Save order - we assume only current ones can be saved.
-            if (property_exists($this, 'SaveOrderLinkLabel') && null !== $this->SaveOrderLinkLabel && $this->SaveOrderLinkLabel && $viewingRealCurrentOrder && ($currentUserID && $this->currentOrder->MemberID === $currentUserID && $this->isCartPage())) {
-                if ($this->currentOrder && $this->currentOrder->getTotalItems() && ! $this->currentOrder->IsSubmitted()) {
-                    $this->actionLinks->push(new ArrayData([
-                        'Title' => $this->SaveOrderLinkLabel,
-                        'Link' => $this->Link('saveorder') . '/' . $this->currentOrder->ID . '/',
-                    ]));
-                }
+            if (property_exists($this, 'SaveOrderLinkLabel') && null !== $this->SaveOrderLinkLabel && $this->SaveOrderLinkLabel && $viewingRealCurrentOrder && ($currentUserID && $this->currentOrder->MemberID === $currentUserID && $this->isCartPage()) && ($this->currentOrder && $this->currentOrder->getTotalItems() && ! $this->currentOrder->IsSubmitted())) {
+                $this->actionLinks->push(new ArrayData([
+                    'Title' => $this->SaveOrderLinkLabel,
+                    'Link' => $this->Link('saveorder') . '/' . $this->currentOrder->ID . '/',
+                ]));
             }
 
             //load order
