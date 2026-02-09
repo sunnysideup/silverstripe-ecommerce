@@ -268,17 +268,18 @@ class ShoppingCart
                         //IF current order has nothing in it AND the member already has an order: use the old one first
                         //first, lets check if the current order is worthwhile keeping
                         if ($this->order->StatusID || $this->order->TotalItems()) {
-                            //do NOTHING!
+                            // add basic address
+                            $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
+                            $this->order->write();
                         } else {
                             $firstStep = DataObject::get_one(OrderStep::class);
                             //we assume the first step always exists.
-                            //TODO: what sort order?
                             $count = 0;
                             /** @var null|Order $previousOrderFromMember */
-                            $previousOrderFromMember = DataObject::get_one(Order::class, '
-                                    "MemberID" = ' . $loggedInMember->ID . '
-                                    AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
-                                    AND "Order"."ID" <> ' . $this->order->ID);
+                            $previousOrderFromMember = $loggedInMember->previousUnsubmittedOrders(
+                                $this->order->ID,
+                                $firstStep->ID
+                            );
                             while ($firstStep && $previousOrderFromMember) {
                                 //arbritary 12 attempts ...
                                 if ($count > 12) {
@@ -297,10 +298,10 @@ class ShoppingCart
                                     $previousOrderFromMember->delete();
                                 }
 
-                                $previousOrderFromMember = DataObject::get_one(Order::class, '
-                                        "MemberID" = ' . $loggedInMember->ID . '
-                                        AND ("StatusID" = ' . $firstStep->ID . ' OR "StatusID" = 0)
-                                        AND "Order"."ID" <> ' . $this->order->ID);
+                                $previousOrderFromMember = $loggedInMember->previousUnsubmittedOrders(
+                                    $this->order->ID,
+                                    $firstStep->ID
+                                );
                             }
                         }
                     }

@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Pages;
 use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
@@ -133,9 +134,9 @@ class CartPageController extends PageController
      *
      * @todo: do we still need loadorder controller method????
      *
-     * @return array just so that template shows
+     * @return array|HTTPResponse just so that template shows
      */
-    public function share(HTTPRequest $request)
+    public function share(HTTPRequest $request): array|HTTPResponse
     {
         $codes = Convert::raw2sql($request->param('ID'));
         if (! $request->getVar('ready') && ! $request->getVar('done')) {

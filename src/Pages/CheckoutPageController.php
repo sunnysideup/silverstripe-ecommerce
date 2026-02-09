@@ -79,7 +79,7 @@ class CheckoutPageController extends CartPageController
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
      *
-     * @return \SilverStripe\ORM\ArrayList (ModifierForms)|null
+     * @return \SilverStripe\ORM\ArrayList|null
      */
     public function ModifierForms()
     {
@@ -94,7 +94,7 @@ class CheckoutPageController extends CartPageController
      * Returns a form allowing a user to enter their
      * details to checkout their order.
      *
-     * @return OrderForm object
+     * @return OrderFormAddress object
      */
     public function OrderFormAddress()
     {
@@ -259,9 +259,9 @@ class CheckoutPageController extends CartPageController
      * if it is ajax it returns the current controller
      * as the inner for the page.
      *
-     * @return array
+     * @return array|DBHTMLText
      */
-    public function checkoutstep(HTTPRequest $request)
+    public function checkoutstep(HTTPRequest $request): array|DBHTMLText
     {
         if ($this->request->isAjax()) {
             Requirements::clear();

@@ -835,6 +835,25 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             ->first();
     }
 
+    public function previousUnsubmittedOrders(int $currentOrderID, ?int $firstStepID = 0)
+    {
+        $owner = $this->getOwner();
+        if (! $firstStepID) {
+            $firstStepID = DataObject::get_one(OrderStep::class)->ID;
+        }
+        return Order::get()
+            ->filter(
+                [
+                    'MemberID' => $owner->ID,
+                    'StatusID' => [0, $firstStepID],
+                    'ID:not' => $currentOrderID
+                ]
+            )
+            ->sort(['ID' => 'DESC'])
+            ->first()
+        ;
+    }
+
     /**
      * standard SS method
      * Make sure the member is added as a customer.
@@ -861,7 +880,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      *
      * @return \SilverStripe\ORM\ArrayList (BillingAddresses | ShippingAddresses)
      */
-    public function previousOrderAddresses($type = BillingAddress::class, $excludeID = 0, $onlyLastRecord = false, $keepDoubles = false)
+    public function previousOrderAddresses(?string $type = BillingAddress::class, ?int $excludeID = 0, ?bool $onlyLastRecord = false, ?bool $keepDoubles = false)
     {
         $returnArrayList = new ArrayList();
         if ($this->getOwner()->exists()) {
@@ -907,7 +926,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      * @param string $type
      * @param int    $excludeID - the ID of the record to exlcude (if any)
      */
-    public function previousOrderAddress($type = BillingAddress::class, $excludeID = 0)
+    public function previousOrderAddress(?string $type = BillingAddress::class, ?int $excludeID = 0)
     {
         $addresses = $this->previousOrderAddresses($type, $excludeID, true);
         if ($addresses->exists()) {
