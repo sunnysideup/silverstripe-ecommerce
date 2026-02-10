@@ -69,29 +69,19 @@ class EcomQuantityField extends NumericField
     protected $template = EcomQuantityField::class;
 
     /**
-     * the tabindex for the form field
-     * we use this so that you can tab through all the
-     * quantity fields without disruption.
-     * It is saved like this: "FieldName (String)" => tabposition (int).
-     *
-     * @var array
-     */
-    private static $tabindex = [];
-
-    /**
-     * @param buyable    $parameters - the buyable / OrderItem
+     * @param mixed $object - the buyable / OrderItem
      * @param null|array $parameters - parameters
-     * @param mixed      $object
      */
-    public function __construct($object, $parameters = [])
+    public function __construct($object, ?array $parameters = [])
     {
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomQuantityField.js'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
         if ($object instanceof BuyableModel) {
-            $this->orderItem = ShoppingCart::singleton()->findOrMakeItem($object, $parameters);
+            $this->orderItem = ShoppingCart::singleton()
+                ->findOrMakeItem($object, $parameters);
             //provide a 0-quantity facade item if there is no such item in cart OR perhaps we should just store the product itself, and do away with the facade, as it might be unnecessary complication
             if (! $this->orderItem) {
                 $className = $object->classNameForOrderItem();
-                $this->orderItem = new $className($object->dataRecord, 0);
+                $this->orderItem = new $className($object, 0);
             }
         } elseif (is_a($object, EcommerceConfigClassNames::getName(OrderItem::class)) && $object->BuyableID) {
             $this->orderItem = $object;
@@ -179,9 +169,7 @@ class EcomQuantityField extends NumericField
     public function Field($properties = [])
     {
         $name = $this->getName();
-        if (! isset(self::$tabindex[$name])) {
-            self::$tabindex[$name] = count(self::$tabindex) + 1;
-        }
+
         $attributes = [
             'type' => 'text',
             'class' => implode(' ', $this->classes),
@@ -192,7 +180,6 @@ class EcomQuantityField extends NumericField
             'data-quantity-link' => $this->getQuantityLink(),
             'min-value' => $this->minValue,
             'max-value' => $this->maxValue,
-            'tabindex' => self::$tabindex[$name],
             'disabled' => 'disabled',
         ];
 
