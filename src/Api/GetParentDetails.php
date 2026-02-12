@@ -33,9 +33,9 @@ class GetParentDetails
     // input
     protected string $expectedParentClassName;
 
-    protected array $allowedClassNames;
+    protected array $allowedClassNames = [];
 
-    protected array $notAllowedClassNames;
+    protected array $notAllowedClassNames = [];
 
     protected string $sortField = 'Sort';
 
@@ -89,7 +89,7 @@ class GetParentDetails
             $obj = $expectedParentClassName::get_by_id((int) $obj->ParentID);
             if ($obj) {
                 $this->parentSortArray[] = sprintf('%05d', $obj->$sortField);
-                if (($this->notAllowedClassNames !== []) > 0) {
+                if (!empty($this->notAllowedClassNames)) {
                     foreach ($this->notAllowedClassNames as $notAllowedClassName) {
                         if (is_a($obj, EcommerceConfigClassNames::getName($notAllowedClassName))) {
                             $obj = null;
@@ -97,7 +97,7 @@ class GetParentDetails
                         }
                     }
                 }
-                if (($this->allowedClassNames !== []) === 0) {
+                if (!empty($this->allowedClassNames)) {
                     foreach ($this->allowedClassNames as $allowedClassName) {
                         if (is_a($obj, EcommerceConfigClassNames::getName($allowedClassName))) {
                             $parentTitleArray[] = $obj->Title;
