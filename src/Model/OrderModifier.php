@@ -119,7 +119,7 @@ class OrderModifier extends OrderAttribute
     private static $table_name = 'OrderModifier';
 
     private static $db = [
-        'Name' => 'HTMLVarchar(200)', // we use this to create the TableTitle, CartTitle and TableSubTitle
+        'Name' => 'HTMLVarchar(400)', // we use this to create the TableTitle, CartTitle and TableSubTitle
         'TableValue' => 'Currency', //the $$ shown in the checkout table
         'HasBeenRemoved' => 'Boolean', // we add this so that we can see what modifiers have been removed
         'Type' => 'Enum("Other,Discount,Tax,Delivery", "Other")',
