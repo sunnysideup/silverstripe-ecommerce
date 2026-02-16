@@ -90,7 +90,6 @@ use Sunnysideup\Vardump\ArrayToTable;
  * @property string $ProductBreadcrumb
  * @property string $ShortDescription
  * @property string $AlternativeProductNames
- * @property bool $UseImageForProducts
  * @property int $GoogleProductCategoryID
  * @property int $ImageID
  * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
@@ -136,21 +135,23 @@ class Product extends Page implements BuyableModel
     private static $table_name = 'Product';
 
     private static $db = [
+        // key fields
+        'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
+        'AllowPurchase' => 'Boolean',
         'Price' => 'Currency',
-        'Weight' => 'Float',
-        'HasPhysicalDispatch' => 'Boolean(1)',
+        'ShortDescription' => 'Varchar(600)', //For use in lists.
+        // other fields
         'UseParentImage' => 'Boolean(1)',
-        'Model' => 'Varchar(30)',
+        'Weight' => 'Float',
         'Quantifier' => 'Varchar(30)',
         'FeaturedProduct' => 'Boolean',
-        'AllowPurchase' => 'Boolean',
-        'InternalItemID' => 'Varchar(30)', //ie SKU, ProductID etc (internal / existing recognition of product)
+        'AlternativeProductNames' => 'Varchar(255)', //To ensure they are also find for other names in search
+        'Model' => 'Varchar(30)',
+        'HasPhysicalDispatch' => 'Boolean(1)',
+        // calculated fields
         'FullSiteTreeSort' => 'Decimal(64, 0)', //store the complete sort numbers from current page up to level 1 page, for sitetree sorting
         'FullName' => 'Varchar(255)', //Name for look-up lists
         'ProductBreadcrumb' => 'Varchar(255)', //Name for look-up lists
-        'ShortDescription' => 'Varchar(600)', //For use in lists.
-        'AlternativeProductNames' => 'Varchar(255)', //To ensure they are also find for other names in search
-        'UseImageForProducts' => 'Boolean', //For use in lists.
         'Popularity' => 'Float', //For actual value
         'PopularityRank' => 'Int', //For fast sorting
         'SearchBoost' => 'Decimal(4,2)',
