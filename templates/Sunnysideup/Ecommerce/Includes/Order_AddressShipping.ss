@@ -14,7 +14,8 @@
     <% if BillingAddressID %>
         <% with BillingAddress %>
 <address class="addressSection <% if $Order.IsSeparateShippingAddress %>separate-shipping-address<% else %>no-separate-shipping-address<% end_if %>" id="BillingAddressSection">
-<% include Sunnysideup\Ecommerce\Includes\Order_AddressBillingInner %>
+    <% include Sunnysideup\Ecommerce\Includes\Order_AddressBillingContactInner %>
+    <% include Sunnysideup\Ecommerce\Includes\Order_AddressBillingAddressInner %>
 </address>
         <% end_with %>
     <% end_if %>

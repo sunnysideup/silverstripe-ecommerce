@@ -1,10 +1,7 @@
-<h2>Payment History</h2>
+<h2>Payment<% if $RelevantPayments.Count > 1 %>s<% end_if %></h2>
 <% if $RelevantPayments %>
-<table id="OrderPayment" class="infotable $Status.LowerCase">
+<table id="OrderPayment" class="information-table $Status.LowerCase">
     <thead>
-        <tr class="gap mainHeader">
-            <th colspan="5" class="left"><h3><% if $RelevantPayments.Count > 1 %><% _t("Order.PAYMENTS","Payments") %><% else %><% _t("Order.PAYMENT","Payment") %><% end_if %></h3></th>
-        </tr>
         <tr>
             <th scope="col" class="left"><% _t("Order.DATE","Date") %></th>
             <th scope="col" class="left"><% _t("Order.PAYMENTSTATUS","Status") %></th>

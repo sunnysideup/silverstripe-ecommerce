@@ -8,7 +8,7 @@ CartResponse.cart_responses_required
 -->
 <div class="sidebarCartInner">
 <% if Items %>
-    <table class="information-table editable infotable">
+    <table class="information-table editable">
         <thead></thead>
         <tbody>
     <% loop Items %>

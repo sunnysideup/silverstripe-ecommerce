@@ -1,4 +1,4 @@
-<table id="OutstandingTable" class="infotable">
+<table id="OutstandingTable" class="information-table">
     <tbody>
         <tr class="gap summary" id="Outstanding">
             <th scope="row"><strong><% _t("Order.TOTALOUTSTANDING","Total outstanding") %></strong></th>

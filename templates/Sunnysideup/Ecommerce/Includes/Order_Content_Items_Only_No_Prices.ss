@@ -1,4 +1,4 @@
-<table class="information-table infotable readonly">
+<table class="information-table readonly">
     <thead>
         <tr>
             <th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>

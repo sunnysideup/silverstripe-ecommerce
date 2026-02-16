@@ -1,4 +1,4 @@
-<table class="information-table editable infotable">
+<table class="information-table editable">
     <thead>
         <tr>
             <th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
