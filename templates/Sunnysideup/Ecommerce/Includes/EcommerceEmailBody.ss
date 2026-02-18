@@ -110,7 +110,7 @@
                                 <tr>
                                     <td>
                                         <div class="footer">
-                                            <h5 class="footer__heading">Thank you for shopping with us!</h5>
+                                            <h2 class="footer__heading">Thank you for shopping with us!</h2>
                                             <% include Sunnysideup\Ecommerce\Includes\Order_FeedbackFormLink %>
                                         </div>
                                     </td>

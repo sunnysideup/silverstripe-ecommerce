@@ -65,8 +65,7 @@ abstract class OrderEmail extends Email
         fclose($cssFileHandler);
         $html = CssInliner::fromHtml($html)
             ->inlineCss($css)
-            ->render()
-        ;
+            ->render();
         //make links absolute!
         return HTTP::absoluteURLs($html);
     }
@@ -167,10 +166,8 @@ abstract class OrderEmail extends Email
             }
 
             $result = $this->createRecord();
-
         }
         return null;
-
     }
 
     /**
@@ -279,9 +276,9 @@ abstract class OrderEmail extends Email
         $sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to');
         if ($sendAllEmailsTo) {
             $orderEmailRecord->To .=
-            _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
-            . $sendAllEmailsTo
-            . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
+                _t('OrderEmail.ACTUALLY_SENT_TO', ' | actually sent to: ')
+                . $sendAllEmailsTo
+                . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
         }
         $orderEmailRecord->write();
 
