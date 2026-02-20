@@ -1,4 +1,4 @@
-    $Prefix $FirstName $Surname<br />
+    <%-- $Prefix $FirstName $Surname<br />
     <% if $Email %>$Email<br /><% end_if %>
     <% if $Phone %>$Phone<br /><% end_if %>
     <% if $CompanyName %><br />$CompanyName<br /><% end_if %>
@@ -8,4 +8,4 @@
     <% if $PostalCode %>$PostalCode<br /><% end_if %>
     <% if $RegionCode %>$RegionCode<br /><% end_if %>
     <% if $Region %>$Region.Name<br /><% end_if %>
-    <% if $FullCountryName %>$FullCountryName<br /><% end_if %>
+    <% if $FullCountryName %>$FullCountryName<br /><% end_if %> --%>
