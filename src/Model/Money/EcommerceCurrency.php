@@ -401,7 +401,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\FieldType\DBField|\SilverStripe\ORM\FieldType\DBMoney
      */
-    public static function get_money_object_from_order_currency($price, Order $order = null)
+    public static function get_money_object_from_order_currency($price, ?Order $order = null)
     {
         if ($price instanceof DBCurrency) {
             $price = $price->getValue();
@@ -744,8 +744,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                 $exists = EcommerceCurrency::get()
                     ->where("UPPER(\"Code\") = '" . $this->Code . "'")
                     ->exclude('ID', (int) $this->ID)
-                    ->exists()
-                ;
+                    ->exists();
                 if ($exists) {
                     $errors[] = "There is alreay another currency in use with code: '{$this->Code}'.";
                 }

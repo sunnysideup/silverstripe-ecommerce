@@ -543,6 +543,11 @@ class OrderItem extends OrderAttribute
         return $this->getTotal();
     }
 
+    /**
+     * return float
+     * @param bool $recalculate
+     * @return float
+     */
     public function getTotal($recalculate = false)
     {
         $total = $this->priceHasBeenFixed() ? $this->CalculatedTotal : $this->getUnitPrice($recalculate) * $this->Quantity;
@@ -551,7 +556,7 @@ class OrderItem extends OrderAttribute
             $total = $updatedTotal[0];
         }
 
-        return $total;
+        return (float) $total;
     }
 
     /**

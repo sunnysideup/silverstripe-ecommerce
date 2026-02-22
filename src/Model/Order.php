@@ -3094,14 +3094,14 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return float
      */
-    public function SubTotal()
+    public function SubTotal(): float
     {
         return $this->getSubTotal();
     }
 
-    public function getSubTotal()
+    public function getSubTotal(): float
     {
-        $result = 0;
+        $result = 0.0;
         $items = $this->Items();
         $type = EcommerceConfigClassNames::getName(OrderItem::class);
         if ($items->exists()) {
@@ -3112,7 +3112,7 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
 
-        return $result;
+        return (float) $result;
     }
 
     /**
