@@ -2236,17 +2236,6 @@ class Order extends DataObject implements EditableEcommerceObject
 
     protected ?array $buyableIdsAndClassNames = null;
 
-    public function BuyableIds(): array
-    {
-        $this->loadBuyableIdsAndClassNames();
-        return ($this->buyableIdsAndClassNames['IDs'] ?? []);
-    }
-
-    public function BuyableClassNames(): array
-    {
-        $this->loadBuyableIdsAndClassNames();
-        return ($this->buyableIdsAndClassNames['ClassNames'] ?? []);
-    }
 
     protected function loadBuyableIdsAndClassNames(): void
     {
@@ -2254,41 +2243,60 @@ class Order extends DataObject implements EditableEcommerceObject
             return;
         }
         $this->buyableIdsAndClassNames = [
-            'ClassNames' => $this->Items()->columnUnique('BuyableClassName'),
-            'IDs' => $this->Items()->columnUnique('BuyableID'),
-        ];
-    }
-
-    protected ?array $productIdsAndClassNames = null;
-
-    public function ProductIds(): array
-    {
-        $this->loadProductIdsAndClassNames();
-        return ($this->productIdsAndClassNames['IDs'] ?? []);
-    }
-
-    public function ProductClassNames(): array
-    {
-        $this->loadProductIdsAndClassNames();
-        return ($this->productIdsAndClassNames['ClassNames'] ?? []);
-    }
-
-    protected function loadProductIdsAndClassNames(): void
-    {
-        if ($this->productIdsAndClassNames !== null) {
-            return;
-        }
-        $this->productIdsAndClassNames = [
+            'ItemIDs' => [],
             'ClassNames' => [],
             'IDs' => [],
+            'ProductClassNames' => [],
+            'ProductIDs' => [],
         ];
         foreach ($this->Items() as $item) {
+            $buyable = $item->getBuyableCached();
             $product = $item->Product();
-            if ($product && $product->exists()) {
-                $this->productIdsAndClassNames['ClassNames'][] = $product->ClassName;
-                $this->productIdsAndClassNames['IDs'][] = $product->ID;
+            if ($buyable) {
+                $this->buyableIdsAndClassNames['ItemIDs'][] = $item->ID;
+                $this->buyableIdsAndClassNames['ClassNames'][] = $buyable->ClassName;
+                $this->buyableIdsAndClassNames['IDs'][] = $buyable->ID;
+                $this->buyableIdsAndClassNames['ProductClassNames'][] = $product->ClassName;
+                $this->buyableIdsAndClassNames['ProductIDs'][] = $product->ID;
             }
         }
+    }
+
+    public function BuyableIds(?bool $withItemID = false): array
+    {
+        $this->loadBuyableIdsAndClassNames();
+        if ($withItemID) {
+            return array_combine($this->buyableIdsAndClassNames['ItemIDs'] ?? [], $this->buyableIdsAndClassNames['IDs'] ?? []);
+        }
+        return ($this->buyableIdsAndClassNames['IDs'] ?? []);
+    }
+
+    public function BuyableClassNames(?bool $withItemID = false): array
+    {
+        $this->loadBuyableIdsAndClassNames();
+        if ($withItemID) {
+            return array_combine($this->buyableIdsAndClassNames['ItemIDs'] ?? [], $this->buyableIdsAndClassNames['ClassNames'] ?? []);
+        }
+        return ($this->buyableIdsAndClassNames['ClassNames'] ?? []);
+    }
+
+
+    public function ProductIds(?bool $withItemID = false): array
+    {
+        $this->loadBuyableIdsAndClassNames();
+        if ($withItemID) {
+            return array_combine($this->buyableIdsAndClassNames['ItemIDs'] ?? [], $this->buyableIdsAndClassNames['ProductIDs'] ?? []);
+        }
+        return ($this->buyableIdsAndClassNames['ProductIDs'] ?? []);
+    }
+
+    public function ProductClassNames(?bool $withItemID = false): array
+    {
+        $this->loadBuyableIdsAndClassNames();
+        if ($withItemID) {
+            return array_combine($this->buyableIdsAndClassNames['ItemIDs'] ?? [], $this->buyableIdsAndClassNames['ProductClassNames'] ?? []);
+        }
+        return ($this->buyableIdsAndClassNames['ProductClassNames'] ?? []);
     }
 
     /**
