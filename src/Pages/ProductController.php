@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -9,7 +10,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
@@ -21,9 +21,9 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\ProductController
  *
- * @property \Sunnysideup\Ecommerce\Pages\Product $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\Product data()
- * @mixin \Sunnysideup\Ecommerce\Pages\Product
+ * @property Product $dataRecord
+ * @method Product data()
+ * @mixin Product
  */
 class ProductController extends PageController
 {
@@ -102,7 +102,7 @@ class ProductController extends PageController
                 new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))
             );
             $requiredFields = ['Quantity'];
-            $validator = new RequiredFields($requiredFields);
+            $validator = new RequiredFieldsValidator($requiredFields);
 
             return new Form($this, 'AddProductForm', $fields, $actions, $validator);
         }

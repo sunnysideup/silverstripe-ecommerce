@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -205,7 +206,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -224,7 +225,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (null === $this->_canView) {
             $this->_canView = false;
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canView($member)) {
+            if ($order instanceof Order && $order->canView($member)) {
                 $this->_canView = true;
             }
         }
@@ -236,7 +237,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -255,7 +256,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (null === $this->_canEdit) {
             $this->_canEdit = false;
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canEdit($member) && ! $order->IsSubmitted()) {
+            if ($order instanceof Order && $order->canEdit($member) && ! $order->IsSubmitted()) {
                 $this->_canEdit = true;
             }
         }
@@ -290,7 +291,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -534,7 +535,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         if ($this->exists()) {
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->exists() && $order->MemberID) {
+            if ($order instanceof Order && $order->exists() && $order->MemberID) {
                 return Member::get_by_id($order->MemberID);
             }
         }
@@ -641,7 +642,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     protected function getEcommerceFields()
     {
@@ -755,9 +756,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * makes selected fields into read only using the $this->readOnlyFields array.
      *
-     * @param FieldList|\SilverStripe\Forms\CompositeField $fields
+     * @param FieldList|CompositeField $fields
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     protected function makeSelectedFieldsReadOnly($fields)
     {

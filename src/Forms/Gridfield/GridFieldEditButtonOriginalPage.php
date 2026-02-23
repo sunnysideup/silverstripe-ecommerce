@@ -2,12 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use SilverStripe\Model\ArrayData;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ArrayData;
 
 /**
  * Provides the entry point to editing a single record presented by the

@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;

@@ -2,6 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
@@ -10,15 +14,11 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -99,7 +99,7 @@ class QuickUpdates extends Controller
             ]
         );
 
-        $required = new RequiredFields([]);
+        $required = new RequiredFieldsValidator([]);
 
         return new Form($this, 'MyForm', $fields, $actions, $required);
     }

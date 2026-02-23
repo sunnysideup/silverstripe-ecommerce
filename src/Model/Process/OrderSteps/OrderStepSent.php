@@ -182,7 +182,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {

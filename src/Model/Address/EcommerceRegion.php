@@ -19,7 +19,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
  * @property bool $DoNotAllowSales
  * @property bool $IsDefault
  * @property int $CountryID
- * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry Country()
+ * @method EcommerceCountry Country()
  */
 class EcommerceRegion extends DataObject implements EditableEcommerceObject
 {
@@ -180,7 +180,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS FieldList.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

@@ -8,7 +8,6 @@ use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-use Sunnysideup\Vardump\Vardump;
 
 /**
  * A wrapper for a paginated of products which can be filtered and sorted.

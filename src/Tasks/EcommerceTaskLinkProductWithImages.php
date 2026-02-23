@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\File;
-use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;

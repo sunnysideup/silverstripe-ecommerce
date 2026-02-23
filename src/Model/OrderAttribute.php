@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\Security\Member;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
@@ -183,7 +184,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -208,7 +209,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -228,7 +229,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             $this->_canView = false;
             if ($this->OrderID) {
                 $o = $this->getOrderCached();
-                if ($o instanceof \Sunnysideup\Ecommerce\Model\Order && $o->exists() && $o->canView($member)) {
+                if ($o instanceof Order && $o->exists() && $o->canView($member)) {
                     $this->_canView = true;
                 }
             }
@@ -241,7 +242,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -267,7 +268,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */

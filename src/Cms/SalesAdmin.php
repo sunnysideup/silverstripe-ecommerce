@@ -112,7 +112,7 @@ class SalesAdmin extends ModelAdmin
     }
 
     /**
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function getList()
     {

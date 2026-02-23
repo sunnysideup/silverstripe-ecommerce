@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Page;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
@@ -52,7 +53,7 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, we can not find the page you are looking for.</p>';
 
-        return $this->renderWith(\Page::class);
+        return $this->renderWith(Page::class);
     }
 
     /**
@@ -64,7 +65,7 @@ abstract class OrderStepController extends Controller
     {
         $this->alternativeContent = '<p class="message bad">Sorry, an error occurred, please contact us for more information....</p>';
 
-        return $this->renderWith(\Page::class);
+        return $this->renderWith(Page::class);
     }
 
     /**
@@ -199,7 +200,7 @@ abstract class OrderStepController extends Controller
             }
 
             self::$_order = Order::get_order_cached($id);
-            if (self::$_order instanceof \Sunnysideup\Ecommerce\Model\Order && $this->secureHash(self::$_order) !== $sessionID) {
+            if (self::$_order instanceof Order && $this->secureHash(self::$_order) !== $sessionID) {
                 self::$_order = null;
             }
         }
@@ -220,7 +221,7 @@ abstract class OrderStepController extends Controller
     }
 
     /**
-     * @return null|OrderStep|\SilverStripe\ORM\DataObject
+     * @return null|OrderStep|DataObject
      */
     protected function orderStep()
     {

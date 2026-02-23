@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -532,7 +534,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function clear(HTTPRequest $request)
     {
@@ -543,7 +545,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function clearandlogout(HTTPRequest $request)
     {
@@ -559,7 +561,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function deleteorder(HTTPRequest $request)
     {
@@ -600,7 +602,7 @@ class ShoppingCartController extends Controller
     /**
      * return cart for ajax call.
      *
-     * @return \SilverStripe\ORM\FieldType\DBHTMLText
+     * @return DBHTMLText
      */
     public function showcart(HTTPRequest $request)
     {
@@ -610,7 +612,7 @@ class ShoppingCartController extends Controller
     /**
      * loads an order.
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function loadorder(HTTPRequest $request)
     {
@@ -626,7 +628,7 @@ class ShoppingCartController extends Controller
     /**
      * remove address from list of available addresses in checkout.
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      * @TODO: add non-ajax version of this request.
      */
     public function removeaddress(HTTPRequest $request)
@@ -661,7 +663,7 @@ class ShoppingCartController extends Controller
      * where only old versions exist.
      * this method should redirect.
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function submittedbuyable(HTTPRequest $request)
     {
@@ -700,7 +702,7 @@ class ShoppingCartController extends Controller
      * This can be used by admins to log in as customers
      * to place orders on their behalf...
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function placeorderformember(HTTPRequest $request)
     {
@@ -729,7 +731,7 @@ class ShoppingCartController extends Controller
      * This can be used by admins to log in as customers to place orders on
      * their behalf...
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function loginas(HTTPRequest $request)
     {

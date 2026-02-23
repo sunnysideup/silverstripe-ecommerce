@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Assets\Image;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 

@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Forms\Fields;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\Validator;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
@@ -89,7 +88,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param Validator $validator
+     * @param \SilverStripe\Forms\Validation\Validator $validator
      *
      * @return bool
      */

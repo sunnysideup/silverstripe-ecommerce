@@ -5,9 +5,9 @@ namespace Sunnysideup\Ecommerce\Pages;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage
+ * @property ProductGroupSearchPage $dataRecord
+ * @method ProductGroupSearchPage data()
+ * @mixin ProductGroupSearchPage
  */
 class ProductGroupSearchPageController extends ProductGroupController
 {

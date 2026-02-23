@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use SilverStripe\Forms\Validation\Validator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -48,11 +48,11 @@ class OrderModifierForm extends Form
         FieldList $actions,
         Validator $optionalValidator = null
     ) {
-        if (! $optionalController instanceof \SilverStripe\Control\Controller) {
+        if (! $optionalController instanceof Controller) {
             $controllerClassName = EcommerceConfig::get(OrderModifierForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (! $optionalValidator instanceof \SilverStripe\Forms\Validator) {
+        if (! $optionalValidator instanceof Validator) {
             $validatorClassName = EcommerceConfig::get(OrderModifierForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }

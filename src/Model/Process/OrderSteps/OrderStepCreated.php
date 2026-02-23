@@ -6,7 +6,6 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -81,7 +80,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {

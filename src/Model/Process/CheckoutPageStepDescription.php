@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -128,7 +130,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * these are only created programmatically
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -141,7 +143,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -165,7 +167,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -189,7 +191,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -216,7 +218,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

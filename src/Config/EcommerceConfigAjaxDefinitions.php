@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Config;
 
+use SilverStripe\Model\ModelData;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -19,7 +19,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  * @package: ecommerce
  * @sub-package: configuration
  */
-class EcommerceConfigAjaxDefinitions extends ViewableData
+class EcommerceConfigAjaxDefinitions extends ModelData
 {
     /**
      * the class that is requesting the ajax definitions

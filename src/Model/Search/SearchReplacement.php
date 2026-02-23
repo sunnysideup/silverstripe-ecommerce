@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Search;
 
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -85,7 +86,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -109,7 +110,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -133,7 +134,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -157,7 +158,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */

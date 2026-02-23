@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
@@ -23,9 +26,9 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
  * @property string $Code
  * @property string $Name
  * @property bool $DoNotAllowSales
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Address\EcommerceRegion[] Regions()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludeFromCountries()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInCountries()
+ * @method DataList|EcommerceRegion[] Regions()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludeFromCountries()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInCountries()
  * @mixin \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
  */
 class EcommerceCountry extends DataObject implements EditableEcommerceObject
@@ -230,7 +233,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -258,7 +261,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -284,7 +287,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -310,7 +313,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
