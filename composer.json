@@ -1,66 +1,66 @@
 {
-  "name": "sunnysideup/ecommerce",
-  "type": "silverstripe-vendormodule",
-  "description": "Silverstripe E-commerce Application",
-  "keywords": [
-    "Silverstripe-CMS",
-    "CMS",
-    "Silverstripe",
-    "e-commerce",
-    "ecommerce",
-    "payment",
-    "shop",
-    "sales",
-    "webshop",
-    "cart",
-    "sales",
-    "products",
-    "selling stuff",
-    "online payment",
-    "services"
-  ],
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Nicolaas Francken",
-      "email": "modules@sunnysideup.co.nz",
-      "role": "lead developer"
+    "name": "sunnysideup/ecommerce",
+    "type": "silverstripe-vendormodule",
+    "description": "Silverstripe E-commerce Application",
+    "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
+        "e-commerce",
+        "ecommerce",
+        "payment",
+        "shop",
+        "sales",
+        "webshop",
+        "cart",
+        "sales",
+        "products",
+        "selling stuff",
+        "online payment",
+        "services"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "silverstripe/cms": "^4.0 || ^5.0",
+        "bummzack/sortablefile": "^2.0",
+        "pelago/emogrifier": "^8.0@stable",
+        "silverstripe/lumberjack": "^2.0 || ^3.0",
+        "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
+        "sunnysideup/google_address_field": "dev-master",
+        "sunnysideup/phone_field": "dev-master",
+        "sunnysideup/cms_edit_link_field": "dev-master",
+        "sunnysideup/permission_provider": "dev-master",
+        "sunnysideup/vardump": "dev-master",
+        "sunnysideup/model-admin-many-tabs": "dev-master",
+        "sunnysideup/email_address_database_field": "dev-master",
+        "sunnysideup/silverstripe-ajax-select-field": "dev-master",
+        "sunnysideup/yes-no-any-filter": "dev-master",
+        "sunnysideup/branded-login-screen": "dev-main",
+        "sunnysideup/one-time-code-authentication": "dev-main"
+    },
+    "suggest": {
+        "sunnysideup/flush": "Better, faster output for tasks",
+        "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this works on your server, before installing it - otherwise it is useless.",
+        "symbiote/silverstripe-grouped-cms-menu": "HIGHLY RECOMMENDED! merge e-commerce cms menu items into one section."
+    },
+    "extra": {
+        "expose": [
+            "client"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Sunnysideup\\Ecommerce\\": "src/",
+            "Sunnysideup\\Ecommerce\\Tests\\": "tests/"
+        }
     }
-  ],
-  "require": {
-    "silverstripe/cms": "^4.0 || ^5.0",
-    "bummzack/sortablefile": "^2.0",
-    "pelago/emogrifier": "^8.0@stable",
-    "silverstripe/lumberjack": "^2.0 || ^3.0",
-    "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
-    "sunnysideup/google_address_field": "dev-master",
-    "sunnysideup/phone_field": "dev-master",
-    "sunnysideup/cms_edit_link_field": "dev-master",
-    "sunnysideup/permission_provider": "dev-master",
-    "sunnysideup/vardump": "dev-master",
-    "sunnysideup/model-admin-many-tabs": "dev-master",
-    "sunnysideup/email_address_database_field": "dev-master",
-    "sunnysideup/silverstripe-ajax-select-field": "dev-master",
-    "sunnysideup/yes-no-any-filter": "dev-master",
-    "sunnysideup/branded-login-screen": "dev-main",
-    "sunnysideup/one-time-code-authentication": "dev-main"
-  },
-  "suggest": {
-    "sunnysideup/flush": "Better, faster output for tasks",
-    "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this works on your server, before installing it - otherwise it is useless.",
-    "symbiote/silverstripe-grouped-cms-menu": "HIGHLY RECOMMENDED! merge e-commerce cms menu items into one section."
-  },
-  "extra": {
-    "expose": [
-      "client"
-    ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "autoload": {
-    "psr-4": {
-      "Sunnysideup\\Ecommerce\\": "src/",
-      "Sunnysideup\\Ecommerce\\Tests\\": "tests/"
-    }
-  }
 }
