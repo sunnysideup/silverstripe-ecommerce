@@ -2,16 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\SS_List;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
@@ -338,7 +337,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     //#################################################
     // HELPERS
     //#################################################
-
     /**
      * Returns children ProductGroup pages of this group.
      * Make it more accesible for ProductGroup.
@@ -346,7 +344,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * @param int          $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
      * @param array|string $filter            - additional filter to be added
      *
-     * @return SS_List (ProductGroups)
+     * @return \SilverStripe\Model\List\SS_List (ProductGroups)
      */
     public function getGroups(?int $maxRecursiveLevel = null, $filter = null)
     {

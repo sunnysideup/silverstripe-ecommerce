@@ -2,16 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\PaginatedList;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\List\ArrayList;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -27,9 +26,9 @@ use Sunnysideup\Vardump\Vardump;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\ProductGroupController
  *
- * @property \Sunnysideup\Ecommerce\Pages\ProductGroup $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\ProductGroup data()
- * @mixin \Sunnysideup\Ecommerce\Pages\ProductGroup
+ * @property ProductGroup $dataRecord
+ * @method ProductGroup data()
+ * @mixin ProductGroup
  */
 class ProductGroupController extends PageController
 {
@@ -146,13 +145,13 @@ class ProductGroupController extends PageController
     /**
      * get the unpaginated list. Only set once.
      *
-     * @return DataList|ArrayList
+     * @return DataList|\SilverStripe\Model\List\ArrayList
      */
     public function getProductList()
     {
         if (! $this->productList) {
             $this->productList = $this->getCachedProductList();
-            if (! $this->productList instanceof \SilverStripe\ORM\DataList) {
+            if (! $this->productList instanceof DataList) {
                 // make sure to apply search filter first.
                 $this->productList = $this->getFinalProductList()
                     ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
@@ -665,7 +664,7 @@ class ProductGroupController extends PageController
      * of recommended product groups. They will be returned here...
      * We sort the list in the order that it is provided.
      *
-     * @return null|\SilverStripe\ORM\DataList (ProductGroups)
+     * @return null|DataList (ProductGroups)
      */
     public function SearchResultsChildGroups(): ?DataList
     {

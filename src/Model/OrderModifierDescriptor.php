@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -23,9 +26,9 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * @property string $Heading
  * @property string $Description
  * @property int $LinkID
- * @method \SilverStripe\CMS\Model\SiteTree Link()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @method SiteTree Link()
+ * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
+ * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
  * @mixin \Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator
  */
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
@@ -127,7 +130,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -140,7 +143,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -165,7 +168,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -177,7 +180,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

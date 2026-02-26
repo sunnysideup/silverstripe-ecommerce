@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -42,7 +43,7 @@ trait EcommerceProductReportTrait
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {

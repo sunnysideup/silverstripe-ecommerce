@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
@@ -34,8 +35,8 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @property bool $Obsolete
  * @property int $OrderID
  * @property int $ShippingRegionID
- * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion ShippingRegion()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method EcommerceRegion ShippingRegion()
+ * @method Order Order()
  */
 class ShippingAddress extends OrderAddress
 {
@@ -224,7 +225,7 @@ class ShippingAddress extends OrderAddress
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -257,7 +258,7 @@ class ShippingAddress extends OrderAddress
     /**
      * Puts together the fields for the Order Form (and other front-end purposes).
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getFields(Member $member = null)
     {

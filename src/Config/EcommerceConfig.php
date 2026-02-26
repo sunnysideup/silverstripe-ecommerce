@@ -35,7 +35,7 @@ class EcommerceConfig implements TemplateGlobalProvider
     }
 
     /**
-     * @return \Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig
+     * @return EcommerceDBConfig
      */
     public static function inst()
     {

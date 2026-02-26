@@ -1,66 +1,116 @@
 {
-  "name": "sunnysideup/ecommerce",
-  "type": "silverstripe-vendormodule",
-  "description": "Silverstripe E-commerce Application",
-  "keywords": [
-    "Silverstripe-CMS",
-    "CMS",
-    "Silverstripe",
-    "e-commerce",
-    "ecommerce",
-    "payment",
-    "shop",
-    "sales",
-    "webshop",
-    "cart",
-    "sales",
-    "products",
-    "selling stuff",
-    "online payment",
-    "services"
-  ],
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Nicolaas Francken",
-      "email": "modules@sunnysideup.co.nz",
-      "role": "lead developer"
+    "name": "sunnysideup/ecommerce",
+    "type": "silverstripe-vendormodule",
+    "description": "Silverstripe E-commerce Application",
+    "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
+        "e-commerce",
+        "ecommerce",
+        "payment",
+        "shop",
+        "sales",
+        "webshop",
+        "cart",
+        "sales",
+        "products",
+        "selling stuff",
+        "online payment",
+        "services"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "silverstripe/cms": "^6.0",
+        "bummzack/sortablefile": "^3.0",
+        "pelago/emogrifier": "^8.0@stable",
+        "silverstripe/lumberjack": "^1.1"
+    },
+    "suggest": {
+        "sunnysideup/flush": "Better, faster output for tasks",
+        "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this works on your server, before installing it - otherwise it is useless.",
+        "symbiote/silverstripe-grouped-cms-menu": "HIGHLY RECOMMENDED! merge e-commerce cms menu items into one section."
+    },
+    "extra": {
+        "expose": [
+            "client"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Sunnysideup\\Ecommerce\\": "src/",
+            "Sunnysideup\\Ecommerce\\Tests\\": "tests/"
+        }
+    },
+    "yet-to-update": {
+        "symbiote/silverstripe-grouped-cms-menu": {
+            "section": "require",
+            "current": "^4.0@stable",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/google_address_field": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/phone_field": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/cms_edit_link_field": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/permission_provider": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/vardump": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/model-admin-many-tabs": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/email_address_database_field": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/silverstripe-ajax-select-field": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/yes-no-any-filter": {
+            "section": "require",
+            "current": "dev-master",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/branded-login-screen": {
+            "section": "require",
+            "current": "dev-main",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/one-time-code-authentication": {
+            "section": "require",
+            "current": "dev-main",
+            "reason": "no-compatible-stable-release"
+        }
     }
-  ],
-  "require": {
-    "silverstripe/cms": "^4.0 || ^5.0",
-    "bummzack/sortablefile": "^2.0",
-    "pelago/emogrifier": "^8.0@stable",
-    "silverstripe/lumberjack": "^2.0 || ^3.0",
-    "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
-    "sunnysideup/google_address_field": "dev-master",
-    "sunnysideup/phone_field": "dev-master",
-    "sunnysideup/cms_edit_link_field": "dev-master",
-    "sunnysideup/permission_provider": "dev-master",
-    "sunnysideup/vardump": "dev-master",
-    "sunnysideup/model-admin-many-tabs": "dev-master",
-    "sunnysideup/email_address_database_field": "dev-master",
-    "sunnysideup/silverstripe-ajax-select-field": "dev-master",
-    "sunnysideup/yes-no-any-filter": "dev-master",
-    "sunnysideup/branded-login-screen": "dev-main",
-    "sunnysideup/one-time-code-authentication": "dev-main"
-  },
-  "suggest": {
-    "sunnysideup/flush": "Better, faster output for tasks",
-    "silverstripe/geoip": "Native Silverstripe way to work out the customer country. Make sure this works on your server, before installing it - otherwise it is useless.",
-    "symbiote/silverstripe-grouped-cms-menu": "HIGHLY RECOMMENDED! merge e-commerce cms menu items into one section."
-  },
-  "extra": {
-    "expose": [
-      "client"
-    ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "autoload": {
-    "psr-4": {
-      "Sunnysideup\\Ecommerce\\": "src/",
-      "Sunnysideup\\Ecommerce\\Tests\\": "tests/"
-    }
-  }
 }

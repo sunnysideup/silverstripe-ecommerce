@@ -19,7 +19,7 @@ use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
  * @property string $Title
  * @property string $Data
  * @property int $ProductGroupID
- * @method \Sunnysideup\Ecommerce\Pages\ProductGroup ProductGroup()
+ * @method ProductGroup ProductGroup()
  */
 class ProductGroupSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {

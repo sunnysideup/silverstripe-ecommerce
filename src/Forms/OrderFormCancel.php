@@ -70,7 +70,7 @@ class OrderFormCancel extends Form
         $member = Security::getCurrentUser();
         if ($member && isset($SQLData['OrderID'])) {
             $order = Order::get_order_cached((int) $SQLData['OrderID']);
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canCancel()) {
+            if ($order instanceof Order && $order->canCancel()) {
                 $reason = '';
                 if (isset($SQLData['CancellationReason'])) {
                     $reason = $SQLData['CancellationReason'];

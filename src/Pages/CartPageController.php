@@ -2,17 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\ORM\DataObject;
 use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -22,16 +23,16 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\CartPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\CartPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\CartPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\CartPage
+ * @property CartPage $dataRecord
+ * @method CartPage data()
+ * @mixin CartPage
  */
 class CartPageController extends PageController
 {
     /**
      * This ArraList holds DataObjects with a Link and Title each....
      *
-     * @var ArrayList
+     * @var \SilverStripe\Model\List\ArrayList
      */
     protected $actionLinks;
 
@@ -263,7 +264,7 @@ class CartPageController extends PageController
     /**
      * This returns a ArraList, each dataobject has two vars: Title and Link.
      *
-     * @return null|ArrayList
+     * @return null|\SilverStripe\Model\List\ArrayList
      */
     public function ActionLinks()
     {
@@ -295,7 +296,7 @@ class CartPageController extends PageController
     }
 
     /**
-     * @return null|\SilverStripe\ORM\DataObject - Order
+     * @return null|DataObject - Order
      */
     public function Order()
     {

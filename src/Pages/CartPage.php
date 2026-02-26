@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use Page;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
@@ -119,7 +121,7 @@ class CartPage extends Page
      * Standard SS function, we only allow for one CartPage page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -132,7 +134,7 @@ class CartPage extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -149,7 +151,7 @@ class CartPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -161,7 +163,7 @@ class CartPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -171,7 +173,7 @@ class CartPage extends Page
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

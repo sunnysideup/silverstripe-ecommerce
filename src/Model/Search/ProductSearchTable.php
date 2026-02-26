@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
  * @property string $Title
  * @property string $Data
  * @property int $ProductID
- * @method \Sunnysideup\Ecommerce\Pages\Product Product()
+ * @method Product Product()
  */
 class ProductSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {

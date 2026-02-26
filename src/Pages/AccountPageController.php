@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use PageController;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
@@ -11,9 +10,9 @@ use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\AccountPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\AccountPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\AccountPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\AccountPage
+ * @property AccountPage $dataRecord
+ * @method AccountPage data()
+ * @mixin AccountPage
  */
 class AccountPageController extends PageController
 {

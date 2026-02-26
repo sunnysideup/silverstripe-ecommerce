@@ -2,9 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\Forms\Validation\Validator;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
@@ -13,9 +14,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
-use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
@@ -241,7 +240,7 @@ class OrderModifier extends OrderAttribute
     /**
      * stardard SS metbod.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -308,7 +307,7 @@ class OrderModifier extends OrderAttribute
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -444,7 +443,7 @@ class OrderModifier extends OrderAttribute
      * We have mainly added this function as an example!
      *
      * @param Controller $optionalController - optional custom controller class
-     * @param Validator  $optionalValidator  - optional custom validator class
+     * @param \SilverStripe\Forms\Validation\Validator $optionalValidator - optional custom validator class
      *
      * @return null|OrderModifierForm or subclass
      */
@@ -539,7 +538,7 @@ class OrderModifier extends OrderAttribute
     /**
      * Returns the Money object of the Table Value.
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function TableValueAsMoney()
     {
@@ -865,7 +864,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if (! $this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
+        if (! $this->orderModifier_Descriptor instanceof DataObject) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]

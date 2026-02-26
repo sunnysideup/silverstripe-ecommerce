@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use Page;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -40,7 +42,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @property string $ContentAboveCheckout
  * @property string $TermsAndConditionsMessage
  * @property int $TermsPageID
- * @method \Page TermsPage()
+ * @method Page TermsPage()
  * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageDataExtension
  */
 class CheckoutPage extends CartPage
@@ -77,7 +79,7 @@ class CheckoutPage extends CartPage
      * @var array
      */
     private static $has_one = [
-        'TermsPage' => \Page::class,
+        'TermsPage' => Page::class,
     ];
 
     /**
@@ -248,7 +250,7 @@ class CheckoutPage extends CartPage
      * Standard SS function, we only allow for one checkout page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -261,7 +263,7 @@ class CheckoutPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -278,7 +280,7 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -290,7 +292,7 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -302,7 +304,7 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS function.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {

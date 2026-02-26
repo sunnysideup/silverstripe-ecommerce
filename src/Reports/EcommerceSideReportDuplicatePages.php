@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
@@ -64,7 +65,7 @@ class EcommerceSideReportDuplicatePages extends Report
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {

@@ -2,10 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use SilverStripe\Control\Controller;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\SetThemed;
@@ -24,9 +23,9 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage
+ * @property OrderConfirmationPage $dataRecord
+ * @method OrderConfirmationPage data()
+ * @mixin OrderConfirmationPage
  */
 class OrderConfirmationPageController extends CartPageController
 {
@@ -450,7 +449,7 @@ class OrderConfirmationPageController extends CartPageController
         $sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
         if ($sessionOrderID) {
             $this->currentOrder = Order::get_order_cached((int) $sessionOrderID);
-            if ($this->currentOrder instanceof \Sunnysideup\Ecommerce\Model\Order) {
+            if ($this->currentOrder instanceof Order) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
                 $validUntil = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime');

@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;

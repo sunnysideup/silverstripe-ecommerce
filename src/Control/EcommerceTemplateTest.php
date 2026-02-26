@@ -11,9 +11,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Class \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
  *
- * @property \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest $dataRecord
- * @method \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest data()
- * @mixin \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
+ * @property EcommerceTemplateTest $dataRecord
+ * @method EcommerceTemplateTest data()
+ * @mixin EcommerceTemplateTest
  */
 class EcommerceTemplateTest extends PageController
 {

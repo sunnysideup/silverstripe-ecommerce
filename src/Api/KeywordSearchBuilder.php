@@ -7,7 +7,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 
 class KeywordSearchBuilder
 {

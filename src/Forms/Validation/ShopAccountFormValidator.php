@@ -2,15 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
-class ShopAccountFormValidator extends RequiredFields
+class ShopAccountFormValidator extends RequiredFieldsValidator
 {
     /**
      * @var int

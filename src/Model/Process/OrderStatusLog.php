@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
@@ -32,8 +33,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property bool $InternalUseOnly
  * @property int $AuthorID
  * @property int $OrderID
- * @method \SilverStripe\Security\Member Author()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method Member Author()
+ * @method Order Order()
  */
 class OrderStatusLog extends DataObject implements EditableEcommerceObject
 {
@@ -202,7 +203,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -230,7 +231,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -266,7 +267,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -282,7 +283,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         }
 
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             //Order Status Logs are so basic, anyone can edit them
             if (OrderStatusLog::class === $this->ClassName) {
                 return $order->canView($member);
@@ -300,7 +301,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * logs can never be deleted...
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -340,7 +341,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -473,7 +474,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {

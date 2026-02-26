@@ -28,7 +28,7 @@ class OrderStepField extends DatalessField
      */
     public function __construct($name, Order $order, Member $member = null)
     {
-        if (! $member instanceof \SilverStripe\Security\Member) {
+        if (! $member instanceof Member) {
             $member = $order->Member();
         }
         if (! $member) {

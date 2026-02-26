@@ -210,7 +210,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * @param int   $count
      * @param int   $offset
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     protected function getMyOrders($idArray, $count, $offset)
     {

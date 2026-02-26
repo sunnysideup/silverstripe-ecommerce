@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Control\HTTPResponse;
 use DateTimeImmutable;
 use DateTimeInterface;
 use SilverStripe\Admin\LeftAndMain;
@@ -204,7 +205,7 @@ class ReferralSummary extends LeftAndMain
             ->setFormMethod('GET');
     }
 
-    public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
+    public function doPrepData(array $data, Form $form): HTTPResponse
     {
         if (! self::needs_processing()) {
             $form->sessionMessage('Data preparation not needed.', 'good');
