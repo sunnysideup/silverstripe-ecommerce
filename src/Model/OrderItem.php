@@ -538,9 +538,28 @@ class OrderItem extends OrderAttribute
      *
      * @return float
      */
-    public function Total($recalculate = false)
+    public function Total(?bool $recalculate = false)
     {
-        return $this->getTotal();
+        return $this->getTotal($recalculate);
+    }
+
+    /**
+     * @param bool $recalculate - forces recalculation of price
+     *
+     * @return float
+     */
+    public function TotalForDiscount(?bool $recalculate = false)
+    {
+        $total = $this->getTotal($recalculate);
+        $updatedTotalForDiscount = $this->extend('updateTotalForDiscount', $total);
+        if (is_iterable($updatedTotalForDiscount)) {
+            foreach ($updatedTotalForDiscount as $v) {
+                if (is_numeric($v) && $v < $total) {
+                    $total = $v;
+                }
+            }
+        }
+        return $total;
     }
 
     /**
@@ -548,12 +567,16 @@ class OrderItem extends OrderAttribute
      * @param bool $recalculate
      * @return float
      */
-    public function getTotal($recalculate = false)
+    public function getTotal(?bool $recalculate = false)
     {
         $total = $this->priceHasBeenFixed() ? $this->CalculatedTotal : $this->getUnitPrice($recalculate) * $this->Quantity;
         $updatedTotal = $this->extend('updateTotal', $total);
-        if (null !== $updatedTotal && is_array($updatedTotal) && count($updatedTotal)) {
-            $total = $updatedTotal[0];
+        if (is_iterable($updatedTotal)) {
+            foreach ($updatedTotal as $k => $v) {
+                if (is_numeric($v) && $v < $total) {
+                    $total = $v;
+                }
+            }
         }
 
         return (float) $total;
