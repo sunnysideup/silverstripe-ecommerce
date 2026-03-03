@@ -5,6 +5,7 @@ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Versioned\GridFieldArchiveAction;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -30,5 +31,6 @@ class GridFieldConfigForProducts extends GridFieldConfig_RelationEditor
             $ac->setSearchList($className::get()->filter(['AllowPurchase' => 1]));
         }
         $this->removeComponentsByType(GridFieldAddNewButton::class);
+        $this->removeComponentsByType(GridFieldArchiveAction::class);
     }
 }
