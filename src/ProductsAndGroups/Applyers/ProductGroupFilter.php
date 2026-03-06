@@ -36,7 +36,7 @@ class ProductGroupFilter extends BaseApplyer
         if (! $getVar) {
             return null;
         }
-        if (! isset(self::$get_group_from_get_variable_store[$getVar])) {
+        if (! array_key_exists($getVar, self::$get_group_from_get_variable_store)) {
             self::$get_group_from_get_variable_store[$getVar] = null;
             if (false !== strpos($getVar, '.')) {
                 $parts = explode('.', $getVar);

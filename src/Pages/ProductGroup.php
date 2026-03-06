@@ -391,7 +391,7 @@ class ProductGroup extends Page
      */
     public function getFilterForCandidateCategories(): DataList
     {
-        if (! isset(self::$filterForCandidateCategoriesCache[$this->ID])) {
+        if (! array_key_exists($this->ID, self::$filterForCandidateCategoriesCache)) {
             self::$filterForCandidateCategoriesCache[$this->ID] =
                 $this->getBaseProductList()->getFilterForCandidateCategories();
         }
@@ -612,7 +612,7 @@ class ProductGroup extends Page
      */
     public function ParentGroup(): ?ProductGroup
     {
-        if (! isset(self::$parentPageCache[$this->ID])) {
+        if (! array_key_exists($this->ID, self::$parentPageCache)) {
             self::$parentPageCache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 
@@ -659,7 +659,7 @@ class ProductGroup extends Page
      */
     public function getNumberOfProducts(): int
     {
-        if (! isset(self::$getProductCountCache[$this->ID])) {
+        if (! array_key_exists($this->ID, self::$getProductCountCache)) {
             self::$getProductCountCache[$this->ID] = Product::get()->filter(['ParentID' => $this->ID])->count();
         }
 
@@ -902,7 +902,7 @@ class ProductGroup extends Page
     protected function recursiveValue(string $fieldNameOrMethod, $default = null)
     {
         $key = $fieldNameOrMethod . '_' . $this->ID;
-        if (! isset(self::$recursiveValuesCache[$key])) {
+        if (! array_key_exists($key, self::$recursiveValuesCache)) {
             $value = null;
             $fieldNameOrMethodWithGet = 'get' . $fieldNameOrMethod;
             $methodWorks = false;

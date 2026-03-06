@@ -766,7 +766,7 @@ class Product extends Page implements BuyableModel
      */
     public function ParentGroup()
     {
-        if (! isset(self::$parent_cache[$this->ID])) {
+        if (! array_key_exists($this->ID, self::$parent_cache)) {
             self::$parent_cache[$this->ID] = ProductGroup::get_by_id($this->ParentID);
         }
 

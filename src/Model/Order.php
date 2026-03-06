@@ -1408,7 +1408,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function tryToFinaliseOrder($recalculate = false, $fromOrderQueue = false)
     {
-        if (! isset(self::$_try_to_finalise_order_count[$this->ID])) {
+        if (! array_key_exists($this->ID, self::$_try_to_finalise_order_count)) {
             self::$_try_to_finalise_order_count[$this->ID] = 0;
         }
         if (self::$_try_to_finalise_order_count[$this->ID] > 30) {
@@ -2304,9 +2304,9 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList (OrderModifiers)
      */
-    public function OrderModifiers()
+    public function OrderModifiers(null|string|array $filterOrClassName = '')
     {
-        return $this->Modifiers();
+        return $this->Modifiers($filterOrClassName);
     }
 
     /**
@@ -2318,7 +2318,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList (OrderModifiers)
      */
-    public function Modifiers($filterOrClassName = '')
+    public function Modifiers(null|string|array $filterOrClassName = '')
     {
         return $this->modifiersFromDatabase($filterOrClassName);
     }
@@ -2394,9 +2394,9 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return null|OrderModifier
      */
-    public function RetrieveModifier($className)
+    public function RetrieveModifier(null|string|array $className)
     {
-        $modifiers = $this->Modifiers();
+        $modifiers = $this->Modifiers($className);
         if ($modifiers->exists()) {
             foreach ($modifiers as $modifier) {
                 if (is_a($modifier, EcommerceConfigClassNames::getName($className))) {
@@ -4340,19 +4340,23 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return \SilverStripe\ORM\DataList (OrderModifiers)
      */
-    protected function modifiersFromDatabase($filterOrClassName = '')
+    protected function modifiersFromDatabase(null|string|array $filterOrClassName = '')
     {
         $className = OrderModifier::class;
         $extrafilter = '';
         if ($filterOrClassName) {
-            if (class_exists($filterOrClassName)) {
+            if (is_string($filterOrClassName) && class_exists($filterOrClassName)) {
                 $className = $filterOrClassName;
             } else {
-                $extrafilter = " AND {$filterOrClassName}";
+                $extrafilter = $filterOrClassName;
             }
         }
 
-        return $className::get()->where('"OrderAttribute"."OrderID" = ' . $this->ID . " {$extrafilter}");
+        if (is_array($extrafilter)) {
+            return $className::get()->filter(['OrderID' => $this->ID] + $extrafilter);
+        } else {
+            return $className::get()->filter(['OrderID' => $this->ID])->where($extrafilter);
+        }
     }
 
     /**

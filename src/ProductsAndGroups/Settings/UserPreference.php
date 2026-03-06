@@ -479,7 +479,7 @@ class UserPreference
     public function getLinksPerType(string $type, ?string $currentKey = '', ?bool $ajaxify = true): ArrayList
     {
         $cacheKey = $type . $currentKey . $ajaxify;
-        if (! isset(self::$links_per_type_cache[$cacheKey])) {
+        if (! array_key_exists($cacheKey, self::$links_per_type_cache)) {
 
             $options = $this->getOptions($type);
             $actions = $this->getActions($type);
@@ -594,7 +594,7 @@ class UserPreference
     public function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = '', ?bool $hideCurrentValue = false): string
     {
         $cacheKey = ($action ?: '') . ($type ?: '') . ($replacementForType ?: '');
-        if (! isset(self::$linkTemplateCache[$cacheKey])) {
+        if (! array_key_exists($cacheKey, self::$linkTemplateCache)) {
             $base = $this->rootGroup->Link($action);
             $getVars = [];
             foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {

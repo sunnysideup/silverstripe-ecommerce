@@ -506,7 +506,7 @@ class OrderItem extends OrderAttribute
         // calculate price
         $buyable = $this->getBuyableCached();
         if ($buyable) {
-            if (! isset(self::$calculated_buyable_price[$this->ID]) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
+            if (! array_key_exists($this->ID, self::$calculated_buyable_price) || $recalculate || Order::get_needs_recalculating($this->OrderID)) {
                 self::$calculated_buyable_price[$this->ID] = $buyable->getCalculatedPrice();
             }
 
@@ -637,7 +637,7 @@ class OrderItem extends OrderAttribute
     public function getBuyableCached($current = false)
     {
         $cacheKey = $this->buyableCacheKey();
-        if (! isset(self::$buyableCached[$cacheKey])) {
+        if (! array_key_exists($cacheKey, self::$buyableCached)) {
             self::$buyableCached[$cacheKey] = $this->getBuyable($current);
         }
 
