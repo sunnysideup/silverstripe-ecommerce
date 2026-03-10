@@ -2,14 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
+use Page;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -231,7 +231,7 @@ class UserPreference
                 if ('GROUPFILTER' === $type) {
                     if ($newPreference) {
                         $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
-                        if ($otherProductGroup instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup) {
+                        if ($otherProductGroup instanceof ProductGroup) {
                             $newPreference = [
                                 'key' => BaseApplyer::DEFAULT_NAME,
                                 'params' => $otherProductGroup->FilterForGroupSegment(),
@@ -415,7 +415,7 @@ class UserPreference
 
             $currentPageNumber = $this->rootGroupController->getCurrentPageNumber();
             if ($currentPageNumber > 1) {
-                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', \Page::class) . ' ' . $currentPageNumber);
+                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', Page::class) . ' ' . $currentPageNumber);
             }
 
             if ($secondaryTitle) {

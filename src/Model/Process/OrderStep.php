@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use SilverStripe\Forms\Form;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -57,9 +58,9 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
  * @property int $Sort
  * @property int $DeferTimeInSeconds
  * @property bool $DeferFromSubmitTime
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] Orders()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord[] OrderEmailRecords()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue[] OrderProcessQueueEntries()
+ * @method DataList|Order[] Orders()
+ * @method DataList|OrderEmailRecord[] OrderEmailRecords()
+ * @method DataList|OrderProcessQueue[] OrderProcessQueueEntries()
  */
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
@@ -528,7 +529,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -716,7 +717,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * A form that can be used by the Customer to progress step!
      *
-     * @return null|\SilverStripe\Forms\Form (CustomerOrderStepForm)
+     * @return null|Form (CustomerOrderStepForm)
      */
     public function CustomerOrderStepForm(Controller $controller, string $name, Order $order)
     {
@@ -726,7 +727,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
@@ -778,7 +779,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\ORM\ValidationResult
+     * @return \SilverStripe\Core\Validation\ValidationResult
      */
     public function validate()
     {
@@ -1152,7 +1153,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * It is important that getRelevantLogEntryClassName returns
      * a specific enough ClassName and not a base class name.
      *
-     * @return null|\SilverStripe\ORM\DataList
+     * @return null|DataList
      */
     public function RelevantLogEntries(Order $order)
     {
@@ -1169,12 +1170,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     // Silverstripe Standard Data Object Methods
-
     /**
      * Standard SS method
      * These are only created programmatically.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -1187,7 +1187,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -1252,7 +1252,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */

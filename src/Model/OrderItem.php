@@ -2,6 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -224,7 +228,7 @@ class OrderItem extends OrderAttribute
      * @param int    $id
      * @param int    $version
      *
-     * @return null|\SilverStripe\ORM\DataObject
+     * @return null|DataObject
      */
     public static function get_version($class, $id, $version)
     {
@@ -297,7 +301,7 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('OrderAttributeGroupID');
 
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             if ($order->IsSubmitted()) {
                 $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
                 $buyable = $this->getBuyableCached();
@@ -334,7 +338,7 @@ class OrderItem extends OrderAttribute
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -357,7 +361,7 @@ class OrderItem extends OrderAttribute
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -585,7 +589,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param bool $recalculate - forces recalculation of price
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function TotalAsMoney($recalculate = false)
     {
@@ -623,7 +627,7 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @return \SilverStripe\ORM\FieldType\DBCurrency (DB Object)
+     * @return DBCurrency (DB Object)
      */
     public function TotalAsCurrencyObject()
     {
@@ -647,7 +651,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param bool $current - is this a current one, or an older VERSION ?
      *
-     * @return \SilverStripe\ORM\DataObject (Any type of Data Object that is buyable)
+     * @return DataObject (Any type of Data Object that is buyable)
      */
     public function Buyable($current = false)
     {
@@ -895,7 +899,7 @@ class OrderItem extends OrderAttribute
     public function getLink()
     {
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             return $order->Link();
         }
 
@@ -1066,7 +1070,7 @@ class OrderItem extends OrderAttribute
     {
         parent::onAfterWrite();
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && ! $order->StatusID) {
+        if ($order instanceof Order && ! $order->StatusID) {
             //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
             $order->init($recalculate = true);
         }

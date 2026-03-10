@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
@@ -140,7 +142,7 @@ class OrderConfirmationPage extends CartPage
      * Standard SS function, we only allow for one OrderConfirmation Page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -153,7 +155,7 @@ class OrderConfirmationPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -170,7 +172,7 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -182,7 +184,7 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -237,7 +239,7 @@ class OrderConfirmationPage extends CartPage
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -380,7 +382,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @param bool $isCurrentStep
      *
-     * @return \SilverStripe\ORM\DataObject
+     * @return DataObject
      */
     public function CurrentCheckoutStep($isCurrentStep = false)
     {

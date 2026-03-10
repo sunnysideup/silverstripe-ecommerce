@@ -2,12 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
@@ -20,9 +19,9 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\CheckoutPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\CheckoutPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\CheckoutPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\CheckoutPage
+ * @property CheckoutPage $dataRecord
+ * @method CheckoutPage data()
+ * @mixin CheckoutPage
  * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageExtensionController
  */
 class CheckoutPageController extends CartPageController
@@ -79,7 +78,7 @@ class CheckoutPageController extends CartPageController
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
      *
-     * @return \SilverStripe\ORM\ArrayList|null
+     * @return \SilverStripe\Model\List\ArrayList|null
      */
     public function ModifierForms()
     {

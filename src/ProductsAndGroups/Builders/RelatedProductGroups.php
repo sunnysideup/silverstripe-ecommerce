@@ -148,7 +148,7 @@ class RelatedProductGroups
     /**
      * @param null|mixed $filter
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function getGroups(?int $maxRecursiveLevel = 0, $filter = null)
     {

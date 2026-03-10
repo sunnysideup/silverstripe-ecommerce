@@ -2,6 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\Lumberjack\Model\Lumberjack;
+use SilverStripe\Security\Member;
 use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
@@ -18,14 +23,12 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -53,10 +56,10 @@ use Sunnysideup\Vardump\Vardump;
  * @property string $DisplayStyle
  * @property bool $UseImageForProducts
  * @property int $ImageID
- * @method \SilverStripe\Assets\Image Image()
- * @method \Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable ProductGroupSearchTable()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] AlsoShowProducts()
- * @mixin \SilverStripe\Lumberjack\Model\Lumberjack
+ * @method Image Image()
+ * @method ProductGroupSearchTable ProductGroupSearchTable()
+ * @method ManyManyList|Product[] AlsoShowProducts()
+ * @mixin Lumberjack
  */
 class ProductGroup extends Page
 {
@@ -217,7 +220,7 @@ class ProductGroup extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -238,7 +241,7 @@ class ProductGroup extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -258,7 +261,7 @@ class ProductGroup extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -715,7 +718,7 @@ class ProductGroup extends Page
     /**
      * Returns children ProductGroup pages of this group.
      *
-     * @return \SilverStripe\ORM\SS_List (ProductGroups)
+     * @return \SilverStripe\Model\List\SS_List (ProductGroups)
      */
     public function ChildCategoriesBasedOnProducts()
     {

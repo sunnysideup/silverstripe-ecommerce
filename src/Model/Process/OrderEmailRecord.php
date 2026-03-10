@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxSetField;
@@ -31,8 +33,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property bool $Result
  * @property int $OrderID
  * @property int $OrderStepID
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
- * @method \Sunnysideup\Ecommerce\Model\Process\OrderStep OrderStep()
+ * @method Order Order()
+ * @method OrderStep OrderStep()
  */
 class OrderEmailRecord extends DataObject implements EditableEcommerceObject
 {
@@ -190,7 +192,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -203,7 +205,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -234,7 +236,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -247,7 +249,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -259,7 +261,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -316,7 +318,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -371,7 +373,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     {
         $str = 'TO: ' . $this->To;
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $str .= ' - ' . $order->getTitle();
             $str .= ' - ' . $this->OrderStepNice();
         }

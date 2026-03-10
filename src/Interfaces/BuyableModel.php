@@ -2,6 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Interfaces;
 
+use SilverStripe\Assets\Image;
+use SilverStripe\ORM\DataObject;
+use Sunnysideup\Ecommerce\Model\OrderItem;
+use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Member;
 
@@ -32,12 +38,11 @@ interface BuyableModel
     /**
      * Returns Buybales in the same group.
      *
-     * @return \SilverStripe\ORM\DataList (Products)
+     * @return DataList (Products)
      */
     public function Siblings();
 
     //IMAGES
-
     /**
      * returns a "BestAvailable" image if the current one is not available
      * In some cases this is appropriate and in some cases this is not.
@@ -49,7 +54,7 @@ interface BuyableModel
      * cart, then you want to show the product image.
      * This can be achieved bu using the BestAvailable image.
      *
-     * @return null|\SilverStripe\Assets\Image
+     * @return null|Image
      */
     public function BestAvailableImage();
 
@@ -68,7 +73,6 @@ interface BuyableModel
     public function DefaultImageLink();
 
     // VERSIONING
-
     /**
      * Action to return specific version of a product.
      * This can be any product to enable the retrieval of deleted products.
@@ -77,18 +81,17 @@ interface BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return null|\SilverStripe\ORM\DataObject
+     * @return null|DataObject
      */
     public function getVersionOfBuyable($id = 0, $version = 0);
 
     //ORDER ITEM
-
     /**
      * returns the order item associated with the buyable.
      * ALWAYS returns one, even if there is none in the cart.
      * Does not write to database.
      *
-     * @return \Sunnysideup\Ecommerce\Model\OrderItem (no kidding)
+     * @return OrderItem (no kidding)
      */
     public function OrderItem();
 
@@ -189,7 +192,7 @@ interface BuyableModel
     public function IsInCart();
 
     /**
-     * @return \Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField
+     * @return EcomQuantityField
      */
     public function EcomQuantityField();
 
@@ -198,7 +201,7 @@ interface BuyableModel
      * In templates, it is used like this:
      * $EcommerceConfigAjax.TableID.
      *
-     * @return \Sunnysideup\Ecommerce\Config\EcommerceConfigAjax
+     * @return EcommerceConfigAjax
      */
     public function AJAXDefinitions();
 
@@ -229,7 +232,7 @@ interface BuyableModel
     /**
      * How do we display the price?
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function CalculatedPriceAsMoney(?bool $recalculate = false);
 

@@ -59,7 +59,7 @@ class EcommercePaymentFormSetupAndValidation
      *
      * @param EcommercePayment $paymentObject
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCreditCardPaymentFormFields($paymentObject = null)
     {

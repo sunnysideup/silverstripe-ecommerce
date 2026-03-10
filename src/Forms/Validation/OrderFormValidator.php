@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
@@ -16,7 +16,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * @package: ecommerce
  * @sub-package: forms
  */
-class OrderFormValidator extends RequiredFields
+class OrderFormValidator extends RequiredFieldsValidator
 {
     /**
      * Ensures member unique id stays unique and other basic stuff...
