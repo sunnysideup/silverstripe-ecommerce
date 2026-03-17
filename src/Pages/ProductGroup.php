@@ -34,7 +34,7 @@ use Sunnysideup\Ecommerce\Cms\ProductsAndGroupsModelAdmin;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\Fields\ProductProductImageUploadField;
-use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldBasicPageRelationConfig;
+use Sunnysideup\Ecommerce\Forms\Gridfield\Configs\GridFieldConfigForProducts;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
@@ -875,11 +875,12 @@ class ProductGroup extends Page
      */
     protected function getProductGroupsTable()
     {
+        //@todo: change to
         $field = GridField::create(
             'AlsoShowProducts',
             _t('ProductGroup.OTHER_PRODUCTS_SHOWN_IN_THIS_GROUP', 'Other products shown in this group ...'),
             $this->AlsoShowProducts(),
-            $config = GridFieldBasicPageRelationConfig::create()
+            $config = GridFieldConfigForProducts::create()
         );
         /** @var GridFieldAddExistingAutocompleter $ac */
         $ac = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
