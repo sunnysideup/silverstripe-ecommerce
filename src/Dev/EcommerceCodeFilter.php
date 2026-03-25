@@ -17,9 +17,9 @@ class EcommerceCodeFilter
      * @var array
      */
     protected $regexReplacements = [
-        '/[^A-Za-z0-9.\-_]+/u' => '', // remove non-ASCII chars, only allow alphanumeric, dashes and dots.
+        '/[^A-Za-z0-9.\-_]+/u' => '', // remove all characters that aren't alphanumeric, dots, dashes, or underscores
         '/[\-]{2,}/u' => '-', // remove duplicate dashes
-        '/[\_]{2,}/u' => '_', // remove duplicate underscores
+        '/[_]{2,}/u' => '_', // remove duplicate underscores
     ];
 
     /**
@@ -35,19 +35,12 @@ class EcommerceCodeFilter
      * makes sure that code is unique and gets rid of special characters
      * should be run in onBeforeWrite.
      *
-     * @param DataObject|string $obj
-     * @param mixed             $fieldName
+     * @param DataObject $obj
+     * @param string     $fieldName
      */
-    public function checkCode($obj, $fieldName = 'Code')
+    public function checkCode(object $obj, string $fieldName): string
     {
-        //exception dealing with Strings
-        $isObject = true;
-        if (! is_object($obj)) {
-            $str = $obj;
-            $obj = new DataObject();
-            $obj->{$fieldName} = strval($str);
-            $isObject = false;
-        }
+
         $s = trim((string) $obj->{$fieldName});
         foreach ($this->regexReplacements as $regex => $replace) {
             $s = preg_replace($regex, $replace, (string) $s);
@@ -58,11 +51,9 @@ class EcommerceCodeFilter
         $s = trim((string) $s);
         //check for other ones.
         if ($s !== '' && $s !== '0') {
-            $count = 2;
-            $code = $s;
-            while ($isObject && $obj::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->exists()) {
-                $s = $code . '_' . $count;
-                ++$count;
+            $className = get_class($obj);
+            if ($className::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->exists()) {
+                user_error("Code $s already exists for $className.", E_USER_WARNING);
             }
         }
         $obj->{$fieldName} = $s;

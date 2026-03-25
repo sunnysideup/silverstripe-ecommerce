@@ -50,7 +50,7 @@ trait EcommerceProductReportTrait
 
         // data class
         $className = ($params['ProductType'] ?? '');
-        if ($className && class_exists($className)) {
+        if ($className && class_exists($className) && $className !== $this->dataClass) {
             $list = $className::get()->filter(['ClassName' => $className]);
         } else {
             $className = $this->dataClass;
@@ -64,7 +64,14 @@ trait EcommerceProductReportTrait
 
         $title = (string) Convert::raw2sql($params['Title'] ?? '');
         if ($title) {
-            $list = $list->filterAny(['Title:PartialMatch' => $title, 'ProductBreadcrumb:PartialMatch' => $title, 'InternalItemID:PartialMatch' => $title, 'AlternativeProductNames:PartialMatch' => $title]);
+            $list = $list->filterAny(
+                [
+                    'Title:PartialMatch' => $title,
+                    'ProductBreadcrumb:PartialMatch' => $title,
+                    'InternalItemID:PartialMatch' => $title,
+                    'AlternativeProductNames:PartialMatch' => $title
+                ]
+            );
         }
 
         $minPrice = (float) preg_replace('#[^0-9.\-]#', '', ($params['MinimumPrice'] ?? 0));
@@ -99,7 +106,6 @@ trait EcommerceProductReportTrait
         if ($parentID !== 0) {
             $list = $list->filter(['ParentID' => $parentID]);
         }
-
         // filter
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
@@ -231,8 +237,10 @@ trait EcommerceProductReportTrait
 
     protected function getProductTypes()
     {
-        $list = ClassInfo::subClassesFor(Product::class, true);
-        $newArray = [];
+        $list = ClassInfo::subClassesFor(Product::class, false);
+        $newArray = [
+            '' => '-- Any Product --',
+        ];
         foreach ($list as $className) {
             $newArray[$className] = Product::class === $className ? '-- Any Product --' : Injector::inst()->get($className)->i18n_plural_name();
         }

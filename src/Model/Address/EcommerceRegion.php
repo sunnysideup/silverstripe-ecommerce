@@ -394,7 +394,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     {
         parent::onBeforeWrite();
         $filter = EcommerceCodeFilter::create();
-        $filter->checkCode($this);
+        $filter->checkCode($this, 'Code');
     }
 
     /**
