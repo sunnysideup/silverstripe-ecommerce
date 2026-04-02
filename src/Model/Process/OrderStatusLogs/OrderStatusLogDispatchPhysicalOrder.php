@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
@@ -92,7 +93,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -129,7 +130,7 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     public function getFrontEndFields($params = null)
     {
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $fields = FieldList::create(
                 [
                     ReadonlyField::create('CustomerInfo', 'Customer', $order->Member()->getCustomerDetails()),

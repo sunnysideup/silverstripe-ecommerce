@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use DateTimeImmutable;
 use DateTimeZone;
 use SilverStripe\Core\Config\Config;
@@ -19,7 +21,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 // Class used to describe the steps in the checkout
-
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderFeedback
  *
@@ -27,7 +28,7 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property string $Note
  * @property bool $Actioned
  * @property int $OrderID
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method Order Order()
  */
 class Referral extends DataObject implements EditableEcommerceObject
 {
@@ -493,7 +494,7 @@ class Referral extends DataObject implements EditableEcommerceObject
      * these are only created programmatically
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -506,7 +507,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -530,7 +531,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -543,7 +544,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -555,7 +556,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -598,7 +599,7 @@ class Referral extends DataObject implements EditableEcommerceObject
     {
         $string = $this->Created;
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $string .= ' (' . $order->getTitle() . ')';
         }
 
@@ -646,7 +647,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             $save = true;
         }
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             if (! $this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
                 $save = true;

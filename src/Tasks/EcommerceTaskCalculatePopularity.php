@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * We calculate the popularity of a product based on the number of orders

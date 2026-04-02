@@ -2,9 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
+use SilverStripe\Core\Extension;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CompositeField;
@@ -23,8 +25,6 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Group;
@@ -48,17 +48,17 @@ use Sunnysideup\PermissionProvider\Interfaces\PermissionProviderFactoryProvider;
 /**
  * Class \Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole
  *
- * @property \SilverStripe\Security\Member|\Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole $owner
+ * @property Member|EcommerceRole $owner
  * @property string $Notes
  * @property string $DefaultSortOrder
  * @property string $DefaultFilter
  * @property string $DisplayStyle
  * @property int $PreferredCurrencyID
- * @method \Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency PreferredCurrency()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] Orders() .Member()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] CancelledOrders() .CancelledBy()
+ * @method EcommerceCurrency PreferredCurrency()
+ * @method DataList|Order[] Orders() .Member()
+ * @method DataList|Order[] CancelledOrders() .CancelledBy()
  */
-class EcommerceRole extends DataExtension implements PermissionProvider, PermissionProviderFactoryProvider
+class EcommerceRole extends Extension implements PermissionProvider, PermissionProviderFactoryProvider
 {
     protected static $adminMemberCache;
 
@@ -221,7 +221,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
-     * @return null|Group|\SilverStripe\ORM\DataObject
+     * @return null|Group|DataObject
      */
     public static function get_customer_group()
     {
@@ -331,7 +331,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param null|\SilverStripe\Security\Member $member
+     * @param null|Member $member
      *
      * @return bool
      */
@@ -350,7 +350,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     /**
      * tells us if the current member is in the Shop Administrators Group.
      *
-     * @param null|\SilverStripe\Security\Member $member
+     * @param null|Member $member
      *
      * @return bool
      */
@@ -369,7 +369,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     /**
      * tells us if the current member can process the orders.
      *
-     * @param null|\SilverStripe\Security\Member $member
+     * @param null|Member $member
      *
      * @return bool
      */
@@ -386,7 +386,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Group)|null
+     * @return DataObject (Group)|null
      */
     public static function get_admin_group()
     {
@@ -399,7 +399,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Group)|null
+     * @return DataObject (Group)|null
      */
     public static function get_assistant_group()
     {
@@ -412,7 +412,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Member)|null
+     * @return DataObject (Member)|null
      */
     public static function get_default_shop_admin_user()
     {
@@ -427,7 +427,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     }
 
     /**
-     * @return \SilverStripe\ORM\DataObject (Member)|null
+     * @return DataObject (Member)|null
      */
     public static function get_default_shop_assistant_user()
     {
@@ -466,7 +466,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     /**
      * you can't delete a Member with one or more orders.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      */
     public function canDelete($member = null)
     {
@@ -481,7 +481,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      * we need this function because $this->Orders does not return anything
      * that is probably because Order links the member twice (placed by and cancelled by).
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function Orders()
     {
@@ -658,7 +658,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     /**
      * @param mixed $mustCreateAccount
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getEcommerceFields($mustCreateAccount = false)
     {
@@ -737,7 +737,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $loginDetailsField,
             );
 
-            if ($passwordDoubleCheckField instanceof \SilverStripe\Forms\PasswordField) {
+            if ($passwordDoubleCheckField instanceof PasswordField) {
                 $fields->push($passwordDoubleCheckField);
             }
         }
@@ -878,7 +878,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      * @param bool   $onlyLastRecord - only select one
      * @param bool   $keepDoubles    - keep addresses that are the same (if set to false, only unique addresses are returned)
      *
-     * @return \SilverStripe\ORM\ArrayList (BillingAddresses | ShippingAddresses)
+     * @return \SilverStripe\Model\List\ArrayList (BillingAddresses | ShippingAddresses)
      */
     public function previousOrderAddresses(?string $type = BillingAddress::class, ?int $excludeID = 0, ?bool $onlyLastRecord = false, ?bool $keepDoubles = false)
     {

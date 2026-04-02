@@ -8,12 +8,9 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
@@ -55,7 +52,7 @@ abstract class AbstractProductsAndGroupsList
      * Key Method!
      * Returns a raw list of all the matching products without any pagination.
      *
-     * @param SS_List $products
+     * @param \SilverStripe\Model\List\SS_List $products
      */
     final public function setProducts($products): self
     {

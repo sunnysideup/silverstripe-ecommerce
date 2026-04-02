@@ -2,9 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 
-class OrderFormPaymentValidator extends RequiredFields
+class OrderFormPaymentValidator extends RequiredFieldsValidator
 {
     public function php($data)
     {

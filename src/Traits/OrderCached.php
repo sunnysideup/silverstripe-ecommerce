@@ -18,7 +18,7 @@ trait OrderCached
 
     public function setOrderCached(?Order $order = null)
     {
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $this->orderCached = $order;
             $this->orderCachedStatusID = $order->StatusID;
             $this->setOrderCachedStatically();

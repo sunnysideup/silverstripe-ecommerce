@@ -2,9 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class Debug extends ViewableData
+class Debug extends ModelData
 {
     protected $rootGroup;
 

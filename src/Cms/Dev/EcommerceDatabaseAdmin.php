@@ -2,14 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\TaskRunner;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\ArrayData;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
@@ -181,7 +181,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of config tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function OverallConfig()
     {
@@ -191,7 +191,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data setup tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function EcommerceSetup()
     {
@@ -201,7 +201,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function DataReview()
     {
@@ -211,7 +211,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function RegularMaintenance()
     {
@@ -221,7 +221,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data debug actions.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function DebugActions()
     {
@@ -231,7 +231,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of migration tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function Migrations()
     {
@@ -241,7 +241,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of crazy actions tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function CrazyShit()
     {

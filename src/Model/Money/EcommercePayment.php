@@ -24,7 +24,6 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -51,8 +50,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property string $AlternativeEndPoint
  * @property int $PaidByID
  * @property int $OrderID
- * @method \SilverStripe\Security\Member PaidBy()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method Member PaidBy()
+ * @method Order Order()
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
@@ -264,7 +263,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -308,7 +307,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -343,7 +342,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * set to false as a security measure...
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -375,7 +374,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             return Controller::curr()->redirect(Controller::join_links(Director::absoluteBaseURL(), $this->AlternativeEndPoint));
         }
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             return Controller::curr()->redirect($order->Link());
         }
         user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);
@@ -545,7 +544,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @param string $amount formatted amount (e.g. 12.30) without the currency
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public static function combined_form_fields($amount, ?Order $order = null)
     {

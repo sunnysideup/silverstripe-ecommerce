@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -362,7 +361,7 @@ class OrderFormAddress extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
+     * @return HTTPRequest|bool Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
@@ -388,7 +387,7 @@ class OrderFormAddress extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
+     * @return HTTPRequest|bool Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
@@ -568,7 +567,7 @@ class OrderFormAddress extends Form
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
-     * @return null|\SilverStripe\Security\Member
+     * @return null|Member
      */
     protected function createOrFindMember(array $data)
     {
@@ -592,7 +591,7 @@ class OrderFormAddress extends Form
                     $this->debugArray[] = 'A2. email does not match shopadmin email - reset orderMember';
                 }
                 $this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
-                if ($this->orderMember instanceof \SilverStripe\Security\Member) {
+                if ($this->orderMember instanceof Member) {
                     if ($this->debug) {
                         $this->debugArray[] = 'A3. the other member already exists';
                     }
@@ -633,7 +632,7 @@ class OrderFormAddress extends Form
 
                     //6. At this stage, if we dont have a member, we will create one!
                     //in case we still dont have a member AND we should create a member for every customer, then we do this below...
-                    if (! $this->orderMember instanceof \SilverStripe\Security\Member) {
+                    if (! $this->orderMember instanceof Member) {
                         if ($this->debug) {
                             $this->debugArray[] = '6. No other member found';
                         }

@@ -2,12 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use SilverStripe\Model\ArrayData;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;

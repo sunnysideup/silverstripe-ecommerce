@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DropdownField;
@@ -41,7 +42,7 @@ trait EcommerceOrderReportTrait
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {

@@ -82,7 +82,7 @@ class AccountPage extends Page
      * Standard SS function, we only allow for one AccountPage to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -95,7 +95,7 @@ class AccountPage extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -112,7 +112,7 @@ class AccountPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -124,7 +124,7 @@ class AccountPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -166,7 +166,7 @@ class AccountPage extends Page
     /**
      * Returns a list of all previous orders for the member / account.
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function PastOrders()
     {
@@ -260,7 +260,7 @@ class AccountPage extends Page
     }
 
     /**
-     * @return \SilverStripe\ORM\DataList (Orders)
+     * @return DataList (Orders)
      */
     protected function pastOrdersSelection()
     {

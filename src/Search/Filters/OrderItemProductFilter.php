@@ -6,7 +6,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 use Sunnysideup\Ecommerce\Pages\Product;
 

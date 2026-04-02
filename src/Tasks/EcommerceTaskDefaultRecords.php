@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Page;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
@@ -83,7 +84,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         if ($checkoutPage) {
             $cacheDataObjectGetOne = false;
             $termsPage = DataObject::get_one(
-                \Page::class,
+                Page::class,
                 ['URLSegment' => 'terms-and-conditions'],
                 $cacheDataObjectGetOne
             );

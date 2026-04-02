@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use SilverStripe\Security\Member;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -67,7 +68,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -79,7 +80,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -92,7 +93,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -141,7 +142,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         $order = $this->getOrderCached();
         // todo: this needs work!
         // $this->OrderAsString = $order->ConvertToString();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && ! $this->Total) {
+        if ($order instanceof Order && ! $this->Total) {
             $this->Total = $order->Total();
             $this->SubTotal = $order->SubTotal();
         }

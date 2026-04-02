@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
+use SilverStripe\Security\Member;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\HeaderField;
@@ -262,7 +264,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -288,7 +290,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -314,7 +316,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -340,7 +342,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -370,7 +372,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * NOTE: when there is only one currency we return an empty DataList
      * as one currency is meaningless.
      *
-     * @return null|\SilverStripe\ORM\DataList
+     * @return null|DataList
      */
     public static function ecommerce_currency_list()
     {
@@ -399,7 +401,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * @param DBCurrency|float $price
      *
-     * @return \SilverStripe\ORM\FieldType\DBField|\SilverStripe\ORM\FieldType\DBMoney
+     * @return DBField|DBMoney
      */
     public static function get_money_object_from_order_currency($price, ?Order $order = null)
     {
@@ -407,7 +409,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $price = $price->getValue();
         }
 
-        if (! $order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if (! $order instanceof Order) {
             $order = ShoppingCart::current_order();
         }
 

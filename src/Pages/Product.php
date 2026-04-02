@@ -2,6 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBMoney;
 use Bummzack\SortableFile\Forms\SortableUploadField;
 use Exception;
 use Page;
@@ -11,7 +16,6 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\GridField\GridField;
@@ -23,7 +27,6 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ManyManyList;
@@ -32,7 +35,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -91,18 +93,18 @@ use Sunnysideup\Vardump\ArrayToTable;
  * @property int $GoogleProductCategoryID
  * @property int $ImageID
  * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
- * @method \SilverStripe\Assets\Image Image()
- * @method \Sunnysideup\Ecommerce\Model\Search\ProductSearchTable ProductSearchTable()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] EcommerceRecommendedProducts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\ProductGroup[] ProductGroups()
- * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] AdditionalFiles()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDiscountCoupon\Model\DiscountCouponOption[] ApplicableDiscountCoupons()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] RecommendedFor()
+ * @method Image Image()
+ * @method ProductSearchTable ProductSearchTable()
+ * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
+ * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
+ * @method ManyManyList|Product[] EcommerceRecommendedProducts()
+ * @method ManyManyList|ProductGroup[] ProductGroups()
+ * @method ManyManyList|File[] AdditionalFiles()
+ * @method ManyManyList|\Sunnysideup\EcommerceDiscountCoupon\Model\DiscountCouponOption[] ApplicableDiscountCoupons()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
+ * @method ManyManyList|Product[] RecommendedFor()
  * @mixin \Sunnysideup\EcommerceGoogleShoppingFeed\Extensions\GoogleShoppingFeedExtension
  * @mixin \Sunnysideup\EcommerceAlsoRecommended\Model\EcommerceAlsoRecommendedDOD
  * @mixin \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
@@ -319,7 +321,7 @@ class Product extends Page implements BuyableModel
      *
      * @param null|mixed $_params
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -652,7 +654,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns all the parent groups for the product.
      *
-     * @return null|\SilverStripe\ORM\DataList (ProductGroups)
+     * @return null|DataList (ProductGroups)
      */
     public function AllParentGroups(?bool $cached = true): ?DataList
     {
@@ -672,7 +674,7 @@ class Product extends Page implements BuyableModel
      * Returns all the parent groups for the product,
      * including the parent-parents, and so on.
      *
-     * @return \SilverStripe\ORM\DataList (ProductGroups)
+     * @return DataList (ProductGroups)
      */
     public function AllParentGroupsIncludingParents()
     {
@@ -710,7 +712,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns products in the same group.
      *
-     * @return null|\SilverStripe\ORM\DataList (Products)
+     * @return null|DataList (Products)
      */
     public function Siblings()
     {
@@ -842,7 +844,7 @@ class Product extends Page implements BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return null|\SilverStripe\ORM\DataObject
+     * @return null|DataObject
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
@@ -1244,7 +1246,7 @@ class Product extends Page implements BuyableModel
     /**
      * How do we display the price?
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function CalculatedPriceAsMoney(?bool $forceRecalculation = false)
     {
@@ -1280,7 +1282,7 @@ class Product extends Page implements BuyableModel
         }
 
         // check country
-        if (! $member instanceof \SilverStripe\Security\Member) {
+        if (! $member instanceof Member) {
             $member = Security::getCurrentUser();
         }
 
@@ -1327,7 +1329,7 @@ class Product extends Page implements BuyableModel
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -1349,7 +1351,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -1370,7 +1372,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -1420,7 +1422,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->exists() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';
-        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() instanceof \SilverStripe\Assets\Image ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
+        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() instanceof Image ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
         $productGroup = ProductGroup::get_by_id($this->ParentID);
         if ($productGroup) {
             $html .= '<li><hr />Product Example<hr /></li>';
