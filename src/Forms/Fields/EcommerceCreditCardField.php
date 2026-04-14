@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
 
@@ -18,6 +19,7 @@ class EcommerceCreditCardField extends TextField
      *
      * @return array List of attributes
      */
+    #[Override]
     public function getAttributes()
     {
         return array_merge(
@@ -35,13 +37,15 @@ class EcommerceCreditCardField extends TextField
      *
      * @param mixed $properties
      */
+    #[Override]
     public function Field($properties = [])
     {
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomCreditCardValidation.js');
         $parts = $this->value;
         if (! is_array($parts)) {
-            $parts = explode("\n", chunk_split($parts, 4, "\n"));
+            $parts = explode("\n", chunk_split((string) $parts, 4, "\n"));
         }
+
         $parts = array_pad($parts, 4, '');
         $properties['ValueOne'] = $parts[0];
         $properties['ValueTwo'] = $parts[1];
@@ -70,6 +74,7 @@ class EcommerceCreditCardField extends TextField
         return is_numeric($tabIndex) ? ' tabindex = "' . $tabIndex . '"' : '';
     }
 
+    #[Override]
     public function dataValue()
     {
         if (is_array($this->value)) {
@@ -86,6 +91,7 @@ class EcommerceCreditCardField extends TextField
      *
      * @param mixed $validator
      */
+    #[Override]
     public function validate($validator)
     {
         // If the field is empty then don't return an invalidation message
@@ -93,10 +99,12 @@ class EcommerceCreditCardField extends TextField
         if (! $cardNumber && ! $this->Required()) {
             return true;
         }
+
         for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; --$i) {
             $digit = (int) $cardNumber[$i];
             $sum += ($i % 2) === 0 ? array_sum(str_split($digit * 2)) : $digit;
         }
+
         if (! (($sum % 10) === 0)) {
             $validator->validationError(
                 $this->name,

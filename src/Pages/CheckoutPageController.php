@@ -2,12 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
@@ -20,9 +20,9 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\CheckoutPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\CheckoutPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\CheckoutPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\CheckoutPage
+ * @property CheckoutPage $dataRecord
+ * @method CheckoutPage data()
+ * @mixin CheckoutPage
  * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageExtensionController
  */
 class CheckoutPageController extends CartPageController
@@ -79,7 +79,7 @@ class CheckoutPageController extends CartPageController
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
      *
-     * @return \SilverStripe\ORM\ArrayList|null
+     * @return \SilverStripe\Model\List\ArrayList|null
      */
     public function ModifierForms()
     {
@@ -100,7 +100,7 @@ class CheckoutPageController extends CartPageController
     {
         $form = OrderFormAddress::create($this, 'OrderFormAddress');
         $this->data()->extend('updateOrderFormAddress', $form);
-        $data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data");
+        $data = $this->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $form->FormName()));
         //load session data
         if ($data) {
             $form->loadDataFrom($data);
@@ -120,7 +120,7 @@ class CheckoutPageController extends CartPageController
         $form = OrderForm::create($this, 'OrderForm');
         $this->data()->extend('updateOrderForm', $form);
         //load session data
-        $data = $this->getRequest()->getSession()->get("FormInfo.{$form->FormName()}.data");
+        $data = $this->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $form->FormName()));
         if ($data) {
             $form->loadDataFrom($data);
         }
@@ -165,6 +165,7 @@ class CheckoutPageController extends CartPageController
 
             return DataObject::get_one(CheckoutPageStepDescription::class, ['Code' => $code]);
         }
+
         $returnData = ArrayList::create();
         $completed = 1;
         $completedClass = 'completed';
@@ -182,13 +183,16 @@ class CheckoutPageController extends CartPageController
                         if ($completed !== 0) {
                             $do->Link = Controller::join_links($this->Link('checkoutstep'), $do->Code);
                         }
-                        $do->LinkingMode = "link {$completedClass}";
+
+                        $do->LinkingMode = 'link ' . $completedClass;
                     }
+
                     $do->Completed = $completed;
                     $returnData->push($do);
                 }
             }
         }
+
         if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
             $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
             if ($orderConfirmationPage) {
@@ -331,6 +335,7 @@ class CheckoutPageController extends CartPageController
      * Standard SS function
      * if set to false, user can edit order, if set to true, user can only review order.
      */
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -340,6 +345,7 @@ class CheckoutPageController extends CartPageController
         if (! ($this->currentStep && in_array($this->currentStep, $this->steps, true))) {
             $this->currentStep = $this->steps[array_key_first($this->steps)];
         }
+
         //redirect to current order -
         // this is only applicable when people submit order (start to pay)
         // and then return back
@@ -347,13 +353,15 @@ class CheckoutPageController extends CartPageController
         if ($checkoutPageCurrentOrderID && $this->currentOrder->ID !== $checkoutPageCurrentOrderID) {
             $this->clearRetrievalOrderID();
         }
+
         if ($this->currentOrder) {
             $this->setRetrievalOrderID($this->currentOrder->ID);
         }
+
         if ($this->IsFinalStep()) {
             Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
             Requirements::customScript(
-                'window.LinkToSendReferral = \'' . $this->getLinkToSendReferral() . '\';',
+                "window.LinkToSendReferral = '" . $this->getLinkToSendReferral() . "';",
                 'LinkToSendReferral'
             );
 
@@ -365,6 +373,7 @@ class CheckoutPageController extends CartPageController
                 'TermsAndConditionsMessage'
             );
         }
+
         Requirements::themedCSS('client/css/CheckoutPage');
         $ajaxifyArray = EcommerceConfig::get(CheckoutPageController::class, 'ajaxify_steps');
         if (is_array($ajaxifyArray) && count($ajaxifyArray)) {

@@ -2,12 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\AssetAdmin\Forms\UploadField;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\SS_List;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * This is a preset upload field for product images.
@@ -106,7 +104,7 @@ class ProductProductImageUploadField extends UploadField
      *
      * @param string              $name          the internal field name, passed to forms
      * @param string              $title         the field label
-     * @param SS_List             $items         if no items are defined, the field will try to auto-detect an existing relation on  @see $record}, with the same name as the field name
+     * @param \SilverStripe\Model\List\SS_List $items if no items are defined, the field will try to auto-detect an existing relation on  @see $record}, with the same name as the field name
      * @param DataObjectInterface $callingObject - useful to automagically set the foldername
      */
     public function __construct($name, $title = null, SS_List $items = null, DataObjectInterface $callingObject = null)

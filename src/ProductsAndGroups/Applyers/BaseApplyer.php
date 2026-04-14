@@ -9,7 +9,6 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\AbstractProductsAndGroupsList;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
@@ -28,10 +27,7 @@ abstract class BaseApplyer
      */
     public const DEFAULT_NAME = 'default';
 
-    /**
-     * @var string
-     */
-    private const SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
+    private const string SQL_PARAM_PLACEHOLDER = '[[PARAMS_GO_HERE]]';
 
     /**
      * a product group that creates the base list.
@@ -273,9 +269,11 @@ abstract class BaseApplyer
         if (! isset($this->baseClassNameForBuyables)) {
             $this->baseClassNameForBuyables = (string) EcommerceConfig::get(ProductGroup::class, 'base_buyable_class');
         }
+
         if (! isset($this->baseClassNameForGroups)) {
             $this->baseClassNameForGroups = (string) EcommerceConfig::get(ProductGroup::class, 'base_group_class');
         }
+
         if (false === $this->applied) {
             $this->selectedOption = $key;
             $this->selectedOptionParams = $params;

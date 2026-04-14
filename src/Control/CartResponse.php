@@ -87,6 +87,6 @@ class CartResponse extends EcommerceResponse
         $json = json_encode($js, $flag);
         $json = preg_replace('/[\t\r\n]+/', ' ', $json);
 
-        return preg_replace('/\s{2,}/', ' ', $json);
+        return preg_replace('/\s{2,}/', ' ', (string) $json);
     }
 }

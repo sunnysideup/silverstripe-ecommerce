@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\LiteralField;
-use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentFailure;
@@ -15,6 +15,8 @@ use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentFailure;
  */
 class EcommercePaymentTestFailure extends EcommercePaymentTest
 {
+    private static $table_name = 'EcommercePaymentTestFailure';
+
     /**
      * standard SS variable.
      *
@@ -29,12 +31,14 @@ class EcommercePaymentTestFailure extends EcommercePaymentTest
      */
     private static $plural_name = 'Ecommerce Test Failuer Payments';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
@@ -45,19 +49,19 @@ class EcommercePaymentTestFailure extends EcommercePaymentTest
      *
      * @return EcommercePaymentFailure
      */
+    #[Override]
     public function processPayment($data, Form $form)
     {
         $this->Status = EcommercePayment::FAILURE_STATUS;
         $this->Message = '<div>PAYMENT TEST: FAILURE</div>';
         $this->write();
 
-        return new EcommercePaymentFailure();
+        return EcommercePaymentFailure::create();
     }
 
+    #[Override]
     public function getPaymentFormFields($amount = 0, ?Order $order = null): FieldList
     {
-        return new FieldList(
-            new LiteralField('SuccessBlurb', '<div>FAILURE PAYMENT TEST</div>')
-        );
+        return FieldList::create(LiteralField::create('SuccessBlurb', '<div>FAILURE PAYMENT TEST</div>'));
     }
 }

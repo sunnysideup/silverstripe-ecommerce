@@ -17,21 +17,22 @@ class CsvFunctionality
 
     public static function convertToCSV($rows, $delimiter = ';', $enclosure = '"', $encloseAll = false)
     {
-        $delimiter_esc = preg_quote($delimiter, '/');
-        $enclosure_esc = preg_quote($enclosure, '/');
+        $delimiter_esc = preg_quote((string) $delimiter, '/');
+        $enclosure_esc = preg_quote((string) $enclosure, '/');
         $string = '';
         foreach ($rows as $row) {
             $output = [];
             foreach ($row as $field) {
                 if (! $field) {
                     $output[] = $enclosure . $field . $enclosure;
-                } elseif ($encloseAll || preg_match("/(?:{$delimiter_esc}|{$enclosure_esc}|\\s)/", $field)) {
+                } elseif ($encloseAll || preg_match(sprintf('/(?:%s|%s|\s)/', $delimiter_esc, $enclosure_esc), (string) $field)) {
                     // Enclose fields containing $delimiter, $enclosure or whitespace
                     $output[] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
                 } else {
                     $output[] = $field;
                 }
             }
+
             $string .= implode($delimiter, $output);
             unset($output);
 

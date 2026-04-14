@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Forms;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -140,6 +139,7 @@ class OrderFormAddress extends Form
                     ->setAttribute('data-login-link', $controller->SendLoginLinkLink())
                     ->setAttribute('data-security-token', SecurityToken::inst()->getValue());
             }
+
             $addressFieldsMember->merge($memberFields);
         }
 
@@ -154,6 +154,7 @@ class OrderFormAddress extends Form
         if ($this->loggedInMember) {
             $requiredFields = array_values(array_diff($requiredFields, ['Email']));
         }
+
         //HACK: move phone to member fields ..
         if ($addressFieldsMember && $addressFieldsBilling) {
             $phoneField = $addressFieldsBilling->dataFieldByName('Phone');
@@ -233,10 +234,12 @@ class OrderFormAddress extends Form
                 ->addExtraClass('leftOrderShippingOptions');
             $allLeftFields->push($leftFieldsShippingOptions);
         }
+
         if ($shippingAddressFirst) {
             if ($addressFieldsShipping) {
                 $allLeftFields->push($leftFieldsShipping);
             }
+
             $allLeftFields->push($leftFieldsBilling);
         } else {
             $allLeftFields->push($leftFieldsBilling);
@@ -256,36 +259,31 @@ class OrderFormAddress extends Form
                 if (! $this->loggedInMember) {
                     $rightFields->push(
                         //TODO: check EXACT link!!!
-                        new LiteralField('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login/?BackURL=/' . urlencode(implode('/', $controller->getURLParams())) . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>')
+                        LiteralField::create('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login/?BackURL=/' . urlencode(implode('/', $controller->getURLParams())) . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>')
                     );
                 }
             } elseif ($this->loggedInMember) {
                 $rightFields->push(
-                    new LiteralField(
-                        'LoginNote',
-                        '<p class="message good">' . _t('Account.LOGGEDIN', 'You are logged in as ') .
-                            Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
-                            Convert::raw2xml($this->loggedInMember->Surname) .
-                            ' (' . Convert::raw2xml($this->loggedInMember->Email) . ').' .
-                            ' <a href="/Security/logout/">' .
-                            _t('Account.LOGOUTNOW', 'Log out?') .
-                            '</a>' .
-                            '</p>'
-                    )
+                    LiteralField::create('LoginNote', '<p class="message good">' . _t('Account.LOGGEDIN', 'You are logged in as ') .
+                        Convert::raw2xml($this->loggedInMember->FirstName) . ' ' .
+                        Convert::raw2xml($this->loggedInMember->Surname) .
+                        ' (' . Convert::raw2xml($this->loggedInMember->Email) . ').' .
+                        ' <a href="/Security/logout/">' .
+                        _t('Account.LOGOUTNOW', 'Log out?') .
+                        '</a>' .
+                        '</p>')
                 );
             }
+
             if ($this->orderMember->exists() && $this->loggedInMember && $this->loggedInMember->ID !== $this->orderMember->ID) {
                 $rightFields->push(
-                    new LiteralField(
-                        'OrderAddedTo',
-                        '<p class="message good">' .
-                            _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
-                            ' ' .
-                            Convert::raw2xml($this->orderMember->Email) .
-                            ' ' .
-                            _t('Account.AS_IDENTIFIER', 'as identifier') .
-                            '</p>'
-                    )
+                    LiteralField::create('OrderAddedTo', '<p class="message good">' .
+                        _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
+                        ' ' .
+                        Convert::raw2xml($this->orderMember->Email) .
+                        ' ' .
+                        _t('Account.AS_IDENTIFIER', 'as identifier') .
+                        '</p>')
                 );
             }
         }
@@ -296,7 +294,7 @@ class OrderFormAddress extends Form
 
         //  ________________  6) Actions and required fields creation + Final Form construction
 
-        $nextButton = new FormAction('saveAddress', _t('OrderForm.NEXT', 'Next'));
+        $nextButton = FormAction::create('saveAddress', _t('OrderForm.NEXT', 'Next'));
         $nextButton->addExtraClass('next');
 
         $actions = FieldList::create($nextButton);
@@ -329,21 +327,24 @@ class OrderFormAddress extends Form
         if ($this->orderMember) {
             $this->loadDataFrom($this->orderMember);
         }
+
         if ($this->order) {
             $this->loadDataFrom($this->order);
             if ($billingAddress) {
                 $this->loadDataFrom($billingAddress);
             }
+
             if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address') && $shippingAddress) {
                 $this->loadDataFrom($shippingAddress);
             }
         }
+
         $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
         $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
         $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
 
         //allow updating via decoration
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
@@ -362,7 +363,7 @@ class OrderFormAddress extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
+     * @return HTTPRequest|bool Request object for this action
      */
     public function saveAddress(array $data, Form $form, HTTPRequest $request)
     {
@@ -373,6 +374,7 @@ class OrderFormAddress extends Form
 
             return true;
         }
+
         $this->controller->redirectBack();
         return false;
     }
@@ -388,7 +390,7 @@ class OrderFormAddress extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return \SilverStripe\Control\HTTPRequest|bool Request object for this action
+     * @return HTTPRequest|bool Request object for this action
      */
     public function saveAddressDetails(array $data, Form $form, HTTPRequest $request)
     {
@@ -404,6 +406,7 @@ class OrderFormAddress extends Form
 
             return false;
         }
+
         //recalculated = true... in TotalItems
         if ($this->order && 0 === (int) $this->order->TotalItems(true)) {
             // WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
@@ -430,11 +433,14 @@ class OrderFormAddress extends Form
                 if ($password) {
                     $this->orderMember->changePassword($password);
                 }
+
                 $this->orderMember->write();
             }
+
             if ($this->memberShouldBeLoggedIn($data)) {
                 Injector::inst()->get(IdentityStore::class)->logIn($this->orderMember);
             }
+
             //this causes ERRORS ....
             $this->order->MemberID = $this->orderMember->ID;
 
@@ -488,7 +494,7 @@ class OrderFormAddress extends Form
     {
         $this->clearMessage();
 
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", null);
+        Controller::curr()->getRequest()->getSession()->set(sprintf('FormInfo.%s.data', $this->FormName()), null);
     }
 
     /**
@@ -568,7 +574,7 @@ class OrderFormAddress extends Form
      *
      * @param array $data form data - should include $data[uniqueField....] - e.g. $data["Email"]
      *
-     * @return null|\SilverStripe\Security\Member
+     * @return null|Member
      */
     protected function createOrFindMember(array $data)
     {
@@ -584,6 +590,7 @@ class OrderFormAddress extends Form
             if ($this->debug) {
                 $this->debugArray[] = 'A1. shop admin places order ';
             }
+
             //2. does email match shopadmin email
             $newEmail = $this->enteredEmailAddressDoesNotMatchLoggedInUser($data);
             if ($newEmail) {
@@ -591,8 +598,9 @@ class OrderFormAddress extends Form
                 if ($this->debug) {
                     $this->debugArray[] = 'A2. email does not match shopadmin email - reset orderMember';
                 }
+
                 $this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
-                if ($this->orderMember instanceof \SilverStripe\Security\Member) {
+                if ($this->orderMember instanceof Member) {
                     if ($this->debug) {
                         $this->debugArray[] = 'A3. the other member already exists';
                     }
@@ -600,6 +608,7 @@ class OrderFormAddress extends Form
                     if ($this->debug) {
                         $this->debugArray[] = 'A4. No other member found - creating new one';
                     }
+
                     $this->orderMember = Member::create();
                     $this->orderMember->Email = Convert::raw2sql($newEmail);
                     $this->newlyCreatedMemberID = $this->orderMember->write();
@@ -609,6 +618,7 @@ class OrderFormAddress extends Form
             if ($this->debug) {
                 $this->debugArray[] = '2. shop allows creation of member';
             }
+
             $this->orderMember = null;
 
             //3. can the entered data be used?
@@ -617,32 +627,37 @@ class OrderFormAddress extends Form
                 if ($this->debug) {
                     $this->debugArray[] = '3. can the entered data be used?';
                 }
+
                 // 4. is there no member logged in yet?
                 //no logged in member
                 if (! $this->loggedInMember) {
                     if ($this->debug) {
                         $this->debugArray[] = '4. is there no member logged in yet?';
                     }
+
                     //5. find member from data entered (even if not logged in)
                     //another member with the same email?
 
                     if ($this->debug) {
                         $this->debugArray[] = '5. find member from data entered (even if not logged in)';
                     }
+
                     $this->orderMember = $this->anotherExistingMemberWithSameUniqueFieldValue($data);
 
                     //6. At this stage, if we dont have a member, we will create one!
                     //in case we still dont have a member AND we should create a member for every customer, then we do this below...
-                    if (! $this->orderMember instanceof \SilverStripe\Security\Member) {
+                    if (! $this->orderMember instanceof Member) {
                         if ($this->debug) {
                             $this->debugArray[] = '6. No other member found';
                         }
+
                         // 7. We do one last check to see if we are allowed to create one
                         //are we allowed to create a member?
                         if ($this->memberShouldBeCreated($data)) {
                             if ($this->debug) {
                                 $this->debugArray[] = '7. We do one last check to see if we are allowed to create one. CREATE NEW MEMBER';
                             }
+
                             $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
                             $this->orderMember->write();
                             //this is safe because of the memberShouldBeCreated above ...
@@ -685,6 +700,7 @@ class OrderFormAddress extends Form
             // TRUE!
             return ! (bool) $this->anotherExistingMemberWithSameUniqueFieldValue($data);
         }
+
         //defaults to FALSE...
         return false;
     }
@@ -714,6 +730,7 @@ class OrderFormAddress extends Form
         if ($this->loggedInMember && ! $this->orderMember) {
             return false;
         }
+
         if ($this->orderMemberAndLoggedInMemberAreDifferent()) {
             return false;
         }
@@ -776,6 +793,7 @@ class OrderFormAddress extends Form
         } elseif ($this->loggedInMember && $this->loggedInMember->Email) {
             // all good
         }
+
         return null;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use Override;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
@@ -19,7 +20,7 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
  * @property bool $DoNotAllowSales
  * @property bool $IsDefault
  * @property int $CountryID
- * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry Country()
+ * @method EcommerceCountry Country()
  */
 class EcommerceRegion extends DataObject implements EditableEcommerceObject
 {
@@ -153,12 +154,14 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      */
     private static $_for_current_order_do_not_show_regions = [];
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('EcommerceRegion.REGION', 'Region');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('EcommerceRegion.REGIONS', 'Regions');
     }
@@ -180,8 +183,9 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS FieldList.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -272,6 +276,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         if (is_array($doNotShow) && count($doNotShow)) {
             foreach ($doNotShow as $id) {
                 if (isset($defaultArray[$id])) {
@@ -290,7 +295,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 
-        return isset(self::$_for_current_order_only_show_regions[$orderID]) ? self::$_for_current_order_only_show_regions[$orderID] : [];
+        return self::$_for_current_order_only_show_regions[$orderID] ?? [];
     }
 
     /**
@@ -312,7 +317,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 
-        return isset(self::$_for_current_order_do_not_show_regions[$orderID]) ? self::$_for_current_order_do_not_show_regions[$orderID] : [];
+        return self::$_for_current_order_do_not_show_regions[$orderID] ?? [];
     }
 
     /**
@@ -342,6 +347,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
                 $regionID = $region->ID;
             }
         }
+
         //3. check GEOIP information
         if (! $regionID) {
             $regions = EcommerceRegion::get()->filter(['IsDefault' => 1]);
@@ -353,6 +359,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             if (is_array($regionArray) && count($regionArray)) {
                 $regionID = array_key_first($regionArray);
             }
@@ -373,6 +380,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if (! $visitorCountryProviderClassName) {
             $visitorCountryProviderClassName = EcommerceRegionVisitorRegionProvider::class;
         }
+
         $visitorCountryProvider = new $visitorCountryProviderClassName();
 
         return $visitorCountryProvider->getRegion();
@@ -390,6 +398,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      * standard SS method
      * cleans up codes.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -411,6 +420,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
         if ($defaultRegion) {
             $regions = $regions->Filter(['CountryID' => EcommerceCountry::get_country_id()]);
         }
+
         if ($regions && $regions->exists()) {
             foreach ($regions as $region) {
                 $defaultArray[$region->ID] = $region->Name;

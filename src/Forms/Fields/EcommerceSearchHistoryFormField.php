@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -113,11 +114,13 @@ class EcommerceSearchHistoryFormField extends LiteralField
         return $this;
     }
 
+    #[Override]
     public function FieldHolder($properties = [])
     {
         return $this->Field($properties);
     }
 
+    #[Override]
     public function Field($properties = [])
     {
         $row = [];
@@ -140,11 +143,13 @@ class EcommerceSearchHistoryFormField extends LiteralField
         if (! $this->minimumCount) {
             ++$this->minimumCount;
         }
+
         $content = '';
         $tableContent = '';
         if ($title && $this->addTitle) {
             $content .= '<h3>' . $title . '</h3>';
         }
+
         $content .= '
         <div id="SearchHistoryTableForCMS">
             <h3>
@@ -164,9 +169,10 @@ class EcommerceSearchHistoryFormField extends LiteralField
                 if (! $key) {
                     $maxWidth = $row['myCount'];
                 }
+
                 $multipliedWidthInPercentage = floor(($row['myCount'] / $maxWidth) * 100);
                 $list[$row['myCount'] . '-' . $key] = $row['Title'];
-                $link = $redirectToPage->Link() . '?searchfilter=Keyword~' . urlencode($row['Title']);
+                $link = $redirectToPage->Link() . '?searchfilter=Keyword~' . urlencode((string) $row['Title']);
                 $debugLink = $link . '&showdebug=1';
                 $tableContent .= '
                     <tr>
@@ -181,6 +187,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                         </td>
                     </tr>';
             }
+
             $tableContent .= '
                 </table>';
             if ($count && $this->addAtoZ) {
@@ -189,7 +196,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
                     <h3>A - Z</h3>
                     <table class="aToz" style="widht: 100%">';
                 foreach ($list as $key => $title) {
-                    $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode($row['Title']) . '&action_doProductSearchForm=Search';
+                    $link = $redirectToPage->Link(ProductSearchForm::class) . '?Keyword=' . urlencode((string) $row['Title']) . '&action_doProductSearchForm=Search';
                     $debugLink = $link . '&showdebug=1';
                     $array = explode('-', $key);
                     $multipliedWidthInPercentage = floor(($array[0] / $maxWidth) * 100);
@@ -206,14 +213,17 @@ class EcommerceSearchHistoryFormField extends LiteralField
                             </td>
                         </tr>';
                 }
+
                 $tableContent .= '
                     </table>';
             }
         }
+
         if (0 === $count) {
             //we replace table content here...
             $tableContent = '<p class="warning message">No searches found.</p>';
         }
+
         $content .= $tableContent;
         if ($this->showMoreLink) {
             $content .= '

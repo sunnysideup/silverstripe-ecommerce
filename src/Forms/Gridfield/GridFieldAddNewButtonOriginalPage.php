@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use Override;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
@@ -24,6 +25,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
 {
+    #[Override]
     public function getHTMLFragments($gridField)
     {
         $singleton = singleton($gridField->getModelClass());
@@ -44,7 +46,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             $getSegment = '?ParentID=' . $page->ID;
         }
 
-        $data = new ArrayData([
+        $data = ArrayData::create([
             'NewLink' => '/admin/' . Config::inst()->get(CMSPageAddControllerProducts::class, 'url_segment') . '/' . $getSegment,
             'ButtonName' => $this->buttonName,
         ]);
@@ -73,6 +75,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             if ($result) {
                 return $result;
             }
+
             $singleton = DataObject::singleton(SiteTree::class);
             $baseTable = $singleton->baseTable();
             $tableName = $singleton->stageTable($baseTable, Versioned::get_stage());

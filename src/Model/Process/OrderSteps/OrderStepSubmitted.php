@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
@@ -51,11 +52,13 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
         'SaveOrderAsSerializedObject' => 0,
     ];
 
+    #[Override]
     public function getRelevantLogEntryClassName(): string
     {
         return EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -83,6 +86,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return (bool) $order->TotalItems();
@@ -95,6 +99,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         if (! $this->IsSubmitted($order)) {
@@ -118,9 +123,11 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                         $obj->OrderAsString = $order->ConvertToString();
                         $saved = true;
                     }
+
                     if ($this->SaveOrderAsHTML || ! $saved) {
                         $obj->OrderAsHTML = $order->ConvertToHTML();
                     }
+
                     $obj->write();
                 } else {
                     user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
@@ -128,6 +135,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
             } else {
                 user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a non-existing class');
             }
+
             $order->LastEdited = DBDatetime::now()->Rfc2822();
 
             //add member if needed...
@@ -143,6 +151,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
                     $order->MemberID = $memberOrderID;
                 }
             }
+
             $order->write($showDebug = false, $forceInsert = false, $forceWrite = true);
         }
 
@@ -161,8 +170,9 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -177,6 +187,7 @@ class OrderStepSubmitted extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.SUBMITTED_DESCRIPTION', 'The official moment the order gets submitted by the customer. The hand-shake for a commercial transaction.');

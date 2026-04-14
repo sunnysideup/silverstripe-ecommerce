@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -17,6 +17,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class OrderStepCreated extends OrderStep implements OrderStepInterface
 {
+    private static $table_name = 'OrderStepCreated';
+
     private static $defaults = [
         'CustomerCanEdit' => 1,
         'CustomerCanPay' => 1,
@@ -50,6 +52,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return true;
@@ -58,6 +61,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Add the member to the order, in case the member is not an admin.
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         if (! $order->MemberID) {
@@ -81,8 +85,9 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -113,7 +118,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
                 if ($requiredBillingFields && is_array($requiredBillingFields) && count($requiredBillingFields)) {
                     foreach ($requiredBillingFields as $requiredBillingField) {
                         if (! $billingAddress->{$requiredBillingField}) {
-                            $problems[] = "There is no --- {$requiredBillingField} --- recorded in the billing address.";
+                            $problems[] = sprintf('There is no --- %s --- recorded in the billing address.', $requiredBillingField);
                         }
                     }
                 }
@@ -123,10 +128,10 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
                 $msg = '<p>You can not submit this order because:</p> <ul><li>' . implode('</li><li>', $problems) . '</li></ul>';
             }
 
-            $fields->addFieldToTab('Root.Next', new HeaderField('CreateSubmitRecordHeader', $header, 3));
-            $fields->addFieldToTab('Root.Next', new LiteralField('CreateSubmitRecordMessage', $msg));
+            $fields->addFieldToTab('Root.Next', HeaderField::create('CreateSubmitRecordHeader', $header, 3));
+            $fields->addFieldToTab('Root.Next', LiteralField::create('CreateSubmitRecordMessage', $msg));
             if ($problems === []) {
-                $fields->addFieldToTab('Root.Next', new CheckboxField('SubmitOrderViaCMS', $label));
+                $fields->addFieldToTab('Root.Next', CheckboxField::create('SubmitOrderViaCMS', $label));
             }
         }
 
@@ -138,6 +143,7 @@ class OrderStepCreated extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.CREATED_DESCRIPTION', 'During this step the customer creates her or his order. The shop admininistrator does not do anything during this step.');

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
@@ -13,6 +16,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class OrderStepArchived extends OrderStep implements OrderStepInterface
 {
+    private static $table_name = 'OrderStepArchived';
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
@@ -31,6 +36,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return true;
@@ -46,6 +52,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         return true;
@@ -60,6 +67,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @return null|OrderStep (next step OrderStep object)
      */
+    #[Override]
     public function nextStep(Order $order): ?OrderStep
     {
         //IMPORTANT
@@ -71,6 +79,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.ARCHIVED_DESCRIPTION', 'This is typically the last step in the order process. Nothing needs to be done to the order anymore.  We keep the order in the system for record-keeping and statistical purposes.');
@@ -81,6 +90,7 @@ class OrderStepArchived extends OrderStep implements OrderStepInterface
      *
      * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $title = '<p class="message good">This order has been archived. There is nothing more to do.</p>';

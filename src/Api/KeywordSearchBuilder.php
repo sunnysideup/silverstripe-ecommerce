@@ -7,7 +7,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
-use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 
 class KeywordSearchBuilder
 {
@@ -44,6 +43,7 @@ class KeywordSearchBuilder
             print_r($sql);
             echo $this->arrayToHtmlTable($result);
         }
+
         return array_column($result, 'ProductID');
     }
 
@@ -56,6 +56,7 @@ class KeywordSearchBuilder
             $rows = DB::query($sql);
             echo $this->arrayToHtmlTable($rows);
         }
+
         return DB::query($sql)->keyedColumn();
     }
 
@@ -64,7 +65,7 @@ class KeywordSearchBuilder
         $this->keywordPhrase = $keywordPhrase;
         $this->replaceSearchPhraseOrWord();
         //now we are going to look for synonyms
-        $words = explode(' ', trim(preg_replace('#\s+#', ' ', (string) $this->keywordPhrase)));
+        $words = explode(' ', trim((string) preg_replace('#\s+#', ' ', (string) $this->keywordPhrase)));
         foreach ($words as $word) {
             //todo: why are we looping through words?
             $this->replaceSearchPhraseOrWord($word);
@@ -91,6 +92,7 @@ class KeywordSearchBuilder
 
             return null;
         }
+
         $phrase = $this->cleanPhrase($phrase);
         $this->ifStatement = '';
         $this->startIfStatement();
@@ -98,6 +100,7 @@ class KeywordSearchBuilder
         if (strlen($phrase) < 2) {
             return '"ID" < 0';
         }
+
         $wordAsArray = array_filter(explode(' ', $phrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
@@ -109,10 +112,12 @@ class KeywordSearchBuilder
                 if (strlen($word) < 2) {
                     continue;
                 }
-                $searchStringArray[] = "\"_FF_FIELD_GOES_HERE_\" LIKE '%{$word}%'";
+
+                $searchStringArray[] = sprintf("\"_FF_FIELD_GOES_HERE_\" LIKE '%%%s%%'", $word);
             }
+
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
-            $hasWordArray = count($searchStringArray) > 0;
+            $hasWordArray = $searchStringArray !== [];
         }
 
         $count = 0;
@@ -121,17 +126,17 @@ class KeywordSearchBuilder
             $strPosition = $this->strPositionPhrase($phrase, $field);
             if ($field === $primaryField) {
                 // exact match with Field, e.g. Title equals "AAAA BBBB"
-                $this->addIfStatement(++$count, '"' . $field . "\" = '{$phrase}'");
+                $this->addIfStatement(++$count, '"' . $field . sprintf("\" = '%s'", $phrase));
             }
 
             // starts with full string and then space, e.g. Title equals "AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '{$phrase} %'");
+            $this->addIfStatement(++$count, '"' . $field . sprintf("\" LIKE '%s %%'", $phrase));
 
             // contains full string with spaces around it, e.g. Title equals "* AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '% {$phrase} %'", $strPosition);
+            $this->addIfStatement(++$count, '"' . $field . sprintf("\" LIKE '%% %s %%'", $phrase), $strPosition);
 
             // contains full string without space around it "*AAAA BBBB*"
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '%{$phrase}%'", $strPosition);
+            $this->addIfStatement(++$count, '"' . $field . sprintf("\" LIKE '%%%s%%'", $phrase), $strPosition);
             if ($hasWordArray) {
                 $this->addIfStatement(
                     ++$count,
@@ -153,7 +158,7 @@ class KeywordSearchBuilder
         return '  +
             (
                 1 - (
-                    MATCH ("' . $field . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) ) / ' . $divisor . '
+                    MATCH ("' . $field . '") AGAINST (\'' . Convert::raw2sql($phrase) . "' IN NATURAL LANGUAGE MODE) ) / " . $divisor . '
             )';
     }
 
@@ -177,10 +182,12 @@ class KeywordSearchBuilder
         if ($where !== '' && $where !== '0') {
             $where = 'WHERE ' . $where;
         }
+
         $titleField = '';
         if ($this->debug) {
             $titleField = '"Title",';
         }
+
         return '
             SELECT
                 "' . $idField . '",
@@ -202,6 +209,7 @@ class KeywordSearchBuilder
         if (! $word) {
             $word = $this->keywordPhrase;
         }
+
         $replacements = SearchReplacement::get()
             ->where(
                 "
@@ -214,6 +222,7 @@ class KeywordSearchBuilder
         if ($this->keywordPhrase !== $word) {
             $replacements = $replacements->exclude(['ReplaceWholePhrase' => 1]);
         }
+
         if ($replacements->exists()) {
             $replacementsArray = $replacements->column('Replace');
             foreach ($replacementsArray as $replacementWord) {
@@ -229,14 +238,17 @@ class KeywordSearchBuilder
             $headers = array_keys((array) $firstRow);
             break;
         }
+
         if (! isset($headers)) {
             return '<p>No results</p>';
         }
+
         $html = '<table border="1" cellspacing="0" cellpadding="4">';
         $html .= '<thead><tr>';
         foreach ($headers as $header) {
             $html .= '<th>' . htmlspecialchars((string) $header) . '</th>';
         }
+
         $html .= '</tr></thead><tbody>';
 
         foreach ($rows as $row) {
@@ -245,6 +257,7 @@ class KeywordSearchBuilder
                 $value = $row[$header] ?? '';
                 $html .= '<td>' . htmlspecialchars((string) $value) . '</td>';
             }
+
             $html .= '</tr>';
         }
 
@@ -258,6 +271,7 @@ class KeywordSearchBuilder
         foreach ($prices as $priceRow) {
             $priceMap[$priceRow['ID']] = (float) $priceRow['Price'];
         }
+
         $newRows = [];
         foreach ($results as $row) {
             $price = $priceMap[$row['ProductID']] ?? 0;

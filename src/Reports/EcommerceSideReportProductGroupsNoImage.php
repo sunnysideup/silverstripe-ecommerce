@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Assets\Image;
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
@@ -22,6 +22,7 @@ class EcommerceSideReportProductGroupsNoImage extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.PRODUCT_GROUPS_NOIMAGE', 'E-commerce: Categories: without image');
@@ -38,6 +39,7 @@ class EcommerceSideReportProductGroupsNoImage extends Report
         if (empty($ok)) {
             return '"ProductGroup"."ID" NOT IN (0)';
         }
+
         return '"ProductGroup"."ID" NOT IN (' . implode(',', $ok) . ')';
     }
 }

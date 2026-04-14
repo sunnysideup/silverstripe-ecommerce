@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -21,6 +22,7 @@ class EcommerceSideReportProductsNoImageButHasAdditionalImages extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.NOIMAGE_ADDITIONAL_IMAGES', 'E-commerce: Products: missing images - but has additional images');
@@ -38,6 +40,7 @@ class EcommerceSideReportProductsNoImageButHasAdditionalImages extends Report
                 $ids[] = $product->ID;
             }
         }
+
         return $list->filter(['ID' => $ids]);
     }
 }

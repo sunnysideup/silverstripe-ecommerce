@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Email;
 
+use Override;
 use Pelago\Emogrifier\CssInliner;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
@@ -125,6 +126,7 @@ abstract class OrderEmail extends Email
         return $this;
     }
 
+    #[Override]
     public function send(): void
     {
         $this->sendInner(false);
@@ -140,6 +142,7 @@ abstract class OrderEmail extends Email
         if (! $this->order) {
             user_error('Must set the order (OrderEmail::setOrder()) before the message is sent (OrderEmail::send()).', E_USER_NOTICE);
         }
+
         $this->fixupSubject();
         if (! $this->hasBeenSent() || ($this->resend)) {
             if (EcommerceConfig::get(OrderEmail::class, 'copy_to_admin_for_all_emails') && ($this->getTo() !== self::get_from_email())) {
@@ -150,14 +153,17 @@ abstract class OrderEmail extends Email
                     if ($bcc !== []) {
                         $array[] = $bcc;
                     }
+
                     $this->setBcc(implode(', ', $array));
                 }
             }
+
             //last chance to adjust
             $this->extend('adjustOrderEmailSending', $this, $order);
             if ($returnBodyOnly) {
                 return (string) $this->getHtmlBody();
             }
+
             if (EcommerceConfig::get(OrderEmail::class, 'send_all_emails_plain')) {
                 parent::sendPlain();
             } else {
@@ -167,6 +173,7 @@ abstract class OrderEmail extends Email
 
             $result = $this->createRecord();
         }
+
         return null;
     }
 
@@ -175,11 +182,13 @@ abstract class OrderEmail extends Email
      *
      * @return $this
      */
+    #[Override]
     public function html($body, string $charset = 'utf-8'): static
     {
         if (null !== $body && is_string($body)) {
             $body = self::emogrify_html($body);
         }
+
         return parent::html($body, $charset);
     }
 
@@ -188,6 +197,7 @@ abstract class OrderEmail extends Email
         if (! $this->getSubject()) {
             $this->setSubject(self::get_subject());
         }
+
         $this->setSubject(str_replace('[OrderNumber]', $this->order->ID, (string) $this->getSubject()));
     }
 
@@ -210,9 +220,11 @@ abstract class OrderEmail extends Email
                 if ($emailString !== '' && $emailString !== '0') {
                     $emailString .= ', ';
                 }
+
                 $emailString .= $this->emailToVarchar($address);
             }
         }
+
         return trim(str_replace(['<', '>', '"', "'"], ' - ', $emailString));
     }
 
@@ -261,18 +273,22 @@ abstract class OrderEmail extends Email
         if ($this->getCc()) {
             $orderEmailRecord->To .= ', CC: ' . $this->emailToVarchar($this->getCc());
         }
+
         if ($this->getBcc()) {
             $orderEmailRecord->To .= ', BCC: ' . $this->emailToVarchar($this->getBcc());
         }
+
         //always set result to try if
         $orderEmailRecord->Subject = $this->getSubject();
         if (Director::isDev()) {
             $orderEmailRecord->Subject .= _t('OrderEmail.FAKELY_RECORDED_AS_SENT', ' - FAKELY RECORDED AS SENT ');
         }
+
         $orderEmailRecord->Content = (string) $this->getHtmlBody();
         $orderEmailRecord->Result = true;
         $orderEmailRecord->OrderID = $this->order->ID;
         $orderEmailRecord->OrderStepID = $this->order->StatusID;
+
         $sendAllEmailsTo = Config::inst()->get(Email::class, 'send_all_emails_to');
         if ($sendAllEmailsTo) {
             $orderEmailRecord->To .=
@@ -280,6 +296,7 @@ abstract class OrderEmail extends Email
                 . $sendAllEmailsTo
                 . _t('OrderEmail.CONFIG_EXPLANATION', ' - (Email::send_all_emails_to)');
         }
+
         $orderEmailRecord->write();
 
         return $orderEmailRecord;

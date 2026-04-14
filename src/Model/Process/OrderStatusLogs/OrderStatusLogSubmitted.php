@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -54,12 +56,14 @@ class OrderStatusLogSubmitted extends OrderStatusLog
      */
     private static $description = 'The record that the order has been submitted by the customer.  This is important in e-commerce, because from here, nothing can change to the order.';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.SUBMITTEDORDER', 'Submitted Order - Fulltext Backup');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderStatusLog.SUBMITTEDORDERS', 'Submitted Orders - Fulltext Backup');
     }
@@ -67,10 +71,11 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -79,11 +84,12 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         return false;
@@ -92,16 +98,18 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -125,6 +133,7 @@ class OrderStatusLogSubmitted extends OrderStatusLog
         if ($this->OrderAsHTML) {
             return $this->OrderAsHTML;
         }
+
         if ($this->OrderAsString) {
             return unserialize((string) $this->OrderAsString);
         }
@@ -135,27 +144,31 @@ class OrderStatusLogSubmitted extends OrderStatusLog
     /**
      * adding a sequential order number.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         $order = $this->getOrderCached();
         // todo: this needs work!
         // $this->OrderAsString = $order->ConvertToString();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && ! $this->Total) {
+        if ($order instanceof Order && ! $this->Total) {
             $this->Total = $order->Total();
             $this->SubTotal = $order->SubTotal();
         }
+
         if ((int) $this->SequentialOrderNumber === 0) {
             $min = (int) EcommerceConfig::get(Order::class, 'order_id_start_number') ?? 1;
             $id = null !== $this->ID ? (int) $this->ID : 0;
-            $lastOne = DB::query("SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> $id")->value();
+            $lastOne = DB::query('SELECT MAX(SequentialOrderNumber) AS LastOrderNumber FROM OrderStatusLogSubmitted WHERE ID <> ' . $id)->value();
             if ($lastOne > 0) {
                 $this->SequentialOrderNumber = (int) $lastOne + 1;
             }
+
             if ($min && $this->SequentialOrderNumber < $min) {
                 $this->SequentialOrderNumber = $min;
             }
         }
+
         // important to reload submission log!
         $order->IsSubmitted($recalculate = true);
 

@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
+use SilverStripe\ORM\DataList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
@@ -45,6 +47,7 @@ class EcommerceSideReportEcommercePages extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.ECOMMERCEPAGES', 'E-commerce: Non-product e-commerce pages');
@@ -65,7 +68,7 @@ class EcommerceSideReportEcommercePages extends Report
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {

@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskAddDefaultProducts extends BuildTask
 {
-    protected $title = 'Add default Products';
+    protected string $title = 'Add default Products';
 
     protected $description = 'Adds two default Products and a Product Group (Category) to your site.';
 
@@ -39,6 +39,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             } else {
                 $productGroup1 = ProductGroup::get()->first();
             }
+
             $content = "<p>This is a <em>product</em>. It's description goes into the Content field as a standard SilverStripe page would have it's content. This is an ideal place to describe your product.</p>";
 
             $page1 = new Product();

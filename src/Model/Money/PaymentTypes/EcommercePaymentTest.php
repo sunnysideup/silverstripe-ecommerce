@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
+use Override;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 
 /**
@@ -9,6 +12,8 @@ use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
  */
 class EcommercePaymentTest extends EcommercePayment
 {
+    private static $table_name = 'EcommercePaymentTest';
+
     /**
      * standard SS variable.
      *
@@ -23,16 +28,19 @@ class EcommercePaymentTest extends EcommercePayment
      */
     private static $plural_name = 'Ecommerce Test Payments';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
 
+    #[Override]
     public function getPaymentFormRequirements(): array
     {
         return [];

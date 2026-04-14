@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\Validator;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
@@ -50,6 +50,7 @@ class ExpiryDateField extends TextField
         $this->setValue($value);
     }
 
+    #[Override]
     public function Field($properties = [])
     {
         $monthValue = '';
@@ -73,12 +74,13 @@ class ExpiryDateField extends TextField
     /**
      * @return string
      */
+    #[Override]
     public function dataValue()
     {
         if (is_array($this->value)) {
             $string = '';
             foreach ($this->value as $part) {
-                $part = str_pad($part, 2, '0', STR_PAD_LEFT);
+                $part = str_pad((string) $part, 2, '0', STR_PAD_LEFT);
                 $string .= trim($part);
             }
 
@@ -89,10 +91,11 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param Validator $validator
+     * @param \SilverStripe\Forms\Validation\Validator $validator
      *
      * @return bool
      */
+    #[Override]
     public function validate($validator)
     {
         // If the field is empty then don't return an invalidation message'
@@ -105,6 +108,7 @@ class ExpiryDateField extends TextField
 
             return false;
         }
+
         if (! isset($this->value['year'])) {
             $validator->validationError(
                 $this->getName(),
@@ -114,6 +118,7 @@ class ExpiryDateField extends TextField
 
             return false;
         }
+
         $value = str_pad($this->value['month'], 2, '0', STR_PAD_LEFT);
         $value .= str_pad($this->value['year'], 2, '0', STR_PAD_LEFT);
         $this->value = $value;
@@ -140,6 +145,7 @@ class ExpiryDateField extends TextField
      *
      * @return FormField|ReadonlyField
      */
+    #[Override]
     public function performReadonlyTransformation()
     {
         return $this->castedCopy(ReadonlyField::class)
@@ -151,6 +157,7 @@ class ExpiryDateField extends TextField
     /**
      * @param string $title
      */
+    #[Override]
     public function setDescription($title): self
     {
         /*
@@ -170,6 +177,7 @@ class ExpiryDateField extends TextField
      * @param mixed      $value
      * @param null|mixed $data
      */
+    #[Override]
     public function setValue($value, $data = null): self
     {
         //store this for later
@@ -215,6 +223,7 @@ class ExpiryDateField extends TextField
             if ($key === $currentValue) {
                 $select = ' selected="selected"';
             }
+
             $string .= '<option value="' . $key . '"' . $select . '>' . $value . '</option>';
         }
 

@@ -2,6 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBMoney;
 use Bummzack\SortableFile\Forms\SortableUploadField;
 use Exception;
 use Page;
@@ -11,7 +16,6 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\GridField\GridField;
@@ -23,7 +27,6 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ManyManyList;
@@ -32,7 +35,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -91,18 +93,18 @@ use Sunnysideup\Vardump\ArrayToTable;
  * @property int $GoogleProductCategoryID
  * @property int $ImageID
  * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
- * @method \SilverStripe\Assets\Image Image()
- * @method \Sunnysideup\Ecommerce\Model\Search\ProductSearchTable ProductSearchTable()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] EcommerceRecommendedProducts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\ProductGroup[] ProductGroups()
- * @method \SilverStripe\ORM\ManyManyList|\SilverStripe\Assets\File[] AdditionalFiles()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDiscountCoupon\Model\DiscountCouponOption[] ApplicableDiscountCoupons()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] RecommendedFor()
+ * @method Image Image()
+ * @method ProductSearchTable ProductSearchTable()
+ * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
+ * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
+ * @method ManyManyList|Product[] EcommerceRecommendedProducts()
+ * @method ManyManyList|ProductGroup[] ProductGroups()
+ * @method ManyManyList|File[] AdditionalFiles()
+ * @method ManyManyList|\Sunnysideup\EcommerceDiscountCoupon\Model\DiscountCouponOption[] ApplicableDiscountCoupons()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierAdditional[] AdditionalDeliveryCosts()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludedFromDeliveryCosts()
+ * @method ManyManyList|Product[] RecommendedFor()
  * @mixin \Sunnysideup\EcommerceGoogleShoppingFeed\Extensions\GoogleShoppingFeedExtension
  * @mixin \Sunnysideup\EcommerceAlsoRecommended\Model\EcommerceAlsoRecommendedDOD
  * @mixin \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
@@ -290,6 +292,7 @@ class Product extends Page implements BuyableModel
         if ($list->exists()) {
             return $list->orderBy('Product_AdditionalImages.ImageSort ASC');
         }
+
         return $list;
     }
 
@@ -319,7 +322,7 @@ class Product extends Page implements BuyableModel
      *
      * @param null|mixed $_params
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function scaffoldSearchFields($_params = null)
     {
@@ -364,8 +367,8 @@ class Product extends Page implements BuyableModel
             'Root.Main',
             [
                 CurrencyField::create('Price', _t('Product.PRICE', 'Price')),
-                new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30),
-                $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')),
+                TextField::create('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30),
+                $allowPurchaseField = CheckboxField::create('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')),
             ],
             'URLSegment'
         );
@@ -376,7 +379,7 @@ class Product extends Page implements BuyableModel
                 $allowPurchaseField->setDescription(
                     _t(
                         'Product.DO_NOT_ALLOW_FREE_PRODUCTS_TO_BE_PURCHASED',
-                        "NB: Allow Purchase + zero price is not allowed.  Change the <a href=\"{$link}\">Shop Settings</a> to allow a zero price product purchases or set price on this product."
+                        sprintf('NB: Allow Purchase + zero price is not allowed.  Change the <a href="%s">Shop Settings</a> to allow a zero price product purchases or set price on this product.', $link)
                     )
                 );
             }
@@ -404,11 +407,11 @@ class Product extends Page implements BuyableModel
         $fields->addFieldsToTab(
             'Root.Details',
             [
-                new CheckboxField('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
-                new TextareaField('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
+                CheckboxField::create('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
+                TextareaField::create('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
                 HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
                     ->setRows(3),
-                new CheckboxField('HasPhysicalDispatch', _t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch')),
+                CheckboxField::create('HasPhysicalDispatch', _t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch')),
             ]
         );
 
@@ -420,7 +423,7 @@ class Product extends Page implements BuyableModel
         }
 
         if ($config->ProductsHaveModelNames) {
-            $fields->addFieldToTab('Root.Details', new TextField('Model', _t('Product.MODEL', 'Model')));
+            $fields->addFieldToTab('Root.Details', TextField::create('Model', _t('Product.MODEL', 'Model')));
         }
 
         if ($config->ProductsHaveQuantifiers) {
@@ -434,27 +437,21 @@ class Product extends Page implements BuyableModel
         if ($this->canPurchase()) {
             $fields->addFieldToTab(
                 'Root.Main',
-                new LiteralField(
-                    'AddToCartLink',
-                    '<p class="message good"><a href="' . $this->AddLink() . '" target="_parent">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>'
-                )
+                LiteralField::create('AddToCartLink', '<p class="message good"><a href="' . $this->AddLink() . '" target="_parent">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>')
             );
         } else {
             $fields->addFieldToTab(
                 'Root.Main',
-                new LiteralField(
-                    'AddToCartLink',
-                    '<p class="message warning">' . _t('Product.CAN_NOT_BE_ADDED_TO_CART', 'this product can not be added to cart') . '</p>'
-                )
+                LiteralField::create('AddToCartLink', '<p class="message warning">' . _t('Product.CAN_NOT_BE_ADDED_TO_CART', 'this product can not be added to cart') . '</p>')
             );
         }
 
         $fields->addFieldsToTab(
             'Root.Under',
             [
-                new ReadonlyField('FullName', _t('Product.FULLNAME', 'Full Name')),
-                new ReadonlyField('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Breadcrumb')),
-                (new ReadonlyField(
+                ReadonlyField::create('FullName', _t('Product.FULLNAME', 'Full Name')),
+                ReadonlyField::create('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Breadcrumb')),
+                (ReadonlyField::create(
                     'FullSiteTreeSortNice',
                     _t('Product.FULLSITETREESORT', 'Full sort index'),
                     /// note use use string to avoid issues with int only supporting 19 digits
@@ -469,7 +466,7 @@ class Product extends Page implements BuyableModel
             $fields->addFieldsToTab(
                 'Root.Under',
                 [
-                    new HeaderField('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
+                    HeaderField::create('ProductGroupsHeader', _t('Product.ALSOSHOWSIN', 'Also shows in ...')),
                     $this->getProductGroupsTableField(),
                 ]
             );
@@ -538,6 +535,7 @@ class Product extends Page implements BuyableModel
                         No search data is recorded.
                     </p>';
             }
+
             $fields->addFieldsToTab(
                 'Root.Search',
                 [
@@ -559,6 +557,7 @@ class Product extends Page implements BuyableModel
                 ]
             );
         }
+
         $fields->addFieldsToTab(
             'Root.Main',
             [
@@ -574,6 +573,7 @@ class Product extends Page implements BuyableModel
         if (! $code) {
             $code = $this->InternalItemID;
         }
+
         $sql = '
             SELECT
                 SiteTree_Versions.LastEdited,
@@ -604,6 +604,7 @@ class Product extends Page implements BuyableModel
                     'For Sale' => $row['AllowPurchase'] ? 'YES' : 'NO',
                 ];
             }
+
             $previousCheck = $check;
         }
 
@@ -652,7 +653,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns all the parent groups for the product.
      *
-     * @return null|\SilverStripe\ORM\DataList (ProductGroups)
+     * @return null|DataList (ProductGroups)
      */
     public function AllParentGroups(?bool $cached = true): ?DataList
     {
@@ -672,7 +673,7 @@ class Product extends Page implements BuyableModel
      * Returns all the parent groups for the product,
      * including the parent-parents, and so on.
      *
-     * @return \SilverStripe\ORM\DataList (ProductGroups)
+     * @return DataList (ProductGroups)
      */
     public function AllParentGroupsIncludingParents()
     {
@@ -710,7 +711,7 @@ class Product extends Page implements BuyableModel
     /**
      * Returns products in the same group.
      *
-     * @return null|\SilverStripe\ORM\DataList (Products)
+     * @return null|DataList (Products)
      */
     public function Siblings()
     {
@@ -747,6 +748,7 @@ class Product extends Page implements BuyableModel
                 return $image;
             }
         }
+
         if ($this->UseParentImage) {
             $parent = $this->ParentGroup();
             if ($parent && $parent->exists() && $parent->UseImageForProducts) {
@@ -842,7 +844,7 @@ class Product extends Page implements BuyableModel
      * @param int $id
      * @param int $version
      *
-     * @return null|\SilverStripe\ORM\DataObject
+     * @return null|DataObject
      */
     public function getVersionOfBuyable($id = 0, $version = 0)
     {
@@ -959,6 +961,7 @@ class Product extends Page implements BuyableModel
         if ($filter && is_array($filter) && count($filter)) {
             return (int) $this->SalesRecord()->filter($filter)->sum('Quantity');
         }
+
         return (int) $this->SalesRecord()->sum('Quantity');
     }
 
@@ -1213,12 +1216,14 @@ class Product extends Page implements BuyableModel
                 $price = (float) EcommerceCache::inst()->retrieve($cacheKey, true);
             }
         }
+
         if (null === $price) {
             $price = $this->Price;
             $updatedPrice = $this->extend('updateBeforeCalculatedPrice', $price);
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
+
             $updatedPrice = $this->extend('updateCalculatedPrice', $price);
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
@@ -1228,6 +1233,7 @@ class Product extends Page implements BuyableModel
             if (null !== $updatedPrice && is_array($updatedPrice) && count($updatedPrice)) {
                 $price = $updatedPrice[0];
             }
+
             if ($cacheKey !== '' && $cacheKey !== '0') {
                 EcommerceCache::inst()->save($cacheKey, $price, true);
             }
@@ -1244,7 +1250,7 @@ class Product extends Page implements BuyableModel
     /**
      * How do we display the price?
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function CalculatedPriceAsMoney(?bool $forceRecalculation = false)
     {
@@ -1280,7 +1286,7 @@ class Product extends Page implements BuyableModel
         }
 
         // check country
-        if (! $member instanceof \SilverStripe\Security\Member) {
+        if (! $member instanceof Member) {
             $member = Security::getCurrentUser();
         }
 
@@ -1327,7 +1333,7 @@ class Product extends Page implements BuyableModel
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -1349,7 +1355,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -1370,7 +1376,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -1420,7 +1426,7 @@ class Product extends Page implements BuyableModel
         $html .= '<li><b>All Others Parent Groups:</b> ' . ($this->AllParentGroups()->exists() ? '<pre>' . print_r($this->AllParentGroups()->map()->toArray(), 1) . '</pre>' : 'none') . '</li>';
 
         $html .= '<li><hr />Image<hr /></li>';
-        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() instanceof \SilverStripe\Assets\Image ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
+        $html .= '<li><b>Image:</b> ' . ($this->BestAvailableImage() instanceof Image ? '<img src=' . $this->BestAvailableImage()->Link() . ' />' : 'no image') . ' </li>';
         $productGroup = ProductGroup::get_by_id($this->ParentID);
         if ($productGroup) {
             $html .= '<li><hr />Product Example<hr /></li>';
@@ -1467,7 +1473,7 @@ class Product extends Page implements BuyableModel
     public function onAfterDelete()
     {
         parent::onAfterDelete();
-        $obj = new EcommerceTaskRemoveSuperfluousLinksInProductProductGroups();
+        $obj = EcommerceTaskRemoveSuperfluousLinksInProductProductGroups::create();
         $obj->setVerbose(false);
         $obj->run(null);
     }
@@ -1485,6 +1491,7 @@ class Product extends Page implements BuyableModel
                 $this->deleteImage($image);
             }
         }
+
         $otherImagesIDs = DB::query(
             '
             SELECT ImageID FROM
@@ -1518,7 +1525,7 @@ class Product extends Page implements BuyableModel
                 if ($image->canArchive()) {
                     $image->doArchive();
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 //do nothing
             }
         }
@@ -1552,12 +1559,7 @@ class Product extends Page implements BuyableModel
      */
     protected function getProductGroupsTableField()
     {
-        return new GridField(
-            'ProductGroups',
-            _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'),
-            $this->ProductGroups()->filter(['ShowInSearch' => 1]),
-            GridFieldConfigForProductGroups::create()
-        );
+        return GridField::create('ProductGroups', _t('Product.THIS_PRODUCT_SHOULD_ALSO_BE_LISTED_UNDER', 'This product is also listed under ...'), $this->ProductGroups()->filter(['ShowInSearch' => 1]), GridFieldConfigForProductGroups::create());
     }
 
     /**
@@ -1588,7 +1590,7 @@ class Product extends Page implements BuyableModel
             <p>To batch upload additional images and files, you must first specify a product code.</p>';
         }
 
-        return new LiteralField('ImageFileNote', $msg);
+        return LiteralField::create('ImageFileNote', $msg);
     }
 
     /**
@@ -1598,10 +1600,7 @@ class Product extends Page implements BuyableModel
      */
     protected function getAdditionalImagesField()
     {
-        return (new SortableUploadField(
-            'AdditionalImages',
-            'More images'
-        ))
+        return (SortableUploadField::create('AdditionalImages', 'More images'))
             ->setSortColumn('ImageSort')
             ->setFolderName($this->getFolderName());
     }
@@ -1613,10 +1612,7 @@ class Product extends Page implements BuyableModel
      */
     protected function getAdditionalFilesField()
     {
-        return (new SortableUploadField(
-            'AdditionalFiles',
-            'Download Files'
-        ))
+        return (SortableUploadField::create('AdditionalFiles', 'Download Files'))
             ->setSortColumn('FileSort')
             ->setFolderName($this->getFolderName());
     }
@@ -1662,6 +1658,7 @@ class Product extends Page implements BuyableModel
                 EcommerceCache::inst()->save($cacheKey, $ids, true);
             }
         }
+
         return $ids;
     }
 
@@ -1678,13 +1675,15 @@ class Product extends Page implements BuyableModel
     public function AlternativeNames(): ?ArrayList
     {
         if ($this->AlternativeProductNames) {
-            $list = array_filter(array_filter(explode(',', (string) $this->AlternativeProductNames), 'trim'));
+            $list = array_filter(array_filter(explode(',', (string) $this->AlternativeProductNames), trim(...)));
             $al = ArrayList::create();
             foreach ($list as $name) {
                 $al->push(ArrayData::create(['Title' => trim($name)]));
             }
+
             return $al;
         }
+
         return null;
     }
 
@@ -1693,23 +1692,25 @@ class Product extends Page implements BuyableModel
         $altNames = str_replace(', ', ' ', (string) $this->AlternativeProductNames);
         $altNamesArray = array_unique(
             array_map(
-                'trim',
+                trim(...),
                 explode(' ', $altNames)
             )
         );
         if ($altNamesArray !== []) {
             return $altNamesArray;
         }
+
         return [];
     }
 
     public function AlternativeNamesUniqueAsArrayList(): ?ArrayList
     {
         $list = $this->AlternativeNamesUnique();
-        $arrayList = new ArrayList();
+        $arrayList = ArrayList::create();
         foreach ($list as $name) {
             $arrayList->push(ArrayData::create(['Title' => $name]));
         }
+
         return $arrayList->count() > 1 ? $arrayList : null;
     }
 
@@ -1718,6 +1719,7 @@ class Product extends Page implements BuyableModel
         if (! $alternativeClassName) {
             $alternativeClassName = static::class;
         }
+
         return $this->stageTable($this->getSchema()->tableName($alternativeClassName), Versioned::get_stage());
     }
 
@@ -1739,6 +1741,7 @@ class Product extends Page implements BuyableModel
         if (is_array($v)) {
             return $v;
         }
+
         return Config::inst()->get(Order::class, 'summary_fields');
     }
 }

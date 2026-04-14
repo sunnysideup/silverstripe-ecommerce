@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use Override;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -109,12 +111,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         'JSONData' => 'Text',
     ];
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderAddress.ORDERADDRESS', 'Order Address');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderAddress.ORDERADDRESSES', 'Order Addresses');
     }
@@ -185,15 +189,18 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -205,26 +212,30 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (! $this->exists()) {
             return $this->canCreate($member);
         }
+
         if (null === $this->_canView) {
             $this->_canView = false;
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canView($member)) {
+            if ($order instanceof Order && $order->canView($member)) {
                 $this->_canView = true;
             }
         }
@@ -236,26 +247,30 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (! $this->exists()) {
             return $this->canCreate($member);
         }
+
         if (null === $this->_canEdit) {
             $this->_canEdit = false;
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canEdit($member) && ! $order->IsSubmitted()) {
+            if ($order instanceof Order && $order->canEdit($member) && ! $order->IsSubmitted()) {
                 $this->_canEdit = true;
             }
         }
@@ -263,11 +278,13 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return $this->_canEdit;
     }
 
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -290,8 +307,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
@@ -343,7 +361,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         $a[] = (string) $this->getFieldValueWithPrefix('Prefix');
         $a[] = (string) $this->getFieldValueWithPrefix('FirstName');
         $a[] = (string) $this->getFieldValueWithPrefix('Surname');
-        $a = array_map('trim', $a);
+        $a = array_map(trim(...), $a);
         $a = array_filter($a);
         return implode(' ', $a);
     }
@@ -414,10 +432,12 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                     $addressPartsInner[] = Convert::raw2xml($value);
                 }
             }
+
             if ($addressPartsInner !== []) {
                 $addressParts[] = implode(' ', $addressPartsInner);
             }
         }
+
         return implode('; ', $addressParts);
     }
 
@@ -502,10 +522,12 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             //copy data from  member
             if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
                 $this->Email = $member->Email;
             }
+
             $fieldNameArray = ['FirstName' => $fieldPrefix . 'FirstName', 'Surname' => $fieldPrefix . 'Surname'];
             foreach ($fieldNameArray as $memberField => $fieldName) {
                 //NOTE, we always override the Billing Address (which does not have a fieldPrefix)
@@ -515,6 +537,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         if ($write) {
             $this->write();
         }
@@ -534,7 +557,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         if ($this->exists()) {
             $order = $this->getOrderCached();
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->exists() && $order->MemberID) {
+            if ($order instanceof Order && $order->exists() && $order->MemberID) {
                 return Member::get_by_id($order->MemberID);
             }
         }
@@ -557,6 +580,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         $this->Obsolete = 1;
         $this->write();
     }
@@ -597,6 +621,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return json_encode($jsArray);
     }
 
+    #[Override]
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
@@ -606,6 +631,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * standard SS method
      * We "hackishly" ensure that the OrderID is set to the right value.
      */
+    #[Override]
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
@@ -626,6 +652,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      * standard SS Method
      * saves the region code.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -641,11 +668,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     protected function getEcommerceFields()
     {
-        return new FieldList();
+        return FieldList::create();
     }
 
     /**
@@ -657,7 +684,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
      */
     protected function getPostalCodeField($name)
     {
-        $field = new TextField($name, _t('OrderAddress.POSTALCODE', 'Postal Code'));
+        $field = TextField::create($name, _t('OrderAddress.POSTALCODE', 'Postal Code'));
         $postalCodeURL = EcommerceConfig::inst()->PostalCodeURL;
         $postalCodeLabel = EcommerceConfig::inst()->PostalCodeLabel;
         if ($postalCodeURL && $postalCodeLabel) {
@@ -692,9 +719,10 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 if (! $freeTextName) {
                     $freeTextName = $nameWithoutID . 'Code';
                 }
-                $regionField = new TextField($freeTextName, $title);
+
+                $regionField = TextField::create($freeTextName, $title);
             } else {
-                $regionField = new DropdownField($name, $title, $regionsForDropdown);
+                $regionField = DropdownField::create($name, $title, $regionsForDropdown);
                 if ($count < 2) {
                     //readonly shows as number (ID), rather than title
                     //$regionField = $regionField->performReadonlyTransformation();
@@ -704,8 +732,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             }
         } else {
             //adding region field here as hidden field to make the code easier below...
-            $regionField = new HiddenField($name, '', 0);
+            $regionField = HiddenField::create($name, '', 0);
         }
+
         $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
         $regionField->addExtraClass($prefix . 'ajaxRegionField');
 
@@ -734,14 +763,16 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
                 $countryCode = EcommerceCountry::get_country(false, $this->OrderID);
             }
         }
-        $countryField = new DropdownField($name, $title, $countriesForDropdown, $countryCode);
+
+        $countryField = DropdownField::create($name, $title, $countriesForDropdown, $countryCode);
         $countryField->setDescription(_t('OrderAddress.' . strtoupper((string) $name) . '_RIGHT', ' '));
         if (count($countriesForDropdown) < 2) {
             $countryField = $countryField->performReadonlyTransformation();
             if (count($countriesForDropdown) < 1) {
-                $countryField = new HiddenField($name, '', 'not available');
+                $countryField = HiddenField::create($name, '', 'not available');
             }
         }
+
         $prefix = EcommerceConfig::get(OrderAddress::class, 'field_class_and_id_prefix');
         $countryField->addExtraClass($prefix . 'ajaxCountryField');
         //important, otherwise loadData will override the default value....
@@ -755,9 +786,9 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * makes selected fields into read only using the $this->readOnlyFields array.
      *
-     * @param FieldList|\SilverStripe\Forms\CompositeField $fields
+     * @param FieldList|CompositeField $fields
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     protected function makeSelectedFieldsReadOnly($fields)
     {
@@ -782,6 +813,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if (is_a($this, EcommerceConfigClassNames::getName(BillingAddress::class))) {
             return BillingAddress::class;
         }
+
         if (is_a($this, EcommerceConfigClassNames::getName(ShippingAddress::class))) {
             return ShippingAddress::class;
         }
@@ -835,6 +867,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return (string) $this->getFullName();
     }
 
@@ -844,6 +877,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return (string) $this->getFieldValueWithPrefix('CompanyName');
     }
 
@@ -853,6 +887,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return $this->getFullPhone();
     }
 
@@ -862,6 +897,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return '';
     }
 
@@ -871,6 +907,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return '';
     }
 
@@ -880,6 +917,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return (string) $this->getFieldValueWithPrefix('Address');
     }
 
@@ -899,6 +937,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return (string) $this->getFieldValueWithPrefix('PostalCode');
     }
 
@@ -923,6 +962,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return 'STANDARD';
     }
 
@@ -932,6 +972,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         if ($v !== null) {
             return $v;
         }
+
         return 'YES';
     }
 
@@ -942,9 +983,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
             return implode(', ', $v);
             ;
         }
+
         if (is_string($v) && strlen($v)) {
             return $v;
         }
+
         return null;
     }
 }

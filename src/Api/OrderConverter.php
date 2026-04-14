@@ -29,9 +29,10 @@ abstract class OrderConverter
 
     public function __construct(?Order $order = null)
     {
-        if (! $order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if (! $order instanceof Order) {
             $order = ShoppingCart::current_order();
         }
+
         ClassHelpers::check_for_instance_of($order, Order::class);
         $this->order = $order;
 
@@ -67,6 +68,7 @@ abstract class OrderConverter
                     if (! isset($this->amountsPerModifierType[$type])) {
                         $this->amountsPerModifierType[$type] = 0;
                     }
+
                     $this->amountsPerModifierType[$type] += $modifier->TableValue;
                 }
             }

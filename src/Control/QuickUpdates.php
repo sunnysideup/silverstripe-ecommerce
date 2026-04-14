@@ -2,6 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use Override;
+use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
@@ -11,14 +15,11 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -91,17 +92,15 @@ class QuickUpdates extends Controller
 
     public function MyForm()
     {
-        $fields = new FieldList([]);
+        $fields = FieldList::create([]);
 
-        $actions = new FieldList(
-            [
-                FormAction::create('doform')->setTitle('Submit'),
-            ]
-        );
+        $actions = FieldList::create([
+            FormAction::create('doform')->setTitle('Submit'),
+        ]);
 
-        $required = new RequiredFields([]);
+        $required = RequiredFields::create([]);
 
-        return new Form($this, 'MyForm', $fields, $actions, $required);
+        return Form::create($this, 'MyForm', $fields, $actions, $required);
     }
 
     public function Menu(): ArrayList
@@ -163,6 +162,7 @@ class QuickUpdates extends Controller
         }
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -171,8 +171,9 @@ class QuickUpdates extends Controller
         if (! Permission::check($securityCheck)) {
             Security::permissionFailure($this);
         }
+
         Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
-        if (get_class($this) === QuickUpdates::class) {
+        if (static::class === QuickUpdates::class) {
             return $this->httpError(404, 'Please choose a specific update.');
         }
     }
@@ -188,6 +189,7 @@ class QuickUpdates extends Controller
             if ($offerRemoveOption) {
                 $source = [-1 * $product->ID => '--- remove ---'] + $source;
             }
+
             return DropdownField::create(
                 $name,
                 $title,
@@ -197,6 +199,7 @@ class QuickUpdates extends Controller
                 ->setValue($product->ID)
             ;
         }
+
         $callBackFx = function ($query, $request) {
 
             $list = Product::get()
@@ -210,6 +213,7 @@ class QuickUpdates extends Controller
                 ];
                 $list = $list->filterAny($filter);
             }
+
             $results = [];
             foreach ($list as $obj) {
                 $results[] = [
@@ -241,7 +245,7 @@ class QuickUpdates extends Controller
 
     public function ListItems(): PaginatedList
     {
-        return (new PaginatedList($this->productList(), $this->getRequest()))
+        return (PaginatedList::create($this->productList(), $this->getRequest()))
             ->setPageLength(50);
     }
 

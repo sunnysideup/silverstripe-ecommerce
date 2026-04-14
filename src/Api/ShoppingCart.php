@@ -13,7 +13,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -232,7 +231,7 @@ class ShoppingCart
      */
     public function currentOrder(?int $recurseCount = 0, ?Order $order = null)
     {
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $this->order = $order;
         }
 
@@ -240,7 +239,7 @@ class ShoppingCart
             if (! $this->order) {
                 $this->order = self::session_order();
                 $loggedInMember = Security::getCurrentUser();
-                if ($this->order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+                if ($this->order instanceof Order) {
                     //first reason to set to null: it is already submitted
                     if ($this->order->IsSubmitted()) {
                         $this->order = null;
@@ -386,6 +385,7 @@ class ShoppingCart
         if ($order) {
             return $order->Link();
         }
+
         return '';
     }
 
@@ -1166,6 +1166,7 @@ class ShoppingCart
                 $outcome = Referral::add_referral($order, $params);
             }
         }
+
         return $outcome;
     }
 
@@ -1181,7 +1182,7 @@ class ShoppingCart
         $sessionVariableName = $this->sessionVariableName('Messages');
         $messages = [];
         $session = $this->getSession();
-        if ($session instanceof \SilverStripe\Control\Session) {
+        if ($session instanceof Session) {
             //get old messages
             $messages = unserialize((string) $session->get($sessionVariableName));
             //clear old messages
@@ -1205,6 +1206,7 @@ class ShoppingCart
                 return $request->getSession();
             }
         }
+
         return null;
     }
 
@@ -1246,11 +1248,11 @@ class ShoppingCart
 
         //TODO: handle passing a message back to a form->sessionMessage
         $this->StoreMessagesInSession();
-        if ($form instanceof \SilverStripe\Forms\Form) {
+        if ($form instanceof Form) {
             // now we can (re)calculate the order
             $form->sessionMessage($message, $status);
             // let the form controller do the redirectback or whatever else is needed.
-        } elseif (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
+        } elseif (empty($_REQUEST['BackURL']) && Controller::curr() !== null) {
             Controller::curr()->redirectBack();
         } else {
             Controller::curr()->redirect(urldecode((string) $_REQUEST['BackURL']));
@@ -1368,7 +1370,7 @@ class ShoppingCart
     protected function sessionVariableName($name = '')
     {
         if (! in_array($name, self::$session_variable_names, true)) {
-            user_error("Tried to set session variable {$name}, that is not in use", E_USER_NOTICE);
+            user_error(sprintf('Tried to set session variable %s, that is not in use', $name), E_USER_NOTICE);
         }
 
         $sessionCode = EcommerceConfig::get(ShoppingCart::class, 'session_code');

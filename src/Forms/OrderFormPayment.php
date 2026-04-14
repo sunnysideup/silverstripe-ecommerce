@@ -24,41 +24,38 @@ class OrderFormPayment extends Form
     public function __construct(Controller $controller, $name, Order $order, $returnToLink = '')
     {
         $requiredFields = [];
-        $fields = new FieldList(
-            new HiddenField('OrderID', '', $order->ID)
-        );
+        $fields = FieldList::create(HiddenField::create('OrderID', '', $order->ID));
         if ($returnToLink) {
-            $fields->push(new HiddenField('returntolink', '', Convert::raw2att($returnToLink)));
+            $fields->push(HiddenField::create('returntolink', '', Convert::raw2att($returnToLink)));
         }
+
         if ($order->PaymentIsPending()) {
             $fields->push(
-                new LiteralField(
-                    'PaymentIsPending',
-                    '<p class="message warning">' . _t(
-                        'OrderForm.PAYMENTISPENDING',
-                        'Your payment is awaiting confirmation. If you haven\'t completed a payment yet, you may proceed with an alternative payment now.'
-                    ) . '</p>'
-                )
+                LiteralField::create('PaymentIsPending', '<p class="message warning">' . _t(
+                    'OrderForm.PAYMENTISPENDING',
+                    "Your payment is awaiting confirmation. If you haven't completed a payment yet, you may proceed with an alternative payment now."
+                ) . '</p>')
             );
         }
-        $bottomFields = new CompositeField();
+
+        $bottomFields = CompositeField::create();
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
             $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }
+
             $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
             if ($paymentRequiredFields !== []) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }
         } else {
-            $bottomFields->push(new HiddenField('PaymentMethod', '', ''));
+            $bottomFields->push(HiddenField::create('PaymentMethod', '', ''));
         }
+
         $fields->push($bottomFields);
-        $actions = new FieldList(
-            new FormAction('dopayment', _t('OrderForm.PAYORDER', 'Pay balance'))
-        );
+        $actions = FieldList::create(FormAction::create('dopayment', _t('OrderForm.PAYORDER', 'Pay balance')));
 
         $validator = OrderFormPaymentValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -72,10 +69,11 @@ class OrderFormPayment extends Form
         $this->setValidator($validator);
 
         $this->setFormAction($controller->Link($name));
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateOrderFormPayment', $this);
     }
 
@@ -97,14 +95,17 @@ class OrderFormPayment extends Form
                     if ($formHelper->validatePayment($order, $data, $form)) {
                         return $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
                     }
+
                     //error messages are set in validation
                     return $this->controller->redirectBack();
                 }
+
                 $form->sessionMessage(_t('OrderForm.NO_PAYMENTS_CAN_BE_MADE_FOR_THIS_ORDER', 'No payments can be made for this order.'), 'bad');
 
                 return $this->controller->redirectBack();
             }
         }
+
         $form->sessionMessage(_t('OrderForm.COULDNOTPROCESSPAYMENT', 'Sorry, we could not find the Order for payment.'), 'bad');
 
         return $this->controller->redirectBack();

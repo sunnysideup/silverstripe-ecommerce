@@ -679,6 +679,7 @@ class EcommerceConfigDefinitions
                 );
             }
         }
+
         //add more stuff through child classes
         $childClasses = ClassInfo::subclassesFor(static::class);
         if (is_array($childClasses) && count($childClasses)) {
@@ -692,10 +693,12 @@ class EcommerceConfigDefinitions
                 }
             }
         }
+
         //return what is appropriate
         if ($className && $variable) {
             return $array[$className][$variable];
         }
+
         if ($className) {
             return $array[$className];
         }

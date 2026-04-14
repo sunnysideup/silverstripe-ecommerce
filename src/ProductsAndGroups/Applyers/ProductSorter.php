@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use Override;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -66,6 +67,7 @@ class ProductSorter extends BaseApplyer
             } elseif ($sort) {
                 $this->products = $this->products->orderBy($sort);
             }
+
             // @todo
             $this->applyEnd($key, $params);
         }
@@ -80,6 +82,7 @@ class ProductSorter extends BaseApplyer
      *
      * @return array|string
      */
+    #[Override]
     public function getSql(?string $key = null, $params = null)
     {
         // if (BaseApplyer::DEFAULT_NAME === $key && self::$defaultSortOrderFromFilter) {
@@ -96,6 +99,7 @@ class ProductSorter extends BaseApplyer
     /**
      * you can add an extra sort (or two), based on filters (or other stuff.).
      */
+    #[Override]
     public function getOptions(): array
     {
         return self::$defaultSortOrderFromFilter + parent::getOptions();

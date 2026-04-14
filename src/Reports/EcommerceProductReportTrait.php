@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -42,7 +43,7 @@ trait EcommerceProductReportTrait
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
@@ -102,10 +103,12 @@ trait EcommerceProductReportTrait
         if ($createdInTheLastXDays !== 0) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
+
         $parentID = intval(($params['ParentID'] ?? 0));
         if ($parentID !== 0) {
             $list = $list->filter(['ParentID' => $parentID]);
         }
+
         // filter
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
@@ -129,8 +132,10 @@ trait EcommerceProductReportTrait
             if (empty($sort)) {
                 $sort = ['Title' => 'ASC'];
             }
+
             $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         }
+
         return $list;
     }
 
@@ -158,17 +163,14 @@ trait EcommerceProductReportTrait
             ],
             'Price' => [
                 'title' => _t('EcommerceSideReport.PRICE', 'Price'),
-                'formatting' => function ($value, $item) {
-                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice() : 'n/a');
-                },
-                'csvFormatting' => function ($value, $item) {
-                    return (intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice() : 'n/a');
-                },
+                'formatting' => fn($value, $item) => intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice() : 'n/a',
+                'csvFormatting' => fn($value, $item) => intval($value) !== 0 ? DBField::create_field('Currency', $value)->Nice() : 'n/a',
             ],
         ];
         if ($this->hasMethod('updateEcommerceReportColumns')) {
             $array = $this->updateEcommerceReportColumns($array);
         }
+
         return $array;
     }
 
@@ -220,7 +222,7 @@ trait EcommerceProductReportTrait
         );
         $fields->recursiveWalk(
             function (FormField $field) {
-                if (0 !== strpos($field->getName(), 'filter[')) {
+                if (!str_starts_with($field->getName(), 'filter[')) {
                     $field->setName(sprintf('filters[%s]', $field->getName()));
                 }
 
@@ -270,6 +272,7 @@ trait EcommerceProductReportTrait
                 }
             }
         }
+
         return asort($array, SORT_NATURAL | SORT_FLAG_CASE) ? $array : [];
     }
 

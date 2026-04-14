@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
@@ -14,7 +16,7 @@ use SilverStripe\ORM\DB;
  */
 class EcommerceTaskCartManipulationCurrent extends BuildTask
 {
-    protected $title = 'Clear the current Cart';
+    protected string $title = 'Clear the current Cart';
 
     protected $description = '
         Removes the cart that is currently in memory (session) for the currrent user.

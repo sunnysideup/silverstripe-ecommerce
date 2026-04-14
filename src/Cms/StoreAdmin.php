@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
@@ -84,10 +85,11 @@ class StoreAdmin extends ModelAdmin
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      *               we make sure that the EcommerceDBConfig is FIRST
      */
+    #[Override]
     public function getManagedModels()
     {
         $models = parent::getManagedModels();
-        $ecommerceDBConfig = isset($models[EcommerceDBConfig::class]) ? $models[EcommerceDBConfig::class] : null;
+        $ecommerceDBConfig = $models[EcommerceDBConfig::class] ?? null;
         if ($ecommerceDBConfig) {
             unset($models[EcommerceDBConfig::class]);
 
@@ -103,6 +105,7 @@ class StoreAdmin extends ModelAdmin
      *
      * @return Form
      */
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);

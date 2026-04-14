@@ -18,7 +18,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceTaskCountryAndRegion extends BuildTask
 {
-    protected $title = 'Create standard countries and regions';
+    protected string $title = 'Create standard countries and regions';
 
     protected $description = 'Adds all countries to the EcommerceCountry list';
 
@@ -37,16 +37,19 @@ class EcommerceTaskCountryAndRegion extends BuildTask
                 //do nothing
                 ++$count;
             } else {
-                DB::alteration_message("adding {$code} to Ecommerce Country", 'created');
+                DB::alteration_message(sprintf('adding %s to Ecommerce Country', $code), 'created');
                 $ecommerceCountry = EcommerceCountry::create();
                 $ecommerceCountry->Code = $code;
             }
+
             if ($allowedArray && count($allowedArray)) {
                 $ecommerceCountry->DoNotAllowSales = in_array($code, $allowedArray, true) ? 0 : 1;
             }
+
             $ecommerceCountry->Name = $name;
             $ecommerceCountry->write();
         }
-        DB::alteration_message("Created / Checked {$count} Ecommerce Countries", 'edited');
+
+        DB::alteration_message(sprintf('Created / Checked %d Ecommerce Countries', $count), 'edited');
     }
 }

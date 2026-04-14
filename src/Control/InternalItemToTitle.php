@@ -34,17 +34,7 @@ class InternalItemToTitle extends Controller
 
     public function index()
     {
-        $form = new Form(
-            $this,
-            'lookup',
-            new FieldList(
-                HeaderField::create('Header', 'Lookup Product Title by Internal Item ID'),
-                new TextareaField('InternalItemIDs', 'List product codes below, comma or line separated')
-            ),
-            new FieldList(
-                new FormAction('lookup', 'Lookup')
-            )
-        );
+        $form = Form::create($this, 'lookup', FieldList::create(HeaderField::create('Header', 'Lookup Product Title by Internal Item ID'), TextareaField::create('InternalItemIDs', 'List product codes below, comma or line separated')), FieldList::create(FormAction::create('lookup', 'Lookup')));
 
         $form->setFormMethod('POST');
         return $this->renderWith(static::class, ['Form' => $form]);
@@ -60,10 +50,12 @@ class InternalItemToTitle extends Controller
         $title = str_replace('\\r', ',', $title);
         $title = str_replace("\t", ',', $title);
         $title = str_replace('\\t', ',', $title);
+
         $array = explode(',', $title);
         $array = array_filter($array);
         $array = array_unique($array);
-        $array = array_map('trim', $array);
+        $array = array_map(trim(...), $array);
+
         $html = '
         <h1>Full Product Names ' . count($array) . '</h1>
         <p><a href="' . $this->Link() . '">Try again</a></p>
@@ -76,6 +68,7 @@ class InternalItemToTitle extends Controller
                 $html .= '<li>Product with code "' . $code . '" not found</li>';
             }
         }
+
         $html .= '</ul><br /><br />';
 
         return $this->renderWith(static::class, ['Form' => DBHTMLText::create_field('HTMLText', $html)]);

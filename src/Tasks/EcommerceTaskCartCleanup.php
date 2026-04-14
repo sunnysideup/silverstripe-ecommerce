@@ -108,7 +108,7 @@ class EcommerceTaskCartCleanup extends BuildTask
      */
     protected $leftMemberJoin = '';
 
-    protected $title = 'Clear old carts';
+    protected string $title = 'Clear old carts';
 
     protected $description = 'Deletes abandonned carts (add ?limit=xxxx to the end of the URL to set the number of records (xxx = number of records) to be deleted in one load).';
 
@@ -191,7 +191,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             $this->verbose = true;
             $this->flush();
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
-            DB::alteration_message("<h2>deleting empty and abandonned carts (total cart count = {$countAll})</h2>.");
+            DB::alteration_message(sprintf('<h2>deleting empty and abandonned carts (total cart count = %s)</h2>.', $countAll));
         }
 
         $this->neverDeleteIfLinkedToMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'never_delete_if_linked_to_member');
@@ -248,11 +248,11 @@ class EcommerceTaskCartCleanup extends BuildTask
 
         $clearMinutesWithoutMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes');
         $timeWithoutMember = strtotime('-' . $clearMinutesWithoutMember . ' minutes');
-        $whereWithoutMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithoutMember} " . $this->withoutMemberWhere;
+        $whereWithoutMember = '"StatusID" = ' . $createdStepID . sprintf(' AND UNIX_TIMESTAMP("Order"."LastEdited") < %s ', $timeWithoutMember) . $this->withoutMemberWhere;
 
         $clearMinutesWithMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_with_member');
         $timeWithMember = strtotime('-' . $clearMinutesWithMember . ' minutes');
-        $whereWithMember = '"StatusID" = ' . $createdStepID . " AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$timeWithMember} ";
+        $whereWithMember = '"StatusID" = ' . $createdStepID . sprintf(' AND UNIX_TIMESTAMP("Order"."LastEdited") < %s ', $timeWithMember);
 
         $where = '(' . $whereWithoutMember . ') OR (' . $whereWithMember . ')';
         $oldCarts = $this->getOldCarts($where);
@@ -273,15 +273,15 @@ class EcommerceTaskCartCleanup extends BuildTask
                 DB::alteration_message('
                         <h2>Total number of abandonned carts: ' . $totalToDelete . '</h2>
                         <br /><b>number of records deleted at one time:</b> ' . $this->maximumNumberOfObjectsDeleted . '
-                        <br /><b>Criteria:</b> last edited ' . $clearMinutesWithoutMember . ' (~' . round($clearMinutesWithoutMember / 60 / 24, 2) . " days)
-                        minutes ago or more {$this->memberDeleteNote}", 'created');
+                        <br /><b>Criteria:</b> last edited ' . $clearMinutesWithoutMember . ' (~' . round($clearMinutesWithoutMember / 60 / 24, 2) . (' days)
+                        minutes ago or more ' . $this->memberDeleteNote), 'created');
             }
 
             foreach ($oldCarts as $oldCart) {
                 ++$count;
                 if ($this->verbose) {
                     $this->flush();
-                    DB::alteration_message("{$count} ... deleting abandonned order #" . $oldCart->ID, 'deleted');
+                    DB::alteration_message($count . ' ... deleting abandonned order #' . $oldCart->ID, 'deleted');
                 }
 
                 $this->deleteObject($oldCart);
@@ -317,7 +317,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         //EMPTY ORDERS
         $clearMinutes = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'clear_minutes_empty_carts');
         $time = strtotime('-' . $clearMinutes . ' minutes');
-        $where = "\"StatusID\" = 0 AND UNIX_TIMESTAMP(\"Order\".\"LastEdited\") < {$time} ";
+        $where = sprintf('"StatusID" = 0 AND UNIX_TIMESTAMP("Order"."LastEdited") < %s ', $time);
         $oldCarts = $this->getOldCarts($where);
 
         if ($oldCarts->exists()) {
@@ -345,7 +345,7 @@ class EcommerceTaskCartCleanup extends BuildTask
                 ++$count;
                 if ($this->verbose) {
                     $this->flush();
-                    DB::alteration_message("{$count} ... deleting empty order #" . $oldCart->ID, 'deleted');
+                    DB::alteration_message($count . ' ... deleting empty order #' . $oldCart->ID, 'deleted');
                 }
 
                 $this->deleteObject($oldCart);
@@ -396,7 +396,7 @@ class EcommerceTaskCartCleanup extends BuildTask
             if (! in_array($className, $this->oneToMany, true) && ! in_array($className, $this->manyToMany, true)) {
                 if ($this->verbose) {
                     $this->flush();
-                    DB::alteration_message("looking for {$className} objects without link to order.");
+                    DB::alteration_message(sprintf('looking for %s objects without link to order.', $className));
                 }
 
                 $rows = DB::query("
@@ -430,20 +430,20 @@ class EcommerceTaskCartCleanup extends BuildTask
                         }
                     } elseif ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("No objects where found for {$className} even though there appear to be missing links.", 'created');
+                        DB::alteration_message(sprintf('No objects where found for %s even though there appear to be missing links.', $className), 'created');
                     }
                 } elseif ($this->verbose) {
                     $this->flush();
-                    DB::alteration_message("All references in Order to {$className} are valid.", 'created');
+                    DB::alteration_message(sprintf('All references in Order to %s are valid.', $className), 'created');
                 }
 
                 if ($this->verbose) {
                     $this->flush();
-                    $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableName}\"")->value();
-                    $countUnlinkedOnes = DB::query("SELECT COUNT(\"{$tableName}\".\"ID\") FROM \"{$tableName}\" LEFT JOIN \"Order\" ON \"{$tableName}\".\"ID\" = \"Order\".\"{$orderFieldName}\" WHERE \"Order\".\"ID\" IS NULL")->value();
-                    DB::alteration_message("In total there are {$countAll} {$className} ({$orderFieldName}), of which there are {$countUnlinkedOnes} not linked to an order. ", 'created');
+                    $countAll = DB::query(sprintf('SELECT COUNT("ID") FROM "%s"', $tableName))->value();
+                    $countUnlinkedOnes = DB::query(sprintf('SELECT COUNT("%s"."ID") FROM "%s" LEFT JOIN "Order" ON "%s"."ID" = "Order"."%s" WHERE "Order"."ID" IS NULL', $tableName, $tableName, $tableName, $orderFieldName))->value();
+                    DB::alteration_message(sprintf('In total there are %s %s (%s), of which there are %s not linked to an order. ', $countAll, $className, $orderFieldName, $countUnlinkedOnes), 'created');
                     if ($countUnlinkedOnes) {
-                        DB::alteration_message("There should be NO {$orderFieldName} ({$className}) without link to Order - un error is suspected", 'deleted');
+                        DB::alteration_message(sprintf('There should be NO %s (%s) without link to Order - un error is suspected', $orderFieldName, $className), 'deleted');
                     }
                 }
             }
@@ -493,18 +493,18 @@ class EcommerceTaskCartCleanup extends BuildTask
                         }
                     } elseif ($this->verbose) {
                         $this->flush();
-                        DB::alteration_message("{$classWithLastEdited} objects could not be found even though they were referenced.", 'deleted');
+                        DB::alteration_message($classWithLastEdited . ' objects could not be found even though they were referenced.', 'deleted');
                     }
                 } elseif ($this->verbose) {
                     $this->flush();
-                    DB::alteration_message("All {$classWithLastEdited} objects have a reference to a valid order.", 'created');
+                    DB::alteration_message(sprintf('All %s objects have a reference to a valid order.', $classWithLastEdited), 'created');
                 }
 
                 if ($this->verbose) {
                     $this->flush();
-                    $countAll = DB::query("SELECT COUNT(\"ID\") FROM \"{$tableWithOrderID}\"")->value();
-                    $countUnlinkedOnes = DB::query("SELECT COUNT(\"{$tableWithOrderID}\".\"ID\") FROM \"{$tableWithOrderID}\" LEFT JOIN \"Order\" ON \"{$tableWithOrderID}\".\"OrderID\" = \"Order\".\"ID\" WHERE \"Order\".\"ID\" IS NULL")->value();
-                    DB::alteration_message("In total there are {$countAll} {$classWithOrderID} ({$classWithLastEdited}), of which there are {$countUnlinkedOnes} not linked to an order. ", 'created');
+                    $countAll = DB::query(sprintf('SELECT COUNT("ID") FROM "%s"', $tableWithOrderID))->value();
+                    $countUnlinkedOnes = DB::query(sprintf('SELECT COUNT("%s"."ID") FROM "%s" LEFT JOIN "Order" ON "%s"."OrderID" = "Order"."ID" WHERE "Order"."ID" IS NULL', $tableWithOrderID, $tableWithOrderID, $tableWithOrderID))->value();
+                    DB::alteration_message(sprintf('In total there are %s %s (%s), of which there are %s not linked to an order. ', $countAll, $classWithOrderID, $classWithLastEdited, $countUnlinkedOnes), 'created');
                 }
             }
         }

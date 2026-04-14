@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
@@ -35,14 +35,7 @@ class BuyableSelectField extends FormField
      *
      * @var string
      */
-    protected $jquery_UI_CSS_location; //'ecommerce/thirdparty/jquery-ui/jquery-ui-1.8.23.custom.css';
-
-    /**
-     * number of suggestions.
-     *
-     * @var int
-     */
-    protected $countOfSuggestions;
+    protected $jquery_UI_CSS_location;
 
     /**
      * @var FormField
@@ -55,30 +48,28 @@ class BuyableSelectField extends FormField
     protected $fieldSelectedBuyable;
 
     /**
-     * @var DataObject
-     */
-    protected $buyable;
-
-    /**
      * @param string $name
      * @param string $title
      * @param object $buyable            - currently selected buyable
      * @param int    $countOfSuggestions - number of suggestions shown (max)
      */
-    public function __construct($name, $title = null, $buyable = null, $countOfSuggestions = 100)
+    public function __construct($name, $title = null, protected $buyable = null, /**
+     * number of suggestions.
+     */
+    protected $countOfSuggestions = 100)
     {
-        $this->countOfSuggestions = $countOfSuggestions;
-        $this->fieldFindBuyable = new TextField("{$name}[FindBuyable]", _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Enter product code or title'));
-        $this->fieldSelectedBuyable = new ReadonlyField("{$name}[SelectedBuyable]", _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ' '), _t('BuyableSelectField.NONE', 'No product selected yet.'));
-        $this->buyable = $buyable;
+        $this->fieldFindBuyable = TextField::create($name . '[FindBuyable]', _t('BuyableSelectField.FIELDLABELFINDBUYABLE', 'Enter product code or title'));
+        $this->fieldSelectedBuyable = ReadonlyField::create($name . '[SelectedBuyable]', _t('BuyableSelectField.FIELDLABELSELECTEDBUYABLE', ' '), _t('BuyableSelectField.NONE', 'No product selected yet.'));
         if ($this->buyable) {
             $value = $this->buyable->FullName ?: $this->buyable->getTitle();
         } else {
             $value = '';
         }
+
         parent::__construct($name, $title, $value);
     }
 
+    #[Override]
     public function hasData()
     {
         return false;
@@ -89,6 +80,7 @@ class BuyableSelectField extends FormField
      *
      * @return DBHTMLText
      */
+    #[Override]
     public function Field($properties = [])
     {
         //Requirements::javascript($this->jquery_UI_JS_location);
@@ -112,6 +104,7 @@ class BuyableSelectField extends FormField
      * @param mixed      $value
      * @param null|mixed $data
      */
+    #[Override]
     public function setValue($value, $data = null): self
     {
         if ($this->buyable) {
@@ -126,6 +119,7 @@ class BuyableSelectField extends FormField
     /**
      * Returns a readonly version of this field.
      */
+    #[Override]
     public function performReadonlyTransformation()
     {
         $clone = clone $this;
@@ -134,6 +128,7 @@ class BuyableSelectField extends FormField
         return $clone;
     }
 
+    #[Override]
     public function setReadonly($bool): static
     {
         parent::setReadonly((bool) $bool);

@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\HeaderField;
@@ -122,6 +125,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         'IsDefaultNice' => 'Default Currency',
         'ExchangeRate' => 'Exchange Rate',
     ];
+
     //note no => for relational fields
 
     /**
@@ -249,12 +253,14 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         'ZMK' => 'zambia kwacha',
     ];
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('EcommerceCurrency.CURRENCY', 'Currency');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('EcommerceCurrency.CURRENCIES', 'Currencies');
     }
@@ -262,11 +268,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
@@ -288,11 +295,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
@@ -314,11 +322,12 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
@@ -340,10 +349,11 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $this->InUse && EcommerceCurrency::get()->Count() > 1) {
@@ -370,7 +380,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * NOTE: when there is only one currency we return an empty DataList
      * as one currency is meaningless.
      *
-     * @return null|\SilverStripe\ORM\DataList
+     * @return null|DataList
      */
     public static function ecommerce_currency_list()
     {
@@ -399,7 +409,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * @param DBCurrency|float $price
      *
-     * @return \SilverStripe\ORM\FieldType\DBField|\SilverStripe\ORM\FieldType\DBMoney
+     * @return DBField|DBMoney
      */
     public static function get_money_object_from_order_currency($price, ?Order $order = null)
     {
@@ -407,7 +417,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $price = $price->getValue();
         }
 
-        if (! $order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if (! $order instanceof Order) {
             $order = ShoppingCart::current_order();
         }
 
@@ -445,7 +455,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         return DataObject::get_one(
             EcommerceCurrency::class,
             [
-                'Code' => trim(strtolower(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'))),
+                'Code' => trim(strtolower((string) EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'))),
                 'InUse' => 1,
             ]
         );
@@ -506,6 +516,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     /**
      * STANDARD SILVERSTRIPE STUFF.
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -517,17 +528,17 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
 
         $titleField->setDescription('e.g. New Zealand Dollar');
 
-        $fields->addFieldToTab('Root.Main', new ReadonlyField('IsDefaulNice', $fieldLabels['IsDefaultNice'], $this->getIsDefaultNice()));
+        $fields->addFieldToTab('Root.Main', ReadonlyField::create('IsDefaulNice', $fieldLabels['IsDefaultNice'], $this->getIsDefaultNice()));
         if (! $this->isDefault()) {
-            $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRate', $fieldLabels['ExchangeRate'], $this->ExchangeRate()));
-            $fields->addFieldToTab('Root.Main', new ReadonlyField('ExchangeRateExplanation', $fieldLabels['ExchangeRateExplanation'], $this->ExchangeRateExplanation()));
+            $fields->addFieldToTab('Root.Main', ReadonlyField::create('ExchangeRate', $fieldLabels['ExchangeRate'], $this->ExchangeRate()));
+            $fields->addFieldToTab('Root.Main', ReadonlyField::create('ExchangeRateExplanation', $fieldLabels['ExchangeRateExplanation'], $this->ExchangeRateExplanation()));
         }
 
         $fields->addFieldsToTab('Root.Main', [
-            new HeaderField('Symbols', 'Symbols'),
-            new ReadonlyField('DefaultSymbol', 'Default'),
-            new ReadonlyField('ShortSymbol', 'Short'),
-            new ReadonlyField('LongSymbol', 'Long'),
+            HeaderField::create('Symbols', 'Symbols'),
+            ReadonlyField::create('DefaultSymbol', 'Default'),
+            ReadonlyField::create('ShortSymbol', 'Short'),
+            ReadonlyField::create('LongSymbol', 'Long'),
         ]);
 
         return $fields;
@@ -591,7 +602,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             user_error('This currency (ID = ' . $this->ID . ') does not have a code ');
         }
 
-        return strtoupper((string) $this->Code) === strtoupper(EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
+        return strtoupper((string) $this->Code) === strtoupper((string) EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'));
     }
 
     /**
@@ -725,6 +736,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         return $linkingMode;
     }
 
+    #[Override]
     public function validate()
     {
         $result = parent::validate();
@@ -737,16 +749,15 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
             $errors[] = 'The name is required.';
         }
 
-        if (! count($errors)) {
+        if ($errors === []) {
             $this->Code = strtoupper((string) $this->Code);
             // Check that there are no 2 same code currencies in use
             if ($this->isChanged('Code')) {
                 $exists = EcommerceCurrency::get()
-                    ->where("UPPER(\"Code\") = '" . $this->Code . "'")
-                    ->exclude('ID', (int) $this->ID)
+                    ->where("UPPER(\"Code\") = '" . $this->Code . "'")->exclude(['ID' => (int) $this->ID])
                     ->exists();
                 if ($exists) {
-                    $errors[] = "There is alreay another currency in use with code: '{$this->Code}'.";
+                    $errors[] = sprintf("There is alreay another currency in use with code: '%s'.", $this->Code);
                 }
             }
         }
@@ -762,6 +773,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * Standard SS Method
      * Adds the default currency.
      */
+    #[Override]
     public function populateDefaults()
     {
         $this->InUse = true;
@@ -773,6 +785,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      * Standard SS Method
      * Adds the default currency.
      */
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -792,7 +805,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         $code = trim(strtoupper((string) $code));
         if (! $name) {
             $currencies = Config::inst()->get(EcommerceCurrency::class, 'currencies');
-            $name = isset($currencies[$code]) ? $currencies[$code] : $code;
+            $name = $currencies[$code] ?? $code;
         }
 
         $name = ucwords($name);
@@ -826,11 +839,13 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();

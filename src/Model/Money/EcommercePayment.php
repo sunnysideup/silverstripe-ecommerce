@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -24,7 +25,6 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
-use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Forms\Validation\EcommercePaymentFormSetupAndValidation;
 use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
@@ -51,8 +51,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property string $AlternativeEndPoint
  * @property int $PaidByID
  * @property int $OrderID
- * @method \SilverStripe\Security\Member PaidBy()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method Member PaidBy()
+ * @method Order Order()
  */
 class EcommercePayment extends DataObject implements EditableEcommerceObject
 {
@@ -186,12 +186,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
 
     private $ecommercePaymentFormSetupAndValidationObject;
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
@@ -209,6 +211,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return $this;
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -229,11 +232,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         );
         $fields->replaceField(
             'PaidByID',
-            new ReadonlyField(
-                'PaidByIDNice',
-                'Payment made by',
-                DBField::create_field('HTMLText', '<a href="' . $this->PaidBy()->CMSEditLink() . '">' . $this->PaidBy()->getTitle() . '</a>')
-            )
+            ReadonlyField::create('PaidByIDNice', 'Payment made by', DBField::create_field('HTMLText', '<a href="' . $this->PaidBy()->CMSEditLink() . '">' . $this->PaidBy()->getTitle() . '</a>'))
         );
         $fields->removeByName('AlternativeEndPoint');
         foreach ($fields->dataFields() as $field) {
@@ -264,20 +263,23 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -285,19 +287,23 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         return parent::canCreate($member);
     }
 
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         $order = $this->getOrderCached();
         if ($order && $order->exists()) {
             return $order->canView();
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -308,27 +314,32 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         if ($this->Order()->IsCancelled()) {
             return false;
         }
+
         if (Director::isDev()) {
             return Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'));
         }
+
         if (EcommercePayment::PENDING_STATUS === $this->Status || EcommercePayment::INCOMPLETE_STATUS === $this->Status) {
             $extended = $this->extendedCan(__FUNCTION__, $member);
             if (null !== $extended) {
                 return $extended;
             }
+
             if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
                 return true;
             }
@@ -343,10 +354,11 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * set to false as a security measure...
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -374,10 +386,12 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if ($this->AlternativeEndPoint) {
             return Controller::curr()->redirect(Controller::join_links(Director::absoluteBaseURL(), $this->AlternativeEndPoint));
         }
+
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             return Controller::curr()->redirect($order->Link());
         }
+
         user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);
     }
 
@@ -394,6 +408,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     /**
      * @return string
      */
+    #[Override]
     public function getTitle()
     {
         return $this->i18n_singular_name();
@@ -468,6 +483,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Set currency to default one.
      * Set IP address.
      */
+    #[Override]
     public function populateDefaults()
     {
         $this->Amount->Currency = EcommerceConfig::get(EcommerceCurrency::class, 'default_currency');
@@ -482,11 +498,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     public function PaymentMethod(): ?string
     {
         $supportedMethods = self::get_supported_methods($this->getOrderCached());
-        if (isset($supportedMethods[$this->ClassName])) {
-            return $supportedMethods[$this->ClassName];
-        }
 
-        return null;
+        return $supportedMethods[$this->ClassName] ?? null;
     }
 
     /**
@@ -545,20 +558,14 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @param string $amount formatted amount (e.g. 12.30) without the currency
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public static function combined_form_fields($amount, ?Order $order = null)
     {
         // Create the initial form fields, which defines an OptionsetField
         // allowing the user to choose which payment method to use.
         $supportedMethods = self::get_supported_methods($order);
-        $fields = new FieldList(
-            $optionsField = new OptionsetField(
-                'PaymentMethod',
-                '',
-                []
-            )
-        );
+        $fields = FieldList::create($optionsField = OptionsetField::create('PaymentMethod', '', []));
         $options = [];
         /** @var string $methodClass */
         /** @var string $methodName */
@@ -567,14 +574,13 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             $options[$htmlClassName] = $methodName;
             // Create a new CompositeField with method specific fields,
             // as defined on each payment method class using getPaymentFormFields()
-            $methodFields = new CompositeField(
-                $methodClass::create()->getPaymentFormFields($amount, $order)
-            );
-            $methodFields->addExtraClass("methodFields_{$htmlClassName}");
+            $methodFields = CompositeField::create($methodClass::create()->getPaymentFormFields($amount, $order));
+            $methodFields->addExtraClass('methodFields_' . $htmlClassName);
             $methodFields->addExtraClass('paymentfields');
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
         }
+
         $optionsField->setSource($options);
 
         // Add the amount and subtotal fields for the payment amount
@@ -603,7 +609,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormFields($amount = 0, ?Order $order = null): FieldList
     {
-        user_error("Please implement getPaymentFormFields() on {$this->ClassName}", E_USER_ERROR);
+        user_error('Please implement getPaymentFormFields() on ' . $this->ClassName, E_USER_ERROR);
 
         return FieldList::create();
     }
@@ -617,7 +623,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function getPaymentFormRequirements(): array
     {
-        user_error("Please implement getPaymentFormRequirements() on {$this->ClassName}", E_USER_ERROR);
+        user_error('Please implement getPaymentFormRequirements() on ' . $this->ClassName, E_USER_ERROR);
 
         return [];
     }
@@ -651,7 +657,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     public function processPayment($data, Form $form)
     {
-        user_error("Please implement processPayment() on {$this->ClassName}", E_USER_ERROR);
+        user_error('Please implement processPayment() on ' . $this->ClassName, E_USER_ERROR);
     }
 
     public function PaidObject()
@@ -663,6 +669,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * Debug helper method.
      * Access through : /shoppingcart/debug/.
      */
+    #[Override]
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
@@ -690,6 +697,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * standard SS method
      * try to finalise order if payment has been made.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -700,6 +708,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      * standard SS method
      * try to finalise order if payment has been made.
      */
+    #[Override]
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
@@ -717,7 +726,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $proxy = null;
         $ip = null;
-        if (Controller::has_curr()) {
+        if (Controller::curr() !== null) {
             $ip = Controller::curr()->getRequest()->getIP();
         }
 
@@ -730,6 +739,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         if (! $this->IP) {
             $this->IP = $ip;
         }
+
         if (! $this->ProxyIP) {
             $this->ProxyIP = $proxy;
         }

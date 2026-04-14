@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -21,6 +22,7 @@ class EcommerceSideReportProductsWithDuplicateInternalItemIds extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return 'E-commerce: Products: with duplicate internal item IDs (product codes / skus)';

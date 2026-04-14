@@ -30,7 +30,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
 
     protected $limit = 1;
 
-    protected $title = 'Try to finalise all orders - WILL SEND EMAILS';
+    protected string $title = 'Try to finalise all orders - WILL SEND EMAILS';
 
     private static $segment = 'EcommerceTaskTryToFinaliseOrders';
 
@@ -52,13 +52,16 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if (isset($_GET['limit'])) {
             $limit = (int) $_GET['limit'];
         }
+
         if ((int) $limit === 0) {
             $limit = $this->limit;
         }
+
         $startAt = null;
         if (isset($_GET['startat'])) {
             $startAt = (int) $_GET['startat'];
         }
+
         if ((int) $startAt === 0) {
             $startAt = $this->getStart();
             if ($startAt === 0) {
@@ -78,12 +81,13 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         } else {
             $ordersInQueueArray = ArrayMethods::filter_array([]);
         }
+
         $orders = Order::get()
             ->orderBy($sort)
             ->filter(['StatusID' => OrderStep::admin_manageable_steps()->columnUnique()])
             ->exclude(['ID' => $ordersInQueueArray]);
         ;
-        DB::alteration_message("<h1>In total there, are {$orders->count()} Orders to move</h1>");
+        DB::alteration_message(sprintf('<h1>In total there, are %d Orders to move</h1>', $orders->count()));
         $this->tryToFinaliseOrders($orders, $limit, $startAt);
         if (! $this->isCli() && $this->getStart()) {
             DB::alteration_message('WAIT: we are still moving more orders ... this page will automatically load the next lot in 5 seconds.', 'deleted');
@@ -95,7 +99,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
     {
         $orders = $orders->limit($limit, $startAt);
         if ($orders->exists()) {
-            DB::alteration_message("<h1>Moving {$limit} Orders (starting from {$startAt})</h1>");
+            DB::alteration_message(sprintf('<h1>Moving %s Orders (starting from %s)</h1>', $limit, $startAt));
             foreach ($orders as $order) {
                 if ($order->IsSubmitted()) {
                     $stepBefore = OrderStep::get_by_id($order->StatusID);
@@ -105,6 +109,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                     } catch (Exception $exception) {
                         DB::alteration_message($exception, 'deleted');
                     }
+
                     $stepAfter = OrderStep::get_by_id($order->StatusID);
                     if ($stepBefore) {
                         if ($stepAfter) {
@@ -124,6 +129,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
                 } else {
                     DB::alteration_message('ERROR: Moving Order ' . $order->getTitle() . ' IS NOT SUBMITTED YET', 'deleted');
                 }
+
                 // completed - so can move on
                 ++$startAt;
                 $this->setStart($startAt);
@@ -153,6 +159,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         if (! Director::is_cli()) {
             return (int) Controller::curr()->getRequest()->getSession()->get('EcommerceTaskTryToFinaliseOrdersStartAt');
         }
+
         return 0;
     }
 

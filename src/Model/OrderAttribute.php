@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
@@ -159,12 +161,14 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      */
     private static $_price_has_been_fixed = [];
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderAttribute.ORDERENTRY', 'Order Entry');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderAttribute.ORDERENTRIES', 'Order Entries');
     }
@@ -183,20 +187,23 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -208,27 +215,31 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (! $this->exists()) {
             return true;
         }
+
         if (null === $this->_canView) {
             $this->_canView = false;
             if ($this->OrderID) {
                 $o = $this->getOrderCached();
-                if ($o instanceof \Sunnysideup\Ecommerce\Model\Order && $o->exists() && $o->canView($member)) {
+                if ($o instanceof Order && $o->exists() && $o->canView($member)) {
                     $this->_canView = true;
                 }
             }
@@ -241,22 +252,26 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * This is an important method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (! $this->exists()) {
             return true;
         }
+
         if (null === $this->_canEdit) {
             $this->_canEdit = ! $this->priceHasBeenFixed();
         }
@@ -267,10 +282,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -357,9 +373,11 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
             $classes[] = strtolower(ClassInfo::shortName($class));
             $class = get_parent_class($class);
         }
+
         if (is_a($this, EcommerceConfigClassNames::getName(OrderItem::class))) {
             $classes[] = strtolower((string) $this->BuyableClassName);
         }
+
         $slugs = array_map(
             fn (string $className): string => strtolower(str_replace('\\', '-', ltrim($className, '\\'))),
             $classes
@@ -412,6 +430,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if ($this->priceHasBeenFixed() && $this->Name) {
             return (string) $this->Name;
         }
+
         return (string) $this->i18n_singular_name();
     }
 
@@ -440,6 +459,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
         if ($this->priceHasBeenFixed()) {
             return (string) $this->TableSubTitleFixed;
         }
+
         return '';
     }
 
@@ -495,6 +515,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Debug helper method.
      * Access through : /shoppingcart/debug/.
      */
+    #[Override]
     public function debug()
     {
         return EcommerceTaskDebugCart::debug_object($this);
@@ -504,6 +525,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * We add the Sort value from the OrderAttributeGroup to the OrderAttribute.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -514,6 +536,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
                     $this->GroupSort = $group->Sort;
                 }
             }
+
             $this->TableSubTitleFixed = $this->getTableSubTitle();
         }
     }
@@ -521,6 +544,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      */
+    #[Override]
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
@@ -531,6 +555,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      */
+    #[Override]
     protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
@@ -565,8 +590,10 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
                     }
                 }
             }
+
             return self::$_price_has_been_fixed[$this->OrderID];
         }
+
         return false;
     }
 }

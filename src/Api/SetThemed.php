@@ -30,6 +30,7 @@ class SetThemed
             if (self::$stage_before && Versioned::LIVE !== self::$stage_before) {
                 Versioned::set_stage(self::$stage_before);
             }
+
             Config::unnest();
             // Config::modify()->set(SSViewer::class, 'theme_enabled', false);
             --self::$changed;

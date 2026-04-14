@@ -2,11 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 use IteratorAggregate;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\ArrayData;
 
 /**
  * @description: Sometimes you need a large collection of products
@@ -28,6 +27,7 @@ abstract class ProductCollection
                 )
             );
         }
+
         return $arrayList;
     }
 
@@ -62,6 +62,7 @@ abstract class ProductCollection
         if ($where) {
             $where = '(' . $where . ') AND ';
         }
+
         return '
             SELECT
                 "SiteTree' . $stage . '"."ID" ProductID,

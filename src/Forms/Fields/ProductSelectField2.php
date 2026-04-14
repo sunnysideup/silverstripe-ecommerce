@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Forms\SearchableDropdownField;
-use SilverStripe\ORM\DataList;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * Select A product using an ajax search field.

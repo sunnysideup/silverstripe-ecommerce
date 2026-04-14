@@ -77,6 +77,7 @@ class ExchangeRateProvider
         if (isset(self::$_memory_cache[$cacheCode])) {
             return self::$_memory_cache[$cacheCode];
         }
+
         $value = Controller::curr()->getRequest()->getSession()->get($cacheCode);
         if ($value) {
             self::$_memory_cache[$cacheCode] = $value;
@@ -103,6 +104,7 @@ class ExchangeRateProvider
         if ($fromCode === $toCode) {
             return 1;
         }
+
         $rate = 1;
         $reference = $fromCode . '_' . $toCode;
         $url = 'http://free.currencyconverterapi.com/api/v5/convert?q=' . $reference . '&compact=y';
@@ -110,15 +112,17 @@ class ExchangeRateProvider
         if ($ch) {
             $timeout = 5;
             // set to zero for no timeout
-            curl_setopt($ch, CURLOPT_URL, "{$url}");
+            curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
             $record = curl_exec($ch);
             curl_close($ch);
         }
+
         if (! $record) {
             $record = file_get_contents($url);
         }
+
         if ($record) {
             $currencyData = json_decode($record);
             if (property_exists($currencyData, $reference)) {
@@ -128,6 +132,7 @@ class ExchangeRateProvider
                 }
             }
         }
+
         if (1 !== $rate) {
             $rate *= $this->exchangeCostMultiplier;
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
@@ -17,7 +19,7 @@ use SilverStripe\ORM\DB;
  */
 class EcommerceTaskTemplateTest extends BuildTask
 {
-    protected $title = 'Get help with building templates';
+    protected string $title = 'Get help with building templates';
 
     protected $description = 'Shows you some of the variables and controls you can use in your templates.';
 

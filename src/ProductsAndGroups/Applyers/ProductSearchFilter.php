@@ -2,19 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\GetVariables;
 use Sunnysideup\Ecommerce\Api\KeywordSearchBuilder;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 use Sunnysideup\Ecommerce\Traits\PartialObjectCache;
@@ -59,7 +58,7 @@ class ProductSearchFilter extends BaseApplyer
     /**
      * @var array<string, array<string, array<string, int>|bool|string>>
      */
-    private const OPTIONS_FOR_SORT = [
+    private const array OPTIONS_FOR_SORT = [
         self::KEY_FOR_SORTER => [
             'Title' => 'Most Relevant',
             // this is replaced by the actual IDs in order or relevance, see apply method
@@ -218,8 +217,8 @@ class ProductSearchFilter extends BaseApplyer
         $string = Convert::raw2sql($string);
         $string = strtolower((string) $string);
         $string = preg_replace('/[^\p{L}\p{N}\s\-\._\/\+\#\(\)\:]/u', ' ', (string) $string);
-        $string = preg_replace('/\s+/u', ' ', $string);
-        $string = trim($string);
+        $string = preg_replace('/\s+/u', ' ', (string) $string);
+        $string = trim((string) $string);
         return substr($string, 0, SearchHistory::KEYWORD_LENGTH_LIMIT);
     }
 
@@ -240,6 +239,7 @@ class ProductSearchFilter extends BaseApplyer
                 $this->runFullProcess();
                 $this->partialCacheSetCacheForHash($hash);
             }
+
             //not sure why we need this, but keeping for now.
             self::$groupCache = $this->productGroupIds;
             self::$groupListCache = $this->matchingGroups;
@@ -263,11 +263,12 @@ class ProductSearchFilter extends BaseApplyer
             $getVars = Controller::curr()?->getRequest()?->getVars();
             if ($getVars) {
                 $this->debug = ! empty($getVars['showdebug']);
-                $this->debugKeywords = isset($getVars['searchfilter']) && strpos($getVars['searchfilter'], 'showdebugkeywords~1') !== false;
+                $this->debugKeywords = isset($getVars['searchfilter']) && str_contains($getVars['searchfilter'], 'showdebugkeywords~1');
             }
         }
     }
 
+    #[Override]
     public function getTitle(?string $key = '', $params = null): string
     {
         return 'Search Results Title (to be completed)';
@@ -352,6 +353,7 @@ class ProductSearchFilter extends BaseApplyer
     // key methods
     //#######################################
 
+    #[Override]
     protected function applyStart(?string $key = null, $params = null): bool
     {
         if (! is_array($params)) {
@@ -359,6 +361,7 @@ class ProductSearchFilter extends BaseApplyer
         } else {
             $this->rawData = $params;
         }
+
         $this->rawData = $this->filterAllowedKeys($this->rawData);
         return parent::applyStart($key, $this->rawData);
     }
@@ -438,8 +441,9 @@ class ProductSearchFilter extends BaseApplyer
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
             $this->debugOutput('<p style="color: red">data: ' . print_r($this->rawData, 1) . '</p>');
         }
-        $this->rawData['MinimumPrice'] = $this->rawData['MinimumPrice'] ?? 0;
-        $this->rawData['MaximumPrice'] = $this->rawData['MaximumPrice'] ?? 0;
+
+        $this->rawData['MinimumPrice'] ??= 0;
+        $this->rawData['MaximumPrice'] ??= 0;
         $this->rawData['MinimumPrice'] = floatval(str_replace(',', '', (string) $this->rawData['MinimumPrice']));
         $this->rawData['MaximumPrice'] = floatval(str_replace(',', '', (string) $this->rawData['MaximumPrice']));
 
@@ -460,6 +464,7 @@ class ProductSearchFilter extends BaseApplyer
         if ($this->debug) {
             $this->debugOutput('<h3>RAW KEYWORD</h3><p>' . $this->keywordPhrase . '</p>');
         }
+
         $this->keywordPhrase = self::keyword_sanitised($this->keywordPhrase);
     }
 
@@ -496,6 +501,7 @@ class ProductSearchFilter extends BaseApplyer
             if ($this->getProductListIsFiltered()) {
                 $where = 'ProductID IN (' . implode(', ', ArrayMethods::filter_array($this->products->columnUnique())) . ')';
             }
+
             $ids = $this->getSearchApi()->getProductResults(
                 $this->keywordPhrase,
                 $where,
@@ -507,6 +513,7 @@ class ProductSearchFilter extends BaseApplyer
                     break;
                 }
             }
+
             // } else {
             //     //work out searches
             //     $searches = $this->getSearchApi()->getSearchArrays($this->keywordPhrase, $fieldArray);
@@ -527,7 +534,7 @@ class ProductSearchFilter extends BaseApplyer
             //     }
             // }
             if ($this->debug) {
-                $this->debugOutput("<h3>FULL KEYWORD SEARCH: {$count}</h3>");
+                $this->debugOutput(sprintf('<h3>FULL KEYWORD SEARCH: %d</h3>', $count));
             }
         }
     }
@@ -549,6 +556,7 @@ class ProductSearchFilter extends BaseApplyer
             $this->debugOutput('<hr />');
             $this->debugOutput('<h3>PRODUCT GROUP SEARCH ' . $this->matchingGroups->count() . '</h3>');
         }
+
         // work out fields to search
 
         // work out searches
@@ -560,6 +568,7 @@ class ProductSearchFilter extends BaseApplyer
                 $where = 'ProductGroupID IN (' . implode(', ', $filterIds) . ')';
             }
         }
+
         if ($this->keywordPhrase) {
             $ids = $this->getSearchApi()->getProductGroupResults(
                 $this->keywordPhrase,
@@ -571,6 +580,7 @@ class ProductSearchFilter extends BaseApplyer
         } else {
             $ids = [-1 => -1];
         }
+
         $sortStatement = ArrayMethods::create_sort_statement_from_id_array($ids, ProductGroup::class);
         $this->matchingGroups = $this->matchingGroups
             ->filter(['ID' => ArrayMethods::filter_array($ids), 'ShowInSearch' => 1])
@@ -597,6 +607,7 @@ class ProductSearchFilter extends BaseApplyer
         if ($this->weHaveEnoughResults()) {
             return true;
         }
+
         // immediate redirect?
         if ($listToAdd->exists()) {
             $sort = $this->config()->get('in_group_sort_sql');
@@ -609,12 +620,14 @@ class ProductSearchFilter extends BaseApplyer
                 //check that this is the right order!
                 $listToAdd = $listToAdd->columnUnique('ID');
             }
+
             foreach ($listToAdd as $pageIdOrObject) {
                 if ($customMethod) {
                     $id = $pageIdOrObject->{$customMethod}();
                 } elseif (is_int($pageIdOrObject)) {
                     $id = $pageIdOrObject;
                 }
+
                 if (! empty($id) && $this->addToResultsInner($id)) {
                     return true;
                 }
@@ -659,10 +672,12 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->matchingGroups instanceof DataList) {
             $this->matchingGroups = $this->finalProductList->getParentGroups();
         }
+
         if (! $this->matchingGroups->exists()) {
             $tmpVar = $this->baseClassNameForGroups;
             $this->matchingGroups = $tmpVar::get();
         }
+
         if ($this->debug) {
             $this->debugOutput('<hr />');
             $this->debugOutput('<h3>BASE LIST</h3><pre>' . Vardump::inst()->mixedToUl($this->products) . '</pre>');
@@ -683,6 +698,7 @@ class ProductSearchFilter extends BaseApplyer
                     $this->debugOutput('<h3>MIN PRICE</h3><pre>' . $min . '</pre>');
                 }
             }
+
             $max = $this->rawData['MaximumPrice'];
             if ($max) {
                 $this->products = $this->products->filter(['Price:LessThanOrEqual' => $max]);
@@ -690,6 +706,7 @@ class ProductSearchFilter extends BaseApplyer
                     $this->debugOutput('<h3>MAX PRICE</h3><pre>' . $max . '</pre>');
                 }
             }
+
             if ($this->debug) {
                 $this->debugOutput('<hr />');
                 $this->debugOutput('<h3>BASE LIST AFTER PRICE SEARCH</h3><pre>' . Vardump::inst()->mixedToUl($this->products->sql()) . '</pre>');

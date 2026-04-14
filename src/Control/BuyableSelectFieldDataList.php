@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Override;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -31,6 +32,7 @@ class BuyableSelectFieldDataList extends Controller
 
     private static $url_segment = 'ecommercebuyabledatalist';
 
+    #[Override]
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get(static::class, 'url_segment');
@@ -79,6 +81,7 @@ class BuyableSelectFieldDataList extends Controller
                 $buyables[$key]['TableName'] = $singleton->stageTableDefault();
             }
         }
+
         unset($arrayOfBuyables);
         while ((count($array) <= $countOfSuggestions) && ($absoluteCount < 30)) {
             ++$absoluteCount;
@@ -93,6 +96,7 @@ class BuyableSelectFieldDataList extends Controller
                     if (! isset($arrayOfAddedItemIDsByClassName[$className])) {
                         $arrayOfAddedItemIDsByClassName[$className] = ArrayMethods::filter_array([]);
                     }
+
                     if ($singleton->hasDatabaseField($fieldName)) {
                         // $where = "\"${fieldName}\" LIKE '%${term}%'
                         //         AND \"" . $tableName . '"."ID" NOT IN
@@ -103,7 +107,7 @@ class BuyableSelectFieldDataList extends Controller
                                 $fieldName . ':PartialMatch' => $term,
                                 'AllowPurchase' => 1,
                             ])
-                            ->where("\"{$tableName}\".\"ID\" NOT IN (" . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
+                            ->where(sprintf('"%s"."ID" NOT IN (', $tableName) . implode(',', $arrayOfAddedItemIDsByClassName[$className]) . ')')
                             ->First()
                         ;
                         if ($obj) {
@@ -118,6 +122,7 @@ class BuyableSelectFieldDataList extends Controller
                                         $useVariationsInstead = true;
                                     }
                                 }
+
                                 if (! $useVariationsInstead) {
                                     $name = $obj->FullName ?: $obj->getTitle();
                                     $array[$className . $obj->ID] = [
@@ -130,10 +135,12 @@ class BuyableSelectFieldDataList extends Controller
                             }
                         }
                     }
+
                     //echo $singleton->ClassName ." does not have $fieldName";
                 }
             }
         }
+
         //remove KEYS
         $finalArray = [];
         $count = 0;
@@ -141,6 +148,7 @@ class BuyableSelectFieldDataList extends Controller
             if ($count < $countOfSuggestions) {
                 $finalArray[] = $item;
             }
+
             ++$count;
         }
 

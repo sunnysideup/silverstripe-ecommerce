@@ -8,7 +8,6 @@ use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\Pages\ProductGroupController;
-use Sunnysideup\Vardump\Vardump;
 
 /**
  * A wrapper for a paginated of products which can be filtered and sorted.
@@ -89,7 +88,7 @@ class FinalProductList extends AbstractProductsAndGroupsList
     public static function inst($rootGroupController, $rootGroup)
     {
         if (! isset(self::$singleton_cache)) {
-            self::$singleton_cache = new FinalProductList($rootGroupController, $rootGroup);
+            self::$singleton_cache = FinalProductList::create($rootGroupController, $rootGroup);
         }
 
         return self::$singleton_cache;

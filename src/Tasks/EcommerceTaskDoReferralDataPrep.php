@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Model\Process\ReferralProcessLog;
  */
 class EcommerceTaskDoReferralDataPrep extends BuildTask
 {
-    protected $title = 'Prepare e-commerce Referral Data';
+    protected string $title = 'Prepare e-commerce Referral Data';
 
     protected $description = 'Prepares all Referral Data for processing.';
 
@@ -61,6 +61,7 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
             $obj->Completed = $finished;
             $obj->write();
         }
+
         return $finished;
     }
 
@@ -85,8 +86,7 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
         // less than 180 days old items that have not been processed should be processed.
         $daysAgoStale = (int) Config::inst()->get(self::class, 'recalculate_days_for_prep_data') ?: self::$max_days_of_interest;
         $refs = Referral::get()
-            ->filter(['Processed' => 0])
-            ->sort('ID', 'ASC')
+            ->filter(['Processed' => 0])->sort(['ID' => 'ASC'])
             ->limit($limit, $start);
         foreach ($refs as $ref) {
             $ref->ProcessReferral($daysAgoStale);
@@ -100,8 +100,7 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
         $daysAgoStale = (int) Config::inst()->get(self::class, 'recalculate_days_for_prep_data') ?: self::$max_days_of_interest;
         $refs = Referral::get()
             ->filterAny(['AmountInvoiced' => 0, 'OrderID' => 0])
-            ->filter(['Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59'])
-            ->sort('ID', 'ASC')
+            ->filter(['Created:LessThan' => date('Y-m-d', strtotime('-' . $daysAgoStale . ' days')) . ' 23:59:59'])->sort(['ID' => 'ASC'])
             ->limit($limit, $start);
         foreach ($refs as $ref) {
             if ($ref->IsStaleWithoutOrder($daysAgoStale)) {

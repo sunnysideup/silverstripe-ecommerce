@@ -16,7 +16,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceTaskProductVariationsFixes extends BuildTask
 {
-    protected $title = 'Fix Product Variations';
+    protected string $title = 'Fix Product Variations';
 
     protected $description = 'Fixes a bunch of links between Products and their Variations ';
 
@@ -36,7 +36,8 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
                     }
                 }
             }
-            DB::alteration_message("Updated {$count} Products (" . $products->count() . " products on {$stage})");
+
+            DB::alteration_message(sprintf('Updated %d Products (', $count) . $products->count() . sprintf(' products on %s)', $stage));
         }
     }
 }
