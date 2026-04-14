@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use SilverStripe\Model\List\ArrayList;
 use Override;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\CMS\Controllers\CMSPageAddController;
 use SilverStripe\Core\ClassInfo;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;

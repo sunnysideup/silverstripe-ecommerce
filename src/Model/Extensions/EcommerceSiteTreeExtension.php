@@ -53,7 +53,7 @@ class EcommerceSiteTreeExtension extends Extension
         }
 
         return Controller::join_links(Director::absoluteBaseURL(), 'Security/login')
-        . '?BackURL=' . urlencode($link);
+        . '?BackURL=' . urlencode((string) $link);
     }
 
     public function augmentValidURLSegment()

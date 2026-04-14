@@ -2,9 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use SilverStripe\Model\List\ArrayList;
 use Override;
 use SilverStripe\Forms\Validation\Validator;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\Model\ArrayData;
 use DateTime;
 use SilverStripe\ORM\FieldType\DBMoney;
@@ -3697,7 +3697,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $al = null;
         $extendedSubmitErrors = $this->extend('updateSubmitErrors');
         if (null !== $extendedSubmitErrors && is_array($extendedSubmitErrors) && count($extendedSubmitErrors)) {
-            $al = \SilverStripe\Model\List\ArrayList::create();
+            $al = ArrayList::create();
             foreach ($extendedSubmitErrors as $returnResultArray) {
                 foreach ($returnResultArray as $issue) {
                     if ($issue) {

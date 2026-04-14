@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
