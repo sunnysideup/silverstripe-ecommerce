@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use Override;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
@@ -43,8 +45,8 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @property bool $Obsolete
  * @property int $OrderID
  * @property int $RegionID
- * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion Region()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method EcommerceRegion Region()
+ * @method Order Order()
  */
 class BillingAddress extends OrderAddress
 {
@@ -216,19 +218,22 @@ class BillingAddress extends OrderAddress
      */
     private static $description = 'The details of the person buying the order.';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('BillingAddress.BILLINGADDRESS', 'Billing Address');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('BillingAddress.BILLINGADDRESSES', 'Billing Addresses');
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -240,7 +245,7 @@ class BillingAddress extends OrderAddress
                 $this->getOrderCached()
             )
         );
-        $fields->replaceField('Email', new EmailField('Email', _t('BillingAddress.EMAIL', 'Email')));
+        $fields->replaceField('Email', EmailField::create('Email', _t('BillingAddress.EMAIL', 'Email')));
         //We remove both the RegionCode and RegionID field and then add only the one we need directly after the country field.
         $fields->removeByName('RegionCode');
         $fields->removeByName('RegionID');
@@ -251,7 +256,7 @@ class BillingAddress extends OrderAddress
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getFields(Member $member = null)
     {
@@ -266,9 +271,9 @@ class BillingAddress extends OrderAddress
                 ->setAttribute('data-title-with-shipping-address', _t('BillingAddress.BILLING_ADDRESS_ONLY', 'Billing Address Only'))
                 ->setAttribute('data-title-with-shipping-address_default', $headerTitle)
         );
-        $fields->push(new TextField('Phone', _t('BillingAddress.PHONE', 'Phone')));
+        $fields->push(TextField::create('Phone', _t('BillingAddress.PHONE', 'Phone')));
 
-        $billingFields = new CompositeField();
+        $billingFields = CompositeField::create();
         if ($member && Security::getCurrentUser() && ($member->exists() && ! $member->IsShopAdmin())) {
             $this->FillWithLastAddressFromMember($member, true);
             if (EcommerceConfig::get(BillingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
@@ -296,6 +301,7 @@ class BillingAddress extends OrderAddress
             if (! class_exists(GoogleAddressField::class)) {
                 user_error('You must install the Sunny Side Up google_address_field module OR remove entries from: BillingAddress.fields_to_google_geocode_conversion');
             }
+
             $billingFields->push(
                 $billingEcommerceGeocodingField = GoogleAddressField::create(
                     'BillingEcommerceGeocodingField',
@@ -307,14 +313,16 @@ class BillingAddress extends OrderAddress
             //$billingFields->push(new HiddenField('Address2', "NOT SET", "NOT SET"));
             //$billingFields->push(new HiddenField('City', "NOT SET", "NOT SET"));
         }
+
         if (EcommerceConfig::get(BillingAddress::class, 'show_company_name')) {
             $billingFields->push(
-                (new TextField('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company Name  (if applicable)')))
+                (TextField::create('CompanyName', _t('BillingAddress.COMPANY_NAME', 'Company Name  (if applicable)')))
             );
         }
-        $billingFields->push(new TextField('Address', _t('BillingAddress.ADDRESS', 'Address')));
-        $billingFields->push(new TextField('Address2', _t('BillingAddress.ADDRESS2', 'Address Line 2')));
-        $billingFields->push(new TextField('City', _t('BillingAddress.CITY', 'Town')));
+
+        $billingFields->push(TextField::create('Address', _t('BillingAddress.ADDRESS', 'Address')));
+        $billingFields->push(TextField::create('Address2', _t('BillingAddress.ADDRESS2', 'Address Line 2')));
+        $billingFields->push(TextField::create('City', _t('BillingAddress.CITY', 'Town')));
         $billingFields->push($this->getPostalCodeField('PostalCode'));
         $billingFields->push($this->getRegionField('RegionID', 'RegionCode'));
         $billingFields->push($this->getCountryField('Country'));
@@ -337,7 +345,8 @@ class BillingAddress extends OrderAddress
         return $this->Config()->get('required_fields');
     }
 
-    public function fieldPrefix(): string
+    #[Override]
+    protected function fieldPrefix(): string
     {
         return '';
     }

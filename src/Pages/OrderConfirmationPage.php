@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
@@ -126,11 +129,13 @@ class OrderConfirmationPage extends CartPage
      */
     private static $description = 'A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderConfirmationpage.SINGULARNAME', 'Order Confirmation Page');
     }
 
+    #[Override]
     public function i18n_plural_name()
     {
         return _t('OrderConfirmationpage.PLURALNAME', 'Order Confirmation Pages');
@@ -140,11 +145,12 @@ class OrderConfirmationPage extends CartPage
      * Standard SS function, we only allow for one OrderConfirmation Page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return OrderConfirmationPage::get()->filter(['ClassName' => OrderConfirmationPage::class])->exists() ? false : $this->canEdit($member);
@@ -153,11 +159,12 @@ class OrderConfirmationPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -170,10 +177,11 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -182,10 +190,11 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
@@ -223,7 +232,7 @@ class OrderConfirmationPage extends CartPage
      */
     public function fieldLabels($includerelations = true)
     {
-        $defaultLabels = parent::fieldLabels($includerelations);
+        $defaultLabels = null;
         $newLabels = $this->customFieldLabels();
         $labels = array_merge($defaultLabels, $newLabels);
         $extendedArray = $this->extend('updateFieldLabels', $labels);
@@ -237,8 +246,9 @@ class OrderConfirmationPage extends CartPage
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -305,12 +315,14 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public static function find_link($action = null)
     {
         $page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class]);
         if ($page) {
             return $page->Link($action);
         }
+
         $page = DataObject::get_one(OrderConfirmationPage::class);
         if ($page) {
             return $page->Link($action);
@@ -326,6 +338,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public static function get_order_link($orderID)
     {
         return Controller::join_links(OrderConfirmationPage::find_link(), 'showorder', $orderID);
@@ -351,6 +364,7 @@ class OrderConfirmationPage extends CartPage
                 $alternativeOrderStepID = $order->StatusID;
             }
         }
+
         if ($alternativeOrderStepID) {
             if ($actuallySendEmail) {
                 $getParams['send'] = $alternativeOrderStepID;
@@ -358,6 +372,7 @@ class OrderConfirmationPage extends CartPage
                 $getParams['test'] = $alternativeOrderStepID;
             }
         }
+
         $getParams = http_build_query($getParams);
 
         return $link . '?' . $getParams;
@@ -370,6 +385,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public function getOrderLink($orderID)
     {
         return OrderConfirmationPage::get_order_link($orderID);
@@ -380,11 +396,11 @@ class OrderConfirmationPage extends CartPage
      *
      * @param bool $isCurrentStep
      *
-     * @return \SilverStripe\ORM\DataObject
+     * @return DataObject
      */
     public function CurrentCheckoutStep($isCurrentStep = false)
     {
-        $do = new CheckoutPageStepDescription();
+        $do = CheckoutPageStepDescription::create();
         $do->Link = $this->Link;
         $do->Heading = $this->MenuTitle;
         $do->Code = $this->URLSegment;
@@ -392,6 +408,7 @@ class OrderConfirmationPage extends CartPage
         if ($isCurrentStep) {
             $do->LinkingMode .= ' current';
         }
+
         $do->Completed = 0;
         $do->ID = 99;
 

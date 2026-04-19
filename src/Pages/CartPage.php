@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use Page;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
@@ -119,7 +121,7 @@ class CartPage extends Page
      * Standard SS function, we only allow for one CartPage page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -132,7 +134,7 @@ class CartPage extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -149,7 +151,7 @@ class CartPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -161,7 +163,7 @@ class CartPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -171,7 +173,7 @@ class CartPage extends Page
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getCMSFields()
     {
@@ -179,27 +181,23 @@ class CartPage extends Page
         $fields->addFieldsToTab(
             'Root.Messages',
             [
-                new TabSet(
-                    'Messages',
-                    Tab::create(
-                        'Actions',
-                        _t('CartPage.ACTIONS', 'Actions'),
-                        new TextField('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
-                        new TextField('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
-                        new TextField('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', "Label on the link 'view account details' - e.g. click here to view your account details")),
-                        new TextField('CurrentOrderLinkLabel', _t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order')),
-                        new TextField('LoginToOrderLinkLabel', _t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order')),
-                        new TextField('SaveOrderLinkLabel', _t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order')),
-                        new TextField('LoadOrderLinkLabel', _t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order')),
-                        new TextField('DeleteOrderLinkLabel', _t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'))
-                    ),
-                    Tab::create(
-                        'Errors',
-                        _t('CartPage.ERRORS', 'Errors'),
-                        $htmlEditorField1 = new HTMLEditorField('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE', 'No items in order - shown when the customer tries to view an order without items.')),
-                        $htmlEditorField2 = new HTMLEditorField('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE', 'Non-existing Order - shown when the customer tries to load a non-existing order.'))
-                    )
-                ),
+                TabSet::create('Messages', Tab::create(
+                    'Actions',
+                    _t('CartPage.ACTIONS', 'Actions'),
+                    TextField::create('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
+                    TextField::create('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
+                    TextField::create('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', "Label on the link 'view account details' - e.g. click here to view your account details")),
+                    TextField::create('CurrentOrderLinkLabel', _t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order')),
+                    TextField::create('LoginToOrderLinkLabel', _t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order')),
+                    TextField::create('SaveOrderLinkLabel', _t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order')),
+                    TextField::create('LoadOrderLinkLabel', _t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order')),
+                    TextField::create('DeleteOrderLinkLabel', _t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'))
+                ), Tab::create(
+                    'Errors',
+                    _t('CartPage.ERRORS', 'Errors'),
+                    $htmlEditorField1 = HTMLEditorField::create('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE', 'No items in order - shown when the customer tries to view an order without items.')),
+                    $htmlEditorField2 = HTMLEditorField::create('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE', 'Non-existing Order - shown when the customer tries to load a non-existing order.'))
+                )),
             ]
         );
         $htmlEditorField1->setRows(3);

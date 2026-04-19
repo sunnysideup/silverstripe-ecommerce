@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Page;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
@@ -28,7 +29,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
      *
      * @var string
      */
-    protected $title = 'Create e-commerce default records';
+    protected string $title = 'Create e-commerce default records';
 
     /**
      * standard SS variable.
@@ -83,7 +84,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         if ($checkoutPage) {
             $cacheDataObjectGetOne = false;
             $termsPage = DataObject::get_one(
-                \Page::class,
+                Page::class,
                 ['URLSegment' => 'terms-and-conditions'],
                 $cacheDataObjectGetOne
             );
@@ -133,7 +134,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 $update[] = 'created default entry for NumberOfProductsPerPage';
             }
 
-            if (count($update)) {
+            if ($update !== []) {
                 $ecommerceConfig->write();
                 DB::alteration_message($ecommerceConfig->ClassName . ' created/updated: ' . implode(' --- ', $update), 'created');
             }

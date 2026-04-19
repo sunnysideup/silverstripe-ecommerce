@@ -16,7 +16,7 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  */
 class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
 {
-    protected $title = 'Add Customers to Customer Group';
+    protected string $title = 'Add Customers to Customer Group';
 
     protected $description = 'Takes all the Members that have ordered something and adds them to the Customer Security Group.';
 
@@ -38,6 +38,7 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
                     $alreadyAdded[$combo['MemberID']] = $combo['MemberID'];
                 }
             }
+
             $unlistedMembers = Member::get()
                 ->exclude(
                     [

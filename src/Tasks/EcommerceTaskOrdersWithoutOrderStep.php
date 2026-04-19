@@ -23,7 +23,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
 
     protected $limit = 1;
 
-    protected $title = 'Orders without orderstep';
+    protected string $title = 'Orders without orderstep';
 
     protected $description = '
         Orders where the order step does not exist.';
@@ -34,6 +34,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         if (! $doCancel) {
             DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
         }
+
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $submittedOrderStatusLogTableName = EcommerceConfig::get(OrderStatusLog::class, 'table_name');
         if ($submittedOrderStatusLogClassName) {
@@ -48,7 +49,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                     )
                     ->innerJoin(
                         $submittedOrderStatusLogTableName,
-                        "\"{$submittedOrderStatusLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\""
+                        sprintf('"%s"."ID" = "OrderStatusLog"."ID"', $submittedOrderStatusLogTableName)
                     )
                 ;
                 if ($orders->exists()) {
@@ -58,6 +59,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                             $archivingNow = 'This order has been cancelled and archived.';
                             $order->Cancel();
                         }
+
                         DB::alteration_message(
                             '<a href="' . $order->CMSEditLink() . '">' . $order->getTitle() . '</a><br />' . $archivingNow . '<br /><br />',
                             'deleted'

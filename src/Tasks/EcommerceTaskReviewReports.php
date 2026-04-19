@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
@@ -17,7 +19,7 @@ class EcommerceTaskReviewReports extends BuildTask
      *
      * @var string
      */
-    protected $title = 'Review E-commerce Pages using the Reports interface';
+    protected string $title = 'Review E-commerce Pages using the Reports interface';
 
     /**
      * Standard (required) SS variable for BuildTasks.

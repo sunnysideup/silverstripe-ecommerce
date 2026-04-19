@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
+use SilverStripe\ORM\DataList;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
@@ -44,6 +46,7 @@ class EcommerceSideReportDuplicatePages extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.DUPLICATE_PAGES', 'Pages with duplicate names');
@@ -64,7 +67,7 @@ class EcommerceSideReportDuplicatePages extends Report
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
@@ -83,6 +86,7 @@ class EcommerceSideReportDuplicatePages extends Report
         if ($classNameFilter && class_exists($classNameFilter)) {
             $list = $list->filter(['ClassName' => $classNameFilter]);
         }
+
         $array = $this->Config()->get('excluded_class_names');
         if (count($array) > 0) {
             $list = $list->exclude(['ClassName' => $array]);
@@ -94,6 +98,7 @@ class EcommerceSideReportDuplicatePages extends Report
     /**
      * @return array
      */
+    #[Override]
     public function columns()
     {
         return [
@@ -117,6 +122,7 @@ class EcommerceSideReportDuplicatePages extends Report
             $obj = Injector::inst()->get($className);
             $array[$className] = $obj->i18n_singular_name();
         }
+
         asort($array);
         $params->push(
             DropdownField::create(

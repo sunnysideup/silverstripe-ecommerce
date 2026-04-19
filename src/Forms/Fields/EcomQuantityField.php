@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Requirements;
@@ -88,14 +89,17 @@ class EcomQuantityField extends NumericField
         } else {
             user_error('EcomQuantityField: no/bad order item or buyable passed to constructor.', E_USER_WARNING);
         }
+
         if ($parameters) {
             $this->parameters = $parameters;
         }
+
         $product = $object->Product();
         if ($product) {
             $this->setMinValue($product->getMinValueInOrder());
             $this->setMaxValue($product->getMaxValueInOrder());
         }
+
         $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
 
         parent::__construct($name, $title = '');
@@ -136,6 +140,7 @@ class EcomQuantityField extends NumericField
     /**
      * @param string $template
      */
+    #[Override]
     public function setTemplate($template): self
     {
         $this->template = $template;
@@ -166,6 +171,7 @@ class EcomQuantityField extends NumericField
      *
      * @return string (HTML)
      */
+    #[Override]
     public function Field($properties = [])
     {
         $name = $this->getName();
@@ -226,6 +232,7 @@ class EcomQuantityField extends NumericField
     /**
      * @return string (HTML)
      */
+    #[Override]
     public function forTemplate(): string
     {
         return $this->renderWith($this->template);

@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -48,12 +50,14 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
      */
     private static $plural_name = 'Order Modifier Types';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
@@ -61,11 +65,12 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
@@ -87,11 +92,12 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
@@ -113,11 +119,12 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
@@ -139,10 +146,11 @@ class OrderAttributeGroup extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $member) {

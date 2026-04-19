@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\NumericField;
 use Sunnysideup\Ecommerce\Api\SetThemed;
@@ -49,10 +52,11 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -72,19 +76,22 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
         return _t('OrderStatusLog.No', 'no');
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.PAYMENTCONFIRMATION', 'Payment Confirmation');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderStatusLog.PAYMENTCONFIRMATIONS', 'Payment Confirmations');
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -92,7 +99,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
         $fields->removeByName('Note');
         $fields->addFieldToTab(
             'Root.Main',
-            new CheckboxField('PaymentConfirmed', _t('OrderStatusLog.CONFIRMED', 'Payment is confirmed'))
+            CheckboxField::create('PaymentConfirmed', _t('OrderStatusLog.CONFIRMED', 'Payment is confirmed'))
         );
 
         return $fields;
@@ -101,11 +108,13 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
     /**
      * @return string
      */
+    #[Override]
     public function CustomerNote()
     {
         return $this->getCustomerNote();
     }
 
+    #[Override]
     public function getCustomerNote()
     {
         if ($this->Author()) {

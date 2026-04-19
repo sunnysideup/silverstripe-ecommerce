@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\EcommercePaymentSupportedMethodsProvider;
@@ -38,6 +39,7 @@ class SalesAdminByPaymentType extends SalesAdmin
         Order::class,
     ];
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -56,6 +58,7 @@ class SalesAdminByPaymentType extends SalesAdmin
                     }
                 }
             }
+
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
 

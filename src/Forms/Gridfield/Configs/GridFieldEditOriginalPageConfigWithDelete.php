@@ -19,8 +19,8 @@ class GridFieldEditOriginalPageConfigWithDelete extends GridFieldConfig_RecordEd
         $this
             ->removeComponentsByType(GridFieldEditButton::class)
             ->removeComponentsByType(GridFieldAddNewButton::class)
-            ->addComponent(new GridFieldAddNewButtonOriginalPage())
-            ->addComponent(new GridFieldEditButtonOriginalPage())
+            ->addComponent(GridFieldAddNewButtonOriginalPage::create())
+            ->addComponent(GridFieldEditButtonOriginalPage::create())
         ;
     }
 }

@@ -27,16 +27,12 @@ class OrderFormCancel extends Form
 {
     public function __construct(Controller $controller, $name, Order $order)
     {
-        $fields = new FieldList(
-            [
-                new HeaderField('CancelOrderHeading', _t('OrderForm.CANCELORDER', 'Changed your mind?'), 2),
-                new TextField('CancellationReason', _t('OrderForm.CANCELLATIONREASON', 'Reason for cancellation')),
-                new HiddenField('OrderID', '', $order->ID),
-            ]
-        );
-        $actions = new FieldList(
-            new FormAction('docancel', _t('OrderForm.CANCELORDER', 'Cancel this order'))
-        );
+        $fields = FieldList::create([
+            HeaderField::create('CancelOrderHeading', _t('OrderForm.CANCELORDER', 'Changed your mind?'), 2),
+            TextField::create('CancellationReason', _t('OrderForm.CANCELLATIONREASON', 'Reason for cancellation')),
+            HiddenField::create('OrderID', '', $order->ID),
+        ]);
+        $actions = FieldList::create(FormAction::create('docancel', _t('OrderForm.CANCELORDER', 'Cancel this order')));
         $requiredFields = [];
         $validator = OrderFormCancelValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
@@ -47,10 +43,11 @@ class OrderFormCancel extends Form
         $this->setActions($actions);
         $this->extend('updateValidator', $validator);
         $this->setValidator($validator);
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateOrderFormCancel', $this);
     }
 
@@ -70,11 +67,12 @@ class OrderFormCancel extends Form
         $member = Security::getCurrentUser();
         if ($member && isset($SQLData['OrderID'])) {
             $order = Order::get_order_cached((int) $SQLData['OrderID']);
-            if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && $order->canCancel()) {
+            if ($order instanceof Order && $order->canCancel()) {
                 $reason = '';
                 if (isset($SQLData['CancellationReason'])) {
                     $reason = $SQLData['CancellationReason'];
                 }
+
                 $order->Cancel($member, $reason);
                 $form->sessionMessage(
                     _t(
@@ -86,6 +84,7 @@ class OrderFormCancel extends Form
                 return $this->controller->redirectBack();
             }
         }
+
         $form->sessionMessage(
             _t(
                 'OrderForm.COULDNOTCANCELORDER',

@@ -127,6 +127,7 @@ class EcommerceCache implements Flushable
             if (false === $alreadySerialized) {
                 $data = serialize($data);
             }
+
             $this->getCacheBackend()->set($cacheKey, $data);
 
             return true;
@@ -160,6 +161,7 @@ class EcommerceCache implements Flushable
         if (is_array($cacheKey)) {
             $cacheKey = implode('_', $cacheKey);
         }
+
         $arrayOfReservedChars = [
             '{',
             '}',

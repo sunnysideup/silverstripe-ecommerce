@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\File;
-use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
@@ -26,7 +25,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
      */
     public $verbose = true;
 
-    protected $title = 'Find product images';
+    protected string $title = 'Find product images';
 
     protected $description = '
         Finds product images (or other files) based on their name.
@@ -66,14 +65,17 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
         if (isset($_REQUEST['start']) && (int) $_REQUEST['start']) {
             $this->start = (int) $_REQUEST['start'];
         }
+
         if (isset($_REQUEST['productid']) && (int) $_REQUEST['productid']) {
             $this->productID = (int) $_REQUEST['productid'];
         }
+
         if ($this->productManyManyField) {
             $products = Product::get()->limit($this->limit, $this->start);
             if ($this->productID) {
                 $products = $products->filter(['ID' => $this->productID]);
             }
+
             if ($products->exists()) {
                 foreach ($products as $product) {
                     if ($product->InternalItemID) {
@@ -85,6 +87,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                                     $whereStringArray[] = $product->InternalItemID . '_' . $number;
                                 }
                             }
+
                             $images = File::get()
                                 ->filter(['Name:PartialMatch' => $whereStringArray])
                             ;
@@ -107,6 +110,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
                         DB::alteration_message('No InternalItemID set for <i>' . $product->Title . '</i>: no images could be added.');
                     }
                 }
+
                 $productCount = Product::get()->count();
                 if ($this->limit < $productCount) {
                     $controller = Controller::curr();

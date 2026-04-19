@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 
@@ -10,6 +12,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  */
 class OrderStatusLogCancel extends OrderStatusLog
 {
+    private static $table_name = 'OrderStatusLogCancel';
+
     private static $defaults = [
         'Title' => 'Order Cancelled',
         'InternalUseOnly' => false,
@@ -26,12 +30,14 @@ class OrderStatusLogCancel extends OrderStatusLog
      */
     private static $description = 'A record noting the cancellation of an order.  ';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.SUBMITTEDORDER', 'Cancelled Order');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderStatusLog.SUBMITTEDORDERS', 'Cancelled Orders');
     }
@@ -39,15 +45,17 @@ class OrderStatusLogCancel extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -59,16 +67,18 @@ class OrderStatusLogCancel extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -80,16 +90,18 @@ class OrderStatusLogCancel extends OrderStatusLog
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;

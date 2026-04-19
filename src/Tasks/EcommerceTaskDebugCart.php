@@ -9,7 +9,7 @@ use Sunnysideup\Ecommerce\Api\ShoppingCart;
 
 class EcommerceTaskDebugCart extends BuildTask
 {
-    protected $title = 'Debug your cart';
+    protected string $title = 'Debug your cart';
 
     protected $description = 'Check all the values in your cart to find any potential errors.';
 
@@ -29,7 +29,7 @@ class EcommerceTaskDebugCart extends BuildTask
         if (count($fields) > 0) {
             foreach ($fields as $key => $type) {
                 $value = self::cleanup_value($type, $obj->{$key});
-                $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
+                $html .= sprintf('<li><b>%s (%s):</b> ', $key, $type) . $value . '</li>';
             }
         }
 
@@ -44,8 +44,9 @@ class EcommerceTaskDebugCart extends BuildTask
                     $method = 'get' . $key;
                     $value = $obj->hasMethod($method) ? $obj->{$method}() : $obj->{$key};
                 }
+
                 $value = self::cleanup_value($type, $value);
-                $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
+                $html .= sprintf('<li><b>%s (%s):</b> ', $key, $type) . $value . '</li>';
             }
         }
 
@@ -59,9 +60,11 @@ class EcommerceTaskDebugCart extends BuildTask
                 if ($object && ($object && $object->exists())) {
                     $value = ', ' . $object->getTitle();
                 }
-                $html .= "<li><b>{$key} ({$type}):</b> " . $obj->{$field} . $value . ' </li>';
+
+                $html .= sprintf('<li><b>%s (%s):</b> ', $key, $type) . $obj->{$field} . $value . ' </li>';
             }
         }
+
         //to do: has_many and many_many
 
         return $html . '</ul>';

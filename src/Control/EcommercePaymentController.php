@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -84,6 +85,7 @@ class EcommercePaymentController extends Controller
      *
      * @return string (Link)
      */
+    #[Override]
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get(static::class, 'url_segment');
@@ -109,6 +111,7 @@ class EcommercePaymentController extends Controller
 
                 return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder, $this->Link('thankyou'));
             }
+
             $this->errorMessage = _t('EcommercePaymentController.CANNOTMAKEPAYMENT', 'You can not make a payment for this order.');
         } else {
             $this->errorMessage = _t('EcommercePaymentController.ORDERCANNOTBEFOUND', 'Order can not be found.');
@@ -127,6 +130,7 @@ class EcommercePaymentController extends Controller
         return $this->goodMessage;
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -138,6 +142,7 @@ class EcommercePaymentController extends Controller
         if (! $id && isset($_REQUEST['OrderID'])) {
             $id = (int) $_REQUEST['OrderID'];
         }
+
         if ($id !== 0) {
             $order = Order::get_by_id_if_can_view($id);
             if ($order) {

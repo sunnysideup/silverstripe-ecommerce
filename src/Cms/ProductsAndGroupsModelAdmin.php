@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\GridField\GridField;
@@ -61,6 +62,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/product-file.gif';
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();
@@ -68,7 +70,7 @@ class ProductsAndGroupsModelAdmin extends ModelAdmin
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
             if ($gridField && $gridField instanceof GridField) {
                 $config = GridFieldEditOriginalPageConfig::create();
-                $exportButton = new GridFieldExportButton('buttons-before-left');
+                $exportButton = GridFieldExportButton::create('buttons-before-left');
                 $exportButton->setExportColumns($this->getExportFields());
                 $config->addComponent($exportButton);
                 $gridField->setConfig($config);

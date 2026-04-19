@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use Override;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\FieldType\DBDate;
@@ -38,11 +41,12 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
     /**
      * @return DataQuery
      */
+    #[Override]
     protected function applyOne(DataQuery $query)
     {
         //$this->model = $query->applyRelation($this->relation);
         $value = Convert::raw2sql($this->getValue());
-        $date = new DBDate();
+        $date = DBDate::create();
         $date->setValue($value);
 
         $distanceFromToday = time() - strtotime((string) $value);
@@ -53,7 +57,7 @@ class EcommercePaymentFiltersAroundDateFilter extends ExactMatchFilter
         // changed for PostgreSQL compatability
         // NOTE - we may wish to add DATEDIFF function to PostgreSQL schema, it's just that this would be the FIRST function added for SilverStripe
         // default is MySQL DATEDIFF() function - broken for others, each database conn type supported must be checked for!
-        $query->where("(DATEDIFF(\"EcommercePayment\".\"Created\", '{$formattedDate}') > -" . $maxDays . " AND DATEDIFF(\"EcommercePayment\".\"Created\", '{$formattedDate}') < " . $maxDays . ')');
+        $query->where(sprintf("(DATEDIFF(\"EcommercePayment\".\"Created\", '%s') > -", $formattedDate) . $maxDays . sprintf(" AND DATEDIFF(\"EcommercePayment\".\"Created\", '%s') < ", $formattedDate) . $maxDays . ')');
 
         return $query;
     }

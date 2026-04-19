@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
+use Override;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
@@ -36,9 +37,10 @@ class ProductGroupFilter extends BaseApplyer
         if (! $getVar) {
             return null;
         }
+
         if (! array_key_exists($getVar, self::$get_group_from_get_variable_store)) {
             self::$get_group_from_get_variable_store[$getVar] = null;
-            if (false !== strpos($getVar, '.')) {
+            if (str_contains($getVar, '.')) {
                 $parts = explode('.', $getVar);
                 $groupId = (int) $parts[1];
                 if ($groupId !== 0) {
@@ -71,12 +73,14 @@ class ProductGroupFilter extends BaseApplyer
             if ($filter && $this->products->exists()) {
                 $this->products = $this->products->filter($filter);
             }
+
             $this->applyEnd($key, $params);
         }
 
         return $this;
     }
 
+    #[Override]
     public function getTitle(?string $key = '', $params = null): string
     {
         $groupId = $this->findGroupId($params);
@@ -105,6 +109,7 @@ class ProductGroupFilter extends BaseApplyer
         if (empty($filter)) {
             $filter = '';
         }
+
         if (is_array($filter)) {
             $filter = implode('.', $filter);
         }

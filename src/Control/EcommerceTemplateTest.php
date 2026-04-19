@@ -11,9 +11,9 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Class \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
  *
- * @property \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest $dataRecord
- * @method \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest data()
- * @mixin \Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
+ * @property EcommerceTemplateTest $dataRecord
+ * @method EcommerceTemplateTest data()
+ * @mixin EcommerceTemplateTest
  */
 class EcommerceTemplateTest extends PageController
 {
@@ -43,6 +43,7 @@ class EcommerceTemplateTest extends PageController
             if ($product) {
                 $notForSale = ! (bool) $product->canPurchase();
             }
+
             ++$offSet;
         }
 
@@ -58,6 +59,7 @@ class EcommerceTemplateTest extends PageController
                 ->shuffle()
                 ->first();
         }
+
         return null;
     }
 

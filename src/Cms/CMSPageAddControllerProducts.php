@@ -2,12 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use SilverStripe\CMS\Controllers\CMSPageAddController;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\Form;
+use Override;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\CMS\Controllers\CMSPageAddController;
+use SilverStripe\Core\ClassInfo;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -47,12 +45,13 @@ class CMSPageAddControllerProducts extends CMSPageAddController
     //     return $this->redirect(Injector::inst()->get(ProductsAndGroupsModelAdmin::class)->Link());
     // }
     /**
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
-    public function PageTypes()
+    #[Override]
+    public function RecordTypes()
     {
         $pageTypes = parent::PageTypes();
-        $result = new ArrayList();
+        $result = ArrayList::create();
 
         $productClass = EcommerceConfigClassNames::getName(Product::class);
         $productGroupClass = EcommerceConfigClassNames::getName(ProductGroup::class);

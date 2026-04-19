@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Assets\Image;
@@ -18,7 +20,7 @@ use SilverStripe\ORM\DB;
  */
 class UpdateProductImages extends BuildTask
 {
-    protected $title = 'Sets Product Images to a new ClassName compatible with Ecommerce for Silvertripe 4.0';
+    protected string $title = 'Sets Product Images to a new ClassName compatible with Ecommerce for Silvertripe 4.0';
 
     protected $description = 'Changes all Images in database from ClassName ProductImage to ClassName SilverStripe\\Assets\\Image';
 

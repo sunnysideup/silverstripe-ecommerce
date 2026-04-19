@@ -22,6 +22,7 @@ class OrderToArray extends OrderConverter
             $shipping = $this->order->ShippingAddress();
             $shipping->setFieldsToMatchBillingAddress();
         }
+
         $array = [
             'totalAmount' => [
                 'amount' => $this->order->Total,
@@ -72,6 +73,7 @@ class OrderToArray extends OrderConverter
                 ],
             ];
         }
+
         foreach ($modifiers as $modifier) {
             switch ($modifier->Type) {
                 case 'Discount':

@@ -24,7 +24,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
     protected $limit = 1;
 
-    protected $title = 'Process The Order Queue';
+    protected string $title = 'Process The Order Queue';
 
     protected $description = 'Go through order queue and try to finalise all the orders in it.';
 
@@ -40,6 +40,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
         }
+
         $id = (int) $request?->getVar('id');
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
@@ -48,11 +49,13 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
             return;
         }
+
         echo '<h3>There are ' . $ordersinQueue->count() . ' in the queue, processing ' . $this->limit . ' now</h3>';
         if ($id !== 0) {
             echo '<h3>FORCING Order with ID: ' . $id . '</h3>';
             $ordersinQueue = $ordersinQueue->filter(['ID' => $id]);
         }
+
         $this->tryToFinaliseOrders($ordersinQueue);
         echo '<hr />';
         echo '<hr />';

@@ -9,7 +9,6 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
@@ -24,7 +23,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
 {
-    protected $title = 'Archive all submitted orders';
+    protected string $title = 'Archive all submitted orders';
 
     protected $description = "
     This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
@@ -50,8 +49,8 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                     ['Sort' => 'DESC']
                 );
                 if ($lastOrderStep) {
-                    $joinSQL = "INNER JOIN \"{$orderStatusLogTableName}\" ON \"{$orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"";
-                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . " AND \"{$orderStatusLogTableName}\".ClassName = '" . Convert::raw2sql($submittedOrderStatusLogClassName) . "'";
+                    $joinSQL = sprintf('INNER JOIN "%s" ON "%s"."OrderID" = "Order"."ID"', $orderStatusLogTableName, $orderStatusLogTableName);
+                    $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . sprintf(" AND \"%s\".ClassName = '", $orderStatusLogTableName) . Convert::raw2sql($submittedOrderStatusLogClassName) . "'";
                     $count = DB::query("
                         SELECT COUNT (\"Order\".\"ID\")
                         FROM \"Order\"
@@ -67,7 +66,7 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                     DB::alteration_message('SQL: ' . $sql);
                     DB::query($sql);
                     if ($count) {
-                        DB::alteration_message("NOTE: {$count} records were updated.", 'created');
+                        DB::alteration_message(sprintf('NOTE: %s records were updated.', $count), 'created');
                     } else {
                         DB::alteration_message('No records were updated.');
                     }

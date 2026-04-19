@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\ProductsAndGroups;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class Debug extends ViewableData
+class Debug extends ModelData
 {
-    protected $rootGroup;
-
-    protected $rootGroupController;
-
-    public function __construct($rootGroupController, $rootGroup)
+    public function __construct(protected $rootGroupController, protected $rootGroup)
     {
         parent::__construct();
-        $this->rootGroupController = $rootGroupController;
-        $this->rootGroup = $rootGroup;
         if (! $this->rootGroup) {
             user_error('Please specify rootGroup');
         }

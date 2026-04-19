@@ -35,6 +35,7 @@ class OrderFormFeedback extends Form
             $value = trim($value);
             $newValues[Convert::raw2att($value)] = $value;
         }
+
         $fields = FieldList::create(
             [
                 OptionsetField::create(
@@ -54,10 +55,11 @@ class OrderFormFeedback extends Form
         ];
         $validator = OrderFormFeedbackValidator::create($requiredFields);
         parent::__construct($controller, $name, $fields, $actions, $validator);
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateOrderFormFeedback', $this);
     }
 
@@ -104,6 +106,7 @@ class OrderFormFeedback extends Form
         if ($page) {
             return $page->{$value};
         }
+
         $defaults = Config::inst()->get(OrderConfirmationPage::class, 'defaults');
         if ($defaults && is_array($defaults) && isset($defaults[$value])) {
             return $defaults[$value];

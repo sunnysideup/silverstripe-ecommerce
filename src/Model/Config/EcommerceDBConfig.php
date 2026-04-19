@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Config;
 
+use Override;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
@@ -143,6 +144,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     private static $casting = [
         'UseThisOneNice' => 'Varchar',
     ];
+
     //adds computed fields that can also have a type (e.g.
 
     /**
@@ -169,6 +171,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     private static $summary_fields = [
         'Title' => 'Title',
     ];
+
     //note no => for relational fields
 
     /**
@@ -243,11 +246,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
@@ -269,11 +273,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
@@ -291,11 +296,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
@@ -317,10 +323,11 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if ($this->UseThisOne) {
@@ -348,6 +355,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
+    #[Override]
     public function populateDefaults()
     {
         $this->ReceiptEmail = Email::config()->admin_email;
@@ -355,12 +363,14 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         return parent::populateDefaults();
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('EcommerceDBConfig.ECOMMERCECONFIGURATION', 'Main E-commerce Configuration');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('EcommerceDBConfig.ECOMMERCECONFIGURATIONS', 'Main E-commerce Configurations');
     }
@@ -406,6 +416,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      *
      * @return array
      */
+    #[Override]
     public function fieldLabels($includerelations = true)
     {
         $defaultLabels = parent::fieldLabels();
@@ -488,8 +499,9 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $this->beforeUpdateCMSFields(
@@ -551,12 +563,12 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Main',
             [
-                new TextField('Title', $fieldLabels['Title']),
+                TextField::create('Title', $fieldLabels['Title']),
                 CheckboxField::create(
                     'UseThisOne',
                     $fieldLabels['UseThisOne']
                 ),
-                new TreeDropdownField('ShopPolicyInfoPageID', 'Shop policy info', SiteTree::class),
+                TreeDropdownField::create('ShopPolicyInfoPageID', 'Shop policy info', SiteTree::class),
                 HTMLReadonlyField::create(
                     'RefreshWebsite',
                     'Update site',
@@ -567,51 +579,51 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Pricing',
             [
-                new CheckboxField('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
-                (new NumericField('DefaultTaxRate', $fieldLabels['DefaultTaxRate']))
+                CheckboxField::create('ShopPricesAreTaxExclusive', $fieldLabels['ShopPricesAreTaxExclusive']),
+                (NumericField::create('DefaultTaxRate', $fieldLabels['DefaultTaxRate']))
                     ->setScale(null),
-                new CheckboxField('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
-                new HTMLEditorField('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation']),
+                CheckboxField::create('AllowFreeProductPurchase', $fieldLabels['AllowFreeProductPurchase']),
+                HTMLEditorField::create('CurrenciesExplanation', $fieldLabels['CurrenciesExplanation']),
             ]
         );
         $fields->addFieldsToTab(
             'Root.Offline',
             [
-                new CheckboxField('ShopClosed', $fieldLabels['ShopClosed']),
+                CheckboxField::create('ShopClosed', $fieldLabels['ShopClosed']),
             ]
         );
         $fields->addFieldsToTab(
             'Root.Products',
             [
-                (new CheckboxField('ShowFullDetailsForProducts', $fieldLabels['ShowFullDetailsForProducts']))
+                (CheckboxField::create('ShowFullDetailsForProducts', $fieldLabels['ShowFullDetailsForProducts']))
                     ->setDescription('In the CMS, show additional info about price and order changes on products'),
-                new NumericField('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
-                new CheckboxField('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
-                new CheckboxField('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
-                new HTMLEditorField('NotForSaleMessage', $fieldLabels['NotForSaleMessage']),
-                new CheckboxField('ProductsHaveWeight', $fieldLabels['ProductsHaveWeight']),
-                new CheckboxField('ProductsHaveModelNames', $fieldLabels['ProductsHaveModelNames']),
-                new CheckboxField('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers']),
+                NumericField::create('NumberOfProductsPerPage', $fieldLabels['NumberOfProductsPerPage']),
+                CheckboxField::create('ProductsAlsoInOtherGroups', $fieldLabels['ProductsAlsoInOtherGroups']),
+                CheckboxField::create('OnlyShowProductsThatCanBePurchased', $fieldLabels['OnlyShowProductsThatCanBePurchased']),
+                HTMLEditorField::create('NotForSaleMessage', $fieldLabels['NotForSaleMessage']),
+                CheckboxField::create('ProductsHaveWeight', $fieldLabels['ProductsHaveWeight']),
+                CheckboxField::create('ProductsHaveModelNames', $fieldLabels['ProductsHaveModelNames']),
+                CheckboxField::create('ProductsHaveQuantifiers', $fieldLabels['ProductsHaveQuantifiers']),
                 //new CheckboxField("ProductsHaveVariations", $fieldLabels["ProductsHaveVariations"])
             ]
         );
         $fields->addFieldsToTab(
             'Root.ProductImages',
             [
-                new ProductProductImageUploadField('DefaultProductImage', $fieldLabels['DefaultProductImage']),
+                ProductProductImageUploadField::create('DefaultProductImage', $fieldLabels['DefaultProductImage']),
             ]
         );
         $fields->addFieldsToTab(
             'Root.AddressAndDelivery',
             [
-                new TextField('PostalCodeURL', $fieldLabels['PostalCodeURL']),
-                new TextField('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
-                new TextField('PhoneNumberForShop', 'Phone Number for Shop'),
-                new TreeDropdownField('DeliveryInfoPageID', 'Delivery Info Page', SiteTree::class),
-                new TextField('ShippingDescriptionShort', 'Delivery Info Short', SiteTree::class),
-                new HTMLEditorField('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
-                new TextField('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
-                new HTMLEditorField('PackingSlipNote', $fieldLabels['PackingSlipNote']),
+                TextField::create('PostalCodeURL', $fieldLabels['PostalCodeURL']),
+                TextField::create('PostalCodeLabel', $fieldLabels['PostalCodeLabel']),
+                TextField::create('PhoneNumberForShop', 'Phone Number for Shop'),
+                TreeDropdownField::create('DeliveryInfoPageID', 'Delivery Info Page', SiteTree::class),
+                TextField::create('ShippingDescriptionShort', 'Delivery Info Short', SiteTree::class),
+                HTMLEditorField::create('ShopPhysicalAddress', $fieldLabels['ShopPhysicalAddress']),
+                TextField::create('PackingSlipTitle', $fieldLabels['PackingSlipTitle']),
+                HTMLEditorField::create('PackingSlipNote', $fieldLabels['PackingSlipNote']),
             ]
         );
         $fields->addFieldsToTab(
@@ -628,10 +640,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         $fields->addFieldsToTab(
             'Root.Emails',
             [
-                new TextField('ReceiptEmail', $fieldLabels['ReceiptEmail']),
-                new UploadField('EmailLogo', $fieldLabels['EmailLogo']),
-                new TextField('InvoiceTitle', $fieldLabels['InvoiceTitle']),
-                $htmlEditorField5 = new HTMLEditorField('InvoiceMessage', $fieldLabels['InvoiceMessage']),
+                TextField::create('ReceiptEmail', $fieldLabels['ReceiptEmail']),
+                UploadField::create('EmailLogo', $fieldLabels['EmailLogo']),
+                TextField::create('InvoiceTitle', $fieldLabels['InvoiceTitle']),
+                $htmlEditorField5 = HTMLEditorField::create('InvoiceMessage', $fieldLabels['InvoiceMessage']),
             ]
         );
         $fields->addFieldsToTab(
@@ -682,16 +694,16 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     public function getOrderStepsField()
     {
         $gridFieldConfig = GridFieldConfig::create()->addComponents(
-            new GridFieldToolbarHeader(),
-            new GridFieldSortableHeader(),
-            new GridFieldDataColumns(),
-            new GridFieldPaginator(200),
-            new GridFieldEditButton(),
-            new GridFieldDeleteAction(),
-            new GridFieldDetailForm()
+            GridFieldToolbarHeader::create(),
+            GridFieldSortableHeader::create(),
+            GridFieldDataColumns::create(),
+            GridFieldPaginator::create(200),
+            GridFieldEditButton::create(),
+            GridFieldDeleteAction::create(),
+            GridFieldDetailForm::create()
         );
 
-        return new GridField('OrderSteps', _t('OrderStep.PLURALNAME', 'Order Steps'), OrderStep::get(), $gridFieldConfig);
+        return GridField::create('OrderSteps', _t('OrderStep.PLURALNAME', 'Order Steps'), OrderStep::get(), $gridFieldConfig);
     }
 
     /**
@@ -713,6 +725,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         } else {
             user_error('No class name provided', E_USER_NOTICE);
         }
+
         return false;
     }
 
@@ -778,6 +791,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         if ($order) {
             return $order->CheckoutLink($action);
         }
+
         return CheckoutPage::find_link($action);
     }
 
@@ -838,6 +852,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * standard SS Method.
      */
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -914,6 +929,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
+    #[Override]
     protected function onAfterWrite()
     {
         if ($this->UseThisOne) {

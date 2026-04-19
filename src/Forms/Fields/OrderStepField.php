@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\DatalessField;
 use SilverStripe\Security\Member;
@@ -28,12 +29,14 @@ class OrderStepField extends DatalessField
      */
     public function __construct($name, Order $order, Member $member = null)
     {
-        if (! $member instanceof \SilverStripe\Security\Member) {
+        if (! $member instanceof Member) {
             $member = $order->Member();
         }
+
         if (! $member) {
-            $member = new Member();
+            $member = Member::create();
         }
+
         $orderSteps = OrderStep::get();
         // $where = '"HideStepFromCustomer" = 0';
         $currentStep = $order->CurrentStepVisibleToCustomer();
@@ -45,6 +48,7 @@ class OrderStepField extends DatalessField
                 ->filter(['HideStepFromCustomer' => 0])
             ;
         }
+
         $future = false;
         $html = '
         <div class="orderStepField">
@@ -54,10 +58,12 @@ class OrderStepField extends DatalessField
                 if ($orderStep->HideFromEveryone()) {
                     continue;
                 }
+
                 $description = '';
                 if ($member->IsShopAdmin() && $orderStep->Description) {
                     $description = ' title="' . Convert::raw2att($orderStep->Description) . '" ';
                 }
+
                 $class = '';
                 if ($orderStep->ID === $currentStep->ID) {
                     $future = true;
@@ -67,11 +73,13 @@ class OrderStepField extends DatalessField
                 } else {
                     $class .= ' done';
                 }
+
                 $html .= '<li class="' . $class . '" ' . $description . '><a href="' . $orderStep->CMSEditLink() . '">' . $orderStep->Title . '</a></li>';
             }
         } else {
             $html .= 'no steps';
         }
+
         $html .= '</ol><div class="clear"></div></div>';
         $this->content = $html;
         Requirements::themedCSS('client/css/OrderStepField');
@@ -85,6 +93,7 @@ class OrderStepField extends DatalessField
      *
      * @return string
      */
+    #[Override]
     public function FieldHolder($properties = [])
     {
         return is_object($this->content) ? $this->content->forTemplate() : $this->content;
@@ -97,6 +106,7 @@ class OrderStepField extends DatalessField
      *
      * @return string
      */
+    #[Override]
     public function Field($properties = [])
     {
         return $this->FieldHolder();
@@ -126,6 +136,7 @@ class OrderStepField extends DatalessField
      * @param mixed      $value
      * @param null|mixed $data
      */
+    #[Override]
     public function setValue($value, $data = null): self
     {
         return $this->setContent($value);
@@ -136,6 +147,7 @@ class OrderStepField extends DatalessField
      *
      * @return OrderStepField
      */
+    #[Override]
     public function performReadonlyTransformation()
     {
         $clone = clone $this;

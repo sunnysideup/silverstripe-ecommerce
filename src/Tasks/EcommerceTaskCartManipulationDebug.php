@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskCartManipulationDebug extends BuildTask
 {
-    protected $title = 'Show debug links';
+    protected string $title = 'Show debug links';
 
     protected $description = 'Use a bunch of debug links to work with various objects such as the cart, the product group and the product page.';
 
@@ -34,12 +34,14 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
             $html .= '
             <li><a href="' . $myProductGroup->Link('debug') . '" target="_debug">debug product group</a></li>';
         }
+
         if ($myProduct) {
             $html .= '
             <li><a href="' . $myProduct->Link('debug') . '" target="_debug">debug product</a></li>';
         }
+
         $html .= '
         </ul>';
-        DB::alteration_message("{$html}");
+        DB::alteration_message($html);
     }
 }

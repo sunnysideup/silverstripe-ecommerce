@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
@@ -98,10 +99,11 @@ class SalesAdmin extends ModelAdmin
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      *               we make sure that the Order Admin is FIRST
      */
+    #[Override]
     public function getManagedModels()
     {
         $models = parent::getManagedModels();
-        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
+        $orderModelManagement = $models[Order::class] ?? null;
         if ($orderModelManagement) {
             unset($models[Order::class]);
 
@@ -112,8 +114,9 @@ class SalesAdmin extends ModelAdmin
     }
 
     /**
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
+    #[Override]
     public function getList()
     {
         $list = parent::getList();
@@ -140,8 +143,10 @@ class SalesAdmin extends ModelAdmin
                     EcommerceCache::inst()->save($this->getTimeBasedCacheKey(), $list->columnUnique());
                 }
             }
+
             $list = self::$_list_cache_orders;
         }
+
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {
@@ -154,6 +159,7 @@ class SalesAdmin extends ModelAdmin
         return $list;
     }
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         // If not supplied, look up the ID from the request
@@ -161,13 +167,14 @@ class SalesAdmin extends ModelAdmin
         if (null === $id && is_numeric($this->getRequest()->param('ID'))) {
             $id = (int) $this->getRequest()->param('ID');
         }
+
         $form = parent::getEditForm($id, $fields);
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
             if ($gridField && $gridField instanceof GridField) {
                 $config = $gridField->getConfig();
                 // export button
-                $exportButton = new GridFieldExportSalesButton('buttons-before-left');
+                $exportButton = GridFieldExportSalesButton::create('buttons-before-left');
                 $exportButton->setExportColumns($this->getExportFields());
                 $config->addComponent($exportButton);
                 //print invoices
@@ -185,6 +192,7 @@ class SalesAdmin extends ModelAdmin
         return $form;
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -215,6 +223,7 @@ class SalesAdmin extends ModelAdmin
                 if ($id !== 0) {
                     $ids[$id] = $id;
                 }
+
                 if (count($ids) > 0) {
                     $arrayOfTabs[$key] = [
                         'TabName' => 'tab' . $key,
@@ -228,6 +237,7 @@ class SalesAdmin extends ModelAdmin
                 unset($arrayOfTabs[$key]);
             }
         }
+
         TabsBuilder::add_many_tabs(
             $arrayOfTabs,
             $form,

@@ -18,7 +18,7 @@ use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
  */
 class EcommerceTaskDeleteProducts extends BuildTask
 {
-    protected $title = 'Delete e-commerce Buyables';
+    protected string $title = 'Delete e-commerce Buyables';
 
     protected $description = 'Removes all Buyables (Products) from the database.';
 
@@ -36,6 +36,7 @@ class EcommerceTaskDeleteProducts extends BuildTask
                     } else {
                         $product->delete();
                     }
+
                     $product->destroy();
                     //TODO: remove versions
                 }

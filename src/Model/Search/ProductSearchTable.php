@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
  * @property string $Title
  * @property string $Data
  * @property int $ProductID
- * @method \Sunnysideup\Ecommerce\Pages\Product Product()
+ * @method Product Product()
  */
 class ProductSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
@@ -106,6 +106,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
             if (! $obj) {
                 $obj = ProductSearchTable::create($filter);
             }
+
             $obj->Title = Sanitizer::html_to_text($product->Title);
             $obj->Data = Sanitizer::html_array_to_text_limit_words($dataAsArray);
             $obj->Boost = $product->getSearchBoostCalculated() ?: 0;
@@ -113,6 +114,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
             foreach ($generalBoosts as $boostClass) {
                 $obj->Boost += $boostClass->getBoostValueForProduct($product) ?: 0;
             }
+
             $obj->write();
         } else {
             self::remove_product($product);
@@ -144,6 +146,7 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
                 }
             }
         }
+
         return self::$_generic_boosts;
     }
 }

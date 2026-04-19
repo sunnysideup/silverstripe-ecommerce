@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
+use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extension;
 
@@ -9,7 +12,7 @@ use SilverStripe\Core\Extension;
  * EcommerceDevelopmentAdminDecorator adds extra functionality to the DevelopmentAdmin
  * It creates a developer view (as in www.mysite.com/dev/) specifically for ecommerce.
  *
- * @property \SilverStripe\Dev\DevelopmentAdmin|\Sunnysideup\Ecommerce\Cms\Dev\EcommerceDevelopmentAdminDecorator $owner
+ * @property DevelopmentAdmin|EcommerceDevelopmentAdminDecorator $owner
  */
 class EcommerceDevelopmentAdminDecorator extends Extension
 {

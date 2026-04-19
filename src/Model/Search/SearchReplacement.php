@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Search;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -64,16 +66,19 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
 
     private static $separator = ',';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
 
+    #[Override]
     public function fieldLabels($includerelations = true)
     {
         return [
@@ -85,20 +90,23 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -109,20 +117,23 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -133,20 +144,23 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -157,19 +171,22 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -189,6 +206,7 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -207,16 +225,18 @@ class SearchReplacement extends DataObject implements EditableEcommerceObject
         return $fields;
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
         //all lower case and make replace double spaces
-        $this->Search = trim(preg_replace('#\s+#', ' ', strtolower((string) $this->Search)));
+        $this->Search = trim((string) preg_replace('#\s+#', ' ', strtolower((string) $this->Search)));
         $searchArray = [];
         // we make sure that there are no spaces before or after the separator!
         foreach (explode(',', (string) $this->Search) as $term) {
             $searchArray[] = trim($term);
         }
+
         $this->Search = implode(',', $searchArray);
         $this->Replace = strtolower((string) $this->Replace);
     }

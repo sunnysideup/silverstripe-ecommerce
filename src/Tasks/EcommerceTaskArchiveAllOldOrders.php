@@ -23,9 +23,9 @@ use Symfony\Component\Mailer\MailerInterface;
  */
 class EcommerceTaskArchiveAllOldOrders extends BuildTask
 {
-    private const AGO_STATEMENT = '-6 months';
+    private const string AGO_STATEMENT = '-6 months';
 
-    protected $title = 'Archive all old orders';
+    protected string $title = 'Archive all old orders';
 
     protected $description = "This task moves all orders to the 'Archived' (last) Order Step that were created " . self::AGO_STATEMENT;
 
@@ -53,7 +53,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
                 {$whereSQL}
             ");
             if ($count) {
-                DB::alteration_message("NOTE: {$count} records were updated.", 'created');
+                DB::alteration_message(sprintf('NOTE: %s records were updated.', $count), 'created');
             } else {
                 DB::alteration_message('No records were updated.');
             }

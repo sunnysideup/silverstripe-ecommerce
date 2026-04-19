@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
-use SilverStripe\Assets\Image;
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -22,6 +22,7 @@ class EcommerceSideReportProductsNoImage extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.NOIMAGE', 'E-commerce: Products: without image');

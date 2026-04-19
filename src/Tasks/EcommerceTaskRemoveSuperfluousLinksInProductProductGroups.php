@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
@@ -14,7 +16,7 @@ use SilverStripe\ORM\DB;
  */
 class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTask
 {
-    protected $title = 'Delete superfluous entries in Product_ProductGroups';
+    protected string $title = 'Delete superfluous entries in Product_ProductGroups';
 
     protected $description = 'Look at all the links in Product_ProductGroups and removes non-existing entries.';
 
@@ -32,6 +34,7 @@ class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTas
         if ($this->verbose) {
             DB::alteration_message('Before: ' . DB::query('COUNT(ID) FROM Product_ProductGroups;')->value());
         }
+
         DB::query('
             DELETE T1 FROM Product_ProductGroups AS T1
                 LEFT JOIN Product ON Product.ID = ProductID

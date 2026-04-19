@@ -2,20 +2,24 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+
 /**
  * Class \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage
+ * @property ProductGroupSearchPage $dataRecord
+ * @method ProductGroupSearchPage data()
+ * @mixin ProductGroupSearchPage
  */
 class ProductGroupSearchPageController extends ProductGroupController
 {
+    #[Override]
     public function getSearchFilterHeader(): string
     {
         return _t('Ecommerce.SEARCH_ALL_PRODUCTS', 'Search all Products');
     }
 
+    #[Override]
     protected function setSearchString()
     {
         $params = $this->getUserPreferencesClass()->getCurrentUserPreferencesParams('SEARCHFILTER');

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
 use SilverStripe\Reports\Report;
 
 /**
@@ -18,6 +21,7 @@ class EcommerceSideReportProductsAll extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.ALLPRODUCTS', 'E-commerce: Products: All');

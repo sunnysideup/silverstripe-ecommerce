@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Model\Process\OrderFeedback;
@@ -67,6 +70,7 @@ class SalesAdminProcess extends ModelAdmin
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/money-file.gif';
 
+    #[Override]
     protected function init()
     {
         parent::init();

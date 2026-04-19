@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use Override;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs\OrderStatusLogSubmitted;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -23,13 +23,14 @@ class OrderItemProductFilter extends ExactMatchFilter
     /**
      * @return DataQuery
      */
+    #[Override]
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
         $value = Convert::raw2sql($this->getValue());
         $product = Product::get()->filter(['InternalItemID' => $value])->first();
         if ($product) {
-            $query->where("BuyableClassName = '" . addslashes($product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
+            $query->where("BuyableClassName = '" . addslashes((string) $product->ClassName) . '\' AND "BuyableID" = ' . $product->ID);
         } else {
             $done = false;
             $rows = DB::query(
@@ -38,12 +39,13 @@ class OrderItemProductFilter extends ExactMatchFilter
                 FROM Product_Versions
                     INNER JOIN SiteTree_Versions
                         ON SiteTree_Versions.RecordID = Product_Versions.RecordID AND SiteTree_Versions.Version = Product_Versions.Version
-                WHERE InternalItemID = \'' . $value . '\' LIMIT 1;'
+                WHERE InternalItemID = \'' . $value . "' LIMIT 1;"
             );
             foreach ($rows as $row) {
-                $query->where("BuyableClassName = '" . addslashes($row['ClassName']) . '\' AND "BuyableID" = ' . $row['RecordID']);
+                $query->where("BuyableClassName = '" . addslashes((string) $row['ClassName']) . '\' AND "BuyableID" = ' . $row['RecordID']);
                 $done = true;
             }
+
             if (! $done) {
                 $logs = OrderStatusLogSubmitted::get()
                     ->filterAny(['OrderAsHTML:PartialMatch' => $value, 'OrderAsString:PartialMatch' => $value])
@@ -52,6 +54,7 @@ class OrderItemProductFilter extends ExactMatchFilter
                 if ($logs->exists()) {
                     $orderIds = $logs->column('OrderID');
                 }
+
                 $query->where('OrderID IN (' . implode(',', $orderIds) . ')');
             }
         }

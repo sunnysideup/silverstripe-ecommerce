@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
@@ -16,7 +18,7 @@ use Sunnysideup\Ecommerce\Model\Order;
  */
 class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
 {
-    protected $title = 'Set Order ID starting number';
+    protected string $title = 'Set Order ID starting number';
 
     protected $description = 'Sets the starting order number with all order numbers following this number.';
 
@@ -31,8 +33,9 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
             if ($count > 0) {
                 $currentMax = DB::Query('SELECT MAX( "ID" ) FROM "Order"')->value();
             }
+
             if ($number > $currentMax) {
-                DB::query("ALTER TABLE \"Order\"  AUTO_INCREMENT = {$number} ROW_FORMAT = DYNAMIC ");
+                DB::query(sprintf('ALTER TABLE "Order"  AUTO_INCREMENT = %s ROW_FORMAT = DYNAMIC ', $number));
                 DB::alteration_message('Change OrderID start number to ' . $number, 'created');
             } else {
                 DB::alteration_message('Can not set OrderID start number to ' . $number . ' because this number has already been used.', 'deleted');

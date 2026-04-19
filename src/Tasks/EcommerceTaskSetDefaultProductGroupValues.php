@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 {
-    protected $title = 'Set Default Product Group Values';
+    protected string $title = 'Set Default Product Group Values';
 
     protected $description = 'Set default product group values such as DefaultSortOrder.';
 
@@ -50,10 +50,10 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
                 $faultyProductGroup->{$fieldName} = $resetValue;
                 $faultyProductGroup->writeToStage(Versioned::DRAFT);
                 $faultyProductGroup->publishRecursive();
-                DB::alteration_message("Reset {$fieldName} for " . $faultyProductGroup->Title, 'created');
+                DB::alteration_message(sprintf('Reset %s for ', $fieldName) . $faultyProductGroup->Title, 'created');
             }
         } else {
-            DB::alteration_message("Could not find any faulty records for ProductGroup.{$fieldName}");
+            DB::alteration_message('Could not find any faulty records for ProductGroup.' . $fieldName);
         }
     }
 }

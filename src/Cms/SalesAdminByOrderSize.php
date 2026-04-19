@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
@@ -50,6 +51,7 @@ class SalesAdminByOrderSize extends SalesAdmin
         Order::class,
     ];
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -66,9 +68,11 @@ class SalesAdminByOrderSize extends SalesAdmin
                     if ($value && ($total >= $prevValue && $total < $value)) {
                         $arrayOfTabs[$value]['IDs'][$order->ID] = $order->ID;
                     }
+
                     $prevValue = $value;
                 }
             }
+
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
 

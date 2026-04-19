@@ -10,7 +10,7 @@ use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 /**
  * Class \Sunnysideup\Ecommerce\Money\EcommerceMoney
  *
- * @property \SilverStripe\ORM\FieldType\DBMoney|\Sunnysideup\Ecommerce\Money\EcommerceMoney $owner
+ * @property DBMoney|EcommerceMoney $owner
  */
 class EcommerceMoney extends Extension
 {
@@ -93,8 +93,9 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_short_symbol($this->getOwner()->currency);
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->getOwner()->currency}\"><span class=\"currencySymbol\">{$symbol}</span></span>";
+            $symbol = sprintf('<span class="currencyHolder currencyHolderShort currency%s"><span class="currencySymbol">%s</span></span>', $this->getOwner()->currency, $symbol);
         }
+
         $amount = $this->getOwner()->getAmount();
 
         $formatter = $this->getOwner()->getFormatter();
@@ -117,10 +118,11 @@ class EcommerceMoney extends Extension
         $short = self::get_short_symbol($this->getOwner()->currency);
         $pre = substr((string) $symbol, 0, mb_strlen((string) $symbol) - mb_strlen((string) $short));
         if ($html) {
-            $symbol = "<span class=\"currencyHolder currencyHolderLong currency{$this->getOwner()->currency}\"><span class=\"currencyPreSymbol\">{$pre}</span><span class=\"currencySymbol\">{$short}</span></span>";
+            $symbol = sprintf('<span class="currencyHolder currencyHolderLong currency%s"><span class="currencyPreSymbol">%s</span><span class="currencySymbol">%s</span></span>', $this->getOwner()->currency, $pre, $short);
         } else {
             $symbol = $pre . $short;
         }
+
         $amount = $this->getOwner()->getAmount();
         $currency = $this->getOwner()->getCurrency();
 
@@ -141,12 +143,14 @@ class EcommerceMoney extends Extension
     {
         $symbol = self::get_short_symbol($this->getOwner()->currency);
         if ($html) {
-            $symbol = "<span class=\"currencySymbol\">{$symbol}</span>";
+            $symbol = sprintf('<span class="currencySymbol">%s</span>', $symbol);
         }
+
         $code = strtolower((string) $this->getOwner()->currency);
         if ($html) {
-            $code = "<span class=\"currencyHolder\">{$code}</span>";
+            $code = sprintf('<span class="currencyHolder">%s</span>', $code);
         }
+
         $amount = $this->getOwner()->getAmount();
 
         $data = is_numeric($amount) ? $symbol . $this->getOwner()->currencyLib->toCurrency($amount, [

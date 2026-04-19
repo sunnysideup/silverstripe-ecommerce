@@ -2,12 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
+use Override;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\TaskRunner;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
@@ -151,10 +152,11 @@ class EcommerceDatabaseAdmin extends TaskRunner
     // BASIC FUNCTIONS
     //##############################
 
+    #[Override]
     public function index()
     {
         if (! Director::is_cli()) {
-            $renderer = new EcommerceDatabaseAdminDebugView();
+            $renderer = EcommerceDatabaseAdminDebugView::create();
             $renderer->renderHeader();
             $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
             $renderer->writeContent($this);
@@ -169,6 +171,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
      *
      * @return string link for the "Controller"
      */
+    #[Override]
     public function Link($action = null)
     {
         return Controller::join_links(
@@ -181,7 +184,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of config tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function OverallConfig()
     {
@@ -191,7 +194,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data setup tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function EcommerceSetup()
     {
@@ -201,7 +204,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function DataReview()
     {
@@ -211,7 +214,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function RegularMaintenance()
     {
@@ -221,7 +224,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data debug actions.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function DebugActions()
     {
@@ -231,7 +234,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of migration tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function Migrations()
     {
@@ -241,7 +244,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of crazy actions tasks.
      *
-     * @return \SilverStripe\ORM\ArrayList
+     * @return \SilverStripe\Model\List\ArrayList
      */
     public function CrazyShit()
     {
@@ -250,15 +253,13 @@ class EcommerceDatabaseAdmin extends TaskRunner
 
     public function Tests()
     {
-        $arrayList = new ArrayList();
+        $arrayList = ArrayList::create();
         foreach ($this->tests as $class => $name) {
             $arrayList->push(
-                new ArrayData(
-                    [
-                        'Name' => $name,
-                        'Class' => $class,
-                    ]
-                )
+                ArrayData::create([
+                    'Name' => $name,
+                    'Class' => $class,
+                ])
             );
         }
 
@@ -273,11 +274,12 @@ class EcommerceDatabaseAdmin extends TaskRunner
         return implode(',', array_keys($this->tests));
     }
 
+    #[Override]
     public function runTask($request)
     {
         $task = null;
         $taskName = $request->param('TaskName');
-        $renderer = new EcommerceDatabaseAdminDebugView();
+        $renderer = EcommerceDatabaseAdminDebugView::create();
         $renderer->renderHeader();
         $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
         $renderer->writePreOutcome();
@@ -294,15 +296,17 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 $task->verbose = true;
                 $task->run($request);
             } else {
-                echo "<p>{$title} is disabled</p>";
+                echo sprintf('<p>%s is disabled</p>', $title);
             }
         } else {
-            echo "Build task '{$taskName}' not found.";
+            echo sprintf("Build task '%s' not found.", $taskName);
             if (class_exists($taskName)) {
                 echo "  It isn't a subclass of BuildTask.";
             }
+
             echo "\n";
         }
+
         $this->displayCompletionMessage($task);
         $renderer->writePostOutcome();
         $renderer->writeContent($this);
@@ -329,17 +333,16 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 $buildTasksArray = array_merge($buildTasksArray, $extendedBuildTasks);
             }
         }
+
         $buildTasksArray = array_unique($buildTasksArray);
-        $arrayList = new ArrayList();
+        $arrayList = ArrayList::create();
         foreach ($buildTasksArray as $buildTask) {
             $obj = new $buildTask();
-            $do = new ArrayData(
-                [
-                    'Link' => $this->Link($buildTask),
-                    'Title' => $obj->getTitle(),
-                    'Description' => $obj->getDescription(),
-                ]
-            );
+            $do = ArrayData::create([
+                'Link' => $this->Link($buildTask),
+                'Title' => $obj->getTitle(),
+                'Description' => $obj->getDescription(),
+            ]);
             $arrayList->push($do);
         }
 

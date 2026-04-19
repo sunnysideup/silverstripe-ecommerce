@@ -20,7 +20,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 {
     public bool $verbose = false;
 
-    protected $title = 'Deletes all orders - CAREFUL!';
+    protected string $title = 'Deletes all orders - CAREFUL!';
 
     protected $description = 'Deletes all the orders and payments ever placed - CAREFULL!';
 
@@ -63,9 +63,11 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
             if (! isset($_REQUEST['i-am-sure'])) {
                 $_REQUEST['i-am-sure'] = '';
             }
+
             if ('yes' !== $_REQUEST['i-am-sure']) {
                 die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/ecommercetaskdeleteallorders/?i-am-sure=yes");
             }
+
             $oldCarts = Order::get();
             $count = 0;
             if ($oldCarts->exists()) {
@@ -74,24 +76,28 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                     $totalToDelete = $totalToDeleteSQLObject->value();
                     DB::alteration_message('<h2>Total number of orders: ' . $totalToDelete . ' .... now deleting: </h2>', 'deleted');
                 }
+
                 foreach ($oldCarts as $oldCart) {
                     ++$count;
                     if ($this->verbose) {
-                        DB::alteration_message("{$count} ... deleting abandonned order #" . $oldCart->ID, 'deleted');
+                        DB::alteration_message($count . ' ... deleting abandonned order #' . $oldCart->ID, 'deleted');
                     }
+
                     $oldCart->delete();
                     $oldCart->destroy();
                 }
             } elseif ($this->verbose) {
                 $count = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
-                DB::alteration_message("There are no abandonned orders. There are {$count} 'live' Orders.", 'created');
+                DB::alteration_message(sprintf("There are no abandonned orders. There are %s 'live' Orders.", $count), 'created');
             }
+
             $countCheck = DB::query('Select COUNT(ID) FROM "Order"')->value();
             if ($countCheck) {
                 DB::alteration_message('ERROR: in testing <i>Orders</i> it appears there are ' . $countCheck . ' records left.', 'deleted');
             } else {
                 DB::alteration_message('PASS: in testing <i>Orders</i> there seem to be no records left.', 'created');
             }
+
             $this->cleanupUnlinkedOrderObjects();
             $this->doubleCheckModifiersAndItems();
 
@@ -107,8 +113,9 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
         if (is_array($classNames) && count($classNames)) {
             foreach ($classNames as $classWithOrderID => $classWithLastEdited) {
                 if ($this->verbose) {
-                    DB::alteration_message("looking for {$classWithOrderID} objects without link to order.", 'deleted');
+                    DB::alteration_message(sprintf('looking for %s objects without link to order.', $classWithOrderID), 'deleted');
                 }
+
                 $where = '"Order"."ID" IS NULL ';
                 // $join = ' LEFT JOIN "Order" ON ';
                 //the code below is a bit of a hack, but because of the one-to-one relationship we
@@ -116,22 +123,25 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                 $unlinkedObjects = $classWithLastEdited::get();
                 if ($classWithLastEdited !== $classWithOrderID) {
                     $unlinkedObjects = $unlinkedObjects
-                        ->leftJoin($classWithOrderID, "\"OrderAddress\".\"ID\" = \"{$classWithOrderID}\".\"ID\"");
+                        ->leftJoin($classWithOrderID, sprintf('"OrderAddress"."ID" = "%s"."ID"', $classWithOrderID));
                 }
+
                 $unlinkedObjects = $unlinkedObjects
                     ->where($where)
-                    ->leftJoin('Order', "\"Order\".\"ID\" = \"{$classWithOrderID}\".\"OrderID\"");
+                    ->leftJoin('Order', sprintf('"Order"."ID" = "%s"."OrderID"', $classWithOrderID));
 
                 if ($unlinkedObjects->exists()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {
                         if ($this->verbose) {
                             DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
                         }
+
                         //HACK FOR DELETING
                         $this->deleteObject($unlinkedObject);
                     }
                 }
-                $countCheck = DB::query("Select COUNT(ID) FROM \"{$classWithLastEdited}\"")->value();
+
+                $countCheck = DB::query(sprintf('Select COUNT(ID) FROM "%s"', $classWithLastEdited))->value();
                 if ($countCheck) {
                     DB::alteration_message('ERROR: in testing <i>' . $classWithOrderID . '</i> it appears there are ' . $countCheck . ' records left.', 'deleted');
                 } else {
@@ -145,7 +155,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     {
         DB::alteration_message('<hr />double-check:</hr />');
         foreach ($this->config()->get('double_check_objects') as $table) {
-            $countCheck = DB::query("Select COUNT(ID) FROM \"{$table}\"")->value();
+            $countCheck = DB::query(sprintf('Select COUNT(ID) FROM "%s"', $table))->value();
             if ($countCheck) {
                 DB::alteration_message('ERROR: in testing <i>' . $table . '</i> it appears there are ' . $countCheck . ' records left.', 'deleted');
             } else {

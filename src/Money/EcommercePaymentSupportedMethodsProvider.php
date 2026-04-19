@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Money;
 
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -54,6 +54,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
         if (Director::isLive()) {
             $hideTestPaymentMethods = true;
         }
+
         $supportedMethods = EcommerceConfig::get(EcommercePayment::class, 'supported_methods');
         if (count($supportedMethods) > 0) {
             if (ArrayLib::is_associative($supportedMethods) && $hideTestPaymentMethods) {
@@ -89,6 +90,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
             if ($k === $oldKey) {
                 $k = $newKey;
             }
+
             $r[$k] = $v;
         }
 
@@ -109,6 +111,7 @@ class EcommercePaymentSupportedMethodsProvider implements EcommercePaymentSuppor
         if ($orderOrOrderId && $orderOrOrderId instanceof Order) {
             return $orderOrOrderId;
         }
+
         if ((int) $orderOrOrderId !== 0) {
             return Order::get_order_cached((int) $orderOrOrderId);
         }

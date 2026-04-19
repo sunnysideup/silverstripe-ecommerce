@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use SilverStripe\Admin\ModelAdmin;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
 use Sunnysideup\Ecommerce\Model\Search\SearchHistory;
@@ -54,6 +55,7 @@ class ProductConfigModelAdmin extends ModelAdmin
      */
     private static $menu_icon = 'vendor/sunnysideup/ecommerce/client/images/icons/product-file.gif';
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm();

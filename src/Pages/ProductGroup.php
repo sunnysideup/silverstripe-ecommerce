@@ -2,6 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\Lumberjack\Model\Lumberjack;
+use SilverStripe\Security\Member;
 use Page;
 use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
@@ -18,14 +23,12 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
@@ -53,10 +56,10 @@ use Sunnysideup\Vardump\Vardump;
  * @property string $DisplayStyle
  * @property bool $UseImageForProducts
  * @property int $ImageID
- * @method \SilverStripe\Assets\Image Image()
- * @method \Sunnysideup\Ecommerce\Model\Search\ProductGroupSearchTable ProductGroupSearchTable()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\Ecommerce\Pages\Product[] AlsoShowProducts()
- * @mixin \SilverStripe\Lumberjack\Model\Lumberjack
+ * @method Image Image()
+ * @method ProductGroupSearchTable ProductGroupSearchTable()
+ * @method ManyManyList|Product[] AlsoShowProducts()
+ * @mixin Lumberjack
  */
 class ProductGroup extends Page
 {
@@ -207,6 +210,7 @@ class ProductGroup extends Page
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -217,7 +221,7 @@ class ProductGroup extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
@@ -228,6 +232,7 @@ class ProductGroup extends Page
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -238,7 +243,7 @@ class ProductGroup extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -247,6 +252,7 @@ class ProductGroup extends Page
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
             return false;
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -258,7 +264,7 @@ class ProductGroup extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
@@ -354,6 +360,7 @@ class ProductGroup extends Page
                 No search data is recorded
             </p>';
         }
+
         $fields->addFieldsToTab(
             'Root.Search',
             [
@@ -367,8 +374,8 @@ class ProductGroup extends Page
         $fields->addFieldsToTab(
             'Root.Under',
             [
-                new ReadonlyField('ProductGroupBreadcrumb', _t('Product.PRODUCT_GROUP_BREADCRUMP', 'Breadcrumb')),
-                (new ReadonlyField(
+                ReadonlyField::create('ProductGroupBreadcrumb', _t('Product.PRODUCT_GROUP_BREADCRUMP', 'Breadcrumb')),
+                (ReadonlyField::create(
                     'FullSiteTreeSortNice',
                     _t('Product.FULLSITETREESORT', 'Full sort index'),
                     /// note use use string to avoid issues with int only supporting 19 digits
@@ -545,6 +552,7 @@ class ProductGroup extends Page
         if ($includeAlsoShowProducts) {
             return $this->getProducts()->exists() || $this->AlsoShowProducts()->exists();
         }
+
         return $this->getProducts()->exists();
     }
 
@@ -588,6 +596,7 @@ class ProductGroup extends Page
             if ($this->getProductsAlsoInOtherGroups() && $this->AlsoShowProducts()->exists()) {
                 $array = $this->AlsoShowProducts()->columnUnique();
             }
+
             EcommerceCache::inst()->save('AlsoShowProducts_' . $this->ID, $array);
         }
 
@@ -715,7 +724,7 @@ class ProductGroup extends Page
     /**
      * Returns children ProductGroup pages of this group.
      *
-     * @return \SilverStripe\ORM\SS_List (ProductGroups)
+     * @return \SilverStripe\Model\List\SS_List (ProductGroups)
      */
     public function ChildCategoriesBasedOnProducts()
     {
@@ -795,6 +804,7 @@ class ProductGroup extends Page
             if (substr((string) $urlSegment, -2) === '-' . $x) {
                 return substr((string) $urlSegment, 0, -2);
             }
+
             ++$x;
         }
 
@@ -817,6 +827,7 @@ class ProductGroup extends Page
                 $actualValue = ' (' . ($options[$key] ?? _t('ProductGroup.ERROR', 'ERROR')) . ')';
                 $options['inherit'] = _t('ProductGroup.INHERIT', 'Inherit') . $actualValue;
             }
+
             $fields->addFieldToTab(
                 'Root.ProductDisplay',
                 $field = DropdownField::create($field, $title, $options)
@@ -862,6 +873,7 @@ class ProductGroup extends Page
             $inheritTitle = _t('ProductGroup.INHERIT', 'Inherit');
             $array = ['inherit' => $inheritTitle];
         }
+
         $method = 'get' . ucwords(strtolower($type)) . 'OptionsMap';
         $options = $this->getProductGroupSchema()->{$method}();
 
@@ -920,9 +932,11 @@ class ProductGroup extends Page
                     }
                 }
             }
+
             if (false === $methodWorks) {
                 $value = $this->{$fieldNameOrMethod} ?? null;
             }
+
             if (! $value || 'inherit' === $value) {
                 $parent = $this->ParentGroup();
                 if ($parent && $parent->exists() && $parent->ID !== $this->ID) {
@@ -931,9 +945,11 @@ class ProductGroup extends Page
                     $value = EcommerceConfig::inst()->recursiveValue($fieldNameOrMethod, $default);
                 }
             }
+
             if (! $value) {
                 $value = $default;
             }
+
             self::$recursiveValuesCache[$key] = $value;
         }
 
@@ -962,13 +978,15 @@ class ProductGroup extends Page
     public function AlternativeNames(): ?ArrayList
     {
         if ($this->AlternativeProductGroupNames) {
-            $list = array_filter(array_filter(explode(',', $this->AlternativeProductGroupNames), 'trim'));
+            $list = array_filter(array_filter(explode(',', $this->AlternativeProductGroupNames), trim(...)));
             $al = ArrayList::create();
             foreach ($list as $name) {
                 $al->push(ArrayData::create(['Title' => DBField::create_field('Varchar', $name)]));
             }
+
             return $al;
         }
+
         return null;
     }
 
@@ -977,23 +995,25 @@ class ProductGroup extends Page
         $altNames = str_replace(', ', ' ', (string) $this->AlternativeProductGroupNames);
         $altNamesArray = array_unique(
             array_map(
-                'trim',
+                trim(...),
                 explode(' ', $altNames)
             )
         );
         if ($altNamesArray !== []) {
             return $altNamesArray;
         }
+
         return [];
     }
 
     public function AlternativeNamesUniqueAsArrayList(): ?ArrayList
     {
         $list = $this->AlternativeNamesUnique();
-        $arrayList = new ArrayList();
+        $arrayList = ArrayList::create();
         foreach ($list as $name) {
             $arrayList->push(ArrayData::create(['Title' => $name]));
         }
+
         return $arrayList->count() > 1 ? $arrayList : null;
     }
 }

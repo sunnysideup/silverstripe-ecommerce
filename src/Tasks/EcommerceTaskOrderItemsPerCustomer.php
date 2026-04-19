@@ -18,7 +18,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
  */
 class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 {
-    protected $title = 'Export all order items to CSV per customer';
+    protected string $title = 'Export all order items to CSV per customer';
 
     protected $description = 'Allows download of all sales items with all details as CSV. Excludes sales made by Admins';
 
@@ -29,7 +29,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 
         //file data
         $now = date('d-m-Y-H-i');
-        $fileName = "export-{$now}.csv";
+        $fileName = sprintf('export-%s.csv', $now);
 
         //data object variables
         $orderStatusSubmissionLog = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
@@ -40,7 +40,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         $orders = Order::get()
             ->sort(['Order.ID' => 'ASC'])
             ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-            ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+            ->innerJoin($orderStatusSubmissionLogTableName, sprintf('"%s"."ID" = "OrderStatusLog"."ID"', $orderStatusSubmissionLogTableName))
             ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
             ->limit($count, $offset)
         ;
@@ -61,6 +61,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                     } else {
                         $memberIsOK = true;
                     }
+
                     if ($memberIsOK) {
                         $items = OrderItem::get()->filter(['OrderID' => $order->ID]);
                         if ($items->exists()) {
@@ -69,15 +70,17 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                     }
                 }
             }
+
             $orders = Order::get()
                 ->sort(['Order.ID' => 'ASC'])
                 ->innerJoin('OrderStatusLog', '"Order"."ID" = "OrderStatusLog"."OrderID"')
-                ->innerJoin($orderStatusSubmissionLogTableName, "\"{$orderStatusSubmissionLogTableName}\".\"ID\" = \"OrderStatusLog\".\"ID\"")
+                ->innerJoin($orderStatusSubmissionLogTableName, sprintf('"%s"."ID" = "OrderStatusLog"."ID"', $orderStatusSubmissionLogTableName))
                 ->leftJoin('Member', '"Member"."ID" = "Order"."MemberID"')
                 ->limit($count, $offset)
             ;
             $ordersCountExists = $orders->exists();
         }
+
         unset($orders);
         if ($fileData !== '' && $fileData !== '0') {
             HTTPRequest::send_file($fileData, $fileName, 'text/csv');
@@ -113,6 +116,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
                     $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
                     $columnData[] = $tmpColumnData;
                 }
+
                 $fileData .= implode($separator, $columnData);
                 $fileData .= "\n";
                 $item->destroy();

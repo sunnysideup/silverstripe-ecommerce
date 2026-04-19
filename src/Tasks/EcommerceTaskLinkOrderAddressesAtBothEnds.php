@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
@@ -17,7 +19,7 @@ use SilverStripe\ORM\DB;
  */
 class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask
 {
-    protected $title = 'Links the Order Addresses at the Order And Address side';
+    protected string $title = 'Links the Order Addresses at the Order And Address side';
 
     protected $description = 'This only needs to be run if you have an outdated version of e-commerce where the links seem broken';
 

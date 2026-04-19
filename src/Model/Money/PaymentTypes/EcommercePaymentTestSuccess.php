@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Model\Money\PaymentTypes;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\LiteralField;
-use Sunnysideup\Ecommerce\Forms\OrderForm;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
@@ -15,6 +15,8 @@ use Sunnysideup\Ecommerce\Money\Payment\PaymentResults\EcommercePaymentSuccess;
  */
 class EcommercePaymentTestSuccess extends EcommercePaymentTest
 {
+    private static $table_name = 'EcommercePaymentTestSuccess';
+
     /**
      * standard SS variable.
      *
@@ -29,12 +31,14 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
      */
     private static $plural_name = 'Ecommerce Test Success Payments';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
@@ -45,22 +49,23 @@ class EcommercePaymentTestSuccess extends EcommercePaymentTest
      *
      * @return EcommercePaymentSuccess
      */
+    #[Override]
     public function processPayment($data, Form $form)
     {
         $this->Status = EcommercePayment::SUCCESS_STATUS;
         $this->Message = '<div>PAYMENT TEST: SUCCESS</div>';
         $this->write();
 
-        return new EcommercePaymentSuccess();
+        return EcommercePaymentSuccess::create();
     }
 
+    #[Override]
     public function getPaymentFormFields($amount = 0, ?Order $order = null): FieldList
     {
-        return new FieldList(
-            new LiteralField('SuccessBlurb', '<div>SUCCESSFUL PAYMENT TEST</div>')
-        );
+        return FieldList::create(LiteralField::create('SuccessBlurb', '<div>SUCCESSFUL PAYMENT TEST</div>'));
     }
 
+    #[Override]
     public function getPaymentFormRequirements(): array
     {
         return [];

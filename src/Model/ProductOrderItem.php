@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Override;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -13,6 +14,8 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class ProductOrderItem extends OrderItem
 {
+    private static $table_name = 'ProductOrderItem';
+
     /**
      * standard SS method.
      *
@@ -64,6 +67,7 @@ class ProductOrderItem extends OrderItem
     /**
      * @return bool
      */
+    #[Override]
     public function hasSameContent(OrderItem $orderItem)
     {
         $parentIsTheSame = parent::hasSameContent($orderItem);
@@ -74,16 +78,19 @@ class ProductOrderItem extends OrderItem
     /**
      * @return DBHTMLText
      */
+    #[Override]
     public function TableTitle(): string
     {
         return $this->getTableTitle();
     }
 
+    #[Override]
     public function getTableTitle(): string
     {
         if ($this->priceHasBeenFixed() && $this->Name) {
             return (string) $this->Name;
         }
+
         $tableTitle = _t('Product.UNKNOWN', 'Unknown Product');
         $product = $this->Product();
         if ($product) {
@@ -104,24 +111,28 @@ class ProductOrderItem extends OrderItem
                 $tableTitle = $row['Title'];
             }
         }
+
         $updatedTableTitle = $this->extend('updateTableTitle', $tableTitle);
         if (null !== $updatedTableTitle && is_array($updatedTableTitle) && count($updatedTableTitle)) {
             $tableTitle = implode('', $updatedTableTitle);
         }
 
-        return trim($tableTitle);
+        return trim((string) $tableTitle);
     }
 
+    #[Override]
     public function getTableSubTitle(): string
     {
         if ($this->priceHasBeenFixed() && $this->TableSubTitleFixed) {
             return (string) $this->TableSubTitleFixed;
         }
+
         $tableSubTitle = '';
         $product = $this->Product();
         if ($product) {
             $tableSubTitle = $product->Quantifier;
         }
+
         $updatedSubTableTitle = $this->extend('updateSubTableTitle', $tableSubTitle);
         if (null !== $updatedSubTableTitle && is_array($updatedSubTableTitle) && count($updatedSubTableTitle)) {
             $tableSubTitle = implode('', $updatedSubTableTitle);
@@ -136,6 +147,7 @@ class ProductOrderItem extends OrderItem
      *
      * @return string
      */
+    #[Override]
     public function debug()
     {
         $title = $this->getTableTitle();

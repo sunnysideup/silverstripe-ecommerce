@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -21,6 +22,7 @@ class EcommerceSideReportProductsNoAlsoShowLink extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.NO_ALSO_SHOW', 'E-commerce: Products: without Also Show Parent');

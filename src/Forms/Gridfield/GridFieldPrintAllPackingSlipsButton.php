@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -9,7 +10,6 @@ use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_FormAction;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 
@@ -18,13 +18,6 @@ use SilverStripe\View\SSViewer;
  */
 class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, GridField_ActionProvider, GridField_URLHandler
 {
-    /**
-     * HTML Fragment to render the field.
-     *
-     * @var string
-     */
-    protected $targetFragment;
-
     /**
      * @config
      *
@@ -35,9 +28,13 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
     /**
      * @param string $targetFragment The HTML fragment to write the button into
      */
-    public function __construct($targetFragment = 'after')
+    public function __construct(
+        /**
+         * HTML Fragment to render the field.
+         */
+        protected $targetFragment = 'after'
+    )
     {
-        $this->targetFragment = $targetFragment;
     }
 
     /**
@@ -47,13 +44,7 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
      */
     public function getHTMLFragments($gridField)
     {
-        $button = new GridField_FormAction(
-            $gridField,
-            'printallpackingslips',
-            _t('TableListField.PRINT_ALL_PACKING_SLIPS', 'Print all Packing Slips'),
-            'printallpackingslips',
-            null
-        );
+        $button = GridField_FormAction::create($gridField, 'printallpackingslips', _t('TableListField.PRINT_ALL_PACKING_SLIPS', 'Print all Packing Slips'), 'printallpackingslips', null);
         $button->addExtraClass('action_print_all_packing_slips action btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
 
@@ -106,6 +97,7 @@ class GridFieldPrintAllPackingSlipsButton implements GridField_HTMLProvider, Gri
         foreach ($list as $order) {
             $al->push($order);
         }
+
         Requirements::clear();
         Config::modify()->set(SSViewer::class, 'theme_enabled', true);
         Requirements::themedCSS('client/css/OrderReport');

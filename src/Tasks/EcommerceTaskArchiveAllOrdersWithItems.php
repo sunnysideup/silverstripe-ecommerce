@@ -22,7 +22,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
 {
-    protected $title = 'Archive all orders with order items and payment and add a submit record.';
+    protected string $title = 'Archive all orders with order items and payment and add a submit record.';
 
     protected $description = "
         This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.
@@ -62,13 +62,14 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
                 {$whereSQL}
             ");
             if ($count) {
-                DB::alteration_message("NOTE: {$count} records were updated.", 'created');
+                DB::alteration_message(sprintf('NOTE: %s records were updated.', $count), 'created');
             } else {
                 DB::alteration_message('No records were updated.');
             }
         } else {
             DB::alteration_message('Could not find the last order step.', 'deleted');
         }
+
         $this->createSubmissionLogForArchivedOrders();
     }
 
@@ -76,8 +77,8 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
     {
         return Order::get()
             ->filter(['StatusID' => $lastOrderStep->ID])
-            ->leftJoin($orderStatusLogTableName, "\"{$orderStatusLogTableName}\".\"OrderID\" = \"Order\".\"ID\"")
-            ->where("\"{$orderStatusLogTableName}\".\"ID\" IS NULL")
+            ->leftJoin($orderStatusLogTableName, sprintf('"%s"."OrderID" = "Order"."ID"', $orderStatusLogTableName))
+            ->where(sprintf('"%s"."ID" IS NULL', $orderStatusLogTableName))
             ->limit(100, $offset)
         ;
     }
@@ -96,6 +97,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
         if (! is_a($obj, EcommerceConfigClassNames::getName(OrderStatusLog::class))) {
             user_error('EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order") refers to a class that is NOT an instance of OrderStatusLog');
         }
+
         $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $offset = 0;
         $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogTableName, $offset);
@@ -117,6 +119,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
                     DB::alteration_message('creating submission log for Order #' . $obj->OrderID, 'created');
                 }
             }
+
             $offset += 100;
             $orders = $this->getOrdersForCreateSubmissionLogForArchivedOrders($lastOrderStep, $orderStatusLogTableName, $offset);
         }

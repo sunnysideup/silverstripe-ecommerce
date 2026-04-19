@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use Sunnysideup\Ecommerce\Email\OrderInvoiceEmail;
@@ -41,6 +42,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
         'SendInvoiceToCustomer' => 1,
     ];
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -66,6 +68,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return $order->IsSubmitted();
@@ -76,6 +79,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendInvoiceToCustomer;
@@ -93,8 +97,9 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         return parent::addOrderStepFields($fields, $order, true);
@@ -105,6 +110,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @return bool
      */
+    #[Override]
     public function hasCustomerMessage()
     {
         return $this->SendInvoiceToCustomer;
@@ -115,6 +121,7 @@ class OrderStepSentInvoice extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.SENTINVOICE_DESCRIPTION', 'Invoice gets sent to the customer via e-mail. In many cases, it is better to only send a receipt and sent the invoice to the shop admin only so that they know an order is coming, while the customer only sees a receipt which shows payment as well as the order itself.');

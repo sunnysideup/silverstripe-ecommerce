@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\DropdownField;
 
@@ -49,6 +50,7 @@ class EcommerceClassNameOrTypeDropdownField extends DropdownField
         $this->addExtraClass('dropdown');
     }
 
+    #[Override]
     public function getSource()
     {
         if ($this->includeBaseClass) {

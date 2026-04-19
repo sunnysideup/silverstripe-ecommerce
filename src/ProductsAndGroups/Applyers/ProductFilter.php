@@ -39,6 +39,7 @@ class ProductFilter extends BaseApplyer
             if (! empty($filter)) {
                 $this->products = is_string($filter) ? $this->products->where($filter) : $this->products->filter($filter);
             }
+
             $this->applyEnd($key, $params);
         }
 

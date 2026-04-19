@@ -15,7 +15,7 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
 {
-    protected $title = 'Disallows sale to all countries';
+    protected string $title = 'Disallows sale to all countries';
 
     protected $description = 'We add this task to reset all countries from Allow Sales to Disallow Sales - as a good starting point when selling to just a few countries';
 

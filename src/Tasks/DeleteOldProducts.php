@@ -17,7 +17,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class DeleteOldProducts extends BuildTask
 {
-    protected $title = 'Delete products that are not for sale and have not been sold for a year';
+    protected string $title = 'Delete products that are not for sale and have not been sold for a year';
 
     protected $description = 'Takes all the Members that have ordered something and adds them to the Customer Security Group.';
 

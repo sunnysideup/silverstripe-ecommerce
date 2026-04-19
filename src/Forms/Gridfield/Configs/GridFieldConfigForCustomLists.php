@@ -19,12 +19,14 @@ class GridFieldConfigForCustomLists extends GridFieldConfig_RelationEditor
         if (! $itemsPerPage) {
             $itemsPerPage = 100;
         }
+
         parent::__construct($itemsPerPage);
         $ac = $this->getComponentByType(GridFieldAddExistingAutocompleter::class);
         if ($ac) {
             $ac->setSearchFields(['Title']);
             $ac->setResultsFormat('$Title ($ProductCount)');
         }
+
         // $this->removeComponentsByType(GridFieldAddNewButton::class);
     }
 }

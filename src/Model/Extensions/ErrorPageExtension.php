@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Form;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -14,7 +16,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
 /**
  * Controller for ErrorPages.
  *
- * @property \SilverStripe\Control\Controller|\SilverStripe\Forms\Form|\Sunnysideup\Ecommerce\Model\Extensions\ErrorPageExtension $owner
+ * @property Controller|Form|ErrorPageExtension $owner
  */
 class ErrorPageExtension extends Extension
 {
@@ -30,7 +32,7 @@ class ErrorPageExtension extends Extension
             $getVars = $request->getVars();
             $dest = $product->Link() . '?' . http_build_query($getVars);
 
-            $response = new HTTPResponse();
+            $response = HTTPResponse::create();
             $response->redirect(Director::absoluteURL($dest), '302');
 
             throw new HTTPResponse_Exception($response);
@@ -46,7 +48,7 @@ class ErrorPageExtension extends Extension
     {
         $errorPage = ErrorPage::response_for(403);
         if ($errorPage) {
-            $response = new HTTPResponse();
+            $response = HTTPResponse::create();
             $response->setStatusCode(403);
             $response->setBody($errorPage->getBody());
             $response->addHeader('X-Error-Page', '403');
@@ -66,6 +68,7 @@ class ErrorPageExtension extends Extension
         if (isset($url['path'])) {
             $path = str_replace('/', '', $url['path']);
         }
+
         if ($path !== '' && $path !== '0') {
             return Product::get()
                 ->filter(['InternalItemID' => Convert::raw2sql($path)])

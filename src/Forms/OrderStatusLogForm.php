@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use SilverStripe\Forms\Validation\Validator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -54,14 +54,16 @@ class OrderStatusLogForm extends Form
         ?FieldList $actions = null,
         Validator $optionalValidator = null
     ) {
-        if (! $optionalController instanceof \SilverStripe\Control\Controller) {
+        if (! $optionalController instanceof Controller) {
             $controllerClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (! $optionalValidator instanceof \SilverStripe\Forms\Validator) {
+
+        if (! $optionalValidator instanceof Validator) {
             $validatorClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }
+
         parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
 
         //extension point
@@ -79,10 +81,11 @@ class OrderStatusLogForm extends Form
         // Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         Requirements::block('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the Log - added in Log
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateOrderStatusLogForm', $this);
     }
 

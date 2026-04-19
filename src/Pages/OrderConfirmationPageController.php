@@ -2,7 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
-use SilverStripe\Control\Controller;
+use Override;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
@@ -24,9 +24,9 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\OrderConfirmationPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\OrderConfirmationPage
+ * @property OrderConfirmationPage $dataRecord
+ * @method OrderConfirmationPage data()
+ * @mixin OrderConfirmationPage
  */
 class OrderConfirmationPageController extends CartPageController
 {
@@ -61,6 +61,7 @@ class OrderConfirmationPageController extends CartPageController
      *
      * @return array|string
      */
+    #[Override]
     public function showorder(HTTPRequest $request)
     {
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'mysite';
@@ -75,6 +76,7 @@ class OrderConfirmationPageController extends CartPageController
 
             return $html;
         }
+
         if (isset($_REQUEST['packingslip'])) {
             Requirements::clear();
             Requirements::themedCSS('client/css/OrderReport'); // LEAVE HERE - NOT EASY TO INCLUDE VIA TEMPLATE
@@ -127,7 +129,7 @@ class OrderConfirmationPageController extends CartPageController
     {
         $where = '';
         if ($number) {
-            $where = "\"CheckoutPageStepDescription\".\"ID\" = {$number}";
+            $where = '"CheckoutPageStepDescription"."ID" = ' . $number;
         }
 
         if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
@@ -137,13 +139,15 @@ class OrderConfirmationPageController extends CartPageController
             if ($number && $dos->exists()) {
                 return $dos->First();
             }
-            $arrayList = new ArrayList([]);
+
+            $arrayList = ArrayList::create([]);
             foreach ($dos as $do) {
                 $do->LinkingMode = 'link completed';
                 $do->Completed = 1;
                 $do->Link = '';
                 $arrayList->push($do);
             }
+
             $do = $this->CurrentCheckoutStep(true);
             $do->LinkingMode = 'current';
             if ($do) {
@@ -173,9 +177,11 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->OrderIsCancelled()) {
                 return $this->OrderCancelledHeader;
             }
+
             if ($this->PaymentIsPending()) {
                 return $this->PaymentPendingHeader;
             }
+
             if ($this->IsPaid()) {
                 return $this->PaymentSuccessfulHeader;
             }
@@ -195,9 +201,11 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->OrderIsCancelled()) {
                 return $this->OrderCancelledMessage;
             }
+
             if ($this->PaymentIsPending()) {
                 return $this->PaymentPendingMessage;
             }
+
             if ($this->IsPaid()) {
                 return $this->PaymentSuccessfulMessage;
             }
@@ -217,9 +225,11 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->OrderIsCancelled()) {
                 return 'bad';
             }
+
             if ($this->PaymentIsPending()) {
                 return 'warning';
             }
+
             if ($this->IsPaid()) {
                 return 'good';
             }
@@ -287,6 +297,7 @@ class OrderConfirmationPageController extends CartPageController
         if ($this->Order() && $this->currentOrder->canCancel()) {
             return OrderFormCancel::create($this, 'CancelForm', $this->currentOrder);
         }
+
         //once cancelled, you will be redirected to main page - hence we need this...
         if ($this->orderID) {
             return [];
@@ -378,6 +389,7 @@ class OrderConfirmationPageController extends CartPageController
             if (class_exists($potentialClassName) && is_a(singleton($potentialClassName), EcommerceConfigClassNames::getName(OrderEmail::class))) {
                 $emailClassName = $potentialClassName;
             }
+
             $sendStepID = (int) $request->getVar('send');
             $testStepID = (int) $request->getVar('test');
             $stepID = 0;
@@ -388,11 +400,13 @@ class OrderConfirmationPageController extends CartPageController
                 $stepID = $testStepID;
                 $isTest = true;
             }
+
             if ($stepID !== 0) {
                 $to = '';
                 if (Permission::check('ADMIN')) {
                     $to = (string) $request->getVar('to');
                 }
+
                 $step = OrderStep::get_by_id($stepID);
                 if ($step) {
                     $subject = $step->CalculatedEmailSubject($this->currentOrder);
@@ -406,10 +420,12 @@ class OrderConfirmationPageController extends CartPageController
                             $email = $adminOnlyOrToEmail;
                         }
                     }
+
                     if (! $to) {
                         $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }
+
                     $outcome = $this->currentOrder->sendEmail(
                         $emailClassName,
                         $subject,
@@ -426,6 +442,7 @@ class OrderConfirmationPageController extends CartPageController
                     $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
                 }
             }
+
             //display same data...
             Requirements::clear();
             echo $message;
@@ -443,6 +460,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * standard controller function.
      */
+    #[Override]
     protected function init()
     {
         //we retrieve the order in the parent page
@@ -450,7 +468,7 @@ class OrderConfirmationPageController extends CartPageController
         $sessionOrderID = $this->getRequest()->getSession()->get('CheckoutPageCurrentOrderID');
         if ($sessionOrderID) {
             $this->currentOrder = Order::get_order_cached((int) $sessionOrderID);
-            if ($this->currentOrder instanceof \Sunnysideup\Ecommerce\Model\Order) {
+            if ($this->currentOrder instanceof Order) {
                 $this->overrideCanView = true;
                 //more than an hour has passed...
                 $validUntil = (int) $this->getRequest()->getSession()->get('CheckoutPageCurrentRetrievalTime');
@@ -461,6 +479,7 @@ class OrderConfirmationPageController extends CartPageController
                 }
             }
         }
+
         parent::init();
         Requirements::themedCSS('client/css/Order');
         Requirements::themedCSS('client/css/Order_Print', 'print');
@@ -472,6 +491,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * Can this page only show Submitted Orders (e.g. OrderConfirmationPage) ?
      */
+    #[Override]
     protected function onlyShowSubmittedOrders(): bool
     {
         return true;
@@ -480,6 +500,7 @@ class OrderConfirmationPageController extends CartPageController
     /**
      * Can this page only show Unsubmitted Orders (e.g. CartPage) ?
      */
+    #[Override]
     protected function onlyShowUnsubmittedOrders(): bool
     {
         return false;

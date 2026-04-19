@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
-use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
  * We calculate the popularity of a product based on the number of orders
@@ -18,7 +17,7 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceTaskCalculatePopularity extends BuildTask
 {
-    protected $title = 'Create popularity for all products';
+    protected string $title = 'Create popularity for all products';
 
     protected $description = 'Goes through all the products and calculates their popularity.';
 
@@ -64,6 +63,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
                 $excludedOrderIds = array_merge($excludedOrderIds, $ids);
             }
         }
+
         $rows = DB::query('
             SELECT BuyableID, DATEDIFF(NOW(), "Created") AS daysAgo
             FROM "OrderItem"
@@ -81,6 +81,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
                 $this->updatePopularityForOneProduct($currentProductID, $totalPointsForProduct);
                 $totalPointsForProduct = 0;
             }
+
             $totalPointsForProduct += exp($lambda * $row['daysAgo']);
             // do last
             $currentProductID = $productID;
@@ -88,6 +89,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
                 echo $count . ' ';
             }
         }
+
         // one last time
         $this->updatePopularityForOneProduct($currentProductID, $totalPointsForProduct);
         echo "\n";
@@ -124,6 +126,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
             } else {
                 echo '. ';
             }
+
             foreach (['', '_Live'] as $suffix) {
                 DB::query(
                     '
@@ -136,6 +139,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
                 }
             }
         }
+
         echo "\n";
         DB::alteration_message('Popularity rank set for all products.', 'created');
     }
