@@ -57,6 +57,15 @@ class OrderConfirmationPage extends CartPage
      */
     private static $table_name = 'OrderConfirmationPage';
 
+    /**
+     * FeedbackFormLinkText is in the database but not shown in CMS.
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'FeedbackFormLinkText',
+        ],
+    ];
+
     private static $db = [
         'StartNewOrderLinkLabel' => 'Varchar(100)',
         'CopyOrderLinkLabel' => 'Varchar(100)',
@@ -259,48 +268,140 @@ class OrderConfirmationPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Errors', 'NoItemsInOrderMessage');
 
         $fieldLabels = $this->fieldLabels();
-        $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
-        $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
+        
+        // Get scaffolded fields and customize them
+        $startNewOrderLinkLabel = $fields->dataFieldByName('StartNewOrderLinkLabel');
+        if ($startNewOrderLinkLabel) {
+            $startNewOrderLinkLabel->setTitle($fieldLabels['StartNewOrderLinkLabel']);
+            $fields->addFieldToTab('Root.Messages.Messages.Actions', $startNewOrderLinkLabel);
+        }
+        
+        $copyOrderLinkLabel = $fields->dataFieldByName('CopyOrderLinkLabel');
+        if ($copyOrderLinkLabel) {
+            $copyOrderLinkLabel->setTitle($fieldLabels['CopyOrderLinkLabel']);
+            $fields->addFieldToTab('Root.Messages.Messages.Actions', $copyOrderLinkLabel);
+        }
+        
+        // Payment message fields
+        $paymentSuccessfulHeader = $fields->dataFieldByName('PaymentSuccessfulHeader');
+        if ($paymentSuccessfulHeader) {
+            $paymentSuccessfulHeader->setTitle($fieldLabels['PaymentSuccessfulHeader']);
+        }
+        
+        $paymentSuccessfulMessage = $fields->dataFieldByName('PaymentSuccessfulMessage');
+        if ($paymentSuccessfulMessage) {
+            $paymentSuccessfulMessage->setTitle($fieldLabels['PaymentSuccessfulMessage']);
+            $paymentSuccessfulMessage->setRows(3);
+        }
+        
+        $paymentNotSuccessfulHeader = $fields->dataFieldByName('PaymentNotSuccessfulHeader');
+        if ($paymentNotSuccessfulHeader) {
+            $paymentNotSuccessfulHeader->setTitle($fieldLabels['PaymentNotSuccessfulHeader']);
+        }
+        
+        $paymentNotSuccessfulMessage = $fields->dataFieldByName('PaymentNotSuccessfulMessage');
+        if ($paymentNotSuccessfulMessage) {
+            $paymentNotSuccessfulMessage->setTitle($fieldLabels['PaymentNotSuccessfulMessage']);
+            $paymentNotSuccessfulMessage->setRows(3);
+        }
+        
+        $paymentPendingHeader = $fields->dataFieldByName('PaymentPendingHeader');
+        if ($paymentPendingHeader) {
+            $paymentPendingHeader->setTitle($fieldLabels['PaymentPendingHeader']);
+        }
+        
+        $paymentPendingMessage = $fields->dataFieldByName('PaymentPendingMessage');
+        if ($paymentPendingMessage) {
+            $paymentPendingMessage->setTitle($fieldLabels['PaymentPendingMessage']);
+            $paymentPendingMessage->setRows(3);
+        }
+        
+        $orderCancelledHeader = $fields->dataFieldByName('OrderCancelledHeader');
+        if ($orderCancelledHeader) {
+            $orderCancelledHeader->setTitle($fieldLabels['OrderCancelledHeader']);
+        }
+        
+        $orderCancelledMessage = $fields->dataFieldByName('OrderCancelledMessage');
+        if ($orderCancelledMessage) {
+            $orderCancelledMessage->setTitle($fieldLabels['OrderCancelledMessage']);
+            $orderCancelledMessage->setRows(3);
+        }
+        
         $fields->addFieldsToTab('Root.Messages.Messages.Payment', [
             HeaderField::create('Successful', 'Successful'),
-            TextField::create('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
-            HTMLEditorField::create('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage'])->setRows(3),
+            $paymentSuccessfulHeader,
+            $paymentSuccessfulMessage,
             HeaderField::create('Unsuccessful', 'Unsuccessful'),
-            TextField::create('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
-            HTMLEditorField::create('PaymentNotSuccessfulMessage', $fieldLabels['PaymentNotSuccessfulMessage'])->setRows(3),
+            $paymentNotSuccessfulHeader,
+            $paymentNotSuccessfulMessage,
             HeaderField::create('Pending', 'Pending'),
-            TextField::create('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
-            HTMLEditorField::create('PaymentPendingMessage', $fieldLabels['PaymentPendingMessage'])->setRows(3),
+            $paymentPendingHeader,
+            $paymentPendingMessage,
             HeaderField::create('Cancelled', 'Cancelled'),
-            TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
-            HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
+            $orderCancelledHeader,
+            $orderCancelledMessage,
         ]);
+        
+        // Feedback form fields
+        $isFeedbackEnabled = $fields->dataFieldByName('IsFeedbackEnabled');
+        if ($isFeedbackEnabled) {
+            $isFeedbackEnabled->setTitle($fieldLabels['IsFeedbackEnabled']);
+        }
+        
         if ($this->IsFeedbackEnabled) {
+            $feedbackHeader = $fields->dataFieldByName('FeedbackHeader');
+            if ($feedbackHeader) {
+                $feedbackHeader->setTitle($fieldLabels['FeedbackHeader']);
+                $feedbackHeader->setDescription(_t('OrderConfirmationPage.FeedbackHeader_RIGHT', 'e.g. Please let us know what you think'));
+            }
+            
+            $feedbackValuesFieldLabel = $fields->dataFieldByName('FeedbackValuesFieldLabel');
+            if ($feedbackValuesFieldLabel) {
+                $feedbackValuesFieldLabel->setTitle($fieldLabels['FeedbackValuesFieldLabel']);
+                $feedbackValuesFieldLabel->setDescription(_t('OrderConfirmationPage.FeedbackValuesFieldLabel_RIGHT', 'e.g. Please rate our service'));
+            }
+            
+            $feedbackValuesOptions = $fields->dataFieldByName('FeedbackValuesOptions');
+            if ($feedbackValuesOptions) {
+                $feedbackValuesOptions->setTitle($fieldLabels['FeedbackValuesOptions']);
+                $feedbackValuesOptions->setDescription(_t('OrderConfirmationPage.FeedbackValuesOptions_RIGHT', 'Comma separated list of feedback rating options (eg Good, Neutral, Bad)'));
+            }
+            
+            $feedbackNotesFieldLabel = $fields->dataFieldByName('FeedbackNotesFieldLabel');
+            if ($feedbackNotesFieldLabel) {
+                $feedbackNotesFieldLabel->setTitle($fieldLabels['FeedbackNotesFieldLabel']);
+                $feedbackNotesFieldLabel->setDescription(_t('OrderConfirmationPage.FeedbackNotesFieldLabel_RIGHT', 'e.g. Please add any comments'));
+            }
+            
+            $feedbackFormSubmitLabel = $fields->dataFieldByName('FeedbackFormSubmitLabel');
+            if ($feedbackFormSubmitLabel) {
+                $feedbackFormSubmitLabel->setTitle($fieldLabels['FeedbackFormSubmitLabel']);
+                $feedbackFormSubmitLabel->setDescription(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now'));
+            }
+            
+            $feedbackFormThankYou = $fields->dataFieldByName('FeedbackFormThankYou');
+            if ($feedbackFormThankYou) {
+                $feedbackFormThankYou->setTitle($fieldLabels['FeedbackFormThankYou']);
+                $feedbackFormThankYou->setDescription(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form'));
+            }
+            
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
                 [
-                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
-                        ->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
-                    TextField::create('FeedbackHeader', $fieldLabels['FeedbackHeader'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackHeader_RIGHT', 'e.g. Please let us know what you think')),
-                    TextField::create('FeedbackValuesFieldLabel', $fieldLabels['FeedbackValuesFieldLabel'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackValuesFieldLabel_RIGHT', 'e.g. Please rate our service')),
-                    TextField::create('FeedbackValuesOptions', $fieldLabels['FeedbackValuesOptions'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackValuesOptions_RIGHT', 'Comma separated list of feedback rating options (eg Good, Neutral, Bad)')),
-                    TextField::create('FeedbackNotesFieldLabel', $fieldLabels['FeedbackNotesFieldLabel'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackNotesFieldLabel_RIGHT', 'e.g. Please add any comments')),
-                    TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now')),
-                    TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form')),
+                    $isFeedbackEnabled->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
+                    $feedbackHeader,
+                    $feedbackValuesFieldLabel,
+                    $feedbackValuesOptions,
+                    $feedbackNotesFieldLabel,
+                    $feedbackFormSubmitLabel,
+                    $feedbackFormThankYou,
                 ]
             );
         } else {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
                 [
-                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
-                        ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails'),
+                    $isFeedbackEnabled->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails'),
                 ]
             );
         }

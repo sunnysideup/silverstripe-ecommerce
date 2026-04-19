@@ -113,6 +113,10 @@ class CheckoutPage extends CartPage
      */
     private static $description = 'A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.';
 
+    /**
+     * Fields are scaffolded automatically, no need to ignore any.
+     */
+
     #[Override]
     public function i18n_singular_name()
     {
@@ -326,37 +330,46 @@ class CheckoutPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'DeleteOrderLinkLabel');
 
-        $termsPageIDField = TreeDropdownField::create(
-            'TermsPageID',
-            _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
-            SiteTree::class
-        );
-        $termsPageIDField->setDescription(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+        // Get scaffolded fields and customize them
+        $termsPageIDField = $fields->dataFieldByName('TermsPageID');
+        if ($termsPageIDField) {
+            $termsPageIDField->setTitle(_t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'));
+            $termsPageIDField->setDescription(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+            $fields->addFieldToTab('Root.Terms', $termsPageIDField);
+        }
 
-        $fields->addFieldToTab('Root.Terms', $termsPageIDField);
-
-        $fields->addFieldToTab(
-            'Root.Terms',
-            $termsPageIDFieldMessage = TextField::create('TermsAndConditionsMessage', _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE', 'Reminder Message'))
-        );
-        $termsPageIDFieldMessage->setDescription(
-            _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE_RIGHT', "Shown if the user does not tick the 'I agree with the Terms and Conditions' box. Leave blank to allow customer to proceed without ticking this box")
-        );
+        $termsPageIDFieldMessage = $fields->dataFieldByName('TermsAndConditionsMessage');
+        if ($termsPageIDFieldMessage) {
+            $termsPageIDFieldMessage->setTitle(_t('CheckoutPage.TERMSANDCONDITIONSMESSAGE', 'Reminder Message'));
+            $termsPageIDFieldMessage->setDescription(
+                _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE_RIGHT', "Shown if the user does not tick the 'I agree with the Terms and Conditions' box. Leave blank to allow customer to proceed without ticking this box")
+            );
+            $fields->addFieldToTab('Root.Terms', $termsPageIDFieldMessage);
+        }
+        
         //The Content field has a slightly different meaning for the Checkout Page.
+        $contentField = $fields->dataFieldByName('Content');
         $fields->removeFieldFromTab('Root.Main', 'Content');
+        
+        $contentAboveCheckoutField = $fields->dataFieldByName('ContentAboveCheckout');
+        if ($contentAboveCheckoutField) {
+            $contentAboveCheckoutField->setTitle(_t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page'));
+            $contentAboveCheckoutField->setRows(5);
+        }
+        
+        if ($contentField) {
+            $contentField->setTitle(_t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page '));
+            $contentField->setRows(5);
+        }
+        
         $fields->addFieldsToTab(
             'Root.Messages.Messages.AlwaysVisible',
             [
-                HTMLEditorField::create(
-                    'ContentAboveCheckout',
-                    _t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page')
-                )->setRows(5),
-                HTMLEditorField::create(
-                    'Content',
-                    _t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page ')
-                )->setRows(5),
+                $contentAboveCheckoutField,
+                $contentField,
             ]
         );
+        
         if (OrderModifierDescriptor::get()->exists()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }

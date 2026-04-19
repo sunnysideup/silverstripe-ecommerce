@@ -107,6 +107,10 @@ class CartPage extends Page
      */
     private static $description = 'A page where the customer can view the current order (cart) without finalising the order.';
 
+    /**
+     * Fields are scaffolded automatically, no need to ignore any.
+     */
+
     public function i18n_singular_name()
     {
         return _t('CartPage.SINGULARNAME', 'Cart Page');
@@ -178,30 +182,76 @@ class CartPage extends Page
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        
+        // Get scaffolded fields and customize them
+        $continueShoppingLabel = $fields->dataFieldByName('ContinueShoppingLabel');
+        $proceedToCheckoutLabel = $fields->dataFieldByName('ProceedToCheckoutLabel');
+        $showAccountLabel = $fields->dataFieldByName('ShowAccountLabel');
+        $currentOrderLinkLabel = $fields->dataFieldByName('CurrentOrderLinkLabel');
+        $loginToOrderLinkLabel = $fields->dataFieldByName('LoginToOrderLinkLabel');
+        $saveOrderLinkLabel = $fields->dataFieldByName('SaveOrderLinkLabel');
+        $loadOrderLinkLabel = $fields->dataFieldByName('LoadOrderLinkLabel');
+        $deleteOrderLinkLabel = $fields->dataFieldByName('DeleteOrderLinkLabel');
+        $noItemsInOrderMessage = $fields->dataFieldByName('NoItemsInOrderMessage');
+        $nonExistingOrderMessage = $fields->dataFieldByName('NonExistingOrderMessage');
+        
+        // Set labels for text fields
+        if ($continueShoppingLabel) {
+            $continueShoppingLabel->setTitle(_t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping'));
+        }
+        if ($proceedToCheckoutLabel) {
+            $proceedToCheckoutLabel->setTitle(_t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order'));
+        }
+        if ($showAccountLabel) {
+            $showAccountLabel->setTitle(_t('CartPage.SHOWACCOUNTLABEL', "Label on the link 'view account details' - e.g. click here to view your account details"));
+        }
+        if ($currentOrderLinkLabel) {
+            $currentOrderLinkLabel->setTitle(_t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order'));
+        }
+        if ($loginToOrderLinkLabel) {
+            $loginToOrderLinkLabel->setTitle(_t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order'));
+        }
+        if ($saveOrderLinkLabel) {
+            $saveOrderLinkLabel->setTitle(_t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order'));
+        }
+        if ($loadOrderLinkLabel) {
+            $loadOrderLinkLabel->setTitle(_t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order'));
+        }
+        if ($deleteOrderLinkLabel) {
+            $deleteOrderLinkLabel->setTitle(_t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'));
+        }
+        if ($noItemsInOrderMessage) {
+            $noItemsInOrderMessage->setTitle(_t('CartPage.NOITEMSINORDERMESSAGE', 'No items in order - shown when the customer tries to view an order without items.'));
+            $noItemsInOrderMessage->setRows(3);
+        }
+        if ($nonExistingOrderMessage) {
+            $nonExistingOrderMessage->setTitle(_t('CartPage.NONEXISTINGORDERMESSAGE', 'Non-existing Order - shown when the customer tries to load a non-existing order.'));
+            $nonExistingOrderMessage->setRows(3);
+        }
+        
+        // Reorganize fields into custom tab structure
         $fields->addFieldsToTab(
             'Root.Messages',
             [
                 TabSet::create('Messages', Tab::create(
                     'Actions',
                     _t('CartPage.ACTIONS', 'Actions'),
-                    TextField::create('ContinueShoppingLabel', _t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping')),
-                    TextField::create('ProceedToCheckoutLabel', _t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order')),
-                    TextField::create('ShowAccountLabel', _t('CartPage.SHOWACCOUNTLABEL', "Label on the link 'view account details' - e.g. click here to view your account details")),
-                    TextField::create('CurrentOrderLinkLabel', _t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order')),
-                    TextField::create('LoginToOrderLinkLabel', _t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order')),
-                    TextField::create('SaveOrderLinkLabel', _t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order')),
-                    TextField::create('LoadOrderLinkLabel', _t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order')),
-                    TextField::create('DeleteOrderLinkLabel', _t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'))
+                    $continueShoppingLabel,
+                    $proceedToCheckoutLabel,
+                    $showAccountLabel,
+                    $currentOrderLinkLabel,
+                    $loginToOrderLinkLabel,
+                    $saveOrderLinkLabel,
+                    $loadOrderLinkLabel,
+                    $deleteOrderLinkLabel
                 ), Tab::create(
                     'Errors',
                     _t('CartPage.ERRORS', 'Errors'),
-                    $htmlEditorField1 = HTMLEditorField::create('NoItemsInOrderMessage', _t('CartPage.NOITEMSINORDERMESSAGE', 'No items in order - shown when the customer tries to view an order without items.')),
-                    $htmlEditorField2 = HTMLEditorField::create('NonExistingOrderMessage', _t('CartPage.NONEXISTINGORDERMESSAGE', 'Non-existing Order - shown when the customer tries to load a non-existing order.'))
+                    $noItemsInOrderMessage,
+                    $nonExistingOrderMessage
                 )),
             ]
         );
-        $htmlEditorField1->setRows(3);
-        $htmlEditorField2->setRows(3);
 
         return $fields;
     }

@@ -118,6 +118,26 @@ class Product extends Page implements BuyableModel
      */
     protected $defaultClassNameForOrderItem = ProductOrderItem::class;
 
+    /**
+     * Ignore calculated/auto-populated fields and ImageID (handled via Image upload field).
+     * Also ignore relations that are displayed via custom GridFields.
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'FullSiteTreeSort',
+            'FullName',
+            'ProductBreadcrumb',
+            'Popularity',
+            'PopularityRank',
+            'ImageID',
+        ],
+        'ignoreRelations' => [
+            'ProductGroups',
+            'AdditionalImages',
+            'AdditionalFiles',
+        ],
+    ];
+
     protected static $parent_cache = [];
 
     private static $buyable_product_variation_class_name = 'Sunnysideup\\EcommerceProductVariation\\Model\\\Buyables\\ProductVariation';
@@ -362,14 +382,31 @@ class Product extends Page implements BuyableModel
         $fields->dataFieldByName('Title')->setTitle(_t('Product.NAME', 'Product Name'));
 
         $config = EcommerceConfig::inst();
-        // main fields
+        
+        // Get scaffolded fields and customize them
+        $priceField = $fields->dataFieldByName('Price');
+        if ($priceField) {
+            $priceField->setTitle(_t('Product.PRICE', 'Price'));
+        }
+        
+        $internalItemIDField = $fields->dataFieldByName('InternalItemID');
+        if ($internalItemIDField) {
+            $internalItemIDField->setTitle(_t('Product.CODE', 'Product Code'));
+        }
+        
+        $allowPurchaseField = $fields->dataFieldByName('AllowPurchase');
+        if ($allowPurchaseField) {
+            $allowPurchaseField->setTitle(_t('Product.ALLOWPURCHASE', 'Allow product to be purchased'));
+        }
+        
+        // Add main fields in order
         $fields->addFieldsToTab(
             'Root.Main',
-            [
-                CurrencyField::create('Price', _t('Product.PRICE', 'Price')),
-                TextField::create('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30),
-                $allowPurchaseField = CheckboxField::create('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')),
-            ],
+            array_filter([
+                $priceField,
+                $internalItemIDField,
+                $allowPurchaseField,
+            ]),
             'URLSegment'
         );
         if ($config && ! $config->AllowFreeProductPurchase) {
@@ -385,13 +422,15 @@ class Product extends Page implements BuyableModel
             }
         }
 
-        // images - dirty hack to show images!
+        // Get scaffolded UseParentImage field
+        $useParentImageField = $fields->dataFieldByName('UseParentImage');
+        
+        // images - custom upload field and relations
         $fields->addFieldsToTab(
             'Root.Images',
             [
                 UploadField::create('Image', _t('Product.IMAGE', 'Product Image'))
                     ->setFolderName($this->getFolderName()),
-                CheckboxField::create('UseParentImage', 'Use parent category image as default image for product (if no image is uploaded)'),
                 $this->getAdditionalImagesField(),
                 $this->getAdditionalImagesMessage(),
                 $this->getAdditionalFilesField(),
@@ -399,39 +438,75 @@ class Product extends Page implements BuyableModel
         );
 
         $parent = $this->getParent();
-        if ($parent && $parent instanceof ProductGroup && ! (bool) $parent->UseImageForProducts) {
+        // Only show UseParentImage if parent allows it
+        if ($parent && $parent instanceof ProductGroup && (bool) $parent->UseImageForProducts) {
+            if ($useParentImageField) {
+                $useParentImageField->setTitle('Use parent category image as default image for product (if no image is uploaded)');
+                $fields->addFieldToTab('Root.Images', $useParentImageField);
+            }
+        } else {
+            // Remove field if parent doesn't allow it
             $fields->removeByName('UseParentImage');
         }
 
-        // details
-        $fields->addFieldsToTab(
-            'Root.Details',
-            [
-                CheckboxField::create('FeaturedProduct', _t('Product.FEATURED', 'Featured Product')),
-                TextareaField::create('ShortDescription', _t('Product.SHORT_DESCRIPTION', 'Short Description')),
-                HTMLEditorField::create('Content', _t('Product.DESCRIPTION', 'Product Description'))
-                    ->setRows(3),
-                CheckboxField::create('HasPhysicalDispatch', _t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch')),
-            ]
-        );
+        // Get scaffolded detail fields and customize them
+        $featuredProductField = $fields->dataFieldByName('FeaturedProduct');
+        if ($featuredProductField) {
+            $featuredProductField->setTitle(_t('Product.FEATURED', 'Featured Product'));
+        }
+        
+        $shortDescriptionField = $fields->dataFieldByName('ShortDescription');
+        if ($shortDescriptionField) {
+            $shortDescriptionField->setTitle(_t('Product.SHORT_DESCRIPTION', 'Short Description'));
+        }
+        
+        $contentField = $fields->dataFieldByName('Content');
+        if ($contentField) {
+            $contentField->setTitle(_t('Product.DESCRIPTION', 'Product Description'));
+            $contentField->setRows(3);
+        }
+        
+        $hasPhysicalDispatchField = $fields->dataFieldByName('HasPhysicalDispatch');
+        if ($hasPhysicalDispatchField) {
+            $hasPhysicalDispatchField->setTitle(_t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch'));
+        }
+        
+        // Add detail fields
+        $detailFields = array_filter([
+            $featuredProductField,
+            $shortDescriptionField,
+            $contentField,
+            $hasPhysicalDispatchField,
+        ]);
+        
+        if ($detailFields) {
+            $fields->addFieldsToTab('Root.Details', $detailFields);
+        }
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
-            $fields->addFieldToTab(
-                'Root.Details',
-                NumericField::create('Weight', _t('Product.WEIGHT', 'Weight'))->setScale(3)
-            );
+            $weightField = $fields->dataFieldByName('Weight');
+            if ($weightField) {
+                $weightField->setTitle(_t('Product.WEIGHT', 'Weight'));
+                $weightField->setScale(3);
+                $fields->addFieldToTab('Root.Details', $weightField);
+            }
         }
 
         if ($config->ProductsHaveModelNames) {
-            $fields->addFieldToTab('Root.Details', TextField::create('Model', _t('Product.MODEL', 'Model')));
+            $modelField = $fields->dataFieldByName('Model');
+            if ($modelField) {
+                $modelField->setTitle(_t('Product.MODEL', 'Model'));
+                $fields->addFieldToTab('Root.Details', $modelField);
+            }
         }
 
         if ($config->ProductsHaveQuantifiers) {
-            $fields->addFieldToTab(
-                'Root.Details',
-                TextField::create('Quantifier', _t('Product.QUANTIFIER', 'Quantifier'))
-                    ->setDescription(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'))
-            );
+            $quantifierField = $fields->dataFieldByName('Quantifier');
+            if ($quantifierField) {
+                $quantifierField->setTitle(_t('Product.QUANTIFIER', 'Quantifier'));
+                $quantifierField->setDescription(_t('Product.QUANTIFIER_EXPLANATION', 'e.g. per kilo, per month, per dozen, each'));
+                $fields->addFieldToTab('Root.Details', $quantifierField);
+            }
         }
 
         if ($this->canPurchase()) {
@@ -536,35 +611,38 @@ class Product extends Page implements BuyableModel
                     </p>';
             }
 
+            $searchBoostField = $fields->dataFieldByName('SearchBoost');
+            if ($searchBoostField) {
+                $searchBoostField->setTitle('Search Boost');
+                $searchBoostField->setDescription(
+                    '
+                        Higher boost means product will appear more up-front in search results.
+                        Zero is the default.
+                        Negative numbers make it less likely to appear.
+                        Use sparingly! If you use it enter a number between -5 and 5 only.
+                        For example 3 is a good number to get a badly peforming product near the front.
+                        '
+                );
+                $searchBoostField->setScale(2);
+            }
+            
             $fields->addFieldsToTab(
                 'Root.Search',
-                [
-                    NumericField::create('SearchBoost', 'Search Boost')
-                        ->setDescription(
-                            '
-                                Higher boost means product will appear more up-front in search results.
-                                Zero is the default.
-                                Negative numbers make it less likely to appear.
-                                Use sparingly! If you use it enter a number between -5 and 5 only.
-                                For example 3 is a good number to get a badly peforming product near the front.
-                                '
-                        )
-                        ->setScale(2),
+                array_filter([
+                    $searchBoostField,
                     LiteralField::create(
                         'SearchDetails',
                         $searchDetails
                     ),
-                ]
+                ])
             );
         }
 
-        $fields->addFieldsToTab(
-            'Root.Main',
-            [
-                TextField::create('AlternativeProductNames', _t('Product.ALTERNATIVEPRODUCTNAMES', 'Alternative Names (comma separated)')),
-            ],
-            'Price'
-        );
+        $alternativeProductNamesField = $fields->dataFieldByName('AlternativeProductNames');
+        if ($alternativeProductNamesField) {
+            $alternativeProductNamesField->setTitle(_t('Product.ALTERNATIVEPRODUCTNAMES', 'Alternative Names (comma separated)'));
+            $fields->addFieldToTab('Root.Main', $alternativeProductNamesField, 'Price');
+        }
         return $fields;
     }
 

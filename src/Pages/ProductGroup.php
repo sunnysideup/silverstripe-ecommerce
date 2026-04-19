@@ -92,6 +92,17 @@ class ProductGroup extends Page
     private static $template_for_selection_of_products = ProductGroupSchema::class;
 
     /**
+     * Ignore calculated fields that are set in onBeforeWrite.
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'FullSiteTreeSort',
+            'ProductGroupBreadcrumb',
+            'ImageID',
+        ],
+    ];
+
+    /**
      * @var string
      */
     private static $base_buyable_class = Product::class;
@@ -277,39 +288,60 @@ class ProductGroup extends Page
     {
         $fields = parent::getCMSFields();
         $fields->dataFieldByName('Title')->setTitle(_t('Category.NAME', 'Category Name'));
-        $fields->addFieldsToTab(
-            'Root.Main',
-            [
-                TextField::create('AlternativeProductGroupNames', _t('ProductGroup.ALTERNATIVEPRODUCTGROUPNAMES', 'Alternative Names (comma separated)')),
-            ],
-            'Content'
-        );
+        
+        // Get scaffolded field and customize it
+        $alternativeProductGroupNames = $fields->dataFieldByName('AlternativeProductGroupNames');
+        if ($alternativeProductGroupNames) {
+            $alternativeProductGroupNames->setTitle(_t('ProductGroup.ALTERNATIVEPRODUCTGROUPNAMES', 'Alternative Names (comma separated)'));
+            $fields->addFieldToTab('Root.Main', $alternativeProductGroupNames, 'Content');
+        }
+        
+        // Image field - use custom upload field
         $fields->addFieldsToTab(
             'Root.Images',
             [
                 ProductProductImageUploadField::create('Image', _t('Product.IMAGE', 'Product Group Image')),
-                CheckboxField::create('UseImageForProducts', 'Child products can use this image as default image'),
             ]
         );
+        
+        // Get scaffolded UseImageForProducts field
+        $useImageForProducts = $fields->dataFieldByName('UseImageForProducts');
+        if ($useImageForProducts) {
+            $useImageForProducts->setTitle('Child products can use this image as default image');
+            $fields->addFieldToTab('Root.Images', $useImageForProducts);
+        }
 
         $calculatedNumberOfProductsPerPage = $this->getProductsPerPage();
         $numberOfProductsPerPageExplanation = $calculatedNumberOfProductsPerPage !== $this->NumberOfProductsPerPage ? _t('ProductGroup.CURRENTLVALUE', 'Current value: ') . $calculatedNumberOfProductsPerPage . ' ' . _t('ProductGroup.INHERITEDFROMPARENTSPAGE', ' (inherited from parent page because the current page is set to zero)') : '';
         if ($this->exists()) {
+            // Get scaffolded fields
+            $productsToShowField = $fields->dataFieldByName('LevelOfProductsToShow');
+            $numberOfProductsPerPageField = $fields->dataFieldByName('NumberOfProductsPerPage');
+            
+            if ($productsToShowField) {
+                $productsToShowField->setTitle(_t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'));
+                $productsToShowField->setSource($this->getShowProductLevelsArray());
+            }
+            
+            if ($numberOfProductsPerPageField) {
+                $numberOfProductsPerPageField->setTitle(_t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'));
+                $numberOfProductsPerPageField->setDescription($numberOfProductsPerPageExplanation);
+                if ($calculatedNumberOfProductsPerPage && ! $this->NumberOfProductsPerPage) {
+                    $this->NumberOfProductsPerPage = 0;
+                    $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
+                }
+            }
+            
             $fields->addFieldToTab(
                 'Root',
                 Tab::create(
                     'ProductDisplay',
                     _t('ProductGroup.DISPLAY', 'Display'),
-                    $productsToShowField = DropdownField::create('LevelOfProductsToShow', _t('ProductGroup.PRODUCTSTOSHOW', 'Products to show'), $this->getShowProductLevelsArray()),
+                    $productsToShowField,
                     HeaderField::create('WhatProductsAreShown', _t('ProductGroup.WHATPRODUCTSSHOWN', _t('ProductGroup.OPTIONSSELECTEDBELOWAPPLYTOCHILDGROUPS', 'Inherited options'))),
-                    $numberOfProductsPerPageField = NumericField::create('NumberOfProductsPerPage', _t('ProductGroup.PRODUCTSPERPAGE', 'Number of products per page'))
+                    $numberOfProductsPerPageField
                 )
             );
-            $numberOfProductsPerPageField->setDescription($numberOfProductsPerPageExplanation);
-            if ($calculatedNumberOfProductsPerPage && ! $this->NumberOfProductsPerPage) {
-                $this->NumberOfProductsPerPage = 0;
-                $numberOfProductsPerPageField->setAttribute('placeholder', $calculatedNumberOfProductsPerPage);
-            }
         }
 
         $this->addDropDownForListConfig($fields, 'FILTER', _t('ProductGroup.DEFAULTFILTER', 'Default Filter'));

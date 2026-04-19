@@ -40,6 +40,11 @@ class AccountPage extends Page
     private static $table_name = 'AccountPage';
 
     /**
+     * No custom fields to scaffold in this class.
+     */
+    private static array $scaffold_cms_fields_settings = [];
+
+    /**
      * standard SS variable.
      *
      * @var array
