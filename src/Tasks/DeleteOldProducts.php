@@ -3,13 +3,15 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * Adds all members, who have bought something, to the customer group.
+ * Deletes products that are not for sale and have not been sold for a year.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -17,23 +19,27 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class DeleteOldProducts extends BuildTask
 {
+    protected static string $commandName = 'ecommerce:delete-old-products';
+
     protected string $title = 'Delete products that are not for sale and have not been sold for a year';
 
-    protected $description = 'Takes all the Members that have ordered something and adds them to the Customer Security Group.';
+    protected static string $description = 'Deletes products that are not for sale and have not been sold for a year.';
 
     private static $last_sold_days_ago = '365';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $cutOfTs = strtotime('-' . $this->Config()->get('last_sold_days_ago') . ' days');
-        DB::alteration_message('<h1>Deleting products that are not for sale, last sold since: ' . date('Y-m-d', $cutOfTs) . '</h1>');
+        $output->writeForHtml('<h1>Deleting products that are not for sale, last sold since: ' . date('Y-m-d', $cutOfTs) . '</h1>');
 
         $products = Product::get()->filter(['ID' => $this->getListOfCandidates()]);
         foreach ($products as $product) {
-            DB::alteration_message('Deleting ' . $product->FullName, 'deleted');
+            $output->writeln('Deleting ' . $product->FullName);
             $product->DeleteFromStage(Versioned::LIVE);
             $product->DeleteFromStage(Versioned::DRAFT);
         }
+
+        return Command::SUCCESS;
     }
 
     public function getListOfCandidates(): array

@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
@@ -15,14 +15,19 @@ use Sunnysideup\Ecommerce\Model\OrderItem;
 use Sunnysideup\Ecommerce\Model\OrderModifier;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 class EcommerceTaskDeleteAllOrders extends BuildTask
 {
     public bool $verbose = false;
 
+    protected static string $commandName = 'ecommerce:delete-all-orders';
+
     protected string $title = 'Deletes all orders - CAREFUL!';
 
-    protected $description = 'Deletes all the orders and payments ever placed - CAREFULL!';
+    protected static string $description = 'Deletes all the orders and payments ever placed - CAREFUL! This is destructive and irreversible.';
 
     /**
      * key = table where OrderID is saved
@@ -50,70 +55,74 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 
     // DELETE OLD SHOPPING CARTS
 
-    /**
-     * @param mixed $request
-     *
-     * @return int - number of carts destroyed
-     */
-    public function run($request)
+    public function getOptions(): array
     {
-        if (! Director::isDev() || Director::isLive()) {
-            DB::alteration_message('you can only run this in dev mode!');
-        } else {
-            if (! isset($_REQUEST['i-am-sure'])) {
-                $_REQUEST['i-am-sure'] = '';
-            }
-
-            if ('yes' !== $_REQUEST['i-am-sure']) {
-                die("<h1>ARE YOU SURE?</h1><br /><br /><br /> please add the 'i-am-sure' get variable to your request and set it to 'yes' ... e.g. <br />http://www.mysite.com/dev/ecommerce/ecommercetaskdeleteallorders/?i-am-sure=yes");
-            }
-
-            $oldCarts = Order::get();
-            $count = 0;
-            if ($oldCarts->exists()) {
-                if ($this->verbose) {
-                    $totalToDeleteSQLObject = DB::query('SELECT COUNT(*) FROM "Order"');
-                    $totalToDelete = $totalToDeleteSQLObject->value();
-                    DB::alteration_message('<h2>Total number of orders: ' . $totalToDelete . ' .... now deleting: </h2>', 'deleted');
-                }
-
-                foreach ($oldCarts as $oldCart) {
-                    ++$count;
-                    if ($this->verbose) {
-                        DB::alteration_message($count . ' ... deleting abandonned order #' . $oldCart->ID, 'deleted');
-                    }
-
-                    $oldCart->delete();
-                    $oldCart->destroy();
-                }
-            } elseif ($this->verbose) {
-                $count = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
-                DB::alteration_message(sprintf("There are no abandonned orders. There are %s 'live' Orders.", $count), 'created');
-            }
-
-            $countCheck = DB::query('Select COUNT(ID) FROM "Order"')->value();
-            if ($countCheck) {
-                DB::alteration_message('ERROR: in testing <i>Orders</i> it appears there are ' . $countCheck . ' records left.', 'deleted');
-            } else {
-                DB::alteration_message('PASS: in testing <i>Orders</i> there seem to be no records left.', 'created');
-            }
-
-            $this->cleanupUnlinkedOrderObjects();
-            $this->doubleCheckModifiersAndItems();
-
-            return $count;
-        }
-
-        return 0;
+        return [
+            new InputOption('confirm', 'c', InputOption::VALUE_NONE, 'Confirm deletion of all orders'),
+            new InputOption('verbose', 'v', InputOption::VALUE_NONE, 'Verbose output'),
+        ];
     }
 
-    public function cleanupUnlinkedOrderObjects()
+    /**
+     * @return int - number of carts destroyed
+     */
+    protected function execute(InputInterface $input, PolyOutput $output): int
+    {
+        // @TODO (SS6 upgrade) - Check if dev mode detection is still needed/available
+        // Original code checked Director::isDev() and Director::isLive()
+        
+        if (!$input->getOption('confirm')) {
+            $output->writeln('ERROR: This command will delete ALL orders permanently!');
+            $output->writeln('To confirm, run with --confirm flag:');
+            $output->writeln('  sake ecommerce:delete-all-orders --confirm');
+            return Command::FAILURE;
+        }
+
+        $this->verbose = $input->getOption('verbose');
+
+        $oldCarts = Order::get();
+        $count = 0;
+        if ($oldCarts->exists()) {
+            if ($this->verbose) {
+                $totalToDeleteSQLObject = DB::query('SELECT COUNT(*) FROM "Order"');
+                $totalToDelete = $totalToDeleteSQLObject->value();
+                $output->writeln('Total number of orders: ' . $totalToDelete . ' .... now deleting:');
+            }
+
+            foreach ($oldCarts as $oldCart) {
+                ++$count;
+                if ($this->verbose) {
+                    $output->writeln($count . ' ... deleting abandonned order #' . $oldCart->ID);
+                }
+
+                $oldCart->delete();
+                $oldCart->destroy();
+            }
+        } elseif ($this->verbose) {
+            $count = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
+            $output->writeln(sprintf("There are no abandonned orders. There are %s 'live' Orders.", $count));
+        }
+
+        $countCheck = DB::query('Select COUNT(ID) FROM "Order"')->value();
+        if ($countCheck) {
+            $output->writeForHtml('ERROR: in testing <i>Orders</i> it appears there are ' . $countCheck . ' records left.');
+        } else {
+            $output->writeForHtml('PASS: in testing <i>Orders</i> there seem to be no records left.');
+        }
+
+        $this->cleanupUnlinkedOrderObjects($output);
+        $this->doubleCheckModifiersAndItems($output);
+
+        return Command::SUCCESS;
+    }
+
+    public function cleanupUnlinkedOrderObjects(PolyOutput $output)
     {
         $classNames = $this->Config()->get('linked_objects_array');
         if (is_array($classNames) && count($classNames)) {
             foreach ($classNames as $classWithOrderID => $classWithLastEdited) {
                 if ($this->verbose) {
-                    DB::alteration_message(sprintf('looking for %s objects without link to order.', $classWithOrderID), 'deleted');
+                    $output->writeln(sprintf('looking for %s objects without link to order.', $classWithOrderID));
                 }
 
                 $where = '"Order"."ID" IS NULL ';
@@ -133,38 +142,38 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                 if ($unlinkedObjects->exists()) {
                     foreach ($unlinkedObjects as $unlinkedObject) {
                         if ($this->verbose) {
-                            DB::alteration_message('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.', 'deleted');
+                            $output->writeln('Deleting ' . $unlinkedObject->ClassName . ' with ID #' . $unlinkedObject->ID . ' because it does not appear to link to an order.');
                         }
 
                         //HACK FOR DELETING
-                        $this->deleteObject($unlinkedObject);
+                        $this->deleteObject($unlinkedObject, $output);
                     }
                 }
 
                 $countCheck = DB::query(sprintf('Select COUNT(ID) FROM "%s"', $classWithLastEdited))->value();
                 if ($countCheck) {
-                    DB::alteration_message('ERROR: in testing <i>' . $classWithOrderID . '</i> it appears there are ' . $countCheck . ' records left.', 'deleted');
+                    $output->writeForHtml('ERROR: in testing <i>' . $classWithOrderID . '</i> it appears there are ' . $countCheck . ' records left.');
                 } else {
-                    DB::alteration_message('PASS: in testing <i>' . $classWithOrderID . '</i> there seem to be no records left.', 'created');
+                    $output->writeForHtml('PASS: in testing <i>' . $classWithOrderID . '</i> there seem to be no records left.');
                 }
             }
         }
     }
 
-    private function doubleCheckModifiersAndItems()
+    private function doubleCheckModifiersAndItems(PolyOutput $output)
     {
-        DB::alteration_message('<hr />double-check:</hr />');
+        $output->writeln('--- double-check ---');
         foreach ($this->config()->get('double_check_objects') as $table) {
             $countCheck = DB::query(sprintf('Select COUNT(ID) FROM "%s"', $table))->value();
             if ($countCheck) {
-                DB::alteration_message('ERROR: in testing <i>' . $table . '</i> it appears there are ' . $countCheck . ' records left.', 'deleted');
+                $output->writeForHtml('ERROR: in testing <i>' . $table . '</i> it appears there are ' . $countCheck . ' records left.');
             } else {
-                DB::alteration_message('PASS: in testing <i>' . $table . '</i> there seem to be no records left.', 'created');
+                $output->writeForHtml('PASS: in testing <i>' . $table . '</i> there seem to be no records left.');
             }
         }
     }
 
-    private function deleteObject($unlinkedObject)
+    private function deleteObject($unlinkedObject, PolyOutput $output)
     {
         if ($unlinkedObject) {
             if ($unlinkedObject->ClassName) {
@@ -175,16 +184,16 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
                         $objectToDelete->delete();
                         $objectToDelete->destroy();
                     } elseif ($this->verbose) {
-                        DB::alteration_message('ERROR: could not find ' . $unlinkedObject->ClassName . ' with ID = ' . $unlinkedObject->ID, 'deleted');
+                        $output->writeln('ERROR: could not find ' . $unlinkedObject->ClassName . ' with ID = ' . $unlinkedObject->ID);
                     }
                 } elseif ($this->verbose) {
-                    DB::alteration_message('ERROR: trying to delete an object that is not a dataobject: ' . $unlinkedObject->ClassName, 'deleted');
+                    $output->writeln('ERROR: trying to delete an object that is not a dataobject: ' . $unlinkedObject->ClassName);
                 }
             } elseif ($this->verbose) {
-                DB::alteration_message('ERROR: trying to delete object without a class name', 'deleted');
+                $output->writeln('ERROR: trying to delete object without a class name');
             }
         } elseif ($this->verbose) {
-            DB::alteration_message('ERROR: trying to delete non-existing object.', 'deleted');
+            $output->writeln('ERROR: trying to delete non-existing object.');
         }
     }
 }

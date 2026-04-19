@@ -7,7 +7,11 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Member;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
@@ -108,11 +112,11 @@ class EcommerceTaskCartCleanup extends BuildTask
      */
     protected $leftMemberJoin = '';
 
+    protected static string $commandName = 'ecommerce:cart-cleanup';
+
     protected string $title = 'Clear old carts';
 
-    protected $description = 'Deletes abandonned carts (add ?limit=xxxx to the end of the URL to set the number of records (xxx = number of records) to be deleted in one load).';
-
-    private static $segment = 'EcommerceTaskCartCleanup';
+    protected static string $description = 'Deletes abandonned carts. Use --limit option to set the number of records to be deleted in one load.';
 
     /**
      * @var int
@@ -185,27 +189,34 @@ class EcommerceTaskCartCleanup extends BuildTask
         $this->run(null);
     }
 
-    public function run($request)
+    public function getOptions(): array
     {
-        if ($this->verbose || (isset($_GET['verbose']))) {
+        return [
+            new InputOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Maximum number of objects to delete'),
+            new InputOption('purge', 'p', InputOption::VALUE_NONE, 'Purge carts linked to members as well'),
+            new InputOption('verbose', 'v', InputOption::VALUE_NONE, 'Verbose output'),
+        ];
+    }
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
+    {
+        if ($this->verbose || $input->getOption('verbose')) {
             $this->verbose = true;
-            $this->flush();
+            $this->flushOutput($output);
             $countAll = DB::query('SELECT COUNT("ID") FROM "Order"')->value();
-            DB::alteration_message(sprintf('<h2>deleting empty and abandonned carts (total cart count = %s)</h2>.', $countAll));
+            $output->writeForHtml(sprintf('<h2>deleting empty and abandonned carts (total cart count = %s)</h2>.', $countAll));
         }
 
         $this->neverDeleteIfLinkedToMember = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'never_delete_if_linked_to_member');
         $this->maximumNumberOfObjectsDeleted = EcommerceConfig::get(EcommerceTaskCartCleanup::class, 'maximum_number_of_objects_deleted');
 
         //LIMITS ...
-        if ($request) {
-            if ($request->getVar('limit')) {
-                $this->maximumNumberOfObjectsDeleted = (int) $request->getVar('limit');
-            }
+        if ($input->getOption('limit')) {
+            $this->maximumNumberOfObjectsDeleted = (int) $input->getOption('limit');
+        }
 
-            if ($request->getVar('purge')) {
-                $this->neverDeleteIfLinkedToMember = false;
-            }
+        if ($input->getOption('purge')) {
+            $this->neverDeleteIfLinkedToMember = false;
         }
 
         //this->sort

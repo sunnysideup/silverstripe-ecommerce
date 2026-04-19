@@ -3,13 +3,15 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * @description: see EcommerceTaskAddDefaultProducts::$description
+ * Adds two default Products and a Product Group (Category) to your site.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -17,11 +19,13 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskAddDefaultProducts extends BuildTask
 {
+    protected static string $commandName = 'ecommerce:add-default-products';
+
     protected string $title = 'Add default Products';
 
-    protected $description = 'Adds two default Products and a Product Group (Category) to your site.';
+    protected static string $description = 'Adds two default Products and a Product Group (Category) to your site.';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         if (! Product::get()->exists()) {
             if (! ProductGroup::get()->exists()) {
@@ -35,7 +39,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
                 $productGroup1->URLSegment = 'products';
                 $productGroup1->writeToStage(Versioned::DRAFT);
                 $productGroup1->publish(Versioned::DRAFT, 'Live');
-                DB::alteration_message("Product group page 'Products' created", 'created');
+                $output->writeln("Product group page 'Products' created");
             } else {
                 $productGroup1 = ProductGroup::get()->first();
             }
@@ -51,7 +55,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page1->FeaturedProduct = true;
             $page1->writeToStage(Versioned::DRAFT);
             $page1->publish(Versioned::DRAFT, 'Live');
-            DB::alteration_message("Product page 'Example product' created", 'created');
+            $output->writeln("Product page 'Example product' created");
 
             $page2 = new Product();
             $page2->Title = 'Example product 2';
@@ -61,9 +65,11 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page2->Price = 25.00;
             $page2->writeToStage(Versioned::DRAFT);
             $page2->publish(Versioned::DRAFT, 'Live');
-            DB::alteration_message("Product page 'Example product 2' created", 'created');
+            $output->writeln("Product page 'Example product 2' created");
         } else {
-            DB::alteration_message('No products created as they already exist.');
+            $output->writeln('No products created as they already exist.');
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -5,12 +5,14 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * create standard country and regions.
+ * Create standard country and regions.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -18,11 +20,13 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceTaskCountryAndRegion extends BuildTask
 {
+    protected static string $commandName = 'ecommerce:create-countries';
+
     protected string $title = 'Create standard countries and regions';
 
-    protected $description = 'Adds all countries to the EcommerceCountry list';
+    protected static string $description = 'Adds all countries to the EcommerceCountry list';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $count = 0;
         $array = EcommerceCountry::get_country_dropdown();
@@ -37,7 +41,7 @@ class EcommerceTaskCountryAndRegion extends BuildTask
                 //do nothing
                 ++$count;
             } else {
-                DB::alteration_message(sprintf('adding %s to Ecommerce Country', $code), 'created');
+                $output->writeln(sprintf('adding %s to Ecommerce Country', $code));
                 $ecommerceCountry = EcommerceCountry::create();
                 $ecommerceCountry->Code = $code;
             }
@@ -50,6 +54,8 @@ class EcommerceTaskCountryAndRegion extends BuildTask
             $ecommerceCountry->write();
         }
 
-        DB::alteration_message(sprintf('Created / Checked %d Ecommerce Countries', $count), 'edited');
+        $output->writeln(sprintf('Created / Checked %d Ecommerce Countries', $count));
+
+        return Command::SUCCESS;
     }
 }

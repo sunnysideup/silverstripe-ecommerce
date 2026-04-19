@@ -3,11 +3,13 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country.
+ * Update EcommerceCountry.DoNotAllowSales to 1 so that you can not sell to any country.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -15,11 +17,13 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
 {
+    protected static string $commandName = 'ecommerce:disallow-all-countries';
+
     protected string $title = 'Disallows sale to all countries';
 
-    protected $description = 'We add this task to reset all countries from Allow Sales to Disallow Sales - as a good starting point when selling to just a few countries';
+    protected static string $description = 'Reset all countries from Allow Sales to Disallow Sales - as a good starting point when selling to just a few countries.';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $allowedArray = EcommerceCountry::get()
             ->filter(['DoNotAllowSales' => 0]);
@@ -27,10 +31,12 @@ class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
             foreach ($allowedArray as $obj) {
                 $obj->DoNotAllowSales = true;
                 $obj->write();
-                DB::alteration_message('Disallowing sales to ' . $obj->Name);
+                $output->writeln('Disallowing sales to ' . $obj->Name);
             }
         } else {
-            DB::alteration_message('Could not find any countries that are allowed', 'created');
+            $output->writeln('Could not find any countries that are allowed');
         }
+
+        return Command::SUCCESS;
     }
 }

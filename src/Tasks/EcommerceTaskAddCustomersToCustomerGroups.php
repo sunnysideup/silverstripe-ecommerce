@@ -4,8 +4,11 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Member;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Adds all members, who have bought something, to the customer group.
@@ -16,11 +19,13 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  */
 class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
 {
+    protected static string $commandName = 'ecommerce:add-customers-to-groups';
+
     protected string $title = 'Add Customers to Customer Group';
 
-    protected $description = 'Takes all the Members that have ordered something and adds them to the Customer Security Group.';
+    protected static string $description = 'Takes all the Members that have ordered something and adds them to the Customer Security Group.';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $customerGroup = EcommerceRole::get_customer_group();
         if ($customerGroup) {
@@ -52,11 +57,13 @@ class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
                 $existingMembers = $customerGroup->Members();
                 foreach ($unlistedMembers as $member) {
                     $existingMembers->add($member);
-                    DB::alteration_message('Added member to customers: ' . $member->Email, 'created');
+                    $output->writeln('Added member to customers: ' . $member->Email);
                 }
             }
         } else {
-            DB::alteration_message('NO customer group found', 'deleted');
+            $output->writeln('NO customer group found');
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -4,12 +4,14 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * shows you the link to remove the current cart.
+ * Shows debug links for cart manipulation.
  *
  * @author: Nicolaas
  * @package: ecommerce
@@ -17,31 +19,29 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskCartManipulationDebug extends BuildTask
 {
+    protected static string $commandName = 'ecommerce:debug-cart-links';
+
     protected string $title = 'Show debug links';
 
-    protected $description = 'Use a bunch of debug links to work with various objects such as the cart, the product group and the product page.';
+    protected static string $description = 'Use a bunch of debug links to work with various objects such as the cart, the product group and the product page.';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $myProductGroup = DataObject::get_one(ProductGroup::class);
         $myProduct = DataObject::get_one(Product::class);
-        $html = '
-        Please use the links below:
-        <ul>
-            <li><a href="/shoppingcart/debug/" target="_debug">debug cart</a></li>
-            <li><a href="/shoppingcart/ajaxtest/?ajax=1" target="_debug">view cart response</a></li>';
+        
+        $output->writeln('Please use the links below:');
+        $output->writeln('  - Debug cart: /shoppingcart/debug/');
+        $output->writeln('  - View cart response: /shoppingcart/ajaxtest/?ajax=1');
+        
         if ($myProductGroup) {
-            $html .= '
-            <li><a href="' . $myProductGroup->Link('debug') . '" target="_debug">debug product group</a></li>';
+            $output->writeln('  - Debug product group: ' . $myProductGroup->Link('debug'));
         }
 
         if ($myProduct) {
-            $html .= '
-            <li><a href="' . $myProduct->Link('debug') . '" target="_debug">debug product</a></li>';
+            $output->writeln('  - Debug product: ' . $myProduct->Link('debug'));
         }
 
-        $html .= '
-        </ul>';
-        DB::alteration_message($html);
+        return Command::SUCCESS;
     }
 }
