@@ -54,7 +54,7 @@ class CMSPageAddControllerProducts extends CMSPageAddController
     //     return $this->redirect(Injector::inst()->get(ProductsAndGroupsModelAdmin::class)->Link());
     // }
     /**
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     #[Override]
     public function RecordTypes()

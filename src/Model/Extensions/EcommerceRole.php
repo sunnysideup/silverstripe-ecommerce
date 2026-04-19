@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataList;
@@ -556,7 +557,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         }
 
         $cancelledOrdersField = $fields->dataFieldByName('CancelledOrders.CancelledBy');
-        if ($cancelledOrdersField) {
+        if ($cancelledOrdersField instanceof FormField) {
             if ($cancelledOrdersField instanceof GridField) {
                 $config = GridFieldConfig_RecordEditor::create();
                 $config->removeComponentsByType(GridFieldDeleteAction::class);
@@ -858,7 +859,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
      * @param bool   $onlyLastRecord - only select one
      * @param bool   $keepDoubles    - keep addresses that are the same (if set to false, only unique addresses are returned)
      *
-     * @return \SilverStripe\Model\List\ArrayList (BillingAddresses | ShippingAddresses)
+     * @return ArrayList (BillingAddresses | ShippingAddresses)
      */
     public function previousOrderAddresses(?string $type = BillingAddress::class, ?int $excludeID = 0, ?bool $onlyLastRecord = false, ?bool $keepDoubles = false)
     {

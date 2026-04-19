@@ -178,9 +178,9 @@ class Order extends DataObject implements EditableEcommerceObject
      * from through the modifier itself.
      *
      * @param Controller $order
-     * @param \SilverStripe\Forms\Validation\Validator $optionalValidator
+     * @param Validator $optionalValidator
      *
-     * @return \SilverStripe\Model\List\ArrayList (ArrayData)|null
+     * @return ArrayList (ArrayData)|null
      */
     protected static array $_modifier_form_cache = [];
 
@@ -750,6 +750,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         if ($this->IsAdminManageable()) {
@@ -2134,7 +2135,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param array|string $types
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function getOrderAttributesByType($types)
     {
@@ -2207,7 +2208,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @param string $filterOrClassName filter - where statement to exclude certain items
      *
-     * @return \SilverStripe\Model\List\ArrayList (Buyables)
+     * @return ArrayList (Buyables)
      */
     public function Buyables(?string $filterOrClassName = '')
     {
@@ -2706,7 +2707,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * Returns all the order logs that the current member can view
      * i.e. some order logs can only be viewed by the admin (e.g. suspected fraud orderlog).
      *
-     * @return \SilverStripe\Model\List\ArrayList (OrderStatusLogs)
+     * @return ArrayList (OrderStatusLogs)
      */
     public function CanViewOrderStatusLogs()
     {
@@ -2725,7 +2726,7 @@ class Order extends DataObject implements EditableEcommerceObject
     /**
      * returns all the logs that can be viewed by the customer.
      *
-     * @return \SilverStripe\Model\List\ArrayList (OrderStausLogs)
+     * @return ArrayList (OrderStausLogs)
      */
     public function CustomerViewableOrderStatusLogs()
     {
@@ -3686,7 +3687,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @see Order::canSubmit
      *
-     * @return null|\SilverStripe\Model\List\ArrayList
+     * @return null|ArrayList
      */
     public function SubmitErrors()
     {
@@ -4274,7 +4275,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @param string $subject - (optional) subject for email
      * @param string $message - (optional) the additional message
      *
-     * @return \SilverStripe\Model\ArrayData
+     * @return ArrayData
      *                   - Subject - EmailSubject
      *                   - Message - specific message for this order
      *                   - Message - custom message
