@@ -227,10 +227,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
     {
         $customerGroupCode = EcommerceConfig::get(EcommerceRoleCustomer::class, 'customer_group_code');
 
-        return DataObject::get_one(
-            Group::class,
-            ['Code' => $customerGroupCode]
-        );
+        return Group::get()->setUseCache(true)->filter(['Code' => $customerGroupCode])->first();
     }
 
     public static function get_category(): string
@@ -310,10 +307,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
             }
         }
 
-        $group = DataObject::get_one(
-            Group::class,
-            ['Code' => 'administrators']
-        );
+        $group = Group::get()->setUseCache(true)->filter(['Code' => 'administrators'])->first();
         //fill array
         if ($group) {
             $members = $group->Members();
@@ -400,10 +394,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
     {
         $adminCode = EcommerceConfig::get(EcommerceRole::class, 'admin_group_code');
 
-        return DataObject::get_one(
-            Group::class,
-            ['Code' => $adminCode]
-        );
+        return Group::get()->setUseCache(true)->filter(['Code' => $adminCode])->first();
     }
 
     /**
@@ -413,10 +404,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
     {
         $assistantCode = EcommerceConfig::get(EcommerceRoleAssistant::class, 'assistant_group_code');
 
-        return DataObject::get_one(
-            Group::class,
-            ['Code' => $assistantCode]
-        );
+        return Group::get()->setUseCache(true)->filter(['Code' => $assistantCode])->first();
     }
 
     /**
@@ -830,7 +818,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
     {
         $owner = $this->getOwner();
         if (! $firstStepID) {
-            $firstStepID = DataObject::get_one(OrderStep::class)->ID;
+            $firstStepID = OrderStep::get()->setUseCache(true)->first()->ID;
         }
 
         return Order::get()

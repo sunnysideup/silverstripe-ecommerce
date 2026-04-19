@@ -840,7 +840,7 @@ class Order extends DataObject implements EditableEcommerceObject
         $this->extend('updateCMSFieldsBefore', $fields);
         $currentMember = Security::getCurrentUser();
         if (! $this->exists() || ! $this->StatusID) {
-            $firstStep = DataObject::get_one(OrderStep::class);
+            $firstStep = OrderStep::get()->setUseCache(true)->first();
             $this->StatusID = $firstStep->ID;
             $this->write();
         }
@@ -1320,7 +1320,7 @@ class Order extends DataObject implements EditableEcommerceObject
             user_error('Can not init an order that has been submitted', E_USER_NOTICE);
         } elseif ($this->StatusID || $recalculate || self::get_needs_recalculating($this->ID)) {
             if (! $this->StatusID) {
-                $createdOrderStatus = DataObject::get_one(OrderStep::class);
+                $createdOrderStatus = OrderStep::get()->setUseCache(true)->first();
                 if (! $createdOrderStatus) {
                     user_error('No ordersteps have been created', E_USER_WARNING);
                 }
@@ -1587,11 +1587,7 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         if (! $step) {
-            $step = DataObject::get_one(
-                OrderStep::class,
-                null,
-                $cacheDataObjectGetOne = false
-            );
+            $step = OrderStep::get()->setUseCache($cacheDataObjectGetOne = false)->first();
         }
 
         if (! $step) {
@@ -1624,7 +1620,7 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($obj->HideStepFromCustomer) {
             $obj = OrderStep::get()->where('"OrderStep"."Sort" < ' . $obj->Sort . ' AND "HideStepFromCustomer" = 0')->Last();
             if (! $obj) {
-                $obj = DataObject::get_one(OrderStep::class);
+                $obj = OrderStep::get()->setUseCache(true)->first();
             }
         }
 
@@ -1638,7 +1634,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function IsFirstStep()
     {
-        $firstStep = DataObject::get_one(OrderStep::class);
+        $firstStep = OrderStep::get()->setUseCache(true)->first();
         $currentStep = $this->MyStep();
         return $firstStep && $currentStep && $firstStep->ID === $currentStep->ID;
     }
@@ -2933,7 +2929,7 @@ class Order extends DataObject implements EditableEcommerceObject
      */
     public function getFeedbackLink()
     {
-        $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+        $orderConfirmationPage = OrderConfirmationPage::get()->setUseCache(true)->first();
         if ($orderConfirmationPage->IsFeedbackEnabled) {
             return Director::AbsoluteURL($this->getRetrieveLink()) . '#OrderFormFeedback_FeedbackForm';
         }
@@ -3775,14 +3771,11 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->MyStep() && $this->MyStep()->AlternativeDisplayPage()) {
             $page = $this->MyStep()->AlternativeDisplayPage();
         } elseif ($this->IsSubmitted()) {
-            $page = DataObject::get_one(OrderConfirmationPage::class);
+            $page = OrderConfirmationPage::get()->setUseCache(true)->first();
         } else {
-            $page = DataObject::get_one(
-                CartPage::class,
-                ['ClassName' => CartPage::class]
-            );
+            $page = CartPage::get()->setUseCache(true)->filter(['ClassName' => CartPage::class])->first();
             if (! $page) {
-                $page = DataObject::get_one(CheckoutPage::class);
+                $page = CheckoutPage::get()->setUseCache(true)->first();
             }
         }
 
@@ -3806,10 +3799,7 @@ class Order extends DataObject implements EditableEcommerceObject
             return $page->getOrderLink($this->ID);
         }
 
-        $page = DataObject::get_one(
-            ErrorPage::class,
-            ['ErrorCode' => '404']
-        );
+        $page = ErrorPage::get()->setUseCache(true)->filter(['ErrorCode' => '404'])->first();
         if ($page) {
             return $page->Link();
         }
