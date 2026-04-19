@@ -28,22 +28,10 @@
         }
     ],
     "require": {
-        "silverstripe/cms": "^4.0 || ^5.0",
-        "bummzack/sortablefile": "^2.0",
+        "silverstripe/cms": "^6.0",
+        "bummzack/sortablefile": "^3.0",
         "pelago/emogrifier": "^8.0@stable",
-        "silverstripe/lumberjack": "^2.0 || ^3.0",
-        "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
-        "sunnysideup/google_address_field": "^5.0-dev",
-        "sunnysideup/phone_field": "^5.0-dev",
-        "sunnysideup/cms_edit_link_field": "^5.0-dev",
-        "sunnysideup/permission_provider": "^5.0-dev",
-        "sunnysideup/vardump": "^5.0-dev",
-        "sunnysideup/model-admin-many-tabs": "^5.0-dev",
-        "sunnysideup/email_address_database_field": "^5.0-dev",
-        "sunnysideup/silverstripe-ajax-select-field": "^5.0-dev",
-        "sunnysideup/yes-no-any-filter": "^5.0-dev",
-        "sunnysideup/branded-login-screen": "^5.0-dev",
-        "sunnysideup/one-time-code-authentication": "^5.0-dev"
+        "silverstripe/lumberjack": "^4.1"
     },
     "suggest": {
         "sunnysideup/flush": "Better, faster output for tasks",
@@ -68,5 +56,67 @@
             "type": "vcs",
             "url": "https://github.com/biwac-websolutions-ag/silverstripe-grouped-cms-menu.git"
         }
-    ]
+    ],
+    "yet-to-update": {
+        "symbiote/silverstripe-grouped-cms-menu": {
+            "section": "require",
+            "current": "^4.0@stable",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/google_address_field": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/phone_field": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/cms_edit_link_field": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/permission_provider": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/vardump": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/model-admin-many-tabs": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/email_address_database_field": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/silverstripe-ajax-select-field": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/yes-no-any-filter": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/branded-login-screen": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        },
+        "sunnysideup/one-time-code-authentication": {
+            "section": "require",
+            "current": "^5.0-dev",
+            "reason": "no-compatible-stable-release"
+        }
+    }
 }
