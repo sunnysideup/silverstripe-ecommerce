@@ -2,15 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 use Override;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\TaskRunner;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\ArrayData;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin

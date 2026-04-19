@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Model\List\ArrayList;
 use Override;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\SetThemed;

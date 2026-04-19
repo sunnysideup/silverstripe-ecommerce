@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
 use Override;
@@ -14,7 +15,6 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
@@ -98,7 +98,7 @@ class QuickUpdates extends Controller
             FormAction::create('doform')->setTitle('Submit'),
         ]);
 
-        $required = RequiredFields::create([]);
+        $required = RequiredFieldsValidator::create([]);
 
         return Form::create($this, 'MyForm', $fields, $actions, $required);
     }

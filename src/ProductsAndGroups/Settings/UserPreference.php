@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
+use SilverStripe\Model\ArrayData;
 use Page;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\CMS\Controllers\ContentController;
@@ -9,7 +10,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -519,7 +519,7 @@ class UserPreference
                     $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $title = $group->MenuTitle;
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
-                    if ($prevGroup && trim($prevGroup->Title) === trim((string) $group->Title) && $prevGroup->ParentID !== $group->ParentID) {
+                    if ($prevGroup && trim((string) $prevGroup->Title) === trim((string) $group->Title) && $prevGroup->ParentID !== $group->ParentID) {
                         $title = $crumb . ' - ' . $title;
                         $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                     }

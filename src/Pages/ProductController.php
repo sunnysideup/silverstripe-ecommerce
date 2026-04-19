@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -9,7 +10,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
@@ -100,7 +100,7 @@ class ProductController extends PageController
             $fields->push(NumericField::create('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
             $actions = FieldList::create(FormAction::create('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart')));
             $requiredFields = ['Quantity'];
-            $validator = RequiredFields::create($requiredFields);
+            $validator = RequiredFieldsValidator::create($requiredFields);
 
             return Form::create($this, 'AddProductForm', $fields, $actions, $validator);
         }
