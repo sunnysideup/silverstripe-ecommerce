@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
@@ -97,6 +98,7 @@ class EcommerceTaskReviewSearches extends BuildTask
         return Command::SUCCESS;
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

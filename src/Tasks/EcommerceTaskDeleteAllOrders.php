@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -55,6 +56,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 
     // DELETE OLD SHOPPING CARTS
 
+    #[Override]
     public function getOptions(): array
     {
         return [

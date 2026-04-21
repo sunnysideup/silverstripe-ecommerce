@@ -2,15 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use SilverStripe\Security\Member;
 use SilverStripe\Forms\FieldList;
 use Page;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\SSViewer;
@@ -41,7 +40,7 @@ class CartPage extends Page
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/CartPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/CartPage-file.gif';
 
     /**
      * Standard SS variable.
@@ -105,18 +104,20 @@ class CartPage extends Page
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view the current order (cart) without finalising the order.';
+    private static $class_description = 'A page where the customer can view the current order (cart) without finalising the order.';
 
     /**
      * Fields are scaffolded automatically, no need to ignore any.
      */
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('CartPage.SINGULARNAME', 'Cart Page');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('CartPage.PLURALNAME', 'Cart Pages');
     }
@@ -130,6 +131,7 @@ class CartPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return CartPage::get()->Filter(['ClassName' => CartPage::class])->exists() ? false : $this->canEdit($member);
@@ -143,6 +145,7 @@ class CartPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -159,6 +162,7 @@ class CartPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return $this->canEdit($member);
@@ -171,6 +175,7 @@ class CartPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
@@ -179,10 +184,11 @@ class CartPage extends Page
     /**
      * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        
+
         // Get scaffolded fields and customize them
         $continueShoppingLabel = $fields->dataFieldByName('ContinueShoppingLabel');
         $proceedToCheckoutLabel = $fields->dataFieldByName('ProceedToCheckoutLabel');
@@ -194,41 +200,50 @@ class CartPage extends Page
         $deleteOrderLinkLabel = $fields->dataFieldByName('DeleteOrderLinkLabel');
         $noItemsInOrderMessage = $fields->dataFieldByName('NoItemsInOrderMessage');
         $nonExistingOrderMessage = $fields->dataFieldByName('NonExistingOrderMessage');
-        
+
         // Set labels for text fields
         if ($continueShoppingLabel) {
             $continueShoppingLabel->setTitle(_t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping'));
         }
+
         if ($proceedToCheckoutLabel) {
             $proceedToCheckoutLabel->setTitle(_t('CartPage.PROCEEDTOCHECKOUTLABEL', 'Label on link to proceed to checkout - e.g. click here to finalise your order'));
         }
+
         if ($showAccountLabel) {
             $showAccountLabel->setTitle(_t('CartPage.SHOWACCOUNTLABEL', "Label on the link 'view account details' - e.g. click here to view your account details"));
         }
+
         if ($currentOrderLinkLabel) {
             $currentOrderLinkLabel->setTitle(_t('CartPage.CURRENTORDERLINKLABEL', 'Label for the link pointing to the current order - e.g. click here to view current order'));
         }
+
         if ($loginToOrderLinkLabel) {
             $loginToOrderLinkLabel->setTitle(_t('CartPage.LOGINTOORDERLINKLABEL', 'Label for the link pointing to the order which requires a log in - e.g. you must login to view this order'));
         }
+
         if ($saveOrderLinkLabel) {
             $saveOrderLinkLabel->setTitle(_t('CartPage.SAVEORDERLINKLABEL', 'Label for the saving an order - e.g. click here to save current order'));
         }
+
         if ($loadOrderLinkLabel) {
             $loadOrderLinkLabel->setTitle(_t('CartPage.LOADORDERLINKLABEL', 'Label for the loading an order into the cart - e.g. click here to finalise this order'));
         }
+
         if ($deleteOrderLinkLabel) {
             $deleteOrderLinkLabel->setTitle(_t('CartPage.DELETEORDERLINKLABEL', 'Label for the deleting an order - e.g. click here to delete this order'));
         }
+
         if ($noItemsInOrderMessage) {
             $noItemsInOrderMessage->setTitle(_t('CartPage.NOITEMSINORDERMESSAGE', 'No items in order - shown when the customer tries to view an order without items.'));
             $noItemsInOrderMessage->setRows(3);
         }
+
         if ($nonExistingOrderMessage) {
             $nonExistingOrderMessage->setTitle(_t('CartPage.NONEXISTINGORDERMESSAGE', 'Non-existing Order - shown when the customer tries to load a non-existing order.'));
             $nonExistingOrderMessage->setRows(3);
         }
-        
+
         // Reorganize fields into custom tab structure
         $fields->addFieldsToTab(
             'Root.Messages',
@@ -374,6 +389,7 @@ class CartPage extends Page
      *
      * @return string
      */
+    #[Override]
     public function LinkingMode()
     {
         return parent::LinkingMode() . ' cartlink cartlinkID_' . $this->ID;
@@ -384,6 +400,7 @@ class CartPage extends Page
      *
      * @return string
      */
+    #[Override]
     public function LinkOrSection()
     {
         return parent::LinkOrSection() . ' cartlink';
@@ -394,6 +411,7 @@ class CartPage extends Page
      *
      * @return string
      */
+    #[Override]
     public function LinkOrCurrent()
     {
         return parent::LinkOrCurrent() . ' cartlink';

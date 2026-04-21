@@ -79,7 +79,7 @@ class CheckoutPageController extends CartPageController
      * forms are used in the OrderInformation HTML table for the user to fill
      * in as needed for each modifier applied on the site.
      *
-     * @return \SilverStripe\Model\List\ArrayList|null
+     * @return ArrayList|null
      */
     public function ModifierForms()
     {

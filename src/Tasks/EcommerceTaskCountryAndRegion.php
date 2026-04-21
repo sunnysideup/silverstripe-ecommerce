@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;

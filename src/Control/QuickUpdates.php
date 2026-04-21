@@ -160,6 +160,8 @@ class QuickUpdates extends Controller
                 );
             }
         }
+
+        return null;
     }
 
     #[Override]

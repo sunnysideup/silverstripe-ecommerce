@@ -14,7 +14,6 @@ use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
@@ -188,7 +187,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of config tasks.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function OverallConfig()
     {
@@ -198,7 +197,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data setup tasks.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function EcommerceSetup()
     {
@@ -208,7 +207,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function DataReview()
     {
@@ -218,7 +217,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * regular data cleanup tasks.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function RegularMaintenance()
     {
@@ -228,7 +227,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of data debug actions.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function DebugActions()
     {
@@ -238,7 +237,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of migration tasks.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function Migrations()
     {
@@ -248,7 +247,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
     /**
      * list of crazy actions tasks.
      *
-     * @return \SilverStripe\Model\List\ArrayList
+     * @return ArrayList
      */
     public function CrazyShit()
     {

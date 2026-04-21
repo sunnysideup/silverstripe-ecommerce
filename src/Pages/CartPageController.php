@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\ORM\DataObject;
@@ -32,7 +33,7 @@ class CartPageController extends PageController
     /**
      * This ArraList holds DataObjects with a Link and Title each....
      *
-     * @var \SilverStripe\Model\List\ArrayList
+     * @var ArrayList
      */
     protected $actionLinks;
 
@@ -264,7 +265,7 @@ class CartPageController extends PageController
     /**
      * This returns a ArraList, each dataobject has two vars: Title and Link.
      *
-     * @return null|\SilverStripe\Model\List\ArrayList
+     * @return null|ArrayList
      */
     public function ActionLinks()
     {
@@ -362,6 +363,7 @@ class CartPageController extends PageController
     /**
      * @standard SS method
      */
+    #[Override]
     protected function init()
     {
         parent::init();

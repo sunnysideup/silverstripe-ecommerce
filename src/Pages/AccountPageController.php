@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use PageController;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
@@ -43,6 +46,7 @@ class AccountPageController extends PageController
     /**
      * standard controller function.
      */
+    #[Override]
     protected function init()
     {
         parent::init();

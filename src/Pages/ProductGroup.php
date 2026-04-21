@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\ORM\ManyManyList;
@@ -12,17 +14,14 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
-use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -185,22 +184,24 @@ class ProductGroup extends Page
 
     private static $default_child = Product::class;
 
-    private static $icon = 'sunnysideup/ecommerce:client/images/icons/productgroup-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce:client/images/icons/productgroup-file.gif';
 
     private static $singular_name = 'Product Category';
 
     private static $plural_name = 'Product Categories';
 
-    private static $description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
+    private static $class_description = 'A page the shows a bunch of products, based on your selection. By default it shows products linked to it (children)';
 
     private static $count = 0;
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('ProductGroup.SINGULARNAME', 'Product Category');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('ProductGroup.PLURALNAME', 'Product Categories');
     }
@@ -215,6 +216,7 @@ class ProductGroup extends Page
         return $this->singular_name();
     }
 
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -237,6 +239,7 @@ class ProductGroup extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -258,6 +261,7 @@ class ProductGroup extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
@@ -279,11 +283,13 @@ class ProductGroup extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return parent::canEdit($member);
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -446,6 +452,7 @@ class ProductGroup extends Page
         return _t('ProductGroup.BUYABLES', 'Products');
     }
 
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -756,7 +763,7 @@ class ProductGroup extends Page
     /**
      * Returns children ProductGroup pages of this group.
      *
-     * @return \SilverStripe\Model\List\SS_List (ProductGroups)
+     * @return SS_List (ProductGroups)
      */
     public function ChildCategoriesBasedOnProducts()
     {
@@ -780,12 +787,14 @@ class ProductGroup extends Page
         return Vardump::inst()->vardumpMe($this->{$method}(), $method, static::class);
     }
 
-    public function onAfterPublish()
+    #[Override]
+    protected function onAfterPublish()
     {
         parent::onAfterPublish();
         $this->addToSearchTable();
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -816,7 +825,8 @@ class ProductGroup extends Page
         ProductGroupSearchTable::remove_product_group($this);
     }
 
-    public function onBeforeDelete()
+    #[Override]
+    protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
         ProductGroupSearchTable::remove_product_group($this);

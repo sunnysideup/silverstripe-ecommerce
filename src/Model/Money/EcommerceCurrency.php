@@ -552,6 +552,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -775,7 +776,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
                     $result->addFieldError(
                         'Code',
                         sprintf(
-                            'There is already another currency in use with code: \'%s\'.',
+                            "There is already another currency in use with code: '%s'.",
                             $this->Code
                         )
                     );

@@ -255,6 +255,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -393,6 +394,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
         }
 
         user_error('No order found with this payment: ' . $this->ID, E_USER_NOTICE);
+        return null;
     }
 
     /**
@@ -726,7 +728,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
     {
         $proxy = null;
         $ip = null;
-        if (Controller::curr() !== null) {
+        if (Controller::curr() instanceof Controller) {
             $ip = Controller::curr()->getRequest()->getIP();
         }
 

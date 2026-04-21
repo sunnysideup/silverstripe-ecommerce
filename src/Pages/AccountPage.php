@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use Page;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
@@ -60,7 +61,7 @@ class AccountPage extends Page
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
 
     /**
      * standard SS variable.
@@ -81,7 +82,7 @@ class AccountPage extends Page
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view all their orders and update their details.';
+    private static $class_description = 'A page where the customer can view all their orders and update their details.';
 
     /**
      * Standard SS function, we only allow for one AccountPage to exist
@@ -92,6 +93,7 @@ class AccountPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return AccountPage::get()->filter(['ClassName' => AccountPage::class])->exists() ? false : $this->canEdit($member);
@@ -105,6 +107,7 @@ class AccountPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -121,6 +124,7 @@ class AccountPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return $this->canEdit($member);
@@ -133,17 +137,20 @@ class AccountPage extends Page
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('AccountPage.SINGULARNAME', 'Account Page');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('AccountPage.PLURALNAME', 'Account Pages');
     }

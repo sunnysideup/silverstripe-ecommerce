@@ -345,7 +345,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
      * @param int          $maxRecursiveLevel - maximum depth , e.g. 1 = one level down - so no Child Child Groups are returned...
      * @param array|string $filter            - additional filter to be added
      *
-     * @return \SilverStripe\Model\List\SS_List (ProductGroups)
+     * @return SS_List (ProductGroups)
      */
     public function getGroups(?int $maxRecursiveLevel = null, $filter = null)
     {

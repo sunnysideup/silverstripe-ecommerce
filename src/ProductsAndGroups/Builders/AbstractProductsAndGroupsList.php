@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
@@ -52,7 +53,7 @@ abstract class AbstractProductsAndGroupsList
      * Key Method!
      * Returns a raw list of all the matching products without any pagination.
      *
-     * @param \SilverStripe\Model\List\SS_List $products
+     * @param SS_List $products
      */
     final public function setProducts($products): self
     {

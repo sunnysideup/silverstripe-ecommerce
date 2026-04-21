@@ -7,10 +7,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
@@ -48,7 +45,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/OrderConfirmationPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/OrderConfirmationPage-file.gif';
 
     /**
      * Standard SS variable.
@@ -136,7 +133,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.';
+    private static $class_description = 'A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.';
 
     #[Override]
     public function i18n_singular_name()
@@ -145,7 +142,7 @@ class OrderConfirmationPage extends CartPage
     }
 
     #[Override]
-    public function i18n_plural_name()
+    public function plural_name()
     {
         return _t('OrderConfirmationpage.PLURALNAME', 'Order Confirmation Pages');
     }
@@ -239,6 +236,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return array
      */
+    #[Override]
     public function fieldLabels($includerelations = true)
     {
         $defaultLabels = null;
@@ -516,6 +514,7 @@ class OrderConfirmationPage extends CartPage
         return $do;
     }
 
+    #[Override]
     public function requireDefaultRecords()
     {
         $checkoutPage = DataObject::get_one(CheckoutPage::class);

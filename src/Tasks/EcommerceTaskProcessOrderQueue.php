@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -90,6 +91,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
         }
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

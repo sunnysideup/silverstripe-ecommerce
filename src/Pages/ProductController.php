@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use PageController;
 use SilverStripe\Control\Director;
@@ -206,6 +207,7 @@ class ProductController extends PageController
         return $this->PreviousProduct() || $this->NextProduct();
     }
 
+    #[Override]
     public function debug(): string
     {
         $member = Security::getCurrentUser();
@@ -222,6 +224,7 @@ class ProductController extends PageController
     /**
      * Standard SS method.
      */
+    #[Override]
     protected function init()
     {
         parent::init();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
@@ -35,6 +36,7 @@ class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTas
         return $this;
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

@@ -453,7 +453,7 @@ class OrderModifier extends OrderAttribute
      * We have mainly added this function as an example!
      *
      * @param Controller $optionalController - optional custom controller class
-     * @param \SilverStripe\Forms\Validation\Validator $optionalValidator - optional custom validator class
+     * @param Validator $optionalValidator - optional custom validator class
      *
      * @return null|OrderModifierForm or subclass
      */

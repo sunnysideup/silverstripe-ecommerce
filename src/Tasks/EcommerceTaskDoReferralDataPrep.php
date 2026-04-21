@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
@@ -135,13 +136,14 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
     {
         if ($this->retainMessages) {
             $this->messages[] = $message;
-        } elseif ($output) {
+        } elseif ($output instanceof PolyOutput) {
             $output->writeln($message);
         } else {
             DB::alteration_message($message, $type);
         }
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\Forms\FieldList;
@@ -16,16 +17,12 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
@@ -298,7 +295,7 @@ class Product extends Page implements BuyableModel
      *
      * @var string
      */
-    private static $description = 'A product that is for sale in the shop.';
+    private static $class_description = 'A product that is for sale in the shop.';
 
     /**
      * Standard SS variable.
@@ -308,7 +305,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS variable.
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/product-file.gif';
 
     public function AdditionalImages(): ManyManyList|UnsavedRelationList
     {
@@ -320,6 +317,7 @@ class Product extends Page implements BuyableModel
         return $list;
     }
 
+    #[Override]
     public function SummaryFields()
     {
         return [
@@ -348,6 +346,7 @@ class Product extends Page implements BuyableModel
      *
      * @return FieldList
      */
+    #[Override]
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
@@ -356,12 +355,14 @@ class Product extends Page implements BuyableModel
         return $fields;
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('Order.PRODUCT', 'Product');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('Order.PRODUCTS', 'Products');
     }
@@ -374,6 +375,7 @@ class Product extends Page implements BuyableModel
     /**
      * Standard SS Method.
      */
+    #[Override]
     public function getCMSFields()
     {
         //prevent calling updateSettingsFields extend function too early
@@ -404,7 +406,7 @@ class Product extends Page implements BuyableModel
         }
 
         // Add main fields in order
-        $fields->addFieldsToTab(
+        $fields->addFieldToTab(
             'Root.Main',
             array_filter([
                 $priceField,
@@ -483,8 +485,8 @@ class Product extends Page implements BuyableModel
             $hasPhysicalDispatchField,
         ]);
 
-        if ($detailFields) {
-            $fields->addFieldsToTab('Root.Details', $detailFields);
+        if ($detailFields !== []) {
+            $fields->addFieldToTab('Root.Details', $detailFields);
         }
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
@@ -631,7 +633,7 @@ class Product extends Page implements BuyableModel
                 $searchBoostField->setScale(2);
             }
 
-            $fields->addFieldsToTab(
+            $fields->addFieldToTab(
                 'Root.Search',
                 array_filter([
                     $searchBoostField,
@@ -648,6 +650,7 @@ class Product extends Page implements BuyableModel
             $alternativeProductNamesField->setTitle(_t('Product.ALTERNATIVEPRODUCTNAMES', 'Alternative Names (comma separated)'));
             $fields->addFieldToTab('Root.Main', $alternativeProductNamesField, 'Price');
         }
+
         return $fields;
     }
 
@@ -1399,6 +1402,7 @@ class Product extends Page implements BuyableModel
         return $this->AllowPurchase;
     }
 
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1421,6 +1425,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -1442,6 +1447,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (is_a(Controller::curr(), EcommerceConfigClassNames::getName(ProductsAndGroupsModelAdmin::class))) {
@@ -1463,6 +1469,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
@@ -1473,6 +1480,7 @@ class Product extends Page implements BuyableModel
         return $this->ID;
     }
 
+    #[Override]
     public function debug(): string
     {
         $config = EcommerceConfig::inst();
@@ -1525,7 +1533,8 @@ class Product extends Page implements BuyableModel
     /**
      * add data to search table if the.
      */
-    public function onAfterPublish()
+    #[Override]
+    protected function onAfterPublish()
     {
         parent::onAfterPublish();
         $this->addToSearchTable();
@@ -1547,22 +1556,26 @@ class Product extends Page implements BuyableModel
         ProductSearchTable::remove_product($this);
     }
 
-    public function onBeforeDelete()
+    #[Override]
+    protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
         ProductSearchTable::remove_product($this);
     }
 
-    public function onAfterDelete()
+    #[Override]
+    protected function onAfterDelete()
     {
         parent::onAfterDelete();
-        $task = $obj = EcommerceTaskRemoveSuperfluousLinksInProductProductGroups::create();
+        $task = EcommerceTaskRemoveSuperfluousLinksInProductProductGroups::create();
+        $obj = $task;
         $definition = new InputDefinition($task->getOptions());
         $input = new ArrayInput(['verbose' => true], $definition);
         $buffered = new BufferedOutput();
         $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
         $output->setWrappedOutput($buffered);
         $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
+
         $task->run($input, $output);
     }
 
@@ -1619,6 +1632,7 @@ class Product extends Page implements BuyableModel
         }
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();

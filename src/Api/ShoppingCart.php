@@ -1134,6 +1134,7 @@ class ShoppingCart
         } else {
             echo 'Please log in as admin first';
         }
+
         return '----';
     }
 
@@ -1202,7 +1203,7 @@ class ShoppingCart
     protected function getSession(): ?Session
     {
         $curr = Controller::curr();
-        if ($curr) {
+        if ($curr instanceof Controller) {
             $request = $curr->getRequest();
             if ($request) {
                 return $request->getSession();
@@ -1254,7 +1255,7 @@ class ShoppingCart
             // now we can (re)calculate the order
             $form->sessionMessage($message, $status);
             // let the form controller do the redirectback or whatever else is needed.
-        } elseif (empty($_REQUEST['BackURL']) && Controller::curr() !== null) {
+        } elseif (empty($_REQUEST['BackURL']) && Controller::curr() instanceof Controller) {
             Controller::curr()->redirectBack();
         } else {
             Controller::curr()->redirect(urldecode((string) $_REQUEST['BackURL']));

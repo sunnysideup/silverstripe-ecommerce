@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Forms\Validation\Validator;
 use Override;
 use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\FormField;
@@ -92,7 +93,7 @@ class ExpiryDateField extends TextField
     }
 
     /**
-     * @param \SilverStripe\Forms\Validation\Validator $validator
+     * @param Validator $validator
      *
      * @return bool
      */
@@ -105,7 +106,7 @@ class ExpiryDateField extends TextField
                     $this->getName(),
                     _t(
                         'ExpiryDateField.NO_MONTH',
-                        'Please ensure you have entered the expiry date \'month\' portion.'
+                        "Please ensure you have entered the expiry date 'month' portion."
                     )
                 );
 
@@ -117,7 +118,7 @@ class ExpiryDateField extends TextField
                     $this->getName(),
                     _t(
                         'ExpiryDateField.NO_YEAR',
-                        'Please ensure you have entered the expiry date \'year\' portion.'
+                        "Please ensure you have entered the expiry date 'year' portion."
                     )
                 );
 

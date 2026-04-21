@@ -6,7 +6,6 @@ use Page;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -51,7 +50,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         // ACCOUNT PAGE
         $accountPage = DataObject::get_one(AccountPage::class, null, $cacheDataObjectGetOne = false);
         if (! $accountPage) {
-            $accountPage = new AccountPage();
+            $accountPage = AccountPage::create();
             $accountPage->Title = 'Account';
             $accountPage->MenuTitle = 'Account';
             $accountPage->MetaTitle = 'Account';
@@ -71,7 +70,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
         $checkoutPage = DataObject::get_one(CheckoutPage::class, null, $cacheDataObjectGetOne = false);
         if (! $checkoutPage) {
-            $checkoutPage = new CheckoutPage();
+            $checkoutPage = CheckoutPage::create();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
             $checkoutPage->Title = 'Checkout';
             $checkoutPage->TermsAndConditionsMessage = 'You must agree with the terms and conditions to proceed. ';
@@ -108,7 +107,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             if ($orderConfirmationPage) {
                 $output->writeln('No need to create an Order Confirmation Page. It already exists.');
             } else {
-                $orderConfirmationPage = new OrderConfirmationPage();
+                $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->ParentID = $checkoutPage->ID;
                 $orderConfirmationPage->Title = 'Order confirmation';
                 $orderConfirmationPage->MenuTitle = 'Order confirmation';

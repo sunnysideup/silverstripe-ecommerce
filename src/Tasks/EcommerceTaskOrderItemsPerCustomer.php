@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -144,6 +145,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
         return '';
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

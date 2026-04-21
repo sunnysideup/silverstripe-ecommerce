@@ -41,7 +41,6 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
-use Symfony\Component\Validator\Validation;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderStep
@@ -701,6 +700,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         $sanitisedClassName = ClassHelpers::sanitise_class_name(OrderStep::class);
@@ -791,9 +791,8 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Core\Validation\ValidationResult
+     * @return ValidationResult
      */
-
     #[Override]
     public function validate(): ValidationResult
     {

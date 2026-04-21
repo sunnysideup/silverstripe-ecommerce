@@ -17,9 +17,6 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
@@ -43,7 +40,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @property string $ContentAboveCheckout
  * @property string $TermsAndConditionsMessage
  * @property int $TermsPageID
- * @method \Page TermsPage()
+ * @method Page TermsPage()
  * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageDataExtension
  */
 class CheckoutPage extends CartPage
@@ -60,7 +57,7 @@ class CheckoutPage extends CartPage
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/CheckoutPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/CheckoutPage-file.gif';
 
     /**
      * standard SS variable.
@@ -111,7 +108,7 @@ class CheckoutPage extends CartPage
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.';
+    private static $class_description = 'A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.';
 
     /**
      * Fields are scaffolded automatically, no need to ignore any.
@@ -124,7 +121,7 @@ class CheckoutPage extends CartPage
     }
 
     #[Override]
-    public function i18n_plural_name()
+    public function plural_name()
     {
         return _t('CheckoutPage.PLURALNAME', 'Checkout Pages');
     }
@@ -381,6 +378,7 @@ class CheckoutPage extends CartPage
         return $fields;
     }
 
+    #[Override]
     public function requireDefaultRecords()
     {
         if (SiteTree::config()->create_default_pages) {

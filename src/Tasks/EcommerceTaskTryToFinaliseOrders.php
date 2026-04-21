@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use Exception;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
@@ -125,6 +126,7 @@ class EcommerceTaskTryToFinaliseOrders extends BuildTask
         return $startAt;
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

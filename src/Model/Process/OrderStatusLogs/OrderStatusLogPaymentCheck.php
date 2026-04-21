@@ -124,5 +124,7 @@ class OrderStatusLogPaymentCheck extends OrderStatusLog
 
             return $html;
         }
+
+        return null;
     }
 }

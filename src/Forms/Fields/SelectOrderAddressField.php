@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\List\SS_List;
 use Override;
 use SilverStripe\Forms\OptionsetField;
@@ -22,7 +23,7 @@ class SelectOrderAddressField extends OptionsetField
      *
      * @param string                      $name      The field name
      * @param string                      $title     The field title
-     * @param \SilverStripe\Model\List\ArrayList $addresses
+     * @param ArrayList $addresses
      * @param string                      $value     The current value
      */
     public function __construct($name, $title = '', protected $addresses = null, $value = '')

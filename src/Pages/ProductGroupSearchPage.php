@@ -30,9 +30,9 @@ class ProductGroupSearchPage extends ProductGroup
 
     private static $table_name = 'ProductGroupSearchPage';
 
-    private static $icon = 'sunnysideup/ecommerce:client/images/icons/productgroupsearchpage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce:client/images/icons/productgroupsearchpage-file.gif';
 
-    private static $description = 'This page allowing the user to search for products.';
+    private static $class_description = 'This page allowing the user to search for products.';
 
     private static $singular_name = 'Product Search Page';
 
@@ -45,7 +45,7 @@ class ProductGroupSearchPage extends ProductGroup
     }
 
     #[Override]
-    public function i18n_plural_name()
+    public function plural_name()
     {
         return _t('ProductGroupSearchPage.PLURALNAME', 'Product Search Pages');
     }

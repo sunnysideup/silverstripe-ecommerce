@@ -206,6 +206,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return 'error';

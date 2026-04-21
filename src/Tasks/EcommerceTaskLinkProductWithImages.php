@@ -2,9 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Assets\File;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Symfony\Component\Console\Command\Command;
@@ -66,7 +66,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
 
         if ($this->productManyManyField) {
             $products = Product::get()->limit($this->limit, $this->start);
-            if ($this->productID) {
+            if ($this->productID !== 0) {
                 $products = $products->filter(['ID' => $this->productID]);
             }
 
@@ -118,6 +118,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
         return Command::SUCCESS;
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

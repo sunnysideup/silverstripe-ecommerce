@@ -55,6 +55,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
         foreach (['', '_Live'] as $suffix) {
             DB::query('UPDATE "Product' . $suffix . '" SET "Popularity" = 0, PopularityRank = 0');
         }
+
         $output->writeln('Reset popularity for all products');
     }
 

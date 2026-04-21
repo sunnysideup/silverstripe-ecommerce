@@ -29,7 +29,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
     {
         if (! Product::get()->exists()) {
             if (! ProductGroup::get()->exists()) {
-                $productGroup1 = new ProductGroup();
+                $productGroup1 = ProductGroup::create();
                 $productGroup1->Title = 'Products';
                 $productGroup1->Content = "
                     <p>This is the top level products page, it uses the <em>product group</em> page type, and it allows you to show your products checked as 'featured' on it. It also allows you to nest <em>product group</em> pages inside it.</p>
@@ -46,7 +46,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
 
             $content = "<p>This is a <em>product</em>. It's description goes into the Content field as a standard SilverStripe page would have it's content. This is an ideal place to describe your product.</p>";
 
-            $page1 = new Product();
+            $page1 = Product::create();
             $page1->Title = 'Example product';
             $page1->Content = $content . '<p>You may also notice that we have checked it as a featured product and it will be displayed on the main Products page.</p>';
             $page1->URLSegment = 'example-product';
@@ -57,7 +57,7 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page1->publish(Versioned::DRAFT, 'Live');
             $output->writeln("Product page 'Example product' created");
 
-            $page2 = new Product();
+            $page2 = Product::create();
             $page2->Title = 'Example product 2';
             $page2->Content = $content;
             $page2->URLSegment = 'example-product-2';

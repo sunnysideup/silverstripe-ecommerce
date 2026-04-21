@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
@@ -17,7 +18,7 @@ use Sunnysideup\Ecommerce\Pages\CartPage;
 /**
  * Class \Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
  *
- * @property \PageController|EcommerceSiteTreeExtensionController $owner
+ * @property PageController|EcommerceSiteTreeExtensionController $owner
  */
 class EcommerceSiteTreeExtensionController extends Extension
 {

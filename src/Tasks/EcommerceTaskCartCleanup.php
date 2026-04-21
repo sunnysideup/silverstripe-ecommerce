@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataList;
@@ -192,6 +193,7 @@ class EcommerceTaskCartCleanup extends BuildTask
         // This method is deprecated and should be refactored
     }
 
+    #[Override]
     public function getOptions(): array
     {
         return [

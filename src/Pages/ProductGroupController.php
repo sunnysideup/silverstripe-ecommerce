@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\List\ArrayList;
@@ -146,7 +147,7 @@ class ProductGroupController extends PageController
     /**
      * get the unpaginated list. Only set once.
      *
-     * @return DataList|\SilverStripe\Model\List\ArrayList
+     * @return DataList|ArrayList
      */
     public function getProductList()
     {
@@ -646,6 +647,7 @@ class ProductGroupController extends PageController
         return $this->Link($action);
     }
 
+    #[Override]
     public function Link($action = null): string
     {
         return $this->getLinkTemplate($action);
@@ -853,6 +855,7 @@ class ProductGroupController extends PageController
         //do nothing here, but on ProductGroupSearchPage, we set it as the baselist....
     }
 
+    #[Override]
     protected function afterHandleRequest()
     {
         if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
@@ -901,6 +904,7 @@ class ProductGroupController extends PageController
         return $this->getUserPreferencesClass()->getLinkTemplate($action, $type, $replacementForType);
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -916,6 +920,7 @@ class ProductGroupController extends PageController
         $this->saveUserPreferences();
         $this->setSearchString();
         //makes sure best match only applies to search -i.e. reset otherwise.
+        return null;
     }
 
     protected function setIdArrayDefaultSort($idArray, $alternativeSort = null)
