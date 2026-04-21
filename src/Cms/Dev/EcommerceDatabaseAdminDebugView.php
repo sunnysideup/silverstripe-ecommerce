@@ -23,4 +23,9 @@ class EcommerceDatabaseAdminDebugView extends DebugView
     {
         echo $controller->RenderWith($controller::class);
     }
+
+    public function writeFooter()
+    {
+        echo '<p><a href="' . Controller::join_links(Controller::curr()->Link(), 'run') . '">Run Task</a></p>';
+    }
 }

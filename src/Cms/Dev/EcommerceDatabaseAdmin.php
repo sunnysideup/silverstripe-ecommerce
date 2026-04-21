@@ -11,6 +11,10 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\TaskRunner;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * Class \Sunnysideup\Ecommerce\Cms\Dev\EcommerceDatabaseAdmin
@@ -291,10 +295,14 @@ class EcommerceDatabaseAdmin extends TaskRunner
                 echo "<h1>Running task '{$title}'...</h1>\n";
             }
 
-            $task = new $taskName();
+            $task = $taskName::create();
             if ($task->isEnabled()) {
-                $task->verbose = true;
-                $task->run($request);
+
+                $definition = new InputDefinition($task->getOptions());
+                $input = new ArrayInput(['verbose' => true], $definition);
+                $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
+                $task->run($input, $output);
+
             } else {
                 echo sprintf('<p>%s is disabled</p>', $title);
             }

@@ -31,7 +31,7 @@ class BuyableFieldType extends DBPolymorphicForeignKey
     }
 
     #[Override]
-    public function compositeDatabaseFields()
+    public function compositeDatabaseFields(): array
     {
         // Ensure the table level cache exists
         if (empty(self::$classname_spec_cache[$this->tableName])) {

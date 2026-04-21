@@ -31,7 +31,7 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
 
     protected static string $description = 'Finds product images (or other files) based on their name. That is, any image name [InteralItemID]_[two digits].[png/gif/jpg/pdf/(etc)] will automatically be linked to the product. For example SKUAAFF_1 or SKU_02. All files ending in a number from 00 to 99 will be added (e.g. 02, 5 or 55). Also SKUAAFF.jpg (without the standard ending with underscore and number) will be added to the product where InternalItemID equals SKUAAFF.';
 
-    protected static string $commandName = 'ecommerce:link-product-images';
+    protected static string $commandName = 'ecommerce-link-product-images';
 
     /**
      * In the default e-commerce, each product only has one image.

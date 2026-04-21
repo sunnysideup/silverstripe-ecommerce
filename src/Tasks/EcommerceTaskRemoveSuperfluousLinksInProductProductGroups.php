@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:clean-product-links';
+    protected static string $commandName = 'ecommerce-clean-product-links';
 
     protected string $title = 'Delete superfluous entries in Product_ProductGroups';
 
@@ -56,7 +56,7 @@ class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTas
                 LEFT JOIN ProductGroup ON ProductGroup.ID = ProductGroupID
             WHERE Product.ID IS NULL OR ProductGroup.ID IS NULL
         ');
-        
+
         if ($this->verbose) {
             $output->writeln('After: ' . DB::query('SELECT COUNT(ID) FROM Product_ProductGroups;')->value());
         }

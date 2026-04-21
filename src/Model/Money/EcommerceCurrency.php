@@ -7,6 +7,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataList;
@@ -737,36 +738,52 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
     }
 
     #[Override]
-    public function validate()
+    public function validate(): ValidationResult
     {
-        $result = parent::validate();
-        $errors = [];
-        if (! $this->Code || 3 !== mb_strlen((string) $this->Code)) {
-            $errors[] = 'The code must be 3 characters long.';
-        }
+        $this->beforeExtending('updateValidate', function (ValidationResult $result): void {
+            if (! $this->Code || mb_strlen((string) $this->Code) !== 3) {
+                $result->addFieldError(
+                    'Code',
+                    'The code must be 3 characters long.'
+                );
+            }
 
-        if (! $this->Name) {
-            $errors[] = 'The name is required.';
-        }
+            if (! $this->Name) {
+                $result->addFieldError(
+                    'Name',
+                    'The name is required.'
+                );
+            }
 
-        if ($errors === []) {
+            if (! $this->Code || ! $this->Name) {
+                return;
+            }
+
             $this->Code = strtoupper((string) $this->Code);
-            // Check that there are no 2 same code currencies in use
+
             if ($this->isChanged('Code')) {
                 $exists = EcommerceCurrency::get()
-                    ->where("UPPER(\"Code\") = '" . $this->Code . "'")->exclude(['ID' => (int) $this->ID])
+                    ->filterAny([
+                        'Code:ExactMatch:nocase' => $this->Code,
+                    ])
+                    ->exclude([
+                        'ID' => (int) $this->ID,
+                    ])
                     ->exists();
+
                 if ($exists) {
-                    $errors[] = sprintf("There is alreay another currency in use with code: '%s'.", $this->Code);
+                    $result->addFieldError(
+                        'Code',
+                        sprintf(
+                            'There is already another currency in use with code: \'%s\'.',
+                            $this->Code
+                        )
+                    );
                 }
             }
-        }
+        });
 
-        foreach ($errors as $error) {
-            $result->addError($error);
-        }
-
-        return $result;
+        return parent::validate();
     }
 
     /**

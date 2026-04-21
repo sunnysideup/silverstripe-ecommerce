@@ -50,6 +50,7 @@ use Sunnysideup\Ecommerce\Pages\CartPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\PhoneField\Model\Fieldtypes\PhoneField;
 
 class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
 {
@@ -97,7 +98,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         'CurrenciesExplanation' => 'HTMLText',
         'AllowFreeProductPurchase' => 'Boolean',
         'ShowFullDetailsForProducts' => 'Boolean',
-        'PhoneNumberForShop' => 'PhoneField',
+        'PhoneNumberForShop' => PhoneField::class,
         'ShippingDescriptionShort' => 'Text',
     ];
 

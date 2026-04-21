@@ -31,7 +31,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
 
     protected static string $description = 'Orders where the order step does not exist.';
 
-    protected static string $commandName = 'ecommerce:orders-without-order-step';
+    protected static string $commandName = 'ecommerce-orders-without-order-step';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

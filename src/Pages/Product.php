@@ -31,6 +31,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\UnsavedRelationList;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -64,6 +65,8 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputDefinition;
 
 /**
  * This is a standard Product page-type with fields like
@@ -1552,9 +1555,14 @@ class Product extends Page implements BuyableModel
     public function onAfterDelete()
     {
         parent::onAfterDelete();
-        $obj = EcommerceTaskRemoveSuperfluousLinksInProductProductGroups::create();
-        $obj->setVerbose(false);
-        $obj->run(null);
+        $task = $obj = EcommerceTaskRemoveSuperfluousLinksInProductProductGroups::create();
+        $definition = new InputDefinition($task->getOptions());
+        $input = new ArrayInput(['verbose' => true], $definition);
+        $buffered = new BufferedOutput();
+        $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
+        $output->setWrappedOutput($buffered);
+        $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
+        $task->run($input, $output);
     }
 
     public function getArrayOfImages(?bool $deleteMissingImages = false): array

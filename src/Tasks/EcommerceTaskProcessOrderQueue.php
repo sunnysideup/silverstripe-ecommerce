@@ -32,7 +32,7 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
     protected static string $description = 'Go through order queue and try to finalise all the orders in it.';
 
-    protected static string $commandName = 'ecommerce:process-order-queue';
+    protected static string $commandName = 'ecommerce-process-order-queue';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

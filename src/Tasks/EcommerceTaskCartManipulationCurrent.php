@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskCartManipulationCurrent extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:clear-current-cart';
+    protected static string $commandName = 'ecommerce-clear-current-cart';
 
     protected string $title = 'Clear the current Cart';
 

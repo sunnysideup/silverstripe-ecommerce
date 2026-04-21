@@ -21,7 +21,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskTemplateTest extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:template-test';
+    protected static string $commandName = 'ecommerce-template-test';
 
     protected string $title = 'Get help with building templates';
 

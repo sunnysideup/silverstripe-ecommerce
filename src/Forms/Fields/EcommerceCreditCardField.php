@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use Override;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Requirements;
 
@@ -89,35 +90,46 @@ class EcommerceCreditCardField extends TextField
      *
      * @reference: http://en.wikipedia.org/wiki/Luhn_algorithm
      *
-     * @param mixed $validator
      */
     #[Override]
-    public function validate($validator)
+    public function validate(): ValidationResult
     {
-        // If the field is empty then don't return an invalidation message
-        $cardNumber = trim(implode('', $this->value));
-        if (! $cardNumber && ! $this->Required()) {
-            return true;
-        }
+        $this->beforeExtending('updateValidate', function (ValidationResult $result): void {
+            // If empty and not required → valid
+            $cardNumber = trim(implode('', (array) $this->value));
 
-        for ($sum = 0, $i = strlen($cardNumber) - 1; $i >= 0; --$i) {
-            $digit = (int) $cardNumber[$i];
-            $sum += ($i % 2) === 0 ? array_sum(str_split($digit * 2)) : $digit;
-        }
+            if ($cardNumber === '' && ! $this->Required()) {
+                return;
+            }
 
-        if (! (($sum % 10) === 0)) {
-            $validator->validationError(
-                $this->name,
-                _t(
-                    'Form.VALID_CREDIT_CARD_NUMBER',
-                    'Please ensure you have entered a valid card number.'
-                ),
-                'bad'
-            );
+            $sum = 0;
+            $length = strlen($cardNumber);
 
-            return false;
-        }
+            for ($i = $length - 1; $i >= 0; --$i) {
+                $digit = (int) $cardNumber[$i];
 
-        return true;
+                if ((($length - $i) % 2) === 0) {
+                    $digit *= 2;
+
+                    if ($digit > 9) {
+                        $digit -= 9;
+                    }
+                }
+
+                $sum += $digit;
+            }
+
+            if (($sum % 10) !== 0) {
+                $result->addFieldError(
+                    $this->getName(),
+                    _t(
+                        'Form.VALID_CREDIT_CARD_NUMBER',
+                        'Please ensure you have entered a valid card number.'
+                    )
+                );
+            }
+        });
+
+        return parent::validate();
     }
 }

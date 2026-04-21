@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskLinkOrderAddressesAtBothEnds extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:link-order-addresses';
+    protected static string $commandName = 'ecommerce-link-order-addresses';
 
     protected string $title = 'Links the Order Addresses at the Order And Address side';
 

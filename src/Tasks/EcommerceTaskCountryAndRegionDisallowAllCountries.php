@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskCountryAndRegionDisallowAllCountries extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:disallow-all-countries';
+    protected static string $commandName = 'ecommerce-disallow-all-countries';
 
     protected string $title = 'Disallows sale to all countries';
 

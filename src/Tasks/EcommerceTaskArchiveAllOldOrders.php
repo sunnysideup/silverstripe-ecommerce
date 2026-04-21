@@ -28,7 +28,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
 {
     private const string AGO_STATEMENT = '-6 months';
 
-    protected static string $commandName = 'ecommerce:archive-old-orders';
+    protected static string $commandName = 'ecommerce-archive-old-orders';
 
     protected string $title = 'Archive all old orders';
 

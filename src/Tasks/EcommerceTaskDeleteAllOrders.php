@@ -23,7 +23,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
 {
     public bool $verbose = false;
 
-    protected static string $commandName = 'ecommerce:delete-all-orders';
+    protected static string $commandName = 'ecommerce-delete-all-orders';
 
     protected string $title = 'Deletes all orders - CAREFUL!';
 
@@ -70,7 +70,7 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     {
         // @TODO (SS6 upgrade) - Check if dev mode detection is still needed/available
         // Original code checked Director::isDev() and Director::isLive()
-        
+
         if (!$input->getOption('confirm')) {
             $output->writeln('ERROR: This command will delete ALL orders permanently!');
             $output->writeln('To confirm, run with --confirm flag:');

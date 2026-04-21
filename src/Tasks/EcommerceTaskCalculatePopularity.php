@@ -24,7 +24,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
 
     protected static string $description = 'Goes through all the products and calculates their popularity.';
 
-    protected static string $commandName = 'ecommerce:calculate-product-popularity';
+    protected static string $commandName = 'ecommerce-calculate-product-popularity';
 
     /**
      * this is the decay rate for the popularity. The higher the number, the faster the decay.

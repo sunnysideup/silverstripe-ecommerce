@@ -162,7 +162,7 @@ class ProductSearchForm extends Form
     }
 
     #[Override]
-    public function forTemplate()
+    public function forTemplate(): string
     {
         if ($this->hasOnlyThisSection()) {
             $title = _t('ProductSearchForm.ONLY_SHOW', 'Only search in');

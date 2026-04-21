@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskCartManipulationDebug extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:debug-cart-links';
+    protected static string $commandName = 'ecommerce-debug-cart-links';
 
     protected string $title = 'Show debug links';
 
@@ -29,11 +29,11 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
     {
         $myProductGroup = DataObject::get_one(ProductGroup::class);
         $myProduct = DataObject::get_one(Product::class);
-        
+
         $output->writeln('Please use the links below:');
         $output->writeln('  - Debug cart: /shoppingcart/debug/');
         $output->writeln('  - View cart response: /shoppingcart/ajaxtest/?ajax=1');
-        
+
         if ($myProductGroup) {
             $output->writeln('  - Debug product group: ' . $myProductGroup->Link('debug'));
         }

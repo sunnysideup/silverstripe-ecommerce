@@ -16,7 +16,7 @@ class EcommerceTaskDebugCart extends BuildTask
 
     protected static string $description = 'Check all the values in your cart to find any potential errors.';
 
-    protected static string $commandName = 'ecommerce:debug-cart';
+    protected static string $commandName = 'ecommerce-debug-cart';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

@@ -23,7 +23,7 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
 
     protected static string $description = 'Fixes a bunch of links between Products and their Variations';
 
-    protected static string $commandName = 'ecommerce:fix-product-variations';
+    protected static string $commandName = 'ecommerce-fix-product-variations';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

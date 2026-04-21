@@ -112,7 +112,7 @@ class EcommerceTaskCartCleanup extends BuildTask
      */
     protected $leftMemberJoin = '';
 
-    protected static string $commandName = 'ecommerce:cart-cleanup';
+    protected static string $commandName = 'ecommerce-cart-cleanup';
 
     protected string $title = 'Clear old carts';
 

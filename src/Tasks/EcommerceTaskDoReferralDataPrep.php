@@ -25,21 +25,21 @@ class EcommerceTaskDoReferralDataPrep extends BuildTask
 
     protected static string $description = 'Prepares all Referral Data for processing.';
 
-    protected static string $commandName = 'ecommerce:prepare-referral-data';
+    protected static string $commandName = 'ecommerce-prepare-referral-data';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $limit = (int) $input->getOption('limit') ?: 99999999;
         $start = (int) $input->getOption('start') ?: 0;
-        
+
         $finished = $this->doDataPrep($limit, $start, false, $output);
-        
+
         if ($finished) {
             $output->writeln('Referral data preparation completed');
         } else {
             $output->writeln('Referral data preparation in progress. Run again with --start=' . ($start + $limit));
         }
-        
+
         return Command::SUCCESS;
     }
 

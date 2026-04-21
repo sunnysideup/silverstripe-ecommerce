@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskAddCustomersToCustomerGroups extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:add-customers-to-groups';
+    protected static string $commandName = 'ecommerce-add-customers-to-groups';
 
     protected string $title = 'Add Customers to Customer Group';
 

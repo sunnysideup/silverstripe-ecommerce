@@ -25,7 +25,7 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
 
     protected static string $description = 'Sets the starting order number with all order numbers following this number.';
 
-    protected static string $commandName = 'ecommerce:set-order-id-starting-number';
+    protected static string $commandName = 'ecommerce-set-order-id-starting-number';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

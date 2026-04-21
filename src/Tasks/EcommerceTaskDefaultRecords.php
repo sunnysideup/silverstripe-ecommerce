@@ -41,7 +41,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
      */
     protected static string $description = 'These default records are basic stuff like an account page, a few products, a product group.';
 
-    protected static string $commandName = 'ecommerce:default-records';
+    protected static string $commandName = 'ecommerce-default-records';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

@@ -29,7 +29,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
 
     protected static string $description = "This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between. NB: It also adds a submit record. This task is basically for orders that never got archived.";
 
-    protected static string $commandName = 'ecommerce:archive-all-orders-with-items';
+    protected static string $commandName = 'ecommerce-archive-all-orders-with-items';
 
     private static $payment_table = 'EcommercePayment';
 

@@ -23,7 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class UpdateProductImages extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:update-product-images';
+    protected static string $commandName = 'ecommerce-update-product-images';
 
     protected string $title = 'Sets Product Images to a new ClassName compatible with Ecommerce for Silverstripe 4.0';
 

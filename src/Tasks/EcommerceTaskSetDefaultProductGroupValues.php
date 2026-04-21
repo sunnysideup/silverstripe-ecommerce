@@ -24,7 +24,7 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 
     protected static string $description = 'Set default product group values such as DefaultSortOrder.';
 
-    protected static string $commandName = 'ecommerce:set-default-product-group-values';
+    protected static string $commandName = 'ecommerce-set-default-product-group-values';
 
     protected $fieldsToCheck = [
         'SORT' => 'DefaultSortOrder',

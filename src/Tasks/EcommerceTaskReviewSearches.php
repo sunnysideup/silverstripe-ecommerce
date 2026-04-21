@@ -59,7 +59,7 @@ class EcommerceTaskReviewSearches extends BuildTask
      */
     protected static string $description = 'What did people search for on the website, you can use the options to query different sets.';
 
-    protected static string $commandName = 'ecommerce:review-searches';
+    protected static string $commandName = 'ecommerce-review-searches';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

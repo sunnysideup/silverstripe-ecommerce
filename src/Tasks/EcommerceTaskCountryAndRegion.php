@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskCountryAndRegion extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:create-countries';
+    protected static string $commandName = 'ecommerce-create-countries';
 
     protected string $title = 'Create standard countries and regions';
 

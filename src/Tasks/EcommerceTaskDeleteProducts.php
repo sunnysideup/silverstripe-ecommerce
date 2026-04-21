@@ -26,7 +26,7 @@ class EcommerceTaskDeleteProducts extends BuildTask
 
     protected static string $description = 'Removes all Buyables (Products) from the database.';
 
-    protected static string $commandName = 'ecommerce:delete-products';
+    protected static string $commandName = 'ecommerce-delete-products';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

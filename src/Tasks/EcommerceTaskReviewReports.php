@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskReviewReports extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:review-reports';
+    protected static string $commandName = 'ecommerce-review-reports';
 
     protected string $title = 'Review E-commerce Pages using the Reports interface';
 

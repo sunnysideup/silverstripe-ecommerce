@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class EcommerceTaskAddDefaultProducts extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:add-default-products';
+    protected static string $commandName = 'ecommerce-add-default-products';
 
     protected string $title = 'Add default Products';
 

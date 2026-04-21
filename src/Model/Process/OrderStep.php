@@ -8,6 +8,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -40,6 +41,7 @@ use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepArchived;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepCreated;
 use Sunnysideup\Ecommerce\Model\Process\OrderSteps\OrderStepSubmitted;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Symfony\Component\Validator\Validation;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderStep
@@ -791,24 +793,40 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * @return \SilverStripe\Core\Validation\ValidationResult
      */
-    #[Override]
-    public function validate()
-    {
-        $result = parent::validate();
-        $anotherOrderStepWithSameNameOrCode = OrderStep::get()
-            ->filter(
-                [
-                    'Name' => $this->Name,
-                    'Code' => strtoupper((string) $this->Code),
-                ]
-            )
-            ->exclude(['ID' => (int) $this->ID])
-            ->First();
-        if ($anotherOrderStepWithSameNameOrCode) {
-            $result->addError(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
-        }
 
-        return $result;
+    #[Override]
+    public function validate(): ValidationResult
+    {
+        $this->beforeExtending('updateValidate', function (ValidationResult $result): void {
+            $name = $this->Name;
+            $code = strtoupper((string) $this->Code);
+
+            if (! $name || ! $code) {
+                return;
+            }
+
+            $exists = OrderStep::get()
+                ->filter([
+                    'Name' => $name,
+                    'Code' => $code,
+                ])
+                ->exclude([
+                    'ID' => (int) $this->ID,
+                ])
+                ->exists();
+
+            if ($exists) {
+                $result->addFieldError(
+                    'Name',
+                    _t(
+                        'OrderStep.ORDERSTEPALREADYEXISTS',
+                        'An order status with this name already exists. Please change the name and try again.'
+                    )
+                );
+            }
+        });
+
+        return parent::validate();
     }
 
     // moving between statusses...

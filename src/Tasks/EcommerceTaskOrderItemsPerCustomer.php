@@ -25,7 +25,7 @@ class EcommerceTaskOrderItemsPerCustomer extends BuildTask
 
     protected static string $description = 'Allows download of all sales items with all details as CSV. Excludes sales made by Admins';
 
-    protected static string $commandName = 'ecommerce:export-order-items';
+    protected static string $commandName = 'ecommerce-export-order-items';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

@@ -25,7 +25,7 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
 
     protected static string $description = 'Fixes broken order submission links (submission records without an order).';
 
-    protected static string $commandName = 'ecommerce:fix-broken-order-submission';
+    protected static string $commandName = 'ecommerce-fix-broken-order-submission';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {

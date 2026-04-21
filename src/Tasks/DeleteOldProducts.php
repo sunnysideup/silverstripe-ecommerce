@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 class DeleteOldProducts extends BuildTask
 {
-    protected static string $commandName = 'ecommerce:delete-old-products';
+    protected static string $commandName = 'ecommerce-delete-old-products';
 
     protected string $title = 'Delete products that are not for sale and have not been sold for a year';
 

@@ -30,7 +30,7 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
 
     protected static string $description = "This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
-    protected static string $commandName = 'ecommerce:archive-all-submitted-orders';
+    protected static string $commandName = 'ecommerce-archive-all-submitted-orders';
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
