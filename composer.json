@@ -67,12 +67,5 @@
       "type": "vcs",
       "url": "https://github.com/biwac-websolutions-ag/silverstripe-grouped-cms-menu.git"
     }
-  ],
-  "yet-to-update": {
-    "symbiote/silverstripe-grouped-cms-menu": {
-      "section": "require",
-      "current": "^4.0@stable",
-      "reason": "no-compatible-stable-release"
-    }
-  }
+  ]
 }
