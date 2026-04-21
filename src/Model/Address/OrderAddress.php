@@ -622,7 +622,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     }
 
     #[Override]
-    public function debug()
+    public function debug(): string
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }

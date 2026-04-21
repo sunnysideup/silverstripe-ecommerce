@@ -516,7 +516,7 @@ class OrderAttribute extends DataObject implements EditableEcommerceObject
      * Access through : /shoppingcart/debug/.
      */
     #[Override]
-    public function debug()
+    public function debug(): string
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }

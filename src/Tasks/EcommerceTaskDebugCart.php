@@ -26,7 +26,7 @@ class EcommerceTaskDebugCart extends BuildTask
         return Command::SUCCESS;
     }
 
-    public static function debug_object($obj)
+    public static function debug_object($obj): string
     {
         $html = '
             <h2>' . $obj->ClassName . '</h2><ul>';

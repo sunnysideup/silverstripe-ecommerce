@@ -148,7 +148,7 @@ class ProductOrderItem extends OrderItem
      * @return string
      */
     #[Override]
-    public function debug()
+    public function debug(): string
     {
         $title = $this->getTableTitle();
         $productID = $this->BuyableID;

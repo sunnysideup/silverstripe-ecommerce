@@ -206,7 +206,7 @@ class ProductController extends PageController
         return $this->PreviousProduct() || $this->NextProduct();
     }
 
-    public function debug()
+    public function debug(): string
     {
         $member = Security::getCurrentUser();
         if (! $member || ! $member->IsShopAdmin()) {

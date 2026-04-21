@@ -1014,7 +1014,7 @@ class OrderItem extends OrderAttribute
     }
 
     #[Override]
-    public function debug()
+    public function debug(): string
     {
         $html = EcommerceTaskDebugCart::debug_object($this);
         $html .= '<ul>';

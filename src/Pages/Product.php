@@ -382,23 +382,23 @@ class Product extends Page implements BuyableModel
         $fields->dataFieldByName('Title')->setTitle(_t('Product.NAME', 'Product Name'));
 
         $config = EcommerceConfig::inst();
-        
+
         // Get scaffolded fields and customize them
         $priceField = $fields->dataFieldByName('Price');
         if ($priceField) {
             $priceField->setTitle(_t('Product.PRICE', 'Price'));
         }
-        
+
         $internalItemIDField = $fields->dataFieldByName('InternalItemID');
         if ($internalItemIDField) {
             $internalItemIDField->setTitle(_t('Product.CODE', 'Product Code'));
         }
-        
+
         $allowPurchaseField = $fields->dataFieldByName('AllowPurchase');
         if ($allowPurchaseField) {
             $allowPurchaseField->setTitle(_t('Product.ALLOWPURCHASE', 'Allow product to be purchased'));
         }
-        
+
         // Add main fields in order
         $fields->addFieldsToTab(
             'Root.Main',
@@ -424,7 +424,7 @@ class Product extends Page implements BuyableModel
 
         // Get scaffolded UseParentImage field
         $useParentImageField = $fields->dataFieldByName('UseParentImage');
-        
+
         // images - custom upload field and relations
         $fields->addFieldsToTab(
             'Root.Images',
@@ -454,23 +454,23 @@ class Product extends Page implements BuyableModel
         if ($featuredProductField) {
             $featuredProductField->setTitle(_t('Product.FEATURED', 'Featured Product'));
         }
-        
+
         $shortDescriptionField = $fields->dataFieldByName('ShortDescription');
         if ($shortDescriptionField) {
             $shortDescriptionField->setTitle(_t('Product.SHORT_DESCRIPTION', 'Short Description'));
         }
-        
+
         $contentField = $fields->dataFieldByName('Content');
         if ($contentField) {
             $contentField->setTitle(_t('Product.DESCRIPTION', 'Product Description'));
             $contentField->setRows(3);
         }
-        
+
         $hasPhysicalDispatchField = $fields->dataFieldByName('HasPhysicalDispatch');
         if ($hasPhysicalDispatchField) {
             $hasPhysicalDispatchField->setTitle(_t('Product.HAS_PHYSICAL_DISPATCH', 'Has Physical Dispatch'));
         }
-        
+
         // Add detail fields
         $detailFields = array_filter([
             $featuredProductField,
@@ -478,7 +478,7 @@ class Product extends Page implements BuyableModel
             $contentField,
             $hasPhysicalDispatchField,
         ]);
-        
+
         if ($detailFields) {
             $fields->addFieldsToTab('Root.Details', $detailFields);
         }
@@ -526,12 +526,13 @@ class Product extends Page implements BuyableModel
             [
                 ReadonlyField::create('FullName', _t('Product.FULLNAME', 'Full Name')),
                 ReadonlyField::create('ProductBreadcrumb', _t('Product.PRODUCT_BREADCRUMP', 'Breadcrumb')),
-                (ReadonlyField::create(
-                    'FullSiteTreeSortNice',
-                    _t('Product.FULLSITETREESORT', 'Full sort index'),
-                    /// note use use string to avoid issues with int only supporting 19 digits
-                    GetParentDetails::format_sort_numbers((string) $this->FullSiteTreeSort)
-                )
+                (
+                    ReadonlyField::create(
+                        'FullSiteTreeSortNice',
+                        _t('Product.FULLSITETREESORT', 'Full sort index'),
+                        /// note use use string to avoid issues with int only supporting 19 digits
+                        GetParentDetails::format_sort_numbers((string) $this->FullSiteTreeSort)
+                    )
                 )
                     ->setDescription('This number is used to sort the product in a list of all products.'),
             ]
@@ -625,7 +626,7 @@ class Product extends Page implements BuyableModel
                 );
                 $searchBoostField->setScale(2);
             }
-            
+
             $fields->addFieldsToTab(
                 'Root.Search',
                 array_filter([
@@ -1468,7 +1469,7 @@ class Product extends Page implements BuyableModel
         return $this->ID;
     }
 
-    public function debug()
+    public function debug(): string
     {
         $config = EcommerceConfig::inst();
 

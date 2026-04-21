@@ -11,6 +11,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -1048,7 +1049,7 @@ class ShoppingCart
     /**
      * Produces a debug of the shopping cart.
      */
-    public function debug()
+    public function debug(): ModelData | string
     {
         if (Director::isDev() || Permission::check('ADMIN')) {
             print_r($this->currentOrder());
@@ -1133,6 +1134,7 @@ class ShoppingCart
         } else {
             echo 'Please log in as admin first';
         }
+        return '----';
     }
 
     /**

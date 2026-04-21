@@ -41,6 +41,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -3938,7 +3939,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return string
      */
     #[Override]
-    public function debug()
+    public function debug(): string
     {
         $this->calculateOrderAttributes(true);
 

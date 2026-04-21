@@ -536,7 +536,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * @return string
      */
     #[Override]
-    public function debug()
+    public function debug(): string
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }

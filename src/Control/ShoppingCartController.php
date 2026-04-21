@@ -13,6 +13,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
@@ -771,7 +772,7 @@ class ShoppingCartController extends Controller
      * Log in as an administrator and visit mysite/shoppingcart/debug.
      */
     #[Override]
-    public function debug()
+    public function Debug(): ModelData | string
     {
         if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
             return $this->cart->debug();
