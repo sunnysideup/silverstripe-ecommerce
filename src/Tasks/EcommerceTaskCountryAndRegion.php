@@ -32,11 +32,9 @@ class EcommerceTaskCountryAndRegion extends BuildTask
         $array = EcommerceCountry::get_country_dropdown();
         $allowedArray = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
         foreach ($array as $code => $name) {
-            $ecommerceCountry = DataObject::get_one(
-                EcommerceCountry::class,
+            $ecommerceCountry = EcommerceCountry::get()->filter(
                 ['Code' => Convert::raw2sql($code)],
-                $cacheDataObjectGetOne = false
-            );
+            )->first();
             if ($ecommerceCountry) {
                 //do nothing
                 ++$count;

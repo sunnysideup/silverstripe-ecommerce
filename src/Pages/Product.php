@@ -67,6 +67,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProd
 use Sunnysideup\Vardump\ArrayToTable;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * This is a standard Product page-type with fields like

@@ -9,6 +9,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
@@ -20,6 +21,8 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputDefinition;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry
@@ -738,7 +741,10 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         parent::requireDefaultRecords();
         if ((! EcommerceCountry::get()->exists()) || isset($_REQUEST['resetecommercecountries'])) {
             $task = EcommerceTaskCountryAndRegion::create();
-            $task->run(null);
+            $definition = new InputDefinition($task->getOptions());
+            $input = new ArrayInput([], $definition);
+            $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
+            $task->run($input, $output);
         }
     }
 
