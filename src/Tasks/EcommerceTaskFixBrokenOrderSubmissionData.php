@@ -6,6 +6,9 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * After a bug in the saving of orders in the CMS
@@ -20,15 +23,17 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
 {
     protected string $title = 'Fixes broken order submission links';
 
-    protected $description = 'Fixes broken order submission links (submission records without an order).';
+    protected static string $description = 'Fixes broken order submission links (submission records without an order).';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce:fix-broken-order-submission';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $problem = DB::query('SELECT COUNT(OrderStatusLog.ID) FROM OrderStatusLogSubmitted INNER JOIN OrderStatusLog ON OrderStatusLogSubmitted.ID = OrderStatusLog.ID WHERE OrderID = 0');
         if ($problem->value()) {
-            DB::alteration_message('the size of the problem is: ' . $problem->value(), 'deleted');
+            $output->writeln('the size of the problem is: ' . $problem->value());
         } else {
-            DB::alteration_message('No broken links found.', 'created');
+            $output->writeln('No broken links found.');
         }
 
         $rows = DB::query('Select "ID" from "Order" WHERE "StatusID" > 1');
@@ -48,12 +53,14 @@ class EcommerceTaskFixBrokenOrderSubmissionData extends BuildTask
                     $innerInners = DB::query($sql);
                     if ($innerInners) {
                         foreach ($innerInners as $innerInnerRow) {
-                            DB::alteration_message('FOUND ' . $innerInnerRow['ID'], 'created');
+                            $output->writeln('FOUND ' . $innerInnerRow['ID']);
                             DB::query(sprintf('UPDATE "OrderStatusLog" SET "OrderID" = %s WHERE "OrderStatusLog"."ID" = ', $orderID) . $innerInnerRow['ID'] . ' AND "OrderID" < 1');
                         }
                     }
                 }
             }
         }
+
+        return Command::SUCCESS;
     }
 }

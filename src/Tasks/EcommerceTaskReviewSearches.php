@@ -3,12 +3,11 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\NumericField;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceSearchHistoryFormField;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @author: Nicolaas [at] Sunny Side Up .co.nz
@@ -58,29 +57,31 @@ class EcommerceTaskReviewSearches extends BuildTask
      *
      * @var string
      */
-    protected $description = '
-        What did people search for on the website, you can use the days, min and ago GET variables to query different sets.';
+    protected static string $description = 'What did people search for on the website, you can use the options to query different sets.';
 
-    private static $segment = 'EcommerceTaskReviewSearches';
+    protected static string $commandName = 'ecommerce:review-searches';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $maxRows = (int) preg_replace('#[^\d.]#', '', (string) $request->getVar('maxrows'));
+        // @TODO (SS6 upgrade) - This task was designed for HTTP with form generation
+        // It has been converted to CLI but may need additional work for optimal UX
+
+        $maxRows = (int) $input->getOption('maxrows');
         if ($maxRows === 0) {
             $maxRows = $this->defaultMaxRows;
         }
 
-        $days = (int) ($request->getVar('days') - 0);
+        $days = (int) $input->getOption('days');
         if ($days === 0) {
             $days = $this->defaultDays;
         }
 
-        $countMin = (int) ($request->getVar('min') - 0);
+        $countMin = (int) $input->getOption('min');
         if ($countMin === 0) {
             $countMin = $this->defaultMinimum;
         }
 
-        $endingDaysBack = (int) ($request->getVar('ago') - 0);
+        $endingDaysBack = (int) $input->getOption('ago');
         if ($endingDaysBack === 0) {
             $endingDaysBack = $this->endingDaysBack;
         }
@@ -91,47 +92,18 @@ class EcommerceTaskReviewSearches extends BuildTask
             ->setMaxRows($maxRows)
             ->setEndingDaysBack($endingDaysBack)
         ;
-        echo $field->forTemplate();
+        $output->writeForHtml($field->forTemplate());
 
-        $fields = FieldList::create(
-            HeaderField::create(
-                'ShowResultsFor',
-                'Show results for ...'
-            ),
-            NumericField::create(
-                'days',
-                'Number of days',
-                $_GET['days'] ?? $this->defaultDays
-            )->setDescription('For example, enter 10 to get results from a 10 day period.'),
-            NumericField::create(
-                'maxrows',
-                'Maximum Number of Rows?',
-                $_GET['maxrows'] ?? $this->defaultMaxRows
-            )->setDescription('For example, enter 10 to get results from a 10 day period.'),
-            NumericField::create(
-                'ago',
-                'Up to how many days go',
-                $_GET['ago'] ?? $this->endingDaysBack
-            )->setDescription('For example, entering 365 days means you get all statistics the specified number of days up to one year ago.'),
-            NumericField::create(
-                'min',
-                'Count treshold',
-                $_GET['min'] ?? $this->defaultMinimum
-            )->setDescription('Minimum number of searches for it to show up in the statistics. For example, enter five to show only phrases that were searched for at least five times during the specified period.')
-        );
-        $actions = FieldList::create(FormAction::create('run')->setTitle('show results'));
-        $form = Form::create(null, 'SearchFields', $fields, $actions, null);
-        $form->setAttribute('method', 'get');
-        $form->setAttribute('action', $this->Link());
-        echo $form->forTemplate();
-        echo '<style>
-            div.field {margin-bottom: 20px;}
-            .right {font-style:italics; color: #555;}
-        </style>';
+        return Command::SUCCESS;
     }
 
-    public function Link($action = null)
+    public function getOptions(): array
     {
-        return '/dev/tasks/EcommerceTaskReviewSearches/';
+        return [
+            new InputOption('days', 'd', InputOption::VALUE_OPTIONAL, 'Number of days to query', $this->defaultDays),
+            new InputOption('maxrows', 'm', InputOption::VALUE_OPTIONAL, 'Maximum number of rows to display', $this->defaultMaxRows),
+            new InputOption('ago', 'a', InputOption::VALUE_OPTIONAL, 'Up to how many days ago', $this->endingDaysBack),
+            new InputOption('min', 'i', InputOption::VALUE_OPTIONAL, 'Minimum count threshold', $this->defaultMinimum),
+        ];
     }
 }

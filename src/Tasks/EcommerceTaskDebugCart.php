@@ -5,18 +5,25 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 class EcommerceTaskDebugCart extends BuildTask
 {
     protected string $title = 'Debug your cart';
 
-    protected $description = 'Check all the values in your cart to find any potential errors.';
+    protected static string $description = 'Check all the values in your cart to find any potential errors.';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce:debug-cart';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $order = ShoppingCart::current_order();
-        echo self::debug_object($order);
+        $output->writeForHtml(self::debug_object($order));
+
+        return Command::SUCCESS;
     }
 
     public static function debug_object($obj)

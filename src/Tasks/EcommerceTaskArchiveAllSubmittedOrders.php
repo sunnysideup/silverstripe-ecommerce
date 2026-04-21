@@ -8,9 +8,12 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * After a bug in the saving of orders in the CMS
@@ -25,12 +28,11 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
 {
     protected string $title = 'Archive all submitted orders';
 
-    protected $description = "
-    This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
+    protected static string $description = "This task moves all orders to the 'Archived' (last) Order Step without running any of the tasks in between.";
 
-    private static $segment = 'ecommercetaskarchiveallsubmittedorders';
+    protected static string $commandName = 'ecommerce:archive-all-submitted-orders';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         //IMPORTANT - just in case!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
@@ -63,21 +65,23 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
                         SET \"Order\".\"StatusID\" = " . $lastOrderStep->ID . "
                         {$whereSQL}
                     ";
-                    DB::alteration_message('SQL: ' . $sql);
+                    $output->writeln('SQL: ' . $sql);
                     DB::query($sql);
                     if ($count) {
-                        DB::alteration_message(sprintf('NOTE: %s records were updated.', $count), 'created');
+                        $output->writeln(sprintf('NOTE: %s records were updated.', $count));
                     } else {
-                        DB::alteration_message('No records were updated.');
+                        $output->writeln('No records were updated.');
                     }
                 } else {
-                    DB::alteration_message('Could not find the last order step.', 'deleted');
+                    $output->writeln('Could not find the last order step.');
                 }
             } else {
-                DB::alteration_message('Could not find any submitted order logs.', 'deleted');
+                $output->writeln('Could not find any submitted order logs.');
             }
         } else {
-            DB::alteration_message('Could not find a class name for submitted orders.', 'deleted');
+            $output->writeln('Could not find a class name for submitted orders.');
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -4,7 +4,10 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * We calculate the popularity of a product based on the number of orders
@@ -19,9 +22,9 @@ class EcommerceTaskCalculatePopularity extends BuildTask
 {
     protected string $title = 'Create popularity for all products';
 
-    protected $description = 'Goes through all the products and calculates their popularity.';
+    protected static string $description = 'Goes through all the products and calculates their popularity.';
 
-    private static $segment = 'calculate-product-popularity';
+    protected static string $commandName = 'ecommerce:calculate-product-popularity';
 
     /**
      * this is the decay rate for the popularity. The higher the number, the faster the decay.
@@ -37,22 +40,25 @@ class EcommerceTaskCalculatePopularity extends BuildTask
      */
     private static bool $set_to_rank = true;
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $this->resetPopularity();
-        $this->calculatePopularity();
-        $this->setPopularityToRank();
-        DB::alteration_message('Popularity for all products calculated.', 'created');
+        $this->resetPopularity($output);
+        $this->calculatePopularity($output);
+        $this->setPopularityToRank($output);
+        $output->writeln('Popularity for all products calculated.');
+
+        return Command::SUCCESS;
     }
 
-    protected function resetPopularity()
+    protected function resetPopularity(PolyOutput $output)
     {
         foreach (['', '_Live'] as $suffix) {
             DB::query('UPDATE "Product' . $suffix . '" SET "Popularity" = 0, PopularityRank = 0');
         }
+        $output->writeln('Reset popularity for all products');
     }
 
-    protected function calculatePopularity()
+    protected function calculatePopularity(PolyOutput $output)
     {
         $lambda = $this->Config()->get('decay_rate') * -1;
         $excludedOrderIds = [];
@@ -86,14 +92,14 @@ class EcommerceTaskCalculatePopularity extends BuildTask
             // do last
             $currentProductID = $productID;
             if ($count % 100 === 0) {
-                echo $count . ' ';
+                $output->write('.');
             }
         }
 
         // one last time
         $this->updatePopularityForOneProduct($currentProductID, $totalPointsForProduct);
-        echo "\n";
-        DB::alteration_message('Popularity calculated for all products', 'created');
+        $output->writeln('');
+        $output->writeln('Popularity calculated for all products');
     }
 
     protected function updatePopularityForOneProduct($productID, $totalPointsForProduct)
@@ -108,7 +114,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
         }
     }
 
-    protected function setPopularityToRank()
+    protected function setPopularityToRank(PolyOutput $output)
     {
         $rows = DB::query(
             '
@@ -124,7 +130,7 @@ class EcommerceTaskCalculatePopularity extends BuildTask
             if ($popularity > 0) {
                 $count++;
             } else {
-                echo '. ';
+                $output->write('.');
             }
 
             foreach (['', '_Live'] as $suffix) {
@@ -135,12 +141,12 @@ class EcommerceTaskCalculatePopularity extends BuildTask
                     WHERE ID = ' . $productID
                 );
                 if ($count % 100 === 0) {
-                    echo '. ';
+                    $output->write('.');
                 }
             }
         }
 
-        echo "\n";
-        DB::alteration_message('Popularity rank set for all products.', 'created');
+        $output->writeln('');
+        $output->writeln('Popularity rank set for all products.');
     }
 }

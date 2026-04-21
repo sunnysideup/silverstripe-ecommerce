@@ -5,10 +5,14 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -25,14 +29,15 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
 
     protected string $title = 'Orders without orderstep';
 
-    protected $description = '
-        Orders where the order step does not exist.';
+    protected static string $description = 'Orders where the order step does not exist.';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce:orders-without-order-step';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $doCancel = $request->getVar('cancel');
+        $doCancel = $input->getOption('cancel');
         if (! $doCancel) {
-            DB::alteration_message('You can add <strong>cancel</strong> as a getvar to cancel and archive all orders.', 'edited');
+            $output->writeForHtml('You can add <strong>--cancel</strong> option to cancel and archive all orders.');
         }
 
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
@@ -60,19 +65,27 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
                             $order->Cancel();
                         }
 
-                        DB::alteration_message(
-                            '<a href="' . $order->CMSEditLink() . '">' . $order->getTitle() . '</a><br />' . $archivingNow . '<br /><br />',
-                            'deleted'
+                        $output->writeForHtml(
+                            '<a href="' . $order->CMSEditLink() . '">' . $order->getTitle() . '</a><br />' . $archivingNow . '<br /><br />'
                         );
                     }
                 } else {
-                    DB::alteration_message('There are no orders without a valid order step.', 'created');
+                    $output->writeln('There are no orders without a valid order step.');
                 }
             } else {
-                DB::alteration_message('NO submitted order status log.', 'deleted');
+                $output->writeln('NO submitted order status log.');
             }
         } else {
-            DB::alteration_message('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")', 'deleted');
+            $output->writeln('NO EcommerceConfig::get("OrderStatusLog", "order_status_log_class_used_for_submitting_order")');
         }
+
+        return Command::SUCCESS;
+    }
+
+    public function getOptions(): array
+    {
+        return [
+            new InputOption('cancel', 'c', InputOption::VALUE_NONE, 'Cancel and archive all orders without order step'),
+        ];
     }
 }
