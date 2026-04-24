@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use Override;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 
@@ -17,6 +18,7 @@ class OrderFiltersHasBeenCancelledFilter extends ExactMatchFilter
     /**
      *  @return DataQuery
      */
+    #[Override]
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
@@ -43,6 +44,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
         'SendReceiptToCustomer' => 1,
     ];
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -57,7 +59,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
                 3
             )
         );
-        $fields->addFieldToTab('Root.CustomerMessage', new CheckboxField('SendReceiptToCustomer', _t('OrderStep.SENDRECEIPTTOCUSTOMER', 'Send receipt to customer?'), 3));
+        $fields->addFieldToTab('Root.CustomerMessage', CheckboxField::create('SendReceiptToCustomer', _t('OrderStep.SENDRECEIPTTOCUSTOMER', 'Send receipt to customer?'), 3));
 
         return $fields;
     }
@@ -73,6 +75,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return $order->IsPaid();
@@ -81,6 +84,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     /**
      * execute the step.
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         $adminOnlyOrToEmail = ! (bool) $this->SendReceiptToCustomer;
@@ -98,8 +102,9 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -114,6 +119,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return bool
      */
+    #[Override]
     public function hasCustomerMessage()
     {
         return $this->SendReceiptToCustomer;
@@ -124,6 +130,7 @@ class OrderStepSentReceipt extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.SENTRECEIPT_DESCRIPTION', 'The customer is sent a receipt.');

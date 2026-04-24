@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -72,6 +73,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         'CustomerMessageGift' => 'Customer message',
     ];
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -116,6 +118,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         if (false === $this->RelevantLogEntries($order)->exists()) {
@@ -140,6 +143,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         $log = $this->RelevantLogEntry($order);
@@ -148,12 +152,14 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
             if ($log->InternalUseOnly || $this->hasBeenSent($order, false)) {
                 return true; //do nothing
             }
+
             if ($log->Sent || $log->BypassSendingGoods) {
                 // too late to send
                 $maxDays = $this->Config()->get('max_days_before_sending_it') ?: 3;
                 if (strtotime((string) $log->LastEdited) < strtotime('-' . $maxDays . ' days')) {
                     return true;
                 }
+
                 $order->sendEmail(
                     $this->getEmailClassName(), // class name
                     $this->CalculatedEmailSubject($order), // subject
@@ -182,8 +188,9 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -198,12 +205,14 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return $fields;
     }
 
+    #[Override]
     public function CalculatedEmailSubject(?Order $order = null): string
     {
         $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {
             $v = $this->EmailSubjectGift;
         }
+
         if (! $v) {
             $v = $this->EmailSubject;
         }
@@ -211,12 +220,14 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
         return (string) $v;
     }
 
+    #[Override]
     public function CalculatedCustomerMessage(Order $order = null): string
     {
         $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {
             $v = $this->CustomerMessageGift;
         }
+
         if (! $v) {
             $v = $this->CustomerMessage;
         }
@@ -229,6 +240,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return bool
      */
+    #[Override]
     public function hasCustomerMessage()
     {
         return $this->SendDetailsToCustomer;
@@ -239,6 +251,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.SENT_DESCRIPTION', 'During this step we record the delivery details for the order such as the courrier ticket number and whatever else is relevant.');

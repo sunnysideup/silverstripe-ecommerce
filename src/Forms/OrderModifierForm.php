@@ -2,11 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use SilverStripe\Forms\Validation\Validator;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -48,14 +48,16 @@ class OrderModifierForm extends Form
         FieldList $actions,
         Validator $optionalValidator = null
     ) {
-        if (! $optionalController instanceof \SilverStripe\Control\Controller) {
+        if (! $optionalController instanceof Controller) {
             $controllerClassName = EcommerceConfig::get(OrderModifierForm::class, 'controller_class');
             $optionalController = new $controllerClassName();
         }
-        if (! $optionalValidator instanceof \SilverStripe\Forms\Validator) {
+
+        if (! $optionalValidator instanceof Validator) {
             $validatorClassName = EcommerceConfig::get(OrderModifierForm::class, 'validator_class');
             $optionalValidator = new $validatorClassName();
         }
+
         parent::__construct($optionalController, $name, $fields, $actions, $optionalValidator);
 
         //extension point
@@ -74,10 +76,11 @@ class OrderModifierForm extends Form
         Requirements::block('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier
 
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateOrderModifierForm', $this);
     }
 
@@ -114,6 +117,6 @@ class OrderModifierForm extends Form
 
     protected function myLcFirst($str)
     {
-        return lcfirst($str);
+        return lcfirst((string) $str);
     }
 }

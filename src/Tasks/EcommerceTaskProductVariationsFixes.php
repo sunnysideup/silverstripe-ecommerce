@@ -3,9 +3,11 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * see description in class.
@@ -16,11 +18,13 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceTaskProductVariationsFixes extends BuildTask
 {
-    protected $title = 'Fix Product Variations';
+    protected string $title = 'Fix Product Variations';
 
-    protected $description = 'Fixes a bunch of links between Products and their Variations ';
+    protected static string $description = 'Fixes a bunch of links between Products and their Variations';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce-fix-product-variations';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $stagingArray = ['Live', 'Stage'];
         foreach ($stagingArray as $stage) {
@@ -28,7 +32,7 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
             $count = 0;
             if ($products) {
                 foreach ($products as $product) {
-                    if ($this->hasExtension('ProductWithVariationDecorator')) {
+                    if ($product->hasExtension('ProductWithVariationDecorator')) {
                         $product->cleaningUpVariationData($verbose = true);
                         if ($product) {
                             ++$count;
@@ -36,7 +40,10 @@ class EcommerceTaskProductVariationsFixes extends BuildTask
                     }
                 }
             }
-            DB::alteration_message("Updated {$count} Products (" . $products->count() . " products on {$stage})");
+
+            $output->writeln(sprintf('Updated %d Products (', $count) . $products->count() . sprintf(' products on %s)', $stage));
         }
+
+        return Command::SUCCESS;
     }
 }

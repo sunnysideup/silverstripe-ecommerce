@@ -132,6 +132,7 @@ class GridFieldPrintInvoiceButton implements GridField_ColumnProvider, GridField
             if (! $item) {
                 return;
             }
+
             // $list = $gridField->getList();
             // $list = $list->exclude(array('ID' => $itemID));
             // $gridField->setList($list);

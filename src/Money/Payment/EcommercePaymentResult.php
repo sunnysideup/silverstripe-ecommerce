@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Money\Payment;
 
 use SilverStripe\Core\Config\Configurable;
@@ -12,11 +14,8 @@ abstract class EcommercePaymentResult
     use Extensible;
     use Injectable;
 
-    protected $value;
-
-    public function __construct($value = null)
+    public function __construct(protected $value = null)
     {
-        $this->value = $value;
     }
 
     public function getValue()

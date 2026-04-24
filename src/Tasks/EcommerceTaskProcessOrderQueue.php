@@ -2,13 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataList;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
 use Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Mailer\MailerInterface;
 
 /**
@@ -24,13 +29,13 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
     protected $limit = 1;
 
-    protected $title = 'Process The Order Queue';
+    protected string $title = 'Process The Order Queue';
 
-    protected $description = 'Go through order queue and try to finalise all the orders in it.';
+    protected static string $description = 'Go through order queue and try to finalise all the orders in it.';
 
-    private static $segment = 'EcommerceTaskProcessOrderQueue';
+    protected static string $commandName = 'ecommerce-process-order-queue';
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         //as this may run every minute, we have to limit it to fifty seconds.
         set_time_limit(50);
@@ -40,29 +45,34 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
             Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
             Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
         }
-        $id = (int) $request?->getVar('id');
+
+        $id = (int) $input->getOption('id');
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         $ordersinQueue = $queueObjectSingleton->OrdersToBeProcessed($id);
         if (! $ordersinQueue->exists()) {
-            echo 'No orders in queue';
+            $output->writeln('No orders in queue');
 
-            return;
+            return Command::SUCCESS;
         }
-        echo '<h3>There are ' . $ordersinQueue->count() . ' in the queue, processing ' . $this->limit . ' now</h3>';
+
+        $output->writeForHtml('<h3>There are ' . $ordersinQueue->count() . ' in the queue, processing ' . $this->limit . ' now</h3>');
         if ($id !== 0) {
-            echo '<h3>FORCING Order with ID: ' . $id . '</h3>';
+            $output->writeForHtml('<h3>FORCING Order with ID: ' . $id . '</h3>');
             $ordersinQueue = $ordersinQueue->filter(['ID' => $id]);
         }
-        $this->tryToFinaliseOrders($ordersinQueue);
-        echo '<hr />';
-        echo '<hr />';
-        echo 'PROCESSED IN: ' . round(((microtime(true) - $now) / 1), 5) . ' seconds';
+
+        $this->tryToFinaliseOrders($ordersinQueue, $output);
+        $output->writeln('');
+        $output->writeln('');
+        $output->writeln('PROCESSED IN: ' . round(((microtime(true) - $now) / 1), 5) . ' seconds');
+
+        return Command::SUCCESS;
     }
 
     /**
      * @param DataList $orders orders to be processsed
      */
-    protected function tryToFinaliseOrders(DataList $orders)
+    protected function tryToFinaliseOrders(DataList $orders, PolyOutput $output)
     {
         //limit orders
         $orders = $orders->limit($this->limit);
@@ -71,13 +81,21 @@ class EcommerceTaskProcessOrderQueue extends BuildTask
 
         $queueObjectSingleton = Injector::inst()->get(OrderProcessQueue::class);
         foreach ($orders as $order) {
-            echo '<hr />Processing order: ' . $order->ID;
+            $output->writeForHtml('<hr />Processing order: ' . $order->ID);
             $outcome = $queueObjectSingleton->process($order);
             if (true === $outcome) {
-                echo '<br />... Order moved successfully.<hr />';
+                $output->writeForHtml('<br />... Order moved successfully.<hr />');
             } else {
-                echo '<br />... ' . $outcome . '<hr />';
+                $output->writeForHtml('<br />... ' . $outcome . '<hr />');
             }
         }
+    }
+
+    #[Override]
+    public function getOptions(): array
+    {
+        return [
+            new InputOption('id', 'i', InputOption::VALUE_OPTIONAL, 'Force processing of a specific order ID'),
+        ];
     }
 }

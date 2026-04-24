@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Control;
 
+use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
@@ -9,16 +12,13 @@ use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
-use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Pages\CartPage;
-use Sunnysideup\Ecommerce\Pages\Product;
-use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
  * Class \Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController
  *
- * @property \PageController|\Sunnysideup\Ecommerce\Control\EcommerceSiteTreeExtensionController $owner
+ * @property PageController|EcommerceSiteTreeExtensionController $owner
  */
 class EcommerceSiteTreeExtensionController extends Extension
 {
@@ -64,6 +64,7 @@ class EcommerceSiteTreeExtensionController extends Extension
                 Requirements::javascript('sunnysideup/ecommerce: ' . $location);
             }
         }
+
         Requirements::themedCSS('client/css/Cart');
         Requirements::themedCSS('client/css/jquery.colorbox');
     }

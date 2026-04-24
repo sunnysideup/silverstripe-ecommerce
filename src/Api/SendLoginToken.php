@@ -24,6 +24,7 @@ class SendLoginToken
         if (! $request) {
             return false;
         }
+
         Injector::inst()
             ->get(OneTimeCodeApi::class)
             ->SendOneTimeCode(['Email' => $email], $request);

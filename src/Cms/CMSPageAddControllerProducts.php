@@ -2,12 +2,18 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
-use SilverStripe\CMS\Controllers\CMSPageAddController;
-use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Model\List\ArrayList;
+/**
+  * ### @@@@ START REPLACEMENT @@@@ ###
+  * WHY: automated upgrade
+  * OLD: SilverStripe\CMS\Controllers\CMSPageAddController ->
+  * NEW: SilverStripe\CMS\Controllers\CMSPageAddController ...  (COMPLEX)
+  * EXP: Removed deprecated class SilverStripe\\CMS\\Controllers\\CMSPageAddController - replaced with CMSMainAddForm. See: https://docs.silverstripe.org/en/6/changelogs/6.0.0/
+  * ### @@@@ STOP REPLACEMENT @@@@ ###
+  */
+
+use SilverStripe\CMS\Forms\CMSMainAddForm;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\Form;
-use SilverStripe\ORM\ArrayList;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -16,7 +22,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroupSearchPage;
 /**
  * Class \Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts
  */
-class CMSPageAddControllerProducts extends CMSPageAddController
+class CMSPageAddControllerProducts extends CMSMainAddForm
 {
     private static $url_segment = 'addproductorproductgroup';
 
@@ -47,12 +53,12 @@ class CMSPageAddControllerProducts extends CMSPageAddController
     //     return $this->redirect(Injector::inst()->get(ProductsAndGroupsModelAdmin::class)->Link());
     // }
     /**
-     * @return \SilverStripe\ORM\ArrayList
+     * @return ArrayList
      */
-    public function PageTypes()
+    public function RecordTypes()
     {
         $pageTypes = parent::PageTypes();
-        $result = new ArrayList();
+        $result = ArrayList::create();
 
         $productClass = EcommerceConfigClassNames::getName(Product::class);
         $productGroupClass = EcommerceConfigClassNames::getName(ProductGroup::class);

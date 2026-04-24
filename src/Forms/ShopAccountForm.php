@@ -53,23 +53,21 @@ class ShopAccountForm extends Form
                 $loginMessage
             );
             $fields->push($loginField);
-            $actions = new FieldList();
+            $actions = FieldList::create();
             $order = ShoppingCart::current_order();
             if ($order) {
                 if ($order->getTotalItems()) {
-                    $actions->push(new FormAction(
-                        'proceed',
-                        _t('Account.SAVE_AND_PROCEED', 'Save and review order')
-                    ));
+                    $actions->push(FormAction::create('proceed', _t('Account.SAVE_AND_PROCEED', 'Save and review order')));
                 } else {
-                    $actions->push(new FormAction('submit', _t('Account.SAVE', 'Save Changes')));
+                    $actions->push(FormAction::create('submit', _t('Account.SAVE', 'Save Changes')));
                 }
             }
         } else {
             if (! $member) {
-                $member = new Member();
+                $member = Member::create();
             }
-            $fields = new FieldList();
+
+            $fields = FieldList::create();
             $urlParams = $controller->getURLParams();
             $backURLLink = Director::baseURL();
             if ($urlParams) {
@@ -79,21 +77,21 @@ class ShopAccountForm extends Form
                     }
                 }
             }
+
             $backURLLink = urlencode($backURLLink);
-            $fields->push(new LiteralField('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login?BackURL=' . $backURLLink . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>'));
+            $fields->push(LiteralField::create('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login?BackURL=' . $backURLLink . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>'));
             $memberFields = $member->getEcommerceFields($mustCreateAccount);
             if ($memberFields) {
                 foreach ($memberFields as $memberField) {
                     $fields->push($memberField);
                 }
             }
-            $passwordField = new PasswordField('PasswordCheck1', _t('Account.PASSWORD', 'Password'));
-            $passwordFieldCheck = new PasswordField('PasswordCheck2', _t('Account.PASSWORDCHECK', 'Password (repeat)'));
+
+            $passwordField = PasswordField::create('PasswordCheck1', _t('Account.PASSWORD', 'Password'));
+            $passwordFieldCheck = PasswordField::create('PasswordCheck2', _t('Account.PASSWORDCHECK', 'Password (repeat)'));
             $fields->push($passwordField);
             $fields->push($passwordFieldCheck);
-            $actions = new FieldList(
-                new FormAction('creatememberandaddtoorder', _t('Account.SAVE', 'Create Account'))
-            );
+            $actions = FieldList::create(FormAction::create('creatememberandaddtoorder', _t('Account.SAVE', 'Create Account')));
         }
 
         $requiredFields = ShopAccountFormValidator::create($member->getEcommerceRequiredFields());
@@ -112,10 +110,11 @@ class ShopAccountForm extends Form
             $this->loadDataFrom($member);
         }
 
-        $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
+        $oldData = Controller::curr()->getRequest()->getSession()->get(sprintf('FormInfo.%s.data', $this->FormName()));
         if ($oldData && (is_array($oldData) || is_object($oldData))) {
             $this->loadDataFrom($oldData);
         }
+
         $this->extend('updateShopAccountForm', $this);
     }
 
@@ -156,7 +155,7 @@ class ShopAccountForm extends Form
      */
     public function creatememberandaddtoorder($data, $form)
     {
-        $member = new Member();
+        $member = Member::create();
         $order = ShoppingCart::current_order();
         if ($order && $order->exists()) {
             $form->saveInto($member);
@@ -170,6 +169,7 @@ class ShopAccountForm extends Form
                             $order->MemberID = $member->ID;
                             $order->write();
                         }
+
                         Injector::inst()->get(IdentityStore::class)->logIn($member);
                         $this->sessionMessage(_t('ShopAccountForm.SAVEDDETAILS', 'Your details has been saved.'), 'good');
                     } else {
@@ -182,6 +182,7 @@ class ShopAccountForm extends Form
         } else {
             $this->sessionMessage(_t('ShopAccountForm.COULDNOTFINDORDER', 'Could not find order.'), 'bad');
         }
+
         $this->controller->redirectBack();
     }
 
@@ -210,6 +211,7 @@ class ShopAccountForm extends Form
             $form->sessionMessage(_t('Account.DETAILSNOTSAVED', 'Your details could not be saved.'), 'bad');
             $this->controller->redirectBack();
         }
+
         $form->saveInto($member);
         $password = ShopAccountFormPasswordValidator::clean_password($data);
         if ($password) {
@@ -219,15 +221,18 @@ class ShopAccountForm extends Form
 
             return $this->controller->redirectBack();
         }
+
         if ($member->validate()->isValid()) {
             $member->write();
             if ($link) {
                 return $this->controller->redirect($link);
             }
+
             $form->sessionMessage(_t('Account.DETAILSSAVED', 'Your details have been saved.'), 'good');
 
             return $this->controller->redirectBack();
         }
+
         $form->sessionMessage(_t('Account.NO_VALID_DATA', 'Your details can not be updated.'), 'bad');
 
         return $this->controller->redirectBack();

@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
@@ -29,11 +30,13 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
         'WaitTimeInMinutes' => 60,
     ];
 
+    #[Override]
     public function HideFromEveryone(): bool
     {
         return true;
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -61,6 +64,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         if ($this->canByPassStep($order) || $this->isReadyToSend($order)) {
@@ -77,11 +81,13 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
      *
      * @return bool - true if run correctly
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         if ($this->canByPassStep($order)) {
             return true;
         }
+
         if (! $this->isReadyToSend($order)) {
             return false;
         }
@@ -109,6 +115,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
             if (! $this->WaitTimeInMinutes || $this->WaitTimeInMinutes < 1) {
                 $this->WaitTimeInMinutes = 60;
             }
+
             self::$is_ready_to_send_cache[$order->ID] = true;
             $log = $order->SubmissionLog();
             if ($log) {
@@ -119,6 +126,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
                 self::$is_ready_to_send_cache[$order->ID] = $startSending < $nowTS;
             }
         }
+
         return self::$is_ready_to_send_cache[$order->ID] ?? true;
     }
 
@@ -140,21 +148,26 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
                     if ($status === EcommercePayment::SUCCESS_STATUS || $status === EcommercePayment::PENDING_STATUS) {
                         continue;
                     }
+
                     $byPass = false;
                     break;
                 }
+
                 self::$cache_order_by_pass[$order->ID] = $byPass;
             }
         }
+
         return self::$cache_order_by_pass[$order->ID];
     }
 
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         // we force TRUE
         return parent::addOrderStepFields($fields, $order, true);
     }
 
+    #[Override]
     public function hasCustomerMessage(): bool
     {
         return false;
@@ -165,6 +178,7 @@ class OrderStepNotifyDeclinedSale extends OrderStep implements OrderStepInterfac
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return 'Allow admin to follow up on declined payments.';

@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * set the order id number.
@@ -16,11 +21,13 @@ use Sunnysideup\Ecommerce\Model\Order;
  */
 class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
 {
-    protected $title = 'Set Order ID starting number';
+    protected string $title = 'Set Order ID starting number';
 
-    protected $description = 'Sets the starting order number with all order numbers following this number.';
+    protected static string $description = 'Sets the starting order number with all order numbers following this number.';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce-set-order-id-starting-number';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         //set starting order number ID
         $number = EcommerceConfig::get(Order::class, 'order_id_start_number');
@@ -31,14 +38,17 @@ class EcommerceTaskSetOrderIDStartingNumber extends BuildTask
             if ($count > 0) {
                 $currentMax = DB::Query('SELECT MAX( "ID" ) FROM "Order"')->value();
             }
+
             if ($number > $currentMax) {
-                DB::query("ALTER TABLE \"Order\"  AUTO_INCREMENT = {$number} ROW_FORMAT = DYNAMIC ");
-                DB::alteration_message('Change OrderID start number to ' . $number, 'created');
+                DB::query(sprintf('ALTER TABLE "Order"  AUTO_INCREMENT = %s ROW_FORMAT = DYNAMIC ', $number));
+                $output->writeln('Change OrderID start number to ' . $number);
             } else {
-                DB::alteration_message('Can not set OrderID start number to ' . $number . ' because this number has already been used.', 'deleted');
+                $output->writeln('Can not set OrderID start number to ' . $number . ' because this number has already been used.');
             }
         } else {
-            DB::alteration_message('Starting OrderID has not been set.', 'deleted');
+            $output->writeln('Starting OrderID has not been set.');
         }
+
+        return Command::SUCCESS;
     }
 }

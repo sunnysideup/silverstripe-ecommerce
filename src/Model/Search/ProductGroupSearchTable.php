@@ -19,7 +19,7 @@ use Sunnysideup\Ecommerce\Traits\SearchTableTrait;
  * @property string $Title
  * @property string $Data
  * @property int $ProductGroupID
- * @method \Sunnysideup\Ecommerce\Pages\ProductGroup ProductGroup()
+ * @method ProductGroup ProductGroup()
  */
 class ProductGroupSearchTable extends DataObject implements EditableEcommerceObject, Flushable
 {
@@ -103,6 +103,7 @@ class ProductGroupSearchTable extends DataObject implements EditableEcommerceObj
             if (! $obj) {
                 $obj = ProductGroupSearchTable::create($filter);
             }
+
             $obj->Title = Sanitizer::html_to_text($productGroup->Title);
             $obj->Data = Sanitizer::html_array_to_text_limit_words($dataAsArray);
             $obj->write();

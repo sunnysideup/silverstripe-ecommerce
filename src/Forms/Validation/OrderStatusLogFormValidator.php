@@ -2,10 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
+use Override;
 
-class OrderStatusLogFormValidator extends RequiredFields
+class OrderStatusLogFormValidator extends RequiredFieldsValidator
 {
+    #[Override]
     public function php($data)
     {
         $this->form->saveDataToSession();

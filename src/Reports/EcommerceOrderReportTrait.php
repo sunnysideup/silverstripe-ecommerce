@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\DropdownField;
@@ -41,7 +42,7 @@ trait EcommerceOrderReportTrait
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
@@ -57,14 +58,14 @@ trait EcommerceOrderReportTrait
 
         if ($startDate) {
             $logs = $logs->filter([
-                'Created:GreaterThanOrEqual' => date('Y-m-d 00:00:00', strtotime($startDate)),
+                'Created:GreaterThanOrEqual' => date('Y-m-d 00:00:00', strtotime((string) $startDate)),
             ]);
         }
 
         $endDate = $params['EndDate'] ?? null;
         if ($endDate) {
             $logs = $logs->filter([
-                'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime($endDate)),
+                'Created:LessThanOrEqual' => date('Y-m-d 23:59:59', strtotime((string) $endDate)),
             ]);
         }
 
@@ -105,6 +106,7 @@ trait EcommerceOrderReportTrait
             if (empty($sort)) {
                 $sort = ['Title' => 'ASC'];
             }
+
             $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         }
 
@@ -112,6 +114,7 @@ trait EcommerceOrderReportTrait
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
+
         return $list;
     }
 
@@ -143,7 +146,7 @@ trait EcommerceOrderReportTrait
         );
         $fields->recursiveWalk(
             function (FormField $field) {
-                if (0 !== strpos($field->getName(), 'filter[')) {
+                if (!str_starts_with($field->getName(), 'filter[')) {
                     $field->setName(sprintf('filters[%s]', $field->getName()));
                 }
 
@@ -169,6 +172,7 @@ trait EcommerceOrderReportTrait
         if (is_array($v)) {
             return $v;
         }
+
         return Config::inst()->get(Order::class, 'summary_fields');
     }
 }

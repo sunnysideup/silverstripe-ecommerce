@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -40,6 +41,7 @@ class OrderModifierFormController extends Controller
      *
      * @return string
      */
+    #[Override]
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get(static::class, 'url_segment');
@@ -62,6 +64,7 @@ class OrderModifierFormController extends Controller
     /**
      * sets virtual methods and order.
      */
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -82,6 +85,7 @@ class OrderModifierFormController extends Controller
                     if (! ($form instanceof Form)) {
                         $form = $form->Form;
                     }
+
                     $this->addWrapperMethod($form->getName(), 'getOrderModifierForm');
                     self::$allowed_actions[] = $form->getName(); // add all these forms to the list of allowed actions also
                 }

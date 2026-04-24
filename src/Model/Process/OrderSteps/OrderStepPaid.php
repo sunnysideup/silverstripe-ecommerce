@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
@@ -15,6 +16,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class OrderStepPaid extends OrderStep implements OrderStepInterface
 {
+    private static $table_name = 'OrderStepPaid';
+
     private static $defaults = [
         'CustomerCanEdit' => 0,
         'CustomerCanCancel' => 0,
@@ -52,6 +55,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return true;
@@ -69,6 +73,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         return true;
@@ -82,8 +87,9 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -104,7 +110,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
                 $fields->addFieldsToTab(
                     'Root.Next',
                     [
-                        new LiteralField('NotPaidMessage', '<p>' . $msg . '</p>'),
+                        LiteralField::create('NotPaidMessage', '<p>' . $msg . '</p>'),
                         EcommerceCMSButtonField::create(
                             'EditPayment',
                             $lastPayment->CMSEditLink(),
@@ -114,6 +120,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
                 );
             }
         }
+
         $paymentField = $fields->fieldByName('Root.Payments.Payments');
         if ($paymentField) {
             $fields->addFieldsToTab(
@@ -132,6 +139,7 @@ class OrderStepPaid extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.PAID_DESCRIPTION', 'The order is paid in full.');

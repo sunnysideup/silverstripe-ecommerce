@@ -41,8 +41,9 @@ class ClassHelpers
         if ($obj instanceof $className) {
             return true;
         }
+
         if ($showError) {
-            user_error('object provided is not an instanceof expected class ' . $className . ' instead it is a ' . get_class($obj));
+            user_error('object provided is not an instanceof expected class ' . $className . ' instead it is a ' . $obj::class);
         }
 
         return false;

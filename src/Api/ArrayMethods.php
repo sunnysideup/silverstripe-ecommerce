@@ -2,8 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Api;
 
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
@@ -52,7 +52,7 @@ class ArrayMethods
         $baseTable = $singleton->baseTable();
         $tableName = $singleton->stageTable($baseTable, Versioned::get_stage());
         foreach ($ids as $id) {
-            $ifStatement .= ' WHEN "' . $tableName . "\".\"ID\" = {$id} THEN {$count}";
+            $ifStatement .= ' WHEN "' . $tableName . sprintf('"."ID" = %s THEN %d', $id, $count);
             ++$count;
         }
 

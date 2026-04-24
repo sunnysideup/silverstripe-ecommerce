@@ -184,6 +184,7 @@ class ProductGroupSchema
         if (isset($data[$type])) {
             return true;
         }
+
         if ($showError) {
             user_error('Invalid type supplied: ' . $type . 'Please use: SORT / FILTER / DISPLAY / SEARCHFILTER');
         }
@@ -265,9 +266,11 @@ class ProductGroupSchema
         if ($betterClassName !== '' && $betterClassName !== '0') {
             $className = $betterClassName;
         }
+
         if (empty(self::$applyerCache[$className])) {
             self::$applyerCache[$className] = new $className($finalProductList);
         }
+
         ClassHelpers::check_for_instance_of(self::$applyerCache[$className], BaseApplyer::class);
 
         return self::$applyerCache[$className];

@@ -119,6 +119,7 @@ trait PartialObjectCache
         if (method_exists($this, 'hasMethod') && $this->hasMethod('partialCacheGetFieldsToCacheCustom')) {
             return $this->partialCacheGetFieldsToCacheCustom();
         }
+
         return [];
     }
 }

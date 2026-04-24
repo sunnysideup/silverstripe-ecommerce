@@ -77,7 +77,7 @@ class GetVariables
                     2
                 );
                 if (count($items) === 2) {
-                    list($key, $value) = $items;
+                    [$key, $value] = $items;
                     $key = str_replace(
                         Config::inst()->get(static::class, 'exception_for_tilde'),
                         Config::inst()->get(static::class, 'equal_alternative'),
@@ -90,7 +90,7 @@ class GetVariables
                     );
                     $newArray[$key] = Convert::raw2sql($value);
                 } elseif (count($items) === 1) {
-                    list($key) = $items;
+                    [$key] = $items;
                     $key = str_replace(
                         Config::inst()->get(static::class, 'exception_for_tilde'),
                         Config::inst()->get(static::class, 'equal_alternative'),

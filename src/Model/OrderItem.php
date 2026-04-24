@@ -2,6 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -202,12 +207,14 @@ class OrderItem extends OrderAttribute
      */
     private static $description = 'Any item that is added to an order and sits before the sub-total. ';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderItem.ORDERITEM', 'Order Item');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderItem.ORDERITEMS', 'Order Items');
     }
@@ -224,7 +231,7 @@ class OrderItem extends OrderAttribute
      * @param int    $id
      * @param int    $version
      *
-     * @return null|\SilverStripe\ORM\DataObject
+     * @return null|DataObject
      */
     public static function get_version($class, $id, $version)
     {
@@ -236,6 +243,7 @@ class OrderItem extends OrderAttribute
         return $versionedObject;
     }
 
+    #[Override]
     public function init()
     {
         parent::init();
@@ -246,6 +254,7 @@ class OrderItem extends OrderAttribute
     /**
      * Standard SS method.
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -297,7 +306,7 @@ class OrderItem extends OrderAttribute
         $fields->removeByName('OrderAttributeGroupID');
 
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             if ($order->IsSubmitted()) {
                 $buyableLink = _t('OrderItem.PRODUCT_PURCHASED', 'Product Purchased: ');
                 $buyable = $this->getBuyableCached();
@@ -334,10 +343,11 @@ class OrderItem extends OrderAttribute
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return $this->canEdit($member);
@@ -357,12 +367,13 @@ class OrderItem extends OrderAttribute
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-        $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
+        $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
 
         return $fields;
     }
@@ -386,7 +397,7 @@ class OrderItem extends OrderAttribute
     {
         $function = EcommerceConfig::get(OrderItem::class, 'ajax_total_format');
         if (is_array($function)) {
-            list($function, $format) = $function;
+            [$function, $format] = $function;
         }
 
         $total = $this->{$function}();
@@ -433,6 +444,7 @@ class OrderItem extends OrderAttribute
      *
      * @param bool $recalculate - run it, even if it has run already
      */
+    #[Override]
     public function runUpdate($recalculate = false)
     {
         $buyable = $this->getBuyableCached(true);
@@ -559,6 +571,7 @@ class OrderItem extends OrderAttribute
                 }
             }
         }
+
         return $total;
     }
 
@@ -585,7 +598,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param bool $recalculate - forces recalculation of price
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function TotalAsMoney($recalculate = false)
     {
@@ -623,7 +636,7 @@ class OrderItem extends OrderAttribute
     }
 
     /**
-     * @return \SilverStripe\ORM\FieldType\DBCurrency (DB Object)
+     * @return DBCurrency (DB Object)
      */
     public function TotalAsCurrencyObject()
     {
@@ -647,7 +660,7 @@ class OrderItem extends OrderAttribute
     /**
      * @param bool $current - is this a current one, or an older VERSION ?
      *
-     * @return \SilverStripe\ORM\DataObject (Any type of Data Object that is buyable)
+     * @return DataObject (Any type of Data Object that is buyable)
      */
     public function Buyable($current = false)
     {
@@ -682,6 +695,7 @@ class OrderItem extends OrderAttribute
                         $product = Product::class;
                     }
                 }
+
                 // $this->BuyableClassName = str_replace('OrderItem', '', (string) $this->ClassName);
             }
 
@@ -758,6 +772,7 @@ class OrderItem extends OrderAttribute
         return $this->getTitle();
     }
 
+    #[Override]
     public function getTitle()
     {
         $buyable = $this->getBuyableCached();
@@ -895,7 +910,7 @@ class OrderItem extends OrderAttribute
     public function getLink()
     {
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             return $order->Link();
         }
 
@@ -998,7 +1013,8 @@ class OrderItem extends OrderAttribute
         return ShoppingCartController::set_quantity_item_link($this->BuyableID, $this->BuyableClassName, array_merge($this->linkParameters(), ['quantity' => $quantity]));
     }
 
-    public function debug()
+    #[Override]
+    public function debug(): string
     {
         $html = EcommerceTaskDebugCart::debug_object($this);
         $html .= '<ul>';
@@ -1028,6 +1044,7 @@ class OrderItem extends OrderAttribute
      * If the quantity is zero then we set it to 1.
      * TODO: evaluate this rule.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         if (! $this->priceHasBeenFixed()) {
@@ -1051,6 +1068,7 @@ class OrderItem extends OrderAttribute
             if (! $this->Version && $buyable) {
                 $this->Version = $buyable->Version;
             }
+
             $this->Name = $this->getTableTitle();
         } else {
             parent::onBeforeWrite();
@@ -1062,11 +1080,12 @@ class OrderItem extends OrderAttribute
      * the method below is very important...
      * We initialise the order once it has an OrderItem.
      */
+    #[Override]
     protected function onAfterWrite()
     {
         parent::onAfterWrite();
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order && ! $order->StatusID) {
+        if ($order instanceof Order && ! $order->StatusID) {
             //this adds the modifiers and automatically WRITES AGAIN - WATCH RACING CONDITIONS!
             $order->init($recalculate = true);
         }
@@ -1090,6 +1109,7 @@ class OrderItem extends OrderAttribute
         return $array;
     }
 
+    #[Override]
     public function Classes(): string
     {
         $classes = parent::Classes();
@@ -1098,6 +1118,7 @@ class OrderItem extends OrderAttribute
         } else {
             $classes .= ' just-one';
         }
+
         return $classes;
     }
 }

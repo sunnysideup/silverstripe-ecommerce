@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
@@ -81,6 +82,7 @@ class ProductSearchForm extends Form
             $data = GetVariables::url_string_to_array($condensedData);
             $getVars = array_merge($getVars, $data);
         }
+
         $defaults = [];
         $defaults['Keyword'] = $getVars['Keyword'] ?? $getVars['keyword'] ?? '';
         $defaults['MinimumPrice'] = $getVars['MinimumPrice'] ?? $getVars['minimumprice'] ?? 0;
@@ -121,6 +123,7 @@ class ProductSearchForm extends Form
                     ->addExtraClass('min-max-holder')
             );
         }
+
         $fields->push(
             HiddenField::create('OnlyThisSection', $defaults['OnlyThisSection'])
         );
@@ -129,6 +132,7 @@ class ProductSearchForm extends Form
             $fields->push(CheckboxField::create('showdebug', 'Debug Search'));
             $fields->push(CheckboxField::create('showdebugkeywords', 'Debug Keywords'));
         }
+
         // actions
         $actions = FieldList::create(
             FormAction::create('doProductSearchForm', 'Search')
@@ -157,13 +161,15 @@ class ProductSearchForm extends Form
         return $this;
     }
 
-    public function forTemplate()
+    #[Override]
+    public function forTemplate(): string
     {
         if ($this->hasOnlyThisSection()) {
             $title = _t('ProductSearchForm.ONLY_SHOW', 'Only search in');
             if ($this->baseListOwner) {
                 $title .= ' <em>' . $this->baseListOwner->Title . '</em> ';
             }
+
             $title = DBField::create_field('HTMLText', $title);
             $this->Fields()->replaceField(
                 'OnlyThisSection',
@@ -249,6 +255,7 @@ class ProductSearchForm extends Form
                 $doSearchAtAll = true;
             }
         }
+
         if ($doSearchAtAll) {
             $link = $this->getResultsPageLink();
             if (! strpos('?', $link)) {
@@ -256,10 +263,12 @@ class ProductSearchForm extends Form
             } else {
                 $link .= '&';
             }
+
             $link .= $this->getVariableContainingSearchParams() . '=' . GetVariables::array_to_url_string($this->cleanedData);
             if ($this->additionalGetParameters) {
                 $link .= '&' . trim((string) $this->additionalGetParameters, '&');
             }
+
             //important - sort by relevancy
             $link .= '&' . $this->getVariableContainingSortParam() . '=' . $this->defaultSort();
             $this->controller->redirect($link);
@@ -285,9 +294,11 @@ class ProductSearchForm extends Form
         if ($this->controller instanceof ProductGroupSearchPageController) {
             return false;
         }
+
         if ($this->baseListOwner instanceof ProductGroupSearchPage) {
             return false;
         }
+
         if ($this->baseListOwner) {
             return $this->baseListOwner->getProducts()->exists();
         }
@@ -303,6 +314,7 @@ class ProductSearchForm extends Form
         if (empty($this->rawData['OnlyThisSection'])) {
             return ProductGroupSearchPage::main_search_page();
         }
+
         //if no specific section is being searched then we redirect to search page:
         return $this->controller->dataRecord;
     }

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -21,6 +24,7 @@ class EcommerceSideReportProductsNoInternalID extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.NOINTERNALID', 'E-commerce: Products: without Internal ID');

@@ -2,18 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
-use Sunnysideup\Ecommerce\Api\EcommerceCache;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\ProductGroupSchema;
@@ -393,6 +391,7 @@ abstract class AbstractProductsAndGroupsList
                     $newArray[] = $filterParent->ID;
                 }
             }
+
             $newGroups = ProductGroup::get()->filter(['ID' => ArrayMethods::filter_array($newArray)]);
         }
 

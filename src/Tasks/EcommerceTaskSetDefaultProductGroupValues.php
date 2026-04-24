@@ -4,9 +4,11 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * @description: resets fields in the product group class to "inherit" in case their value does not exist.
@@ -17,9 +19,11 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 {
-    protected $title = 'Set Default Product Group Values';
+    protected string $title = 'Set Default Product Group Values';
 
-    protected $description = 'Set default product group values such as DefaultSortOrder.';
+    protected static string $description = 'Set default product group values such as DefaultSortOrder.';
+
+    protected static string $commandName = 'ecommerce-set-default-product-group-values';
 
     protected $fieldsToCheck = [
         'SORT' => 'DefaultSortOrder',
@@ -27,20 +31,22 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
         'DISPLAY' => 'DisplayStyle',
     ];
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $productGroup = DataObject::get_one(ProductGroup::class);
         if ($productGroup) {
             foreach ($this->fieldsToCheck as $method => $fieldName) {
                 $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));
-                $this->checkOneField($fieldName, $acceptableValuesArray, 'inherit');
+                $this->checkOneField($fieldName, $acceptableValuesArray, 'inherit', $output);
             }
         } else {
-            DB::alteration_message('There are no ProductGroup pages to correct', 'created');
+            $output->writeln('There are no ProductGroup pages to correct');
         }
+
+        return Command::SUCCESS;
     }
 
-    protected function checkOneField($fieldName, $acceptableValuesArray, $resetValue)
+    protected function checkOneField($fieldName, $acceptableValuesArray, $resetValue, PolyOutput $output)
     {
         $faultyProductGroups = ProductGroup::get()
             ->exclude([$fieldName => $acceptableValuesArray])
@@ -50,10 +56,10 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
                 $faultyProductGroup->{$fieldName} = $resetValue;
                 $faultyProductGroup->writeToStage(Versioned::DRAFT);
                 $faultyProductGroup->publishRecursive();
-                DB::alteration_message("Reset {$fieldName} for " . $faultyProductGroup->Title, 'created');
+                $output->writeln(sprintf('Reset %s for ', $fieldName) . $faultyProductGroup->Title);
             }
         } else {
-            DB::alteration_message("Could not find any faulty records for ProductGroup.{$fieldName}");
+            $output->writeln('Could not find any faulty records for ProductGroup.' . $fieldName);
         }
     }
 }

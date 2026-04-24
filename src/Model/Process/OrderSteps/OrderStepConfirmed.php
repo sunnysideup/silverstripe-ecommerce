@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -15,6 +16,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class OrderStepConfirmed extends OrderStep implements OrderStepInterface
 {
+    private static $table_name = 'OrderStepConfirmed';
+
     /**
      * @var string
      */
@@ -62,6 +65,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return true;
@@ -77,6 +81,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @return bool - true if run correctly
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         return true;
@@ -98,8 +103,9 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -108,7 +114,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
             'Root.Next',
             [
                 $order->getOrderStatusLogsTableField(OrderStatusLogPaymentCheck::class, $title),
-                new LiteralField('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get(OrderStepConfirmed::class, 'list_of_things_to_check')) . '</li></ul>'),
+                LiteralField::create('ExampleOfThingsToCheck', '<ul><li>' . implode('</li><li>', EcommerceConfig::get(OrderStepConfirmed::class, 'list_of_things_to_check')) . '</li></ul>'),
             ]
         );
 
@@ -120,6 +126,7 @@ class OrderStepConfirmed extends OrderStep implements OrderStepInterface
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t('OrderStep.CONFIRMED_DESCRIPTION', 'The shop administrator confirms all the details for the current order.');

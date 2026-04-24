@@ -2,16 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Page;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 use Sunnysideup\Ecommerce\Pages\AccountPage;
 use Sunnysideup\Ecommerce\Pages\CheckoutPage;
 use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * create default records for e-commerce
@@ -28,16 +31,18 @@ class EcommerceTaskDefaultRecords extends BuildTask
      *
      * @var string
      */
-    protected $title = 'Create e-commerce default records';
+    protected string $title = 'Create e-commerce default records';
 
     /**
      * standard SS variable.
      *
      * @var string
      */
-    protected $description = 'These default records are basic stuff like an account page, a few products, a product group.';
+    protected static string $description = 'These default records are basic stuff like an account page, a few products, a product group.';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce-default-records';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $update = [];
         $orderStep = singleton(OrderStep::class);
@@ -45,7 +50,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         // ACCOUNT PAGE
         $accountPage = DataObject::get_one(AccountPage::class, null, $cacheDataObjectGetOne = false);
         if (! $accountPage) {
-            $accountPage = new AccountPage();
+            $accountPage = AccountPage::create();
             $accountPage->Title = 'Account';
             $accountPage->MenuTitle = 'Account';
             $accountPage->MetaTitle = 'Account';
@@ -54,9 +59,9 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $accountPage->ShowInMenus = false;
             $accountPage->writeToStage(Versioned::DRAFT);
             $accountPage->publishRecursive();
-            DB::alteration_message("Account page 'Account' created", 'created');
+            $output->writeln("Account page 'Account' created");
         } else {
-            DB::alteration_message('No need to create an account page, it already exists.');
+            $output->writeln('No need to create an account page, it already exists.');
         }
 
         //CHECKOUT PAGE
@@ -65,7 +70,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
         $checkoutPage = DataObject::get_one(CheckoutPage::class, null, $cacheDataObjectGetOne = false);
         if (! $checkoutPage) {
-            $checkoutPage = new CheckoutPage();
+            $checkoutPage = CheckoutPage::create();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
             $checkoutPage->Title = 'Checkout';
             $checkoutPage->TermsAndConditionsMessage = 'You must agree with the terms and conditions to proceed. ';
@@ -75,34 +80,34 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $update[] = "Checkout page 'Checkout' created";
             $checkoutPage->ShowInMenus = false;
 
-            DB::alteration_message('new checkout page created.', 'created');
+            $output->writeln('new checkout page created.');
         } else {
-            DB::alteration_message('No need to create an checkout page, it already exists.');
+            $output->writeln('No need to create an checkout page, it already exists.');
         }
 
         if ($checkoutPage) {
             $cacheDataObjectGetOne = false;
             $termsPage = DataObject::get_one(
-                \Page::class,
+                Page::class,
                 ['URLSegment' => 'terms-and-conditions'],
                 $cacheDataObjectGetOne
             );
             if (0 === $checkoutPage->TermsPageID && $termsPage) {
                 $checkoutPage->TermsPageID = $termsPage->ID;
-                DB::alteration_message('terms and conditions page linked.', 'created');
+                $output->writeln('terms and conditions page linked.');
             } else {
-                DB::alteration_message('No terms and conditions page linked.');
+                $output->writeln('No terms and conditions page linked.');
             }
 
             $checkoutPage->writeToStage(Versioned::DRAFT);
             $checkoutPage->publishRecursive();
-            DB::alteration_message('Checkout page saved');
+            $output->writeln('Checkout page saved');
 
             $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class, null, $cacheDataObjectGetOne = false);
             if ($orderConfirmationPage) {
-                DB::alteration_message('No need to create an Order Confirmation Page. It already exists.');
+                $output->writeln('No need to create an Order Confirmation Page. It already exists.');
             } else {
-                $orderConfirmationPage = new OrderConfirmationPage();
+                $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->ParentID = $checkoutPage->ID;
                 $orderConfirmationPage->Title = 'Order confirmation';
                 $orderConfirmationPage->MenuTitle = 'Order confirmation';
@@ -112,7 +117,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 $orderConfirmationPage->ShowInMenus = false;
                 $orderConfirmationPage->writeToStage(Versioned::DRAFT);
                 $orderConfirmationPage->publishRecursive();
-                DB::alteration_message('Order Confirmation created', 'created');
+                $output->writeln('Order Confirmation created');
             }
         }
 
@@ -133,10 +138,12 @@ class EcommerceTaskDefaultRecords extends BuildTask
                 $update[] = 'created default entry for NumberOfProductsPerPage';
             }
 
-            if (count($update)) {
+            if ($update !== []) {
                 $ecommerceConfig->write();
-                DB::alteration_message($ecommerceConfig->ClassName . ' created/updated: ' . implode(' --- ', $update), 'created');
+                $output->writeln($ecommerceConfig->ClassName . ' created/updated: ' . implode(' --- ', $update));
             }
         }
+
+        return Command::SUCCESS;
     }
 }

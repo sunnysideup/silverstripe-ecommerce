@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
 use Page;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
@@ -40,6 +41,11 @@ class AccountPage extends Page
     private static $table_name = 'AccountPage';
 
     /**
+     * No custom fields to scaffold in this class.
+     */
+    private static array $scaffold_cms_fields_settings = [];
+
+    /**
      * standard SS variable.
      *
      * @var array
@@ -55,7 +61,7 @@ class AccountPage extends Page
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/AccountPage-file.gif';
 
     /**
      * standard SS variable.
@@ -76,17 +82,18 @@ class AccountPage extends Page
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view all their orders and update their details.';
+    private static $class_description = 'A page where the customer can view all their orders and update their details.';
 
     /**
      * Standard SS function, we only allow for one AccountPage to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return AccountPage::get()->filter(['ClassName' => AccountPage::class])->exists() ? false : $this->canEdit($member);
@@ -95,11 +102,12 @@ class AccountPage extends Page
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -112,10 +120,11 @@ class AccountPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return $this->canEdit($member);
@@ -124,21 +133,24 @@ class AccountPage extends Page
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('AccountPage.SINGULARNAME', 'Account Page');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('AccountPage.PLURALNAME', 'Account Pages');
     }
@@ -166,7 +178,7 @@ class AccountPage extends Page
     /**
      * Returns a list of all previous orders for the member / account.
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function PastOrders()
     {
@@ -260,15 +272,16 @@ class AccountPage extends Page
     }
 
     /**
-     * @return \SilverStripe\ORM\DataList (Orders)
+     * @return DataList (Orders)
      */
     protected function pastOrdersSelection()
     {
         $memberID = (int) Security::getCurrentUser()?->ID;
         if ($memberID === 0) {
             //set t
-            $memberID = rand() * -1;
+            $memberID = random_int(0, mt_getrandmax()) * -1;
         }
+
         if ($memberID !== 0) {
             return Order::get()
                 ->where(

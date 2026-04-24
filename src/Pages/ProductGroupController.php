@@ -2,16 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Model\List\PaginatedList;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\List\ArrayList;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\PaginatedList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -27,9 +27,9 @@ use Sunnysideup\Vardump\Vardump;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\ProductGroupController
  *
- * @property \Sunnysideup\Ecommerce\Pages\ProductGroup $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\ProductGroup data()
- * @mixin \Sunnysideup\Ecommerce\Pages\ProductGroup
+ * @property ProductGroup $dataRecord
+ * @method ProductGroup data()
+ * @mixin ProductGroup
  */
 class ProductGroupController extends PageController
 {
@@ -125,6 +125,7 @@ class ProductGroupController extends PageController
                 'cachingRelatedJavascript_AJAXlist'
             );
         }
+
         $currentOrder = ShoppingCart::current_order();
         if ($currentOrder->TotalItems(true)) {
             $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
@@ -152,7 +153,7 @@ class ProductGroupController extends PageController
     {
         if (! $this->productList) {
             $this->productList = $this->getCachedProductList();
-            if (! $this->productList instanceof \SilverStripe\ORM\DataList) {
+            if (! $this->productList instanceof DataList) {
                 // make sure to apply search filter first.
                 $this->productList = $this->getFinalProductList()
                     ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
@@ -164,6 +165,7 @@ class ProductGroupController extends PageController
                 $this->setCachedProductList($this->productList);
             }
         }
+
         // @return SS_List
         return $this->productList;
     }
@@ -400,6 +402,7 @@ class ProductGroupController extends PageController
         if ($this->IsShowFullList()) {
             return min($this->TotalCount(), $this->MaxNumberOfProductsPerPageAbsolute());
         }
+
         $perPage = $this->getProductsPerPage();
         $total = $this->TotalCount();
 
@@ -423,6 +426,7 @@ class ProductGroupController extends PageController
         if ($v > $totalCount) {
             $v = $totalCount;
         }
+
         return (int) $v;
     }
 
@@ -529,6 +533,7 @@ class ProductGroupController extends PageController
         if (is_array($extendedHeading) && count($extendedHeading)) {
             $extendedHeading = $extendedHeading[0];
         }
+
         return $extendedHeading ?: $heading;
     }
 
@@ -601,10 +606,12 @@ class ProductGroupController extends PageController
             if (! is_array($filter['ID'])) {
                 $filter['ID'] = [$filter['ID']];
             }
+
             $filter['ID'] = array_merge($filter['ID'], $listIds);
         } else {
             $filter += ['ID' => $listIds];
         }
+
         $filterList = ProductGroup::get()->filter($filter)->columnUnique();
         return $list->filter(['ID' => $filterList]);
     }
@@ -640,6 +647,7 @@ class ProductGroupController extends PageController
         return $this->Link($action);
     }
 
+    #[Override]
     public function Link($action = null): string
     {
         return $this->getLinkTemplate($action);
@@ -665,7 +673,7 @@ class ProductGroupController extends PageController
      * of recommended product groups. They will be returned here...
      * We sort the list in the order that it is provided.
      *
-     * @return null|\SilverStripe\ORM\DataList (ProductGroups)
+     * @return null|DataList (ProductGroups)
      */
     public function SearchResultsChildGroups(): ?DataList
     {
@@ -720,15 +728,18 @@ class ProductGroupController extends PageController
         if ($filter && count($filter)) {
             $list = $list->filter($filter);
         }
+
         if ($list && $list->exists()) {
             $vars = implode(',', $list->column('InternalItemID'));
         } else {
             if ($noReturnIfNoVars) {
                 return '';
             }
+
             $vars = '';
         }
-        $glue = strpos($link, '?') === false ? '?' : '&';
+
+        $glue = str_contains((string) $link, '?') ? '&' : '?';
         return $link . $glue . 'codes=' . $vars;
     }
 
@@ -798,9 +809,11 @@ class ProductGroupController extends PageController
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
         }
+
         if ($extraFilter) {
             $this->finalProductList->setExtraFilter($extraFilter);
         }
+
         if ($alternativeSort) {
             $this->finalProductList->setAlternativeSort($alternativeSort);
         }
@@ -842,12 +855,14 @@ class ProductGroupController extends PageController
         //do nothing here, but on ProductGroupSearchPage, we set it as the baselist....
     }
 
+    #[Override]
     protected function afterHandleRequest()
     {
         if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
             $this->getProductGroupSchema()->getDebugProviderAsObject($this, $this->dataRecord)->print();
             die();
         }
+
         parent::afterHandleRequest();
     }
 
@@ -889,12 +904,14 @@ class ProductGroupController extends PageController
         return $this->getUserPreferencesClass()->getLinkTemplate($action, $type, $replacementForType);
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();
         if ($this->request->getVar('reload')) {
             return $this->redirect($this->Link());
         }
+
         $this->originalTitle = $this->MenuTitle;
         Requirements::themedCSS('client/css/ProductGroup');
         Requirements::themedCSS('client/css/ProductGroupPopUp');
@@ -903,6 +920,7 @@ class ProductGroupController extends PageController
         $this->saveUserPreferences();
         $this->setSearchString();
         //makes sure best match only applies to search -i.e. reset otherwise.
+        return null;
     }
 
     protected function setIdArrayDefaultSort($idArray, $alternativeSort = null)

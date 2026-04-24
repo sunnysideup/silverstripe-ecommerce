@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use Override;
+use SilverStripe\ORM\DataList;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
@@ -28,8 +31,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property int $ProcessAttempts
  * @property int $OrderID
  * @property int $OrderStepID
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
- * @method \Sunnysideup\Ecommerce\Model\Process\OrderStep OrderStep()
+ * @method Order Order()
+ * @method OrderStep OrderStep()
  */
 class OrderProcessQueue extends DataObject
 {
@@ -106,11 +109,12 @@ class OrderProcessQueue extends DataObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -119,23 +123,27 @@ class OrderProcessQueue extends DataObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         //is the member is a shop assistant they can always view it
         if (EcommerceRole::current_member_is_shop_assistant($member)) {
             return true;
@@ -147,11 +155,12 @@ class OrderProcessQueue extends DataObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         return false;
@@ -161,21 +170,24 @@ class OrderProcessQueue extends DataObject
      * Standard SS method
      * Queues can be deleted if needed.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return parent::canDelete($member);
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderProcessQueue.SINGULAR_NAME', 'Order In Queue');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderProcessQueue.PLURAL_NAME', 'Orders In Queue');
     }
@@ -191,6 +203,7 @@ class OrderProcessQueue extends DataObject
         if (! $order || ! $order->ID) {
             user_error('No real order provided.');
         }
+
         $filter = [
             'OrderID' => $order->ID,
             'OrderStepID' => $order->StatusID,
@@ -208,6 +221,7 @@ class OrderProcessQueue extends DataObject
                 $existingEntry->{$field} = $value;
             }
         }
+
         $existingEntry->write();
 
         return $existingEntry;
@@ -225,14 +239,15 @@ class OrderProcessQueue extends DataObject
     public function process(?Order $order = null)
     {
         //find variables
-        if (! $order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if (! $order instanceof Order) {
             $order = $this->getOrderCached();
             $myQueueObject = $this;
         } else {
             $myQueueObject = $this->getQueueObject($order);
         }
+
         //delete if order is gone ...
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             //if order has moved already ... delete
             if (
                 $order->IsCancelled() ||
@@ -262,6 +277,7 @@ class OrderProcessQueue extends DataObject
 
                         return true;
                     }
+
                     $message = 'Attempt to move order was not successful.';
                     $myQueueObject->InProcess = false;
                     $myQueueObject->write();
@@ -310,7 +326,7 @@ class OrderProcessQueue extends DataObject
      * @param int $id    force this Order to be processed
      * @param int $limit total number of orders that can be retrieved at any one time
      *
-     * @return \SilverStripe\ORM\DataList (of orders)
+     * @return DataList (of orders)
      */
     public function OrdersToBeProcessed($id = 0, $limit = 9999)
     {
@@ -347,7 +363,7 @@ class OrderProcessQueue extends DataObject
      *
      * @param int $limit total number of orders that can be retrieved at any one time
      *
-     * @return \SilverStripe\ORM\DataList (of orders)
+     * @return DataList (of orders)
      */
     public function AllOrdersInQueue($limit = 9999)
     {
@@ -364,7 +380,7 @@ class OrderProcessQueue extends DataObject
      *
      * @param int $limit total number of orders that can be retrieved at any one time
      *
-     * @return \SilverStripe\ORM\DataList (of orders)
+     * @return DataList (of orders)
      */
     public function OrdersInQueueThatAreNotReady($limit = 9999)
     {
@@ -383,6 +399,7 @@ class OrderProcessQueue extends DataObject
         foreach ($rows as $row) {
             $orderIDs[$row['OrderID']] = $row['OrderID'];
         }
+
         $orderIDs = ArrayMethods::filter_array($orderIDs);
 
         return Order::get()
@@ -404,7 +421,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
+     * @return DBDatetime|DBField
      */
     public function ToBeProcessedAt()
     {
@@ -414,7 +431,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
+     * @return DBDatetime|DBField
      */
     public function getToBeProcessedAt()
     {
@@ -424,7 +441,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
+     * @return DBDatetime|DBField
      */
     public function HasBeenInQueueForSince()
     {
@@ -434,7 +451,7 @@ class OrderProcessQueue extends DataObject
     /**
      * casted variable.
      *
-     * @return \SilverStripe\ORM\FieldType\DBDatetime|\SilverStripe\ORM\FieldType\DBField
+     * @return DBDatetime|DBField
      */
     public function getHasBeenInQueueForSince()
     {
@@ -444,8 +461,9 @@ class OrderProcessQueue extends DataObject
     /**
      * CMS Fields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -489,6 +507,7 @@ class OrderProcessQueue extends DataObject
         return $fields;
     }
 
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();

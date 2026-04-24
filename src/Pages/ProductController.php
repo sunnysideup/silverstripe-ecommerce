@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use PageController;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -9,7 +11,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
@@ -21,9 +22,9 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\ProductController
  *
- * @property \Sunnysideup\Ecommerce\Pages\Product $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\Product data()
- * @mixin \Sunnysideup\Ecommerce\Pages\Product
+ * @property Product $dataRecord
+ * @method Product data()
+ * @mixin Product
  */
 class ProductController extends PageController
 {
@@ -96,15 +97,13 @@ class ProductController extends PageController
     {
         if ($this->canPurchase()) {
             $farray = [];
-            $fields = new FieldList($farray);
-            $fields->push(new NumericField('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
-            $actions = new FieldList(
-                new FormAction('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart'))
-            );
+            $fields = FieldList::create($farray);
+            $fields->push(NumericField::create('Quantity', 'Quantity', 1)); //TODO: perhaps use a dropdown instead (elimiates need to use keyboard)
+            $actions = FieldList::create(FormAction::create('addproductfromform', _t('Product.ADDLINK', 'Add this item to cart')));
             $requiredFields = ['Quantity'];
-            $validator = new RequiredFields($requiredFields);
+            $validator = RequiredFieldsValidator::create($requiredFields);
 
-            return new Form($this, 'AddProductForm', $fields, $actions, $validator);
+            return Form::create($this, 'AddProductForm', $fields, $actions, $validator);
         }
 
         return _t('Product.PRODUCTNOTFORSALE', 'Product not for sale');
@@ -120,10 +119,12 @@ class ProductController extends PageController
             if ($quantity === 0.0) {
                 $quantity = 1;
             }
+
             $product = Product::get_by_id($this->ID);
             if ($product) {
                 ShoppingCart::singleton()->addBuyable($product, $quantity);
             }
+
             if ($this->IsInCart()) {
                 $msg = _t('Order.SUCCESSFULLYADDED', 'Added to cart.');
                 $status = 'good';
@@ -131,9 +132,11 @@ class ProductController extends PageController
                 $msg = _t('Order.NOTADDEDTOCART', 'Not added to cart.');
                 $status = 'bad';
             }
+
             if (Director::is_ajax()) {
                 return ShoppingCart::singleton()->setMessageAndReturn($msg, $status);
             }
+
             $form->sessionMessage($msg, $status);
             $this->redirectBack();
         } else {
@@ -189,6 +192,7 @@ class ProductController extends PageController
             if ($id === $this->ID) {
                 return Product::get_by_id($previousID);
             }
+
             $previousID = $id;
         }
 
@@ -203,7 +207,8 @@ class ProductController extends PageController
         return $this->PreviousProduct() || $this->NextProduct();
     }
 
-    public function debug()
+    #[Override]
+    public function debug(): string
     {
         $member = Security::getCurrentUser();
         if (! $member || ! $member->IsShopAdmin()) {
@@ -219,6 +224,7 @@ class ProductController extends PageController
     /**
      * Standard SS method.
      */
+    #[Override]
     protected function init()
     {
         parent::init();

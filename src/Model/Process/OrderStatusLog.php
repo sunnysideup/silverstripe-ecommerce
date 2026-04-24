@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use Override;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
@@ -32,8 +34,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property bool $InternalUseOnly
  * @property int $AuthorID
  * @property int $OrderID
- * @method \SilverStripe\Security\Member Author()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method Member Author()
+ * @method Order Order()
  */
 class OrderStatusLog extends DataObject implements EditableEcommerceObject
 {
@@ -202,23 +204,27 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         //is the member is a shop assistant they can always view it
         if (EcommerceRole::current_member_is_shop_assistant($member)) {
             return true;
@@ -230,31 +236,37 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
+
         //is the member is a shop assistant they can always view it
         if (EcommerceRole::current_member_is_shop_assistant($member)) {
             return true;
         }
+
         if ($this->InternalUseOnly) {
             //only Shop Administrators can see it ...
             return false;
         }
+
         $order = $this->getOrderCached();
         if ($order && $order->canView($member)) {
             return true;
@@ -266,23 +278,25 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
 
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             //Order Status Logs are so basic, anyone can edit them
             if (OrderStatusLog::class === $this->ClassName) {
                 return $order->canView($member);
@@ -300,15 +314,17 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      * Standard SS method
      * logs can never be deleted...
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
@@ -317,12 +333,14 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         return false;
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.ORDERLOGENTRY', 'Order Log Entry');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderStatusLog.ORDERLOGENTRIES', 'Order Log Entries');
     }
@@ -330,6 +348,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
+    #[Override]
     public function populateDefaults()
     {
         if (Security::database_is_ready()) {
@@ -340,8 +359,9 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -376,6 +396,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                     )
                 );
             }
+
             $bypassField = $fields->dataFieldByName('BypassEmailing');
             if ($bypassField) {
                 if ($order && $order->MyStep()->hasCustomerMessage()) {
@@ -395,6 +416,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
         foreach ($availableLogs as $className) {
             $availableLogsAssociative[$className] = Injector::inst()->get($className)->singular_name();
         }
+
         $title = _t('OrderStatusLog.TYPE', 'Type');
         if (($this->exists() || $this->limitedToOneClassName())
                 && $this->ClassName &&
@@ -423,6 +445,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
             $ecommerceClassNameOrTypeDropdownField->setIncludeBaseClass(true);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Title');
         }
+
         $fields->replaceField(
             'OrderID',
             CMSEditLinkField::create(
@@ -441,6 +464,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -473,8 +497,9 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
@@ -511,7 +536,8 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function debug()
+    #[Override]
+    public function debug(): string
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }
@@ -524,6 +550,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -535,6 +562,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 $this->OrderID = $orderID;
             }
         }
+
         //END HACK TO PREVENT LOSS
         if (! $this->AuthorID) {
             $member = Security::getCurrentUser();
@@ -542,6 +570,7 @@ class OrderStatusLog extends DataObject implements EditableEcommerceObject
                 $this->AuthorID = $member->ID;
             }
         }
+
         if (! $this->Title) {
             $this->Title = _t('OrderStatusLog.ORDERUPDATE', 'Order Update');
         }

@@ -35,6 +35,7 @@ class CartResponseAsArray
                 $messagesImploded .= '<span class="' . $messageArray['Type'] . '">' . $messageArray['Message'] . '</span>';
             }
         }
+
         return $messagesImploded;
     }
 
@@ -118,34 +119,41 @@ class CartResponseAsArray
                 $template = $template['template'] ?? null;
                 $minNumberOfItems = $template['min_number_of_items'] ?? 0;
             }
+
             if (! $template) {
                 continue;
             }
+
             $selector = $ajaxObject->{$idMethod}();
             $classOrID = '#';
-            if (false !== stripos($idMethod, 'class')) {
+            if (false !== stripos((string) $idMethod, 'class')) {
                 $classOrID = '.';
             }
+
             $data = $minNumberOfItems && $items->count() < $minNumberOfItems ? '' : ' ' . $currentOrder->RenderWith($template);
 
             $js[$classOrID . $selector] = [
                 'html' => $data,
             ];
         }
+
         //now can check if it needs to be reloaded
         if (self::$forceReload) {
             $js['body'] = ['callback' => 'window.location.reload();'];
             self::$forceReload = false;
         }
+
         //merge and return
         if (is_array($additionalData) && count($additionalData)) {
             $js = array_merge($js, $additionalData);
         }
+
         foreach ($js as $key => $value) {
             if (isset($value['html']) && is_object($value['html'])) {
                 $js[$key]['html'] = $value['html']->forTemplate();
             }
         }
+
         return $js;
     }
 }

@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use Override;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
@@ -16,6 +21,8 @@ use Sunnysideup\Ecommerce\Interfaces\EditableEcommerceObject;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputDefinition;
 
 /**
  * Class \Sunnysideup\Ecommerce\Model\Address\EcommerceCountry
@@ -23,9 +30,9 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskCountryAndRegion;
  * @property string $Code
  * @property string $Name
  * @property bool $DoNotAllowSales
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Address\EcommerceRegion[] Regions()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludeFromCountries()
- * @method \SilverStripe\ORM\ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInCountries()
+ * @method DataList|EcommerceRegion[] Regions()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] ExcludeFromCountries()
+ * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] AvailableInCountries()
  * @mixin \Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptionsCountry
  */
 class EcommerceCountry extends DataObject implements EditableEcommerceObject
@@ -217,12 +224,14 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      */
     private static $list_of_allowed_entries_for_dropdown_array = [];
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('EcommerceCountry.COUNTRY', 'Country');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('EcommerceCountry.COUNTRIES', 'Countries');
     }
@@ -230,11 +239,12 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         $can = false;
@@ -258,11 +268,12 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
@@ -284,11 +295,12 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS Method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
@@ -310,10 +322,11 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         if (! $member) {
@@ -461,6 +474,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if ($code === '' || $code === '0') {
             $code = self::get_country_default();
         }
+
         $options = self::get_country_dropdown(true);
         // check if code was provided, and is found in the country array
         if (isset($options[$code])) {
@@ -498,7 +512,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         $orderID = ShoppingCart::current_order_id($orderID);
 
-        return isset(self::$_country_cache[$orderID]) ? self::$_country_cache[$orderID] : null;
+        return self::$_country_cache[$orderID] ?? null;
     }
 
     /**
@@ -525,6 +539,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         if (! $orderID) {
             $orderID = ShoppingCart::current_order_id($orderID);
         }
+
         $countryCode = self::get_country_cache($orderID);
         if (null === $countryCode || $recalculate || Order::get_needs_recalculating($orderID)) {
             //1. fixed country is first
@@ -687,21 +702,19 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         return self::$_allow_sales_cache[$orderID];
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
         $fields->addFieldToTab(
             'Root.Main',
-            new LiteralField(
-                'Add Add Countries',
-                '
+            LiteralField::create('Add Add Countries', '
                 <h3>Short-Cuts</h3>
                 <h6>
                     <a href="/dev/tasks/EcommerceTaskCountryAndRegionDisallowAllCountries" target="_blank">' . _t('EcommerceCountry.DISALLOW_ALL', 'disallow sales to all countries') . '</a> |||
                     <a href="/dev/tasks/EcommerceTaskCountryAndRegionAllowAllCountries" target="_blank">' . _t('EcommerceCountry.ALLOW_ALL', 'allow sales to all countries') . '</a>
                 </h6>
-            '
-            )
+            ')
         );
 
         return $fields;
@@ -714,6 +727,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -722,12 +736,16 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
         if ((! EcommerceCountry::get()->exists()) || isset($_REQUEST['resetecommercecountries'])) {
-            $task = new EcommerceTaskCountryAndRegion();
-            $task->run(null);
+            $task = EcommerceTaskCountryAndRegion::create();
+            $definition = new InputDefinition($task->getOptions());
+            $input = new ArrayInput([], $definition);
+            $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
+            $task->run($input, $output);
         }
     }
 
@@ -840,6 +858,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
      * standard SS method
      * cleans up codes.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();

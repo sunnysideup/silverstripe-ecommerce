@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use DateTimeImmutable;
 use DateTimeZone;
 use SilverStripe\Core\Config\Config;
@@ -19,7 +22,6 @@ use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Traits\OrderCached;
 
 // Class used to describe the steps in the checkout
-
 /**
  * Class \Sunnysideup\Ecommerce\Model\Process\OrderFeedback
  *
@@ -27,7 +29,7 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property string $Note
  * @property bool $Actioned
  * @property int $OrderID
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method Order Order()
  */
 class Referral extends DataObject implements EditableEcommerceObject
 {
@@ -300,7 +302,7 @@ class Referral extends DataObject implements EditableEcommerceObject
 
     public static function add_referral(Order $order, ?array $params = []): ?int
     {
-        if ($params !== null && $params !== [] && count($params) > 0) {
+        if (!in_array($params, [null, [], []], true)) {
             $filter = [
                 'UniqueID' => ($params['_uniqueID'] ?? '') ?: $order->ID,
             ];
@@ -308,6 +310,7 @@ class Referral extends DataObject implements EditableEcommerceObject
             if (! $ref) {
                 $ref = Referral::create($filter);
             }
+
             $params = Convert::raw2sql($params);
             $ref->LandingUrl = $params['_landingUrl'] ?? '';
             $ref->Referrer = $params['_referrer'] ?? '';
@@ -316,6 +319,7 @@ class Referral extends DataObject implements EditableEcommerceObject
                 $localDate = $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
                 $ref->CapturedAt = $localDate->format('Y-m-d H:i:s');
             }
+
             // set fields based on config
             $fieldValues = [];
             $from = [];
@@ -330,18 +334,23 @@ class Referral extends DataObject implements EditableEcommerceObject
                     $field = 'Source';
                     $val .= ' (' . $name . ')';
                 }
+
                 if (! isset($fieldValues[$field])) {
                     $fieldValues[$field] = [];
                 }
+
                 $fieldValues[$field][] = $val;
             }
+
             foreach ($fieldValues as $field => $values) {
                 $ref->$field = implode(' | ', array_filter(array_unique($values)));
             }
+
             $ref->From = $from !== [] ? implode(' | ', array_filter(array_unique($from))) : 'Other';
             $ref->write();
             return $ref->ID;
         }
+
         return null;
     }
 
@@ -479,12 +488,14 @@ class Referral extends DataObject implements EditableEcommerceObject
      */
     private static $can_create = false;
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderFeedback.SINGULAR_NAME', 'Order Referral');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderFeedback.PLURAL_NAME', 'Order Referrals');
     }
@@ -493,11 +504,12 @@ class Referral extends DataObject implements EditableEcommerceObject
      * these are only created programmatically
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -506,20 +518,23 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -530,11 +545,12 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         return false;
@@ -543,10 +559,11 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -555,8 +572,9 @@ class Referral extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -579,6 +597,7 @@ class Referral extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -594,11 +613,12 @@ class Referral extends DataObject implements EditableEcommerceObject
         return $this->getTitle();
     }
 
+    #[Override]
     public function getTitle()
     {
         $string = $this->Created;
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $string .= ' (' . $order->getTitle() . ')';
         }
 
@@ -614,11 +634,12 @@ class Referral extends DataObject implements EditableEcommerceObject
             $txt = $this->getFullCode();
             $list = [];
             foreach ($source as $key => $getVarDetails) {
-                if (strpos($txt, $key) !== false) {
+                if (str_contains($txt, (string) $key)) {
                     $list[] = $getVarDetails['Name'];
                 }
             }
         }
+
         return $list !== [] ? implode(' | ', array_filter(array_unique($list))) : 'Other';
     }
 
@@ -627,7 +648,8 @@ class Referral extends DataObject implements EditableEcommerceObject
         return implode('|', array_filter([$this->Source,  $this->Medium, $this->Campaign, $this->Term, $this->Content]));
     }
 
-    public function onBeforeWrite()
+    #[Override]
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
     }
@@ -637,6 +659,7 @@ class Referral extends DataObject implements EditableEcommerceObject
         if ($this->Processed) {
             return;
         }
+
         $save = false;
         $processed = false;
         $stale = strtotime($this->Created) < strtotime('-' . $daysAgo . ' days');
@@ -645,22 +668,26 @@ class Referral extends DataObject implements EditableEcommerceObject
             $processed = true;
             $save = true;
         }
+
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             if (! $this->IsSubmitted) {
                 $this->IsSubmitted = $order->getIsSubmitted();
                 $save = true;
             }
+
             if ($this->IsSubmitted && ! $this->AmountInvoiced) {
                 $this->AmountInvoiced = $order->getTotal();
                 $save = true;
                 $processed = true;
             }
         }
+
         if (! $this->From) {
             $this->From = $this->getFromAfterwards();
             $save = true;
         }
+
         if ($save) {
             $this->Processed = $processed;
             $this->write();
@@ -674,11 +701,13 @@ class Referral extends DataObject implements EditableEcommerceObject
             if (! $this->OrderID) {
                 return true;
             }
+
             $amountInvoiced = floatval($this->AmountInvoiced);
             if ($amountInvoiced <= 0.01) {
                 return true;
             }
         }
+
         return false;
     }
 }

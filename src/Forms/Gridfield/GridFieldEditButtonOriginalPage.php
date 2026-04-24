@@ -2,12 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use SilverStripe\Model\ArrayData;
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ArrayData;
 
 /**
  * Provides the entry point to editing a single record presented by the
@@ -28,12 +29,13 @@ class GridFieldEditButtonOriginalPage extends GridFieldEditButton implements Gri
      *
      * @return string - the HTML for the column
      */
+    #[Override]
     public function getColumnContent($gridField, $record, $columnName)
     {
         // No permission checks, handled through GridFieldDetailForm,
         // which can make the form readonly if no edit permissions are available.
         if ($record->hasMethod('CMSEditLink')) {
-            $data = new ArrayData([
+            $data = ArrayData::create([
                 'Link' => Controller::join_links($record->CMSEditLink()),
             ]);
 

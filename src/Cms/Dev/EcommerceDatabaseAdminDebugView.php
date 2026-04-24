@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Cms\Dev;
 
 use SilverStripe\Control\Controller;
@@ -19,6 +21,11 @@ class EcommerceDatabaseAdminDebugView extends DebugView
 
     public function writeContent(Controller $controller)
     {
-        echo $controller->RenderWith(get_class($controller));
+        echo $controller->RenderWith($controller::class);
+    }
+
+    public function writeFooter()
+    {
+        echo '<p><a href="' . Controller::join_links(Controller::curr()->Link(), 'run') . '">Run Task</a></p>';
     }
 }

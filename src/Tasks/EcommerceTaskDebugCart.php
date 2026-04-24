@@ -5,21 +5,28 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 class EcommerceTaskDebugCart extends BuildTask
 {
-    protected $title = 'Debug your cart';
+    protected string $title = 'Debug your cart';
 
-    protected $description = 'Check all the values in your cart to find any potential errors.';
+    protected static string $description = 'Check all the values in your cart to find any potential errors.';
 
-    public function run($request)
+    protected static string $commandName = 'ecommerce-debug-cart';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $order = ShoppingCart::current_order();
-        echo self::debug_object($order);
+        $output->writeForHtml(self::debug_object($order));
+
+        return Command::SUCCESS;
     }
 
-    public static function debug_object($obj)
+    public static function debug_object($obj): string
     {
         $html = '
             <h2>' . $obj->ClassName . '</h2><ul>';
@@ -29,7 +36,7 @@ class EcommerceTaskDebugCart extends BuildTask
         if (count($fields) > 0) {
             foreach ($fields as $key => $type) {
                 $value = self::cleanup_value($type, $obj->{$key});
-                $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
+                $html .= sprintf('<li><b>%s (%s):</b> ', $key, $type) . $value . '</li>';
             }
         }
 
@@ -44,8 +51,9 @@ class EcommerceTaskDebugCart extends BuildTask
                     $method = 'get' . $key;
                     $value = $obj->hasMethod($method) ? $obj->{$method}() : $obj->{$key};
                 }
+
                 $value = self::cleanup_value($type, $value);
-                $html .= "<li><b>{$key} ({$type}):</b> " . $value . '</li>';
+                $html .= sprintf('<li><b>%s (%s):</b> ', $key, $type) . $value . '</li>';
             }
         }
 
@@ -59,9 +67,11 @@ class EcommerceTaskDebugCart extends BuildTask
                 if ($object && ($object && $object->exists())) {
                     $value = ', ' . $object->getTitle();
                 }
-                $html .= "<li><b>{$key} ({$type}):</b> " . $obj->{$field} . $value . ' </li>';
+
+                $html .= sprintf('<li><b>%s (%s):</b> ', $key, $type) . $obj->{$field} . $value . ' </li>';
             }
         }
+
         //to do: has_many and many_many
 
         return $html . '</ul>';

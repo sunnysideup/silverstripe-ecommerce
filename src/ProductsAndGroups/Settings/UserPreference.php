@@ -2,14 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Settings;
 
+use SilverStripe\Model\ArrayData;
+use Page;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -231,7 +231,7 @@ class UserPreference
                 if ('GROUPFILTER' === $type) {
                     if ($newPreference) {
                         $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
-                        if ($otherProductGroup instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup) {
+                        if ($otherProductGroup instanceof ProductGroup) {
                             $newPreference = [
                                 'key' => BaseApplyer::DEFAULT_NAME,
                                 'params' => $otherProductGroup->FilterForGroupSegment(),
@@ -373,7 +373,7 @@ class UserPreference
         //todo: add to config
 
         if (! $this->secondaryTitleHasBeenAdded) {
-            if (trim($secondaryTitle) !== '' && trim($secondaryTitle) !== '0') {
+            if (trim((string) $secondaryTitle) !== '' && trim((string) $secondaryTitle) !== '0') {
                 $secondaryTitle = $this->addToTitle($secondaryTitle);
             }
 
@@ -415,7 +415,7 @@ class UserPreference
 
             $currentPageNumber = $this->rootGroupController->getCurrentPageNumber();
             if ($currentPageNumber > 1) {
-                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', \Page::class) . ' ' . $currentPageNumber);
+                $secondaryTitle .= $this->addToTitle(_t('ProductGroup.PAGE', Page::class) . ' ' . $currentPageNumber);
             }
 
             if ($secondaryTitle) {
@@ -486,7 +486,7 @@ class UserPreference
             $actionCount = $actions ? $actions->count() : 0;
             $isGroupSegmentStyle = $actionCount > 0;
             $isNonGroupSegmentStyle = count($options) > 1;
-            $list = new ArrayList();
+            $list = ArrayList::create();
             if ($isGroupSegmentStyle) {
                 if (! $currentKey) {
                     $currentKey = $this->getCurrentUserPreferencesParams($type);
@@ -500,49 +500,48 @@ class UserPreference
                     $obj = null;
                     if ($group->ClassName !== $previousClassName) {
                         $previousClassName = $group->ClassName;
-                        $obj = new ArrayData(
-                            [
-                                'ID' => 0,
-                                'ClassName' => null,
-                                'Title' => _t('ProductGroup.ALL', 'All') . ' ' . $group->i18n_plural_name(), //
-                                'Current' => $isCurrent,
-                                'Link' => $this->getLinkTemplate('', $type, '', true),
-                                'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
-                                'Ajaxify' => $ajaxify,
-                                'Image' => null,
-                                'Key' => '',
-                                'ResetFor' => $getVar,
-                                'IsResetFor' => true,
-                            ]
-                        );
+                        $obj = ArrayData::create([
+                            'ID' => 0,
+                            'ClassName' => null,
+                            'Title' => _t('ProductGroup.ALL', 'All') . ' ' . $group->i18n_plural_name(), //
+                            'Current' => $isCurrent,
+                            'Link' => $this->getLinkTemplate('', $type, '', true),
+                            'LinkingMode' => $isCurrent ? 'current is-all' : 'link is-all',
+                            'Ajaxify' => $ajaxify,
+                            'Image' => null,
+                            'Key' => '',
+                            'ResetFor' => $getVar,
+                            'IsResetFor' => true,
+                        ]);
                         $list->push($obj);
                     }
+
                     $isCurrent = $currentKey === $group->FilterForGroupSegment();
                     $title = $group->MenuTitle;
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
-                    if ($prevGroup && trim($prevGroup->Title) === trim($group->Title) && $prevGroup->ParentID !== $group->ParentID) {
+                    if ($prevGroup && trim((string) $prevGroup->Title) === trim((string) $group->Title) && $prevGroup->ParentID !== $group->ParentID) {
                         $title = $crumb . ' - ' . $title;
                         $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                     }
+
                     foreach (array_keys($options) as $key) {
-                        $obj = new ArrayData(
-                            [
-                                'ID' => $group->ID,
-                                'ClassName' => $group->ClassName,
-                                'Title' => $title,
-                                'ProductGroupBreadcrumb' => $crumb,
-                                'Current' => $isCurrent,
-                                'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
-                                'LinkingMode' => $isCurrent ? 'current' : 'link',
-                                'Ajaxify' => $ajaxify,
-                                'Image' => $group->Image(),
-                                'Key' => $key,
-                                'IsResetFor' => false,
-                                'ResetFor' => '',
-                            ]
-                        );
+                        $obj = ArrayData::create([
+                            'ID' => $group->ID,
+                            'ClassName' => $group->ClassName,
+                            'Title' => $title,
+                            'ProductGroupBreadcrumb' => $crumb,
+                            'Current' => $isCurrent,
+                            'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
+                            'LinkingMode' => $isCurrent ? 'current' : 'link',
+                            'Ajaxify' => $ajaxify,
+                            'Image' => $group->Image(),
+                            'Key' => $key,
+                            'IsResetFor' => false,
+                            'ResetFor' => '',
+                        ]);
                         $list->push($obj);
                     }
+
                     $prevGroup = $obj;
                     $previousClassName = $group->ClassName;
                 }
@@ -550,6 +549,7 @@ class UserPreference
                 if (! $currentKey) {
                     $currentKey = $this->getCurrentUserPreferencesKey($type);
                 }
+
                 $sortFilterDisplayValues = $this->rootGroupController->getSortFilterDisplayValues();
                 $getVar = $sortFilterDisplayValues[$type]['getVariable'] ?? '';
                 $dbFieldName = $sortFilterDisplayValues[$type]['dbFieldName'] ?? '';
@@ -558,6 +558,7 @@ class UserPreference
                 } else {
                     $default = BaseApplyer::DEFAULT_NAME;
                 }
+
                 foreach ($options as $key => $data) {
                     $isCurrent = $currentKey === $key;
                     $isResetFor = $key === $default;
@@ -574,12 +575,14 @@ class UserPreference
                         'ResetFor' => $resetFor,
                     ];
 
-                    $obj = new ArrayData($data);
+                    $obj = ArrayData::create($data);
                     $list->push($obj);
                 }
             }
+
             self::$links_per_type_cache[$cacheKey] = $list;
         }
+
         return self::$links_per_type_cache[$cacheKey];
     }
 
@@ -600,12 +603,13 @@ class UserPreference
             foreach ($this->rootGroupController->getSortFilterDisplayValues() as $myType => $values) {
                 if ($type && $myType === $type) {
                     // if it is mytype, then we have a replacement
-                    $value = $replacementForType ? $replacementForType : self::GET_VAR_VALUE_PLACE_HOLDER;
+                    $value = $replacementForType ?: self::GET_VAR_VALUE_PLACE_HOLDER;
                 } else {
                     //keep current value
                     $value = $this->getCurrentUserPreferencesKey($myType);
                 }
-                if ($type === $myType && (! $hideCurrentValue && ($this->getIsSearch() || trim($this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)))) {
+
+                if ($type === $myType && (! $hideCurrentValue && ($this->getIsSearch() || trim((string) $this->rootGroup->getListConfigCalculated($myType)) !== trim((string) $value)))) {
                     $getVars[$values['getVariable']] = $value;
                 }
             }

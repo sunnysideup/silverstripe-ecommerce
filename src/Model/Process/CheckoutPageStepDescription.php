@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
@@ -114,12 +117,14 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      */
     private static $can_create = false;
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('CheckoutPage.CHECKOUTSTEPDESCRIPTION', 'Checkout Step Description');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('CheckoutPage.CHECKOUTSTEPDESCRIPTIONS', 'Checkout Step Descriptions');
     }
@@ -128,11 +133,12 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      * these are only created programmatically
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -141,20 +147,23 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -165,20 +174,23 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -189,23 +201,27 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         $array = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         if (in_array($this->getCode, $array, true)) {
             return false;
         }
+
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -216,13 +232,15 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        $fields->replaceField('Above', new HTMLEditorField('Above', _t('Checkout.ABOVE', 'Top of section note')));
-        $fields->replaceField('Below', new HTMLEditorField('Below', _t('Checkout.BELOW', 'Bottom of section note')));
+        $fields->replaceField('Above', HTMLEditorField::create('Above', _t('Checkout.ABOVE', 'Top of section note')));
+        $fields->replaceField('Below', HTMLEditorField::create('Below', _t('Checkout.BELOW', 'Bottom of section note')));
+
         $steps = EcommerceConfig::get(CheckoutPageController::class, 'checkout_steps');
         $fields->replaceField(
             'Code',
@@ -246,6 +264,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -261,6 +280,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
         return $this->getTitle();
     }
 
+    #[Override]
     public function getTitle()
     {
         return $this->Heading;
@@ -269,6 +289,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
     /**
      * standard SS method.
      */
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -286,6 +307,7 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                     $addCodeStep->write();
                 }
             }
+
             foreach ($steps as $code) {
                 $filter = ['Code' => $code];
                 $obj = CheckoutPageStepDescription::get()->filter($filter)->first();
@@ -295,10 +317,12 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
                     $obj = CheckoutPageStepDescription::create($filter);
                     $obj->Heading = $this->getDefaultTitle($code);
                     $obj->write();
-                    DB::alteration_message("Creating CheckoutPageStepDescription {$code}", 'created');
+                    DB::alteration_message('Creating CheckoutPageStepDescription ' . $code, 'created');
                 }
+
                 $idArray[$obj->ID] = $obj->ID;
             }
+
             $toDeleteObjects = CheckoutPageStepDescription::get()->exclude(['ID' => ArrayMethods::filter_array($idArray)]);
             if ($toDeleteObjects->exists()) {
                 foreach ($toDeleteObjects as $toDeleteObject) {
@@ -318,15 +342,11 @@ class CheckoutPageStepDescription extends DataObject implements EditableEcommerc
      */
     private function getDefaultTitle($code)
     {
-        switch ($code) {
-            case 'orderitems':
-                return _t('CheckoutPage.ORDERITEMS', 'Order Details');
-            case 'orderformaddress':
-                return _t('CheckoutPage.ORDERFORMADDRESS', 'Your Details');
-            case 'orderconfirmationandpayment':
-                return _t('CheckoutPage.ORDERCONFIRMATIONANDPAYMENT', 'Confirm and Pay');
-        }
-
-        return $code;
+        return match ($code) {
+            'orderitems' => _t('CheckoutPage.ORDERITEMS', 'Order Details'),
+            'orderformaddress' => _t('CheckoutPage.ORDERFORMADDRESS', 'Your Details'),
+            'orderconfirmationandpayment' => _t('CheckoutPage.ORDERCONFIRMATIONANDPAYMENT', 'Confirm and Pay'),
+            default => $code,
+        };
     }
 }

@@ -29,7 +29,7 @@ class Sanitizer
 
     public static function html_array_to_text_limit_words(array $array, ?int $maxChars = 2024, ?string $glue = ' '): string
     {
-        $glue = $glue ?? ' ';
+        $glue ??= ' ';
 
         $fromStringToWordArray = static function (string $s): array {
             $s = trim($s);
@@ -53,6 +53,7 @@ class Sanitizer
                         }
                     }
                 }
+
                 $parts[] = $words;
             }
         }
@@ -63,10 +64,12 @@ class Sanitizer
             if ($chunks === []) {
                 return 0;
             }
+
             $sum = 0;
             foreach ($chunks as $c) {
                 $sum += mb_strlen($c);
             }
+
             return $sum + (count($chunks) - 1);
         };
 
@@ -80,9 +83,11 @@ class Sanitizer
                     $idx = $i;
                 }
             }
+
             if ($idx === null || $max <= 0) {
                 break;
             }
+
             array_pop($parts[$idx]); // remove one word from the longest part
         }
 
@@ -104,6 +109,7 @@ class Sanitizer
         foreach ($array as $key => $value) {
             $array[$key] = trim(self::html_to_text($value));
         }
+
         $array = array_filter($array);
         return implode(' ', $array);
     }
@@ -112,7 +118,7 @@ class Sanitizer
     {
         return (string) strtolower(
             trim(
-                preg_replace(
+                (string) preg_replace(
                     '/\s+/u',
                     ' ',
                     strip_tags(
@@ -132,6 +138,7 @@ class Sanitizer
         if (! $text) {
             return '';
         }
+
         $text = strip_tags($text);
         $words = preg_split('/\s+/', $text);
         $words = array_unique($words);

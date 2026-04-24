@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\DataList;
@@ -91,10 +92,11 @@ class SalesAdminExtras extends ModelAdmin
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      *               we make sure that the Order Admin is FIRST
      */
+    #[Override]
     public function getManagedModels()
     {
         $models = parent::getManagedModels();
-        $orderModelManagement = isset($models[Order::class]) ? $models[Order::class] : null;
+        $orderModelManagement = $models[Order::class] ?? null;
         if ($orderModelManagement) {
             unset($models[Order::class]);
 
@@ -105,14 +107,16 @@ class SalesAdminExtras extends ModelAdmin
     }
 
     /**
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
+    #[Override]
     public function getList()
     {
         $list = parent::getList();
         if (is_subclass_of($this->modelClass, Order::class) || Order::class === $this->modelClass) {
             $list = Order::get_datalist_of_orders_with_joined_submission_record($list);
         }
+
         $newLists = $this->extend('updateGetList', $list);
         if (is_array($newLists) && count($newLists)) {
             foreach ($newLists as $newList) {
@@ -125,6 +129,7 @@ class SalesAdminExtras extends ModelAdmin
         return $list;
     }
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -132,7 +137,7 @@ class SalesAdminExtras extends ModelAdmin
             $gridField = $form->Fields()->dataFieldByName($this->sanitiseClassName($this->modelClass));
             if ($gridField && $gridField instanceof GridField) {
                 $config = $gridField->getConfig();
-                $exportButton = new GridFieldExportSalesButton('buttons-before-left');
+                $exportButton = GridFieldExportSalesButton::create('buttons-before-left');
                 $exportButton->setExportColumns($this->getExportFields());
                 $config->addComponent($exportButton);
                 $printAllInvoices = new GridFieldPrintAllInvoicesButton('buttons-before-left');
@@ -148,6 +153,7 @@ class SalesAdminExtras extends ModelAdmin
         return $form;
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();

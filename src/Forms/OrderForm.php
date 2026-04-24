@@ -16,7 +16,6 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
@@ -52,28 +51,29 @@ class OrderForm extends Form
 
         //  ________________  3) Payment fields - BOTTOM FIELDS
 
-        $bottomFields = new CompositeField();
+        $bottomFields = CompositeField::create();
 
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
-            $bottomFields->push(new HeaderField('PaymentHeader', _t('OrderForm.SELECT_PAYMENT', 'Select Payment Option'), 2));
+            $bottomFields->push(HeaderField::create('PaymentHeader', _t('OrderForm.SELECT_PAYMENT', 'Select Payment Option'), 2));
             $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }
+
             $paymentRequiredFields = EcommercePayment::combined_form_requirements($order);
             if ($paymentRequiredFields !== []) {
                 $requiredFields = array_merge($requiredFields, $paymentRequiredFields);
             }
         } else {
-            $bottomFields->push(new HiddenField('PaymentMethod', '', ''));
+            $bottomFields->push(HiddenField::create('PaymentMethod', '', ''));
         }
 
         //  ________________  4) FINAL FIELDS
 
-        $finalFields = new CompositeField();
+        $finalFields = CompositeField::create();
         $finalFields->addExtraClass('finalFields');
-        $finalFields->push(new HeaderField('CompleteOrder', _t('OrderForm.COMPLETEORDER', 'Complete Order'), 2));
+        $finalFields->push(HeaderField::create('CompleteOrder', _t('OrderForm.COMPLETEORDER', 'Complete Order'), 2));
         // If a terms and conditions page exists, we need to create a field to confirm the user has read it
         $termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page();
         if ($termsAndConditionsPage) {
@@ -84,6 +84,7 @@ class OrderForm extends Form
             } else {
                 $alreadyTicked = true;
             }
+
             $finalFields->push(
                 CheckboxField::create(
                     'ReadTermsAndConditions',
@@ -95,12 +96,13 @@ class OrderForm extends Form
                 )
             );
         }
-        $textAreaField = new TextareaField('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE', 'Note / Question'));
+
+        $textAreaField = TextareaField::create('CustomerOrderNote', _t('OrderForm.CUSTOMERNOTE', 'Note / Question'));
         $finalFields->push($textAreaField);
 
         //  ________________  5) Put all the fields in one FieldList
 
-        $fields = new FieldList($bottomFields, $finalFields);
+        $fields = FieldList::create($bottomFields, $finalFields);
 
         //  ________________  6) Actions and required fields creation + Final Form construction
 
@@ -112,11 +114,13 @@ class OrderForm extends Form
                 foreach ($submitErrors as $error) {
                     $submitErrorsString .= '<li>' . $error->Title . '</li>';
                 }
+
                 $message = '<div class="submitErrors"><p class="message bad">' . _t('OrderForm.KNOWN_ISSUES', 'This order can not be completed, because: ') . '</p><ul>' . $submitErrorsString . '</ul></div>';
                 $actions->push(LiteralField::create('SubmitErrors', $message));
             }
         }
-        $actions->push(new FormAction('processOrder', _t('OrderForm.PROCESSORDER', 'Place order and make payment')));
+
+        $actions->push(FormAction::create('processOrder', _t('OrderForm.PROCESSORDER', 'Place order and make payment')));
         $validator = OrderFormValidator::create($requiredFields);
         //we stick with standard validation here, because of the complexity and
         //hard-coded payment validation that is required
@@ -149,7 +153,7 @@ class OrderForm extends Form
      * @param array $data Form request data submitted from OrderForm
      * @param Form  $form Form object for this action
      *
-     * @return bool|\SilverStripe\Control\HTTPRequest Request object for this action
+     * @return bool|HTTPRequest Request object for this action
      */
     public function processOrder(array $data, Form $form, HTTPRequest $request)
     {
@@ -163,6 +167,7 @@ class OrderForm extends Form
 
             return false;
         }
+
         // $recalculate = true in TotalItems
         if ($order && 0 === (int) $order->TotalItems(true)) {
             // WE DO NOT NEED THE THING BELOW BECAUSE IT IS ALREADY IN THE TEMPLATE AND IT CAN LEAD TO SHOWING ORDER WITH ITEMS AND MESSAGE
@@ -171,6 +176,7 @@ class OrderForm extends Form
 
             return false;
         }
+
         if (! $order->canSubmit()) {
             $message = _t('OrderForm.ORDER_CAN_NOT_BE_COMPLETED', 'Order can not be completed.  For more details see below.');
             $form->sessionMessage($message, 'bad');
@@ -212,6 +218,7 @@ class OrderForm extends Form
             if ($password) {
                 $member->changePassword($password);
             }
+
             if ($member->validate()) {
                 $member->write();
             } else {
@@ -253,6 +260,7 @@ class OrderForm extends Form
             //redirection is taken care of by EcommercePayment
             return $paymentResult;
         }
+
         //there is an error with payment
         if (! Controller::curr()->redirectedTo()) {
             $this->controller->redirect($order->Link());
@@ -279,6 +287,6 @@ class OrderForm extends Form
     {
         $this->clearMessage();
 
-        Controller::curr()->getRequest()->getSession()->set("FormInfo.{$this->FormName()}.data", null);
+        Controller::curr()->getRequest()->getSession()->set(sprintf('FormInfo.%s.data', $this->FormName()), null);
     }
 }

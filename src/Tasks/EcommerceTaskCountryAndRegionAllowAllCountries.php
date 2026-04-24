@@ -3,11 +3,13 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * update EcommerceCountry.DoNotAllowSales to 0 so that you can sell to all countries.
+ * Update EcommerceCountry.DoNotAllowSales to 0 so that you can sell to all countries.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -15,11 +17,13 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceTaskCountryAndRegionAllowAllCountries extends BuildTask
 {
-    protected $title = 'Allows sale to all countries';
+    protected static string $commandName = 'ecommerce-allow-all-countries';
 
-    protected $description = 'We add this task to reset all countries from Allow Sales to Disallow Sales - as a good starting point when selling to just a few countries';
+    protected string $title = 'Allows sale to all countries';
 
-    public function run($request)
+    protected static string $description = 'Reset all countries from Disallow Sales to Allow Sales - as a good starting point when selling to all countries.';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $allowedArray = EcommerceCountry::get()
             ->filter(['DoNotAllowSales' => 1]);
@@ -27,10 +31,12 @@ class EcommerceTaskCountryAndRegionAllowAllCountries extends BuildTask
             foreach ($allowedArray as $obj) {
                 $obj->DoNotAllowSales = false;
                 $obj->write();
-                DB::alteration_message('Disallowing sales to ' . $obj->Name);
+                $output->writeln('Allowing sales to ' . $obj->Name);
             }
         } else {
-            DB::alteration_message('Could not find any countries that are not allowed', 'created');
+            $output->writeln('Could not find any countries that are not allowed');
         }
+
+        return Command::SUCCESS;
     }
 }

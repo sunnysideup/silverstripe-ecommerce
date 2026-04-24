@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Core\Convert;

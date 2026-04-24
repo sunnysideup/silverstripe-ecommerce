@@ -2,10 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Forms\Validation\Validator;
+use Override;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\Validator;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 
 /**
@@ -50,6 +52,7 @@ class ExpiryDateField extends TextField
         $this->setValue($value);
     }
 
+    #[Override]
     public function Field($properties = [])
     {
         $monthValue = '';
@@ -73,12 +76,13 @@ class ExpiryDateField extends TextField
     /**
      * @return string
      */
+    #[Override]
     public function dataValue()
     {
         if (is_array($this->value)) {
             $string = '';
             foreach ($this->value as $part) {
-                $part = str_pad($part, 2, '0', STR_PAD_LEFT);
+                $part = str_pad((string) $part, 2, '0', STR_PAD_LEFT);
                 $string .= trim($part);
             }
 
@@ -93,46 +97,58 @@ class ExpiryDateField extends TextField
      *
      * @return bool
      */
-    public function validate($validator)
+    #[Override]
+    public function validate(): ValidationResult
     {
-        // If the field is empty then don't return an invalidation message'
-        if (! isset($this->value['month'])) {
-            $validator->validationError(
-                $this->getName(),
-                _t('ExpiryDateField.NO_MONTH', "Please ensure you have entered the expiry date 'month' portion."),
-                'bad'
-            );
+        $this->beforeExtending('updateValidate', function (ValidationResult $result): void {
+            if (! isset($this->value['month'])) {
+                $result->addFieldError(
+                    $this->getName(),
+                    _t(
+                        'ExpiryDateField.NO_MONTH',
+                        "Please ensure you have entered the expiry date 'month' portion."
+                    )
+                );
 
-            return false;
-        }
-        if (! isset($this->value['year'])) {
-            $validator->validationError(
-                $this->getName(),
-                _t('ExpiryDateField.NO_YEAR', "Please ensure you have entered the expiry date 'year' portion."),
-                'bad'
-            );
+                return;
+            }
 
-            return false;
-        }
-        $value = str_pad($this->value['month'], 2, '0', STR_PAD_LEFT);
-        $value .= str_pad($this->value['year'], 2, '0', STR_PAD_LEFT);
-        $this->value = $value;
-        // months are entered as a simple number (e.g. 1,2,3, we add a leading zero if needed)
-        $monthValue = substr((string) $this->value, 0, 2);
-        $yearValue = '20' . substr((string) $this->value, 2, 2);
-        $ts = strtotime(date('Y-m-01')) - (60 * 60 * 24);
-        $expiryTs = strtotime('20' . $yearValue . '-' . $monthValue . '-01');
-        if ($ts > $expiryTs) {
-            $validator->validationError(
-                $this->getName(),
-                _t('ExpiryDateField.PAST_DATE', 'Please ensure you have entered the expiry date correctly.'),
-                'bad'
-            );
+            if (! isset($this->value['year'])) {
+                $result->addFieldError(
+                    $this->getName(),
+                    _t(
+                        'ExpiryDateField.NO_YEAR',
+                        "Please ensure you have entered the expiry date 'year' portion."
+                    )
+                );
 
-            return false;
-        }
+                return;
+            }
 
-        return true;
+            $value = str_pad((string) $this->value['month'], 2, '0', STR_PAD_LEFT);
+            $value .= str_pad((string) $this->value['year'], 2, '0', STR_PAD_LEFT);
+
+            $this->value = $value;
+
+            // Months are entered as a simple number (e.g. 1, 2, 3)
+            $monthValue = substr((string) $this->value, 0, 2);
+            $yearValue = '20' . substr((string) $this->value, 2, 2);
+
+            $ts = strtotime(date('Y-m-01')) - (60 * 60 * 24);
+            $expiryTs = strtotime($yearValue . '-' . $monthValue . '-01');
+
+            if ($ts > $expiryTs) {
+                $result->addFieldError(
+                    $this->getName(),
+                    _t(
+                        'ExpiryDateField.PAST_DATE',
+                        'Please ensure you have entered the expiry date correctly.'
+                    )
+                );
+            }
+        });
+
+        return parent::validate();
     }
 
     /**
@@ -140,6 +156,7 @@ class ExpiryDateField extends TextField
      *
      * @return FormField|ReadonlyField
      */
+    #[Override]
     public function performReadonlyTransformation()
     {
         return $this->castedCopy(ReadonlyField::class)
@@ -151,6 +168,7 @@ class ExpiryDateField extends TextField
     /**
      * @param string $title
      */
+    #[Override]
     public function setDescription($title): self
     {
         /*
@@ -170,6 +188,7 @@ class ExpiryDateField extends TextField
      * @param mixed      $value
      * @param null|mixed $data
      */
+    #[Override]
     public function setValue($value, $data = null): self
     {
         //store this for later
@@ -215,6 +234,7 @@ class ExpiryDateField extends TextField
             if ($key === $currentValue) {
                 $select = ' selected="selected"';
             }
+
             $string .= '<option value="' . $key . '"' . $select . '>' . $value . '</option>';
         }
 

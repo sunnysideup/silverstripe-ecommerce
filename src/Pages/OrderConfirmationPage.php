@@ -2,12 +2,12 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
@@ -45,7 +45,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/OrderConfirmationPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/OrderConfirmationPage-file.gif';
 
     /**
      * Standard SS variable.
@@ -53,6 +53,15 @@ class OrderConfirmationPage extends CartPage
      * @var array
      */
     private static $table_name = 'OrderConfirmationPage';
+
+    /**
+     * FeedbackFormLinkText is in the database but not shown in CMS.
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'FeedbackFormLinkText',
+        ],
+    ];
 
     private static $db = [
         'StartNewOrderLinkLabel' => 'Varchar(100)',
@@ -124,14 +133,16 @@ class OrderConfirmationPage extends CartPage
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.';
+    private static $class_description = 'A page where the customer can view her or his submitted order. Every e-commerce site needs an Order Confirmation Page.';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderConfirmationpage.SINGULARNAME', 'Order Confirmation Page');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderConfirmationpage.PLURALNAME', 'Order Confirmation Pages');
     }
@@ -140,11 +151,12 @@ class OrderConfirmationPage extends CartPage
      * Standard SS function, we only allow for one OrderConfirmation Page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return OrderConfirmationPage::get()->filter(['ClassName' => OrderConfirmationPage::class])->exists() ? false : $this->canEdit($member);
@@ -153,11 +165,12 @@ class OrderConfirmationPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -170,10 +183,11 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -182,10 +196,11 @@ class OrderConfirmationPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
@@ -221,9 +236,10 @@ class OrderConfirmationPage extends CartPage
      *
      * @return array
      */
+    #[Override]
     public function fieldLabels($includerelations = true)
     {
-        $defaultLabels = parent::fieldLabels($includerelations);
+        $defaultLabels = null;
         $newLabels = $this->customFieldLabels();
         $labels = array_merge($defaultLabels, $newLabels);
         $extendedArray = $this->extend('updateFieldLabels', $labels);
@@ -237,8 +253,9 @@ class OrderConfirmationPage extends CartPage
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -249,48 +266,140 @@ class OrderConfirmationPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Errors', 'NoItemsInOrderMessage');
 
         $fieldLabels = $this->fieldLabels();
-        $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('StartNewOrderLinkLabel', $fieldLabels['StartNewOrderLinkLabel']));
-        $fields->addFieldToTab('Root.Messages.Messages.Actions', TextField::create('CopyOrderLinkLabel', $fieldLabels['CopyOrderLinkLabel']));
+        
+        // Get scaffolded fields and customize them
+        $startNewOrderLinkLabel = $fields->dataFieldByName('StartNewOrderLinkLabel');
+        if ($startNewOrderLinkLabel) {
+            $startNewOrderLinkLabel->setTitle($fieldLabels['StartNewOrderLinkLabel']);
+            $fields->addFieldToTab('Root.Messages.Messages.Actions', $startNewOrderLinkLabel);
+        }
+        
+        $copyOrderLinkLabel = $fields->dataFieldByName('CopyOrderLinkLabel');
+        if ($copyOrderLinkLabel) {
+            $copyOrderLinkLabel->setTitle($fieldLabels['CopyOrderLinkLabel']);
+            $fields->addFieldToTab('Root.Messages.Messages.Actions', $copyOrderLinkLabel);
+        }
+        
+        // Payment message fields
+        $paymentSuccessfulHeader = $fields->dataFieldByName('PaymentSuccessfulHeader');
+        if ($paymentSuccessfulHeader) {
+            $paymentSuccessfulHeader->setTitle($fieldLabels['PaymentSuccessfulHeader']);
+        }
+        
+        $paymentSuccessfulMessage = $fields->dataFieldByName('PaymentSuccessfulMessage');
+        if ($paymentSuccessfulMessage) {
+            $paymentSuccessfulMessage->setTitle($fieldLabels['PaymentSuccessfulMessage']);
+            $paymentSuccessfulMessage->setRows(3);
+        }
+        
+        $paymentNotSuccessfulHeader = $fields->dataFieldByName('PaymentNotSuccessfulHeader');
+        if ($paymentNotSuccessfulHeader) {
+            $paymentNotSuccessfulHeader->setTitle($fieldLabels['PaymentNotSuccessfulHeader']);
+        }
+        
+        $paymentNotSuccessfulMessage = $fields->dataFieldByName('PaymentNotSuccessfulMessage');
+        if ($paymentNotSuccessfulMessage) {
+            $paymentNotSuccessfulMessage->setTitle($fieldLabels['PaymentNotSuccessfulMessage']);
+            $paymentNotSuccessfulMessage->setRows(3);
+        }
+        
+        $paymentPendingHeader = $fields->dataFieldByName('PaymentPendingHeader');
+        if ($paymentPendingHeader) {
+            $paymentPendingHeader->setTitle($fieldLabels['PaymentPendingHeader']);
+        }
+        
+        $paymentPendingMessage = $fields->dataFieldByName('PaymentPendingMessage');
+        if ($paymentPendingMessage) {
+            $paymentPendingMessage->setTitle($fieldLabels['PaymentPendingMessage']);
+            $paymentPendingMessage->setRows(3);
+        }
+        
+        $orderCancelledHeader = $fields->dataFieldByName('OrderCancelledHeader');
+        if ($orderCancelledHeader) {
+            $orderCancelledHeader->setTitle($fieldLabels['OrderCancelledHeader']);
+        }
+        
+        $orderCancelledMessage = $fields->dataFieldByName('OrderCancelledMessage');
+        if ($orderCancelledMessage) {
+            $orderCancelledMessage->setTitle($fieldLabels['OrderCancelledMessage']);
+            $orderCancelledMessage->setRows(3);
+        }
+        
         $fields->addFieldsToTab('Root.Messages.Messages.Payment', [
             HeaderField::create('Successful', 'Successful'),
-            TextField::create('PaymentSuccessfulHeader', $fieldLabels['PaymentSuccessfulHeader']),
-            HTMLEditorField::create('PaymentSuccessfulMessage', $fieldLabels['PaymentSuccessfulMessage'])->setRows(3),
+            $paymentSuccessfulHeader,
+            $paymentSuccessfulMessage,
             HeaderField::create('Unsuccessful', 'Unsuccessful'),
-            TextField::create('PaymentNotSuccessfulHeader', $fieldLabels['PaymentNotSuccessfulHeader']),
-            HTMLEditorField::create('PaymentNotSuccessfulMessage', $fieldLabels['PaymentNotSuccessfulMessage'])->setRows(3),
+            $paymentNotSuccessfulHeader,
+            $paymentNotSuccessfulMessage,
             HeaderField::create('Pending', 'Pending'),
-            TextField::create('PaymentPendingHeader', $fieldLabels['PaymentPendingHeader']),
-            HTMLEditorField::create('PaymentPendingMessage', $fieldLabels['PaymentPendingMessage'])->setRows(3),
+            $paymentPendingHeader,
+            $paymentPendingMessage,
             HeaderField::create('Cancelled', 'Cancelled'),
-            TextField::create('OrderCancelledHeader', $fieldLabels['OrderCancelledHeader']),
-            HTMLEditorField::create('OrderCancelledMessage', $fieldLabels['OrderCancelledMessage'])->setRows(3),
+            $orderCancelledHeader,
+            $orderCancelledMessage,
         ]);
+        
+        // Feedback form fields
+        $isFeedbackEnabled = $fields->dataFieldByName('IsFeedbackEnabled');
+        if ($isFeedbackEnabled) {
+            $isFeedbackEnabled->setTitle($fieldLabels['IsFeedbackEnabled']);
+        }
+        
         if ($this->IsFeedbackEnabled) {
+            $feedbackHeader = $fields->dataFieldByName('FeedbackHeader');
+            if ($feedbackHeader) {
+                $feedbackHeader->setTitle($fieldLabels['FeedbackHeader']);
+                $feedbackHeader->setDescription(_t('OrderConfirmationPage.FeedbackHeader_RIGHT', 'e.g. Please let us know what you think'));
+            }
+            
+            $feedbackValuesFieldLabel = $fields->dataFieldByName('FeedbackValuesFieldLabel');
+            if ($feedbackValuesFieldLabel) {
+                $feedbackValuesFieldLabel->setTitle($fieldLabels['FeedbackValuesFieldLabel']);
+                $feedbackValuesFieldLabel->setDescription(_t('OrderConfirmationPage.FeedbackValuesFieldLabel_RIGHT', 'e.g. Please rate our service'));
+            }
+            
+            $feedbackValuesOptions = $fields->dataFieldByName('FeedbackValuesOptions');
+            if ($feedbackValuesOptions) {
+                $feedbackValuesOptions->setTitle($fieldLabels['FeedbackValuesOptions']);
+                $feedbackValuesOptions->setDescription(_t('OrderConfirmationPage.FeedbackValuesOptions_RIGHT', 'Comma separated list of feedback rating options (eg Good, Neutral, Bad)'));
+            }
+            
+            $feedbackNotesFieldLabel = $fields->dataFieldByName('FeedbackNotesFieldLabel');
+            if ($feedbackNotesFieldLabel) {
+                $feedbackNotesFieldLabel->setTitle($fieldLabels['FeedbackNotesFieldLabel']);
+                $feedbackNotesFieldLabel->setDescription(_t('OrderConfirmationPage.FeedbackNotesFieldLabel_RIGHT', 'e.g. Please add any comments'));
+            }
+            
+            $feedbackFormSubmitLabel = $fields->dataFieldByName('FeedbackFormSubmitLabel');
+            if ($feedbackFormSubmitLabel) {
+                $feedbackFormSubmitLabel->setTitle($fieldLabels['FeedbackFormSubmitLabel']);
+                $feedbackFormSubmitLabel->setDescription(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now'));
+            }
+            
+            $feedbackFormThankYou = $fields->dataFieldByName('FeedbackFormThankYou');
+            if ($feedbackFormThankYou) {
+                $feedbackFormThankYou->setTitle($fieldLabels['FeedbackFormThankYou']);
+                $feedbackFormThankYou->setDescription(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form'));
+            }
+            
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
                 [
-                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
-                        ->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
-                    TextField::create('FeedbackHeader', $fieldLabels['FeedbackHeader'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackHeader_RIGHT', 'e.g. Please let us know what you think')),
-                    TextField::create('FeedbackValuesFieldLabel', $fieldLabels['FeedbackValuesFieldLabel'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackValuesFieldLabel_RIGHT', 'e.g. Please rate our service')),
-                    TextField::create('FeedbackValuesOptions', $fieldLabels['FeedbackValuesOptions'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackValuesOptions_RIGHT', 'Comma separated list of feedback rating options (eg Good, Neutral, Bad)')),
-                    TextField::create('FeedbackNotesFieldLabel', $fieldLabels['FeedbackNotesFieldLabel'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackNotesFieldLabel_RIGHT', 'e.g. Please add any comments')),
-                    TextField::create('FeedbackFormSubmitLabel', $fieldLabels['FeedbackFormSubmitLabel'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackFormSubmitLabel_RIGHT', 'e.g. Submit Feedback Now')),
-                    TextField::create('FeedbackFormThankYou', $fieldLabels['FeedbackFormThankYou'])
-                        ->setDescription(_t('OrderConfirmationPage.FeedbackFormThankYou_RIGHT', 'Thank you message displayed to user after submitting the feedback form')),
+                    $isFeedbackEnabled->setDescription(_t('OrderConfirmationPage.IsFeedbackEnabled_RIGHT', 'Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails')),
+                    $feedbackHeader,
+                    $feedbackValuesFieldLabel,
+                    $feedbackValuesOptions,
+                    $feedbackNotesFieldLabel,
+                    $feedbackFormSubmitLabel,
+                    $feedbackFormThankYou,
                 ]
             );
         } else {
             $fields->addFieldsToTab(
                 'Root.FeedbackForm',
                 [
-                    CheckboxField::create('IsFeedbackEnabled', $fieldLabels['IsFeedbackEnabled'])
-                        ->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails'),
+                    $isFeedbackEnabled->setDescription('Enabling this option will display a feedback form on the order confirmation page and include links to the form in all order emails'),
                 ]
             );
         }
@@ -305,12 +414,14 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public static function find_link($action = null)
     {
         $page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class]);
         if ($page) {
             return $page->Link($action);
         }
+
         $page = DataObject::get_one(OrderConfirmationPage::class);
         if ($page) {
             return $page->Link($action);
@@ -326,6 +437,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public static function get_order_link($orderID)
     {
         return Controller::join_links(OrderConfirmationPage::find_link(), 'showorder', $orderID);
@@ -351,6 +463,7 @@ class OrderConfirmationPage extends CartPage
                 $alternativeOrderStepID = $order->StatusID;
             }
         }
+
         if ($alternativeOrderStepID) {
             if ($actuallySendEmail) {
                 $getParams['send'] = $alternativeOrderStepID;
@@ -358,6 +471,7 @@ class OrderConfirmationPage extends CartPage
                 $getParams['test'] = $alternativeOrderStepID;
             }
         }
+
         $getParams = http_build_query($getParams);
 
         return $link . '?' . $getParams;
@@ -370,6 +484,7 @@ class OrderConfirmationPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public function getOrderLink($orderID)
     {
         return OrderConfirmationPage::get_order_link($orderID);
@@ -380,11 +495,11 @@ class OrderConfirmationPage extends CartPage
      *
      * @param bool $isCurrentStep
      *
-     * @return \SilverStripe\ORM\DataObject
+     * @return DataObject
      */
     public function CurrentCheckoutStep($isCurrentStep = false)
     {
-        $do = new CheckoutPageStepDescription();
+        $do = CheckoutPageStepDescription::create();
         $do->Link = $this->Link;
         $do->Heading = $this->MenuTitle;
         $do->Code = $this->URLSegment;
@@ -392,12 +507,14 @@ class OrderConfirmationPage extends CartPage
         if ($isCurrentStep) {
             $do->LinkingMode .= ' current';
         }
+
         $do->Completed = 0;
         $do->ID = 99;
 
         return $do;
     }
 
+    #[Override]
     public function requireDefaultRecords()
     {
         $checkoutPage = DataObject::get_one(CheckoutPage::class);

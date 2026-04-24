@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderStatusLogs;
 
+use Override;
+use Sunnysideup\Ecommerce\Model\Order;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\LiteralField;
@@ -70,16 +72,19 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         'ID' => 'DESC',
     ];
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRY', 'Order Log Physical Dispatch Entry');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderStatusLog.ORDERLOGPHYSICALDISPATCHENTRIES', 'Order Log Physical Dispatch Entries');
     }
 
+    #[Override]
     public function populateDefaults()
     {
         $this->Title = _t('OrderStatusLog.ORDERDISPATCHED', 'Order Dispatched');
@@ -92,13 +97,14 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
         $dispatchedOnLabel = _t('OrderStatusLog.DISPATCHEDON', 'Dispatched on');
-        $fields->replaceField('DispatchedOn', $dispatchedOnField = new TextField('DispatchedOn', $dispatchedOnLabel));
+        $fields->replaceField('DispatchedOn', $dispatchedOnField = TextField::create('DispatchedOn', $dispatchedOnLabel));
         $dispatchedOnField->setDescription(_t('OrderStatusLog.DISPATCHED_ON_NOTE', 'Please use year-month-date, e.g. 2015-11-23'));
         $dispatchLinkField = $fields->dataFieldByName('DispatchLink');
         $dispatchLinkField->setDescription(_t('OrderStatusLog.LINK_EXAMPLE', 'e.g. http://www.ups.com/mytrackingnumber'));
@@ -112,11 +118,13 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
     /**
      * @return string
      */
+    #[Override]
     public function CustomerNote()
     {
         return $this->getCustomerNote();
     }
 
+    #[Override]
     public function getCustomerNote()
     {
         SetThemed::start();
@@ -126,10 +134,11 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
         return $html;
     }
 
+    #[Override]
     public function getFrontEndFields($params = null)
     {
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $fields = FieldList::create(
                 [
                     ReadonlyField::create('CustomerInfo', 'Customer', $order->Member()->getCustomerDetails()),
@@ -151,10 +160,12 @@ class OrderStatusLogDispatchPhysicalOrder extends OrderStatusLogDispatch
                 ]
             );
         }
+
         $this->updateFrontEndFields($fields);
         return $fields;
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();

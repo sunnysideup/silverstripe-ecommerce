@@ -21,6 +21,7 @@ class GridFieldConfigForProductGroups extends GridFieldConfig_RelationEditor
         if (! $itemsPerPage) {
             $itemsPerPage = 100;
         }
+
         parent::__construct($itemsPerPage);
         $ac = $this->getComponentByType(GridFieldAddExistingAutocompleter::class);
         if ($ac) {
@@ -28,6 +29,7 @@ class GridFieldConfigForProductGroups extends GridFieldConfig_RelationEditor
             $ac->setResultsFormat('$Breadcrumbs');
             $ac->setSearchList(ProductGroup::get()->filter(['ShowInSearch' => 1]));
         }
+
         $this->removeComponentsByType(GridFieldAddNewButton::class);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Override;
+use SilverStripe\Forms\Validation\Validator;
+use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
@@ -13,9 +15,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\Tab;
-use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
@@ -228,12 +228,14 @@ class OrderModifier extends OrderAttribute
      */
     private $orderModifier_Descriptor;
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderModifier.SINGULARNAME', 'Order Modifier');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderModifier.PLURALNAME', 'Order Modifiers');
     }
@@ -241,8 +243,9 @@ class OrderModifier extends OrderAttribute
     /**
      * stardard SS metbod.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -257,14 +260,14 @@ class OrderModifier extends OrderAttribute
             Tab::create(
                 'Debug',
                 _t('OrderModifier.DEBUG', 'Debug'),
-                new ReadonlyField('CreatedShown', 'Created', $this->Created),
-                new ReadonlyField('LastEditedShown', 'Last Edited', $this->LastEdited),
-                new ReadonlyField('TableValueShown', 'Table Value', $this->TableValue),
-                new ReadonlyField('CalculatedTotal', 'Raw Value', $this->CalculatedTotal)
+                ReadonlyField::create('CreatedShown', 'Created', $this->Created),
+                ReadonlyField::create('LastEditedShown', 'Last Edited', $this->LastEdited),
+                ReadonlyField::create('TableValueShown', 'Table Value', $this->TableValue),
+                ReadonlyField::create('CalculatedTotal', 'Raw Value', $this->CalculatedTotal)
             )
         );
 
-        $fields->addFieldToTab('Root.Main', new CheckboxField('HasBeenRemoved', 'Has been removed'));
+        $fields->addFieldToTab('Root.Main', CheckboxField::create('HasBeenRemoved', 'Has been removed'));
         $fields->removeByName('OrderAttributeGroupID');
 
         //OrderID Field
@@ -278,14 +281,14 @@ class OrderModifier extends OrderAttribute
                 )
             );
         } else {
-            $fields->replaceField('OrderID', new NumericField('OrderID'));
+            $fields->replaceField('OrderID', NumericField::create('OrderID'));
         }
 
         //ClassName Field
         $availableModifiers = EcommerceConfig::get(Order::class, 'modifiers');
 
         if ($this->exists()) {
-            $fields->addFieldToTab('Root.Main', new LiteralField('MyClassName', '<h2>' . $this->singular_name() . '</h2>'), 'Name');
+            $fields->addFieldToTab('Root.Main', LiteralField::create('MyClassName', '<h2>' . $this->singular_name() . '</h2>'), 'Name');
         } else {
             $ecommerceClassNameOrTypeDropdownField = EcommerceClassNameOrTypeDropdownField::create('ClassName', 'Type', OrderModifier::class, $availableModifiers);
             $fields->addFieldToTab('Root.Main', $ecommerceClassNameOrTypeDropdownField, 'Name');
@@ -308,12 +311,13 @@ class OrderModifier extends OrderAttribute
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function scaffoldSearchFields($_params = null)
     {
         $fields = parent::scaffoldSearchFields($_params);
-        $fields->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
+        $fields->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
 
         return $fields;
     }
@@ -332,6 +336,7 @@ class OrderModifier extends OrderAttribute
     /**
      * This method runs when the OrderModifier is first added to the order.
      */
+    #[Override]
     public function init()
     {
         parent::init();
@@ -346,6 +351,7 @@ class OrderModifier extends OrderAttribute
      * all classes extending OrderModifier must have this method if it has more fields
      * @param bool $recalculate - run it, even if it has run already
      */
+    #[Override]
     public function runUpdate($recalculate = false)
     {
         $this->checkField('Name', $recalculate);
@@ -355,6 +361,7 @@ class OrderModifier extends OrderAttribute
         if ($this->mustUpdate && $this->canBeUpdated()) {
             $this->write();
         }
+
         if (! $this->IsRemoved()) {
             $this->runningTotal += $this->CalculatedTotal;
         }
@@ -370,6 +377,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -382,6 +390,7 @@ class OrderModifier extends OrderAttribute
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -444,18 +453,18 @@ class OrderModifier extends OrderAttribute
      * We have mainly added this function as an example!
      *
      * @param Controller $optionalController - optional custom controller class
-     * @param Validator  $optionalValidator  - optional custom validator class
+     * @param Validator $optionalValidator - optional custom validator class
      *
      * @return null|OrderModifierForm or subclass
      */
     public function getModifierForm(?Controller $optionalController = null, ?Validator $optionalValidator = null)
     {
         if ($this->ShowForm()) {
-            $fields = new FieldList();
+            $fields = FieldList::create();
             $fields->push($this->headingField());
             $fields->push($this->descriptionField());
 
-            return OrderModifierForm::create($optionalController, 'ModifierForm', $fields, $actions = new FieldList(), $optionalValidator);
+            return OrderModifierForm::create($optionalController, 'ModifierForm', $fields, $actions = FieldList::create(), $optionalValidator);
         }
 
         return null;
@@ -468,11 +477,13 @@ class OrderModifier extends OrderAttribute
      *
      * @return DBHTMLText
      */
+    #[Override]
     public function TableTitle(): string
     {
         return $this->getTableTitle();
     }
 
+    #[Override]
     public function getTableTitle(): string
     {
         return (string) $this->Name;
@@ -527,6 +538,7 @@ class OrderModifier extends OrderAttribute
      * tells you whether the modifier shows up on the checkout  / cart form.
      * this is also the place where we check if the modifier has been updated.
      */
+    #[Override]
     public function ShowInTable(): bool
     {
         if (! $this->baseRunUpdateCalled && $this->canBeUpdated()) {
@@ -539,7 +551,7 @@ class OrderModifier extends OrderAttribute
     /**
      * Returns the Money object of the Table Value.
      *
-     * @return \SilverStripe\ORM\FieldType\DBMoney
+     * @return DBMoney
      */
     public function TableValueAsMoney()
     {
@@ -714,7 +726,8 @@ class OrderModifier extends OrderAttribute
         return $this->HasBeenRemoved;
     }
 
-    public function onBeforeWrite()
+    #[Override]
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
     }
@@ -754,7 +767,7 @@ class OrderModifier extends OrderAttribute
     {
         $function = EcommerceConfig::get(OrderModifier::class, 'ajax_total_format');
         if (is_array($function)) {
-            list($function, $format) = $function;
+            [$function, $format] = $function;
         }
 
         $total = $this->{$function}();
@@ -801,7 +814,8 @@ class OrderModifier extends OrderAttribute
      * Debug helper method.
      * Access through : /shoppingcart/debug/.
      */
-    public function debug()
+    #[Override]
+    public function debug(): string
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }
@@ -839,10 +853,10 @@ class OrderModifier extends OrderAttribute
     {
         $name = $this->ClassName . 'Heading';
         if ($this->Heading()) {
-            return new HeaderField($name, $this->Heading(), 2);
+            return HeaderField::create($name, $this->Heading(), 2);
         }
 
-        return new LiteralField($name, '<!-- EmptyHeading -->');
+        return LiteralField::create($name, '<!-- EmptyHeading -->');
     }
 
     /**
@@ -852,10 +866,10 @@ class OrderModifier extends OrderAttribute
     {
         $name = $this->ClassName . 'Description';
         if ($this->Description()) {
-            return new LiteralField($name, '<div id="' . Convert::raw2att($name) . 'DescriptionHolder" class="descriptionHolder">' . Convert::raw2xml($this->Description()) . '</div>');
+            return LiteralField::create($name, '<div id="' . Convert::raw2att($name) . 'DescriptionHolder" class="descriptionHolder">' . Convert::raw2xml($this->Description()) . '</div>');
         }
 
-        return new LiteralField($name, '<!-- EmptyDescription -->');
+        return LiteralField::create($name, '<!-- EmptyDescription -->');
     }
 
     /**
@@ -865,7 +879,7 @@ class OrderModifier extends OrderAttribute
      */
     protected function getOrderModifierDescriptor()
     {
-        if (! $this->orderModifier_Descriptor instanceof \SilverStripe\ORM\DataObject) {
+        if (! $this->orderModifier_Descriptor instanceof DataObject) {
             $this->orderModifier_Descriptor = DataObject::get_one(
                 OrderModifierDescriptor::class,
                 ['ModifierClassName' => $this->ClassName]
@@ -906,9 +920,10 @@ class OrderModifier extends OrderAttribute
         return $this->Type ?? 'Other';
     }
 
+    #[Override]
     public function Classes(): string
     {
         $classes = parent::Classes();
-        return $classes . ('type-is-' . strtolower($this->LiveType()));
+        return $classes . ('type-is-' . strtolower((string) $this->LiveType()));
     }
 }

@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * @author: Nicolaas [at] Sunny Side Up .co.nz
@@ -12,23 +16,16 @@ use SilverStripe\ORM\DB;
  */
 class EcommerceTaskReviewReports extends BuildTask
 {
-    /**
-     * Standard (required) SS variable for BuildTasks.
-     *
-     * @var string
-     */
-    protected $title = 'Review E-commerce Pages using the Reports interface';
+    protected static string $commandName = 'ecommerce-review-reports';
 
-    /**
-     * Standard (required) SS variable for BuildTasks.
-     *
-     * @var string
-     */
-    protected $description = '
-        Review a bunch of reports that provide information on the e-commerce pages created, such as the Products without Images.';
+    protected string $title = 'Review E-commerce Pages using the Reports interface';
 
-    public function run($request)
+    protected static string $description = 'Review a bunch of reports that provide information on the e-commerce pages created, such as the Products without Images.';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        DB::alteration_message('<h1><a href="/admin/reports/" target="_blank">Open Reports Interface</a></h1>');
+        $output->writeln('Open the Reports Interface in your browser: /admin/reports/');
+
+        return Command::SUCCESS;
     }
 }

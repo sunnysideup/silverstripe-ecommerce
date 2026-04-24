@@ -2,15 +2,16 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
+use Override;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
-class ShopAccountFormValidator extends RequiredFields
+class ShopAccountFormValidator extends RequiredFieldsValidator
 {
     /**
      * @var int
@@ -25,6 +26,7 @@ class ShopAccountFormValidator extends RequiredFields
      *
      * @return bool
      */
+    #[Override]
     public function php($data, $allowExistingEmail = false)
     {
         $this->form->saveDataToSession();
@@ -40,6 +42,7 @@ class ShopAccountFormValidator extends RequiredFields
                     $isShopAdmin = true;
                 }
             }
+
             if ($isShopAdmin || $allowExistingEmail) {
                 //do nothing
             } else {
@@ -58,7 +61,7 @@ class ShopAccountFormValidator extends RequiredFields
                         $message = _t(
                             'Account.ALREADYTAKEN',
                             '{uniqueFieldValue} is not available. Please log in or use another {uniqueFieldName}.',
-                            ['uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => strtolower($uniqueFieldName)]
+                            ['uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => strtolower((string) $uniqueFieldName)]
                         );
                         $this->validationError(
                             $uniqueFieldName,
@@ -70,6 +73,7 @@ class ShopAccountFormValidator extends RequiredFields
                 }
             }
         }
+
         // check password fields are the same before saving
         if (isset($data['PasswordCheck1'], $data['PasswordCheck2'])) {
             if ($data['PasswordCheck1'] !== $data['PasswordCheck2']) {
@@ -80,6 +84,7 @@ class ShopAccountFormValidator extends RequiredFields
                 );
                 $valid = false;
             }
+
             //if you are not logged in, you have not provided a password and the settings require you to be logged in then
             //we have a problem
             if (! $loggedInMember && ! $data['PasswordCheck1'] && EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase')) {
@@ -90,6 +95,7 @@ class ShopAccountFormValidator extends RequiredFields
                 );
                 $valid = false;
             }
+
             $letterCount = strlen((string) $data['PasswordCheck1']);
             $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
             if ($letterCount > 0 && $letterCount < $minLength) {
@@ -101,6 +107,7 @@ class ShopAccountFormValidator extends RequiredFields
                 $valid = false;
             }
         }
+
         if (isset($data['FirstName']) && strlen((string) $data['FirstName']) < 2) {
             $this->validationError(
                 'FirstName',
@@ -109,6 +116,7 @@ class ShopAccountFormValidator extends RequiredFields
             );
             $valid = false;
         }
+
         if (isset($data['Surname']) && strlen((string) $data['Surname']) < 2) {
             $this->validationError(
                 'Surname',
@@ -117,10 +125,12 @@ class ShopAccountFormValidator extends RequiredFields
             );
             $valid = false;
         }
+
         $validExtended = $this->extend('updatePHP', $data, $this);
         if (false === $validExtended) {
             $valid = false;
         }
+
         if (! $valid) {
             $this->form->sessionMessage(_t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'), 'bad');
         }

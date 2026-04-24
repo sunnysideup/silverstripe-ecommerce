@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Reports;
 
+use SilverStripe\ORM\DataList;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -38,7 +39,7 @@ trait EcommerceProductGroupReportTrait
      *
      * @param null|mixed $params
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function sourceRecords($params = null, $sort = null, $limit = null)
     {
@@ -64,18 +65,21 @@ trait EcommerceProductGroupReportTrait
         if ($createdInTheLastXDays !== 0) {
             $list = $list->where(['"Created" >= DATE_ADD(CURDATE(), INTERVAL -' . (int) $createdInTheLastXDays . ' DAY)']);
         }
+
         if ($this->hasMethod('getEcommerceFilter')) {
             $filter = $this->getEcommerceFilter();
             if (! empty($filter)) {
                 $list = $list->filter($filter);
             }
         }
+
         $sort = null;
         if ($this->hasMethod('getEcommerceSort')) {
             $sort = $this->getEcommerceSort();
             if (empty($sort)) {
                 $sort = ['Title' => 'ASC'];
             }
+
             $list = is_array($sort) ? $list->sort($sort) : $list->orderBy($sort);
         }
 
@@ -89,6 +93,7 @@ trait EcommerceProductGroupReportTrait
         if ($this->hasMethod('updateEcommerceList')) {
             $list = $this->updateEcommerceList($list);
         }
+
         return $list;
     }
 
@@ -143,7 +148,7 @@ trait EcommerceProductGroupReportTrait
         );
         $fields->recursiveWalk(
             function (FormField $field) {
-                if (0 !== strpos($field->getName(), 'filter[')) {
+                if (!str_starts_with($field->getName(), 'filter[')) {
                     $field->setName(sprintf('filters[%s]', $field->getName()));
                 }
 

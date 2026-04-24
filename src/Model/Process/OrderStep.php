@@ -2,10 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use Override;
+use SilverStripe\Forms\Form;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -57,9 +60,9 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
  * @property int $Sort
  * @property int $DeferTimeInSeconds
  * @property bool $DeferFromSubmitTime
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Order[] Orders()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord[] OrderEmailRecords()
- * @method \SilverStripe\ORM\DataList|\Sunnysideup\Ecommerce\Model\Process\OrderProcessQueue[] OrderProcessQueueEntries()
+ * @method DataList|Order[] Orders()
+ * @method DataList|OrderEmailRecord[] OrderEmailRecords()
+ * @method DataList|OrderProcessQueue[] OrderProcessQueueEntries()
  */
 class OrderStep extends DataObject implements EditableEcommerceObject
 {
@@ -272,6 +275,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $this->getTitle();
     }
 
+    #[Override]
     public function getTitle(): string
     {
         return (string) $this->Name;
@@ -373,12 +377,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         return $this->yesOrNoNiceHelper($this->HideStepFromCustomer);
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('defaults')['Name'] ?? _t('OrderStep.ORDERSTEP', 'Order Step');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('defaults')['Name'] ?? _t('OrderStep.ORDERSTEP', 'Order Step');
     }
@@ -520,6 +526,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
+    #[Override]
     public function populateDefaults()
     {
         $this->Description = $this->myDescription();
@@ -528,8 +535,9 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -542,6 +550,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $config->removeComponentsByType(GridFieldAddExistingAutocompleter::class);
                 $config->removeComponentsByType(GridFieldDeleteAction::class);
             }
+
             if ($this->DeferTimeInSeconds) {
                 $fields->addFieldToTab(
                     'Root.Queue',
@@ -555,7 +564,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $fields->addFieldsToTab(
                 'Root.Queue',
                 [
-                    new HeaderField('DeferHeader', _t('OrderStep.DEFER_HEADER', 'Delay'), 3),
+                    HeaderField::create('DeferHeader', _t('OrderStep.DEFER_HEADER', 'Delay'), 3),
                     $deferTimeInSecondsField = TextField::create(
                         'DeferTimeInSeconds',
                         _t('OrderStep.DeferTimeInSeconds', 'Seconds in queue')
@@ -584,6 +593,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                         )
                 );
             }
+
             $fields->addFieldToTab(
                 'Root.Queue',
                 $queueField
@@ -592,6 +602,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $fields->removeFieldFromTab('Root', 'OrderProcessQueueEntries');
             $fields->removeByName(['DeferTimeInSeconds', 'DeferFromSubmitTime']);
         }
+
         if ($this->hasCustomerMessage()) {
             $rightTitle = _t(
                 'OrderStep.EXPLAIN_ORDER_NUMBER_IN_SUBJECT',
@@ -606,9 +617,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if ($testEmailLink) {
                 $fields->addFieldToTab(
                     'Root.CustomerMessage',
-                    new LiteralField(
-                        'testEmailLink',
-                        '<h3 class="form-field-holder">
+                    LiteralField::create('testEmailLink', '<h3 class="form-field-holder">
                             <a href="' . $testEmailLink . '" data-popup="true" target"_blank" onclick="emailPrompt(this, event);">
                                 ' . _t('OrderStep.VIEW_EMAIL_EXAMPLE', 'Test Email') . '
                             </a>
@@ -623,13 +632,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                                 }
                                 window.open(href);
                             };
-                        </script>'
-                    ),
+                        </script>'),
                     'EmailSubject'
                 );
             }
 
-            $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = new HTMLEditorField('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
+            $fields->addFieldToTab('Root.CustomerMessage', $htmlEditorField = HTMLEditorField::create('CustomerMessage', _t('OrderStep.CUSTOMERMESSAGE', 'Customer Message (if any)')));
             $htmlEditorField->setRows(3);
             $orderEmaiLRecordsField = $fields->dataFieldByName('OrderEmailRecords');
             if ($orderEmaiLRecordsField) {
@@ -642,22 +650,25 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $fields->removeFieldFromTab('Root.Main', 'EmailSubject');
             $fields->removeFieldFromTab('Root.Main', 'CustomerMessage');
         }
+
         //adding
         if (! $this->exists() || ! $this->isDefaultStatusOption()) {
             $fields->removeFieldFromTab('Root.Main', 'Code');
-            $fields->addFieldToTab('Root.Main', new DropdownField('ClassName', _t('OrderStep.TYPE', 'Type'), self::get_not_created_codes_for_order_steps_to_include()), 'Name');
+            $fields->addFieldToTab('Root.Main', DropdownField::create('ClassName', _t('OrderStep.TYPE', 'Type'), self::get_not_created_codes_for_order_steps_to_include()), 'Name');
         }
+
         if ($this->isDefaultStatusOption()) {
             $fields->replaceField('Code', $fields->dataFieldByName('Code')->performReadonlyTransformation());
         }
+
         //headers
-        $fields->addFieldToTab('Root.Main', new HeaderField('WARNING1', _t('OrderStep.CAREFUL', 'CAREFUL! please edit details below with care'), 2), 'Description');
-        $fields->addFieldToTab('Root.Main', new HeaderField('WARNING2', _t('OrderStep.CUSTOMERCANCHANGE', 'What can be changed during this step?'), 3), 'CustomerCanEdit');
-        $fields->addFieldToTab('Root.Main', new HeaderField('WARNING5', _t('OrderStep.ORDERGROUPS', 'Order groups for customer?'), 3), 'ShowAsUncompletedOrder');
-        $fields->addFieldToTab('Root.Main', new HeaderField('HideStepFromCustomerHeader', _t('OrderStep.HIDE_STEP_FROM_CUSTOMER_HEADER', 'Customer Interaction'), 3), 'HideStepFromCustomer');
+        $fields->addFieldToTab('Root.Main', HeaderField::create('WARNING1', _t('OrderStep.CAREFUL', 'CAREFUL! please edit details below with care'), 2), 'Description');
+        $fields->addFieldToTab('Root.Main', HeaderField::create('WARNING2', _t('OrderStep.CUSTOMERCANCHANGE', 'What can be changed during this step?'), 3), 'CustomerCanEdit');
+        $fields->addFieldToTab('Root.Main', HeaderField::create('WARNING5', _t('OrderStep.ORDERGROUPS', 'Order groups for customer?'), 3), 'ShowAsUncompletedOrder');
+        $fields->addFieldToTab('Root.Main', HeaderField::create('HideStepFromCustomerHeader', _t('OrderStep.HIDE_STEP_FROM_CUSTOMER_HEADER', 'Customer Interaction'), 3), 'HideStepFromCustomer');
         //final cleanup
         $fields->removeFieldFromTab('Root.Main', 'Sort');
-        $fields->addFieldToTab('Root.Main', new TextareaField('Description', _t('OrderStep.DESCRIPTION', 'Explanation for internal use only')), 'WARNING1');
+        $fields->addFieldToTab('Root.Main', TextareaField::create('Description', _t('OrderStep.DESCRIPTION', 'Explanation for internal use only')), 'WARNING1');
         $fields->addFieldsToTab(
             'Root.Advanced',
             [
@@ -689,6 +700,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         $sanitisedClassName = ClassHelpers::sanitise_class_name(OrderStep::class);
@@ -716,7 +728,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * A form that can be used by the Customer to progress step!
      *
-     * @return null|\SilverStripe\Forms\Form (CustomerOrderStepForm)
+     * @return null|Form (CustomerOrderStepForm)
      */
     public function CustomerOrderStepForm(Controller $controller, string $name, Order $order)
     {
@@ -726,7 +738,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
@@ -750,6 +762,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 ]
             );
         }
+
         $this->addQuickLogEntryButton($fields, $order);
         $this->extend('addOrderStepFieldsAdditional', $fields, $order, $nothingToDo);
         return $fields;
@@ -778,25 +791,41 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * @return \SilverStripe\ORM\ValidationResult
+     * @return ValidationResult
      */
-    public function validate()
+    #[Override]
+    public function validate(): ValidationResult
     {
-        $result = parent::validate();
-        $anotherOrderStepWithSameNameOrCode = OrderStep::get()
-            ->filter(
-                [
-                    'Name' => $this->Name,
-                    'Code' => strtoupper((string) $this->Code),
-                ]
-            )
-            ->exclude(['ID' => (int) $this->ID])
-            ->First();
-        if ($anotherOrderStepWithSameNameOrCode) {
-            $result->addError(_t('OrderStep.ORDERSTEPALREADYEXISTS', 'An order status with this name already exists. Please change the name and try again.'));
-        }
+        $this->beforeExtending('updateValidate', function (ValidationResult $result): void {
+            $name = $this->Name;
+            $code = strtoupper((string) $this->Code);
 
-        return $result;
+            if (! $name || ! $code) {
+                return;
+            }
+
+            $exists = OrderStep::get()
+                ->filter([
+                    'Name' => $name,
+                    'Code' => $code,
+                ])
+                ->exclude([
+                    'ID' => (int) $this->ID,
+                ])
+                ->exists();
+
+            if ($exists) {
+                $result->addFieldError(
+                    'Name',
+                    _t(
+                        'OrderStep.ORDERSTEPALREADYEXISTS',
+                        'An order status with this name already exists. Please change the name and try again.'
+                    )
+                );
+            }
+        });
+
+        return parent::validate();
     }
 
     // moving between statusses...
@@ -812,7 +841,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function initStep(Order $order): bool
     {
-        user_error('Please implement the initStep method in a subclass (' . __CLASS__ . ') of OrderStep', E_USER_WARNING);
+        user_error('Please implement the initStep method in a subclass (' . self::class . ') of OrderStep', E_USER_WARNING);
 
         return true;
     }
@@ -829,7 +858,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function doStep(Order $order): bool
     {
-        user_error('Please implement the initStep method in a subclass (' . __CLASS__ . ') of OrderStep', E_USER_WARNING);
+        user_error('Please implement the initStep method in a subclass (' . self::class . ') of OrderStep', E_USER_WARNING);
 
         return true;
     }
@@ -855,6 +884,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
 
                     return $classNameOrTrue::get()->first();
                 }
+
                 if (false === $outcome) {
                     // important - do nothing - allow another condition to apply
                 } else {
@@ -875,6 +905,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($sort === 0) {
             $sort = 0;
         }
+
         $where = '"OrderStep"."Sort" >  ' . $sort;
         $nextOrderStepObject = DataObject::get_one(
             OrderStep::class,
@@ -904,11 +935,12 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if ($otherStatus->Sort < $this->Sort) {
                 return true;
             }
+
             if ($orIsEqualTo && $otherStatus->Code === $this->Code) {
                 return true;
             }
         } else {
-            user_error("could not find {$code} in OrderStep", E_USER_NOTICE);
+            user_error(sprintf('could not find %s in OrderStep', $code), E_USER_NOTICE);
         }
 
         return false;
@@ -979,6 +1011,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if ($log && $log->BypassEmailing) {
             return true;
         }
+
         if ($checkDateOfOrder) {
             $lastEditedValue = $log ? $log->LastEdited : $order->LastEdited;
             $orderTs = strtotime((string) $lastEditedValue);
@@ -1040,26 +1073,33 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         } elseif ($this->ShowAsCompletedOrder) {
             $v .= _t('OrderStep.COMPLETED', 'Completed');
         }
+
         $v .= '</strong>';
         $canArray = [];
         if ($this->CustomerCanEdit) {
             $canArray[] = _t('OrderStep.EDITABLE', 'edit');
         }
+
         if ($this->CustomerCanPay) {
             $canArray[] = _t('OrderStep.PAY', 'pay');
         }
+
         if ($this->CustomerCanCancel) {
             $canArray[] = _t('OrderStep.CANCEL', 'cancel');
         }
-        if (count($canArray)) {
+
+        if ($canArray !== []) {
             $v .= '<br />' . _t('OrderStep.CUSTOMER_CAN', 'Customer Can') . ': ' . implode(', ', $canArray) . '.';
         }
+
         if ($this->hasCustomerMessage()) {
             $v .= '<br />' . _t('OrderStep.CUSTOMER_MESSAGES', 'Includes message to customer / admin.');
         }
+
         if ($this->hasStepConditions()) {
             $v .= '<br />' . _t('OrderStep.HAS_CONDITIONS', 'Conditions must be met before order can progress.');
         }
+
         if ($this->DeferTimeInSeconds) {
             $v .= '<br />' . $this->humanReadeableDeferTimeInSeconds();
         }
@@ -1139,6 +1179,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if (! class_exists($className)) {
                 $className = OrderStatusLog::class;
             }
+
             $log = $className::create();
             $log->OrderID = $order->ID;
             $log->write();
@@ -1152,7 +1193,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * It is important that getRelevantLogEntryClassName returns
      * a specific enough ClassName and not a base class name.
      *
-     * @return null|\SilverStripe\ORM\DataList
+     * @return null|DataList
      */
     public function RelevantLogEntries(Order $order)
     {
@@ -1169,16 +1210,16 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     }
 
     // Silverstripe Standard Data Object Methods
-
     /**
      * Standard SS method
      * These are only created programmatically.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -1187,20 +1228,23 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -1233,15 +1277,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -1252,10 +1299,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         //cant delete last status if there are orders with this status
@@ -1270,16 +1318,20 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 return false;
             }
         }
+
         if ($this->isDefaultStatusOption()) {
             return false;
         }
+
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -1291,6 +1343,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * standard SS method
      * USED TO BE: Unpaid,Query,Paid,Processing,Sent,Complete,AdminCancelled,MemberCancelled,Cart.
      */
+    #[Override]
     public function requireDefaultRecords()
     {
         parent::requireDefaultRecords();
@@ -1330,6 +1383,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -1344,6 +1398,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $this->ShowAsUncompletedOrder = false;
             $this->ShowAsInProcessOrder = false;
         }
+
         if (! $this->canBeDeferred()) {
             $this->DeferTimeInSeconds = 0;
             $this->DeferFromSubmitTime = 0;
@@ -1357,6 +1412,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $this->DeferTimeInSeconds = 0;
             }
         }
+
         $this->Code = strtoupper((string) $this->Code);
     }
 
@@ -1364,6 +1420,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      * move linked orders to the next status
      * standard SS method.
      */
+    #[Override]
     protected function onBeforeDelete()
     {
         $ordersWithThisStatus = Order::get()->filter(['StatusID' => $this->ID]);
@@ -1375,6 +1432,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             } else {
                 $bestOrderStep = $this->PreviousOrderStep();
             }
+
             if ($bestOrderStep) {
                 foreach ($ordersWithThisStatus as $orderWithThisStatus) {
                     $orderWithThisStatus->StatusID = $bestOrderStep->ID;
@@ -1382,12 +1440,14 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 }
             }
         }
+
         parent::onBeforeDelete();
     }
 
     /**
      * standard SS method.
      */
+    #[Override]
     protected function onAfterDelete()
     {
         parent::onAfterDelete();
@@ -1419,15 +1479,18 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             if (! $subject) {
                 $subject = $this->CalculatedEmailSubject($order);
             }
+
             $useAlternativeEmail = $adminOnlyOrToEmail && filter_var($adminOnlyOrToEmail, FILTER_VALIDATE_EMAIL);
             if (! $useAlternativeEmail) {
                 $adminOnlyOrToEmail = (bool) $adminOnlyOrToEmail;
             }
+
             //this is NOT an admin EMAIL
             if ($this->hasCustomerMessage() || $useAlternativeEmail) {
                 if (! $emailClassName) {
                     $emailClassName = $this->getEmailClassName();
                 }
+
                 $outcome = $order->sendEmail(
                     $emailClassName,
                     $subject,
@@ -1440,6 +1503,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 if (! $emailClassName) {
                     $emailClassName = OrderErrorEmail::class;
                 }
+
                 //looks like we are sending an error, but we are just using this for notification
                 $message = _t('OrderStep.THISMESSAGENOTSENTTOCUSTOMER', 'NOTE: This message was not sent to the customer.') . '<br /><br /><br /><br />' . $message;
                 $outcome = $order->sendAdminNotification(
@@ -1477,6 +1541,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     ->innerJoin('OrderStep', '"OrderStep"."ID" = "Order"."StatusID"')
                     ->first();
             }
+
             if ($order) {
                 return OrderConfirmationPage::get_email_link(
                     $order->ID,
@@ -1573,16 +1638,19 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                             $obj->Code = $code;
                             $obj->write();
                         }
+
                         if ($obj->ClassName !== $className) {
                             $obj->ClassName = $className;
                             $obj->write();
                         }
+
                         //replace default description
                         $parentObj = singleton(OrderStep::class);
                         if ($obj->Description === $parentObj->myDescription()) {
                             $obj->Description = $obj->myDescription();
                             $obj->write();
                         }
+
                         //check sorting order
                         if ($obj->Sort !== $indexNumber) {
                             $obj->Sort = $indexNumber;
@@ -1601,18 +1669,20 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     $obj->Description = $obj->myDescription();
                     $obj->Sort = $indexNumber;
                     $obj->write();
-                    DB::alteration_message("Created \"{$code}\" as {$className}.", 'created');
+                    DB::alteration_message(sprintf('Created "%s" as %s.', $code, $className), 'created');
                 }
+
                 $obj = DataObject::get_one(
                     OrderStep::class,
                     $filter,
                     $cacheDataObjectGetOne = false
                 );
                 if (! $obj) {
-                    user_error("There was an error in creating the {$code} OrderStep", E_USER_NOTICE);
+                    user_error(sprintf('There was an error in creating the %s OrderStep', $code), E_USER_NOTICE);
                 }
             }
         }
+
         $steps = OrderStep::get();
         foreach ($steps as $step) {
             if (! $step->Description) {
@@ -1638,6 +1708,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         if (is_array($v)) {
             return $v;
         }
+
         return Config::inst()->get(Order::class, 'summary_fields');
     }
 }

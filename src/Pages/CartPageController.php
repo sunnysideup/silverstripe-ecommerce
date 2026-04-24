@@ -2,17 +2,19 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\ORM\DataObject;
 use PageController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -22,9 +24,9 @@ use Sunnysideup\Ecommerce\Model\Order;
 /**
  * Class \Sunnysideup\Ecommerce\Pages\CartPageController
  *
- * @property \Sunnysideup\Ecommerce\Pages\CartPage $dataRecord
- * @method \Sunnysideup\Ecommerce\Pages\CartPage data()
- * @mixin \Sunnysideup\Ecommerce\Pages\CartPage
+ * @property CartPage $dataRecord
+ * @method CartPage data()
+ * @mixin CartPage
  */
 class CartPageController extends PageController
 {
@@ -295,7 +297,7 @@ class CartPageController extends PageController
     }
 
     /**
-     * @return null|\SilverStripe\ORM\DataObject - Order
+     * @return null|DataObject - Order
      */
     public function Order()
     {
@@ -361,6 +363,7 @@ class CartPageController extends PageController
     /**
      * @standard SS method
      */
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -447,6 +450,7 @@ class CartPageController extends PageController
         } else {
             $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
         }
+
         return null;
     }
 
@@ -488,7 +492,7 @@ class CartPageController extends PageController
     protected function workOutMessagesAndActions()
     {
         if (! $this->workedOutMessagesAndActions) {
-            $this->actionLinks = new ArrayList([]);
+            $this->actionLinks = ArrayList::create([]);
             //what order are we viewing?
             $viewingRealCurrentOrder = $this->CurrentOrderIsInCart();
             $currentUserID = Security::getCurrentUser()?->ID;
@@ -512,7 +516,7 @@ class CartPageController extends PageController
             if (property_exists($this, 'ProceedToCheckoutLabel') && null !== $this->ProceedToCheckoutLabel && $this->ProceedToCheckoutLabel && $viewingRealCurrentOrder && $this->isCartPage()) {
                 $checkoutPageLink = CheckoutPage::find_link();
                 if ($checkoutPageLink && $this->currentOrder && $this->currentOrder->getTotalItems()) {
-                    $this->actionLinks->push(new ArrayData([
+                    $this->actionLinks->push(ArrayData::create([
                         'Title' => $this->ProceedToCheckoutLabel,
                         'Link' => $checkoutPageLink,
                     ]));
@@ -521,7 +525,7 @@ class CartPageController extends PageController
 
             //view account details
             if (property_exists($this, 'ShowAccountLabel') && null !== $this->ShowAccountLabel && $this->ShowAccountLabel && ($this->isOrderConfirmationPage() || $this->isCartPage()) && (AccountPage::find_link() && $currentUserID)) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->ShowAccountLabel,
                     'Link' => AccountPage::find_link(),
                 ]));
@@ -529,7 +533,7 @@ class CartPageController extends PageController
 
             //go to current order
             if (property_exists($this, 'CurrentOrderLinkLabel') && null !== $this->CurrentOrderLinkLabel && $this->CurrentOrderLinkLabel && $this->isCartPage() && ! $viewingRealCurrentOrder) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->CurrentOrderLinkLabel,
                     'Link' => ShoppingCart::current_order()->Link(),
                 ]));
@@ -537,7 +541,7 @@ class CartPageController extends PageController
 
             //Save order - we assume only current ones can be saved.
             if (property_exists($this, 'SaveOrderLinkLabel') && null !== $this->SaveOrderLinkLabel && $this->SaveOrderLinkLabel && $viewingRealCurrentOrder && ($currentUserID && $this->currentOrder->MemberID === $currentUserID && $this->isCartPage()) && ($this->currentOrder && $this->currentOrder->getTotalItems() && ! $this->currentOrder->IsSubmitted())) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->SaveOrderLinkLabel,
                     'Link' => $this->Link('saveorder') . '/' . $this->currentOrder->ID . '/',
                 ]));
@@ -545,7 +549,7 @@ class CartPageController extends PageController
 
             //load order
             if (property_exists($this, 'LoadOrderLinkLabel') && null !== $this->LoadOrderLinkLabel && $this->LoadOrderLinkLabel && ($this->isCartPage() && $this->currentOrder) && ! $viewingRealCurrentOrder) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->LoadOrderLinkLabel,
                     'Link' => $this->Link('loadorder') . '/' . $this->currentOrder->ID . '/',
                 ]));
@@ -553,7 +557,7 @@ class CartPageController extends PageController
 
             //delete order
             if (property_exists($this, 'DeleteOrderLinkLabel') && null !== $this->DeleteOrderLinkLabel && $this->DeleteOrderLinkLabel && ($this->isCartPage() && $this->currentOrder) && ! $viewingRealCurrentOrder) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->DeleteOrderLinkLabel,
                     'Link' => $this->Link('deleteorder') . '/' . $this->currentOrder->ID . '/',
                 ]));
@@ -563,7 +567,7 @@ class CartPageController extends PageController
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
             if (property_exists($this, 'StartNewOrderLinkLabel') && null !== $this->StartNewOrderLinkLabel && $this->StartNewOrderLinkLabel && $this->isOrderConfirmationPage()) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->StartNewOrderLinkLabel,
                     'Link' => CartPage::new_order_link($this->currentOrder->ID),
                 ]));
@@ -573,7 +577,7 @@ class CartPageController extends PageController
             //Strictly speaking this is only part of the
             //OrderConfirmationPage but we put it here for simplicity's sake
             if (property_exists($this, 'CopyOrderLinkLabel') && null !== $this->CopyOrderLinkLabel && $this->CopyOrderLinkLabel && ($this->isOrderConfirmationPage() && $this->currentOrder->ID)) {
-                $this->actionLinks->push(new ArrayData([
+                $this->actionLinks->push(ArrayData::create([
                     'Title' => $this->CopyOrderLinkLabel,
                     'Link' => OrderConfirmationPage::copy_order_link($this->currentOrder->ID),
                 ]));
@@ -586,7 +590,7 @@ class CartPageController extends PageController
                     foreach ($modifiers as $modifier) {
                         $array = $modifier->PostSubmitAction();
                         if (is_array($array) && count($array)) {
-                            $this->actionLinks->push(new ArrayData($array));
+                            $this->actionLinks->push(ArrayData::create($array));
                         }
                     }
                 }
@@ -683,6 +687,7 @@ class CartPageController extends PageController
         if (SecurityToken::inst()->checkRequest($request)) {
             return $this->httpError(400, 'Invalid security token');
         }
+
         $obj = Injector::inst()->get(SendLoginToken::class);
         $obj->send($email, $backURL, $request);
 

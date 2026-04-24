@@ -1,18 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use Override;
 use SilverStripe\Forms\DropdownField;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 class ProductGroupDropdown extends DropdownField
 {
+    #[Override]
     public function getHasEmptyDefault()
     {
         return true;
     }
 
+    #[Override]
     public function getSource()
     {
         $idList = Product::get()->filter(['AllowPurchase' => 1])->columnUnique('ParentID');

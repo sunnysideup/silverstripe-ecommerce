@@ -2,12 +2,13 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use SilverStripe\Model\ArrayData;
+use Override;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -24,6 +25,7 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
 {
+    #[Override]
     public function getHTMLFragments($gridField)
     {
         $singleton = singleton($gridField->getModelClass());
@@ -44,7 +46,7 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             $getSegment = '?ParentID=' . $page->ID;
         }
 
-        $data = new ArrayData([
+        $data = ArrayData::create([
             'NewLink' => '/admin/' . Config::inst()->get(CMSPageAddControllerProducts::class, 'url_segment') . '/' . $getSegment,
             'ButtonName' => $this->buttonName,
         ]);
@@ -66,13 +68,11 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
         $defaultRootParentClass = Config::inst()->get(CMSPageAddControllerProducts::class, 'root_parent_class_for_adding_page');
         $rootParentClassArray = [$defaultRootParentClass, ProductGroup::class];
         foreach ($rootParentClassArray as $rootParentClass) {
-            $result = DataObject::get_one(
-                $rootParentClass,
-                ['ParentID' => 0]
-            );
+            $result = $rootParentClass::get()->setUseCache(true)->filter(['ParentID' => 0])->first();
             if ($result) {
                 return $result;
             }
+
             $singleton = DataObject::singleton(SiteTree::class);
             $baseTable = $singleton->baseTable();
             $tableName = $singleton->stageTable($baseTable, Versioned::get_stage());

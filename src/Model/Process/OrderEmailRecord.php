@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxSetField;
@@ -31,8 +34,8 @@ use Sunnysideup\Ecommerce\Traits\OrderCached;
  * @property bool $Result
  * @property int $OrderID
  * @property int $OrderStepID
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
- * @method \Sunnysideup\Ecommerce\Model\Process\OrderStep OrderStep()
+ * @method Order Order()
+ * @method OrderStep OrderStep()
  */
 class OrderEmailRecord extends DataObject implements EditableEcommerceObject
 {
@@ -177,12 +180,14 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         return _t('OrderEmailRecord.NO', 'No');
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('OrderEmailRecord.CUSTOMEREMAIL', 'Customer Email');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('OrderEmailRecord.CUSTOMEREMAILS', 'Customer Emails');
     }
@@ -190,11 +195,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -203,11 +209,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
@@ -234,11 +241,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         return false;
@@ -247,10 +255,11 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -259,8 +268,9 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
     /**
      * standard SS method.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -276,7 +286,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
             ]
         );
         $emailLink = OrderEmailRecordReview::review_link($this);
-        $fields->replaceField('Content', new LiteralField('Content', "<iframe src=\"{$emailLink}\" width=\"100%\" height=\"700\"  style=\"border: 5px solid #2e7ead; border-radius: 2px;\"></iframe>"));
+        $fields->replaceField('Content', LiteralField::create('Content', sprintf('<iframe src="%s" width="100%%" height="700"  style="border: 5px solid #2e7ead; border-radius: 2px;"></iframe>', $emailLink)));
         $fields->replaceField(
             'OrderID',
             CMSEditLinkField::create(
@@ -285,7 +295,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                 $this->getOrderCached()
             )
         );
-        $fields->replaceField('OrderStepID', new ReadonlyField('OrderStepNice', 'Order Step', $this->OrderStepNice()));
+        $fields->replaceField('OrderStepID', ReadonlyField::create('OrderStepNice', 'Order Step', $this->OrderStepNice()));
 
         return $fields;
     }
@@ -297,6 +307,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
+    #[Override]
     public function CMSEditLink($action = null)
     {
         return CMSEditLinkAPI::find_edit_link_for_object($this, $action);
@@ -316,12 +327,13 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *                       'fieldClasses': Associative array of field names as keys and FormField classes as values
      *                       'restrictFields': Numeric array of a field name whitelist
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function scaffoldSearchFields($_params = null)
     {
         $fieldList = parent::scaffoldSearchFields($_params);
-        $fieldList->replaceField('OrderID', new NumericField('OrderID', 'Order Number'));
+        $fieldList->replaceField('OrderID', NumericField::create('OrderID', 'Order Number'));
 
         $statusOptions = OrderStep::get();
         if ($statusOptions->exists()) {
@@ -340,17 +352,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
                         ->count()
                     ;
                     if ($count > 0) {
-                        $arrayOfStatusOptionsFinal[$key] = $value . " ({$count})";
+                        $arrayOfStatusOptionsFinal[$key] = $value . sprintf(' (%d)', $count);
                     }
                 }
             }
 
-            $statusField = new CheckboxSetField(
-                'OrderStepID',
-                Injector::inst()->get(OrderStep::class)->i18n_singular_name(),
-                $arrayOfStatusOptionsFinal,
-                $preSelected
-            );
+            $statusField = CheckboxSetField::create('OrderStepID', Injector::inst()->get(OrderStep::class)->i18n_singular_name(), $arrayOfStatusOptionsFinal, $preSelected);
             $fieldList->push($statusField);
         }
 
@@ -367,11 +374,12 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         return $this->getTitle();
     }
 
+    #[Override]
     public function getTitle()
     {
         $str = 'TO: ' . $this->To;
         $order = $this->getOrderCached();
-        if ($order instanceof \Sunnysideup\Ecommerce\Model\Order) {
+        if ($order instanceof Order) {
             $str .= ' - ' . $order->getTitle();
             $str .= ' - ' . $this->OrderStepNice();
         }
@@ -405,7 +413,8 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function debug()
+    #[Override]
+    public function debug(): string
     {
         return EcommerceTaskDebugCart::debug_object($this);
     }

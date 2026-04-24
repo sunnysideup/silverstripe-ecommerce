@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
 
@@ -37,6 +38,7 @@ class SalesAdminByOrderStep extends SalesAdmin
         Order::class,
     ];
 
+    #[Override]
     public function getEditForm($id = null, $fields = null)
     {
         $form = parent::getEditForm($id, $fields);
@@ -53,6 +55,7 @@ class SalesAdminByOrderStep extends SalesAdmin
                     }
                 }
             }
+
             $this->buildTabs($brackets, $arrayOfTabs, $form);
         }
 
@@ -63,6 +66,7 @@ class SalesAdminByOrderStep extends SalesAdmin
      * @return array Map of class name to an array of 'title' (see {@link $managed_models})
      *               we make sure that the Order Admin is FIRST
      */
+    #[Override]
     public function getManagedModels()
     {
         return parent::getManagedModels();

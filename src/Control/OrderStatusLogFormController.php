@@ -2,10 +2,10 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Forms\Form;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Forms\OrderStatusLogForm;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -33,6 +33,7 @@ class OrderStatusLogFormController extends Controller
      *
      * @return string
      */
+    #[Override]
     public function Link($action = null)
     {
         $URLSegment = Config::inst()->get(static::class, 'url_segment');
@@ -57,6 +58,7 @@ class OrderStatusLogFormController extends Controller
      * sets order
      * creates virtual methods.
      */
+    #[Override]
     protected function init()
     {
         parent::init();

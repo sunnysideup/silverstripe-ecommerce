@@ -2,10 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
-use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\ViewableData;
 
 class EcommerceCMSButtonField extends LiteralField
 {
@@ -18,6 +16,7 @@ class EcommerceCMSButtonField extends LiteralField
         if ($newWindow) {
             $target = 'target="_blank"';
         }
+
         $html = <<<html
                     <div class="form-group field readonly">
                         <label class="form__field-label"></label>

@@ -3,13 +3,15 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * @description: see EcommerceTaskAddDefaultProducts::$description
+ * Adds two default Products and a Product Group (Category) to your site.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -17,15 +19,17 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
  */
 class EcommerceTaskAddDefaultProducts extends BuildTask
 {
-    protected $title = 'Add default Products';
+    protected static string $commandName = 'ecommerce-add-default-products';
 
-    protected $description = 'Adds two default Products and a Product Group (Category) to your site.';
+    protected string $title = 'Add default Products';
 
-    public function run($request)
+    protected static string $description = 'Adds two default Products and a Product Group (Category) to your site.';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         if (! Product::get()->exists()) {
             if (! ProductGroup::get()->exists()) {
-                $productGroup1 = new ProductGroup();
+                $productGroup1 = ProductGroup::create();
                 $productGroup1->Title = 'Products';
                 $productGroup1->Content = "
                     <p>This is the top level products page, it uses the <em>product group</em> page type, and it allows you to show your products checked as 'featured' on it. It also allows you to nest <em>product group</em> pages inside it.</p>
@@ -35,13 +39,14 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
                 $productGroup1->URLSegment = 'products';
                 $productGroup1->writeToStage(Versioned::DRAFT);
                 $productGroup1->publish(Versioned::DRAFT, 'Live');
-                DB::alteration_message("Product group page 'Products' created", 'created');
+                $output->writeln("Product group page 'Products' created");
             } else {
                 $productGroup1 = ProductGroup::get()->first();
             }
+
             $content = "<p>This is a <em>product</em>. It's description goes into the Content field as a standard SilverStripe page would have it's content. This is an ideal place to describe your product.</p>";
 
-            $page1 = new Product();
+            $page1 = Product::create();
             $page1->Title = 'Example product';
             $page1->Content = $content . '<p>You may also notice that we have checked it as a featured product and it will be displayed on the main Products page.</p>';
             $page1->URLSegment = 'example-product';
@@ -50,9 +55,9 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page1->FeaturedProduct = true;
             $page1->writeToStage(Versioned::DRAFT);
             $page1->publish(Versioned::DRAFT, 'Live');
-            DB::alteration_message("Product page 'Example product' created", 'created');
+            $output->writeln("Product page 'Example product' created");
 
-            $page2 = new Product();
+            $page2 = Product::create();
             $page2->Title = 'Example product 2';
             $page2->Content = $content;
             $page2->URLSegment = 'example-product-2';
@@ -60,9 +65,11 @@ class EcommerceTaskAddDefaultProducts extends BuildTask
             $page2->Price = 25.00;
             $page2->writeToStage(Versioned::DRAFT);
             $page2->publish(Versioned::DRAFT, 'Live');
-            DB::alteration_message("Product page 'Example product 2' created", 'created');
+            $output->writeln("Product page 'Example product 2' created");
         } else {
-            DB::alteration_message('No products created as they already exist.');
+            $output->writeln('No products created as they already exist.');
         }
+
+        return Command::SUCCESS;
     }
 }

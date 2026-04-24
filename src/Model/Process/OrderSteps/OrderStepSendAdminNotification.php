@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Model\Process\OrderSteps;
 
+use Override;
 use SilverStripe\Forms\FieldList;
 use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
 use Sunnysideup\Ecommerce\Interfaces\OrderStepInterface;
@@ -14,6 +15,8 @@ use Sunnysideup\Ecommerce\Model\Process\OrderStep;
  */
 class OrderStepSendAdminNotification extends OrderStep implements OrderStepInterface
 {
+    private static $table_name = 'OrderStepSendAdminNotification';
+
     /**
      * @var string
      */
@@ -50,6 +53,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return bool - true if the current step is ready to be run...
      */
+    #[Override]
     public function initStep(Order $order): bool
     {
         return $order->IsSubmitted();
@@ -60,6 +64,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      * or in case this is not selected, it will send a message to the shop admin only
      * The latter is useful in case the payment does not go through (and no receipt is received).
      */
+    #[Override]
     public function doStep(Order $order): bool
     {
         return $this->sendEmailForStep(
@@ -75,8 +80,9 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
     /**
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false)
     {
         $fields = parent::addOrderStepFields($fields, $order);
@@ -91,6 +97,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return bool
      */
+    #[Override]
     public function hasCustomerMessage()
     {
         return false;
@@ -101,6 +108,7 @@ class OrderStepSendAdminNotification extends OrderStep implements OrderStepInter
      *
      * @return string
      */
+    #[Override]
     protected function myDescription()
     {
         return _t(

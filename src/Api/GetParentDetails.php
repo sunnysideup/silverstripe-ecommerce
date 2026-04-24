@@ -28,11 +28,6 @@ class GetParentDetails
         return implode($delimiter, $chunks);
     }
 
-    protected object $objectWithParentID;
-
-    // input
-    protected string $expectedParentClassName;
-
     protected array $allowedClassNames = [];
 
     protected array $notAllowedClassNames = [];
@@ -55,6 +50,7 @@ class GetParentDetails
         if (is_string($allowedClassNames)) {
             $allowedClassNames = [$allowedClassNames];
         }
+
         $this->allowedClassNames = $allowedClassNames;
         return $this;
     }
@@ -64,14 +60,13 @@ class GetParentDetails
         if (is_string($notAllowedClassNames)) {
             $notAllowedClassNames = [$notAllowedClassNames];
         }
+
         $this->notAllowedClassNames = $notAllowedClassNames;
         return $this;
     }
 
-    public function __construct(object $objectWithParentID, string $expectedParentClassName)
+    public function __construct(protected object $objectWithParentID, protected string $expectedParentClassName)
     {
-        $this->expectedParentClassName = $expectedParentClassName;
-        $this->objectWithParentID = $objectWithParentID;
         if (! isset($this->objectWithParentID->ParentID)) {
             user_error('ParentID not set on object', E_USER_ERROR);
         }
@@ -89,7 +84,7 @@ class GetParentDetails
             $obj = $expectedParentClassName::get_by_id((int) $obj->ParentID);
             if ($obj) {
                 $this->parentSortArray[] = sprintf('%05d', $obj->$sortField);
-                if (!empty($this->notAllowedClassNames)) {
+                if ($this->notAllowedClassNames !== []) {
                     foreach ($this->notAllowedClassNames as $notAllowedClassName) {
                         if (is_a($obj, EcommerceConfigClassNames::getName($notAllowedClassName))) {
                             $obj = null;
@@ -97,7 +92,8 @@ class GetParentDetails
                         }
                     }
                 }
-                if (!empty($this->allowedClassNames)) {
+
+                if ($this->allowedClassNames !== []) {
                     foreach ($this->allowedClassNames as $allowedClassName) {
                         if (is_a($obj, EcommerceConfigClassNames::getName($allowedClassName))) {
                             $parentTitleArray[] = $obj->Title;
@@ -117,6 +113,7 @@ class GetParentDetails
         if ([] !== $parentTitleArray) {
             $this->parentsTitle = implode(' / ', $parentTitleArray);
         }
+
         return $this;
     }
 

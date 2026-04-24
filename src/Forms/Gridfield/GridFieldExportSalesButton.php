@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Gridfield;
 
+use Override;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\GridField\GridField;
@@ -41,11 +42,13 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      *
      * @param mixed $gridField
      */
+    #[Override]
     public function getActions($gridField)
     {
         return ['exportsales'];
     }
 
+    #[Override]
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
         if ('exportsales' === $actionName) {
@@ -58,6 +61,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      *
      * @param mixed $gridField
      */
+    #[Override]
     public function getURLHandlers($gridField)
     {
         return [
@@ -76,7 +80,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
         $fileData = $this->generateExportFileData($gridField);
         if ($fileData) {
             $now = date('d-m-Y-H-i');
-            $fileName = "sales-{$now}.csv";
+            $fileName = sprintf('sales-%s.csv', $now);
 
             return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
         }
@@ -87,15 +91,10 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      *
      * @param mixed $gridField
      */
+    #[Override]
     public function getHTMLFragments($gridField)
     {
-        $button = new GridField_FormAction(
-            $gridField,
-            'exportsales',
-            _t('TableListField.CSVEXPORT_SALES', 'Export Row Items'),
-            'exportsales',
-            null
-        );
+        $button = GridField_FormAction::create($gridField, 'exportsales', _t('TableListField.CSVEXPORT_SALES', 'Export Row Items'), 'exportsales', null);
         $button->addExtraClass('action btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
 
@@ -111,6 +110,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      *
      * @return null|string
      */
+    #[Override]
     public function generateExportFileData($gridField)
     {
         //reset time limit
@@ -151,6 +151,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                             $memberIsOK = true;
                         }
                     }
+
                     if ($memberIsOK) {
                         $items = OrderItem::get()->filter(['OrderID' => $order->ID]);
                         if ($items->exists()) {
@@ -159,9 +160,11 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                     }
                 }
             }
+
             unset($orders);
             $orders = $this->getMyOrders($idArray, $count, $offset);
         }
+
         if ($fileData !== '' && $fileData !== '0') {
             return $fileData;
         }
@@ -179,6 +182,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
             $fileData = '"Email"' . $separator . '"SubmittedDate"' . $separator . '"' . implode('"' . $separator . '"', $exportFields) . '"' . "\n";
             $this->isFirstRow = false;
         }
+
         if ($orderItems) {
             foreach ($orderItems as $item) {
                 $columnData = [];
@@ -187,12 +191,13 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
                 foreach ($exportFields as $field) {
                     $value = $item->hasMethod($field) ? (string) $item->{$field}() : (string) $item->{$field};
                     $value = preg_replace('#\s+#', ' ', $value);
-                    $value = preg_replace('#\s+#', ' ', $value);
+                    $value = preg_replace('#\s+#', ' ', (string) $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);
                     $value = str_replace(["\r", "\n"], "\n", $value);
                     $tmpColumnData = '"' . str_replace('"', '\"', $value) . '"';
                     $columnData[] = $tmpColumnData;
                 }
+
                 $fileData .= implode($separator, $columnData);
                 $fileData .= "\n";
                 $item->destroy();
@@ -210,7 +215,7 @@ class GridFieldExportSalesButton extends GridFieldExportButton implements GridFi
      * @param int   $count
      * @param int   $offset
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     protected function getMyOrders($idArray, $count, $offset)
     {

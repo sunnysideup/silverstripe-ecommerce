@@ -4,13 +4,14 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * create standard country and regions.
+ * Create standard country and regions.
  *
  * @author: Nicolaas [at] Sunny Side Up .co.nz
  * @package: ecommerce
@@ -18,35 +19,40 @@ use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
  */
 class EcommerceTaskCountryAndRegion extends BuildTask
 {
-    protected $title = 'Create standard countries and regions';
+    protected static string $commandName = 'ecommerce-create-countries';
 
-    protected $description = 'Adds all countries to the EcommerceCountry list';
+    protected string $title = 'Create standard countries and regions';
 
-    public function run($request)
+    protected static string $description = 'Adds all countries to the EcommerceCountry list';
+
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         $count = 0;
         $array = EcommerceCountry::get_country_dropdown();
         $allowedArray = EcommerceConfig::get(EcommerceCountry::class, 'allowed_country_codes');
         foreach ($array as $code => $name) {
-            $ecommerceCountry = DataObject::get_one(
-                EcommerceCountry::class,
+            $ecommerceCountry = EcommerceCountry::get()->filter(
                 ['Code' => Convert::raw2sql($code)],
-                $cacheDataObjectGetOne = false
-            );
+            )->first();
             if ($ecommerceCountry) {
                 //do nothing
                 ++$count;
             } else {
-                DB::alteration_message("adding {$code} to Ecommerce Country", 'created');
+                $output->writeln(sprintf('adding %s to Ecommerce Country', $code));
                 $ecommerceCountry = EcommerceCountry::create();
                 $ecommerceCountry->Code = $code;
             }
+
             if ($allowedArray && count($allowedArray)) {
                 $ecommerceCountry->DoNotAllowSales = in_array($code, $allowedArray, true) ? 0 : 1;
             }
+
             $ecommerceCountry->Name = $name;
             $ecommerceCountry->write();
         }
-        DB::alteration_message("Created / Checked {$count} Ecommerce Countries", 'edited');
+
+        $output->writeln(sprintf('Created / Checked %d Ecommerce Countries', $count));
+
+        return Command::SUCCESS;
     }
 }

@@ -2,7 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Extensions;
 
-use SilverStripe\CMS\Model\SiteTreeExtension;
+use SilverStripe\Core\Extension;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -12,9 +13,9 @@ use Sunnysideup\Ecommerce\Pages\ProductGroup;
 /**
  * Class \Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension
  *
- * @property \SilverStripe\CMS\Model\SiteTree|\Sunnysideup\Ecommerce\Model\Extensions\EcommerceSiteTreeExtension $owner
+ * @property SiteTree|EcommerceSiteTreeExtension $owner
  */
-class EcommerceSiteTreeExtension extends SiteTreeExtension
+class EcommerceSiteTreeExtension extends Extension
 {
     /**
      * returns the instance of EcommerceConfigAjax for use in templates.
@@ -25,7 +26,7 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
      */
     public function AJAXDefinitions()
     {
-        return EcommerceConfigAjax::get_one($this->owner);
+        return EcommerceConfigAjax::get_one($this->getOwner());
     }
 
     /**
@@ -52,12 +53,12 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         }
 
         return Controller::join_links(Director::absoluteBaseURL(), 'Security/login')
-        . '?BackURL=' . urlencode($link);
+        . '?BackURL=' . urlencode((string) $link);
     }
 
     public function augmentValidURLSegment()
     {
-        if ($this->owner instanceof ProductGroup) {
+        if ($this->getOwner() instanceof ProductGroup) {
             $checkForDuplicatesURLSegments = ProductGroup::get()
                 ->filter(['URLSegment' => $this->getOwner()->URLSegment])
                 ->exclude(['ID' => $this->getOwner()->ID])
@@ -66,6 +67,7 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
                 return false;
             }
         }
+
         return null;
     }
 }

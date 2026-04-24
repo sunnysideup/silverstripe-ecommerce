@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Security\Member;
+use SilverStripe\Forms\FieldList;
 use Page;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -14,9 +17,6 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
@@ -40,7 +40,7 @@ use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
  * @property string $ContentAboveCheckout
  * @property string $TermsAndConditionsMessage
  * @property int $TermsPageID
- * @method \Page TermsPage()
+ * @method Page TermsPage()
  * @mixin \Sunnysideup\EcommerceGoogleAnalytics\CheckoutPageDataExtension
  */
 class CheckoutPage extends CartPage
@@ -57,7 +57,7 @@ class CheckoutPage extends CartPage
      *
      * @var string
      */
-    private static $icon = 'sunnysideup/ecommerce: client/images/icons/CheckoutPage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce: client/images/icons/CheckoutPage-file.gif';
 
     /**
      * standard SS variable.
@@ -77,7 +77,7 @@ class CheckoutPage extends CartPage
      * @var array
      */
     private static $has_one = [
-        'TermsPage' => \Page::class,
+        'TermsPage' => Page::class,
     ];
 
     /**
@@ -108,14 +108,20 @@ class CheckoutPage extends CartPage
      *
      * @var string
      */
-    private static $description = 'A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.';
+    private static $class_description = 'A page where the customer can view the current order (cart) and finalise (submit) the order. Every e-commerce site needs an Order Confirmation Page.';
 
+    /**
+     * Fields are scaffolded automatically, no need to ignore any.
+     */
+
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('CheckoutPage.SINGULARNAME', 'Checkout Page');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('CheckoutPage.PLURALNAME', 'Checkout Pages');
     }
@@ -142,6 +148,7 @@ class CheckoutPage extends CartPage
      *
      * @return string (URLSegment)
      */
+    #[Override]
     public static function find_link($action = null): string
     {
         $page = DataObject::get_one(CheckoutPage::class);
@@ -248,11 +255,12 @@ class CheckoutPage extends CartPage
      * Standard SS function, we only allow for one checkout page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return CheckoutPage::get()->Filter(['ClassName' => CheckoutPage::class])->exists() ? false : $this->canEdit($member);
@@ -261,11 +269,12 @@ class CheckoutPage extends CartPage
     /**
      * Shop Admins can edit.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
@@ -278,10 +287,11 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -290,10 +300,11 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canPublish($member = null)
     {
         return $this->canEdit($member);
@@ -302,8 +313,9 @@ class CheckoutPage extends CartPage
     /**
      * Standard SS function.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -315,40 +327,46 @@ class CheckoutPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'DeleteOrderLinkLabel');
 
-        $termsPageIDField = TreeDropdownField::create(
-            'TermsPageID',
-            _t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'),
-            SiteTree::class
-        );
-        $termsPageIDField->setDescription(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+        // Get scaffolded fields and customize them
+        $termsPageIDField = $fields->dataFieldByName('TermsPageID');
+        if ($termsPageIDField) {
+            $termsPageIDField->setTitle(_t('CheckoutPage.TERMSANDCONDITIONSPAGE', 'Terms and conditions page'));
+            $termsPageIDField->setDescription(_t('CheckoutPage.TERMSANDCONDITIONSPAGE_RIGHT', 'This is optional. To remove this page clear the reminder message below.'));
+            $fields->addFieldToTab('Root.Terms', $termsPageIDField);
+        }
 
-        $fields->addFieldToTab('Root.Terms', $termsPageIDField);
-
-        $fields->addFieldToTab(
-            'Root.Terms',
-            $termsPageIDFieldMessage = new TextField(
-                'TermsAndConditionsMessage',
-                _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE', 'Reminder Message')
-            )
-        );
-        $termsPageIDFieldMessage->setDescription(
-            _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE_RIGHT', "Shown if the user does not tick the 'I agree with the Terms and Conditions' box. Leave blank to allow customer to proceed without ticking this box")
-        );
+        $termsPageIDFieldMessage = $fields->dataFieldByName('TermsAndConditionsMessage');
+        if ($termsPageIDFieldMessage) {
+            $termsPageIDFieldMessage->setTitle(_t('CheckoutPage.TERMSANDCONDITIONSMESSAGE', 'Reminder Message'));
+            $termsPageIDFieldMessage->setDescription(
+                _t('CheckoutPage.TERMSANDCONDITIONSMESSAGE_RIGHT', "Shown if the user does not tick the 'I agree with the Terms and Conditions' box. Leave blank to allow customer to proceed without ticking this box")
+            );
+            $fields->addFieldToTab('Root.Terms', $termsPageIDFieldMessage);
+        }
+        
         //The Content field has a slightly different meaning for the Checkout Page.
+        $contentField = $fields->dataFieldByName('Content');
         $fields->removeFieldFromTab('Root.Main', 'Content');
+        
+        $contentAboveCheckoutField = $fields->dataFieldByName('ContentAboveCheckout');
+        if ($contentAboveCheckoutField) {
+            $contentAboveCheckoutField->setTitle(_t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page'));
+            $contentAboveCheckoutField->setRows(5);
+        }
+        
+        if ($contentField) {
+            $contentField->setTitle(_t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page '));
+            $contentField->setRows(5);
+        }
+        
         $fields->addFieldsToTab(
             'Root.Messages.Messages.AlwaysVisible',
             [
-                HTMLEditorField::create(
-                    'ContentAboveCheckout',
-                    _t('CheckoutPage.TOPCONTENT', 'General note - always visible above a checkout step on the checkout page')
-                )->setRows(5),
-                HTMLEditorField::create(
-                    'Content',
-                    _t('CheckoutPage.CONTENT', 'General note - always visible below a checkout step on the checkout page ')
-                )->setRows(5),
+                $contentAboveCheckoutField,
+                $contentField,
             ]
         );
+        
         if (OrderModifierDescriptor::get()->exists()) {
             $fields->addFieldToTab('Root.Messages.Messages.OrderExtras', $this->getOrderModifierDescriptionField());
         }
@@ -360,6 +378,7 @@ class CheckoutPage extends CartPage
         return $fields;
     }
 
+    #[Override]
     public function requireDefaultRecords()
     {
         if (SiteTree::config()->create_default_pages) {
@@ -381,16 +400,16 @@ class CheckoutPage extends CartPage
     protected function getOrderModifierDescriptionField()
     {
         $gridFieldConfig = GridFieldConfig::create()->addComponents(
-            new GridFieldToolbarHeader(),
-            new GridFieldSortableHeader(),
-            new GridFieldDataColumns(),
-            new GridFieldEditButton(),
-            new GridFieldDetailForm()
+            GridFieldToolbarHeader::create(),
+            GridFieldSortableHeader::create(),
+            GridFieldDataColumns::create(),
+            GridFieldEditButton::create(),
+            GridFieldDetailForm::create()
         );
         $title = _t('CheckoutPage.ORDERMODIFIERDESCRIPTMESSAGES', 'Messages relating to order form extras (e.g. tax or shipping)');
         $source = OrderModifierDescriptor::get();
 
-        return new GridField('OrderModifierDescriptor', $title, $source, $gridFieldConfig);
+        return GridField::create('OrderModifierDescriptor', $title, $source, $gridFieldConfig);
     }
 
     /**
@@ -399,15 +418,15 @@ class CheckoutPage extends CartPage
     protected function getCheckoutStepDescriptionField()
     {
         $gridFieldConfig = GridFieldConfig::create()->addComponents(
-            new GridFieldToolbarHeader(),
-            new GridFieldSortableHeader(),
-            new GridFieldDataColumns(),
-            new GridFieldEditButton(),
-            new GridFieldDetailForm()
+            GridFieldToolbarHeader::create(),
+            GridFieldSortableHeader::create(),
+            GridFieldDataColumns::create(),
+            GridFieldEditButton::create(),
+            GridFieldDetailForm::create()
         );
         $title = _t('CheckoutPage.CHECKOUTSTEPESCRIPTIONS', 'Checkout Step Descriptions');
         $source = CheckoutPageStepDescription::get();
 
-        return new GridField('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
+        return GridField::create('CheckoutPageStepDescription', $title, $source, $gridFieldConfig);
     }
 }

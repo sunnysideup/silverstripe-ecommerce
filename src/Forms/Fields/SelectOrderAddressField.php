@@ -2,9 +2,11 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\List\SS_List;
+use Override;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\View\Requirements;
 
 /**
@@ -17,21 +19,15 @@ use SilverStripe\View\Requirements;
 class SelectOrderAddressField extends OptionsetField
 {
     /**
-     * @var \SilverStripe\ORM\DataList
-     */
-    protected $addresses;
-
-    /**
      * Creates a new optionset field.
      *
      * @param string                      $name      The field name
      * @param string                      $title     The field title
-     * @param \SilverStripe\ORM\ArrayList $addresses
+     * @param ArrayList $addresses
      * @param string                      $value     The current value
      */
-    public function __construct($name, $title = '', $addresses = null, $value = '')
+    public function __construct($name, $title = '', protected $addresses = null, $value = '')
     {
-        $this->addresses = $addresses;
         $source = [];
         if ($this->addresses && $this->addresses instanceof SS_List) {
             $source = [];
@@ -39,6 +35,7 @@ class SelectOrderAddressField extends OptionsetField
                 $source[$address->ID] = $address->FullString();
             }
         }
+
         parent::__construct($name, $title, $source, $value);
     }
 
@@ -50,6 +47,7 @@ class SelectOrderAddressField extends OptionsetField
      *
      * @return DBHTMLText
      */
+    #[Override]
     public function Field($properties = [])
     {
         // $jsArray = [];
@@ -65,6 +63,7 @@ class SelectOrderAddressField extends OptionsetField
                 ';
             }
         }
+
         Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomSelectOrderAddressField.js');
         Requirements::customScript(
             $js,

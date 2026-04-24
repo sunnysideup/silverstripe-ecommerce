@@ -37,6 +37,7 @@ class YesNoDropDownField extends DropdownField
                 '1' => 'Yes',
             ];
         }
+
         parent::__construct($name, $title, $source, $value);
         $this->addExtraClass('dropdown-yes-no');
     }

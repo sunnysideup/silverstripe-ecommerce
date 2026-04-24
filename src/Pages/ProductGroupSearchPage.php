@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -28,20 +30,22 @@ class ProductGroupSearchPage extends ProductGroup
 
     private static $table_name = 'ProductGroupSearchPage';
 
-    private static $icon = 'sunnysideup/ecommerce:client/images/icons/productgroupsearchpage-file.gif';
+    private static $cms_icon = 'sunnysideup/ecommerce:client/images/icons/productgroupsearchpage-file.gif';
 
-    private static $description = 'This page allowing the user to search for products.';
+    private static $class_description = 'This page allowing the user to search for products.';
 
     private static $singular_name = 'Product Search Page';
 
     private static $plural_name = 'Product Search Pages';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('ProductGroupSearchPage.SINGULARNAME', 'Product Search Page');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('ProductGroupSearchPage.PLURALNAME', 'Product Search Pages');
     }
@@ -50,11 +54,12 @@ class ProductGroupSearchPage extends ProductGroup
      * Standard SS function, we only allow for one Product Search Page to exist
      * but we do allow for extensions to exist at the same time.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return ProductGroupSearchPage::get()->exists() ? false : $this->canEdit($member);
@@ -79,6 +84,7 @@ class ProductGroupSearchPage extends ProductGroup
         return $page ? $page->ID : 0;
     }
 
+    #[Override]
     public function getMyLevelOfProductsToShow(?int $defauult = 99): int
     {
         return -2;

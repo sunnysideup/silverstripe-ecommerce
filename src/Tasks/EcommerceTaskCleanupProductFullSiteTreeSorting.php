@@ -2,9 +2,14 @@
 
 namespace Sunnysideup\Ecommerce\Tasks;
 
+use Override;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\ORM\DB;
+use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @description: see description
@@ -15,12 +20,11 @@ use Sunnysideup\Ecommerce\Pages\Product;
  */
 class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
 {
-    protected $title = 'Cleanup Product Full SiteTree Sorting';
+    protected string $title = 'Cleanup Product Full SiteTree Sorting';
 
-    protected $description = '
-    Resets all the sorting values in the Full Site Tree Sorting field in Products (not for the ProductVariations).
-    This field includes the sorting number for the product at hand, as well as all the sorting number of its parent pages...
-    Allowing you to keep the SiteTree sort order for a collection of random products. ';
+    protected static string $description = 'Resets all the sorting values in the Full Site Tree Sorting field in Products (not for the ProductVariations). This field includes the sorting number for the product at hand, as well as all the sorting number of its parent pages... Allowing you to keep the SiteTree sort order for a collection of random products.';
+
+    protected static string $commandName = 'ecommerce-cleanup-product-sorting';
 
     protected $deleteFirst = true;
 
@@ -29,15 +33,20 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
         $this->deleteFirst = $b;
     }
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
+        if ($input->getOption('no-delete')) {
+            $this->deleteFirst = false;
+        }
+
         $stagingArray = ['_Live', ''];
         foreach ($stagingArray as $extension) {
             if ($this->deleteFirst) {
-                DB::query("UPDATE Product{$extension} SET \"FullSiteTreeSort\" = '';");
+                DB::query(sprintf("UPDATE Product%s SET \"FullSiteTreeSort\" = '';", $extension));
             } else {
-                DB::alteration_message("updating Product{$extension}");
+                $output->writeln('updating Product' . $extension);
             }
+
             for ($i = 30; $i > 0; --$i) {
                 $joinStatement = "
                     INNER JOIN SiteTree{$extension} AS UP0 ON UP0.ID = Product{$extension}.ID";
@@ -47,6 +56,7 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
                     $joinStatement .= "
                         INNER JOIN SiteTree{$extension} AS UP{$j} ON UP{$j}.ID = UP" . ($j - 1) . '.ParentID';
                 }
+
                 $concatStatement .= 'UP0.Sort)';
                 $sql = "
                     SELECT COUNT(\"Product{$extension}\".\"ID\")
@@ -56,7 +66,7 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
                 ";
                 $count = DB::query($sql)->value();
                 if ($count) {
-                    DB::alteration_message("We are about to update {$count} Products", 'created');
+                    $output->writeln(sprintf('We are about to update %s Products', $count));
                     $sql = "
                         UPDATE \"Product{$extension}\"
                         {$joinStatement}
@@ -64,24 +74,36 @@ class EcommerceTaskCleanupProductFullSiteTreeSorting extends BuildTask
                         WHERE \"Product{$extension}\".\"FullSiteTreeSort\" IS NULL OR \"Product{$extension}\".\"FullSiteTreeSort\" = '';";
                     DB::query($sql);
                     $outcome = DB::query($sql);
-                    echo '<p style="font-size: 10px; color: grey;">' . $sql . ': ' . ($outcome ? 'SUCCESS' : 'ERROR') . '</p>';
+                    $output->writeForHtml('<p style="font-size: 10px; color: grey;">' . $sql . ': ' . ($outcome ? 'SUCCESS' : 'ERROR') . '</p>');
                 }
             }
         }
+
         $missedOnes = Product::get()
             ->where("\"FullSiteTreeSort\" IS NULL OR \"FullSiteTreeSort\" = ''");
         if ($missedOnes->exists()) {
-            DB::alteration_message('ERROR: could not updated all Product.FullSiteTreeSort numbers!', 'deleted');
+            $output->writeln('ERROR: could not updated all Product.FullSiteTreeSort numbers!');
         } else {
-            DB::alteration_message('All Product.FullSiteTreeSort have been updated');
+            $output->writeln('All Product.FullSiteTreeSort have been updated');
         }
+
         $examples = Product::get()
             ->shuffle()
             ->limit(3);
         if ($examples->exists()) {
             foreach ($examples as $key => $example) {
-                DB::alteration_message("EXAMPLE #{$key}: " . $example->Title . ': <strong>' . $example->FullSiteTreeSort . '</strong>');
+                $output->writeForHtml(sprintf('EXAMPLE #%s: ', $key) . $example->Title . ': <strong>' . $example->FullSiteTreeSort . '</strong>');
             }
         }
+
+        return Command::SUCCESS;
+    }
+
+    #[Override]
+    public function getOptions(): array
+    {
+        return [
+            new InputOption('no-delete', 'd', InputOption::VALUE_NONE, 'Do not delete existing sort values first'),
+        ];
     }
 }

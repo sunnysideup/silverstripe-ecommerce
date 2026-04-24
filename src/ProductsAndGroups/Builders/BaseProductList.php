@@ -2,16 +2,15 @@
 
 namespace Sunnysideup\Ecommerce\ProductsAndGroups\Builders;
 
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\SS_List;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
-use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 
@@ -175,6 +174,7 @@ class BaseProductList extends AbstractProductsAndGroupsList
             $className = static::class;
             self::$singleton_caches[$cacheKey] = new $className($rootGroup, $buyableClassName, $levelOfProductsToShow, $searchString);
         }
+
         self::$singleton_caches[$cacheKey]
             ->setCacheKey($cacheKey)
             ->init();
@@ -338,7 +338,6 @@ class BaseProductList extends AbstractProductsAndGroupsList
     //#################################################
     // HELPERS
     //#################################################
-
     /**
      * Returns children ProductGroup pages of this group.
      * Make it more accesible for ProductGroup.

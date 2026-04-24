@@ -2,7 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
+use Override;
 use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
@@ -16,7 +17,7 @@ use Sunnysideup\Ecommerce\Pages\CheckoutPage;
  * @package: ecommerce
  * @sub-package: forms
  */
-class OrderFormValidator extends RequiredFields
+class OrderFormValidator extends RequiredFieldsValidator
 {
     /**
      * Ensures member unique id stays unique and other basic stuff...
@@ -25,6 +26,7 @@ class OrderFormValidator extends RequiredFields
      *
      * @return bool
      */
+    #[Override]
     public function php($data)
     {
         $valid = parent::php($data);
@@ -37,6 +39,7 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
+
         $order = ShoppingCart::current_order();
         if (! $order) {
             $this->validationError(
@@ -46,6 +49,7 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
+
         $billingAddress = BillingAddress::get_by_id($order->BillingAddressID);
         if (! $billingAddress) {
             $this->validationError(
@@ -55,10 +59,12 @@ class OrderFormValidator extends RequiredFields
             );
             $valid = false;
         }
+
         $validExtended = $this->extend('updatePHP', $data, $this);
         if (false === $validExtended) {
             $valid = false;
         }
+
         if (! $valid) {
             $this->form->sessionError(
                 _t('OrderForm.ERRORINFORM', 'We could not process with your order, please check your errors below.'),

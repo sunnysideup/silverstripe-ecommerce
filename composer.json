@@ -28,22 +28,21 @@
     }
   ],
   "require": {
-    "silverstripe/cms": "^4.0 || ^5.0",
-    "bummzack/sortablefile": "^2.0",
+    "silverstripe/cms": "^6.0",
+    "bummzack/sortablefile": "^3.0",
     "pelago/emogrifier": "^8.0@stable",
-    "silverstripe/lumberjack": "^2.0 || ^3.0",
-    "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
-    "sunnysideup/google_address_field": "5.x-dev",
-    "sunnysideup/phone_field": "5.x-dev",
-    "sunnysideup/cms_edit_link_field": "5.x-dev",
-    "sunnysideup/permission_provider": "5.x-dev",
-    "sunnysideup/vardump": "5.x-dev",
-    "sunnysideup/model-admin-many-tabs": "5.x-dev",
-    "sunnysideup/email_address_database_field": "5.x-dev",
-    "sunnysideup/silverstripe-ajax-select-field": "5.x-dev",
-    "sunnysideup/yes-no-any-filter": "5.x-dev",
-    "sunnysideup/branded-login-screen": "5.x-dev",
-    "sunnysideup/one-time-code-authentication": "5.x-dev"
+    "silverstripe/lumberjack": "^4.1",
+    "sunnysideup/google_address_field": "dev-main",
+    "sunnysideup/phone_field": "dev-main",
+    "sunnysideup/cms_edit_link_field": "dev-main",
+    "sunnysideup/permission_provider": "dev-main",
+    "sunnysideup/vardump": "dev-main",
+    "sunnysideup/model-admin-many-tabs": "dev-main",
+    "sunnysideup/email_address_database_field": "dev-main",
+    "sunnysideup/silverstripe-ajax-select-field": "dev-main",
+    "sunnysideup/yes-no-any-filter": "dev-main",
+    "sunnysideup/branded-login-screen": "dev-main",
+    "sunnysideup/one-time-code-authentication": "dev-main"
   },
   "suggest": {
     "sunnysideup/flush": "Better, faster output for tasks",
@@ -62,5 +61,11 @@
       "Sunnysideup\\Ecommerce\\": "src/",
       "Sunnysideup\\Ecommerce\\Tests\\": "tests/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/biwac-websolutions-ag/silverstripe-grouped-cms-menu.git"
+    }
+  ]
 }

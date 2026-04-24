@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Fieldtypes;
 
+use Override;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
@@ -19,15 +21,17 @@ class BuyableFieldType extends DBPolymorphicForeignKey
 {
     private static $classname_spec_cache = [];
 
-    public function scaffoldFormField($title = null, $params = null)
+    #[Override]
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         // Opt-out of form field generation - Scaffolding should be performed on
         // the has_many end, or set programatically.
         // @todo - Investigate suitable FormField
-        return new BuyableSelectField($this->name, $title);
+        return BuyableSelectField::create($this->name, $title);
     }
 
-    public function compositeDatabaseFields()
+    #[Override]
+    public function compositeDatabaseFields(): array
     {
         // Ensure the table level cache exists
         if (empty(self::$classname_spec_cache[$this->tableName])) {
@@ -41,8 +45,8 @@ class BuyableFieldType extends DBPolymorphicForeignKey
             $classNames = ClassInfo::implementorsOf(BuyableModel::class);
 
             $schema = DB::get_schema();
-            if ($schema->hasField($this->tableName, "{$this->name}Class")) {
-                $existing = DB::query("SELECT DISTINCT \"{$this->name}Class\" FROM \"{$this->tableName}\"")->column();
+            if ($schema->hasField($this->tableName, $this->name . 'Class')) {
+                $existing = DB::query(sprintf('SELECT DISTINCT "%sClass" FROM "%s"', $this->name, $this->tableName))->column();
                 $classNames = array_unique(array_merge($classNames, $existing));
             }
 

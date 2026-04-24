@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sunnysideup\Ecommerce\Cms;
 
+use Override;
+use SilverStripe\Control\HTTPResponse;
 use DateTimeImmutable;
 use DateTimeInterface;
 use SilverStripe\Admin\LeftAndMain;
@@ -85,6 +87,7 @@ class ReferralSummary extends LeftAndMain
         'doPrepData' => 'ADMIN',
     ];
 
+    #[Override]
     public function getEditForm($id = null, $fields = null): Form
     {
         $request = $this->getRequest();
@@ -204,16 +207,17 @@ class ReferralSummary extends LeftAndMain
             ->setFormMethod('GET');
     }
 
-    public function doPrepData(array $data, Form $form): \SilverStripe\Control\HTTPResponse
+    public function doPrepData(array $data, Form $form): HTTPResponse
     {
         if (! self::needs_processing()) {
             $form->sessionMessage('Data preparation not needed.', 'good');
             return $this->redirectBack();
         }
+
         $request = $this->getRequest();
         $start = $request->getSession()->get('ReferralSummaryStart') ?? 0;
         $limit = 500;
-        $task = new EcommerceTaskDoReferralDataPrep();
+        $task = EcommerceTaskDoReferralDataPrep::create();
         if ($task->doDataPrep($limit, $start, true)) {
             $request->getSession()->set('ReferralSummaryStart', $start + $limit);
             $message = 'Data preparation completed successfully.';
@@ -222,6 +226,7 @@ class ReferralSummary extends LeftAndMain
             $message = 'Data preparation in progress. Please click the button again to continue processing.';
             $type = 'warning';
         }
+
         $form->sessionMessage($message, $type);
         return $this->redirectBack();
     }
@@ -265,19 +270,17 @@ class ReferralSummary extends LeftAndMain
         $stats = (array) $this->config()->get('stats_to_report_on');
         $statistic = isset($stats[$vars['Statistic'] ?? '']) ? $vars['Statistic'] : $this->getDefaultFormValue('Statistic');
 
-        $formatKey = static function (DateTimeInterface $dt, string $mode): array {
-            return match ($mode) {
-                'Day' => [$dt->format('Y-m-d'), $dt->format('Y-m-d')],
-                'Week' => [$dt->format('o-\WW'), $dt->format('o-\WW')],
-                'Month' => [$dt->format('Y-m'), $dt->format('Y-m')],
-                'Quarter' => [
-                    $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
-                    $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
-                ],
-                'Year' => [$dt->format('Y'), $dt->format('Y')],
-                'AllTime' => ['AllTime', 'AllTime'],
-            };
-        };
+        $formatKey = (static fn(DateTimeInterface $dt, string $mode): array => match ($mode) {
+            'Day' => [$dt->format('Y-m-d'), $dt->format('Y-m-d')],
+            'Week' => [$dt->format('o-\WW'), $dt->format('o-\WW')],
+            'Month' => [$dt->format('Y-m'), $dt->format('Y-m')],
+            'Quarter' => [
+                $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
+                $dt->format('Y') . '-Q' . (int) ceil(((int) $dt->format('n')) / 3),
+            ],
+            'Year' => [$dt->format('Y'), $dt->format('Y')],
+            'AllTime' => ['AllTime', 'AllTime'],
+        });
 
         $filters = [
             'Created:GreaterThanOrEqual' => $dateFrom . ' 00:00:00',
@@ -288,6 +291,7 @@ class ReferralSummary extends LeftAndMain
         } elseif ($orderType === 'Uncompleted') {
             $filters['IsSubmitted'] = 0;
         }
+
         if (! empty($vars['Keyword'])) {
             $keywordFilters = [];
             $keyword = $vars['Keyword'];
@@ -328,18 +332,23 @@ class ReferralSummary extends LeftAndMain
             if ($includeFrom) {
                 $key .= '|' . $from;
             }
+
             if ($includeSource) {
                 $key .= '|' . $source;
             }
+
             if ($includeMedium) {
                 $key .= '|' . $medium;
             }
+
             if ($includeCampaign) {
                 $key .= '|' . $campaign;
             }
+
             if ($includeTerm) {
                 $key .= '|' . ($ref->Term ?: 'none');
             }
+
             if ($includeContent) {
                 $key .= '|' . ($ref->Content ?: 'none');
             }
@@ -349,21 +358,27 @@ class ReferralSummary extends LeftAndMain
                 if ($includeFrom) {
                     $row['Company'] = $from;
                 }
+
                 if ($includeSource) {
                     $row['Source'] = $source;
                 }
+
                 if ($includeMedium) {
                     $row['Medium'] = $medium;
                 }
+
                 if ($includeCampaign) {
                     $row['Campaign'] = $campaign;
                 }
+
                 if ($includeTerm) {
                     $row['Term'] = $ref->Term ?: 'none';
                 }
+
                 if ($includeContent) {
                     $row['Content'] = $ref->Content ?: 'none';
                 }
+
                 $row += [
                     'NumberOfClicks' => 0,
                     'NumberOfOrders' => 0,
@@ -393,8 +408,8 @@ class ReferralSummary extends LeftAndMain
     protected function arrayToTableWithBars(array $array, string $statistic): string
     {
         $html = '<h2>Results</h2>';
-        if (! count($array)) {
-            return $html . '<p class=\'message warning\'>no data</p>';
+        if ($array === []) {
+            return $html . "<p class='message warning'>no data</p>";
         }
 
         // find max of selected statistic
@@ -405,6 +420,7 @@ class ReferralSummary extends LeftAndMain
                 $max = $val;
             }
         }
+
         $max = $max > 0 ? $max : 1.0;
 
         $escapeFN = static fn (string $s): string => htmlspecialchars($s, ENT_QUOTES);
@@ -433,12 +449,13 @@ class ReferralSummary extends LeftAndMain
             $isHeader = ! $isStat && ! isset($headerkeys[$key]);
             $label = $this->camelCaseToWords((string) $key);
             if ($isStat) {
-                $extra = $isStat ? ' class=\'ref-stat-col\'' : '';
+                $extra = $isStat ? " class='ref-stat-col'" : '';
                 $html .= '<th' . $extra . '>' . $escapeFN($label) . '</th>';
             } elseif ($isHeader) {
                 $html .= '<th>' . $escapeFN($label) . '</th>';
             }
         }
+
         $html .= '</tr></thead><tbody>';
 
         // rows
@@ -458,14 +475,16 @@ class ReferralSummary extends LeftAndMain
                     } else {
                         $label = (string) $cell;
                     }
-                    $html .= '<td class=\'ref-num\'>'
+
+                    $html .= "<td class='ref-num'>"
                         . $escapeFN($label)
-                        . '<div class=\'ref-bar\' style=\'width:' . $width . '%\'></div>'
+                        . "<div class='ref-bar' style='width:" . $width . "%'></div>"
                         . '</td>';
                 } elseif ($isHeader) {
-                    $html .= '<td class=\'ref-string\'>' . $escapeFN((string) $cell) . '</td>';
+                    $html .= "<td class='ref-string'>" . $escapeFN((string) $cell) . '</td>';
                 }
             }
+
             $html .= '</tr>';
         }
 
@@ -485,12 +504,12 @@ class ReferralSummary extends LeftAndMain
     public static function last_processed()
     {
         $ref = ReferralProcessLog::get()
-            ->filter(['Completed' => 1])
-            ->sort('ID', 'DESC')
+            ->filter(['Completed' => 1])->sort(['ID' => 'DESC'])
             ->first();
         if ($ref) {
             return $ref->LastEdited;
         }
+
         return '1 Jan 1970 00:00:00';
     }
 

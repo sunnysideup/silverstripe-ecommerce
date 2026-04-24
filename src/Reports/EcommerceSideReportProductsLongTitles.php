@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Reports;
 
+use Override;
 use SilverStripe\Reports\Report;
 use Sunnysideup\Ecommerce\Pages\Product;
 
@@ -23,6 +26,7 @@ class EcommerceSideReportProductsLongTitles extends Report
     /**
      * @return string
      */
+    #[Override]
     public function title()
     {
         return _t('EcommerceSideReport.PRODUCT_LONG_TITLES', 'E-commerce: Products: Long Titles');

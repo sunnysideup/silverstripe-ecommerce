@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use SilverStripe\Admin\CMSMenu;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 
@@ -14,6 +16,6 @@ use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
 //last param is priority
 
 // CMSMenu::add_menu_item('refresh', 'Refresh Website', 'shoppingcart/clear/?flush=all', $controllerClass = null, $priority = 2.9, array('target' => '_blank'));
-if (isset($_SERVER['REQUEST_URI']) && 0 === strpos($_SERVER['REQUEST_URI'], '/admin/')) {
+if (isset($_SERVER['REQUEST_URI']) && str_starts_with((string) $_SERVER['REQUEST_URI'], '/admin/')) {
     CMSMenu::remove_menu_class(CMSPageAddControllerProducts::class);
 }

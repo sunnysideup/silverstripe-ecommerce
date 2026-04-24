@@ -2,6 +2,9 @@
 
 namespace Sunnysideup\Ecommerce\Control;
 
+use Override;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -10,6 +13,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
@@ -110,6 +114,7 @@ class ShoppingCartController extends Controller
 
             return;
         }
+
         user_error(_t('Order.NOCARTINITIALISED', 'no cart initialised'), E_USER_NOTICE);
 
         return $this->goToErrorPage();
@@ -122,6 +127,7 @@ class ShoppingCartController extends Controller
      *
      * @return string (Link)
      */
+    #[Override]
     public function Link($action = null)
     {
         return self::create_link($action);
@@ -343,6 +349,7 @@ class ShoppingCartController extends Controller
         if ($this->cart) {
             return $this->cart->addReferral($this->parameters(false));
         }
+
         return -2;
     }
 
@@ -532,7 +539,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function clear(HTTPRequest $request)
     {
@@ -543,7 +550,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function clearandlogout(HTTPRequest $request)
     {
@@ -559,7 +566,7 @@ class ShoppingCartController extends Controller
     }
 
     /**
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function deleteorder(HTTPRequest $request)
     {
@@ -579,6 +586,7 @@ class ShoppingCartController extends Controller
         if ($order) {
             $this->cart->copyOrder($order);
         }
+
         $link = CheckoutPage::find_link();
 
         return $this->redirect($link);
@@ -600,7 +608,7 @@ class ShoppingCartController extends Controller
     /**
      * return cart for ajax call.
      *
-     * @return \SilverStripe\ORM\FieldType\DBHTMLText
+     * @return DBHTMLText
      */
     public function showcart(HTTPRequest $request)
     {
@@ -610,7 +618,7 @@ class ShoppingCartController extends Controller
     /**
      * loads an order.
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function loadorder(HTTPRequest $request)
     {
@@ -626,7 +634,7 @@ class ShoppingCartController extends Controller
     /**
      * remove address from list of available addresses in checkout.
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      * @TODO: add non-ajax version of this request.
      */
     public function removeaddress(HTTPRequest $request)
@@ -644,13 +652,16 @@ class ShoppingCartController extends Controller
                     if ($request->isAjax()) {
                         return _t('Order.ADDRESSREMOVED', 'Address removed.');
                     }
+
                     $this->redirectBack();
                 }
             }
         }
+
         if ($request->isAjax()) {
             return _t('Order.ADDRESSNOTREMOVED', 'Address could not be removed.');
         }
+
         $this->redirectBack();
 
         return [];
@@ -661,7 +672,7 @@ class ShoppingCartController extends Controller
      * where only old versions exist.
      * this method should redirect.
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function submittedbuyable(HTTPRequest $request)
     {
@@ -678,6 +689,7 @@ class ShoppingCartController extends Controller
 
                 return $this->redirect($link);
             }
+
             if ($bestBuyable) {
                 //show singleton with old version
                 $link = $bestBuyable->Link('viewversion/' . $version . '/');
@@ -685,6 +697,7 @@ class ShoppingCartController extends Controller
                 return $this->redirect($link);
             }
         }
+
         $errorPage404 = DataObject::get_one(
             ErrorPage::class,
             ['ErrorCode' => '404']
@@ -700,7 +713,7 @@ class ShoppingCartController extends Controller
      * This can be used by admins to log in as customers
      * to place orders on their behalf...
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function placeorderformember(HTTPRequest $request)
     {
@@ -716,6 +729,7 @@ class ShoppingCartController extends Controller
 
                 return $this->redirect($newOrder->Link());
             }
+
             user_error('Can not find this member.');
         } else {
             //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/placeorderformember/".$request->param("ID")."/")."\">log in</a> first.";
@@ -729,7 +743,7 @@ class ShoppingCartController extends Controller
      * This can be used by admins to log in as customers to place orders on
      * their behalf...
      *
-     * @return \SilverStripe\Control\HTTPResponse|string
+     * @return HTTPResponse|string
      */
     public function loginas(HTTPRequest $request)
     {
@@ -757,7 +771,8 @@ class ShoppingCartController extends Controller
      * Handy debugging action visit.
      * Log in as an administrator and visit mysite/shoppingcart/debug.
      */
-    public function debug()
+    #[Override]
+    public function Debug(): ModelData | string
     {
         if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
             return $this->cart->debug();
@@ -789,6 +804,7 @@ class ShoppingCartController extends Controller
         } else {
             echo 'please <a href="Security/login/?BackURL=' . urlencode($this->config()->get('url_segment') . '/ajaxtest/') . '">log in</a> first.';
         }
+
         if (! $request->isAjax()) {
             user_error('---- make sure to add ?ajax=1 to the URL ---');
         }
@@ -796,6 +812,7 @@ class ShoppingCartController extends Controller
         return [];
     }
 
+    #[Override]
     protected function init()
     {
         parent::init();
@@ -806,14 +823,17 @@ class ShoppingCartController extends Controller
                 if (! isset($_GET['SecurityID'])) {
                     $_GET['SecurityID'] = '';
                 }
+
                 if ($savedSecurityID) {
                     if ($_GET['SecurityID'] !== $savedSecurityID) {
                         $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
                     }
+
                     //all OK!
                 }
             }
         }
+
         $this->cart = ShoppingCart::singleton();
     }
 

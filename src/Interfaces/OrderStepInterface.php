@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\Ecommerce\Interfaces;
 
 use SilverStripe\Forms\FieldList;
@@ -38,7 +40,7 @@ interface OrderStepInterface
      * Allows the opportunity for the Order Step to add any fields to Order::getCMSFields
      * You should be able to run this method many times without causing problems.
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function addOrderStepFields(FieldList $fields, Order $order, ?bool $nothingToDo = false);
 }

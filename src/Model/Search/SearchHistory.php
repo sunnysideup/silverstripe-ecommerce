@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Search;
 
+use Override;
+use SilverStripe\Security\Member;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
@@ -69,12 +71,14 @@ class SearchHistory extends DataObject
      */
     private static $plural_name = 'Search History Entries';
 
+    #[Override]
     public function i18n_singular_name()
     {
         return $this->Config()->get('singular_name');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return $this->Config()->get('plural_name');
     }
@@ -88,7 +92,8 @@ class SearchHistory extends DataObject
         if ($member && $member->IsShopAdmin()) {
             return null;
         }
-        $obj = new SearchHistory();
+
+        $obj = SearchHistory::create();
         $obj->Title = $keywordString;
         $obj->ProductCount = $productCount;
         $obj->GroupCount = $groupCount;
@@ -100,11 +105,12 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canCreate($member = null, $context = [])
     {
         return false;
@@ -113,20 +119,23 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canView($member = null, $context = [])
     {
         if (! $member) {
             $member = Security::getCurrentUser();
         }
+
         $extended = $this->extendedCan(__FUNCTION__, $member);
         if (null !== $extended) {
             return $extended;
         }
+
         if (Permission::checkMember($member, Config::inst()->get(EcommerceRole::class, 'admin_permission_code'))) {
             return true;
         }
@@ -137,11 +146,12 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      * @param mixed                         $context
      *
      * @return bool
      */
+    #[Override]
     public function canEdit($member = null, $context = [])
     {
         return false;
@@ -150,10 +160,11 @@ class SearchHistory extends DataObject
     /**
      * standard SS method.
      *
-     * @param \SilverStripe\Security\Member $member
+     * @param Member $member
      *
      * @return bool
      */
+    #[Override]
     public function canDelete($member = null)
     {
         return false;
@@ -162,9 +173,10 @@ class SearchHistory extends DataObject
     /**
      * remove excessive spaces.
      */
+    #[Override]
     protected function onBeforeWrite()
     {
-        $this->Title = trim(preg_replace('#\s+#', ' ', (string) $this->Title));
+        $this->Title = trim((string) preg_replace('#\s+#', ' ', (string) $this->Title));
         parent::onBeforeWrite();
     }
 }

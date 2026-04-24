@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\Ecommerce\Search\Filters;
 
+use Override;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
@@ -23,6 +24,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
     /**
      * @return DataQuery
      */
+    #[Override]
     public function apply(DataQuery $query)
     {
         $this->model = $query->applyRelation($this->relation);
@@ -43,6 +45,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         if ($billingAddresses->exists()) {
             $billingAddressesIDs = $billingAddresses->columnUnique();
         }
+
         $billingAddressesIDs = ArrayMethods::filter_array($billingAddressesIDs);
         $where[] = '"BillingAddressID" IN (' . implode(',', $billingAddressesIDs) . ')';
         $shippingAddressesIDs = [];
@@ -59,6 +62,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         if ($shippingAddresses->exists()) {
             $shippingAddressesIDs = $shippingAddresses->columnUnique();
         }
+
         $shippingAddressesIDs = ArrayMethods::filter_array($shippingAddressesIDs);
         $where[] = '"ShippingAddressID" IN (' . implode(',', $shippingAddressesIDs) . ')';
         $memberIDs = [];
@@ -70,6 +74,7 @@ class OrderFiltersMemberAndAddressFilter extends ExactMatchFilter
         if ($members->exists()) {
             $memberIDs = $members->columnUnique();
         }
+
         $memberIDs = ArrayMethods::filter_array($memberIDs);
         $where[] = '"MemberID" IN (' . implode(',', $memberIDs) . ')';
 

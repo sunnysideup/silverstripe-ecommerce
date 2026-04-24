@@ -148,13 +148,14 @@ class RelatedProductGroups
     /**
      * @param null|mixed $filter
      *
-     * @return \SilverStripe\ORM\DataList
+     * @return DataList
      */
     public function getGroups(?int $maxRecursiveLevel = 0, $filter = null)
     {
         if (! $maxRecursiveLevel) {
             $maxRecursiveLevel = $this->levelsToShow;
         }
+
         if (empty($this->groups) || ! empty($filter)) {
             if (-2 === $maxRecursiveLevel) {
                 // NONE !
@@ -167,14 +168,17 @@ class RelatedProductGroups
                 if ($this->includeRoot) {
                     $ids[] = $this->rootGroup->ID;
                 }
+
                 $ids = ArrayMethods::filter_array($ids);
                 $this->groups = ProductGroup::get()->filter(['ID' => $ids]);
             } else {
                 $this->groups = ProductGroup::get();
             }
+
             if ($filter) {
                 $this->groups = is_array($filter) ? $this->groups->filter($filter) : $this->groups->where($filter);
             }
+
             self::apply_default_filter_to_groups($this->groups);
         }
 

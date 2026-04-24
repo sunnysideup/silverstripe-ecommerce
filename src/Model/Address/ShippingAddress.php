@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
+use Override;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
@@ -34,8 +36,8 @@ use Sunnysideup\GoogleAddressField\GoogleAddressField;
  * @property bool $Obsolete
  * @property int $OrderID
  * @property int $ShippingRegionID
- * @method \Sunnysideup\Ecommerce\Model\Address\EcommerceRegion ShippingRegion()
- * @method \Sunnysideup\Ecommerce\Model\Order Order()
+ * @method EcommerceRegion ShippingRegion()
+ * @method Order Order()
  */
 class ShippingAddress extends OrderAddress
 {
@@ -195,6 +197,7 @@ class ShippingAddress extends OrderAddress
      */
     private static $description = 'The address for delivery of the order.';
 
+    #[Override]
     public function fieldLabels($includerelations = true)
     {
         $billingAddress = Injector::inst()->get(BillingAddress::class);
@@ -213,19 +216,22 @@ class ShippingAddress extends OrderAddress
         return $shippingLabels;
     }
 
+    #[Override]
     public function i18n_singular_name()
     {
         return _t('ShippingAddress.SHIPPINGADDRESS', 'Shipping Address');
     }
 
-    public function i18n_plural_name()
+    #[Override]
+    public function plural_name()
     {
         return _t('ShippingAddress.SHIPPINGADDRESSES', 'Shipping Addresses');
     }
 
     /**
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -257,20 +263,13 @@ class ShippingAddress extends OrderAddress
     /**
      * Puts together the fields for the Order Form (and other front-end purposes).
      *
-     * @return \SilverStripe\Forms\FieldList
+     * @return FieldList
      */
     public function getFields(Member $member = null)
     {
         $fields = parent::getEcommerceFields();
         if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {
-            $shippingFieldsHeader = new CompositeField(
-                new HeaderField(
-                    'SendGoodsToADifferentAddress',
-                    _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'),
-                    2
-                ),
-                new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
-            );
+            $shippingFieldsHeader = CompositeField::create(HeaderField::create('SendGoodsToADifferentAddress', _t('ShippingAddress.SENDGOODSTODIFFERENTADDRESS', 'Delivery Address'), 2), LiteralField::create('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>'));
 
             if ($member && Security::getCurrentUser()) {
                 if ($member->exists() && ! $member->IsShopAdmin()) {
@@ -283,28 +282,21 @@ class ShippingAddress extends OrderAddress
                         }
                     }
                 }
-                $shippingFields = new CompositeField(
-                    new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
-                    new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
-                );
+
+                $shippingFields = CompositeField::create(TextField::create('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')), TextField::create('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname')));
             } else {
-                $shippingFields = new CompositeField(
-                    new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
-                    new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
-                );
+                $shippingFields = CompositeField::create(TextField::create('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')), TextField::create('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname')));
             }
-            $shippingFields->push(new TextField('ShippingPhone', _t('ShippingAddress.PHONE', 'Phone')));
+
+            $shippingFields->push(TextField::create('ShippingPhone', _t('ShippingAddress.PHONE', 'Phone')));
             $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
             if (is_array($mappingArray) && count($mappingArray)) {
                 if (! class_exists(GoogleAddressField::class)) {
                     user_error('You must install the Sunny Side Up google_address_field module OR remove entries from: ShippingAddress.fields_to_google_geocode_conversion');
                 }
+
                 $shippingFields->push(
-                    $shippingEcommerceGeocodingField = new GoogleAddressField(
-                        'ShippingEcommerceGeocodingField',
-                        _t('ShippingAddress.Find_Address', 'Find address'),
-                        Controller::curr()->getRequest()->getSession()->get('ShippingEcommerceGeocodingFieldValue')
-                    )
+                    $shippingEcommerceGeocodingField = GoogleAddressField::create('ShippingEcommerceGeocodingField', _t('ShippingAddress.Find_Address', 'Find address'), Controller::curr()->getRequest()->getSession()->get('ShippingEcommerceGeocodingFieldValue'))
                 );
                 $shippingEcommerceGeocodingField->setFieldMap($mappingArray);
                 //$shippingFields->push(new HiddenField('ShippingAddress2'));
@@ -313,12 +305,13 @@ class ShippingAddress extends OrderAddress
 
             if (EcommerceConfig::get(ShippingAddress::class, 'show_company_name')) {
                 $shippingFields->push(
-                    (new TextField('ShippingCompanyName', _t('ShippingAddress.COMPANY_NAME', 'Company Name (if applicable)')))
+                    (TextField::create('ShippingCompanyName', _t('ShippingAddress.COMPANY_NAME', 'Company Name (if applicable)')))
                 );
             }
-            $shippingFields->push(new TextField('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
-            $shippingFields->push(new TextField('ShippingAddress2', _t('ShippingAddress.ADDRESS2', 'Address Line 2')));
-            $shippingFields->push(new TextField('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
+
+            $shippingFields->push(TextField::create('ShippingAddress', _t('ShippingAddress.ADDRESS', 'Address')));
+            $shippingFields->push(TextField::create('ShippingAddress2', _t('ShippingAddress.ADDRESS2', 'Address Line 2')));
+            $shippingFields->push(TextField::create('ShippingCity', _t('ShippingAddress.CITY', 'Town')));
             $shippingFields->push($this->getPostalCodeField('ShippingPostalCode'));
             $shippingFields->push($this->getRegionField('ShippingRegionID', 'ShippingRegionCode'));
             $shippingFields->push($this->getCountryField('ShippingCountry'));
@@ -329,6 +322,7 @@ class ShippingAddress extends OrderAddress
             $shippingFields->addExtraClass('shippingFields');
             $fields->push($shippingFields);
         }
+
         $this->extend('augmentEcommerceShippingAddressFields', $shippingFields);
 
         return $fields;
@@ -344,6 +338,7 @@ class ShippingAddress extends OrderAddress
         return $this->Config()->get('required_fields');
     }
 
+    #[Override]
     public function setFieldsToMatchBillingAddress()
     {
         foreach (array_keys($this->config()->get('db')) as $fieldName) {
@@ -354,7 +349,8 @@ class ShippingAddress extends OrderAddress
         }
     }
 
-    public function fieldPrefix(): string
+    #[Override]
+    protected function fieldPrefix(): string
     {
         return 'Shipping';
     }

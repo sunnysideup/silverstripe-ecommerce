@@ -43,19 +43,22 @@ class EcommerceCodeFilter
 
         $s = trim((string) $obj->{$fieldName});
         foreach ($this->regexReplacements as $regex => $replace) {
-            $s = preg_replace($regex, $replace, (string) $s);
+            $s = preg_replace($regex, (string) $replace, (string) $s);
         }
+
         foreach ($this->straightReplacements as $find => $replace) {
             $s = str_replace($find, $replace, $s);
         }
+
         $s = trim((string) $s);
         //check for other ones.
         if ($s !== '' && $s !== '0') {
-            $className = get_class($obj);
+            $className = $obj::class;
             if ($className::get()->filter([$fieldName => $s])->exclude(['ID' => $obj->ID])->exists()) {
-                user_error("Code $s already exists for $className.", E_USER_WARNING);
+                user_error(sprintf('Code %s already exists for %s.', $s, $className), E_USER_WARNING);
             }
         }
+
         $obj->{$fieldName} = $s;
 
         return $obj->{$fieldName};
