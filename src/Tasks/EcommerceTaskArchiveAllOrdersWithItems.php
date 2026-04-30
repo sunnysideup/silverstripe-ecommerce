@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -37,12 +36,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
     {
         set_time_limit(1200);
         //IMPORTANT!
-        $lastOrderStep = DataObject::get_one(
-            OrderStep::class,
-            '',
-            $cache = true,
-            ['Sort' => 'DESC']
-        );
+        $lastOrderStep = OrderStep::get()->setUseCache($cache = true)->sort(['Sort' => 'DESC'])->first();
         if ($lastOrderStep) {
             $joinSQL = '
             INNER JOIN "OrderAttribute" ON "Order"."ID" = "OrderAttribute"."OrderID"
@@ -88,12 +82,7 @@ class EcommerceTaskArchiveAllOrdersWithItems extends BuildTask
 
     protected function createSubmissionLogForArchivedOrders(PolyOutput $output)
     {
-        $lastOrderStep = DataObject::get_one(
-            OrderStep::class,
-            '',
-            $cache = true,
-            ['Sort' => 'DESC']
-        );
+        $lastOrderStep = OrderStep::get()->setUseCache($cache = true)->sort(['Sort' => 'DESC'])->first();
         $submissionLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $obj = $submissionLogClassName::create();
 

@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use Override;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -43,7 +42,7 @@ class EcommerceTaskOrdersWithoutOrderStep extends BuildTask
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         $submittedOrderStatusLogTableName = EcommerceConfig::get(OrderStatusLog::class, 'table_name');
         if ($submittedOrderStatusLogClassName) {
-            $submittedStatusLog = DataObject::get_one($submittedOrderStatusLogClassName);
+            $submittedStatusLog = $submittedOrderStatusLogClassName::get()->setUseCache(true)->first();
             if ($submittedStatusLog) {
                 $orderStepsIDArray = OrderStep::get()->columnUnique();
                 $orders = Order::get()

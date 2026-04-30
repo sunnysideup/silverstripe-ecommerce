@@ -6,7 +6,6 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Email\EcommerceDummyMailer;
@@ -39,12 +38,7 @@ class EcommerceTaskArchiveAllOldOrders extends BuildTask
         //IMPORTANT!
         Config::modify()->set(Email::class, 'send_all_emails_to', 'no-one@localhost');
         Injector::inst()->registerService(new EcommerceDummyMailer(), MailerInterface::class);
-        $lastOrderStep = DataObject::get_one(
-            OrderStep::class,
-            '',
-            $cache = true,
-            ['Sort' => 'DESC']
-        );
+        $lastOrderStep = OrderStep::get()->setUseCache($cache = true)->sort(['Sort' => 'DESC'])->first();
         if ($lastOrderStep) {
             $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . ' AND UNIX_TIMESTAMP(LastEdited) < ' . strtotime(self::AGO_STATEMENT);
             $count = DB::query("

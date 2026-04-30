@@ -235,7 +235,7 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             ReadonlyField::create('PaidByIDNice', 'Payment made by', DBField::create_field('HTMLText', '<a href="' . $this->PaidBy()->CMSEditLink() . '">' . $this->PaidBy()->getTitle() . '</a>'))
         );
         $fields->removeByName('AlternativeEndPoint');
-        foreach ($fields->dataFields() as $field) {
+        foreach ($fields->getDataFields() as $field) {
             $name = $field->ID();
             if (! in_array($name, $this->Config()->get('editable_fields'), true)) {
                 $fields->replaceField(

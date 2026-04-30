@@ -482,10 +482,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
 
         if ($code) {
-            $obj = DataObject::get_one(
-                EcommerceCountry::class,
-                ['Code' => $code]
-            );
+            $obj = EcommerceCountry::get()->setUseCache(true)->filter(['Code' => $code])->first();
             if ($obj) {
                 return $obj->Name;
             }
@@ -549,7 +546,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
                 //include $countryCode = self::get_country_from_ip();
                 $o = ShoppingCart::current_order();
                 if ($orderID && $orderID !== $o->ID) {
-                    $o = DataObject::get_one(Order::class, ['ID' => $orderID]);
+                    $o = Order::get()->setUseCache(true)->filter(['ID' => $orderID])->first();
                 }
 
                 if ($o && $o->exists()) {
@@ -600,7 +597,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     {
         if (is_string($var)) {
             $var = strtoupper($var);
-            $var = DataObject::get_one(EcommerceCountry::class, ['Code' => $var]);
+            $var = EcommerceCountry::get()->setUseCache(true)->filter(['Code' => $var])->first();
         } elseif (is_numeric($var) && is_int($var)) {
             $var = EcommerceCountry::get_by_id($var);
         }
@@ -631,10 +628,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
             $countryCode = self::get_country($recalculate);
         }
 
-        return DataObject::get_one(
-            EcommerceCountry::class,
-            ['Code' => $countryCode]
-        );
+        return EcommerceCountry::get()->setUseCache(true)->filter(['Code' => $countryCode])->first();
     }
 
     /**
@@ -656,10 +650,7 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
 
         self::$_code_to_id_map[$countryCode] = 0;
-        $country = DataObject::get_one(
-            EcommerceCountry::class,
-            ['Code' => $countryCode]
-        );
+        $country = EcommerceCountry::get()->setUseCache(true)->filter(['Code' => $countryCode])->first();
         if ($country) {
             self::$_code_to_id_map[$countryCode] = $country->ID;
 

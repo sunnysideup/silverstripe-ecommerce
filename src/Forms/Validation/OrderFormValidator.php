@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Forms\Validation;
 
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use Override;
-use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -30,7 +29,7 @@ class OrderFormValidator extends RequiredFieldsValidator
     public function php($data)
     {
         $valid = parent::php($data);
-        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+        $checkoutPage = CheckoutPage::get()->setUseCache(true)->first();
         if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage && isset($data['ReadTermsAndConditions']) && ! $data['ReadTermsAndConditions']) {
             $this->validationError(
                 'ReadTermsAndConditions',

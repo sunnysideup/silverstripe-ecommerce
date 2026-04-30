@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Pages;
 
+use Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions;
+use Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator;
 use Override;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
@@ -96,8 +98,8 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
  * @method Image Image()
  * @method ProductSearchTable ProductSearchTable()
- * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
- * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
+ * @method ManyManyList|GSTTaxModifierOptions[] ExcludedFrom()
+ * @method ManyManyList|GSTTaxModifierOptions[] AdditionalTax()
  * @method ManyManyList|\Sunnysideup\EcommerceDelivery\Model\PickUpOrDeliveryModifierOptions[] UnavailableDeliveryOptions()
  * @method ManyManyList|Product[] EcommerceRecommendedProducts()
  * @method ManyManyList|ProductGroup[] ProductGroups()
@@ -110,7 +112,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * @mixin \Sunnysideup\EcommerceAlsoRecommended\Model\EcommerceAlsoRecommendedDOD
  * @mixin \Sunnysideup\EcommerceDelivery\Extensions\ProductDeliveryExtension
  * @mixin \Sunnysideup\EcommerceDiscountCoupon\Model\Buyables\DiscountCouponProductDataExtension
- * @mixin \Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator
+ * @mixin GSTTaxDecorator
  */
 class Product extends Page implements BuyableModel
 {

@@ -13,7 +13,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -272,7 +271,7 @@ class ShoppingCart
                             $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
                             $this->order->write();
                         } else {
-                            $firstStep = DataObject::get_one(OrderStep::class);
+                            $firstStep = OrderStep::get()->setUseCache(true)->first();
                             //we assume the first step always exists.
                             $count = 0;
                             /** @var null|Order $previousOrderFromMember */
@@ -311,7 +310,7 @@ class ShoppingCart
                     if ($loggedInMember) {
                         //find previour order...
                         /** @var null|OrderStep $firstStep */
-                        $firstStep = DataObject::get_one(OrderStep::class);
+                        $firstStep = OrderStep::get()->setUseCache(true)->first();
                         if ($firstStep) {
                             $previousOrderFromMember = Order::get()->filter(['MemberID' => $loggedInMember->ID, 'StatusID' => [$firstStep->ID, 0]])->first();
                             if ($previousOrderFromMember && $previousOrderFromMember->canView()) {
@@ -1298,11 +1297,7 @@ class ShoppingCart
         if ($order) {
             $orderID = $order->ID;
 
-            return DataObject::get_one(
-                OrderItem::class,
-                '"BuyableClassName" = ' . Convert::raw2sql($buyable->ClassName, true) . ' AND "BuyableID" = ' . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString,
-                $cacheDataObjectGetOne = false
-            );
+            return OrderItem::get()->setUseCache($cacheDataObjectGetOne = false)->filter('"BuyableClassName" = ' . Convert::raw2sql($buyable->ClassName, true) . ' AND "BuyableID" = ' . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString)->first();
         }
     }
 

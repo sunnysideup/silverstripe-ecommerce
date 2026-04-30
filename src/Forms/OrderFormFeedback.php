@@ -11,7 +11,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextareaField;
-use SilverStripe\ORM\DataObject;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Forms\Validation\OrderFormFeedbackValidator;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -118,7 +117,7 @@ class OrderFormFeedback extends Form
     protected function getOrderConfirmationPage()
     {
         if (! $this->_orderConfirmationPage) {
-            $this->_orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+            $this->_orderConfirmationPage = OrderConfirmationPage::get()->setUseCache(true)->first();
         }
 
         return $this->_orderConfirmationPage;

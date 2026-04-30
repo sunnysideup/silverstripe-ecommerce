@@ -8,7 +8,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -163,7 +162,7 @@ class CheckoutPageController extends CartPageController
         if ($number) {
             $code = $steps[$number - 1];
 
-            return DataObject::get_one(CheckoutPageStepDescription::class, ['Code' => $code]);
+            return CheckoutPageStepDescription::get()->setUseCache(true)->filter(['Code' => $code])->first();
         }
 
         $returnData = ArrayList::create();
@@ -194,7 +193,7 @@ class CheckoutPageController extends CartPageController
         }
 
         if (EcommerceConfig::get(OrderConfirmationPageController::class, 'include_as_checkout_step')) {
-            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+            $orderConfirmationPage = OrderConfirmationPage::get()->setUseCache(true)->first();
             if ($orderConfirmationPage) {
                 $do = $orderConfirmationPage->CurrentCheckoutStep(false);
                 if ($do) {

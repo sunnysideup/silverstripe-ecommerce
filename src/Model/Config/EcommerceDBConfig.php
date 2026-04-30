@@ -396,11 +396,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 $className = EcommerceDBConfig::class;
             }
 
-            self::$_my_current_one = DataObject::get_one(
-                $className,
-                ['UseThisOne' => 1],
-                $cacheDataObjectGetOne = false
-            );
+            self::$_my_current_one = $className::get()->setUseCache($cacheDataObjectGetOne = false)->filter(['UseThisOne' => 1])->first();
 
             if (! self::$_my_current_one) {
                 self::$_my_current_one = $className::create();
@@ -669,7 +665,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
         //     ]
         // );
 
-        foreach ($fields->dataFields() as $field) {
+        foreach ($fields->getDataFields() as $field) {
             if (isset($fieldDescriptions[$field->getName()])) {
                 $field->setDescription($fieldDescriptions[$field->Name]);
             }

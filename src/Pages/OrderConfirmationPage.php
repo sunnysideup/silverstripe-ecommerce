@@ -417,12 +417,12 @@ class OrderConfirmationPage extends CartPage
     #[Override]
     public static function find_link($action = null)
     {
-        $page = DataObject::get_one(OrderConfirmationPage::class, ['ClassName' => OrderConfirmationPage::class]);
+        $page = OrderConfirmationPage::get()->setUseCache(true)->filter(['ClassName' => OrderConfirmationPage::class])->first();
         if ($page) {
             return $page->Link($action);
         }
 
-        $page = DataObject::get_one(OrderConfirmationPage::class);
+        $page = OrderConfirmationPage::get()->setUseCache(true)->first();
         if ($page) {
             return $page->Link($action);
         }
@@ -458,7 +458,7 @@ class OrderConfirmationPage extends CartPage
         $link = Controller::join_links(OrderConfirmationPage::find_link(), 'sendemail', $orderID, str_replace('\\', '-', $emailClassName));
         $getParams = [];
         if (! $alternativeOrderStepID) {
-            $order = DataObject::get_one(Order::class, ['ID' => $orderID]);
+            $order = Order::get()->setUseCache(true)->filter(['ID' => $orderID])->first();
             if ($order) {
                 $alternativeOrderStepID = $order->StatusID;
             }
@@ -517,9 +517,9 @@ class OrderConfirmationPage extends CartPage
     #[Override]
     public function requireDefaultRecords()
     {
-        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+        $checkoutPage = CheckoutPage::get()->setUseCache(true)->first();
         if ($checkoutPage) {
-            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class);
+            $orderConfirmationPage = OrderConfirmationPage::get()->setUseCache(true)->first();
             if (! $orderConfirmationPage) {
                 $orderConfirmationPage = OrderConfirmationPage::create();
                 $orderConfirmationPage->Title = 'Order Confirmation';

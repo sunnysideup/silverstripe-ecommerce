@@ -14,7 +14,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ErrorPage\ErrorPage;
 use SilverStripe\Model\ModelData;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
@@ -698,10 +697,7 @@ class ShoppingCartController extends Controller
             }
         }
 
-        $errorPage404 = DataObject::get_one(
-            ErrorPage::class,
-            ['ErrorCode' => '404']
-        );
+        $errorPage404 = ErrorPage::get()->setUseCache(true)->filter(['ErrorCode' => '404'])->first();
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
         }
@@ -754,7 +750,7 @@ class ShoppingCartController extends Controller
                 Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 
-                $accountPage = DataObject::get_one(AccountPage::class);
+                $accountPage = AccountPage::get()->setUseCache(true)->first();
 
                 if ($accountPage) {
                     return $this->redirect($accountPage->Link());
@@ -929,10 +925,7 @@ class ShoppingCartController extends Controller
 
     protected function goToErrorPage()
     {
-        $errorPage404 = DataObject::get_one(
-            ErrorPage::class,
-            ['ErrorCode' => '404']
-        );
+        $errorPage404 = ErrorPage::get()->setUseCache(true)->filter(['ErrorCode' => '404'])->first();
         if ($errorPage404) {
             return $this->redirect($errorPage404->Link());
         }

@@ -6,7 +6,6 @@ use Override;
 use Page;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -164,10 +163,7 @@ class AccountPage extends Page
      */
     public static function find_link(?string $action = null)
     {
-        $page = DataObject::get_one(
-            AccountPage::class,
-            ['ClassName' => AccountPage::class]
-        );
+        $page = AccountPage::get()->setUseCache(true)->filter(['ClassName' => AccountPage::class])->first();
         if ($page) {
             return $page->Link($action);
         }

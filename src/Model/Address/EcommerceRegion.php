@@ -217,10 +217,7 @@ class EcommerceRegion extends DataObject implements EditableEcommerceObject
      */
     public static function code_allowed($code)
     {
-        $region = DataObject::get_one(
-            EcommerceRegion::class,
-            ['Code' => $code]
-        );
+        $region = EcommerceRegion::get()->setUseCache(true)->filter(['Code' => $code])->first();
         if ($region) {
             return self::regionid_allowed($region->ID);
         }

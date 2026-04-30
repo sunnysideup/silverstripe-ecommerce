@@ -14,7 +14,6 @@ use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextareaField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
@@ -77,7 +76,7 @@ class OrderForm extends Form
         // If a terms and conditions page exists, we need to create a field to confirm the user has read it
         $termsAndConditionsPage = CheckoutPage::find_terms_and_conditions_page();
         if ($termsAndConditionsPage) {
-            $checkoutPage = DataObject::get_one(CheckoutPage::class);
+            $checkoutPage = CheckoutPage::get()->setUseCache(true)->first();
             if ($checkoutPage && $checkoutPage->TermsAndConditionsMessage) {
                 $alreadyTicked = false;
                 $requiredFields[] = 'ReadTermsAndConditions';

@@ -2,6 +2,8 @@
 
 namespace Sunnysideup\Ecommerce\Model;
 
+use Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions;
+use Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator;
 use Override;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Security\Member;
@@ -28,9 +30,9 @@ use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
  * @property string $Description
  * @property int $LinkID
  * @method SiteTree Link()
- * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] ExcludedFrom()
- * @method ManyManyList|\Sunnysideup\EcommerceTax\Model\GSTTaxModifierOptions[] AdditionalTax()
- * @mixin \Sunnysideup\EcommerceTax\Decorator\GSTTaxDecorator
+ * @method ManyManyList|GSTTaxModifierOptions[] ExcludedFrom()
+ * @method ManyManyList|GSTTaxModifierOptions[] AdditionalTax()
+ * @mixin GSTTaxDecorator
  */
 class OrderModifierDescriptor extends DataObject implements EditableEcommerceObject
 {
@@ -247,11 +249,7 @@ class OrderModifierDescriptor extends DataObject implements EditableEcommerceObj
         }
 
         foreach ($arrayOfModifiers as $className) {
-            $orderModifier_Descriptor = DataObject::get_one(
-                OrderModifierDescriptor::class,
-                ['ModifierClassName' => $className],
-                $cacheDataObjectGetOne = false
-            );
+            $orderModifier_Descriptor = OrderModifierDescriptor::get()->setUseCache($cacheDataObjectGetOne = false)->filter(['ModifierClassName' => $className])->first();
             if (! $orderModifier_Descriptor) {
                 $modifier = Injector::inst()->get($className);
                 $orderModifier_Descriptor = OrderModifierDescriptor::create();

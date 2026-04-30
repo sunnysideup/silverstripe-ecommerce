@@ -2,8 +2,6 @@
 
 namespace Sunnysideup\Ecommerce\Model\Address;
 
-use SilverStripe\ORM\DataObject;
-
 class EcommerceRegionVisitorRegionProvider
 {
     /**
@@ -11,7 +9,7 @@ class EcommerceRegionVisitorRegionProvider
      */
     public function getRegion(): int
     {
-        $region = DataObject::get_one(EcommerceRegion::class);
+        $region = EcommerceRegion::get()->setUseCache(true)->first();
         if ($region) {
             return $region->ID;
         }

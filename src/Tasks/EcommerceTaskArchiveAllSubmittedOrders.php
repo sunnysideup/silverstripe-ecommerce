@@ -6,7 +6,6 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -40,16 +39,9 @@ class EcommerceTaskArchiveAllSubmittedOrders extends BuildTask
         $orderStatusLogTableName = OrderStatusLog::getSchema()->tableName(OrderStatusLog::class);
         $submittedOrderStatusLogClassName = EcommerceConfig::get(OrderStatusLog::class, 'order_status_log_class_used_for_submitting_order');
         if ($submittedOrderStatusLogClassName) {
-            $sampleSubmittedStatusLog = DataObject::get_one(
-                $submittedOrderStatusLogClassName
-            );
+            $sampleSubmittedStatusLog = $submittedOrderStatusLogClassName::get()->setUseCache(true)->first();
             if ($sampleSubmittedStatusLog) {
-                $lastOrderStep = DataObject::get_one(
-                    OrderStep::class,
-                    '',
-                    $cache = true,
-                    ['Sort' => 'DESC']
-                );
+                $lastOrderStep = OrderStep::get()->setUseCache($cache = true)->sort(['Sort' => 'DESC'])->first();
                 if ($lastOrderStep) {
                     $joinSQL = sprintf('INNER JOIN "%s" ON "%s"."OrderID" = "Order"."ID"', $orderStatusLogTableName, $orderStatusLogTableName);
                     $whereSQL = 'WHERE "StatusID" <> ' . $lastOrderStep->ID . sprintf(" AND \"%s\".ClassName = '", $orderStatusLogTableName) . Convert::raw2sql($submittedOrderStatusLogClassName) . "'";

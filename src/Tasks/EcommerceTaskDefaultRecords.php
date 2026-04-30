@@ -5,7 +5,6 @@ namespace Sunnysideup\Ecommerce\Tasks;
 use Page;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -48,7 +47,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
         $orderStep = singleton(OrderStep::class);
         $orderStep->requireDefaultRecords();
         // ACCOUNT PAGE
-        $accountPage = DataObject::get_one(AccountPage::class, null, $cacheDataObjectGetOne = false);
+        $accountPage = AccountPage::get()->setUseCache($cacheDataObjectGetOne = false)->first();
         if (! $accountPage) {
             $accountPage = AccountPage::create();
             $accountPage->Title = 'Account';
@@ -68,7 +67,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
         //CHECKOUT PAGE
 
-        $checkoutPage = DataObject::get_one(CheckoutPage::class, null, $cacheDataObjectGetOne = false);
+        $checkoutPage = CheckoutPage::get()->setUseCache($cacheDataObjectGetOne = false)->first();
         if (! $checkoutPage) {
             $checkoutPage = CheckoutPage::create();
             $checkoutPage->Content = '<p>This is the checkout page. You can edit all the messages in the Content Management System.</p>';
@@ -87,11 +86,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
 
         if ($checkoutPage) {
             $cacheDataObjectGetOne = false;
-            $termsPage = DataObject::get_one(
-                Page::class,
-                ['URLSegment' => 'terms-and-conditions'],
-                $cacheDataObjectGetOne
-            );
+            $termsPage = Page::get()->setUseCache($cacheDataObjectGetOne)->filter(['URLSegment' => 'terms-and-conditions'])->first();
             if (0 === $checkoutPage->TermsPageID && $termsPage) {
                 $checkoutPage->TermsPageID = $termsPage->ID;
                 $output->writeln('terms and conditions page linked.');
@@ -103,7 +98,7 @@ class EcommerceTaskDefaultRecords extends BuildTask
             $checkoutPage->publishRecursive();
             $output->writeln('Checkout page saved');
 
-            $orderConfirmationPage = DataObject::get_one(OrderConfirmationPage::class, null, $cacheDataObjectGetOne = false);
+            $orderConfirmationPage = OrderConfirmationPage::get()->setUseCache($cacheDataObjectGetOne = false)->first();
             if ($orderConfirmationPage) {
                 $output->writeln('No need to create an Order Confirmation Page. It already exists.');
             } else {

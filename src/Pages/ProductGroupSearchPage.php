@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Pages;
 
 use Override;
 use SilverStripe\Security\Member;
-use SilverStripe\ORM\DataObject;
 
 /**
  * This page manages searching for products.
@@ -71,7 +70,7 @@ class ProductGroupSearchPage extends ProductGroup
     public static function main_search_page()
     {
         // @return null|ProductGroupSearchPage
-        return DataObject::get_one(ProductGroupSearchPage::class);
+        return ProductGroupSearchPage::get()->setUseCache(true)->first();
     }
 
     /**

@@ -453,13 +453,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function default_currency()
     {
-        return DataObject::get_one(
-            EcommerceCurrency::class,
-            [
-                'Code' => trim(strtolower((string) EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'))),
-                'InUse' => 1,
-            ]
-        );
+        return EcommerceCurrency::get()->setUseCache(true)->filter([
+            'Code' => trim(strtolower((string) EcommerceConfig::get(EcommerceCurrency::class, 'default_currency'))),
+            'InUse' => 1,
+        ])->first();
     }
 
     /**
@@ -505,13 +502,10 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
      */
     public static function get_one_from_code($currencyCode)
     {
-        return DataObject::get_one(
-            EcommerceCurrency::class,
-            [
-                'Code' => trim(strtoupper((string) $currencyCode)),
-                'InUse' => 1,
-            ]
-        );
+        return EcommerceCurrency::get()->setUseCache(true)->filter([
+            'Code' => trim(strtoupper((string) $currencyCode)),
+            'InUse' => 1,
+        ])->first();
     }
 
     /**
@@ -827,11 +821,7 @@ class EcommerceCurrency extends DataObject implements EditableEcommerceObject
         }
 
         $name = ucwords($name);
-        $currency = DataObject::get_one(
-            EcommerceCurrency::class,
-            ['Code' => $code],
-            $cacheDataObjectGetOne = false
-        );
+        $currency = EcommerceCurrency::get()->setUseCache($cacheDataObjectGetOne = false)->filter(['Code' => $code])->first();
         if ($currency) {
             $currency->Name = $name;
             $currency->InUse = true;

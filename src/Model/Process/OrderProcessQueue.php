@@ -208,11 +208,7 @@ class OrderProcessQueue extends DataObject
             'OrderID' => $order->ID,
             'OrderStepID' => $order->StatusID,
         ];
-        $existingEntry = DataObject::get_one(
-            OrderProcessQueue::class,
-            $filter,
-            $cacheDataObjectGetOne = false
-        );
+        $existingEntry = OrderProcessQueue::get()->setUseCache($cacheDataObjectGetOne = false)->filter($filter)->first();
         $filter['DeferTimeInSeconds'] = $deferTimeInSeconds;
         if (! $existingEntry) {
             $existingEntry = OrderProcessQueue::create($filter);

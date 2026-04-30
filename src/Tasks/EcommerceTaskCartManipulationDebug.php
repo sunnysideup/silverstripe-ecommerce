@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -27,8 +26,8 @@ class EcommerceTaskCartManipulationDebug extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $myProductGroup = DataObject::get_one(ProductGroup::class);
-        $myProduct = DataObject::get_one(Product::class);
+        $myProductGroup = ProductGroup::get()->setUseCache(true)->first();
+        $myProduct = Product::get()->setUseCache(true)->first();
 
         $output->writeln('Please use the links below:');
         $output->writeln('  - Debug cart: /shoppingcart/debug/');

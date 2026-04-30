@@ -4,7 +4,6 @@ namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use Override;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
@@ -125,7 +124,7 @@ class EcommerceSearchHistoryFormField extends LiteralField
     {
         $row = [];
         $maxWidth = 100;
-        $redirectToPage = DataObject::get_one(ProductGroupSearchPage::class);
+        $redirectToPage = ProductGroupSearchPage::get()->setUseCache(true)->first();
         $title = $this->getContent();
         $totalNumberOfDaysBack = $this->numberOfDays + $this->endingDaysBack;
         $data = DB::query('

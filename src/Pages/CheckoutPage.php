@@ -17,7 +17,6 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -133,7 +132,7 @@ class CheckoutPage extends CartPage
      */
     public static function find_terms_and_conditions_page()
     {
-        $checkoutPage = DataObject::get_one(CheckoutPage::class);
+        $checkoutPage = CheckoutPage::get()->setUseCache(true)->first();
         if ($checkoutPage && $checkoutPage->TermsPageID) {
             return Page::get_by_id($checkoutPage->TermsPageID);
         }
@@ -151,15 +150,12 @@ class CheckoutPage extends CartPage
     #[Override]
     public static function find_link($action = null): string
     {
-        $page = DataObject::get_one(CheckoutPage::class);
+        $page = CheckoutPage::get()->setUseCache(true)->first();
         if ($page) {
             return $page->Link($action);
         }
 
-        $page = DataObject::get_one(
-            ErrorPage::class,
-            ['ErrorCode' => '404']
-        );
+        $page = ErrorPage::get()->setUseCache(true)->filter(['ErrorCode' => '404'])->first();
         if ($page) {
             return $page->Link();
         }
@@ -382,7 +378,7 @@ class CheckoutPage extends CartPage
     public function requireDefaultRecords()
     {
         if (SiteTree::config()->create_default_pages) {
-            $checkoutPage = DataObject::get_one(CheckoutPage::class);
+            $checkoutPage = CheckoutPage::get()->setUseCache(true)->first();
             if (! $checkoutPage) {
                 $checkoutPage = self::create();
                 $checkoutPage->Title = 'Checkout';

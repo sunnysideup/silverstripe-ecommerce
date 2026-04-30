@@ -10,7 +10,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -280,7 +279,7 @@ class CartPage extends Page
      */
     public static function find_link($action = null)
     {
-        $page = DataObject::get_one(CartPage::class, ['ClassName' => CartPage::class]);
+        $page = CartPage::get()->setUseCache(true)->filter(['ClassName' => CartPage::class])->first();
         if ($page) {
             return $page->Link($action);
         }

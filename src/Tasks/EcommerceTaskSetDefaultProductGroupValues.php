@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Tasks;
 
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -33,7 +32,7 @@ class EcommerceTaskSetDefaultProductGroupValues extends BuildTask
 
     protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $productGroup = DataObject::get_one(ProductGroup::class);
+        $productGroup = ProductGroup::get()->setUseCache(true)->first();
         if ($productGroup) {
             foreach ($this->fieldsToCheck as $method => $fieldName) {
                 $acceptableValuesArray = array_flip($productGroup->getUserPreferencesOptionsForDropdown($method));

@@ -462,10 +462,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public static function get_status_id_from_code(string $code): int
     {
-        $otherStatus = DataObject::get_one(
-            OrderStep::class,
-            ['Code' => $code]
-        );
+        $otherStatus = OrderStep::get()->setUseCache(true)->filter(['Code' => $code])->first();
         if ($otherStatus) {
             return (int) $otherStatus->ID;
         }
@@ -500,7 +497,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         $array = EcommerceConfig::get(OrderStep::class, 'order_steps_to_include');
         if (is_array($array) && count($array)) {
             foreach ($array as $className) {
-                $obj = DataObject::get_one($className);
+                $obj = $className::get()->setUseCache(true)->first();
                 if ($obj) {
                     unset($array[$className]);
                 }
@@ -907,10 +904,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         }
 
         $where = '"OrderStep"."Sort" >  ' . $sort;
-        $nextOrderStepObject = DataObject::get_one(
-            OrderStep::class,
-            $where
-        );
+        $nextOrderStepObject = OrderStep::get()->setUseCache(true)->filter($where)->first();
 
         return $nextOrderStepObject ?: null;
     }
@@ -927,10 +921,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
      */
     public function hasPassed($code, $orIsEqualTo = false)
     {
-        $otherStatus = DataObject::get_one(
-            OrderStep::class,
-            ['Code' => $code]
-        );
+        $otherStatus = OrderStep::get()->setUseCache(true)->filter(['Code' => $code])->first();
         if ($otherStatus) {
             if ($otherStatus->Sort < $this->Sort) {
                 return true;
@@ -1628,11 +1619,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                 $itemCountCounts = OrderStep::get()->filterAny($filter)->count();
                 if (1 === $itemCountCounts) {
                     //always reset code
-                    $obj = DataObject::get_one(
-                        OrderStep::class,
-                        $filter,
-                        $cacheDataObjectGetOne = false
-                    );
+                    $obj = OrderStep::get()->setUseCache($cacheDataObjectGetOne = false)->filter($filter)->first();
                     if ($obj && $obj instanceof OrderStep) {
                         if ($obj->Code !== $code) {
                             $obj->Code = $code;
@@ -1672,11 +1659,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
                     DB::alteration_message(sprintf('Created "%s" as %s.', $code, $className), 'created');
                 }
 
-                $obj = DataObject::get_one(
-                    OrderStep::class,
-                    $filter,
-                    $cacheDataObjectGetOne = false
-                );
+                $obj = OrderStep::get()->setUseCache($cacheDataObjectGetOne = false)->filter($filter)->first();
                 if (! $obj) {
                     user_error(sprintf('There was an error in creating the %s OrderStep', $code), E_USER_NOTICE);
                 }

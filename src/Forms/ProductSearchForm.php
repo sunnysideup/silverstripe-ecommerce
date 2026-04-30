@@ -232,7 +232,7 @@ class ProductSearchForm extends Form
     protected function runFullProcessInner($data)
     {
         $this->saveDataToSession();
-        foreach ($this->Fields()->dataFields() as $field) {
+        foreach ($this->Fields()->getDataFields() as $field) {
             $name = $field->getName();
             if (! empty($this->rawData[$name])) {
                 $this->cleanedData[$name] = $this->rawData[$name];
