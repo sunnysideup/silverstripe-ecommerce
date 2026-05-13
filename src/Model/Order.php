@@ -496,9 +496,11 @@ class Order extends DataObject implements EditableEcommerceObject
         ],
         //make sure to keep the items below, otherwise they do not show in form
         'StatusID' => [
+            'field' => NumericField::class,
             'filter' => OrderFiltersMultiOptionsetStatusIDFilter::class,
         ],
         'CancelledByID' => [
+            'field' => NumericField::class,
             'filter' => OrderFiltersHasBeenCancelledFilter::class,
             'title' => 'Cancelled by ...',
         ],
