@@ -408,7 +408,7 @@ class Product extends Page implements BuyableModel
         }
 
         // Add main fields in order
-        $fields->addFieldToTab(
+        $fields->addFieldsToTab(
             'Root.Main',
             array_filter([
                 $priceField,
@@ -488,7 +488,7 @@ class Product extends Page implements BuyableModel
         ]);
 
         if ($detailFields !== []) {
-            $fields->addFieldToTab('Root.Details', $detailFields);
+            $fields->addFieldsToTab('Root.Details', $detailFields);
         }
 
         if (EcommerceConfig::inst()->ProductsHaveWeight) {
@@ -635,7 +635,7 @@ class Product extends Page implements BuyableModel
                 $searchBoostField->setScale(2);
             }
 
-            $fields->addFieldToTab(
+            $fields->addFieldsToTab(
                 'Root.Search',
                 array_filter([
                     $searchBoostField,
