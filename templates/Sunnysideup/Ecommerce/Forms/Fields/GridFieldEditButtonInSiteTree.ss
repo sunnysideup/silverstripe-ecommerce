@@ -1,1 +1,1 @@
-<a class="action font-icon-sitemap action-detail edit-link btn btn-secondary" href="$Link" title="<% _t('GridFieldEditButton_ss.EDITINSITETREE', 'Edit in SiteTree') %>" target="_blank"><% _t('GridFieldEditButton_ss.EDITINSITETREE', 'In Situ Edit') %></a>
+<a class="action font-icon-sitemap action-detail edit-link btn btn-secondary" href="$Link" title="<%t GridFieldEditButton_ss.EDITINSITETREE 'Edit in SiteTree' %>" target="_blank"><%t GridFieldEditButton_ss.EDITINSITETREE 'In Situ Edit' %></a>
