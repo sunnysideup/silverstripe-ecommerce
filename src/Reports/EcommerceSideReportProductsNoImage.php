@@ -36,6 +36,10 @@ class EcommerceSideReportProductsNoImage extends Report
         $ok = Product::get()->filter(['ImageID:GreaterThan' => 0])
             ->innerJoin('File', '"File"."ID" = "Product"."ImageID"')
             ->columnUnique();
+        if (empty($ok)) {
+            return '"Product"."ID" NOT IN (0)';
+        }
+
         return '"Product"."ID" NOT IN (' . implode(',', $ok) . ')';
     }
 }
