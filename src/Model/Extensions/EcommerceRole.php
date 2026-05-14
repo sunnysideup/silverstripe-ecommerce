@@ -472,7 +472,7 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
             return false;
         }
 
-        return parent::canDelete($member);
+        return null;
     }
 
     /**

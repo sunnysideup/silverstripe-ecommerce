@@ -1920,9 +1920,13 @@ class Order extends DataObject implements EditableEcommerceObject
             BillingAddress::class => 'BillingAddress',
             ShippingAddress::class => 'ShippingAddress',
         ];
-        $methodName = $methodNames[$className];
+        $methodName = $methodNames[$className] ?? null;
         if ($alternativeMethodName) {
             $methodName = $alternativeMethodName;
+        }
+
+        if (! $methodName) {
+            $methodName = ClassInfo::shortName($className);
         }
 
         if ($this->IsSubmitted()) {
