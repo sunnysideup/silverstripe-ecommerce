@@ -1,8 +1,8 @@
 <table class="information-table readonly">
     <thead>
         <tr>
-            <th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
-            <th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
+            <th scope="col" class="left"><%t Order.PRODUCT 'Product' %></th>
+            <th scope="col" class="center"><%t Order.QUANTITY 'Quantity' %></th>
         </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@
         </tr>
         <tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
             <td colspan="2" class="center">
-                <% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
+                <%t Order.NOITEMS 'There are <strong>no</strong> items in your cart.' %>
             </td>
         </tr>
     </tfoot>

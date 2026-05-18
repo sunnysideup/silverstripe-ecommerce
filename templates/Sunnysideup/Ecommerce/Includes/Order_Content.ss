@@ -2,10 +2,10 @@
 <table class="information-table readonly">
     <thead>
         <tr>
-            <th scope="col" class="left product title"><% _t("Order.PRODUCT","Product") %></th>
-            <th scope="col" class="center quantity"><% _t("Order.QUANTITY", "Quantity") %></th>
-            <th scope="col" class="right unitprice"><% _t("Order.PRICE","Price") %> ($CurrencyUsed.Code)</th>
-            <th scope="col" class="right total"><% _t("Order.TOTALPRICE","Total") %> ($CurrencyUsed.Code)</th>
+            <th scope="col" class="left product title"><%t Order.PRODUCT 'Product' %></th>
+            <th scope="col" class="center quantity"><%t Order.QUANTITY 'Quantity' %></th>
+            <th scope="col" class="right unitprice"><%t Order.PRICE 'Price' %> ($CurrencyUsed.Code)</th>
+            <th scope="col" class="right total"><%t Order.TOTALPRICE 'Total' %> ($CurrencyUsed.Code)</th>
         </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
         <% end_loop %>
 
         <tr class="gap summary subTotal">
-            <th colspan="3" scope="row" class="threeColHeader subtotal"><% _t("Order.SUBTOTAL","Sub-total") %></th>
+            <th colspan="3" scope="row" class="threeColHeader subtotal"><%t Order.SUBTOTAL 'Sub-total' %></th>
             <td class="right subTotal">$SubTotalAsMoney.NiceDefaultFormat</td>
         </tr>
 
@@ -46,7 +46,7 @@
     <% else %>
         <tr class="showOnZeroItems">
             <td colspan="4" class="center">
-                <% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
+                <%t Order.NOITEMS 'There are <strong>no</strong> items in your cart.' %>
             </td>
         </tr>
     <% end_if %>
@@ -54,7 +54,7 @@
     <% if Items %>
     <tfoot>
         <tr class="gap total summary">
-            <th colspan="3" scope="row" class="threeColHeader"><% _t("Order.TOTAL","Total") %></th>
+            <th colspan="3" scope="row" class="threeColHeader"><%t Order.TOTAL 'Total' %></th>
             <td class="right total grandTotal">
                 <strong class="value">$TotalAsMoney.NiceDefaultFormat</strong>
             </td>

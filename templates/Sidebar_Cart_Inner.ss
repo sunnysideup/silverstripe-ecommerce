@@ -32,16 +32,16 @@ CartResponse.cart_responses_required
         </tbody>
         <tfoot>
             <tr class="gap summary hideOnZeroItems subTotal">
-                <th colspan="2" scope="row"><% _t("Order.SUBTOTAL","Sub-total") %></th>
+                <th colspan="2" scope="row"><%t Order.SUBTOTAL 'Sub-total' %></th>
                 <td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
             </tr>
             <tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
-                <td colspan="3" class="center"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></td>
+                <td colspan="3" class="center"><%t Order.NOITEMS 'There are <strong>no</strong> items in your cart.' %></td>
             </tr>
         </tfoot>
     </table>
-    <p class="goToCart"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><% _t("Order.GOTOCHECKOUTLINK","Go to the checkout") %></a></p>
+    <p class="goToCart"><a href="$EcomConfig.CheckoutLink" class="action goToCheckoutLink"><%t Order.GOTOCHECKOUTLINK 'Go to the checkout' %></a></p>
 <% else %>
-    <p class="noItems"><% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %></p>
+    <p class="noItems"><%t Order.NOITEMS 'There are <strong>no</strong> items in your cart.' %></p>
 <% end_if %>
 </div>

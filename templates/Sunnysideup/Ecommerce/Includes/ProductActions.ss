@@ -10,8 +10,8 @@
         <% if IsOlderVersion %>
         <p class="message warning">
             <%t ProductGroup.VIEWINGOLDERVERSION 'You are viewing an older version of {name}' name=$Title %>
-            <% _t("ProductGroup.YOUMAYALSOVIEW","You may also view") %>
-            <a href="$Link"><% _t("ProductGroup.CURRENTVERSION","the current version") %></a>.
+            <%t ProductGroup.YOUMAYALSOVIEW 'You may also view' %>
+            <a href="$Link"><%t ProductGroup.CURRENTVERSION 'the current version' %></a>.
         </p>
         <% else %>
         <div class="notForSale message">$EcomConfig.NotForSaleMessage</div>

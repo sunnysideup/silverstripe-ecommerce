@@ -1,19 +1,18 @@
 <div class="sidebarBox userAccount">
-    <h2><% _t("SideBar.YOUR_ACCOUNT","Your Account") %></h2>
+    <h2><%t SideBar.YOUR_ACCOUNT 'Your Account' %></h2>
     <p>
 <% if $EcomConfig.Customer.Exists %>
-    <% _t("SideBar.LOGGED_IN_AS","You are logged in as") %> <% if $EcomConfig.AccountPageLink %><a href="$EcomConfig.AccountPageLink"><% end_if %>$EcomConfig.Customer.Title<% if $EcomConfig.AccountPageLink %></a><% end_if %>.
-    <% _t("SideBar.YOU_CAN","You can") %>
-    <a href="Security/logout/"><% _t("SideBar.LOG_OUT","log out") %></a>
-    <% _t("SideBar.AT_ANY_TIME_YOUR_ORDER_IS_SAVE","at any time; your order information will be retained for when you next log in.") %>
+    <%t SideBar.LOGGED_IN_AS 'You are logged in as' %> <% if $EcomConfig.AccountPageLink %><a href="$EcomConfig.AccountPageLink"><% end_if %>$EcomConfig.Customer.Title<% if $EcomConfig.AccountPageLink %></a><% end_if %>.
+    <%t SideBar.YOU_CAN 'You can' %>
+    <a href="Security/logout/"><%t SideBar.LOG_OUT 'log out' %></a>
+    <%t SideBar.AT_ANY_TIME_YOUR_ORDER_IS_SAVE 'at any time; your order information will be retained for when you next log in.' %>
 <% else %>
-    <% _t("SideBar.YOU_ARE_NOT","You are not") %> <a href="$EcommerceLogInLink"><% _t("SideBar.LOGGED_IN","logged in") %></a>.
+    <%t SideBar.YOU_ARE_NOT 'You are not' %> <a href="$EcommerceLogInLink"><%t SideBar.LOGGED_IN 'logged in' %></a>.
     <% if $EcomConfig.AccountPageLink %>
-    <% _t("SideBar.YOU_CAN","You can") %>
-    <a href="{$EcomConfig.AccountPageLink}"><% _t("SideBar.CREATE_AN_ACCOUNT","create an account") %></a>
-    <% _t("SideBar.SAVE_YOUR_ORDER_DETAILS","to save your order details.") %>
+    <%t SideBar.YOU_CAN 'You can' %>
+    <a href="{$EcomConfig.AccountPageLink}"><%t SideBar.CREATE_AN_ACCOUNT 'create an account' %></a>
+    <%t SideBar.SAVE_YOUR_ORDER_DETAILS 'to save your order details.' %>
     <% end_if %>
 <% end_if %>
     </p>
 </div>
-

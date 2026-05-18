@@ -7,7 +7,7 @@
                 <div class="tableSubTitle" id="$AJAXDefinitions.TableSubTitleID">$TableSubTitle</div >
             <% end_if %>
         <% if MoreInfoPage %>
-            <div class="moreInfoLink"><a href="$MoreInfoPage.Link" ><% _t("Order.FIND_OUT_MORE","Find out more") %></a></div>
+            <div class="moreInfoLink"><a href="$MoreInfoPage.Link" ><%t Order.FIND_OUT_MORE 'Find out more' %></a></div>
         <% end_if %>
     </td>
     <td class="right total" id="$AJAXDefinitions.TableTotalID">$TableValueAsMoney.NiceDefaultFormat</td>

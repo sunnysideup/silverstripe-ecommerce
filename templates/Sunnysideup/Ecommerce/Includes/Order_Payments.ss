@@ -3,11 +3,11 @@
 <table id="OrderPayment" class="information-table $Status.LowerCase">
     <thead>
         <tr>
-            <th scope="col" class="left"><% _t("Order.DATE","Date") %></th>
-            <th scope="col" class="left"><% _t("Order.PAYMENTSTATUS","Status") %></th>
-            <th scope="col" class="left"><% _t("Order.PAYMENTMETHOD","Method") %></th>
-            <th scope="col" class="left"><% _t("Order.PAYMENTNOTE","Note") %></th>
-            <th scope="col" class="right"><% _t("Order.AMOUNT","Amount") %></th>
+            <th scope="col" class="left"><%t Order.DATE 'Date' %></th>
+            <th scope="col" class="left"><%t Order.PAYMENTSTATUS 'Status' %></th>
+            <th scope="col" class="left"><%t Order.PAYMENTMETHOD 'Method' %></th>
+            <th scope="col" class="left"><%t Order.PAYMENTNOTE 'Note' %></th>
+            <th scope="col" class="right"><%t Order.AMOUNT 'Amount' %></th>
         </tr>
     </thead>
     <tbody>
@@ -23,5 +23,5 @@
     </tbody>
 </table>
 <% else %>
-<p id="NoPaymentsNote" class="message warning"><% _t("Order.NOPAYMENTS","There are no payments for this order.") %></p>
+<p id="NoPaymentsNote" class="message warning"><%t Order.NOPAYMENTS 'There are no payments for this order.' %></p>
 <% end_if %>

@@ -28,7 +28,7 @@
 <% include Sunnysideup\Ecommerce\Includes\ProductGroupPagination %>
 
 <% else %>
-<p class="noProductsFound message warning"><% _t("Product.NOPRODUCTSFOUND", "No products are listed here.") %></p>
+<p class="noProductsFound message warning"><%t Product.NOPRODUCTSFOUND 'No products are listed here.' %></p>
 <% end_if %>
 
 <% if Form %><div id="FormHolder">$Form</div><% end_if %>

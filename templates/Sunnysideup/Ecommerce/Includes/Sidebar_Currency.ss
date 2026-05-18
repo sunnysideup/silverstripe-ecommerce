@@ -1,6 +1,6 @@
 <% if $EcomConfig.Currencies %>
 <div class="sidebarBox currency">
-    <h3><% _t("SideBar.CURRENCIES","Currencies") %></h3>
+    <h3><%t SideBar.CURRENCIES 'Currencies' %></h3>
     <% with EcomConfig %>
         <% if CurrenciesExplanation %><div class="explanation">$CurrenciesExplanation</div><% end_if %>
         <% include Sunnysideup\Ecommerce\Includes\Sidebar_Currency_Inner %>

@@ -3,10 +3,10 @@
 <table class="information-table editable">
     <thead>
         <tr>
-            <th scope="col" class="left titleCol"><% _t("Order.PRODUCT","Product") %></th>
-            <th scope="col" class="center quantityCol"><% _t("Order.QUANTITY", "Quantity") %></th>
-            <th scope="col" class="right priceCol"><% _t("Order.PRICE","Price") %></th>
-            <th scope="col" class="right totalCol"><% _t("Order.TOTALPRICE","Total") %></th>
+            <th scope="col" class="left titleCol"><%t Order.PRODUCT 'Product' %></th>
+            <th scope="col" class="center quantityCol"><%t Order.QUANTITY 'Quantity' %></th>
+            <th scope="col" class="right priceCol"><%t Order.PRICE 'Price' %></th>
+            <th scope="col" class="right totalCol"><%t Order.TOTALPRICE 'Total' %></th>
             <th scope="col" class="right emptyCell deleteCol"></th>
         </tr>
     </thead>
@@ -19,7 +19,7 @@
     <% end_loop %>
 
         <tr class="gap summary hideOnZeroItems subTotal">
-            <th colspan="3" scope="row" class="firstThreeCols"><% _t("Order.SUBTOTAL","Sub-total") %></th>
+            <th colspan="3" scope="row" class="firstThreeCols"><%t Order.SUBTOTAL 'Sub-total' %></th>
             <td class="right totalCol" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
             <td class="emptyCell deleteCol">&nbsp;</td>
         </tr>
@@ -36,7 +36,7 @@
     <tfoot>
 <% if Items %>
         <tr class="gap total summary hideOnZeroItems">
-            <th colspan="3" scope="row" class="firstThreeCols"><% _t("Order.TOTAL","Total") %> ($CurrencyUsed.Code)</th>
+            <th colspan="3" scope="row" class="firstThreeCols"><%t Order.TOTAL 'Total' %> ($CurrencyUsed.Code)</th>
             <td class="right total totalCol" id="$AJAXDefinitions.TableTotalID">
                 <span class="value">$TotalAsMoney.NiceDefaultFormat</span>
             </td>
@@ -56,7 +56,7 @@
                 $CartStatusMessage
                 <% if $SubmitErrors %>
                 <div class="submitErrors">
-                    <p class="warning message"><% _t('Order.AREAS_THAT_NEED_ATTENTION', 'areas that need attention') %></p>
+                    <p class="warning message"><%t Order.AREAS_THAT_NEED_ATTENTION 'areas that need attention' %></p>
                 <ul>
                 <% loop $SubmitErrors %>
                     <li>$Title</li>

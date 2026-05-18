@@ -323,6 +323,11 @@ class CheckoutPage extends CartPage
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'SaveOrderLinkLabel');
         $fields->removeFieldFromTab('Root.Messages.Messages.Actions', 'DeleteOrderLinkLabel');
 
+        $fields->removeByName('ShowAccountLabel');
+        $fields->removeByName('LoginToOrderLinkLabel');
+        $fields->removeByName('NoItemsInOrderMessage');
+        $fields->removeByName('NonExistingOrderMessage');
+
         // Get scaffolded fields and customize them
         $termsPageIDField = $fields->dataFieldByName('TermsPageID');
         if ($termsPageIDField) {

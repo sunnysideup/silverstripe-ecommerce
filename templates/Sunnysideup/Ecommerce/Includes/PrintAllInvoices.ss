@@ -5,7 +5,7 @@
     <meta name="robots" content="noindex, nofollow">
     $MetaTags
     <link rel="shortcut icon" href="/favicon.ico" />
-    <title><% _t('PRINT_ALL_INVOICES', 'Print Invoices for Selected Orders') %></title>
+    <title><%t PRINT_ALL_INVOICES 'Print Invoices for Selected Orders' %></title>
 </head>
 <body>
     <% loop $Orders %>

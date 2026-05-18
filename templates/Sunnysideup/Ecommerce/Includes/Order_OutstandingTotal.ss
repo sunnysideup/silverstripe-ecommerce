@@ -1,7 +1,7 @@
 <table id="OutstandingTable" class="information-table">
     <tbody>
         <tr class="gap summary" id="Outstanding">
-            <th scope="row"><strong><% _t("Order.TOTALOUTSTANDING","Total outstanding") %></strong></th>
+            <th scope="row"><strong><%t Order.TOTALOUTSTANDING 'Total outstanding' %></strong></th>
             <td class="right"><strong>$TotalOutstandingAsMoney.NiceDefaultFormat</strong></td>
         </tr>
     </tbody>
@@ -10,12 +10,11 @@
 <% else_if $IsCancelled %>
 <% else_if $PaymentIsPending %>
     <p class="paidNote">
-        <% _t("Order.OUTSTANDINGNOTE","This order has a pending payment.") %>
+        <%t Order.OUTSTANDINGNOTE 'This order has a pending payment.' %>
     </p>
 <% else %>
     <p class="paidNote">
-        <% _t("Order.OUTSTANDINGNOTE","This order has an outstanding balance.") %>
-        <a href="$Link#OrderFormPayment_PaymentForm"><% _t("Order.PAYNOW","Pay now") %></a>.
+        <%t Order.OUTSTANDINGNOTE 'This order has an outstanding balance.' %>
+        <a href="$Link#OrderFormPayment_PaymentForm"><%t Order.PAYNOW 'Pay now' %></a>.
     </p>
 <% end_if %>
-

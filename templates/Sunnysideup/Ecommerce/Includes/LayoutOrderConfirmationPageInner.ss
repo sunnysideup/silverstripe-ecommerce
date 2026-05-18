@@ -23,7 +23,7 @@
     </div>
 <% end_if %>
 <% else %>
-<p class="message bad"><% _t("OrderConfirmationPage.COULDNOTBEFOUND","Your order could not be found.") %></p>
+<p class="message bad"><%t OrderConfirmationPage.COULDNOTBEFOUND 'Your order could not be found.' %></p>
 <% end_if %>
 
 <% include Sunnysideup\Ecommerce\Includes\CartActionsAndMessages %>

@@ -1,5 +1,5 @@
 <% if CustomerOrderNote %>
-<h2><% _t("Order.CUSTOMER_ORDER_NOTE","Note") %></h2>
+<h2><%t Order.CUSTOMER_ORDER_NOTE 'Note' %></h2>
 <p>
     $CustomerOrderNote.XML
 </p>

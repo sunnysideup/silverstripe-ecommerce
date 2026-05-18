@@ -10,5 +10,5 @@
     <% if ShippingRegion %><span class="stateSpan">$ShippingRegion.Name </span><% end_if %>
     <% if ShippingFullCountryName %><span class="countrySpan">$ShippingFullCountryName </span><% end_if %>
 </address>
-<a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("Order.REMOVETHISADDRESS", "address no longer in use.") %></a>
+<a href="$RemoveLink" class="noLongerInUse" rel="$ID"><%t Order.REMOVETHISADDRESS 'address no longer in use.' %></a>
 <div class="clearer"></div>

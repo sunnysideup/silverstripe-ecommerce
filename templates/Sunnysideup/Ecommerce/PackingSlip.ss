@@ -2,21 +2,21 @@
 
 
 <div id="Wrapper">
-    <h1 class="title"><% if PackingSlipTitle %>$PackingSlipTitle<% else %><% _t("Order.PACKING_SLIP", "Packing Slip") %><% end_if %></h1>
+    <h1 class="title"><% if PackingSlipTitle %>$PackingSlipTitle<% else %><%t Order.PACKING_SLIP 'Packing Slip' %><% end_if %></h1>
     <div id="AddressesHolder">
         <div id="Sender" class="section">
-            <h3><% _t("Order.SENDER", "Sender:") %></h3>
+            <h3><%t Order.SENDER 'Sender:' %></h3>
             <% include Sunnysideup\Ecommerce\Includes\Order_ShopInfo_PackingSlip %>
         </div>
     <% with Order %>
         <div id="Recipient" class="section">
-            <h3><% _t("Order.DELIVER_TO", "Deliver to:") %></h3>
+            <h3><%t Order.DELIVER_TO 'Deliver to:' %></h3>
             <% include Sunnysideup\Ecommerce\Includes\Order_AddressShipping %>
         </div>
         <div class="clear"></div>
     </div>
     <div id="ItemsHolder" class="section">
-        <h3><% _t("Order.ITEMS", "Items:") %></h3>
+        <h3><%t Order.ITEMS 'Items:' %></h3>
         <% include Sunnysideup\Ecommerce\Includes\Order_Content_Items_Only_No_Prices %>
     </div>
     <% include Sunnysideup\Ecommerce\Includes\Order_FeedbackFormLink %>

@@ -415,7 +415,6 @@ class ShoppingCart
 
                 return false;
             }
-
             $item = $this->prepareOrderItem($buyable, $parameters, $mustBeExistingItem = false);
             $quantity = $this->prepareQuantity($buyable, $quantity);
             if ($item && $quantity) {
@@ -1297,7 +1296,18 @@ class ShoppingCart
         if ($order) {
             $orderID = $order->ID;
 
-            return OrderItem::get()->setUseCache($cacheDataObjectGetOne = false)->filter('"BuyableClassName" = ' . Convert::raw2sql($buyable->ClassName, true) . ' AND "BuyableID" = ' . $buyable->ID . ' AND "OrderID" = ' . $orderID . ' ' . $filterString)->first();
+            $list = OrderItem::get()
+                ->setUseCache($cacheDataObjectGetOne = false)
+                ->filter([
+                    'BuyableClassName' => $buyable->ClassName,
+                    'BuyableID' => $buyable->ID,
+                    'OrderID' => $orderID,
+                ]);
+            if ($filterString) {
+                $list = $list->where($filterString);
+            }
+
+            return $list->first();
         }
     }
 

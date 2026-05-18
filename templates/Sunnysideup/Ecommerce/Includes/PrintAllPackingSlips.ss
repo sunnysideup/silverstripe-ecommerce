@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="robots" content="noindex, nofollow">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <title><% _t('PRINT_ALL_PACKING_SLIPS', 'Print Packing Slips for Selected Orders') %></title>
+    <title><%t PRINT_ALL_PACKING_SLIPS 'Print Packing Slips for Selected Orders' %></title>
 </head>
 <body>
     <% loop $Orders %>
@@ -13,12 +13,12 @@
                 <% if PackingSlipTitle %>
                     $PackingSlipTitle
                 <% else %>
-                    <% _t("Order.PACKING_SLIP", "Packing Slip") %>
+                    <%t Order.PACKING_SLIP 'Packing Slip' %>
                 <% end_if %>
             </h1>
             <div id="AddressesHolder">
                 <div id="Sender" class="section">
-                    <h3><% _t("Order.SENDER", "Sender:") %></h3>
+                    <h3><%t Order.SENDER 'Sender:' %></h3>
                     <% with EcomConfig %>
                         <div id="ShopInfo">
                             <% if EmailLogo %><img loading="lazy" src="$EmailLogo.getAbsoluteURL" alt="Logo - $EmailLogo.Title" /><% end_if %>
@@ -28,13 +28,13 @@
                     <% end_with %>
                 </div>
                 <div id="Recipient" class="section">
-                    <h3><% _t("Order.DELIVER_TO", "Deliver to:") %></h3>
+                    <h3><%t Order.DELIVER_TO 'Deliver to:' %></h3>
                     <% include Sunnysideup\Ecommerce\Includes\Order_AddressShipping %>
                 </div>
                 <div class="clear"></div>
             </div>
             <div id="ItemsHolder" class="section">
-                <h3><% _t("Order.ITEMS", "Items:") %></h3>
+                <h3><%t Order.ITEMS 'Items:' %></h3>
                 <% include Sunnysideup\Ecommerce\Includes\Order_Content_Items_Only_No_Prices %>
             </div>
             <div id="PackingSlipNote">$PackingSlipNote</div>

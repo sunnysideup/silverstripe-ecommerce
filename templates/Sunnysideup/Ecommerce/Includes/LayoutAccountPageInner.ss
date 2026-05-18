@@ -16,7 +16,7 @@
 
 <% if CurrentMember  %>
     <div id="PastOrderHolder">
-        <h3><% _t("Account.PreviousOrders","Previous Orders") %></h3>
+        <h3><%t Account.PreviousOrders 'Previous Orders' %></h3>
         <% include Sunnysideup\Ecommerce\Includes\AccountPastOrders %>
     </div>
 <% end_if %>

@@ -1,10 +1,10 @@
 <table class="information-table editable">
     <thead>
         <tr>
-            <th scope="col" class="left"><% _t("Order.PRODUCT","Product") %></th>
-            <th scope="col" class="center"><% _t("Order.QUANTITY", "Quantity") %></th>
-            <th scope="col" class="right"><% _t("Order.PRICE","Price") %> ($EcomConfig.Currency)</th>
-            <th scope="col" class="right"><% _t("Order.TOTALPRICE","Total") %> ($EcomConfig.Currency)</th>
+            <th scope="col" class="left"><%t Order.PRODUCT 'Product' %></th>
+            <th scope="col" class="center"><%t Order.QUANTITY 'Quantity' %></th>
+            <th scope="col" class="right"><%t Order.PRICE 'Price' %> ($EcomConfig.Currency)</th>
+            <th scope="col" class="right"><%t Order.TOTALPRICE 'Total' %> ($EcomConfig.Currency)</th>
             <th scope="col" class="right"></th>
         </tr>
     </thead>
@@ -17,7 +17,7 @@
     <% end_loop %>
 
         <tr class="gap summary hideOnZeroItems subTotal">
-            <th colspan="3"><% _t("Order.SUBTOTAL","Sub-total") %></th>
+            <th colspan="3"><%t Order.SUBTOTAL 'Sub-total' %></th>
             <td class="right" id="$AJAXDefinitions.TableSubTotalID">$SubTotalAsMoney.NiceDefaultFormat</td>
             <td>&nbsp;</td>
         </tr>
@@ -29,7 +29,7 @@
         </tr>
         <tr class="showOnZeroItems"<% if Items %> style="display: none"<% end_if %>>
             <td colspan="5" class="center">
-                <% _t("Order.NOITEMS","There are <strong>no</strong> items in your cart.") %>
+                <%t Order.NOITEMS 'There are <strong>no</strong> items in your cart.' %>
             </td>
         </tr>
     </tfoot>

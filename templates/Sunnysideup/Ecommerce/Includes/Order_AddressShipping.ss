@@ -7,7 +7,7 @@
         <% end_with %>
     <% else  %>
         <p>
-            <% _t("NOSHIPPINGADDRESSAVAILABLE", "No shipping address available.") %>
+            <%t NOSHIPPINGADDRESSAVAILABLE 'No shipping address available.' %>
         </p>
     <% end_if %>
 <% else %>
