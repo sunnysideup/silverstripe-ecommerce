@@ -148,7 +148,6 @@ class OrderModifier extends OrderAttribute
             'title' => 'Order Number',
         ],
         'Name' => 'PartialMatchFilter',
-        'TableSubTitle' => 'PartialMatchFilter',
         'TableValue' => 'PartialMatchFilter',
         'HasBeenRemoved' => 'ExactMatchFilter',
         'Type' => 'ExactMatchFilter',

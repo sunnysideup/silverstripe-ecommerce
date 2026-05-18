@@ -121,6 +121,7 @@ class OrderEmailRecord extends DataObject implements EditableEcommerceObject
         //make sure to keep the item below, otherwise they do not show in form
         'OrderStepID' => [
             'filter' => OrderEmailRecordFiltersMultiOptionsetStatusIDFilter::class,
+            'field' => NumericField::class,
         ],
         'Result',
     ];

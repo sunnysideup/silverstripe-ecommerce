@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Model;
 
 use Override;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\Security\Member;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\FieldType\DBMoney;
@@ -29,6 +30,7 @@ use Sunnysideup\Ecommerce\Forms\Fields\EcomQuantityField;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Pages\Product;
+use Sunnysideup\Ecommerce\Search\Filters\OrderItemProductFilter;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 
 /**
@@ -154,10 +156,9 @@ class OrderItem extends OrderAttribute
         'BuyableID' => [
             'field' => TextField::class,
             'title' => 'Internal Item ID',
-            'filter' => 'OrderItemProductFilter',
+            'filter' => OrderItemProductFilter::class,
         ],
-        'Name' => 'PartialMatchFilter',
-        'TableSubTitle' => 'PartialMatchFilter',
+        'Name' => PartialMatchFilter::class,
         //"UnitPrice",
         'Quantity',
         //"Total"
