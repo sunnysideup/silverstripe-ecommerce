@@ -239,7 +239,7 @@ class OrderConfirmationPage extends CartPage
     #[Override]
     public function fieldLabels($includerelations = true)
     {
-        $defaultLabels = null;
+        $defaultLabels = parent::fieldLabels($includerelations);
         $newLabels = $this->customFieldLabels();
         $labels = array_merge($defaultLabels, $newLabels);
         $extendedArray = $this->extend('updateFieldLabels', $labels);

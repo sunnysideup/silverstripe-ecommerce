@@ -981,10 +981,11 @@ class Order extends DataObject implements EditableEcommerceObject
             }
         }
 
-        $fields->addFieldToTab(
-            'Root.Next',
-            $nextFieldArray
-        );
+        if (is_array($nextFieldArray)) {
+            $fields->addFieldsToTab('Root.Next', $nextFieldArray);
+        } elseif ($nextFieldArray) {
+            $fields->addFieldToTab('Root.Next', $nextFieldArray);
+        }
 
         if ($submitted) {
             $permaLinkLabel = _t('Order.PERMANENT_LINK', 'Customer Link');

@@ -632,21 +632,27 @@ class EcommerceRole extends Extension implements PermissionProvider, PermissionP
         }
 
         $headerField = HeaderField::create('MemberLinkFieldHeader', _t('Member.EDIT_CUSTOMER', 'Edit Customer'));
-        $linkField1 = EcommerceCMSButtonField::create(
-            'MemberLinkFieldEditThisCustomer',
-            $this->getOwner()->CMSEditLink(),
-            _t('Member.EDIT', 'Edit') . ' <i>' . $this->getOwner()->getTitle() . '</i>'
-        );
         $fields->push($headerField);
-        $fields->push($linkField1);
+        $editLink = $this->getOwner()->CMSEditLink();
+        if ($editLink) {
+            $linkField1 = EcommerceCMSButtonField::create(
+                'MemberLinkFieldEditThisCustomer',
+                $editLink,
+                _t('Member.EDIT', 'Edit') . ' <i>' . $this->getOwner()->getTitle() . '</i>'
+            );
+            $fields->push($linkField1);
+        }
 
         if (EcommerceRole::current_member_can_process_orders(Security::getCurrentUser())) {
-            $linkField2 = EcommerceCMSButtonField::create(
-                'MemberLinkFieldEditAllCustomers',
-                CMSEditLinkAPI::find_edit_link_for_object($group),
-                _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All ' . $group->Title)
-            );
-            $fields->push($linkField2);
+            $groupEditLink = CMSEditLinkAPI::find_edit_link_for_object($group);
+            if ($groupEditLink) {
+                $linkField2 = EcommerceCMSButtonField::create(
+                    'MemberLinkFieldEditAllCustomers',
+                    $groupEditLink,
+                    _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All ' . $group->Title)
+                );
+                $fields->push($linkField2);
+            }
         }
 
         return $fields;

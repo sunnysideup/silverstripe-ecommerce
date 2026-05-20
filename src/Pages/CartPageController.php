@@ -416,10 +416,12 @@ class CartPageController extends PageController
             $canView = $this->overrideCanView ? $this->currentOrder->canOverrideCanView() : $this->currentOrder->canView();
             //IMPORTANT SECURITY QUESTION!
             if ($canView) {
-                if ($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
-                    $this->redirect($this->currentOrder->Link());
-                } elseif (! $this->currentOrder->IsSubmitted() && $this->onlyShowSubmittedOrders()) {
-                    $this->redirect($this->currentOrder->Link());
+                if (! $this->getRequest()->getVar('CMSPreview')) {
+                    if ($this->currentOrder->IsSubmitted() && $this->onlyShowUnsubmittedOrders()) {
+                        $this->redirect($this->currentOrder->Link());
+                    } elseif (! $this->currentOrder->IsSubmitted() && $this->onlyShowSubmittedOrders()) {
+                        $this->redirect($this->currentOrder->Link());
+                    }
                 }
             } else {
                 if (! $this->LoginToOrderLinkLabel) {

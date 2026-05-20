@@ -200,6 +200,19 @@ class CartPage extends Page
         $noItemsInOrderMessage = $fields->dataFieldByName('NoItemsInOrderMessage');
         $nonExistingOrderMessage = $fields->dataFieldByName('NonExistingOrderMessage');
 
+        $fields->removeByName([
+            'ContinueShoppingLabel',
+            'ProceedToCheckoutLabel',
+            'ShowAccountLabel',
+            'CurrentOrderLinkLabel',
+            'LoginToOrderLinkLabel',
+            'SaveOrderLinkLabel',
+            'LoadOrderLinkLabel',
+            'DeleteOrderLinkLabel',
+            'NoItemsInOrderMessage',
+            'NonExistingOrderMessage',
+        ]);
+
         // Set labels for text fields
         if ($continueShoppingLabel) {
             $continueShoppingLabel->setTitle(_t('CartPage.CONTINUESHOPPINGLABEL', 'Label on link to continue shopping - e.g. click here to continue shopping'));

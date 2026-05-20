@@ -903,8 +903,7 @@ class OrderStep extends DataObject implements EditableEcommerceObject
             $sort = 0;
         }
 
-        $where = '"OrderStep"."Sort" >  ' . $sort;
-        $nextOrderStepObject = OrderStep::get()->setUseCache(true)->filter($where)->first();
+        $nextOrderStepObject = OrderStep::get()->setUseCache(true)->filter(['Sort:GreaterThan' => $sort])->first();
 
         return $nextOrderStepObject ?: null;
     }
