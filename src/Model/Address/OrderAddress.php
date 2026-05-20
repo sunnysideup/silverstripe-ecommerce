@@ -569,7 +569,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     /**
      * make an address obsolete and include all the addresses that are identical.
      */
-    public function MakeObsolete(Member $member = null)
+    public function MakeObsolete(?Member $member = null)
     {
         $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = true);
         $comparisonString = $this->comparisonString();

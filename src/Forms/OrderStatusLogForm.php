@@ -48,11 +48,11 @@ class OrderStatusLogForm extends Form
      * @param string $name
      */
     public function __construct(
-        Controller $optionalController = null,
+        ?Controller $optionalController = null,
         $name = null,
         ?FieldList $fields = null,
         ?FieldList $actions = null,
-        Validator $optionalValidator = null
+        ?Validator $optionalValidator = null
     ) {
         if (! $optionalController instanceof Controller) {
             $controllerClassName = EcommerceConfig::get(OrderStatusLogForm::class, 'controller_class');

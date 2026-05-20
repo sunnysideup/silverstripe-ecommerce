@@ -27,7 +27,7 @@ class OrderStepField extends DatalessField
     /**
      * @param string $name
      */
-    public function __construct($name, Order $order, Member $member = null)
+    public function __construct($name, Order $order, ?Member $member = null)
     {
         if (! $member instanceof Member) {
             $member = $order->Member();

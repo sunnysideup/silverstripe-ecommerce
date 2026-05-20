@@ -221,7 +221,7 @@ class OrderStepSent extends OrderStep implements OrderStepInterface
     }
 
     #[Override]
-    public function CalculatedCustomerMessage(Order $order = null): string
+    public function CalculatedCustomerMessage(?Order $order = null): string
     {
         $v = '';
         if ($order && $order->IsSeparateShippingAddress()) {

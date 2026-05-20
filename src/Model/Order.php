@@ -582,7 +582,7 @@ class Order extends DataObject implements EditableEcommerceObject
         return self::$_needs_recalculating[$orderID] ?? false;
     }
 
-    public function getModifierForms(Controller $optionalController = null, Validator $optionalValidator = null)
+    public function getModifierForms(?Controller $optionalController = null, ?Validator $optionalValidator = null)
     {
         if (empty(self::$_modifier_form_cache[$this->ID])) {
             $formsDone = [];
@@ -2626,7 +2626,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canSubmit(Member $member = null)
+    public function canSubmit(?Member $member = null)
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -2648,7 +2648,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canPay(Member $member = null)
+    public function canPay(?Member $member = null)
     {
         $member = $this->getMemberForCanFunctions($member);
         $extended = $this->extendedCan(__FUNCTION__, $member);
@@ -2668,7 +2668,7 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return bool
      */
-    public function canCancel(Member $member = null)
+    public function canCancel(?Member $member = null)
     {
         //if it is already cancelled it can not be cancelled again
         if ($this->CancelledByID) {
@@ -4126,8 +4126,8 @@ class Order extends DataObject implements EditableEcommerceObject
     protected function getOrderStatusLogsTableField_Archived(
         $sourceClass = OrderStatusLog::class,
         $title = '',
-        FieldList $fieldList = null,
-        FieldList $detailedFormFields = null
+        ?FieldList $fieldList = null,
+        ?FieldList $detailedFormFields = null
     ) {
         $title ?: $title = _t('OrderLog.PLURALNAME', 'Order Log');
         $source = $this->OrderStatusLogs();
@@ -4432,7 +4432,7 @@ class Order extends DataObject implements EditableEcommerceObject
      * @return DataObject (Member)
      */
     //TODO: please comment why we make use of this function
-    protected function getMemberForCanFunctions(Member $member = null)
+    protected function getMemberForCanFunctions(?Member $member = null)
     {
         if (! $member instanceof Member) {
             $member = Security::getCurrentUser();

@@ -265,7 +265,7 @@ class ShippingAddress extends OrderAddress
      *
      * @return FieldList
      */
-    public function getFields(Member $member = null)
+    public function getFields(?Member $member = null)
     {
         $fields = parent::getEcommerceFields();
         if (EcommerceConfig::get(OrderAddress::class, 'use_separate_shipping_address')) {

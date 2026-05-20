@@ -46,7 +46,7 @@ class OrderModifierForm extends Form
         string $name,
         FieldList $fields,
         FieldList $actions,
-        Validator $optionalValidator = null
+        ?Validator $optionalValidator = null
     ) {
         if (! $optionalController instanceof Controller) {
             $controllerClassName = EcommerceConfig::get(OrderModifierForm::class, 'controller_class');

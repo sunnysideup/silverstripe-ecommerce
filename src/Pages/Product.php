@@ -1359,7 +1359,7 @@ class Product extends Page implements BuyableModel
      *
      * @return bool
      */
-    public function canPurchase(Member $member = null, $checkPrice = true)
+    public function canPurchase(?Member $member = null, $checkPrice = true)
     {
         $config = EcommerceConfig::inst();
 

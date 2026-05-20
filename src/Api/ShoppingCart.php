@@ -1226,7 +1226,7 @@ class ShoppingCart
      * @param string $status
      * @returns String (JSON)
      */
-    public function setMessageAndReturn($message = '', $status = '', Form $form = null)
+    public function setMessageAndReturn($message = '', $status = '', ?Form $form = null)
     {
         if ($message && $status) {
             $this->addMessage($message, $status);
