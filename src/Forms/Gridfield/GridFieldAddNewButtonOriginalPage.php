@@ -11,6 +11,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\Ecommerce\Cms\CMSPageAddControllerProducts;
+use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
+use Sunnysideup\Ecommerce\Pages\Product;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 /**
@@ -40,14 +42,17 @@ class GridFieldAddNewButtonOriginalPage extends GridFieldAddNewButton
             $this->buttonName = _t('GridField.Add_USING_PAGES_SECTION', 'Add {name}', ['name' => $objectName]);
         }
 
-        $getSegment = '';
+        $query = [
+            'RecordType' => EcommerceConfigClassNames::getName(Product::class),
+        ];
         $page = $this->BestParentPage();
         if ($page) {
-            $getSegment = '?ParentID=' . $page->ID;
+            $query['ParentID'] = $page->ID;
         }
+        $queryString = $query ? ('?' . http_build_query($query)) : '';
 
         $data = ArrayData::create([
-            'NewLink' => '/admin/' . Config::inst()->get(CMSPageAddControllerProducts::class, 'url_segment') . '/' . $getSegment,
+            'NewLink' => '/admin/pages/add' . $queryString,
             'ButtonName' => $this->buttonName,
         ]);
 

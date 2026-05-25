@@ -457,7 +457,7 @@ class ProductGroupController extends PageController
 
     public function getUserPreferencesTitle(string $type, ?string $key): string
     {
-        return $this->getProductGroupSchema()->getSortFilterDisplayValues($type, 'Title');
+        return $this->data()->getProductGroupSchema()->getSortFilterDisplayValues($type, 'Title');
     }
 
     /**
@@ -805,7 +805,7 @@ class ProductGroupController extends PageController
     public function getFinalProductList($extraFilter = null, $alternativeSort = null)
     {
         if (! $this->finalProductList) {
-            $className = $this->getProductGroupSchema()->getFinalProductListClassName();
+            $className = $this->data()->getProductGroupSchema()->getFinalProductListClassName();
             $this->finalProductList = $className::inst($this, $this->dataRecord);
             ClassHelpers::check_for_instance_of($this->finalProductList, FinalProductList::class, true);
         }
@@ -859,7 +859,7 @@ class ProductGroupController extends PageController
     protected function afterHandleRequest()
     {
         if ($this->request->getVar('showdebug') && (Permission::check('ADMIN') || Director::isDev())) {
-            $this->getProductGroupSchema()->getDebugProviderAsObject($this, $this->dataRecord)->print();
+            $this->data()->getProductGroupSchema()->getDebugProviderAsObject($this, $this->dataRecord)->print();
             die();
         }
 
@@ -901,7 +901,12 @@ class ProductGroupController extends PageController
      */
     protected function getLinkTemplate(?string $action = null, ?string $type = '', ?string $replacementForType = ''): string
     {
-        return $this->getUserPreferencesClass()->getLinkTemplate($action, $type, $replacementForType);
+        $preferences = $this->getUserPreferencesClass();
+        if (! $preferences) {
+            return $this->Link();
+        }
+
+        return $preferences->getLinkTemplate($action, $type, $replacementForType);
     }
 
     #[Override]
@@ -994,9 +999,18 @@ class ProductGroupController extends PageController
     protected function getUserPreferencesClass()
     {
         if (null === $this->userPreferencesObject) {
-            $className = $this->getProductGroupSchema()->getUserPreferencesClassName();
+            $page = $this->dataRecord;
+            if (! $page || ! method_exists($page, 'getProductGroupSchema')) {
+                $page = ProductGroup::get()->First();
+            }
+
+            if (! $page || ! method_exists($page, 'getProductGroupSchema')) {
+                return null;
+            }
+
+            $className = $page->getProductGroupSchema()->getUserPreferencesClassName();
             $this->userPreferencesObject = Injector::inst()->get($className)
-                ->setRootGroup($this->dataRecord)
+                ->setRootGroup($page)
                 ->setRootGroupController($this)
                 ->setRequest($this->getRequest());
         }
