@@ -903,7 +903,7 @@ class ProductGroupController extends PageController
     {
         $preferences = $this->getUserPreferencesClass();
         if (! $preferences) {
-            return $this->Link();
+            return parent::Link($action);
         }
 
         return $preferences->getLinkTemplate($action, $type, $replacementForType);
