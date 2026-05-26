@@ -1572,7 +1572,7 @@ class Product extends Page implements BuyableModel
         $task = EcommerceTaskRemoveSuperfluousLinksInProductProductGroups::create();
         $obj = $task;
         $definition = new InputDefinition($task->getOptions());
-        $input = new ArrayInput(['verbose' => true], $definition);
+        $input = new ArrayInput(['--verbose' => true], $definition);
         $buffered = new BufferedOutput();
         $output = PolyOutput::create(PolyOutput::FORMAT_ANSI);
         $output->setWrappedOutput($buffered);
