@@ -4,6 +4,8 @@ namespace Sunnysideup\Ecommerce\Tasks;
 
 use Override;
 use SilverStripe\Assets\File;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
 use Sunnysideup\Ecommerce\Pages\Product;
@@ -126,6 +128,11 @@ class EcommerceTaskLinkProductWithImages extends BuildTask
             new InputOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'The number of products selected per cycle', 100),
             new InputOption('productid', 'p', InputOption::VALUE_OPTIONAL, 'Specific product ID to process', 0),
         ];
+    }
+
+    public function Link(): string
+    {
+        return Controller::join_links(Director::baseURL(), 'dev/tasks', static::getNameWithoutNamespace());
     }
 
     public function setProductID($id)
