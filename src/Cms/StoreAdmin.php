@@ -46,7 +46,6 @@ class StoreAdmin extends ModelAdmin
      * @var array
      */
     private static $managed_models = [
-        EcommerceDBConfig::class,
         OrderStep::class,
         EcommerceCountry::class,
         EcommerceCurrency::class,

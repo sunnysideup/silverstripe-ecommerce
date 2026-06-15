@@ -537,10 +537,10 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                                 'Process',
                                 _t('EcommerceDBConfig.PROCESS', 'Process')
                             ),
-                            Tab::create(
-                                'Advanced',
-                                _t('EcommerceDBConfig.ADVANCED', 'Advanced')
-                            ),
+                            // Tab::create(
+                            //     'Advanced',
+                            //     _t('EcommerceDBConfig.ADVANCED', 'Advanced')
+                            // ),
                             Tab::create(
                                 'Offline',
                                 _t('EcommerceDBConfig.OFFLINE', 'Offline')
@@ -569,7 +569,7 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
                 HTMLReadonlyField::create(
                     'RefreshWebsite',
                     'Update site',
-                    '<h2><a href="/shoppingcart/clear/?flush=all" target="_blank">Refresh website / clear caches</a></h2>'
+                    '<a href="/shoppingcart/clear/?flush=all" target="_blank" class="btn action btn btn-primary refresh">Refresh website / clear caches</a>'
                 ),
             ]
         );
