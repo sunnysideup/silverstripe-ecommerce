@@ -107,6 +107,8 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     private static $table_name = 'EcommercePayment';
 
+    private static $method_disabled = false;
+
     private static $db = [
         'Status' => "Enum('" . self::INCOMPLETE_STATUS . ',' . self::SUCCESS_STATUS . ',' . self::FAILURE_STATUS . ',' . self::PENDING_STATUS . "','" . self::INCOMPLETE_STATUS . "')",
         'Amount' => DBMoney::class,
@@ -572,6 +574,9 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
             );
             $methodFields->addExtraClass("methodFields_{$htmlClassName}");
             $methodFields->addExtraClass('paymentfields');
+            if ($methodClass::config()->get('method_disabled')) {
+                $methodFields->addExtraClass('methodDisabled');
+            }
             // Add those fields to the initial FieldSet we first created
             $fields->push($methodFields);
         }

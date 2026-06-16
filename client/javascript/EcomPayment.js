@@ -13,7 +13,7 @@ if (
     paymentInputsSelector:
       '#OrderForm_OrderForm_PaymentMethod input[type=radio], #OrderFormPayment_PaymentForm_PaymentMethod input[type=radio]',
 
-    paymentFieldSelector: 'div.paymentfields',
+    paymentFieldSelector: 'div.paymentfields:not(.methodDisabled)',
 
     paymentMethodPrefix: '.methodFields_',
 
