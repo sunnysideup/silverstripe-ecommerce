@@ -64,6 +64,8 @@ class EcommerceDBConfig extends DataObject implements EditableEcommerceObject
      */
     private static $ecommerce_db_config_class_name = self::class;
 
+    private static bool $include_cart_data_in_html = true;
+
     /**
      * Standard SS Variable.
      *
