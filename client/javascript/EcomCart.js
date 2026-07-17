@@ -693,6 +693,11 @@ const EcomCart = {
       success: function (data, textStatus, jqXHR) {
         window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
 
+        const holderEl = document.querySelector(EcomCart.ajaxifiedListHolderSelector)
+        if (holderEl) {
+          holderEl.dispatchEvent(new CustomEvent('SSU:DOMContentUpdated', { bubbles: true, detail: { updatedElement: holderEl } }))
+        }
+
         // create history
         var pageTitle = window.jQuery(EcomCart.hiddenPageTitleID).text()
         // create history
