@@ -99,7 +99,7 @@ class ProductGroupController extends PageController
     /**
      * adds Javascript to the page to make it work when products are cached.
      */
-    public function CachingRelatedJavascript()
+    public function CachingRelatedJavascript(): void
     {
         if ($this->ProductGroupListAreAjaxified()) {
             Requirements::customScript(
@@ -126,6 +126,10 @@ class ProductGroupController extends PageController
             );
         }
 
+        $includeCurrentOrder = EcommerceConfig::get(EcommerceDBConfig::class, 'include_cart_data_in_html');
+        if (! $includeCurrentOrder) {
+            return;
+        }
         $currentOrder = ShoppingCart::current_order();
         if ($currentOrder->TotalItems(true)) {
             $responseClass = EcommerceConfig::get(ShoppingCart::class, 'response_class');
@@ -137,7 +141,7 @@ class ProductGroupController extends PageController
                     if(typeof EcomCartOptions === 'undefined') {
                         var EcomCartOptions = {};
                     }
-                    EcomCartOptions.initialData= " . $json . ';
+                    EcomCartOptions.initialData = " . $json . ';
                 ',
                 'cachingRelatedJavascript_JSON'
             );
@@ -183,7 +187,7 @@ class ProductGroupController extends PageController
 
         $this->addSecondaryTitle();
 
-        $this->cachingRelatedJavascript();
+        $this->CachingRelatedJavascript();
 
         return $this->paginateList($list);
     }
