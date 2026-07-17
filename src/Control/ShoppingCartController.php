@@ -38,6 +38,19 @@ use Sunnysideup\Ecommerce\Pages\Product;
 class ShoppingCartController extends Controller
 {
     /**
+     * Set true to add SecurityID=token to links.
+     * @var bool
+     */
+    private static bool $add_security_id_to_links = true;
+
+    /**
+     * Set true to mandate SecurityID for each request.
+     * Only actions defined in $methodsRequiringSecurityID are mandated.
+     * @var bool
+     */
+    private static bool $check_security_id_for_links = true;
+
+    /**
      * We need to only use the Security ID on a few
      * actions, these are listed here.
      *
@@ -259,7 +272,6 @@ class ShoppingCartController extends Controller
         return self::create_link('deleteorder/' . $orderID . '/' . self::params_to_get_string($parameters));
     }
 
-    /**
     /**
      *
      * @return string
@@ -800,7 +812,7 @@ class ShoppingCartController extends Controller
     {
         parent::init();
         $action = $this->request->param('Action');
-        if ($action && (in_array($action, $this->methodsRequiringSecurityID, true))) {
+        if ($this->should_check_SecurityID($action)) {
             $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
             if ($savedSecurityID) {
                 if (! isset($_GET['SecurityID'])) {
@@ -815,6 +827,22 @@ class ShoppingCartController extends Controller
             }
         }
         $this->cart = ShoppingCart::singleton();
+    }
+
+    /**
+     * Return whether the SecurityID should be checked for the given action.
+     * @param null|string $action the Action parameter
+     * @return bool
+     */
+    private function should_check_SecurityID(?string $action): bool
+    {
+        if (!$action) {
+            return false;
+        }
+        if (!Config::inst()->get(ShoppingCartController::class, 'check_security_id_for_links')) {
+            return false;
+        }
+        return in_array($action, $this->methodsRequiringSecurityID, true);
     }
 
     /**
@@ -849,8 +877,10 @@ class ShoppingCartController extends Controller
     protected static function params_to_get_string(array $array)
     {
         $token = SecurityToken::inst();
-        if (! isset($array['SecurityID'])) {
-            $array['SecurityID'] = $token->getValue();
+        if (Config::inst()->get(ShoppingCartController::class, 'add_security_id_to_links')) {
+            if (! isset($array['SecurityID'])) {
+                $array['SecurityID'] = $token->getValue();
+            }
         }
 
         return '?' . http_build_query($array);

@@ -840,6 +840,19 @@ const EcomCart = {
   // SETUP PAGE
   // #################################
 
+  resolveLink(element) {
+    var url = element.dataset.link || window.jQuery(element).attr('href')
+    return url
+  },
+
+  resolveAddRemoveLink(element) {
+    var url = EcomCart.resolveLink(element)
+    if (EcomCart.productListIsFromCachedSource) {
+      url += (url.includes('?') ? '&' : '?') + 'cached=1'
+    }
+    return url
+  },
+
   /**
    * adds the "add to cart" ajax functionality to links.
    * @param String withinSelector: area where these links can be found, the more specific the better (faster)
@@ -849,10 +862,7 @@ const EcomCart = {
       .jQuery(withinSelector)
       .not(EcomCart.excludedPagesSelector)
       .on('click', EcomCart.addLinkSelector, function () {
-        var url = window.jQuery(this).attr('href')
-        if (EcomCart.productListIsFromCachedSource) {
-          url += '&cached=1'
-        }
+        var url = EcomCart.resolveAddRemoveLink(this)
         EcomCart.getChanges(url, null, this)
         return false
       })
@@ -869,10 +879,7 @@ const EcomCart = {
       .not(EcomCart.excludedPagesSelector)
       .on('click', EcomCart.removeLinkSelector, function () {
         if (EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
-          var url = window.jQuery(this).attr('href')
-          if (EcomCart.productListIsFromCachedSource) {
-            url += '&cached=1'
-          }
+          var url = EcomCart.resolveAddRemoveLink(this)
           EcomCart.getChanges(url, null, this)
         }
         return false
@@ -892,7 +899,7 @@ const EcomCart = {
           !EcomCart.confirmDeleteText ||
           confirm(EcomCart.confirmDeleteText)
         ) {
-          var url = window.jQuery(this).attr('href')
+          var url = EcomCart.resolveLink(this)
           var el = window.jQuery(this).parents(EcomCart.orderItemHolderSelector)
           window.jQuery(el).slideUp('slow', function () {
             window.jQuery(el).remove()
@@ -988,7 +995,6 @@ const EcomCart = {
       window.location = window.location
       return
     }
-    console.log()
     if (EcomCart.openAjaxCalls <= 0) {
       Object.entries(changes).forEach(([selector, values]) => {
         EcomCart.applyData(selector, values)
