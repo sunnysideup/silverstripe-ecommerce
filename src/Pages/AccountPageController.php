@@ -59,4 +59,9 @@ class AccountPageController extends PageController
         Requirements::themedCSS('client/css/AccountPage');
         return null;
     }
+
+    public function canCachePage(): bool
+    {
+        return false;
+    }
 }

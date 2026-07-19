@@ -693,4 +693,10 @@ class CartPageController extends PageController
             If you haven\'t shopped with us before, please proceed to checkout as a guest or create an account.',
         );
     }
+
+    public function canCachePage(): bool
+    {
+        return false;
+    }
+
 }
