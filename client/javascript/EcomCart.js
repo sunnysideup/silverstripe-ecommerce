@@ -693,9 +693,16 @@ const EcomCart = {
       success: function (data, textStatus, jqXHR) {
         window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
 
-        const holderEl = document.querySelector(EcomCart.ajaxifiedListHolderSelector)
+        const holderEl = document.querySelector(
+          EcomCart.ajaxifiedListHolderSelector
+        )
         if (holderEl) {
-          holderEl.dispatchEvent(new CustomEvent('SSU:DOMContentUpdated', { bubbles: true, detail: { updatedElement: holderEl } }))
+          holderEl.dispatchEvent(
+            new CustomEvent('SSU:DOMContentUpdated', {
+              bubbles: true,
+              detail: { updatedElement: holderEl }
+            })
+          )
         }
 
         // create history
@@ -845,74 +852,203 @@ const EcomCart = {
   // SETUP PAGE
   // #################################
 
-  resolveLink(element) {
+  resolveLink (element) {
     var url = element.dataset.link || window.jQuery(element).attr('href')
     return url
   },
 
-  resolveAddRemoveLink(element) {
+  resolveAddRemoveLink (element) {
     var url = EcomCart.resolveLink(element)
     if (EcomCart.productListIsFromCachedSource) {
       url += (url.includes('?') ? '&' : '?') + 'cached=1'
     }
     return url
   },
+  /**
+   * Helper function to handle AJAX form submission for adding/removing items
+   * via fetch (POST), mirroring the logic of getChanges().
+   */
+  postCartUpdate: async function (form, button) {
+    if (!form) return
+
+    // Resolve URL from the form's action attribute
+    const urlStr = form.getAttribute('action')
+    const url = new URL(urlStr, document.baseURI || window.location.href)
+
+    // Serialise the form (includes SecurityID and other hidden fields)
+    const body = new URLSearchParams(new FormData(form))
+    const extras = {}
+
+    if (EcomCart.ajaxButtonsOn) {
+      extras.ajaxButtonsOn = 'true'
+    }
+    if (EcomCart.openAjaxCalls > 1) {
+      extras.manyrequests = '1'
+    }
+
+    const loadingIndex = EcomCart.addLoadingSelector(button)
+    if (loadingIndex !== null) {
+      extras.loadingindex = String(loadingIndex)
+    }
+
+    for (const [key, value] of Object.entries(extras)) {
+      body.set(key, value)
+      url.searchParams.set(key, value)
+    }
+
+    if (typeof EcomCart.onBeforeUpdate === 'function') {
+      EcomCart.onBeforeUpdate.call(url.toString(), body, EcomCart.setChanges)
+    }
+
+    EcomCart.openAjaxCalls++
+    button.setAttribute('aria-busy', 'true')
+
+    try {
+      const response = await fetch(url.toString(), {
+        method: 'POST',
+        body,
+        credentials: 'same-origin',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          Accept: 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error(`Cart update failed: HTTP ${response.status}`)
+      }
+
+      const changes = await response.json()
+      EcomCart.setChanges(changes, 'success')
+    } catch (error) {
+      EcomCart.openAjaxCalls--
+
+      // Clean up loading states on error
+      if (EcomCart.loadingSelectors[loadingIndex]) {
+        EcomCart.loadingSelectors[loadingIndex].classList.remove(
+          EcomCart.classToShowLoading
+        )
+      }
+      document.body.classList.remove(EcomCart.classToShowPageIsUpdating)
+      console.error(error)
+    } finally {
+      button.setAttribute('aria-busy', 'false')
+    }
+  },
 
   /**
-   * adds the "add to cart" ajax functionality to links.
-   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   * adds the "add to cart" ajax functionality to links/buttons.
+   * @param String withinSelector: area where these links can be found
    */
   addAddLinks: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .not(EcomCart.excludedPagesSelector)
-      .on('click', EcomCart.addLinkSelector, function () {
-        var url = EcomCart.resolveAddRemoveLink(this)
-        EcomCart.getChanges(url, null, this)
-        return false
+    const containers = document.querySelectorAll(withinSelector)
+    containers.forEach(container => {
+      container.addEventListener('click', function (event) {
+        const button = event.target.closest(EcomCart.addLinkSelector)
+        const isExcluded = event.target.closest(EcomCart.excludedPagesSelector)
+
+        if (button && !isExcluded) {
+          event.preventDefault()
+          const form = button.closest('form')
+
+          if (form) {
+            EcomCart.postCartUpdate(form, button)
+          } else {
+            // Fallback for legacy <a> links without a form
+            const url = EcomCart.resolveAddRemoveLink(button)
+            EcomCart.getChanges(url, null, button)
+          }
+        }
       })
+    })
   },
 
   /**
-   * add ajax functionality to "remove from cart" links
-   * outside the cart
-   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   * add ajax functionality to "remove from cart" links/buttons outside the cart
+   * @param String withinSelector: area where these links can be found
    */
   addRemoveLinks: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .not(EcomCart.excludedPagesSelector)
-      .on('click', EcomCart.removeLinkSelector, function () {
-        if (EcomCart.unconfirmedDelete || confirm(EcomCart.confirmDeleteText)) {
-          var url = EcomCart.resolveAddRemoveLink(this)
-          EcomCart.getChanges(url, null, this)
+    const containers = document.querySelectorAll(withinSelector)
+    containers.forEach(container => {
+      container.addEventListener('click', function (event) {
+        const button = event.target.closest(EcomCart.removeLinkSelector)
+        const isExcluded = event.target.closest(EcomCart.excludedPagesSelector)
+
+        if (button && !isExcluded) {
+          event.preventDefault()
+          if (
+            EcomCart.unconfirmedDelete ||
+            confirm(EcomCart.confirmDeleteText)
+          ) {
+            const form = button.closest('form')
+
+            if (form) {
+              EcomCart.postCartUpdate(form, button)
+            } else {
+              // Fallback for legacy <a> links without a form
+              const url = EcomCart.resolveAddRemoveLink(button)
+              EcomCart.getChanges(url, null, button)
+            }
+          }
         }
-        return false
       })
+    })
   },
 
   /**
-   * adds the "remove from cart" ajax functionality to links
-   * IN THE CART!
-   * @param String withinSelector: area where these links can be found, the more specific the better (faster)
+   * adds the "remove from cart" ajax functionality to links/buttons IN THE CART!
+   * @param String withinSelector: area where these links can be found
    */
   addCartRemove: function (withinSelector) {
-    window
-      .jQuery(withinSelector)
-      .on('click', EcomCart.removeCartSelector, function (event) {
-        if (
-          !EcomCart.confirmDeleteText ||
-          confirm(EcomCart.confirmDeleteText)
-        ) {
-          var url = EcomCart.resolveLink(this)
-          var el = window.jQuery(this).parents(EcomCart.orderItemHolderSelector)
-          window.jQuery(el).slideUp('slow', function () {
-            window.jQuery(el).remove()
-          })
-          EcomCart.getChanges(url, null, this)
+    const containers = document.querySelectorAll(withinSelector)
+    containers.forEach(container => {
+      container.addEventListener('click', function (event) {
+        const button = event.target.closest(EcomCart.removeCartSelector)
+
+        if (button) {
+          event.preventDefault()
+          if (
+            !EcomCart.confirmDeleteText ||
+            confirm(EcomCart.confirmDeleteText)
+          ) {
+            const orderItemHolder = button.closest(
+              EcomCart.orderItemHolderSelector
+            )
+
+            if (orderItemHolder) {
+              // Vanilla JS equivalent of jQuery slideUp() & remove()
+              orderItemHolder.style.transition = 'all 0.4s ease-out'
+              orderItemHolder.style.overflow = 'hidden'
+              orderItemHolder.style.height = orderItemHolder.offsetHeight + 'px'
+
+              // Force repaint before transitioning to 0
+              orderItemHolder.offsetHeight
+
+              orderItemHolder.style.height = '0px'
+              orderItemHolder.style.paddingTop = '0px'
+              orderItemHolder.style.paddingBottom = '0px'
+              orderItemHolder.style.marginTop = '0px'
+              orderItemHolder.style.marginBottom = '0px'
+              orderItemHolder.style.opacity = '0'
+              orderItemHolder.style.border = 'none'
+
+              setTimeout(() => {
+                orderItemHolder.remove()
+              }, 400) // Wait for transition to finish
+            }
+
+            const form = button.closest('form')
+            if (form) {
+              EcomCart.postCartUpdate(form, button)
+            } else {
+              // Fallback for legacy <a> links without a form
+              const url = EcomCart.resolveLink(button)
+              EcomCart.getChanges(url, null, button)
+            }
+          }
         }
-        return false
       })
+    })
   },
 
   // #################################

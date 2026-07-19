@@ -1,10 +1,24 @@
 <div class="ecomquantityfield">
-    <a style="visibility: <% if Quantity %>visible<% else %>hidden<% end_if %>;" class="removeOneLink" href="$DecrementLink" title="<%t Order.REMOVEONE 'Remove one &quot;{name}&quot; from your cart.' name=$Item.TableTitle.ATT %>">
-        -
-    </a>
-    $Field
-    <a class="addOneLink" href="$IncrementLink" title="<%t Order.ADDONE 'Add one &quot;{name}&quot; to your cart.' name=$Item.TableTitle.ATT %>">
-        +
-    </a>
-    $AJAXLinkHiddenField.RAW
+    <form class="button-form enable-after-adding-security-id" action="$DecrementLink" method="post"<% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %> style="visibility: <% if Quantity %>visible<% else %>hidden<% end_if %>;">
+        <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+        <button
+            type="submit"
+            class="removeOneLink"
+            title="Remove one from Cart"
+        >-</button>
+    </form>
+
+    <form class="button-form enable-after-adding-security-id" action="$QuantityLink" method="post" <% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %>>
+        <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+        $Field
+    </form>
+
+    <form class="button-form enable-after-adding-security-id" action="$IncrementLink" method="post"<% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %>>
+        <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+        <button
+            type="submit"
+            class="addOneLink"
+            title="Add one to Cart"
+        >+</button>
+    </form>
 </div>

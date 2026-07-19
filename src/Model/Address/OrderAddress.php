@@ -14,6 +14,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\SetThemed;
@@ -559,6 +560,14 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         }
         $this->Obsolete = 1;
         $this->write();
+    }
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
     }
 
     /**

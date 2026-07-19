@@ -23,10 +23,33 @@
             <tr>
                 <td class="left">
                     <a href="$Link" class="view">$Title</a>
-                    <% if CopyOrderLink %><a href="$CopyOrderLink" class="copy" title="<% _t("Account.COPY", "Copy") %>">copy</a><% end_if %>
+                    <% if $CopyOrderLink %>
+                    <form class="button-form enable-after-adding-security-id" action="$CopyOrderLink" method="post"<% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %>>
+                        <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+                        <button
+                            type="submit"
+                            class="button copy"
+                            title="<% _t("Account.COPY", "Copy") %>"
+                        >
+                            <% _t("Account.COPY", "Copy") %>
+                        </button>
+                    </form>
+                    <% end_if %>
                 </td>
-                <td class="left">$CustomerStatus
-                    <% if DeleteLink %><br /><a href="$DeleteLink"><% _t("Account.REMOVE","remove") %></a><% end_if %>
+                <td class="left">
+                    $CustomerStatus
+                    <% if $DeleteLink %>
+                    <form class="button-form enable-after-adding-security-id" action="$DeleteLink" method="post"<% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %>>
+                        <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+                        <button
+                            type="submit"
+                            class="button"
+                            title="<% _t("Account.REMOVE","remove") %>"
+                        >
+                            <% _t("Account.REMOVE","remove") %>
+                        </button>
+                    </form>
+                    <% end_if %>
                 </td>
                 <td class="right">$Total.Nice</td>
                 <td class="right">$TotalPaid.Nice</td>

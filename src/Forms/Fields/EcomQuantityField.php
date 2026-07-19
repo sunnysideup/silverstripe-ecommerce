@@ -3,6 +3,7 @@
 namespace Sunnysideup\Ecommerce\Forms\Fields;
 
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\HTML;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -180,31 +181,21 @@ class EcomQuantityField extends NumericField
             'data-quantity-link' => $this->getQuantityLink(),
             'min-value' => $this->minValue,
             'max-value' => $this->maxValue,
+            'data-add-security-id-to' => 'data-quantity-link',
             'disabled' => 'disabled',
         ];
 
         return HTML::createTag('input', $attributes);
     }
 
-    /**
-     * Used for storing the quantity update link for ajax use.
-     */
-    public function AJAXLinkHiddenField(): string
+    public function SecurityIDToken(): string
     {
-        $name = $this->orderItem->AJAXDefinitions()->TableID() . '_Quantity_SetQuantityLink';
-        $quantitylink = $this->getQuantityLink();
-        if ($quantitylink !== '' && $quantitylink !== '0') {
-            $attributes = [
-                'type' => 'hidden',
-                'class' => 'ajaxQuantityField_qtylink',
-                'name' => $name,
-                'value' => $quantitylink,
-            ];
+        return (string) SecurityToken::getSecurityID();
+    }
 
-            return HTML::createTag('input', $attributes);
-        }
-
-        return '';
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
     }
 
     /**
@@ -214,6 +205,7 @@ class EcomQuantityField extends NumericField
     {
         return ShoppingCartController::add_item_link($this->orderItem->BuyableID, $this->orderItem->BuyableClassName, $this->parameters);
     }
+
 
     /**
      * @return string (URLSegment)

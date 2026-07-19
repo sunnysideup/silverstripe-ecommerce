@@ -17,6 +17,7 @@ use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Security\SecurityToken;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
 use Sunnysideup\Ecommerce\Api\CartResponseAsArray;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -604,6 +605,14 @@ class OrderModifier extends OrderAttribute
     public function CalculatedTotal()
     {
         return $this->CalculatedTotal;
+    }
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
     }
 
     /**

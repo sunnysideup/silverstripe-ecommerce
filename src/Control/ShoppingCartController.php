@@ -51,24 +51,6 @@ class ShoppingCartController extends Controller
     private static bool $check_security_id_for_links = true;
 
     /**
-     * We need to only use the Security ID on a few
-     * actions, these are listed here.
-     *
-     * @var array
-     */
-    protected $methodsRequiringSecurityID = [
-        // 'additem', // actions could be cached
-        // 'removeitem', // actions could be cached
-        // 'removeallitem', // actions could be cached
-        // 'removeallitemandedit', // actions could be cached
-        'removemodifier',
-        'addmodifier',
-        'copyorder',
-        'deleteorder',
-        'save',
-    ];
-
-    /**
      * @var ShoppingCart
      */
     protected $cart;
@@ -85,32 +67,56 @@ class ShoppingCartController extends Controller
         '$Action//$ID/$OtherID/$Version' => 'handleAction',
     ];
 
-    private static $allowed_actions = [
+    private static $allowed_actions_as_simple_links = [
         'json',
         'index',
+        // products
+        'submittedbuyable',
+        // cart
+        'numberofitemsincart',
+        'showcart',
+        // admin only
+        'removefromsale', // need to be logged-in as shop assistant!
+        'placeorderformember', // need to be logged-in as admin
+        'loginas', // need to be logged-in as admin
+        'debug', // need to be logged-in as admin
+        'ajaxtest', // need to be logged-in as admin
+    ];
+
+    private static $allowed_actions = [
+        // general
+        'json',
+        'index',
+        // products get info only
+        'submittedbuyable',
+        // order get only
+        'numberofitemsincart',
+        'showcart',
+        // buyables
         'additem',
         'addreferral',
         'removeitem',
         'removeallitem',
         'removeallitemandedit',
+        'setquantityitem',
+        // modifiers
         'removemodifier',
         'addmodifier',
+        // order
         'setcountry',
         'setregion',
         'setcurrency',
-        'removefromsale',
-        'setquantityitem',
         'clear',
         'clearandlogout',
         'save',
         'deleteorder',
-        'numberofitemsincart',
-        'showcart',
         'loadorder',
         'copyorder',
+        // addresses
         'removeaddress',
-        'submittedbuyable',
-        'placeorderformember',
+        // admin
+        'removefromsale', // no need to set to  => 'ADMIN',
+        'placeorderformember', // no need to set to  => 'ADMIN',
         'loginas', // no need to set to  => 'ADMIN',
         'debug', // no need to set to  => 'ADMIN',
         'ajaxtest', // no need to set to  => 'ADMIN',
@@ -140,13 +146,18 @@ class ShoppingCartController extends Controller
         return self::create_link($action);
     }
 
+    public static function add_security_id_to_links(): bool
+    {
+        return Config::inst()->get(self::class, 'add_security_id_to_links');
+    }
+
     /**
      * @param int    $buyableID
      * @param string $classNameForBuyable
      *
      * @return string
      */
-    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = [])
+    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = []) : string
     {
         $classNameForBuyable = ClassHelpers::sanitise_class_name($classNameForBuyable);
 
@@ -309,11 +320,41 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-    public static function remove_from_sale_link($id, $className)
+    public static function remove_from_sale_link($id, $className) : string
     {
-        $className = ClassHelpers::sanitise_class_name($className);
+        if (EcommerceRole::current_member_is_shop_assistant()) {
+            $className = ClassHelpers::sanitise_class_name($className);
+            return self::create_link('removefromsale/' . $className . '/' . $id . '/');
+        }
+        return '';
+    }
 
-        return self::create_link('removefromsale/' . $className . '/' . $id . '/');
+    /**
+     * @param int    $id
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function place_order_for_member_link(int $memberID) : string
+    {
+        if (EcommerceRole::current_member_is_shop_assistant()) {
+            return self::create_link('placeorderformember/' . $memberID . '/');
+        }
+        return '';
+    }
+
+    /**
+     * @param int    $id
+     * @param string $className
+     *
+     * @return string
+     */
+    public static function login_as_link(int $memberID) : string
+    {
+        if (Permission::check('ADMIN')) {
+            return self::create_link('loginas/' . $memberID . '/');
+        }
+        return '';
     }
 
     /**
@@ -603,10 +644,10 @@ class ShoppingCartController extends Controller
     {
         $order = $this->cart->CurrentOrder();
         if ($order) {
-            return (int) $order->TotalItems($recalculate = false);
+            return (float) $order->TotalItems($recalculate = false);
         }
 
-        return 0;
+        return (float) 0;
     }
 
     /**
@@ -729,12 +770,9 @@ class ShoppingCartController extends Controller
                 return $this->redirect($newOrder->Link());
             }
             user_error('Can not find this member.');
-        } else {
-            //echo "please <a href=\"Security/login/?BackURL=".urlencode($this->config()->get("url_segment")."/placeorderformember/".$request->param("ID")."/")."\">log in</a> first.";
-            return Security::permissionFailure($this);
         }
+        return Security::permissionFailure($this);
 
-        return '404-error-placeholder-for-member';
     }
 
     /**
@@ -771,7 +809,7 @@ class ShoppingCartController extends Controller
      */
     public function debug()
     {
-        if (Director::isDev() || EcommerceRole::current_member_is_shop_admin()) {
+        if (Permission::check('ADMIN')) {
             return $this->cart->debug();
         }
 
@@ -812,20 +850,22 @@ class ShoppingCartController extends Controller
     {
         parent::init();
         $action = $this->request->param('Action');
-        if ($this->should_check_SecurityID($action)) {
-            $savedSecurityID = $this->getRequest()->getSession()->get('SecurityID');
-            if ($savedSecurityID) {
-                if (! isset($_GET['SecurityID'])) {
-                    $_GET['SecurityID'] = '';
+        if ($this->shouldCheckSecurityID($action)) {
+            $request = $this->getRequest();
+            if(! $request->isPOST()) {
+                if(Director::isDev()) {
+                    user_error('SecurityID check failed for action: ' . $action . ' - only POST requests are allowed for this action.', E_USER_WARNING);
                 }
-                if ($savedSecurityID) {
-                    if ($_GET['SecurityID'] !== $savedSecurityID) {
-                        $this->httpError(400, "Security token doesn't match, possible CSRF attack.");
-                    }
-                    //all OK!
+                $this->httpError(400);
+            }
+            elseif (!SecurityToken::inst()->checkRequest($request)) {
+                if(Director::isDev()) {
+                    user_error('SecurityID check failed for action: ' . $action . ' - SecurityID is missing or invalid.', E_USER_WARNING);
                 }
+                $this->httpError(400);
             }
         }
+
         $this->cart = ShoppingCart::singleton();
     }
 
@@ -834,15 +874,17 @@ class ShoppingCartController extends Controller
      * @param null|string $action the Action parameter
      * @return bool
      */
-    private function should_check_SecurityID(?string $action): bool
+    private function shouldCheckSecurityID(?string $action = null): bool
     {
+        $config = $this->config();
         if (!$action) {
             return false;
         }
-        if (!Config::inst()->get(ShoppingCartController::class, 'check_security_id_for_links')) {
+        if (!$config->get('check_security_id_for_links')) {
             return false;
         }
-        return in_array($action, $this->methodsRequiringSecurityID, true);
+
+        return ! in_array($action, $config->get('allowed_actions_as_simple_links'), true);
     }
 
     /**
@@ -949,4 +991,5 @@ class ShoppingCartController extends Controller
 
         return $this->redirect('page-not-found');
     }
+
 }

@@ -748,7 +748,7 @@ class ShoppingCart
      *
      * returns null if the current user does not allow order manipulation or saving (e.g. session disabled)
      *
-     * @param OrderModifier $modifier | int
+     * @param OrderModifier|int $modifier
      *
      * @return null|bool
      */

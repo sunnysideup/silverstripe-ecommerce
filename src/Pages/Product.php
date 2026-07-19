@@ -62,6 +62,7 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
+use SilverStripe\Security\SecurityToken;
 
 /**
  * This is a standard Product page-type with fields like
@@ -436,7 +437,7 @@ class Product extends Page implements BuyableModel
                 'Root.Main',
                 new LiteralField(
                     'AddToCartLink',
-                    '<p class="message good"><a href="' . $this->AddLink() . '" target="_parent">' . _t('Product.ADD_TO_CART', 'add to cart') . '</a></p>'
+                    '<p class="message good">' . _t('Product.CAN_BE_ADDED_TO_CART', 'this product can be added to cart') . '</p>'
                 )
             );
         } else {
@@ -1014,6 +1015,14 @@ class Product extends Page implements BuyableModel
     {
         return str_replace('?stage=Stage', '', $this->AbsoluteLink());
     }
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
+    }
 
     /**
      * passing on shopping cart links ...is this necessary?? ...why not just pass the cart?
@@ -1114,7 +1123,7 @@ class Product extends Page implements BuyableModel
         );
     }
 
-    public function RemoveFromSaleLink()
+    public function RemoveFromSaleLink(): string
     {
         return ShoppingCartController::remove_from_sale_link($this->ID, $this->ClassName);
     }

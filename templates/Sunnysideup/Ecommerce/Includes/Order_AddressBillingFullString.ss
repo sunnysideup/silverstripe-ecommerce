@@ -11,5 +11,14 @@
     <% if $Region %><span class="regionCodeSpan">$Region.Name</span><% end_if %>
     <% if $FullCountryName %><span class="countrySpan">$FullCountryName</span><% end_if %>
 </address>
-<a href="$RemoveLink" class="noLongerInUse" rel="$ID"><% _t("Order.REMOVETHISADDRESS", "address no longer in use.") %></a>
+<form class="button-form enable-after-adding-security-id" action="$RemoveLink" method="post"<% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %> rel="$ID">
+    <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+    <button
+        type="submit"
+        class="button"
+        title="Remove address"
+    >
+        <% _t("Order.REMOVETHISADDRESS", "address no longer in use.") %>
+    </button>
+</form>
 <div class="clearer"></div>

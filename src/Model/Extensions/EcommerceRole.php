@@ -577,10 +577,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             'LoginAsThisCustomer',
             '<p class="actionInCMS"><a href="' . $this->getOwner()->LoginAsLink() . '" target="_blank">Login as this customer</a></p>'
         );
-        $link = Controller::join_links(
-            Director::baseURL(),
-            Config::inst()->get(ShoppingCartController::class, 'url_segment') . '/placeorderformember/' . $this->getOwner()->ID . '/'
-        );
+        $link = ShoppingCartController::place_order_for_member_link($this->getOwner()->ID);
         $orderForLink = new LiteralField('OrderForCustomerLink', "<p class=\"actionInCMS\"><a href=\"{$link}\" target=\"_blank\">Place order for customer</a></p>");
         $fields->addFieldsToTab(
             'Root.ecommerce',
@@ -934,13 +931,9 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         }
     }
 
-    public function LoginAsLink()
+    public function LoginAsLink() : string
     {
-        return Controller::join_links(
-            Director::baseURL(),
-            Config::inst()->get(ShoppingCartController::class, 'url_segment') .
-                '/loginas/' . $this->getOwner()->ID . '/'
-        );
+        return ShoppingCartController::login_as_link($this->getOwner()->ID);
     }
 
     /**

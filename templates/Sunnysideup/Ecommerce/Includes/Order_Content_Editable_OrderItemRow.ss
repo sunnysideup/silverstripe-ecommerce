@@ -10,11 +10,16 @@
     <td class="right total" id="$AJAXDefinitions.TableTotalID">$TotalAsMoney.NiceDefaultFormat</td>
     <td class="right remove">
         <% if RemoveAllLink %>
-        <strong>
-            <a class="ajaxQuantityLink ajaxRemoveFromCart" href="$RemoveAllLink">
-                <img src="$resourceURL('sunnysideup/ecommerce:client/images/remove.gif')" alt="x"/>
-            </a>
-        </strong>
+        <form class="button-form enable-after-adding-security-id" action="$RemoveLink" method="post"<% if not $AddSecurityIdToLinks %> disabled="disabled"<% end_if %> rel="$ID">
+            <input type="hidden" name="SecurityID" value="<% if $AddSecurityIdToLinks %>$SecurityIDToken<% else %><% end_if %>"/>
+            <button
+                type="submit"
+                class="ajaxQuantityLink ajaxRemoveFromCart"
+                title="Remove from Cart"
+            >
+                <img loading="lazy" src="$resourceURL('sunnysideup/ecommerce:client/images/remove.gif')" alt="remove icon" />
+            </button>
+        </form>
         <% end_if %>
     </td>
 </tr>

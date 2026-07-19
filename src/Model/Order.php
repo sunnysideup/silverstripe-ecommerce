@@ -47,6 +47,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -2936,6 +2937,14 @@ class Order extends DataObject implements EditableEcommerceObject
 
         return null;
     }
+    public function SecurityIDToken(): string
+    {
+        return (string) SecurityToken::getSecurityID();
+    }
+    public function AddSecurityIdToLinks(): bool
+    {
+        return ShoppingCartController::add_security_id_to_links();
+    }
 
     /**
      * link to delete order.
@@ -2961,15 +2970,15 @@ class Order extends DataObject implements EditableEcommerceObject
      *
      * @return string
      */
-    public function CopyOrderLink()
+    public function CopyOrderLink(): string
     {
         return $this->getCopyOrderLink();
     }
 
-    public function getCopyOrderLink()
+    public function getCopyOrderLink(): string
     {
         if ($this->canView() && $this->IsSubmitted()) {
-            return ShoppingCartController::copy_order_link($this->ID);
+            return (string) ShoppingCartController::copy_order_link($this->ID);
         }
 
         return '';
