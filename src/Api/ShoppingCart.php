@@ -1266,7 +1266,7 @@ class ShoppingCart
     protected function allowWrites()
     {
         if (null === self::$_allow_writes_cache) {
-            if ($this->order) {
+            if ($this->order && $this->order->exists()) {
                 self::$_allow_writes_cache = true;
             } elseif (PHP_SAPI === 'cli') {
                 self::$_allow_writes_cache = false;
