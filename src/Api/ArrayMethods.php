@@ -40,8 +40,6 @@ class ArrayMethods
 
     /**
      * creates a sort string from a list of ID arrays...
-     *
-     * @param string
      */
     public static function create_sort_statement_from_id_array(array $ids, ?string $className = '', ?bool $includeElse = false): string
     {
