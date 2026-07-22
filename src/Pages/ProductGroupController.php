@@ -995,4 +995,15 @@ class ProductGroupController extends PageController
     {
         $this->getUserPreferencesClass()->addSecondaryTitle($secondaryTitle);
     }
+
+    public function cacheControlCanCacheAjax(): bool
+    {
+        return true;
+    }
+
+    public function cacheControlCanCacheGetVars(array $getVars): bool
+    {
+        return true;
+    }
+
 }
