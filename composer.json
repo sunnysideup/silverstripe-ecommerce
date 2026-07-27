@@ -30,7 +30,7 @@
   "require": {
     "silverstripe/cms": "^4.0 || ^5.0",
     "bummzack/sortablefile": "^2.0",
-    "pelago/emogrifier": "^8.0@stable",
+    "pelago/emogrifier": "^8.1",
     "silverstripe/lumberjack": "^2.0 || ^3.0",
     "symbiote/silverstripe-grouped-cms-menu": "^4.0@stable",
     "sunnysideup/google_address_field": "5.x-dev",
