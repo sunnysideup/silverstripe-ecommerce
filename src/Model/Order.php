@@ -1716,7 +1716,9 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         if ($this->IsSubmitted()) {
             // also see: maximum_ignorable_sales_payments_difference
-            return ($this->Total() >= 0) && ($this->TotalOutstanding() <= 0);
+            // outstanding now includes pending as well, this shouldn't calculate including that, so don't use outstanding here, but rather total - paid
+            return ($this->Total() >= 0) && ($this->Total() - $this->TotalPaid() <= 0);
+            //return ($this->Total() >= 0) && ($this->TotalOutstanding() <= 0);
         }
 
         return false;
@@ -3241,7 +3243,8 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             $total = $this->Total();
             $paid = $this->TotalPaid();
-            $outstanding = $total - $paid;
+            $pending = $this->TotalPending();
+            $outstanding = $total - $paid - $pending;
             $maxDifference = EcommerceConfig::get(Order::class, 'maximum_ignorable_sales_payments_difference');
             if (abs($outstanding) < $maxDifference) {
                 $outstanding = 0;
@@ -3272,6 +3275,33 @@ class Order extends DataObject implements EditableEcommerceObject
     public function getTotalOutstandingAsMoney()
     {
         return EcommerceCurrency::get_money_object_from_order_currency($this->TotalOutstanding(), $this);
+    }
+
+    public function TotalPending()
+    {
+        return $this->getTotalPending();
+    }
+
+    public function getTotalPending()
+    {
+        $pending = 0;
+        /** @var DataList $payments */
+        $payments = $this->Payments();
+        if ($payments && $payments->exists()) {
+            foreach ($payments as $payment) {
+                if (EcommercePayment::PENDING_STATUS === $payment->Status) {
+                    $paymentObject = $payment->dbObject('Amount');
+                    $pending += $paymentObject->getAmount();
+                }
+            }
+        }
+
+        $reverseExchange = 1;
+        if ($this->ExchangeRate && 1 !== $this->ExchangeRate) {
+            $reverseExchange = 1 / $this->ExchangeRate;
+        }
+
+        return $pending * $reverseExchange;
     }
 
     /**
