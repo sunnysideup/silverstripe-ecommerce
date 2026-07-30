@@ -11,7 +11,6 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
@@ -19,6 +18,7 @@ use Sunnysideup\Ecommerce\Api\EcommerceCache;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ProductSearchForm;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\BaseApplyer;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Applyers\ProductSearchFilter;
 use Sunnysideup\Ecommerce\ProductsAndGroups\Builders\FinalProductList;
@@ -157,7 +157,7 @@ class ProductGroupController extends PageController
     {
         if (! $this->productList) {
             $this->productList = $this->getCachedProductList();
-            if (! $this->productList instanceof \SilverStripe\ORM\DataList) {
+            if (! $this->productList instanceof DataList) {
                 // make sure to apply search filter first.
                 $this->productList = $this->getFinalProductList()
                     ->applySearchFilter($this->getCurrentUserPreferencesKey('SEARCHFILTER'), $this->getCurrentUserPreferencesParams('SEARCHFILTER'))
@@ -670,7 +670,7 @@ class ProductGroupController extends PageController
      * of recommended product groups. They will be returned here...
      * We sort the list in the order that it is provided.
      *
-     * @return null|\SilverStripe\ORM\DataList (ProductGroups)
+     * @return null|DataList (ProductGroups)
      */
     public function SearchResultsChildGroups(): ?DataList
     {
