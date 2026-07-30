@@ -1006,4 +1006,9 @@ class ProductGroupController extends PageController
         return true;
     }
 
+    public function getListNote(): string
+    {
+        return '';
+    }
+
 }
