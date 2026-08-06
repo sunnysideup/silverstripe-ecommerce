@@ -531,6 +531,15 @@ class ProductGroup extends Page
     }
 
     /**
+     *
+     * @return DataList
+     */
+    public function Products()
+    {
+        return $this->getProducts();
+    }
+
+    /**
      * @EcommerceCache candidate?
      *
      * @return DataList
