@@ -154,7 +154,6 @@ class ProductSearchForm extends Form
             ->setAttribute('spellcheck', 'false');
         $this->extend('updateProductSearchForm', $this);
 
-        return $this;
     }
 
     public function forTemplate()
