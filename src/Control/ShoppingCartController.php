@@ -75,6 +75,7 @@ class ShoppingCartController extends Controller
         // cart
         'numberofitemsincart',
         'showcart',
+        'clearandlogout',
         // admin only
         'removefromsale', // need to be logged-in as shop assistant!
         'placeorderformember', // need to be logged-in as admin
@@ -157,7 +158,7 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = []) : string
+    public static function add_item_link($buyableID, $classNameForBuyable = Product::class, array $parameters = []): string
     {
         $classNameForBuyable = ClassHelpers::sanitise_class_name($classNameForBuyable);
 
@@ -320,7 +321,7 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-    public static function remove_from_sale_link($id, $className) : string
+    public static function remove_from_sale_link($id, $className): string
     {
         if (EcommerceRole::current_member_is_shop_assistant()) {
             $className = ClassHelpers::sanitise_class_name($className);
@@ -335,7 +336,7 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-    public static function place_order_for_member_link(int $memberID) : string
+    public static function place_order_for_member_link(int $memberID): string
     {
         if (EcommerceRole::current_member_is_shop_assistant()) {
             return self::create_link('placeorderformember/' . $memberID . '/');
@@ -349,7 +350,7 @@ class ShoppingCartController extends Controller
      *
      * @return string
      */
-    public static function login_as_link(int $memberID) : string
+    public static function login_as_link(int $memberID): string
     {
         if (Permission::check('ADMIN')) {
             return self::create_link('loginas/' . $memberID . '/');
@@ -852,14 +853,13 @@ class ShoppingCartController extends Controller
         $action = $this->request->param('Action');
         if ($this->shouldCheckSecurityID($action)) {
             $request = $this->getRequest();
-            if(! $request->isPOST()) {
-                if(Director::isDev()) {
+            if (! $request->isPOST()) {
+                if (Director::isDev()) {
                     user_error('SecurityID check failed for action: ' . $action . ' - only POST requests are allowed for this action.', E_USER_WARNING);
                 }
                 $this->httpError(400);
-            }
-            elseif (!SecurityToken::inst()->checkRequest($request)) {
-                if(Director::isDev()) {
+            } elseif (!SecurityToken::inst()->checkRequest($request)) {
+                if (Director::isDev()) {
                     user_error('SecurityID check failed for action: ' . $action . ' - SecurityID is missing or invalid.', E_USER_WARNING);
                 }
                 $this->httpError(400);
