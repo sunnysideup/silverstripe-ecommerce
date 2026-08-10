@@ -90,9 +90,12 @@ class ProductSearchTable extends DataObject implements EditableEcommerceObject, 
                 DB::query('DELETE FROM ProductSearchTable WHERE ProductID = 0');
                 DB::query(
                     '
-                    DELETE ProductSearchTable FROM ProductSearchTable
-                    LEFT JOIN Product_Live ON Product_Live.ID = ProductSearchTable.ProductID
-                    WHERE Product_Live.ID IS NULL'
+                    DELETE FROM ProductSearchTable
+                    WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM Product_Live
+                        WHERE Product_Live.ID = ProductSearchTable.ProductID
+                    )'
                 );
             }
         }
