@@ -1717,7 +1717,12 @@ class Order extends DataObject implements EditableEcommerceObject
         if ($this->IsSubmitted()) {
             // also see: maximum_ignorable_sales_payments_difference
             // outstanding now includes pending as well, this shouldn't calculate including that, so don't use outstanding here, but rather total - paid
-            return ($this->Total() >= 0) && ($this->Total() - $this->TotalPaid() <= 0);
+            $totalOutstanding = $this->Total() - $this->TotalPaid();
+            $maxDifference = EcommerceConfig::get(Order::class, 'maximum_ignorable_sales_payments_difference');
+            if (abs($totalOutstanding) < $maxDifference) {
+                $totalOutstanding = 0;
+            }
+            return ($this->Total() >= 0) && ($totalOutstanding <= 0);
             //return ($this->Total() >= 0) && ($this->TotalOutstanding() <= 0);
         }
 
