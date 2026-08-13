@@ -96,6 +96,7 @@ class EcommerceMoney extends Extension
             $symbol = "<span class=\"currencyHolder currencyHolderShort currency{$this->getOwner()->currency}\"><span class=\"currencySymbol\">{$symbol}</span></span>";
         }
         $amount = $this->getOwner()->getAmount();
+        $amount = $amount ?? 0; // enforce 0 if null
 
         $formatter = $this->getOwner()->getFormatter();
         $data = $formatter->format($amount);
