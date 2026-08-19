@@ -44,7 +44,7 @@ class OrderFormPayment extends Form
         $bottomFields = new CompositeField();
         $bottomFields->addExtraClass('bottomOrder');
         if ($order->Total() > 0) {
-            $paymentFields = EcommercePayment::combined_form_fields($order->getTotalAsMoney()->NiceLongSymbol(false), $order);
+            $paymentFields = EcommercePayment::combined_form_fields($order->TotalOutstandingAsMoney()->NiceLongSymbol(false), $order);
             foreach ($paymentFields as $paymentField) {
                 $bottomFields->push($paymentField);
             }

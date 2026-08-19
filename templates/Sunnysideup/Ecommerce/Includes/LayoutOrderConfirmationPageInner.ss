@@ -14,7 +14,9 @@
 <% with Order %>
     <% include Sunnysideup\Ecommerce\Includes\Order %>
 <% end_with %>
+<% if TotalOutstanding > 0.1 %>
 <% if $PaymentForm %><div id="PaymentForm">$PaymentForm</div><% end_if %>
+<% end_if %>
 <% if $CancelForm %><div id="CancelForm">$CancelForm</div><% end_if %>
 <% if FeedbackForm %>
     <div id="FeedbackForm">
