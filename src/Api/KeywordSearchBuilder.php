@@ -73,8 +73,6 @@ class KeywordSearchBuilder
         return $this->keywordPhrase;
     }
 
-    protected static $ifStatementCache;
-
     /**
      * creates three levels of searches that
      * can be executed one after the other, each
@@ -84,20 +82,15 @@ class KeywordSearchBuilder
      * @param mixed  $primaryField
      * @param mixed  $secondaryField
      */
-    protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data')
+    protected function createIfStatements(string $phrase, $primaryField = 'Title', $secondaryField = 'Data'): void
     {
-        if (! is_null(self::$ifStatementCache)) {
-            $this->ifStatement = self::$ifStatementCache;
-
-            return null;
-        }
         $phrase = $this->cleanPhrase($phrase);
-        $this->ifStatement = '';
-        $this->startIfStatement();
+        $this->resetIfStatement();
         //make three levels of search
         if (strlen($phrase) < 2) {
-            return '"ID" < 0';
+            return;
         }
+        $this->startIfStatement();
         $wordAsArray = array_filter(explode(' ', $phrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
@@ -142,8 +135,6 @@ class KeywordSearchBuilder
         }
 
         $this->addEndIfStatement($count);
-        self::$ifStatementCache = $this->ifStatement;
-        return null;
     }
 
     protected function strPositionPhrase(string $phrase, string $field): string
@@ -157,47 +148,46 @@ class KeywordSearchBuilder
             )';
     }
 
-    protected function startIfStatement()
+    protected function resetIfStatement(): void
+    {
+        $this->ifStatement = '';
+    }
+
+    protected function startIfStatement(): void
     {
         $this->ifStatement .= '(';
     }
 
-    protected function addIfStatement(int $count, string $where, string $secondaryCount = '')
+    protected function addIfStatement(int $count, string $where, string $secondaryCount = ''): void
     {
         $this->ifStatement .= ' IF(' . $where . ', ( ' . $count . ' ' . $secondaryCount . ' ), ';
     }
 
-    protected function addEndIfStatement($count)
+    protected function addEndIfStatement($count): void
     {
         $this->ifStatement .= '999' . str_repeat(')', $count) . ') - "Boost" AS gp';
     }
 
     protected function createSql(string $table, string $idField, string $phrase, string $where, $limit): string
     {
-        if ($where !== '' && $where !== '0') {
-            $where = 'WHERE ' . $where;
+        if ($where === '') {
+            $where = '1=1';
         }
         $titleField = '';
         if ($this->debug) {
             $titleField = '"Title",';
         }
-        return '
-            SELECT
-                "' . $idField . '",
-                ' . $titleField . '
-                ' . $this->ifStatement . '
-            FROM "' . $table . '"
-            ' . $where . '
-            HAVING gp < 999
-            ORDER BY
-                gp ASC
-            LIMIT ' . $limit . ';';
+        $hasGp = $this->ifStatement !== '';
+        $gpField = $hasGp ? $this->ifStatement : '0 AS gp';
+        $fields = implode(', ', array_filter([$idField, $titleField, $gpField]));
+        $orderBy = $hasGp ? 'gp ASC' : "{$idField} DESC";
+        return "SELECT {$fields} FROM {$table} WHERE {$where} HAVING gp < 999 ORDER BY {$orderBy} LIMIT {$limit};";
     }
 
     /**
      * @param string $word (optional word within keywordPhrase)
      */
-    protected function replaceSearchPhraseOrWord(?string $word = '')
+    protected function replaceSearchPhraseOrWord(?string $word = ''): void
     {
         if (! $word) {
             $word = $this->keywordPhrase;
