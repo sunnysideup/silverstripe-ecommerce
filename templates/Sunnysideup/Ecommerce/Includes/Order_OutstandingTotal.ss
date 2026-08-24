@@ -10,7 +10,7 @@
 <% else_if $IsCancelled %>
 <% else_if $PaymentIsPending %>
     <p class="paidNote">
-        <% _t("Order.OUTSTANDINGNOTE","This order has a pending payment.") %>
+        $EcomConfig.OrderPaymentPendingMessageForTemplate
     </p>
 <% else %>
     <p class="paidNote">
@@ -18,4 +18,3 @@
         <a href="$Link#OrderFormPayment_PaymentForm"><% _t("Order.PAYNOW","Pay now") %></a>.
     </p>
 <% end_if %>
-
