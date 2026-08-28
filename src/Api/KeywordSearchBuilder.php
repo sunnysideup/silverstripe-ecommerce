@@ -52,7 +52,6 @@ class KeywordSearchBuilder
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', $phrase, $where, $limit);
         if ($this->debug) {
-            print_r($sql);
             $rows = DB::query($sql);
             echo $this->arrayToHtmlTable($rows);
         }
@@ -227,7 +226,7 @@ class KeywordSearchBuilder
         foreach ($headers as $header) {
             $html .= '<th>' . htmlspecialchars((string) $header) . '</th>';
         }
-        $html .= '</tr></thead><tbody>';
+        $html .= '<th>Page</th></tr></thead><tbody>';
 
         foreach ($rows as $row) {
             $html .= '<tr>';
@@ -235,6 +234,16 @@ class KeywordSearchBuilder
                 $value = $row[$header] ?? '';
                 $html .= '<td>' . htmlspecialchars((string) $value) . '</td>';
             }
+            $pageID = $row['ProductID'] ?? $row['ProductGroupID'] ?? 0;
+            $pageTitle = 'Unknown';
+            if ($pageID) {
+                $pageTitle = DB::query("SELECT \"Title\" FROM \"SiteTree\" WHERE \"ID\" = {$pageID}")->value();
+                if (! $pageTitle) {
+                    $pageTitle = 'Unknown';
+                }
+            }
+
+            $html .= '<td>' . htmlspecialchars((string) $pageTitle) . '</td>';
             $html .= '</tr>';
         }
 

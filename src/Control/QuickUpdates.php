@@ -35,12 +35,12 @@ class QuickUpdates extends Controller
     private static $url_segment = 'admin/ecommerce/quick-updates';
 
     private static $allowed_actions = [
-        'index' => true,
-        'doform' => true,
-        'done' => true,
-        'list' => true,
-        'updateone' => true,
-        'MyForm' => true,
+        'index' => true, // this can't be "ADMIN" because when you extend this class, it will also check for ADMIN permissions
+        'doform' => true, // this can't be "ADMIN" because when you extend this class, it will also check for ADMIN permissions
+        'done' => true, // this can't be "ADMIN" because when you extend this class, it will also check for ADMIN permissions
+        'list' => true, // this can't be "ADMIN" because when you extend this class, it will also check for ADMIN permissions
+        'updateone' => true, // this can't be "ADMIN" because when you extend this class, it will also check for ADMIN permissions
+        'MyForm' => true, // this can't be "ADMIN" because when you extend this class, it will also check for ADMIN permissions
     ];
 
     public function updateone($request)
