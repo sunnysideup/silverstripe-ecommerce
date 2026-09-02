@@ -1,6 +1,6 @@
 <div class="itemTitleAndSubTitle $Classes">
-    <% if Link %>
-        <a id="$AJAXDefinitions.TableTitleID" href="$BuyableLink">$TableTitle</a>
+    <% if $BuyableLink %>
+        <a id="$AJAXDefinitions.TableTitleID" href="$BuyableLink" data-popup="true">$TableTitle</a>
     <% else %>
         <span id="$AJAXDefinitions.TableTitleID">$TableTitle</span>
     <% end_if %>

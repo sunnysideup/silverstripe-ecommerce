@@ -15,8 +15,9 @@ CartResponse.cart_responses_required
         <% if ShowInTable %>
             <tr id="$AJAXDefinitions.TableID" class="$Classes hideOnZeroItems orderItemHolder">
                 <td class="product title">
-                    <% if Link %>
-                        <a id="$AJAXDefinitions.CartTitleID" href="$Link">$CartTitle</a>
+                    $ClassName
+                    <% if $BuyableLink %>
+                        <a id="$AJAXDefinitions.CartTitleID" href="$BuyableLink" data-popup="true">$CartTitle</a>
                     <% else %>
                         <span id="$AJAXDefinitions.CartTitleID">$CartTitle</span>
                     <% end_if %>
