@@ -66,9 +66,7 @@ class ShopAccountForm extends Form
                 }
             }
         } else {
-            if (! $member) {
-                $member = new Member();
-            }
+            $member = Member::create();
             $fields = new FieldList();
             $urlParams = $controller->getURLParams();
             $backURLLink = Director::baseURL();
