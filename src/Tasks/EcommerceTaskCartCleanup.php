@@ -10,9 +10,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\Security\Member;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Address\ShippingAddress;
@@ -21,6 +18,9 @@ use Sunnysideup\Ecommerce\Model\OrderAttribute;
 use Sunnysideup\Ecommerce\Model\Process\OrderEmailRecord;
 use Sunnysideup\Ecommerce\Model\Process\OrderStatusLog;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @description: cleans up old (abandonned) carts...
@@ -199,7 +199,6 @@ class EcommerceTaskCartCleanup extends BuildTask
         return [
             new InputOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Maximum number of objects to delete'),
             new InputOption('purge', 'p', InputOption::VALUE_NONE, 'Purge carts linked to members as well'),
-            new InputOption('verbose', 'v', InputOption::VALUE_NONE, 'Verbose output'),
         ];
     }
 

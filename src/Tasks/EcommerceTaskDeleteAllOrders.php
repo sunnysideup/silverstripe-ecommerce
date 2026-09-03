@@ -61,7 +61,6 @@ class EcommerceTaskDeleteAllOrders extends BuildTask
     {
         return [
             new InputOption('confirm', 'c', InputOption::VALUE_NONE, 'Confirm deletion of all orders'),
-            new InputOption('verbose', 'v', InputOption::VALUE_NONE, 'Verbose output'),
         ];
     }
 

@@ -40,7 +40,6 @@ class EcommerceTaskRemoveSuperfluousLinksInProductProductGroups extends BuildTas
     public function getOptions(): array
     {
         return [
-            new InputOption('verbose', 'v', InputOption::VALUE_NONE, 'Verbose output'),
         ];
     }
 
