@@ -659,6 +659,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
      */
     public function getEcommerceFields($mustCreateAccount = false)
     {
+        $passwordDoubleCheckField = null;
         if (! EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
             //if no accounts are made then we simply return the basics....
             $fields = new FieldList(
@@ -668,16 +669,13 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             );
         } else {
             Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPasswordField.js');
-
-            if ($this->getOwner()->exists()) {
-                if ($this->getOwner()->Password) {
-                    $passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD', 'New Password'));
-                    $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD', 'Confirm New Password'));
-                    $updatePasswordLinkField = new LiteralField(
-                        'UpdatePasswordLink',
-                        '<a href="#Password"  datano="' . Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')) . '"  class="updatePasswordLink passwordToggleLink secondary-button" rel="Password">' . _t('Account.UPDATE_PASSWORD', 'Update Password') . '</a>'
-                    );
-                }
+            if ($this->getOwner()->exists() && Security::getCurrentUser()) {
+                $passwordField = new PasswordField('PasswordCheck1', _t('Account.NEW_PASSWORD', 'New Password'));
+                $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_NEW_PASSWORD', 'Confirm New Password'));
+                $updatePasswordLinkField = new LiteralField(
+                    'UpdatePasswordLink',
+                    '<a href="#Password"  datano="' . Convert::raw2att(_t('Account.DO_NOT_UPDATE_PASSWORD', 'Do not update password')) . '"  class="updatePasswordLink passwordToggleLink secondary-button" rel="Password">' . _t('Account.UPDATE_PASSWORD', 'Update Password') . '</a>'
+                );
                 //if they dont have a password then we now force them to create one.
                 //the fields of which are added further down the line...
                 //we simply hide these fields, as they add little extra ....
@@ -685,7 +683,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $loginDetailsDescription = new HiddenField(
                     'AccountInfo',
                     '<p>' .
-                        _t('OrderForm.PLEASE_REVIEW', 'Please review your log in details below.')
+                        _t('OrderForm.PLEASE_REVIEW', 'Please review your log-in details below.')
                         . '</p>'
                 );
             } elseif (EcommerceConfig::get(EcommerceRole::class, 'must_have_account_to_purchase') || $mustCreateAccount) {
@@ -710,8 +708,6 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 //close by default
             }
 
-            $passwordDoubleCheckField = null;
-
             if (empty($passwordField)) {
                 $passwordField = new PasswordField('PasswordCheck1', _t('Account.CREATE_PASSWORD', 'Password'));
                 $passwordDoubleCheckField = new PasswordField('PasswordCheck2', _t('Account.CONFIRM_PASSWORD', 'Confirm Password'));
@@ -734,7 +730,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
                 $loginDetailsField,
             );
 
-            if ($passwordDoubleCheckField instanceof \SilverStripe\Forms\PasswordField) {
+            if ($passwordDoubleCheckField && $passwordDoubleCheckField instanceof PasswordField) {
                 $fields->push($passwordDoubleCheckField);
             }
         }
