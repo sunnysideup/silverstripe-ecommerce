@@ -14,7 +14,7 @@
     </p>
 <% else %>
     <p class="paidNote">
+        <a href="$Link#OrderFormPayment_PaymentForm" class="button"><% _t("Order.PAYNOW","Pay now") %></a>
         <% _t("Order.OUTSTANDINGNOTE","This order has an outstanding balance.") %>
-        <a href="$Link#OrderFormPayment_PaymentForm"><% _t("Order.PAYNOW","Pay now") %></a>.
     </p>
 <% end_if %>
