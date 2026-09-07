@@ -3,6 +3,8 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use IteratorAggregate;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
@@ -53,7 +55,32 @@ abstract class ProductCollection
      */
     public function getArrayBasic(?string $where = '')
     {
+        if(! $where) {
+            $where = $this->getGetVarWhere();  
+        }
         return DB::query($this->getSQL($where))->getIterator();
+    }
+
+    protected function getGetVarWhere(): string
+    {
+        $request = Controller::curr();
+        if ($request) {
+            $parentId = intval($request->getVar('parentid'));
+            $internalItemIDs = $request->getVar('internalitemid');
+            if ($parentId || $internalItemIDs) {
+                $whereArray = [];
+                $stage = '_Live'; // always live
+                if (is_array($internalItemIDs)) {
+                    $internalItemIDs = Convert::raw2sql($internalItemIDs);
+                    $whereArray = '"Product' . $stage . '"."ID" IN ("' . implode("','", $internalItemIDs) . '")';
+                }
+                if ($parentId) {
+                    $whereArray[] = '"Product' . $stage . '"."ParentID" = ' . intval($parentId);
+                }
+                return !empty($whereArray) ? implode(' AND ', $whereArray) : '';
+            }
+        }
+        return '';
     }
 
     public function getSQL(?string $where = ''): string
