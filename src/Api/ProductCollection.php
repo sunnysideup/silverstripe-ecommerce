@@ -10,6 +10,8 @@ use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
 
+use function Clue\StreamFilter\fun;
+
 /**
  * @description: Sometimes you need a large collection of products
  * returned as an array or ArrayList. Using the ORM can be inefficient to retrieve these collections.
@@ -55,29 +57,38 @@ abstract class ProductCollection
      */
     public function getArrayBasic(?string $where = '')
     {
-        if(! $where) {
-            $where = $this->getGetVarWhere();  
+        if (! $where) {
+            $where = $this->getGetVarWhere();
         }
         return DB::query($this->getSQL($where))->getIterator();
     }
 
     protected function getGetVarWhere(): string
     {
-        $request = Controller::curr();
-        if ($request) {
-            $parentId = intval($request->getVar('parentid'));
-            $internalItemIDs = $request->getVar('internalitemid');
-            if ($parentId || $internalItemIDs) {
-                $whereArray = [];
-                $stage = '_Live'; // always live
-                if (is_array($internalItemIDs)) {
-                    $internalItemIDs = Convert::raw2sql($internalItemIDs);
-                    $whereArray = '"Product' . $stage . '"."ID" IN ("' . implode("','", $internalItemIDs) . '")';
+        $controller = Controller::curr();
+        if ($controller) {
+            $request = $controller->getRequest();
+            if ($request) {
+                $parentId = intval($request->getVar('parentid'));
+                $internalItemIDs = $request->getVar('internalitemid');
+                if ($parentId || $internalItemIDs) {
+                    $whereArray = [];
+                    $stage = '_Live'; // always live
+                    if (is_array($internalItemIDs)) {
+                        $internalItemIDs = Convert::raw2sql($internalItemIDs);
+                        $internalItemIDs = array_map(
+                            function ($id) {
+                                return str_replace('"', '', $id);
+                            },
+                            $internalItemIDs
+                        );
+                        $whereArray = '"Product' . $stage . '"."ID" IN ("' . implode("','", $internalItemIDs) . '")';
+                    }
+                    if ($parentId) {
+                        $whereArray[] = '"SiteTree' . $stage . '"."ParentID" = ' . intval($parentId);
+                    }
+                    return !empty($whereArray) ? implode(' AND ', $whereArray) : '';
                 }
-                if ($parentId) {
-                    $whereArray[] = '"Product' . $stage . '"."ParentID" = ' . intval($parentId);
-                }
-                return !empty($whereArray) ? implode(' AND ', $whereArray) : '';
             }
         }
         return '';
