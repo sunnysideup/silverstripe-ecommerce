@@ -9,6 +9,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ArrayData;
+use Sunnysideup\Ecommerce\Pages\ProductGroup;
 
 use function Clue\StreamFilter\fun;
 
@@ -20,6 +21,8 @@ use function Clue\StreamFilter\fun;
  */
 abstract class ProductCollection
 {
+    protected $additionalPredeterminedFilters = [];
+
     public function getArrayList(): ArrayList
     {
         $arrayList = ArrayList::create();
@@ -57,24 +60,27 @@ abstract class ProductCollection
      */
     public function getArrayBasic(?string $where = '')
     {
-        if (! $where) {
-            $where = $this->getGetVarWhere();
-        }
         return DB::query($this->getSQL($where))->getIterator();
     }
 
-    protected function getGetVarWhere(): string
+    public function setAdditionalPredeterminedFilters(array $filters)
+    {
+        $this->additionalPredeterminedFilters = $filters;
+        return $this;
+    }
+
+    protected function getAdditionalPredeterminedFiltersWhere(): string
     {
         $controller = Controller::curr();
         if ($controller) {
             $request = $controller->getRequest();
             if ($request) {
-                $parentId = intval($request->getVar('parentid'));
-                $internalItemIDs = $request->getVar('internalitemid');
+                $parentId = intval($this->additionalPredeterminedFilters['parentid'] ?? 0);
+                $internalItemIDs = $this->additionalPredeterminedFilters['internalitemsid'] ?? null;
                 if ($parentId || $internalItemIDs) {
                     $whereArray = [];
                     $stage = '_Live'; // always live
-                    if (is_array($internalItemIDs)) {
+                    if (is_array($internalItemIDs) && !empty($internalItemIDs)) {
                         $internalItemIDs = Convert::raw2sql($internalItemIDs);
                         $internalItemIDs = array_map(
                             function ($id) {
@@ -82,10 +88,14 @@ abstract class ProductCollection
                             },
                             $internalItemIDs
                         );
-                        $whereArray = '"Product' . $stage . '"."ID" IN ("' . implode("','", $internalItemIDs) . '")';
+                        $whereArray = '"Product' . $stage . '"."ID" IN (\'' . implode("','", $internalItemIDs) . '\')';
                     }
                     if ($parentId) {
-                        $whereArray[] = '"SiteTree' . $stage . '"."ParentID" = ' . intval($parentId);
+                        $parent = ProductGroup::get()->byID($parentId);
+                        if ($parent) {
+                            $productIds = $parent->getProducts()->columnUnique();
+                            $whereArray[] = '"Product' . $stage . '"."ID" IN (\'' . implode("','", $productIds) . '\')';
+                        }
                     }
                     return !empty($whereArray) ? implode(' AND ', $whereArray) : '';
                 }
@@ -93,12 +103,29 @@ abstract class ProductCollection
         }
         return '';
     }
+    protected function getWhereArrayForSql(array|string|null $where = ''): array
+    {
+        $array = $this->standardiseToArray($where);
+        return $array;
+    }
+
+    protected function standardiseToArray(array|string|null $where = ''): array
+    {
+        if (! is_array($where)) {
+            $where = [$where];
+        }
+        $where[] = $this->getAdditionalPredeterminedFiltersWhere();
+        $where = array_filter($where);
+        return array_unique($where);
+    }
 
     public function getSQL(?string $where = ''): string
     {
+        $array = $this->getWhereArrayForSql($where);
+
         $stage = '_Live'; // always live
-        if ($where) {
-            $where = '(' . $where . ') AND ';
+        if ($array) {
+            $where = '(' . implode(' AND ', $array) . ') AND ';
         }
         return '
             SELECT
