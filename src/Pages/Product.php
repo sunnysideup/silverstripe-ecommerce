@@ -31,6 +31,7 @@ use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\ArrayData;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
@@ -62,7 +63,6 @@ use Sunnysideup\Ecommerce\Tasks\EcommerceTaskDebugCart;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskLinkProductWithImages;
 use Sunnysideup\Ecommerce\Tasks\EcommerceTaskRemoveSuperfluousLinksInProductProductGroups;
 use Sunnysideup\Vardump\ArrayToTable;
-use SilverStripe\Security\SecurityToken;
 
 /**
  * This is a standard Product page-type with fields like
@@ -561,9 +561,9 @@ class Product extends Page implements BuyableModel
             );
         }
         $fields->addFieldsToTab(
-            'Root.Main',
+            'Root.Details',
             [
-                TextField::create('AlternativeProductNames', _t('Product.ALTERNATIVEPRODUCTNAMES', 'Alternative Names (comma separated)')),
+                TextareaField::create('AlternativeProductNames', _t('Product.ALTERNATIVEPRODUCTNAMES', 'Alternative Names (comma separated)')),
             ],
             'Price'
         );
