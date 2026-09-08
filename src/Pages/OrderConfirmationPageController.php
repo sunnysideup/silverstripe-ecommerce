@@ -326,7 +326,11 @@ class OrderConfirmationPageController extends CartPageController
             if ($this->currentOrder->canPay()) {
                 Requirements::javascript('sunnysideup/ecommerce: client/javascript/EcomPayment.js');
 
-                return OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
+                $form = OrderFormPayment::create($this, 'PaymentForm', $this->currentOrder);
+                if ($form instanceof OrderFormPayment) {
+                    return $form;
+                }
+                return [];
             }
 
             return [];

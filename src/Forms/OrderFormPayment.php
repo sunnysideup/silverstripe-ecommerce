@@ -95,7 +95,11 @@ class OrderFormPayment extends Form
                 if ($order && $order->canPay()) {
                     $formHelper = EcommercePayment::ecommerce_payment_form_setup_and_validation_object();
                     if ($formHelper->validatePayment($order, $data, $form)) {
-                        return $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
+                        $outcome = $formHelper->processPaymentFormAndReturnNextStep($order, $data, $form);
+                        if ($outcome === null) {
+                            return $this->controller->redirectBack();
+                        }
+                        return $outcome;
                     }
                     //error messages are set in validation
                     return $this->controller->redirectBack();
