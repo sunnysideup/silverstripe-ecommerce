@@ -68,4 +68,24 @@ class EcommerceSiteTreeExtension extends SiteTreeExtension
         }
         return null;
     }
+
+    /**
+     * returns a URL without the -2 or -3, at the end,
+     * so that the URLSegment can be used as a code.
+     *
+     * @return string [description]
+     */
+    public function CleanURLSegment(): string
+    {
+        $urlSegment = $this->getOwner()->URLSegment;
+        $x = 2;
+        while ($x < 10) {
+            if (substr((string) $urlSegment, -2) === '-' . $x) {
+                return substr((string) $urlSegment, 0, -2);
+            }
+            ++$x;
+        }
+
+        return $urlSegment;
+    }
 }

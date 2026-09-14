@@ -790,26 +790,6 @@ class ProductGroup extends Page
         ProductGroupSearchTable::remove_product_group($this);
     }
 
-    /**
-     * returns a URL without the -2 or -3, at the end,
-     * so that the URLSegment can be used as a code.
-     *
-     * @return string [description]
-     */
-    public function CleanURLSegment(): string
-    {
-        $urlSegment = $this->URLSegment;
-        $x = 2;
-        while ($x < 10) {
-            if (substr((string) $urlSegment, -2) === '-' . $x) {
-                return substr((string) $urlSegment, 0, -2);
-            }
-            ++$x;
-        }
-
-        return $urlSegment;
-    }
-
     protected function getTemplateForSelectionOfProducts(): string
     {
         return $this->Config()->get('template_for_selection_of_products');
