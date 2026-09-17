@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\Forms\Gridfield\Configs;
 
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 
 /**
  * @author nicolaas <github@sunnysideup.co.nz>
@@ -17,5 +18,6 @@ class GridFieldBasicPageRelationConfig extends GridFieldConfig_RelationEditor
     {
         parent::__construct($itemsPerPage);
         $this->removeComponentsByType(GridFieldAddNewButton::class);
+        $this->removeComponentsByType(GridFieldFilterHeader::class);
     }
 }
