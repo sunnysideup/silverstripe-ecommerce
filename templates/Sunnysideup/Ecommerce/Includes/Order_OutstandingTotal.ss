@@ -6,15 +6,15 @@
         </tr>
     </tbody>
 </table>
+<p class="paidNote">
+<% if $ShouldShowPaymentForm %>
+    <a href="$Link#OrderFormPayment_PaymentForm" class="button"><% _t("Order.PAYNOW","Pay now") %></a>
+<% end_if %>
 <% if $IsPaid %>
 <% else_if $IsCancelled %>
 <% else_if $PaymentIsPending %>
-    <p class="paidNote">
-        $EcomConfig.OrderPaymentPendingMessageForTemplate
-    </p>
+    $EcomConfig.OrderPaymentPendingMessageForTemplate
 <% else %>
-    <p class="paidNote">
-        <a href="$Link#OrderFormPayment_PaymentForm" class="button"><% _t("Order.PAYNOW","Pay now") %></a>
-        <% _t("Order.OUTSTANDINGNOTE","This order has an outstanding balance.") %>
-    </p>
+    <% _t("Order.OUTSTANDINGNOTE","This order has an outstanding balance.") %>
 <% end_if %>
+</p>

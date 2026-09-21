@@ -4494,4 +4494,9 @@ class Order extends DataObject implements EditableEcommerceObject
         Versioned::set_reading_mode('Stage.Live');
         Versioned::set_stage(Versioned::LIVE);
     }
+
+    public function ShouldShowPaymentForm(): bool
+    {
+        return $this->canPay() && $this->TotalOutstanding > 0.1;
+    }
 }
