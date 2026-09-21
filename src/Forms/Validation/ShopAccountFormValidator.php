@@ -15,7 +15,7 @@ class ShopAccountFormValidator extends RequiredFields
     /**
      * @var int
      */
-    private static $minimum_password_length = 7;
+    private static $minimum_password_length = 8;
 
     /**
      * Ensures member unique id stays unique and other basic stuff...
@@ -91,7 +91,7 @@ class ShopAccountFormValidator extends RequiredFields
                 $valid = false;
             }
             $letterCount = strlen((string) $data['PasswordCheck1']);
-            $minLength = Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
+            $minLength = self::getMinimumPasswordLength();
             if ($letterCount > 0 && $letterCount < $minLength) {
                 $this->validationError(
                     'PasswordCheck1',
@@ -126,5 +126,12 @@ class ShopAccountFormValidator extends RequiredFields
         }
 
         return $valid;
+    }
+
+    public static function getMinimumPasswordLength()
+    {
+        $minLength = (int) Config::inst()->get(ShopAccountFormValidator::class, 'minimum_password_length');
+        $validator = Member::password_validator();
+        return max($minLength, $validator->getMinLength());
     }
 }
