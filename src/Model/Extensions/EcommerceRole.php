@@ -37,6 +37,7 @@ use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Control\ShoppingCartController;
 use Sunnysideup\Ecommerce\Forms\Fields\EcommerceCMSButtonField;
+use Sunnysideup\Ecommerce\Forms\Validation\ShopAccountFormValidator;
 use Sunnysideup\Ecommerce\Model\Address\BillingAddress;
 use Sunnysideup\Ecommerce\Model\Money\EcommerceCurrency;
 use Sunnysideup\Ecommerce\Model\Money\EcommercePayment;
@@ -654,10 +655,11 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
     /**
      * @param mixed $mustCreateAccount
+     * @param bool $enforcePasswordLength
      *
      * @return \SilverStripe\Forms\FieldList
      */
-    public function getEcommerceFields($mustCreateAccount = false)
+    public function getEcommerceFields($mustCreateAccount = false, $enforcePasswordLength = false)
     {
         $passwordDoubleCheckField = null;
         if (! EcommerceConfig::get(EcommerceRole::class, 'allow_customers_to_setup_accounts')) {
@@ -714,6 +716,16 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             }
             if (empty($updatePasswordLinkField)) {
                 $updatePasswordLinkField = new LiteralField('UpdatePasswordLink', '');
+            }
+
+            if ($enforcePasswordLength) {
+                $minLength = ShopAccountFormValidator::getMinimumPasswordLength();
+                if ($minLength > 0) {
+                    $passwordField->setAttribute('minlength', $minLength);
+                    $passwordDoubleCheckField->setAttribute('minlength', $minLength);
+                    $passwordField->setAttribute('placeholder', _t('Account.PASSWORDPLACEHOLDER', 'At least {minLength} characters long', ['minLength' => $minLength]));
+                    $passwordDoubleCheckField->setAttribute('placeholder', _t('Account.PASSWORDPLACEHOLDER', 'At least {minLength} characters long', ['minLength' => $minLength]));
+                }
             }
 
             $loginDetailsField = CompositeField::create();

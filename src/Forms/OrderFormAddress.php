@@ -132,11 +132,11 @@ class OrderFormAddress extends Form
         // member fields
         if ($this->orderMember) {
             if ($this->loggedInMember && $this->loggedInMember->ID === $this->orderMember->ID) {
-                $memberFields = $this->orderMember->getEcommerceFields();
+                $memberFields = $this->orderMember->getEcommerceFields(false, true);
                 $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
             } else {
                 $tempMember = Member::create();
-                $memberFields = $tempMember->getEcommerceFields();
+                $memberFields = $tempMember->getEcommerceFields(false, true);
                 $requiredFields = array_merge($requiredFields, $tempMember->getEcommerceRequiredFields());
             }
             if ($this->loggedInMember) {
