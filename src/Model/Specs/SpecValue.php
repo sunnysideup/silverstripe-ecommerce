@@ -185,7 +185,7 @@ class SpecValue extends DataObject
     }
 
 
-    public function getValue(): ?string
+    public function getValue()
     {
         return $this->Value;
     }

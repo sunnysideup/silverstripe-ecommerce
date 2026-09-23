@@ -13,10 +13,7 @@ class SpecValueDate extends SpecValue
     ];
 
     private static $indexes = [
-        'Value' => [
-            'type' => 'unique',
-            'columns' => ['Value', 'ParentID'],
-        ],
+        'Value' => true,
     ];
 
     public function getValue(): ?string
