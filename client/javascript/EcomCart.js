@@ -404,6 +404,23 @@ const EcomCart = {
   },
 
   /**
+   * The group filter sidebar (groupfilter links) is NOT part of the
+   * ajaxified product list holder, so its link hrefs are never refreshed
+   * when a product list is loaded via ajax - only the product grid is
+   * swapped. This means every groupfilter link's href always reflects the
+   * groupfilter selection as it was at the last full page load.
+   *
+   * We capture that initial selection once (in `init`), so that later
+   * clicks can work out what a single, possibly-stale link is actually
+   * meant to toggle, and apply that toggle against the live/current
+   * selection instead - allowing more than one group filter to be
+   * selected at once without one click replacing the previous one.
+   *
+   * @var array
+   */
+  initialGroupFilterTokens: [],
+
+  /**
    * Hidden page title, used when products are updated using the
    * @var String
    */
@@ -476,6 +493,11 @@ const EcomCart = {
     EcomCart.countryAndRegionUpdates()
     // setup an area where the user can change their country / region
     EcomCart.changeCountryFieldSwap()
+    // capture the groupfilter selection baked into the page at full load time
+    // (see initialGroupFilterTokens for why this is needed)
+    EcomCart.initialGroupFilterTokens = EcomCart.getGroupFilterTokens(
+      window.location.href
+    )
     // ajaxify product list
     EcomCart.addAjaxificationOfProductList()
     EcomCart.addSelectForSmallerSpaces()
@@ -571,8 +593,9 @@ const EcomCart = {
             event.preventDefault()
 
             const currentEl = target // already a native DOM element
-            const url = currentEl.getAttribute('href')
             const dataResetFor = currentEl.getAttribute('data-reset-for')
+            const rawUrl = currentEl.getAttribute('href')
+            const url = EcomCart.applyGroupFilterToggle(rawUrl, dataResetFor)
 
             EcomCart.ajaxLoadProductList(url, dataResetFor, () => {
               // Step 1: Find the closest ancestor matching the selector
@@ -597,10 +620,10 @@ const EcomCart = {
                 if (select) {
                   // Check if the select has an option with the given value
                   const optionExists = Array.from(select.options).some(
-                    option => option.value === url
+                    option => option.value === rawUrl
                   )
                   if (optionExists) {
-                    select.value = url
+                    select.value = rawUrl
                     // console.log('Select value set to:', select.value) // Verify the value is set
                   }
                 } else {
@@ -625,9 +648,17 @@ const EcomCart = {
           event.preventDefault()
 
           const currentEl = target // already a native DOM element
-          const url = currentEl.value
+          const rawUrl = currentEl.value
           const selectedOption = currentEl.options[currentEl.selectedIndex]
           const dataResetFor = selectedOption.getAttribute('data-reset-for')
+          // unlike the plain filter links (which can be combined), the
+          // select dropdown only ever allows a single group to be picked
+          // at a time - managing several selections through one <select>
+          // is not practical
+          const url = EcomCart.applyGroupFilterSingleSelection(
+            rawUrl,
+            dataResetFor
+          )
           EcomCart.ajaxLoadProductList(url, dataResetFor, () => {
             const holder = currentEl.closest(
               EcomCart.ajaxifiedListAdjusterSelectors
@@ -635,7 +666,10 @@ const EcomCart = {
             holder.querySelectorAll('a.current').forEach(link => {
               link.classList.remove('current')
             })
-            holder.querySelector(`a[href='${url}']`).classList.add('current')
+            const matchingLink = holder.querySelector(`a[href='${rawUrl}']`)
+            if (matchingLink) {
+              matchingLink.classList.add('current')
+            }
           })
         }
       })
@@ -691,7 +725,7 @@ const EcomCart = {
         window.location.href = myUrl
       },
       success: function (data, textStatus, jqXHR) {
-        window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
+        EcomCart.applyAjaxProductListResponse(data, myUrl)
 
         const holderEl = document.querySelector(
           EcomCart.ajaxifiedListHolderSelector
@@ -746,8 +780,19 @@ const EcomCart = {
     })
   },
 
-  addSelectForSmallerSpaces: function () {
-    const filterSortLinks = document.querySelectorAll(
+  /**
+   * builds (or rebuilds) the "select" dropdown version of a filter/sort
+   * list, used on smaller screens when there are too many options to show
+   * as a plain list of links.
+   *
+   * @param {ParentNode} root optional - scope the search for filter/sort
+   *                          groups to within this element only (e.g. a
+   *                          container that was just refreshed via ajax).
+   *                          Defaults to the whole document.
+   */
+  addSelectForSmallerSpaces: function (root) {
+    const searchRoot = root || document
+    const filterSortLinks = searchRoot.querySelectorAll(
       EcomCart.ajaxifiedListAdjusterSelectors
     )
     filterSortLinks.forEach(group => {
@@ -767,25 +812,35 @@ const EcomCart = {
         return
       }
       const dropdown = dropdownContainer.querySelector('.dropdown')
+      if (!dropdown) {
+        return
+      }
+
+      // clear out any options from a previous run - this function may be
+      // called again (e.g. after an ajax refresh of this group's markup),
+      // and the select element itself is not replaced, so without this
+      // options would be duplicated every time
+      dropdown.innerHTML = ''
 
       // Add list items to the select dropdown
       Array.from(listItems).forEach(item => {
         const link = item.querySelector('a')
+        if (!link) {
+          return
+        }
         const url = new URL(link.href)
         const pathAndQuery = url.pathname + url.search
         const dataResetFor = link.getAttribute('data-reset-for')
-        if (link) {
-          const option = document.createElement('option')
-          option.textContent = link.textContent
-          option.value = pathAndQuery
-          if (dataResetFor) {
-            option.setAttribute('data-reset-for', dataResetFor)
-          }
-          if (link.classList.contains('current')) {
-            option.selected = true
-          }
-          dropdown.appendChild(option)
+        const option = document.createElement('option')
+        option.textContent = link.textContent
+        option.value = pathAndQuery
+        if (dataResetFor) {
+          option.setAttribute('data-reset-for', dataResetFor)
         }
+        if (link.classList.contains('current')) {
+          option.selected = true
+        }
+        dropdown.appendChild(option)
       })
 
       // Check if list has more than maxLength items
@@ -846,6 +901,237 @@ const EcomCart = {
     const urlObj = new URL(url, window.location.origin)
     urlObj.searchParams.delete('ajax')
     return urlObj.toString()
+  },
+
+  /**
+   * The ajax product list response may contain two named partials (see
+   * AjaxProductList.ss):
+   * - #ProductGroupGroupFiltersHolder: a freshly rendered copy of the
+   *   group filter sidebar, with links/hrefs reflecting the live,
+   *   possibly multi-group, selection
+   * - #ProductGroupProductListPartial: the actual product cards
+   *
+   * When both are present, each is used to update its matching live
+   * element so that, after an ajax product list reload, the group filter
+   * links are no longer stale (fixing more than one group filter being
+   * selectable at once). If the response doesn't contain these partials
+   * (e.g. a different ajaxified list elsewhere on the site), it falls
+   * back to the previous behaviour of setting the whole response as the
+   * product list holder's content.
+   *
+   * @param {String} data   the raw html returned by the ajax product list request
+   * @param {String} newUrl the (merged/toggled) url that was requested
+   */
+  applyAjaxProductListResponse: function (data, newUrl) {
+    let filtersPartial = null
+    let productListPartial = null
+
+    if (typeof window.DOMParser !== 'undefined') {
+      const parsedDoc = new window.DOMParser().parseFromString(
+        data,
+        'text/html'
+      )
+      filtersPartial = parsedDoc.getElementById('ProductGroupGroupFiltersHolder')
+      productListPartial = parsedDoc.getElementById(
+        'ProductGroupProductListPartial'
+      )
+    }
+
+    if (productListPartial) {
+      window
+        .jQuery(EcomCart.ajaxifiedListHolderSelector)
+        .html(productListPartial.innerHTML)
+    } else {
+      window.jQuery(EcomCart.ajaxifiedListHolderSelector).html(data)
+    }
+
+    if (filtersPartial) {
+      const liveFiltersHolder = document.getElementById(
+        'ProductGroupGroupFiltersHolder'
+      )
+      if (liveFiltersHolder) {
+        liveFiltersHolder.innerHTML = filtersPartial.innerHTML
+        // the newly inserted markup has its own (empty) select dropdown
+        // for smaller screens - rebuild it (and re-apply the
+        // show-list/show-dropdown classes) for this holder only, so it
+        // doesn't end up shown empty, and so it doesn't duplicate options
+        // in any other, unrelated, filter/sort dropdown on the page
+        EcomCart.addSelectForSmallerSpaces(liveFiltersHolder)
+        // the selected groupfilter(s) have just changed, so the baseline
+        // snapshot used by applyGroupFilterToggle needs to move forward too
+        // (use the url that was just requested, not window.location, since
+        // the history pushState for it hasn't happened yet at this point)
+        if (newUrl) {
+          EcomCart.initialGroupFilterTokens = EcomCart.getGroupFilterTokens(
+            newUrl
+          )
+        }
+      }
+    }
+  },
+
+  /**
+   * Returns the array of groupfilter tokens (comma separated group
+   * segments, e.g. "my-group.123") present in the given URL, or an empty
+   * array if there is no groupfilter param.
+   *
+   * @param {String} url
+   * @return {Array}
+   */
+  getGroupFilterTokens: function (url) {
+    try {
+      const urlObj = new URL(url, window.location.origin)
+      const raw = urlObj.searchParams.get('groupfilter')
+      if (!raw) {
+        return []
+      }
+
+      return raw
+        .split(',')
+        .map(token => token.trim())
+        .filter(Boolean)
+    } catch (e) {
+      return []
+    }
+  },
+
+  /**
+   * Returns the tokens that are present in only one of the two given
+   * arrays (i.e. the symmetric difference).
+   *
+   * @param {Array} a
+   * @param {Array} b
+   * @return {Array}
+   */
+  symmetricDifferenceOfTokens: function (a, b) {
+    const result = []
+    a.forEach(function (token) {
+      if (b.indexOf(token) === -1) {
+        result.push(token)
+      }
+    })
+    b.forEach(function (token) {
+      if (a.indexOf(token) === -1 && result.indexOf(token) === -1) {
+        result.push(token)
+      }
+    })
+
+    return result
+  },
+
+  /**
+   * The groupfilter sidebar links are not refreshed when the product list
+   * is loaded via ajax (only the product grid is) - see
+   * `initialGroupFilterTokens` above for the full explanation. This means
+   * a link's href always reflects the groupfilter selection as it was at
+   * the last full page load, rather than the live/current selection,
+   * which would otherwise cause one group filter selection to replace
+   * another instead of being added to it.
+   *
+   * This method works out, from a (possibly stale) link's own href, which
+   * single group it is meant to toggle on or off - by comparing it
+   * against the selection that was present at the initial page load -
+   * and then applies that one toggle against the CURRENT, live selection
+   * (taken from the address bar), keeping any other groups already
+   * selected.
+   *
+   * Links that have nothing to do with groupfilter (sort/filter/display
+   * links, or the groupfilter "reset to all" link) are returned
+   * unchanged.
+   *
+   * @param {String} url          the href of the link/option that was activated
+   * @param {String} dataResetFor the type being reset by this link, if any
+   * @return {String} the url to actually load, with the groupfilter
+   *                   selection merged in
+   */
+  applyGroupFilterToggle: function (url, dataResetFor) {
+    if ('groupfilter' === dataResetFor) {
+      // "All" / reset link - always clears the whole selection
+      return url
+    }
+
+    const hrefTokens = EcomCart.getGroupFilterTokens(url)
+    const initialTokens = EcomCart.initialGroupFilterTokens || []
+
+    if (0 === hrefTokens.length && 0 === initialTokens.length) {
+      // this link has nothing to do with groupfilter (e.g. a sort,
+      // filter, or display link)
+      return url
+    }
+
+    const changedTokens = EcomCart.symmetricDifferenceOfTokens(
+      hrefTokens,
+      initialTokens
+    )
+    if (1 !== changedTokens.length) {
+      // can't work out, with confidence, which single group this link is
+      // meant to toggle - fall back to the href exactly as rendered
+      return url
+    }
+
+    const ownToken = changedTokens[0]
+    const currentTokens = EcomCart.getGroupFilterTokens(window.location.href)
+    const position = currentTokens.indexOf(ownToken)
+    let newTokens
+    if (-1 === position) {
+      newTokens = currentTokens.concat([ownToken])
+    } else {
+      newTokens = currentTokens.slice()
+      newTokens.splice(position, 1)
+    }
+
+    const urlObj = new URL(url, window.location.origin)
+    if (newTokens.length) {
+      urlObj.searchParams.set('groupfilter', newTokens.join(','))
+    } else {
+      urlObj.searchParams.delete('groupfilter')
+    }
+
+    return urlObj.pathname + urlObj.search
+  },
+
+  /**
+   * Unlike the plain filter links (which can be combined - see
+   * applyGroupFilterToggle above), the small-screen "select" dropdown
+   * version of the group filter list only ever allows a single group to
+   * be selected at a time: managing several selections through a single
+   * <select> is not practical from a usability point of view.
+   *
+   * The dropdown's options are built from the same (possibly already
+   * combined) hrefs as the plain links - e.g. an option may have a value
+   * of "groupfilter=a,b" if "a" was already selected when "b"'s option
+   * was built (see combineGroupFilterValue on the server). The group this
+   * particular option represents is always the LAST token in that list,
+   * since the server always appends a newly added group at the end.
+   *
+   * This reduces the option's value down to just that single group,
+   * discarding any others, so that picking an option from the dropdown
+   * always replaces rather than adds to the current groupfilter
+   * selection.
+   *
+   * @param {String} url          the href/value of the option that was selected
+   * @param {String} dataResetFor the type being reset by this option, if any
+   * @return {String} the url to actually load, with only a single group selected
+   */
+  applyGroupFilterSingleSelection: function (url, dataResetFor) {
+    if ('groupfilter' === dataResetFor) {
+      // "All" / reset option - always clears the whole selection
+      return url
+    }
+
+    const hrefTokens = EcomCart.getGroupFilterTokens(url)
+    if (0 === hrefTokens.length) {
+      // this option has nothing to do with groupfilter (e.g. a sort,
+      // filter, or display option)
+      return url
+    }
+
+    const ownToken = hrefTokens[hrefTokens.length - 1]
+
+    const urlObj = new URL(url, window.location.origin)
+    urlObj.searchParams.set('groupfilter', ownToken)
+
+    return urlObj.pathname + urlObj.search
   },
 
   // #################################

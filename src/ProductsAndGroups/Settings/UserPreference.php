@@ -230,12 +230,22 @@ class UserPreference
                 $newPreference = $this->request->getVar($getVariableName);
                 if ('GROUPFILTER' === $type) {
                     if ($newPreference) {
-                        $otherProductGroup = ProductGroupFilter::get_group_from_get_variable($newPreference);
-                        if ($otherProductGroup instanceof \Sunnysideup\Ecommerce\Pages\ProductGroup) {
+                        // supports a single group token (my-group.123) or a comma
+                        // separated list of group tokens (my-group.123,other-group.456)
+                        // to filter for more than one group at once
+                        $otherProductGroups = ProductGroupFilter::get_groups_from_get_variable($newPreference);
+                        if (! empty($otherProductGroups)) {
+                            $segments = [];
+                            $titles = [];
+                            foreach ($otherProductGroups as $otherProductGroup) {
+                                $segments[] = $otherProductGroup->FilterForGroupSegment();
+                                $titles[] = $otherProductGroup->MenuTitle;
+                            }
+
                             $newPreference = [
                                 'key' => BaseApplyer::DEFAULT_NAME,
-                                'params' => $otherProductGroup->FilterForGroupSegment(),
-                                'title' => $otherProductGroup->MenuTitle,
+                                'params' => implode(',', $segments),
+                                'title' => implode(', ', $titles),
                             ];
                         }
                     }
@@ -493,6 +503,7 @@ class UserPreference
                 }
 
                 $isCurrent = ! (bool) $currentKey;
+                $currentKeyParts = $currentKey ? explode(',', (string) $currentKey) : [];
                 $previousClassName = '';
                 $getVar = $this->rootGroupController->getSortFilterDisplayValues()[$type]['getVariable'] ?? '';
                 $prevGroup = null;
@@ -517,13 +528,14 @@ class UserPreference
                         );
                         $list->push($obj);
                     }
-                    $isCurrent = $currentKey === $group->FilterForGroupSegment();
+                    $isCurrent = in_array($group->FilterForGroupSegment(), $currentKeyParts, true);
                     $title = $group->MenuTitle;
                     $crumb = $group->getProductGroupBreadcrumbCalculated();
                     if ($prevGroup && trim($prevGroup->Title) === trim($group->Title) && $prevGroup->ParentID !== $group->ParentID) {
                         $title = $crumb . ' - ' . $title;
                         $prevGroup->Title = $prevGroup->ProductGroupBreadcrumb . ' - ' . $prevGroup->Title;
                     }
+                    $linkValue = $this->combineGroupFilterValue($currentKeyParts, $group->FilterForGroupSegment());
                     foreach (array_keys($options) as $key) {
                         $obj = new ArrayData(
                             [
@@ -532,7 +544,7 @@ class UserPreference
                                 'Title' => $title,
                                 'ProductGroupBreadcrumb' => $crumb,
                                 'Current' => $isCurrent,
-                                'Link' => $this->getLinkTemplate('', $type, $group->FilterForGroupSegment()),
+                                'Link' => $this->getLinkTemplate('', $type, $linkValue),
                                 'LinkingMode' => $isCurrent ? 'current' : 'link',
                                 'Ajaxify' => $ajaxify,
                                 'Image' => $group->Image(),
@@ -614,6 +626,31 @@ class UserPreference
         }
 
         return self::$linkTemplateCache[$cacheKey];
+    }
+
+    /**
+     * Works out the groupfilter GET var value to use when a user clicks a
+     * particular group filter link, given the groups that are already
+     * selected (as a comma separated list of group segments).
+     *
+     * - if the group is not currently selected, it is added to the existing
+     *   selection (so the previous groupfilter selections are kept)
+     * - if the group is already selected, clicking it again removes it
+     *   (so it acts as an on/off toggle)
+     *
+     * @param array  $currentSegments the group segments that are currently selected
+     * @param string $groupSegment    the group segment being clicked
+     */
+    protected function combineGroupFilterValue(array $currentSegments, string $groupSegment): string
+    {
+        $position = array_search($groupSegment, $currentSegments, true);
+        if (false !== $position) {
+            unset($currentSegments[$position]);
+        } else {
+            $currentSegments[] = $groupSegment;
+        }
+
+        return implode(',', array_values(array_unique($currentSegments)));
     }
 
     /**
