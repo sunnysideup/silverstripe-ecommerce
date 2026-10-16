@@ -15,7 +15,7 @@
     <% include Sunnysideup\Ecommerce\Includes\Order %>
 <% end_with %>
 
-<% if $Order.TotalOutstanding > 0.1 %>
+<% if $Order.ShouldShowPaymentForm %>
 <% if $PaymentForm %><div id="PaymentForm">$PaymentForm</div><% end_if %>
 <% end_if %>
 

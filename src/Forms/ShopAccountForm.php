@@ -41,7 +41,7 @@ class ShopAccountForm extends Form
     {
         $member = Security::getCurrentUser();
         if ($member && $member->exists()) {
-            $fields = $member->getEcommerceFields(false);
+            $fields = $member->getEcommerceFields(false, true);
             $clearCartAndLogoutLink = ShoppingCartController::clear_cart_and_logout_link();
             $loginMessage =
                 '<span class="customerName">' . trim(Convert::raw2xml($member->FirstName) . ' ' . Convert::raw2xml($member->Surname)) . '</span>, '
@@ -79,7 +79,7 @@ class ShopAccountForm extends Form
             }
             $backURLLink = urlencode($backURLLink);
             $fields->push(new LiteralField('MemberInfo', '<p class="message good">' . _t('OrderForm.MEMBERINFO', 'If you already have an account then please') . ' <a href="Security/login?BackURL=' . $backURLLink . '">' . _t('OrderForm.LOGIN', 'log in') . '</a>.</p>'));
-            $memberFields = $member->getEcommerceFields($mustCreateAccount);
+            $memberFields = $member->getEcommerceFields($mustCreateAccount, true);
             if ($memberFields) {
                 foreach ($memberFields as $memberField) {
                     $fields->push($memberField);

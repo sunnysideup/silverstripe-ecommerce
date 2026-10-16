@@ -451,6 +451,30 @@ class ProductGroupController extends PageController
         }
     }
 
+    public function AdjacentPaginationLinks(): array
+    {
+        $previous = null;
+        $next = null;
+        $current = null;
+        foreach ($this->Products()?->PaginationSummary() ?? [] as $page) {
+            $page = $page->toMap();
+            if ($page['CurrentBool']) {
+                $current = $page;
+                continue;
+            }
+            if (!$current) {
+                $previous = $page;
+            } else {
+                $next = $page;
+                break;
+            }
+        }
+        return [
+            'Previous' => $previous['Link'] ?? null,
+            'Next' => $next['Link'] ?? null,
+        ];
+    }
+
     protected function pageStart(): int
     {
         return (int) $this->request->getVar('start');

@@ -210,6 +210,29 @@ class Product extends Page implements BuyableModel
         ],
     ];
 
+    public function augmentDatabase(): void
+    {
+        parent::augmentDatabase();
+
+        // Default join table format is {OwnerClass}_{RelationName}
+        DB::require_index(
+            'Product_AdditionalImages',
+            'ImageSortIndex',
+            [
+                'type' => 'index',
+                'columns' => ['ImageSortIndex'],
+            ]
+        );
+        DB::require_index(
+            'Product_AdditionalFiles',
+            'FileSortIndex',
+            [
+                'type' => 'index',
+                'columns' => ['FileSortIndex'],
+            ]
+        );
+    }
+
     /**
      * Standard SS variable.
      */
