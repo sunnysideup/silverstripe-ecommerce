@@ -674,6 +674,43 @@ const EcomCart = {
         }
       })
 
+      // group filter form (checkboxes on desktop, select on small screens).
+      // This is a form rather than links so that robots do not follow it.
+      document.body.addEventListener('change', function (event) {
+        const form = event.target.closest('form[data-group-filter-form]')
+        if (!form) {
+          return
+        }
+        let tokens = []
+        if (event.target.tagName === 'SELECT') {
+          if (event.target.value) {
+            tokens = [event.target.value]
+          }
+        } else {
+          form
+            .querySelectorAll('input.group-filter-checkbox:checked')
+            .forEach(function (cb) {
+              tokens.push(cb.value)
+            })
+        }
+        const url =
+          window.location.pathname +
+          (tokens.length
+            ? '?groupfilter=' + encodeURIComponent(tokens.join(','))
+            : '')
+        // the refreshed filter markup replaces this form, no callback needed
+        EcomCart.ajaxLoadProductList(
+          url,
+          tokens.length ? null : 'groupfilter',
+          function () {}
+        )
+      })
+      document.body.addEventListener('submit', function (event) {
+        if (event.target.closest('form[data-group-filter-form]')) {
+          event.preventDefault()
+        }
+      })
+
       // fix for back button
     }
 
@@ -697,18 +734,35 @@ const EcomCart = {
 
   hasAjaxProductLoad: false,
 
+  /**
+   * disables / enables the group filter form inputs, so they can not be
+   * clicked while a product list is being reloaded.
+   */
+  setGroupFilterFormsDisabled: function (disabled) {
+    document
+      .querySelectorAll('form[data-group-filter-form]')
+      .forEach(function (form) {
+        form.classList.toggle('is-loading', disabled)
+        form.querySelectorAll('input, select').forEach(function (el) {
+          el.disabled = disabled
+        })
+      })
+  },
+
   ajaxLoadProductList: function (myUrl, dataResetFor, myCallBack) {
     EcomCart.hasAjaxProductLoad = true
     // console.log('AJAX Load Product List:', myUrl) // Debug: Check if URL is correct
     myUrl = EcomCart.mergeUrlParamsForAjax(myUrl, dataResetFor)
     window.jQuery.ajax({
       beforeSend: function () {
+        EcomCart.setGroupFilterFormsDisabled(true)
         window
           .jQuery(EcomCart.ajaxifiedListHolderSelector)
           .addClass(EcomCart.classToShowLoading)
       },
       // cache: false,
       complete: function () {
+        EcomCart.setGroupFilterFormsDisabled(false)
         window
           .jQuery(EcomCart.ajaxifiedListHolderSelector)
           .removeClass(EcomCart.classToShowLoading)
