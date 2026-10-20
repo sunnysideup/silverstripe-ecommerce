@@ -3086,10 +3086,10 @@ class Order extends DataObject implements EditableEcommerceObject
     {
         $html = '';
         $x = 0;
-        $exists = $this->owner->OrderItems()->exists();
+        $exists = $this->OrderItems()->exists();
         if ($exists) {
             $html .= '<div><ul class="order-items-summary">';
-            foreach ($this->owner->OrderItems() as $orderItem) {
+            foreach ($this->OrderItems() as $orderItem) {
                 ++$x;
                 $buyable = $orderItem->getBuyableCached();
                 $html .= '<li>' . $orderItem->Quantity . '× ';

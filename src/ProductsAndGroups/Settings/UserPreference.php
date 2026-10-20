@@ -522,6 +522,7 @@ class UserPreference
                                 'Ajaxify' => $ajaxify,
                                 'Image' => null,
                                 'Key' => '',
+                                'Segment' => '',
                                 'ResetFor' => $getVar,
                                 'IsResetFor' => true,
                             ]
@@ -549,6 +550,7 @@ class UserPreference
                                 'Ajaxify' => $ajaxify,
                                 'Image' => $group->Image(),
                                 'Key' => $key,
+                                'Segment' => $group->FilterForGroupSegment(),
                                 'IsResetFor' => false,
                                 'ResetFor' => '',
                             ]
