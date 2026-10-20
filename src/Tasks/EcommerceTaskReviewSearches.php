@@ -120,10 +120,14 @@ class EcommerceTaskReviewSearches extends BuildTask
         $form->setAttribute('method', 'get');
         $form->setAttribute('action', $this->Link());
         echo $form->forTemplate();
-        echo '<style>
-            div.field {margin-bottom: 20px;}
-            .right {font-style:italics; color: #555;}
-        </style>';
+        // This is not a valid HTML but give a reasonable title/styles to the standalone page
+        echo <<<HTML
+<title>Review Searches</title>
+<style>
+    div.field {margin-bottom: 20px;}
+    .right {font-style:italics; color: #555;}
+</style>
+HTML;
     }
 
     public function Link($action = null)
