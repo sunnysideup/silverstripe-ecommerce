@@ -10,6 +10,8 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\HeaderField;
@@ -673,11 +675,11 @@ class OrderStep extends DataObject implements EditableEcommerceObject
         );
         $exportButton = Injector::inst()->createWithArgs(GridFieldExportButton::class, ['buttons-before-left']);
         $exportButton->setExportColumns($this->getExportFieldsForOrder());
-        $fields->dataFieldByName('Orders')
-            ->getConfig()
-            ->addComponent(
-                $exportButton
-            );
+        $ordersField = $fields->dataFieldByName('Orders');
+        if ($ordersField) {
+            $config = $ordersField->setConfig(GridFieldConfig_RecordViewer::create());
+            $config->addComponent($exportButton);
+        }
 
         return $fields;
     }
