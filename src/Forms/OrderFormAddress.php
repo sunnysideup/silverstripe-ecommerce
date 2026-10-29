@@ -332,7 +332,7 @@ class OrderFormAddress extends Form
 
         //we do this first so that Billing and Shipping Address can override this...
 
-        if ($this->orderMember) {
+        if ($this->orderMember && $this->loggedInMember) {
             $this->loadDataFrom($this->orderMember);
         }
         if ($this->order) {
@@ -344,9 +344,11 @@ class OrderFormAddress extends Form
                 $this->loadDataFrom($shippingAddress);
             }
         }
-        $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
-        $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
-        $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
+        if ($this->orderMember && $this->loggedInMember) {
+            $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
+            $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
+            $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
+        }
 
         //allow updating via decoration
         $oldData = Controller::curr()->getRequest()->getSession()->get("FormInfo.{$this->FormName()}.data");
