@@ -154,6 +154,8 @@ class Product extends Page implements BuyableModel
         'Popularity' => 'Float', //For actual value
         'PopularityRank' => 'Int', //For fast sorting
         'SearchBoost' => 'Decimal(4,2)',
+        'DiscountPercentage' => 'Percentage', // used for sorting only for any discount applied
+        'DiscountAmount' => 'Currency', // used for sorting only for any discount applied
     ];
 
     private static $has_one = [
@@ -199,6 +201,8 @@ class Product extends Page implements BuyableModel
         'FullName' => true,
         'Price' => true,
         'PopularityRank' => true,
+        'DiscountPercentage' => true,
+        'DiscountAmount' => true,
     ];
 
     private static $many_many_extraFields = [
@@ -388,6 +392,8 @@ class Product extends Page implements BuyableModel
             'Root.Main',
             [
                 CurrencyField::create('Price', _t('Product.PRICE', 'Price')),
+                CurrencyField::create('DiscountAmount', _t('Product.DISCOUNTEDPRICE', 'Current Discounted Amount')),
+                ReadonlyField::create('DiscountPercentageNice', _t('Product.DISCOUNTPERCENTAGE', 'Discount Percentage'), $this->dbObject('DiscountPercentage')->Nice()),
                 new TextField('InternalItemID', _t('Product.CODE', 'Product Code'), '', 30),
                 $allowPurchaseField = new CheckboxField('AllowPurchase', _t('Product.ALLOWPURCHASE', 'Allow product to be purchased')),
             ],
