@@ -91,6 +91,8 @@ use Sunnysideup\Vardump\ArrayToTable;
  * @property string $AlternativeProductNames
  * @property int $GoogleProductCategoryID
  * @property int $ImageID
+ * @property float $DiscountedPrice
+ * @property float $DiscountAmount
  * @method \Sunnysideup\EcommerceGoogleShoppingFeed\Model\GoogleProductCategory GoogleProductCategory()
  * @method \SilverStripe\Assets\Image Image()
  * @method \Sunnysideup\Ecommerce\Model\Search\ProductSearchTable ProductSearchTable()
