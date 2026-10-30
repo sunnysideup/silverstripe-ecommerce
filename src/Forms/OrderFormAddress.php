@@ -74,7 +74,7 @@ class OrderFormAddress extends Form
      *
      * @var bool
      */
-    protected $canUseOrderMember = false;
+    protected $orderMemberAndLoggedInMemberAreEqual = false;
 
     /**
      * ID of the member that has just been created.
@@ -130,17 +130,18 @@ class OrderFormAddress extends Form
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
         $this->loggedInMember = Security::getCurrentUser();
-        $this->canUseOrderMember = $this->orderMember && $this->loggedInMember && $this->orderMember->ID === $this->loggedInMember->ID;
+        $this->orderMemberAndLoggedInMemberAreEqual = $this->orderMember && $this->loggedInMember && $this->orderMember->ID === $this->loggedInMember->ID;
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember && $this->orderMember->ID !== $this->loggedInMember->ID && ! $this->loggedInMember->IsShopAdmin()) {
             $this->loggedInMember->logOut();
             $this->loggedInMember = null;
+            $this->orderMemberAndLoggedInMemberAreEqual = false;
         }
 
         // member fields
         if ($this->orderMember) {
-            if ($this->canUseOrderMember) {
+            if ($this->orderMemberAndLoggedInMemberAreEqual) {
                 $memberFields = $this->orderMember->getEcommerceFields(false, true);
                 $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
             } else {
@@ -327,7 +328,7 @@ class OrderFormAddress extends Form
 
         //we do this first so that Billing and Shipping Address can override this...
 
-        if ($this->canUseOrderMember) {
+        if ($this->orderMemberAndLoggedInMemberAreEqual) {
             $this->loadDataFrom($this->orderMember);
         }
         if ($this->order) {
@@ -339,7 +340,7 @@ class OrderFormAddress extends Form
                 $this->loadDataFrom($shippingAddress);
             }
         }
-        if ($this->canUseOrderMember) {
+        if ($this->orderMemberAndLoggedInMemberAreEqual) {
             $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
             $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
             $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
@@ -747,6 +748,7 @@ class OrderFormAddress extends Form
 
     protected function orderMemberAndLoggedInMemberAreDifferent()
     {
+        return ! $this->orderMemberAndLoggedInMemberAreEqual;
     }
 
     /**
