@@ -70,6 +70,13 @@ class OrderFormAddress extends Form
     protected $loggedInMember;
 
     /**
+     * whether the order member can be used (i.e. matches the logged in member)
+     *
+     * @var bool
+     */
+    protected $canUseOrderMember = false;
+
+    /**
      * ID of the member that has just been created.
      *
      * @var int
