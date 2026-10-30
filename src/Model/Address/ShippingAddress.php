@@ -272,27 +272,20 @@ class ShippingAddress extends OrderAddress
                 new LiteralField('ShippingNote', '<p class="message warning" id="ShippingNote">' . _t('ShippingAddress.SHIPPINGNOTE', 'Your goods will be sent to the address below.') . '</p>')
             );
 
-            if ($member && Security::getCurrentUser()) {
-                if ($this->validateMemberForAutocompletion($member)) {
-                    $this->FillWithLastAddressFromMember($member, true);
-                    if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
-                        $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
-                        //we want MORE than one here not just one.
-                        if ($addresses->count() > 1) {
-                            $shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('ShippingAddress.SELECTBILLINGADDRESS', 'Select Shipping Address'), $addresses));
-                        }
+            if ($member && $this->validateMemberForAutocompletion($member)) {
+                $this->FillWithLastAddressFromMember($member, true);
+                if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
+                    $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
+                    //we want MORE than one here not just one.
+                    if ($addresses->count() > 1) {
+                        $shippingFieldsHeader->push(SelectOrderAddressField::create('SelectShippingAddressField', _t('ShippingAddress.SELECTBILLINGADDRESS', 'Select Shipping Address'), $addresses));
                     }
                 }
-                $shippingFields = new CompositeField(
-                    new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
-                    new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
-                );
-            } else {
-                $shippingFields = new CompositeField(
-                    new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
-                    new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
-                );
             }
+            $shippingFields = new CompositeField(
+                new TextField('ShippingFirstName', _t('ShippingAddress.FIRSTNAME', 'First Name')),
+                new TextField('ShippingSurname', _t('ShippingAddress.SURNAME', 'Surname'))
+            );
             $shippingFields->push(new TextField('ShippingPhone', _t('ShippingAddress.PHONE', 'Phone')));
             $mappingArray = $this->Config()->get('fields_to_google_geocode_conversion');
             if (is_array($mappingArray) && count($mappingArray)) {

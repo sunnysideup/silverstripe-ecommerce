@@ -161,7 +161,7 @@ class OrderFormAddress extends Form
 
         //billing address field
         $billingAddress = $this->order->CreateOrReturnExistingAddress(BillingAddress::class);
-        $billingAddressFields = $billingAddress->getFields($this->orderMember);
+        $billingAddressFields = $billingAddress->getFields($this->loggedInMember);
         $addressFieldsBilling->merge($billingAddressFields);
 
         $requiredFields = array_merge($requiredFields, $billingAddress->getRequiredFields());
@@ -217,7 +217,7 @@ class OrderFormAddress extends Form
             //$addressFieldsShipping->merge($useShippingAddressField);
             //now we can add the shipping fields
             $shippingAddress = $this->order->CreateOrReturnExistingAddress(ShippingAddress::class);
-            $shippingAddressFields = $shippingAddress->getFields($this->orderMember);
+            $shippingAddressFields = $shippingAddress->getFields($this->loggedInMember);
             $requiredFields = array_merge($requiredFields, $shippingAddress->getRequiredFields());
             $addressFieldsShipping->merge($shippingAddressFields);
         }
