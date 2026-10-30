@@ -141,7 +141,7 @@ class OrderFormAddress extends Form
                 $memberFields = $tempMember->getEcommerceFields(false, true);
                 $requiredFields = array_merge($requiredFields, $tempMember->getEcommerceRequiredFields());
             }
-            if ($this->canUseOrderMember) {
+            if ($this->loggedInMember) {
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
             } else {
                 $memberFields->dataFieldByName('Email')
@@ -282,20 +282,6 @@ class OrderFormAddress extends Form
                     )
                 );
             }
-            if ($this->orderMember->exists() && $this->loggedInMember && $this->loggedInMember->ID !== $this->orderMember->ID) {
-                $rightFields->push(
-                    new LiteralField(
-                        'OrderAddedTo',
-                        '<p class="message good">' .
-                            _t('Account.ORDERADDEDTO', 'Order will be retrievable using') .
-                            ' ' .
-                            Convert::raw2xml($this->orderMember->Email) .
-                            ' ' .
-                            _t('Account.AS_IDENTIFIER', 'as identifier') .
-                            '</p>'
-                    )
-                );
-            }
         }
 
         //  ________________  5) Put all the fields in one FieldList
@@ -334,7 +320,7 @@ class OrderFormAddress extends Form
 
         //we do this first so that Billing and Shipping Address can override this...
 
-        if ($this->orderMember && $this->loggedInMember) {
+        if ($this->canUseOrderMember) {
             $this->loadDataFrom($this->orderMember);
         }
         if ($this->order) {
@@ -346,7 +332,7 @@ class OrderFormAddress extends Form
                 $this->loadDataFrom($shippingAddress);
             }
         }
-        if ($this->orderMember && $this->loggedInMember) {
+        if ($this->canUseOrderMember) {
             $fields->dataFieldByName('FirstName')->setValue($this->orderMember->FirstName);
             $fields->dataFieldByName('Surname')->setValue($this->orderMember->Surname);
             $fields->dataFieldByName('Email')->setValue($this->orderMember->Email);
