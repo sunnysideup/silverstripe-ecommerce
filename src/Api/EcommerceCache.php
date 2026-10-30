@@ -83,7 +83,7 @@ class EcommerceCache implements Flushable
             $this->productCacheKey .= '_' . strtotime((string) Product::get()->max('LastEdited'));
             $this->productCacheKey .= '_' . ProductGroup::get()->count();
             $this->productCacheKey .= '_' . strtotime((string) ProductGroup::get()->max('LastEdited'));
-            $this->productCacheKey .= '_' . self::escapeCacheKey(Versioned::get_reading_mode());
+            $this->productCacheKey .= '_' . self::escapeCacheKey((string) Versioned::get_reading_mode());
         }
 
         return $this->productCacheKey;
