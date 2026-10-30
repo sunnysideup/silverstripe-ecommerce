@@ -477,6 +477,12 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
         return strtolower(trim($comparisonString));
     }
 
+    protected function validateMemberForAutocompletion(Member $member): bool
+    {
+        $loggedInUser = Security::getCurrentUser();
+        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
+    }
+
     /**
      *@todo: are there times when the Shipping rather than the Billing address should be linked?
      * Copies the last address used by the member.
@@ -489,7 +495,7 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
     {
         $excludedFields = ['ID', 'OrderID'];
         $fieldPrefix = $this->fieldPrefix();
-        if ($member && $member->exists()) {
+        if ($this->validateMemberForAutocompletion($member)) {
             $oldAddress = $member->previousOrderAddress($this->baseClassLinkingToOrder(), $this->ID);
             if ($oldAddress) {
                 $fieldNameArray = array_keys($this->Config()->get('db')) + array_keys($this->Config()->get('has_one'));

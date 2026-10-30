@@ -123,15 +123,17 @@ class OrderFormAddress extends Form
         $this->order = ShoppingCart::current_order();
         $this->orderMember = $this->order->CreateOrReturnExistingMember(false);
         $this->loggedInMember = Security::getCurrentUser();
+        $this->canUseOrderMember = $this->orderMember && $this->loggedInMember && $this->orderMember->ID === $this->loggedInMember->ID;
 
         //strange security situation...
         if ($this->orderMember->exists() && $this->loggedInMember && $this->orderMember->ID !== $this->loggedInMember->ID && ! $this->loggedInMember->IsShopAdmin()) {
             $this->loggedInMember->logOut();
+            $this->loggedInMember = null;
         }
 
         // member fields
         if ($this->orderMember) {
-            if ($this->loggedInMember && $this->loggedInMember->ID === $this->orderMember->ID) {
+            if ($this->canUseOrderMember) {
                 $memberFields = $this->orderMember->getEcommerceFields(false, true);
                 $requiredFields = array_merge($requiredFields, $this->orderMember->getEcommerceRequiredFields());
             } else {
@@ -139,7 +141,7 @@ class OrderFormAddress extends Form
                 $memberFields = $tempMember->getEcommerceFields(false, true);
                 $requiredFields = array_merge($requiredFields, $tempMember->getEcommerceRequiredFields());
             }
-            if ($this->loggedInMember) {
+            if ($this->canUseOrderMember) {
                 $memberFields->replaceField('Email', ReadonlyField::create('Email', 'Email', $this->loggedInMember->Email));
             } else {
                 $memberFields->dataFieldByName('Email')

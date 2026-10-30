@@ -1957,10 +1957,12 @@ class Order extends DataObject implements EditableEcommerceObject
         }
 
         if (! $address) {
-            $address = new $className();
+            $address = Injector::inst()->create($className);
             $member = $this->CreateOrReturnExistingMember();
             if ($member && $member->exists()) {
-                $address->FillWithLastAddressFromMember($member, $write = false);
+                if ($address->validateMemberForAutocompletion($member)) {
+                    $address->FillWithLastAddressFromMember($member, $write = false);
+                }
             }
         }
 

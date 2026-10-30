@@ -273,7 +273,7 @@ class ShippingAddress extends OrderAddress
             );
 
             if ($member && Security::getCurrentUser()) {
-                if ($member->exists() && ! $member->IsShopAdmin()) {
+                if ($this->validateMemberForAutocompletion($member)) {
                     $this->FillWithLastAddressFromMember($member, true);
                     if (EcommerceConfig::get(ShippingAddress::class, 'allow_selection_of_previous_addresses_in_checkout')) {
                         $addresses = $member->previousOrderAddresses($this->baseClassLinkingToOrder(), $this->ID, $onlyLastRecord = false, $keepDoubles = false);
