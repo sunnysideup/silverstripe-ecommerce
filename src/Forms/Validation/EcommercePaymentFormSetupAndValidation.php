@@ -125,14 +125,7 @@ class EcommercePaymentFormSetupAndValidation
         }
 
         if (! $this->paymentObject) {
-            $paymentClass = empty($data['PaymentMethod']) ? null : $data['PaymentMethod'];
-            if ($paymentClass) {
-                //important! convert back to PHP class
-                $paymentClass = EcommercePayment::html_class_to_php_class($paymentClass);
-                if (class_exists($paymentClass)) {
-                    $this->paymentObject = $paymentClass::create();
-                }
-            }
+            $this->paymentObject = $this->createPaymentObjectFromData($order, $data);
         }
 
         if (! $this->paymentObject || ! ($this->paymentObject instanceof EcommercePayment)) {
@@ -257,6 +250,38 @@ class EcommercePaymentFormSetupAndValidation
     }
 
     /**
+     * Creates a payment object for the payment method that was submitted.
+     * SECURITY: the submitted value is user input, so we only ever create a payment object
+     * for a payment method that is currently supported (configured and, on live, not a test method)
+     * for this order AND that is an EcommercePayment.
+     * Anything else returns null.
+     *
+     * @param null|Order $order
+     * @param array      $data  - Array of data that is submittted
+     */
+    protected function createPaymentObjectFromData($order, $data): ?EcommercePayment
+    {
+        $paymentClass = is_array($data) ? ($data['PaymentMethod'] ?? null) : null;
+        if (! is_string($paymentClass) || '' === $paymentClass) {
+            return null;
+        }
+        //important! convert back to PHP class
+        $paymentClass = ltrim(EcommercePayment::html_class_to_php_class($paymentClass), '\\');
+        $supportedClasses = array_map(
+            static fn ($class) => ltrim((string) $class, '\\'),
+            array_keys(EcommercePayment::get_supported_methods($order instanceof Order ? $order : null))
+        );
+        if (! in_array($paymentClass, $supportedClasses, true)) {
+            return null;
+        }
+        if (! class_exists($paymentClass) || ! is_a($paymentClass, EcommercePayment::class, true)) {
+            return null;
+        }
+
+        return $paymentClass::create();
+    }
+
+    /**
      * Process payment form and return next step in the payment process.
      * Steps taken are:
      * 1. create new payment
@@ -272,10 +297,7 @@ class EcommercePaymentFormSetupAndValidation
     public function processPaymentFormAndReturnNextStep(Order $order, $data, Form $form)
     {
         if (! $this->paymentObject) {
-            $paymentClass = empty($data['PaymentMethod']) ? null : $data['PaymentMethod'];
-            if ($paymentClass && class_exists($paymentClass)) {
-                $this->paymentObject = $paymentClass::create();
-            }
+            $this->paymentObject = $this->createPaymentObjectFromData($order, $data);
         }
 
         if (! $this->paymentObject) {
