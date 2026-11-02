@@ -4,6 +4,7 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
@@ -252,6 +253,11 @@ abstract class BaseApplyer
             }
 
             foreach ($params as $param) {
+                if (! is_scalar($param)) {
+                    continue;
+                }
+                // the param ends up in the SQL so it must be a number or a properly quoted and escaped string.
+                $param = is_numeric($param) ? (string) (0 + $param) : Convert::raw2sql((string) $param, true);
                 $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);
             }
         }

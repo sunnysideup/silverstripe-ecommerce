@@ -52,7 +52,9 @@ class ArrayMethods
         $baseTable = $singleton->baseTable();
         $tableName = $singleton->stageTable($baseTable, Versioned::get_stage());
         foreach ($ids as $id) {
-            $ifStatement .= ' WHEN "' . $tableName . sprintf('"."ID" = %s THEN %d', $id, $count);
+            // IDs are added to the SQL directly so they MUST be whole numbers.
+            $id = (int) $id;
+            $ifStatement .= ' WHEN "' . $tableName . "\".\"ID\" = {$id} THEN {$count}";
             ++$count;
         }
 

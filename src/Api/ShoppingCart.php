@@ -1376,14 +1376,16 @@ class ShoppingCart
         $cleanedparams = $this->cleanParameters($parameters);
         $outputArray = [];
         foreach ($cleanedparams as $field => $value) {
-            $outputarray[$field] = '"' . $field . '" = ' . $value;
+            // field names come from config, but let's make sure they are safe anyway.
+            if (! is_scalar($value) || ! preg_match('/^[A-Za-z0-9_]+$/', (string) $field)) {
+                continue;
+            }
+            // $value has been escaped in cleanParameters (raw2sql) so it just needs to be quoted.
+            $outputArray[] = ' AND "' . $field . '" = \'' . $value . '\'';
         }
 
-        if ([] !== $outputArray) {
-            return implode(' AND ', $outputArray);
-        }
-
-        return '';
+        // NB: this is added to the end of a WHERE statement (see getExistingItem)
+        return implode('', $outputArray);
     }
 
     /**
