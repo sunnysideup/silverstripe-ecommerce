@@ -15,10 +15,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
+use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\ShopAccountForm;
+use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Order;
 
 /**
@@ -153,8 +155,9 @@ class CartPageController extends PageController
             foreach ($buyables as $buyable) {
                 $details = explode(',', $buyable);
                 if (3 === count($details)) {
-                    $className = $details[0];
-                    $className = class_exists($className) ? $className : null;
+                    // only buyables can be added to the cart (the class name comes from the URL!)
+                    $className = ClassHelpers::unsanitise_class_name($details[0]);
+                    $className = EcommerceDBConfig::is_buyable($className) ? $className : null;
                     $id = (int) $details[1];
                     $quantity = floatval($details[2]);
                     if ($className && $id && $quantity) {
@@ -170,7 +173,9 @@ class CartPageController extends PageController
                 }
             }
 
-            $order->calculateOrderAttributes(false);
+            if ($order) {
+                $order->calculateOrderAttributes(false);
+            }
             if (! $request->getVar('done')) {
                 return $this->redirect($this->Link('share/' . $codes) . '?done=1');
             }

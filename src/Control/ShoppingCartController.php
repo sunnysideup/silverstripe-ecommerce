@@ -23,6 +23,7 @@ use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
+use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -519,16 +520,19 @@ class ShoppingCartController extends Controller
     public function removefromsale(HTTPRequest $request)
     {
         if (EcommerceRole::current_member_is_shop_assistant()) {
-            $className = Convert::raw2sql($request->param('ID'));
+            // only buyables can be removed from sale (the class name comes from the URL!)
+            $className = ClassHelpers::unsanitise_class_name((string) $request->param('ID'));
             $id = (int) $request->param('OtherID');
-            if (class_exists($className)) {
+            if ($id && EcommerceDBConfig::is_buyable($className)) {
                 $obj = $className::get_by_id($id);
-                $obj->AllowPurchase = 0;
-                if ($obj instanceof SiteTree) {
-                    $obj->writeToStage(Versioned::DRAFT);
-                    $obj->publishRecursive();
-                } else {
-                    $obj->write();
+                if ($obj && $obj->hasField('AllowPurchase')) {
+                    $obj->AllowPurchase = 0;
+                    if ($obj instanceof SiteTree) {
+                        $obj->writeToStage(Versioned::DRAFT);
+                        $obj->publishRecursive();
+                    } else {
+                        $obj->write();
+                    }
                 }
             }
 
@@ -652,9 +656,10 @@ class ShoppingCartController extends Controller
     {
         $id = (int) $request->param('ID');
 
-        $className = Convert::raw2sql($request->param('OtherID'));
+        // only order addresses can be removed (the class name comes from the URL!)
+        $className = ClassHelpers::unsanitise_class_name((string) $request->param('OtherID'));
 
-        if (class_exists($className)) {
+        if ($id && class_exists($className) && is_a($className, OrderAddress::class, true)) {
             $address = $className::get_by_id($id);
             if ($address && $address->canView()) {
                 $member = Security::getCurrentUser();
