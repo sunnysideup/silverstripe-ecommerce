@@ -400,6 +400,8 @@ class OrderFormAddress extends Form
         Controller::curr()->getRequest()->getSession()->set('ShippingEcommerceGeocodingFieldValue', empty($data['ShippingEcommerceGeocodingField']) ? null : $data['ShippingEcommerceGeocodingField']);
         $this->saveDataToSession();
 
+        // the password must be taken from the data as it was typed (before any escaping).
+        $enteredPassword = $this->validPasswordHasBeenEntered($data);
         $data = Convert::raw2sql($data);
         //check for cart items
         if (! $this->order) {
@@ -430,9 +432,20 @@ class OrderFormAddress extends Form
         if ($this->orderMember && is_object($this->orderMember)) {
             if ($this->memberShouldBeSaved($data)) {
                 $form->saveInto($this->orderMember);
-                $password = $this->validPasswordHasBeenEntered($data);
+                $password = $enteredPassword;
                 if ($password) {
-                    $this->orderMember->changePassword($password);
+                    // a member that already has a password can only change it on the account page (where the current password is needed).
+                    if (ShopAccountFormPasswordValidator::can_set_password_without_current_password($this->orderMember)) {
+                        $passwordResult = $this->orderMember->changePassword($password);
+                        if (! $passwordResult->isValid()) {
+                            $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.') . ' ' . ShopAccountFormPasswordValidator::messages_as_string($passwordResult), 'bad');
+                            $this->controller->redirectBack();
+
+                            return false;
+                        }
+                    } else {
+                        $form->sessionMessage(_t('Account.PASSWORD_CHANGE_ON_ACCOUNT_PAGE', 'Your password has not been changed. To change your password, please use your account page.'), 'warning');
+                    }
                 }
                 $this->orderMember->write();
             }

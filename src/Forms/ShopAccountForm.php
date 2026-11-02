@@ -53,6 +53,15 @@ class ShopAccountForm extends Form
                 $loginMessage
             );
             $fields->push($loginField);
+            if ($member->Password) {
+                // needed to change email or password (checked in processForm)
+                $fields->push(
+                    PasswordField::create(
+                        'CurrentPassword',
+                        _t('Account.CURRENT_PASSWORD', 'Current password')
+                    )->setDescription(_t('Account.CURRENT_PASSWORD_DESCRIPTION', 'Only needed if you want to change your email or password.'))
+                );
+            }
             $actions = new FieldList();
             $order = ShoppingCart::current_order();
             if ($order) {
@@ -160,8 +169,10 @@ class ShopAccountForm extends Form
             $form->saveInto($member);
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {
-                $member->changePassword($password);
-                if ($member->validate()->isValid()) {
+                $passwordResult = $member->changePassword($password, false);
+                if (! $passwordResult->isValid()) {
+                    $this->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.') . ' ' . ShopAccountFormPasswordValidator::messages_as_string($passwordResult), 'bad');
+                } elseif ($member->validate()->isValid()) {
                     $member->write();
                     if ($member->exists()) {
                         if (! $order->MemberID) {
@@ -204,18 +215,40 @@ class ShopAccountForm extends Form
     protected function processForm(array $data, $form, $request, ?string $link = '')
     {
         $member = Security::getCurrentUser();
-        if (! $member) {
+        if (! $member || ! $member->exists()) {
             $form->sessionMessage(_t('Account.DETAILSNOTSAVED', 'Your details could not be saved.'), 'bad');
-            $this->controller->redirectBack();
+
+            return $this->controller->redirectBack();
         }
-        $form->saveInto($member);
         $password = ShopAccountFormPasswordValidator::clean_password($data);
-        if ($password) {
-            $member->changePassword($password);
-        } elseif ($data['PasswordCheck1']) {
+        if (! $password && ! empty($data['PasswordCheck1'])) {
             $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.'), 'bad');
 
             return $this->controller->redirectBack();
+        }
+        // Changing the email or the password of an account that has a password
+        // requires the current password.
+        // (otherwise anyone with access to a logged-in browser can take over the account).
+        // NB: this has to be checked BEFORE saving anything into the member.
+        $newEmail = isset($data['Email']) && is_string($data['Email']) ? trim($data['Email']) : '';
+        $emailChanged = '' !== $newEmail && 0 !== strcasecmp($newEmail, (string) $member->Email);
+        if (($password || $emailChanged) && ! ShopAccountFormPasswordValidator::can_set_password_without_current_password($member)) {
+            $currentPassword = isset($data['CurrentPassword']) && is_string($data['CurrentPassword']) ? $data['CurrentPassword'] : '';
+            if (! ShopAccountFormPasswordValidator::is_current_password($member, $currentPassword)) {
+                $form->sessionMessage(_t('Account.CURRENT_PASSWORD_REQUIRED', 'Please enter your current password to change your email or password.'), 'bad');
+
+                return $this->controller->redirectBack();
+            }
+        }
+        $form->saveInto($member);
+        if ($password) {
+            // do not write yet: we only write if the member as a whole is valid (see below).
+            $passwordResult = $member->changePassword($password, false);
+            if (! $passwordResult->isValid()) {
+                $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.') . ' ' . ShopAccountFormPasswordValidator::messages_as_string($passwordResult), 'bad');
+
+                return $this->controller->redirectBack();
+            }
         }
         if ($member->validate()->isValid()) {
             $member->write();
