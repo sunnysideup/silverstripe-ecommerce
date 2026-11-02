@@ -864,7 +864,8 @@ class ShoppingCartController extends Controller
      */
     public function ajaxtest(HTTPRequest $request)
     {
-        if (! (Director::isDev() || !Permission::check('ADMIN'))) {
+        // developers only: allowed in dev mode, or for admins.
+        if (! Director::isDev() && ! Permission::check('ADMIN')) {
             return Security::permissionFailure($this);
         }
         // we want the same response as for an ajax request

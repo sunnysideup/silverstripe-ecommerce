@@ -818,9 +818,13 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
     public function getEcommerceFieldsForCMS()
     {
         $fields = new CompositeField();
-        $memberTitle = HTMLReadonlyField::create('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . $this->getOwner()->getTitle() . '</p>');
+        // SECURITY: the name and email are typed in by customers (also guests), and this is shown to admins.
+        // Everything that goes into HTML here has to be escaped.
+        $memberName = Convert::raw2xml((string) $this->getOwner()->getTitle());
+        $memberEmailAddress = (string) $this->getOwner()->Email;
+        $memberTitle = HTMLReadonlyField::create('MemberTitle', _t('Member.TITLE', 'Name'), '<p>' . $memberName . '</p>');
         $fields->push($memberTitle);
-        $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p><a href="mailto:' . $this->getOwner()->Email . '">' . $this->getOwner()->Email . '</a></p>');
+        $memberEmail = HTMLReadonlyField::create('MemberEmail', _t('Member.EMAIL', 'Email'), '<p><a href="mailto:' . Convert::raw2att($memberEmailAddress) . '">' . Convert::raw2xml($memberEmailAddress) . '</a></p>');
         $fields->push($memberEmail);
         $lastLogin = HTMLReadonlyField::create('MemberLastLogin', _t('Member.LASTLOGIN', 'Last Login'), '<p>' . $this->getOwner()->dbObject('LastVisited') . '</p>');
         $fields->push($lastLogin);
@@ -832,7 +836,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
         $linkField1 = EcommerceCMSButtonField::create(
             'MemberLinkFieldEditThisCustomer',
             $this->getOwner()->CMSEditLink(),
-            _t('Member.EDIT', 'Edit') . ' <i>' . $this->getOwner()->getTitle() . '</i>'
+            _t('Member.EDIT', 'Edit') . ' <i>' . $memberName . '</i>'
         );
         $fields->push($headerField);
         $fields->push($linkField1);
@@ -841,7 +845,7 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
             $linkField2 = EcommerceCMSButtonField::create(
                 'MemberLinkFieldEditAllCustomers',
                 CMSEditLinkAPI::find_edit_link_for_object($group),
-                _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All ' . $group->Title)
+                _t('Member.EDIT_ALL_CUSTOMERS', 'Edit All ') . Convert::raw2xml((string) $group->Title)
             );
             $fields->push($linkField2);
         }
