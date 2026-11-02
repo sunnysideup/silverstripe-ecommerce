@@ -436,7 +436,7 @@ class ProductSearchFilter extends BaseApplyer
         if ($this->debug) {
             $this->debugOutput('<h2>Debugging Search Results in ' . static::class . '</h2>');
             $this->debugOutput('<p>Base Class Name: ' . $this->baseClassNameForBuyables . '</p>');
-            $this->debugOutput('<p style="color: red">data: ' . print_r($this->rawData, 1) . '</p>');
+            $this->debugOutput('<p style="color: red">data: ' . Convert::raw2xml(print_r($this->rawData, true)) . '</p>');
         }
         $this->rawData['MinimumPrice'] = $this->rawData['MinimumPrice'] ?? 0;
         $this->rawData['MaximumPrice'] = $this->rawData['MaximumPrice'] ?? 0;
@@ -458,7 +458,7 @@ class ProductSearchFilter extends BaseApplyer
     protected function doKeywordCleanup()
     {
         if ($this->debug) {
-            $this->debugOutput('<h3>RAW KEYWORD</h3><p>' . $this->keywordPhrase . '</p>');
+            $this->debugOutput('<h3>RAW KEYWORD</h3><p>' . Convert::raw2xml((string) $this->keywordPhrase) . '</p>');
         }
         $this->keywordPhrase = self::keyword_sanitised($this->keywordPhrase);
     }
@@ -472,7 +472,7 @@ class ProductSearchFilter extends BaseApplyer
         if (! $this->weHaveEnoughResults()) {
             $this->keywordPhrase = $this->getSearchApi()->processKeyword($this->keywordPhrase);
             if ($this->debug) {
-                $this->debugOutput('<pre>WORD ARRAY: ' . print_r($this->keywordPhrase, 1) . '</pre>');
+                $this->debugOutput('<pre>WORD ARRAY: ' . Convert::raw2xml(print_r($this->keywordPhrase, true)) . '</pre>');
             }
         }
     }
@@ -566,7 +566,7 @@ class ProductSearchFilter extends BaseApplyer
                 $where
             );
             if ($this->debug) {
-                $this->debugOutput('<pre>ID ARRAY: ' . print_r($ids, 1) . ' using where of ' . $where . '</pre>');
+                $this->debugOutput('<pre>ID ARRAY: ' . Convert::raw2xml(print_r($ids, true)) . ' using where of ' . Convert::raw2xml($where) . '</pre>');
             }
         } else {
             $ids = [-1 => -1];
