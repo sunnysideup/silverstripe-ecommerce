@@ -3,7 +3,6 @@
 namespace Sunnysideup\Ecommerce\Api;
 
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Model\Search\SearchReplacement;
@@ -26,6 +25,13 @@ class KeywordSearchBuilder
 
     protected $ifStatement = '';
 
+    /**
+     * the values (in order) for the ? placeholders in $ifStatement
+     *
+     * @var array
+     */
+    protected $ifParams = [];
+
     protected $debug = false;
 
     public function setDebug(bool $bool = true): static
@@ -39,7 +45,7 @@ class KeywordSearchBuilder
     {
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductSearchTable', 'ProductID', $phrase, $where, $limit);
-        $result = $this->addPriceAdjustment(DB::query($sql));
+        $result = $this->addPriceAdjustment(DB::prepared_query($sql, $this->ifParams));
         if ($this->debug) {
             print_r($sql);
             echo $this->arrayToHtmlTable($result);
@@ -52,10 +58,10 @@ class KeywordSearchBuilder
         $this->createIfStatements($phrase, 'Title', 'Data');
         $sql = $this->createSql('ProductGroupSearchTable', 'ProductGroupID', $phrase, $where, $limit);
         if ($this->debug) {
-            $rows = DB::query($sql);
+            $rows = DB::prepared_query($sql, $this->ifParams);
             echo $this->arrayToHtmlTable($rows);
         }
-        return DB::query($sql)->keyedColumn();
+        return DB::prepared_query($sql, $this->ifParams)->keyedColumn();
     }
 
     public function processKeyword(string $keywordPhrase)
@@ -93,6 +99,7 @@ class KeywordSearchBuilder
         $wordAsArray = array_filter(explode(' ', $phrase));
         // create Field LIKE %AAAA% AND Field LIKE %BBBBB
         $searchStringAND = '';
+        $searchStringANDParams = [];
         $hasWordArray = false;
         if (count($wordAsArray) > 1) {
             $searchStringArray = [];
@@ -101,34 +108,39 @@ class KeywordSearchBuilder
                 if (strlen($word) < 2) {
                     continue;
                 }
-                $searchStringArray[] = "\"_FF_FIELD_GOES_HERE_\" LIKE '%{$word}%'";
+                $searchStringArray[] = '"_FF_FIELD_GOES_HERE_" LIKE ?';
+                $searchStringANDParams[] = '%' . $this->escapeLike($word) . '%';
             }
             $searchStringAND = '(' . implode(' AND ', $searchStringArray) . ')';
             $hasWordArray = count($searchStringArray) > 0;
         }
 
         $count = 0;
+        $likePhrase = $this->escapeLike($phrase);
 
+        // NB: all values are passed as parameters (?) - never add values directly to the SQL.
         foreach ([$primaryField, $secondaryField] as $field) {
             $strPosition = $this->strPositionPhrase($phrase, $field);
             if ($field === $primaryField) {
                 // exact match with Field, e.g. Title equals "AAAA BBBB"
-                $this->addIfStatement(++$count, '"' . $field . "\" = '{$phrase}'");
+                $this->addIfStatement(++$count, '"' . $field . '" = ?', [$phrase]);
             }
 
             // starts with full string and then space, e.g. Title equals "AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '{$phrase} %'");
+            $this->addIfStatement(++$count, '"' . $field . '" LIKE ?', [$likePhrase . ' %']);
 
             // contains full string with spaces around it, e.g. Title equals "* AAAA BBBB *" (note space!)
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '% {$phrase} %'", $strPosition);
+            $this->addIfStatement(++$count, '"' . $field . '" LIKE ?', ['% ' . $likePhrase . ' %'], $strPosition, [$phrase]);
 
             // contains full string without space around it "*AAAA BBBB*"
-            $this->addIfStatement(++$count, '"' . $field . "\" LIKE '%{$phrase}%'", $strPosition);
+            $this->addIfStatement(++$count, '"' . $field . '" LIKE ?', ['%' . $likePhrase . '%'], $strPosition, [$phrase]);
             if ($hasWordArray) {
                 $this->addIfStatement(
                     ++$count,
                     str_replace('_FF_FIELD_GOES_HERE_', $field, $searchStringAND),
-                    $strPosition
+                    $searchStringANDParams,
+                    $strPosition,
+                    [$phrase]
                 );
             }
         }
@@ -136,20 +148,32 @@ class KeywordSearchBuilder
         $this->addEndIfStatement($count);
     }
 
+    /**
+     * returns SQL with ONE ? placeholder (for the phrase).
+     */
     protected function strPositionPhrase(string $phrase, string $field): string
     {
-
         $divisor = 5;
+
         return '  +
             (
                 1 - (
-                    MATCH ("' . $field . '") AGAINST (\'' . Convert::raw2sql($phrase) . '\' IN NATURAL LANGUAGE MODE) ) / ' . $divisor . '
+                    MATCH ("' . $field . '") AGAINST (? IN NATURAL LANGUAGE MODE) ) / ' . $divisor . '
             )';
+    }
+
+    /**
+     * escapes the characters that have a special meaning in LIKE.
+     */
+    protected function escapeLike(string $value): string
+    {
+        return addcslashes($value, '\\%_');
     }
 
     protected function resetIfStatement(): void
     {
         $this->ifStatement = '';
+        $this->ifParams = [];
     }
 
     protected function startIfStatement(): void
@@ -157,9 +181,15 @@ class KeywordSearchBuilder
         $this->ifStatement .= '(';
     }
 
-    protected function addIfStatement(int $count, string $where, string $secondaryCount = ''): void
+    /**
+     * @param array $whereParams     values for the ? in $where
+     * @param array $secondaryParams values for the ? in $secondaryCount
+     */
+    protected function addIfStatement(int $count, string $where, array $whereParams = [], string $secondaryCount = '', array $secondaryParams = []): void
     {
         $this->ifStatement .= ' IF(' . $where . ', ( ' . $count . ' ' . $secondaryCount . ' ), ';
+        // the order of the parameters must match the order of the placeholders in the SQL
+        $this->ifParams = array_merge($this->ifParams, array_values($whereParams), array_values($secondaryParams));
     }
 
     protected function addEndIfStatement($count): void
@@ -191,14 +221,15 @@ class KeywordSearchBuilder
         if (! $word) {
             $word = $this->keywordPhrase;
         }
+        $likeWord = $this->escapeLike((string) $word);
         $replacements = SearchReplacement::get()
-            ->where(
-                "
-                LOWER(\"Search\") = '{$word}' OR
-                LOWER(\"Search\") LIKE '%,{$word}' OR
-                LOWER(\"Search\") LIKE '{$word},%' OR
-                LOWER(\"Search\") LIKE '%,{$word},%'"
-            );
+            ->where([
+                '
+                LOWER("Search") = ? OR
+                LOWER("Search") LIKE ? OR
+                LOWER("Search") LIKE ? OR
+                LOWER("Search") LIKE ?' => [(string) $word, '%,' . $likeWord, $likeWord . ',%', '%,' . $likeWord . ',%'],
+            ]);
         //if it is a word replacement then we do not want replace whole phrase ones ...
         if ($this->keywordPhrase !== $word) {
             $replacements = $replacements->exclude(['ReplaceWholePhrase' => 1]);
@@ -237,7 +268,7 @@ class KeywordSearchBuilder
             $pageID = $row['ProductID'] ?? $row['ProductGroupID'] ?? 0;
             $pageTitle = 'Unknown';
             if ($pageID) {
-                $pageTitle = DB::query("SELECT \"Title\" FROM \"SiteTree\" WHERE \"ID\" = {$pageID}")->value();
+                $pageTitle = DB::prepared_query('SELECT "Title" FROM "SiteTree" WHERE "ID" = ?', [(int) $pageID])->value();
                 if (! $pageTitle) {
                     $pageTitle = 'Unknown';
                 }
