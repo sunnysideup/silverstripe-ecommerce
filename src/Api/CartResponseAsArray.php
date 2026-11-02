@@ -55,10 +55,13 @@ class CartResponseAsArray
         $js = [];
 
         //must be first
-        if (isset($_REQUEST['loadingindex'])) {
+        // NB: this comes straight from the request. It is only ever a small whole number (see EcomCart.js),
+        // so we accept nothing else.
+        $loadingIndex = $_REQUEST['loadingindex'] ?? null;
+        if ((is_string($loadingIndex) || is_int($loadingIndex)) && preg_match('/^[0-9]{1,6}$/', (string) $loadingIndex)) {
             $js['body'] = [
                 't' => 'loadingindex',
-                'v' => $_REQUEST['loadingindex'],
+                'v' => (string) $loadingIndex,
             ];
         }
 
