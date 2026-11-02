@@ -11,6 +11,8 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\SetThemed;
@@ -56,6 +58,11 @@ class ProductController extends PageController
         $currentVersion = $this->Version;
         if ($currentVersion !== $version) {
             $record = $this->getVersionOfBuyable($this->ID, $version);
+            // only versions that have been published can be viewed by visitors
+            // (otherwise people could look at drafts by trying out version numbers).
+            if ($record && ! $this->versionCanBeViewed($record)) {
+                $record = null;
+            }
             if ($record) {
                 //we check again, because we may actually get the same version back...
                 if ($record->Version !== $this->Version) {
@@ -72,6 +79,28 @@ class ProductController extends PageController
         }
 
         return [];
+    }
+
+    /**
+     * Can the (older) version of the product be viewed by the current user?
+     * Yes if the user can edit the product OR if the version has been published at some point.
+     */
+    protected function versionCanBeViewed(DataObject $record): bool
+    {
+        if ($this->dataRecord->canEdit()) {
+            return true;
+        }
+        // the current version is always fine.
+        if ((int) $record->Version === (int) $this->Version) {
+            return true;
+        }
+        $baseTable = DataObject::getSchema()->baseDataTable($record);
+        $wasPublished = DB::prepared_query(
+            'SELECT "WasPublished" FROM "' . $baseTable . '_Versions" WHERE "RecordID" = ? AND "Version" = ? LIMIT 1',
+            [(int) $record->ID, (int) $record->Version]
+        )->value();
+
+        return (bool) $wasPublished;
     }
 
     /**
