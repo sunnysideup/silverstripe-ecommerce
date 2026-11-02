@@ -1250,10 +1250,18 @@ class ShoppingCart
             // now we can (re)calculate the order
             $form->sessionMessage($message, $status);
             // let the form controller do the redirectback or whatever else is needed.
-        } elseif (empty($_REQUEST['BackURL']) && Controller::has_curr()) {
-            Controller::curr()->redirectBack();
-        } else {
-            Controller::curr()->redirect(urldecode((string) $_REQUEST['BackURL']));
+        } elseif (Controller::has_curr()) {
+            // BackURL may be double-encoded (see Product::AddToCartAndGoToCheckoutLink),
+            // hence the urldecode.  Only ever redirect to URLs on this site (open redirect protection).
+            $backURL = '';
+            if (isset($_REQUEST['BackURL']) && is_string($_REQUEST['BackURL'])) {
+                $backURL = urldecode($_REQUEST['BackURL']);
+            }
+            if ('' !== $backURL && Director::is_site_url($backURL)) {
+                Controller::curr()->redirect($backURL);
+            } else {
+                Controller::curr()->redirectBack();
+            }
         }
     }
 
