@@ -16,7 +16,7 @@
             <td class="left" title="$LastEdited.Format('dd-MM-y HH:mm')">$LastEdited.Format('dd-MM-y')</td>
             <td class="left">$Status</td>
             <td class="left">$PaymentMethod.XML</td>
-            <td class="left"><% if $Message.Plain %>$Message.Plain.RAW<% else %>---<% end_if %></td>
+            <td class="left"><% if $Message.Plain %>$Message.Plain<% else %>---<% end_if %></td>
             <td class="right">$Amount.NiceDefaultFormat</td>
         </tr>
     <% end_loop %>
