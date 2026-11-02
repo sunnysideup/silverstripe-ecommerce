@@ -439,9 +439,18 @@ class CartPageController extends PageController
                 )->first();
                 if ($retrievedOrder) {
                     $this->currentOrder = $retrievedOrder;
-                    $this->overrideCanView = true;
-                    $this->overrideCanViewOrderID = (int) $retrievedOrder->ID;
-                    $this->setRetrievalOrderID($this->currentOrder->ID);
+                    if ($retrievedOrder->RetrieveLinkHasExpired()) {
+                        // The link has expired, so it does not give access to the order any more.
+                        // The normal permissions apply: the customer will be asked to log in
+                        // (and can view the order if it is theirs).
+                        $this->overrideCanView = false;
+                        $this->overrideCanViewOrderID = 0;
+                        $this->message = _t('CartPage.RETRIEVELINKEXPIRED', 'This link has expired. Please log in to view your order.');
+                    } else {
+                        $this->overrideCanView = true;
+                        $this->overrideCanViewOrderID = (int) $retrievedOrder->ID;
+                        $this->setRetrievalOrderID($this->currentOrder->ID);
+                    }
                 } else {
                     $this->httpError(404, 'No order was found.');
                     $this->message = _t('CartPage.ORDERNOTFOUND', 'Order can not be found.');
