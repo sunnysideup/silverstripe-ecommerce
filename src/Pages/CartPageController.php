@@ -684,12 +684,16 @@ class CartPageController extends PageController
 
     public function sendloginlink(HTTPRequest $request)
     {
-        $email = $request->requestVar('email');
-        $backURL = $request->requestVar('BackURL');
-        if (SecurityToken::inst()->checkRequest($request)) {
+        if (! SecurityToken::inst()->checkRequest($request)) {
             return $this->httpError(400, 'Invalid security token');
         }
-
+        $email = $request->requestVar('email');
+        $backURL = $request->requestVar('BackURL');
+        if (! is_string($email) || ! filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+            return $this->httpError(400, 'Invalid email address');
+        }
+        $email = trim($email);
+        $backURL = is_string($backURL) ? $backURL : '';
         $obj = Injector::inst()->get(SendLoginToken::class);
         $obj->send($email, $backURL, $request);
 
