@@ -31,7 +31,7 @@ if (
           const params = new URLSearchParams()
           params.append('email', email)
           params.append('BackURL', window.location.href)
-          params.append('securitytoken', securityToken)
+          params.append('SecurityID', securityToken)
 
           fetch(loginLink, {
             method: 'POST',
