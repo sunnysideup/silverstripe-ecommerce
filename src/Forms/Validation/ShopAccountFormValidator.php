@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use Sunnysideup\Ecommerce\Api\AttemptLimiter;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
@@ -17,6 +18,22 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
      * @var int
      */
     private static $minimum_password_length = 7;
+
+    /**
+     * How many times (per visitor and per time period) can someone enter an email address that
+     * already has an account.  After that, every email address is refused for a while.
+     * Set to zero for no limit.
+     *
+     * @var int
+     */
+    private static $max_taken_email_attempts = 5;
+
+    /**
+     * The time period (in seconds) for max_taken_email_attempts.
+     *
+     * @var int
+     */
+    private static $max_taken_email_attempts_period_in_seconds = 3600;
 
     /**
      * Ensures member unique id stays unique and other basic stuff...
@@ -47,11 +64,34 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
                 //do nothing
             } else {
                 $uniqueFieldValue = Convert::raw2sql($data[$uniqueFieldName]);
+                // This check tells people if an email address already has an account.
+                // To stop people from using it to find out which email addresses have accounts,
+                // we limit how often someone can run into an email address that is taken.
+                // Once the limit has been reached, every email address is refused (whether it is taken or not).
+                $limiter = AttemptLimiter::create(
+                    'RegistrationEmailTaken',
+                    (int) Config::inst()->get(ShopAccountFormValidator::class, 'max_taken_email_attempts'),
+                    (int) Config::inst()->get(ShopAccountFormValidator::class, 'max_taken_email_attempts_period_in_seconds')
+                );
+                if ($limiter->isLimited()) {
+                    $this->validationError(
+                        $uniqueFieldName,
+                        _t(
+                            'Account.TOOMANYATTEMPTS',
+                            'Too many attempts. Please try again later or log in.'
+                        ),
+                        'required'
+                    );
+                    $this->form->sessionMessage(_t('Account.ERRORINFORM', 'We could not save your details, please check your errors below.'), 'bad');
+
+                    return false;
+                }
                 //can't be taken
                 $otherMembersWithSameEmail = Member::get()
                     ->filter([$uniqueFieldName => $uniqueFieldValue])
                     ->exclude(['ID' => $loggedInMemberID]);
                 if ($otherMembersWithSameEmail->exists()) {
+                    $limiter->record();
                     //we allow existing email
                     // if we are currently NOT logged in
                     // in case we place an order!
