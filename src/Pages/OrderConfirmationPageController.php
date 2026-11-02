@@ -3,10 +3,14 @@
 namespace Sunnysideup\Ecommerce\Pages;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\Requirements;
 use Sunnysideup\Ecommerce\Api\SetThemed;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
@@ -17,6 +21,7 @@ use Sunnysideup\Ecommerce\Email\OrderReceiptEmail;
 use Sunnysideup\Ecommerce\Forms\OrderFormCancel;
 use Sunnysideup\Ecommerce\Forms\OrderFormFeedback;
 use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 use Sunnysideup\Ecommerce\Model\Order;
 use Sunnysideup\Ecommerce\Model\Process\CheckoutPageStepDescription;
 use Sunnysideup\Ecommerce\Model\Process\OrderStep;
@@ -54,6 +59,14 @@ class OrderConfirmationPageController extends CartPageController
      * @var bool
      */
     private static $include_as_checkout_step = true;
+
+    /**
+     * Customers who own an order can have the email for the current step of their order re-sent
+     * to their own account email. This is the minimum number of seconds between two such sends (per order).
+     *
+     * @var int
+     */
+    private static $owner_email_resend_cooldown_in_seconds = 300;
 
     /**
      * This method exists just so that template
@@ -382,8 +395,9 @@ class OrderConfirmationPageController extends CartPageController
             if (class_exists($potentialClassName) && is_a(singleton($potentialClassName), EcommerceConfigClassNames::getName(OrderEmail::class))) {
                 $emailClassName = $potentialClassName;
             }
-            $sendStepID = (int) $request->getVar('send');
-            $testStepID = (int) $request->getVar('test');
+            // POST vars are used by the "send" form, GET vars by the (CMS) links that open the preview.
+            $sendStepID = (int) $request->requestVar('send');
+            $testStepID = (int) $request->requestVar('test');
             $stepID = 0;
             if ($sendStepID !== 0) {
                 $stepID = $sendStepID;
@@ -393,9 +407,19 @@ class OrderConfirmationPageController extends CartPageController
                 $isTest = true;
             }
             if ($stepID !== 0) {
+                // Shop admins can send any step email (and test emails, and to any address).
+                // The owner of the order can only re-send the email for the current step of their order,
+                // and only to their own account email (see below).
+                $isShopAdmin = Permission::check('ADMIN') || EcommerceRole::current_member_is_shop_admin();
+                $ownerEmail = $isShopAdmin ? '' : $this->orderOwnerEmail();
+                if (! $isShopAdmin) {
+                    if ($ownerEmail === '' || $isTest || $stepID !== (int) $this->currentOrder->StatusID) {
+                        return $this->httpError(403, 'You do not have permission to send order emails.');
+                    }
+                }
                 $to = '';
                 if (Permission::check('ADMIN')) {
-                    $to = (string) $request->getVar('to');
+                    $to = (string) $request->requestVar('to');
                 }
                 $step = OrderStep::get_by_id($stepID);
                 if ($step) {
@@ -414,17 +438,46 @@ class OrderConfirmationPageController extends CartPageController
                         $email = $adminOnlyOrToEmail ? 'site administrator' : $this->currentOrder->getOrderEmail();
                         // goes to Email for order.
                     }
-                    $outcome = $this->currentOrder->sendEmail(
-                        $emailClassName,
-                        $subject,
-                        $message,
-                        $resend = true,
-                        $adminOnlyOrToEmail
-                    );
-                    if ($outcome) {
-                        $message = _t('OrderConfirmationPage.RECEIPTSENT', 'This email has been sent to: <strong>') . $email . '</strong><br >with subject: <strong>' . $subject . '</strong><hr />';
+                    if ($ownerEmail !== '') {
+                        // owner of the order: always send to their account email, nowhere else.
+                        $adminOnlyOrToEmail = $ownerEmail;
+                        $email = $ownerEmail;
+                        $to = '';
+                    }
+                    if ($request->isPOST()) {
+                        // only a POST with a valid security token actually sends the email.
+                        if (! SecurityToken::inst()->checkRequest($request)) {
+                            return $this->httpError(400, 'Invalid security token');
+                        }
+                        $session = $request->getSession();
+                        $sessionKey = 'OrderEmailResentAt.' . $this->currentOrder->ID;
+                        $cooldown = (int) $this->config()->get('owner_email_resend_cooldown_in_seconds');
+                        if ($ownerEmail !== '' && time() - (int) $session->get($sessionKey) < $cooldown) {
+                            $outcome = false;
+                            $tooSoon = true;
+                        } else {
+                            $tooSoon = false;
+                            if ($ownerEmail !== '') {
+                                $session->set($sessionKey, time());
+                            }
+                            $outcome = $this->currentOrder->sendEmail(
+                                $emailClassName,
+                                $subject,
+                                $message,
+                                $resend = true,
+                                $adminOnlyOrToEmail
+                            );
+                        }
+                        if ($tooSoon) {
+                            $message = _t('OrderConfirmationPage.RECEIPT_TOO_SOON', 'This email has been sent recently. Please wait a few minutes before sending it again.');
+                        } elseif ($outcome) {
+                            $message = _t('OrderConfirmationPage.RECEIPTSENT', 'This email has been sent to: <strong>') . Convert::raw2xml($email) . '</strong><br >with subject: <strong>' . Convert::raw2xml($subject) . '</strong><hr />';
+                        } else {
+                            $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . Convert::raw2xml($email);
+                        }
                     } else {
-                        $message = _t('OrderConfirmationPage.RECEIPT_NOT_SENT', 'Email could NOT be sent to: ') . $email;
+                        // GET: never send, only show a preview and a form to send it.
+                        $message = $this->sendEmailConfirmationForm($request, $isTest ? 'test' : 'send', $stepID, (string) $to, (string) $email, (string) $subject);
                     }
                 } else {
                     $message = _t('OrderConfirmationPage.RECEIPTNOTSENTNOEMAIL', 'No customer details found.  EMAIL NOT SENT.');
@@ -442,6 +495,46 @@ class OrderConfirmationPageController extends CartPageController
         }
 
         return _t('OrderConfirmationPage.RECEIPTNOTSENTNOORDER', 'Order could not be found.');
+    }
+
+    /**
+     * If the current user is logged in and owns the (submitted) current order,
+     * then this returns their account email (if valid), otherwise an empty string.
+     */
+    protected function orderOwnerEmail(): string
+    {
+        $member = Security::getCurrentUser();
+        $order = $this->currentOrder;
+        if ($member && $member->exists() && $order && $order->exists() && $order->IsSubmitted() && (int) $order->MemberID === (int) $member->ID) {
+            $email = (string) $member->Email;
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $email;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * returns the HTML for a small form that sends the email (POST + security token).
+     */
+    protected function sendEmailConfirmationForm(HTTPRequest $request, string $stepVarName, int $stepID, string $to, string $email, string $subject): string
+    {
+        $action = Controller::join_links(Director::baseURL(), $request->getURL());
+        $token = SecurityToken::inst();
+        $html = '<form method="post" action="' . Convert::raw2att($action) . '" style="padding: 1rem; background: #ffc; border-bottom: 1px solid #ccc;">'
+            . '<input type="hidden" name="' . Convert::raw2att($token->getName()) . '" value="' . Convert::raw2att($token->getValue()) . '" />'
+            . '<input type="hidden" name="' . Convert::raw2att($stepVarName) . '" value="' . $stepID . '" />';
+        if ($to !== '') {
+            $html .= '<input type="hidden" name="to" value="' . Convert::raw2att($to) . '" />';
+        }
+        $html .= '<p>' . _t('OrderConfirmationPage.PREVIEWONLY', 'Preview only - nothing has been sent yet.')
+            . '<br />' . _t('OrderConfirmationPage.SENDTO', 'Send to:') . ' <strong>' . Convert::raw2xml($email) . '</strong>'
+            . '<br />' . _t('OrderConfirmationPage.WITHSUBJECT', 'Subject:') . ' <strong>' . Convert::raw2xml($subject) . '</strong></p>'
+            . '<button type="submit">' . _t('OrderConfirmationPage.SENDEMAILNOW', 'Send this email now') . '</button>'
+            . '</form>';
+
+        return $html;
     }
 
     /**
