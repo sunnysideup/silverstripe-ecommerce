@@ -215,10 +215,20 @@ class OrderForm extends Form
             $form->saveInto($member);
             $password = ShopAccountFormPasswordValidator::clean_password($data);
             if ($password) {
-                $member->changePassword($password);
-            }
+                // a member that already has a password can only change it on the account page (where the current password is needed).
+                if (ShopAccountFormPasswordValidator::can_set_password_without_current_password($member)) {
+                    $passwordResult = $member->changePassword($password);
+                    if (! $passwordResult->isValid()) {
+                        $form->sessionMessage(_t('Account.NO_VALID_PASSWORD', 'You need to enter a valid password.') . ' ' . ShopAccountFormPasswordValidator::messages_as_string($passwordResult), 'bad');
+                        $this->controller->redirectBack();
 
-            if ($member->validate()) {
+                        return false;
+                    }
+                } else {
+                    $form->sessionMessage(_t('Account.PASSWORD_CHANGE_ON_ACCOUNT_PAGE', 'Your password has not been changed. To change your password, please use your account page.'), 'warning');
+                }
+            }
+            if ($member->validate()->isValid()) {
                 $member->write();
             } else {
                 $form->sessionMessage(_t('OrderForm.ACCOUNTERROR', 'There was an error saving your account details.'), 'warning');
