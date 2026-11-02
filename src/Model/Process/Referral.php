@@ -7,8 +7,8 @@ use SilverStripe\Security\Member;
 use SilverStripe\Forms\FieldList;
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataObject;
@@ -300,58 +300,119 @@ class Referral extends DataObject implements EditableEcommerceObject
         ],
     ];
 
+    /**
+     * The maximum number of referrals that can be recorded for one order.
+     * This stops anonymous visitors from creating an unlimited number of rows.
+     */
+    private static int $max_referrals_per_order = 5;
+
+    /**
+     * The maximum number of (extra) parameters that are looked at in one request.
+     */
+    private static int $max_params_per_referral = 40;
+
+    /**
+     * Records a referral for the order.
+     *
+     * SECURITY: all of the data comes from the browser and must not be trusted:
+     * - a referral that already belongs to another order is never changed
+     * - only a limited number of referrals can be created per order
+     * - values are cleaned (scalar only) and cut to the length of the database field.
+     *
+     * @return null|int the ID of the referral (also if it was already recorded), NULL if nothing was recorded.
+     */
     public static function add_referral(Order $order, ?array $params = []): ?int
     {
-        if (!in_array($params, [null, [], []], true)) {
-            $filter = [
-                'UniqueID' => ($params['_uniqueID'] ?? '') ?: $order->ID,
-            ];
-            $ref = Referral::get()->filter($filter)->first();
-            if (! $ref) {
-                $ref = Referral::create($filter);
-            }
-
-            $params = Convert::raw2sql($params);
-            $ref->LandingUrl = $params['_landingUrl'] ?? '';
-            $ref->Referrer = $params['_referrer'] ?? '';
-            if (! empty($params['_capturedAt'])) {
-                $date = new DateTimeImmutable($params['_capturedAt'], new DateTimeZone('UTC'));
-                $localDate = $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-                $ref->CapturedAt = $localDate->format('Y-m-d H:i:s');
-            }
-
-            // set fields based on config
-            $fieldValues = [];
-            $from = [];
-            $list = Config::inst()->get(Referral::class, 'referral_sources');
-            unset($params['_uniqueID'], $params['_landingUrl'], $params['_referrer'], $params['_capturedAt']);
-            foreach ($params as $key => $val) {
-                $getVarDetails = $list[$key] ?? null;
-                $name = $getVarDetails['Name'] ?? $key;
-                $field = $getVarDetails['Field'] ?? '';
-                $from[] = $name;
-                if (! $field) {
-                    $field = 'Source';
-                    $val .= ' (' . $name . ')';
-                }
-
-                if (! isset($fieldValues[$field])) {
-                    $fieldValues[$field] = [];
-                }
-
-                $fieldValues[$field][] = $val;
-            }
-
-            foreach ($fieldValues as $field => $values) {
-                $ref->$field = implode(' | ', array_filter(array_unique($values)));
-            }
-
-            $ref->From = $from !== [] ? implode(' | ', array_filter(array_unique($from))) : 'Other';
-            $ref->write();
-            return $ref->ID;
+        if ($params === null || $params === []) {
+            return null;
+        }
+        if (! $order->exists()) {
+            return null;
+        }
+        // 1. the unique ID: only accept sensible values (uuid or number as created by UTMReferralPointer.js)
+        $uniqueID = $params['_uniqueID'] ?? '';
+        if (! is_string($uniqueID) || ! preg_match('/^[A-Za-z0-9-]{8,36}$/', $uniqueID)) {
+            $uniqueID = (string) $order->ID;
         }
 
-        return null;
+        // 2. does it exist already?
+        $ref = Referral::get()->filter(['UniqueID' => $uniqueID])->first();
+        if ($ref) {
+            if ((int) $ref->OrderID !== (int) $order->ID && (int) $ref->OrderID !== 0) {
+                // belongs to another order: leave it alone.
+                return (int) $ref->ID;
+            }
+        } else {
+            // 3. limit the number of referrals per order.
+            $existing = Referral::get()->filter(['OrderID' => $order->ID]);
+            if ($existing->count() >= (int) Config::inst()->get(Referral::class, 'max_referrals_per_order')) {
+                $last = $existing->sort('ID', 'DESC')->first();
+
+                return $last ? (int) $last->ID : null;
+            }
+            $ref = Referral::create(['UniqueID' => $uniqueID]);
+        }
+        $ref->OrderID = $order->ID;
+
+        $ref->LandingUrl = self::clean_value($params['_landingUrl'] ?? '', 255);
+        $ref->Referrer = self::clean_value($params['_referrer'] ?? '', 255);
+        $capturedAt = self::clean_value($params['_capturedAt'] ?? '', 40);
+        if ($capturedAt !== '') {
+            try {
+                $date = new DateTimeImmutable($capturedAt, new DateTimeZone('UTC'));
+                $localDate = $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                $ref->CapturedAt = $localDate->format('Y-m-d H:i:s');
+            } catch (Exception) {
+                // invalid date: ignore.
+            }
+        }
+        // set fields based on config
+        $fieldValues = [];
+        $from = [];
+        $list = Config::inst()->get(Referral::class, 'referral_sources');
+        unset($params['_uniqueID'], $params['_landingUrl'], $params['_referrer'], $params['_capturedAt']);
+        $params = array_slice($params, 0, (int) Config::inst()->get(Referral::class, 'max_params_per_referral'), true);
+        foreach ($params as $key => $val) {
+            $key = self::clean_value($key, 50);
+            $val = self::clean_value($val, 80);
+            if ($key === '' || $val === '') {
+                continue;
+            }
+            $getVarDetails = $list[$key] ?? null;
+            $name = $getVarDetails['Name'] ?? $key;
+            $field = $getVarDetails['Field'] ?? '';
+            $from[] = $name;
+            if (! $field) {
+                $field = 'Source';
+                $val .= ' (' . $name . ')';
+            }
+            if (! isset($fieldValues[$field])) {
+                $fieldValues[$field] = [];
+            }
+            $fieldValues[$field][] = $val;
+        }
+        foreach ($fieldValues as $field => $values) {
+            $ref->$field = self::clean_value(implode(' | ', array_filter(array_unique($values))), 100);
+        }
+        $ref->From = self::clean_value($from !== [] ? implode(' | ', array_filter(array_unique($from))) : 'Other', 100);
+        $ref->write();
+
+        return (int) $ref->ID;
+    }
+
+    /**
+     * Cleans a value that came from the browser: scalar only, no tags, no control characters, limited length.
+     * (no need for Convert::raw2sql as the ORM takes care of that.)
+     */
+    protected static function clean_value($value, int $maxLength): string
+    {
+        if (! is_scalar($value)) {
+            return '';
+        }
+        $value = strip_tags((string) $value);
+        $value = (string) preg_replace('/[\x00-\x1F\x7F]/u', '', $value);
+
+        return mb_substr(trim($value), 0, $maxLength);
     }
 
     /**

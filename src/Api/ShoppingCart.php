@@ -1179,7 +1179,7 @@ class ShoppingCart
         if (! empty($params)) {
             $order = $this->currentOrder();
             if ($order && $order->exists()) {
-                $outcome = Referral::add_referral($order, $params);
+                $outcome = Referral::add_referral($order, $params) ?? -1;
             }
         }
 
