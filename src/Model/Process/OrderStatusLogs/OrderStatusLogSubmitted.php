@@ -126,7 +126,12 @@ class OrderStatusLogSubmitted extends OrderStatusLog
             return $this->OrderAsHTML;
         }
         if ($this->OrderAsString) {
-            return unserialize((string) $this->OrderAsString);
+            // never create objects from stored data.
+            // (the serialized Order is an object, so this only returns something for text.)
+            $data = unserialize((string) $this->OrderAsString, ['allowed_classes' => false]);
+            if (is_string($data) && '' !== $data) {
+                return $data;
+            }
         }
 
         return _t('OrderStatusLog.NO_FURTHER_INFO_AVAILABLE', 'no further information available');
