@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Extension;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\JQueryRequirement;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigAjax;
@@ -29,7 +30,7 @@ class EcommerceSiteTreeExtensionController extends Extension
     public function onBeforeInit()
     {
         //$this->secureHostSwitcher();
-        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        JQueryRequirement::require();
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         //todo: check if we even need this (via ShoppingCartsRequirements.ss)
         // if ($this->getOwner()->dataRecord) {

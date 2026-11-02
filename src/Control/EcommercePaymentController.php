@@ -7,6 +7,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\JQueryRequirement;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Forms\OrderFormPayment;
 use Sunnysideup\Ecommerce\Model\Order;
@@ -132,7 +133,7 @@ class EcommercePaymentController extends Controller
         parent::init();
         // isset($project) ? $themeBaseFolder = $project : $themeBaseFolder = 'app';
 
-        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        JQueryRequirement::require();
         //Requirements::javascript(Director::protocol()."ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
         $id = (int) $this->request->param('ID');
         if (! $id && isset($_REQUEST['OrderID'])) {

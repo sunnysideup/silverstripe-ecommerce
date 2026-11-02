@@ -8,6 +8,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validator;
 use SilverStripe\View\Requirements;
+use Sunnysideup\Ecommerce\Api\JQueryRequirement;
 use Sunnysideup\Ecommerce\Api\Sanitizer;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -69,7 +70,7 @@ class OrderModifierForm extends Form
         // $this->setAttribute('autocomplete', 'off');
         Requirements::themedCSS('client/css/' . ClassInfo::shortName(self::class));
         $this->addExtraClass($this->myLcFirst(ucwords($name)));
-        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        JQueryRequirement::require();
         // Requirements::javascript('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         Requirements::block('silverstripe/admin: thirdparty/jquery-form/jquery.form.js');
         //add JS for the modifier - added in modifier
