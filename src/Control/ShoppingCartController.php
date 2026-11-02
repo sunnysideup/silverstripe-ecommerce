@@ -21,6 +21,7 @@ use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Versioned\Versioned;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\ConfirmAction;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Interfaces\BuyableModel;
 use Sunnysideup\Ecommerce\Model\Address\OrderAddress;
@@ -526,6 +527,13 @@ class ShoppingCartController extends Controller
             if ($id && EcommerceDBConfig::is_buyable($className)) {
                 $obj = $className::get_by_id($id);
                 if ($obj && $obj->hasField('AllowPurchase')) {
+                    if (! ConfirmAction::isConfirmed($request)) {
+                        return ConfirmAction::form(
+                            $request,
+                            _t('ShoppingCartController.CONFIRM_REMOVEFROMSALE', 'Do you want to remove this product from sale?') . ' (' . $obj->getTitle() . ')',
+                            _t('ShoppingCartController.CONFIRM_REMOVEFROMSALE_BUTTON', 'Remove from sale')
+                        );
+                    }
                     $obj->AllowPurchase = 0;
                     if ($obj instanceof SiteTree) {
                         $obj->writeToStage(Versioned::DRAFT);
@@ -569,6 +577,13 @@ class ShoppingCartController extends Controller
      */
     public function clearandlogout(HTTPRequest $request)
     {
+        if (! ConfirmAction::isConfirmed($request)) {
+            return ConfirmAction::form(
+                $request,
+                _t('ShoppingCartController.CONFIRM_CLEARANDLOGOUT', 'Do you want to clear your cart and log out?'),
+                _t('ShoppingCartController.CONFIRM_CLEARANDLOGOUT_BUTTON', 'Clear cart and log out')
+            );
+        }
         $this->cart->clear();
         $member = Security::getCurrentUser();
         if ($member) {
@@ -733,6 +748,13 @@ class ShoppingCartController extends Controller
         if (EcommerceRole::current_member_is_shop_admin()) {
             $member = Member::get_by_id((int) $request->param('ID'));
             if ($member) {
+                if (! ConfirmAction::isConfirmed($request)) {
+                    return ConfirmAction::form(
+                        $request,
+                        _t('ShoppingCartController.CONFIRM_PLACEORDERFORMEMBER', 'Do you want to start a new order for this customer?') . ' (' . $member->getTitle() . ')',
+                        _t('ShoppingCartController.CONFIRM_PLACEORDERFORMEMBER_BUTTON', 'Start new order')
+                    );
+                }
                 $newOrder = Order::create();
                 //copying fields.
                 $newOrder->MemberID = $member->ID;
@@ -764,6 +786,13 @@ class ShoppingCartController extends Controller
             $newMember = Member::get_by_id((int) $request->param('ID'));
 
             if ($newMember) {
+                if (! ConfirmAction::isConfirmed($request)) {
+                    return ConfirmAction::form(
+                        $request,
+                        _t('ShoppingCartController.CONFIRM_LOGINAS', 'Do you want to log in as this customer?') . ' (' . $newMember->getTitle() . ')',
+                        _t('ShoppingCartController.CONFIRM_LOGINAS_BUTTON', 'Log in as customer')
+                    );
+                }
                 Security::setCurrentUser($newMember);
                 Injector::inst()->get(IdentityStore::class)->logIn($newMember);
 

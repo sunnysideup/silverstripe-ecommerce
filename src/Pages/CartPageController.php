@@ -16,6 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
+use Sunnysideup\Ecommerce\Api\ConfirmAction;
 use Sunnysideup\Ecommerce\Api\SendLoginToken;
 use Sunnysideup\Ecommerce\Api\ShoppingCart;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
@@ -199,6 +200,16 @@ class CartPageController extends PageController
      */
     public function loadorder(HTTPRequest $request)
     {
+        if (! $this->currentOrder) {
+            return $this->httpError(404);
+        }
+        if (! ConfirmAction::isConfirmed($request)) {
+            return ConfirmAction::form(
+                $request,
+                _t('CartPage.CONFIRM_LOADORDER', 'Do you want to load this order into your cart?'),
+                _t('CartPage.CONFIRM_LOADORDER_BUTTON', 'Load order')
+            );
+        }
         self::set_message(_t('CartPage.ORDERLOADED', 'Order has been loaded.'));
         ShoppingCart::singleton()->loadOrder($this->currentOrder->ID);
         $this->redirect($this->Link());
@@ -219,6 +230,14 @@ class CartPageController extends PageController
             $this->showCreateAccountForm = true;
 
             return [];
+        }
+
+        if (! ConfirmAction::isConfirmed($request)) {
+            return ConfirmAction::form(
+                $request,
+                _t('CartPage.CONFIRM_SAVEORDER', 'Do you want to save this order?'),
+                _t('CartPage.CONFIRM_SAVEORDER_BUTTON', 'Save order')
+            );
         }
 
         if ($this->currentOrder && $this->currentOrder->getTotalItems()) {
@@ -242,6 +261,13 @@ class CartPageController extends PageController
      */
     public function deleteorder(HTTPRequest $request)
     {
+        if (! ConfirmAction::isConfirmed($request)) {
+            return ConfirmAction::form(
+                $request,
+                _t('CartPage.CONFIRM_DELETEORDER', 'Do you want to delete this order?'),
+                _t('CartPage.CONFIRM_DELETEORDER_BUTTON', 'Delete order')
+            );
+        }
         if (! $this->CurrentOrderIsInCart() && $this->currentOrder->canDelete()) {
             $this->currentOrder->delete();
             self::set_message(_t('CartPage.ORDERDELETED', 'Order has been deleted.'));
@@ -260,6 +286,13 @@ class CartPageController extends PageController
      */
     public function startneworder(HTTPRequest $request)
     {
+        if (! ConfirmAction::isConfirmed($request)) {
+            return ConfirmAction::form(
+                $request,
+                _t('CartPage.CONFIRM_STARTNEWORDER', 'Do you want to start a new order? Your current cart will be cleared.'),
+                _t('CartPage.CONFIRM_STARTNEWORDER_BUTTON', 'Start new order')
+            );
+        }
         ShoppingCart::singleton()->clear();
         self::set_message(_t('CartPage.NEWORDERSTARTED', 'New order has been started.'));
         $this->redirect($this->Link());
