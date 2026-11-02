@@ -100,7 +100,8 @@ class EcommerceCache implements Flushable
         $data = $this->getCacheBackend()->get($cacheKey);
         if ($data) {
             if (false === $alreadyUnserialized) {
-                $data = unserialize((string) $data);
+                // only simple data (arrays, strings, numbers) is cached - never create objects from cached data.
+                $data = unserialize((string) $data, ['allowed_classes' => false]);
             }
 
             return $data;

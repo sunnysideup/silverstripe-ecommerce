@@ -1200,7 +1200,11 @@ class ShoppingCart
         $session = $this->getSession();
         if ($session instanceof Session) {
             //get old messages
-            $messages = unserialize((string) $session->get($sessionVariableName));
+            // messages are simple arrays - never allow objects to be created from session data.
+            $messages = unserialize((string) $session->get($sessionVariableName), ['allowed_classes' => false]);
+            if (! is_array($messages)) {
+                $messages = [];
+            }
             //clear old messages
             $session->clear($sessionVariableName);
         }
