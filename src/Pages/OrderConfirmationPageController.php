@@ -110,6 +110,14 @@ class OrderConfirmationPageController extends CartPageController
      */
     public function retrieveorder(HTTPRequest $request)
     {
+        // The retrieve link contains a secret token (anyone with the link can view the order).
+        // The order has been retrieved and stored in the session (see CartPageController::init),
+        // so we send people to the link of the order without the token.
+        // This keeps the token out of the browser history, analytics, chat widgets, screenshots, etc...
+        if ($this->currentOrder && $this->currentOrder->exists()) {
+            return $this->redirect($this->currentOrder->Link());
+        }
+
         return [];
     }
 
