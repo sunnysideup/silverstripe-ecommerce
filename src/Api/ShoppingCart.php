@@ -755,7 +755,7 @@ class ShoppingCart
     {
         if ($this->allowWrites()) {
             $modifier = is_numeric($modifier) ? OrderModifier::get_by_id($modifier) : $modifier;
-            if (! $modifier) {
+            if (! $modifier || ! $this->modifierBelongsToCurrentOrder($modifier)) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
 
                 return false;
@@ -799,7 +799,7 @@ class ShoppingCart
                 user_error('Bad parameter provided to ShoppingCart::addModifier', E_USER_WARNING);
             }
 
-            if (! $modifier) {
+            if (! $modifier || ! $this->modifierBelongsToCurrentOrder($modifier)) {
                 $this->addMessage(_t('Order.MODIFIERNOTFOUND', 'Modifier could not be found.'), 'bad');
 
                 return false;
@@ -815,6 +815,21 @@ class ShoppingCart
         $this->addMessage(_t('Order.CAN_NOT_BE_WRITTEN', 'Cart can not be updated.'), 'bad');
 
         return false;
+    }
+
+    /**
+     * Modifiers can only be changed if they are part of the current (not yet submitted)
+     * order of this cart. This stops people from changing modifiers
+     * on other people's orders or on orders that have already been submitted.
+     */
+    protected function modifierBelongsToCurrentOrder(OrderModifier $modifier): bool
+    {
+        $order = $this->currentOrder();
+        if (! $order || ! $order->exists() || $order->IsSubmitted()) {
+            return false;
+        }
+
+        return (int) $modifier->OrderID === (int) $order->ID;
     }
 
     /**
