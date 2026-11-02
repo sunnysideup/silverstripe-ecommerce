@@ -22,6 +22,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 use Sunnysideup\AjaxSelectField\AjaxSelectField;
+use Sunnysideup\Ecommerce\Api\JQueryRequirement;
 use Sunnysideup\Ecommerce\Pages\Product;
 
 /**
@@ -173,8 +174,7 @@ class QuickUpdates extends Controller
         if (! Permission::check($securityCheck)) {
             Security::permissionFailure($this);
         }
-
-        Requirements::javascript('https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js');
+        JQueryRequirement::require();
         if (static::class === QuickUpdates::class) {
             return $this->httpError(404, 'Please choose a specific update.');
         }

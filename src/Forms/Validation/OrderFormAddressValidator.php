@@ -44,7 +44,7 @@ class OrderFormAddressValidator extends ShopAccountFormValidator
                 $uniqueFieldName,
                 _t(
                     'OrderForm.EMAILFROMOTHERUSER',
-                    'Sorry, an account with that email is already in use by another customer. If this is your email address then please log in first before placing your order.'
+                    'Sorry, we can not use this email address. If it is your email address then please log in first before placing your order. Otherwise, please use another email address.'
                 ),
                 'required'
             );

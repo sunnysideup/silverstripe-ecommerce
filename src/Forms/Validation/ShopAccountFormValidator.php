@@ -58,10 +58,11 @@ class ShopAccountFormValidator extends RequiredFieldsValidator
                     if ($allowExistingEmail) {
                         //do nothing
                     } else {
+                        // NB: we do not repeat the email address and we do not say that an account exists.
                         $message = _t(
                             'Account.ALREADYTAKEN',
-                            '{uniqueFieldValue} is not available. Please log in or use another {uniqueFieldName}.',
-                            ['uniqueFieldValue' => $uniqueFieldValue, 'uniqueFieldName' => strtolower((string) $uniqueFieldName)]
+                            'This {uniqueFieldName} can not be used. If you already have an account, please log in. Otherwise, please use another {uniqueFieldName}.',
+                            ['uniqueFieldName' => strtolower((string) $uniqueFieldName)]
                         );
                         $this->validationError(
                             $uniqueFieldName,
