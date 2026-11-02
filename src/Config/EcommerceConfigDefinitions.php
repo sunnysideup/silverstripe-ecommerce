@@ -466,7 +466,7 @@ class EcommerceConfigDefinitions
                      You can just add them as a non-associative array.
                      However, their order is important!',
 
-                'minutes_an_order_can_be_viewed_without_logging_in' => 'Orders can be viewed with the special retrieve link (without the need for the user to log in) for xxx number of minutes.',
+                'minutes_an_order_can_be_viewed_without_logging_in' => 'Orders can be viewed with the special retrieve link (without the need for the user to log in) for xxx number of minutes after the order has been placed. Set to zero for no limit.',
 
                 'maximum_ignorable_sales_payments_difference' => 'The maximum allowable difference between the Order Total and the Payment Total.
                     If this value is, for example, 10 cents and the total amount outstanding for an order is less than ten cents, than the order is considered \'paid\'',
