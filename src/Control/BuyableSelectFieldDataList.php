@@ -7,11 +7,12 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
+use SilverStripe\Security\Permission;
 use Sunnysideup\Ecommerce\Api\ArrayMethods;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Model\Config\EcommerceDBConfig;
+use Sunnysideup\Ecommerce\Model\Extensions\EcommerceRole;
 
 /**
  * Class \Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
@@ -26,7 +27,8 @@ class BuyableSelectFieldDataList extends Controller
     ];
 
     private static $allowed_actions = [
-        'json',
+        // only used by the BuyableSelectField in the CMS
+        'json' => '->canUseBuyableSearch',
     ];
 
     private static $url_segment = 'ecommercebuyabledatalist';
@@ -46,6 +48,15 @@ class BuyableSelectFieldDataList extends Controller
     }
 
     /**
+     * This search is used in the CMS only (see BuyableSelectField)
+     * and it returns internal data (e.g. InternalItemID), so it is not open to the public.
+     */
+    public function canUseBuyableSearch(): bool
+    {
+        return Permission::check('ADMIN') || EcommerceRole::current_member_can_process_orders();
+    }
+
+    /**
      * returns JSON in this format:
      * Array(
      *  ClassName => $className,
@@ -58,8 +69,14 @@ class BuyableSelectFieldDataList extends Controller
      */
     public function json(HTTPRequest $request)
     {
-        $countOfSuggestions = $request->requestVar('countOfSuggestions');
-        $term = Convert::raw2sql($request->requestVar('term'));
+        // limit the number of suggestions (each suggestion can mean a lot of database queries).
+        $countOfSuggestions = max(1, min(50, (int) $request->requestVar('countOfSuggestions')));
+        // no need for Convert::raw2sql: the ORM takes care of escaping.
+        $term = $request->requestVar('term');
+        $term = is_string($term) ? trim($term) : '';
+        if ('' === $term) {
+            return $this->array2json([]);
+        }
         $arrayOfBuyables = EcommerceConfig::get(EcommerceDBConfig::class, 'array_of_buyables');
         $arrayOfAddedItemIDsByClassName = [];
         $lengthOfFieldsToSearch = count($this->fieldsToSearch);
