@@ -159,7 +159,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
             $renderer->renderHeader();
             $renderer->renderInfo('SilverStripe Ecommerce Tools', Director::absoluteBaseURL());
             $renderer->writeContent($this);
-            $renderer->writeFooter();
+            $renderer->renderFooter();
         }
     }
 
@@ -310,7 +310,7 @@ class EcommerceDatabaseAdmin extends TaskRunner
         }
         $renderer->writePostOutcome();
         $renderer->writeContent($this);
-        $renderer->writeFooter();
+        $renderer->renderFooter();
 
         return [];
     }
