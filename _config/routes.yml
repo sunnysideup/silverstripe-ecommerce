@@ -8,7 +8,6 @@ SilverStripe\Control\Director:
     shoppingcart//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\ShoppingCartController
     ecommerceinternalitemtotitle//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\InternalItemToTitle
     ecommercepayment//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommercePaymentController
-    ecommercetemplatetest//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\EcommerceTemplateTest
     ecommercebuyabledatalist//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\BuyableSelectFieldDataList
     admin/ecommerce-email-preview//$Action/$ID/$OtherID: Sunnysideup\Ecommerce\Control\OrderEmailRecordReview
     ecommercemodifierformcontroller//$Action/$ID/$OtherID/$Version: Sunnysideup\Ecommerce\Control\OrderModifierFormController
