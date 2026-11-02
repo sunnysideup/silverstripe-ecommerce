@@ -142,14 +142,14 @@ class AttemptLimiter
 
     protected function getIp(): string
     {
-        $request = Controller::has_curr() ? Controller::curr()->getRequest() : null;
+        $request = Controller::curr() instanceof Controller ? Controller::curr()->getRequest() : null;
 
         return (string) ($request?->getIP() ?? 'unknown');
     }
 
     protected function getSession()
     {
-        $request = Controller::has_curr() ? Controller::curr()->getRequest() : null;
+        $request = Controller::curr() instanceof Controller ? Controller::curr()->getRequest() : null;
 
         return $request?->getSession();
     }

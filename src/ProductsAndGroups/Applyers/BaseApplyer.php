@@ -4,10 +4,10 @@ namespace Sunnysideup\Ecommerce\ProductsAndGroups\Applyers;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DB;
 use Sunnysideup\Ecommerce\Api\ClassHelpers;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Pages\ProductGroup;
@@ -257,7 +257,7 @@ abstract class BaseApplyer
                     continue;
                 }
                 // the param ends up in the SQL so it must be a number or a properly quoted and escaped string.
-                $param = is_numeric($param) ? (string) (0 + $param) : Convert::raw2sql((string) $param, true);
+                $param = is_numeric($param) ? (string) (0 + $param) : DB::get_conn()->quoteString((string) $param);
                 $sql = str_replace(self::SQL_PARAM_PLACEHOLDER, $param, $sql);
             }
         }

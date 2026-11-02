@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sunnysideup\Ecommerce\Forms\Validation;
 
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
