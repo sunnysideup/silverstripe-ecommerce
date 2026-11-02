@@ -12,7 +12,8 @@ interface EcommerceGEOipProvider
     public function getCountry();
 
     /**
-     * returns a country code of the current user...
+     * returns the IP address of the current user: a single, valid IP address, or an empty string.
+     * Do not trust request headers for this (they can be faked): see EcommerceCountryVisitorCountryProvider::visitor_ip().
      *
      * @return string
      */

@@ -359,12 +359,15 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
     }
 
     /**
-     * returns the country based on the Visitor Country Provider.
-     * this is some sort of IP recogniser system (e.g. Geoip Class).
+     * returns the IP address of the visitor (via the Visitor Country Provider).
      *
-     * @return string (country code)
+     * THIS is the method to use whenever you need the IP address of the visitor:
+     * that way, everything in the site uses the same (correct) IP address.
+     * Whatever the provider returns is checked: the answer is a single, valid IP address, or an empty string.
+     *
+     * @return string (IP address, or empty)
      */
-    public static function get_ip()
+    public static function get_ip(): string
     {
         $visitorCountryProviderClassName = EcommerceConfig::get(EcommerceCountry::class, 'visitor_country_provider');
         if (! $visitorCountryProviderClassName) {
@@ -372,8 +375,9 @@ class EcommerceCountry extends DataObject implements EditableEcommerceObject
         }
 
         $visitorCountryProvider = new $visitorCountryProviderClassName();
+        $ip = $visitorCountryProvider->getIP();
 
-        return $visitorCountryProvider->getIP();
+        return is_string($ip) && filter_var(trim($ip), FILTER_VALIDATE_IP) ? trim($ip) : '';
     }
 
     /**

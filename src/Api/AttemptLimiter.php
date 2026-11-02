@@ -6,6 +6,8 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
+use Sunnysideup\OneTimeCode\ClientIp;
 
 /**
  * A simple way to limit how many times something can be tried by one visitor,
@@ -142,9 +144,11 @@ class AttemptLimiter
 
     protected function getIp(): string
     {
-        $request = Controller::has_curr() ? Controller::curr()->getRequest() : null;
+        // the real IP address of the visitor (also behind CloudFlare).
+        // IPv6 addresses count as their /64: one visitor usually has a whole /64 for themselves.
+        $ip = EcommerceCountry::get_ip();
 
-        return (string) ($request?->getIP() ?? 'unknown');
+        return '' !== $ip ? ClientIp::bucket($ip) : 'unknown';
     }
 
     protected function getSession()

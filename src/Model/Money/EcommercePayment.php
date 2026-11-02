@@ -22,6 +22,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use Sunnysideup\CmsEditLinkField\Api\CMSEditLinkAPI;
 use Sunnysideup\CmsEditLinkField\Forms\Fields\CMSEditLinkField;
+use Sunnysideup\Ecommerce\Model\Address\EcommerceCountry;
 use Sunnysideup\Ecommerce\Config\EcommerceConfig;
 use Sunnysideup\Ecommerce\Config\EcommerceConfigClassNames;
 use Sunnysideup\Ecommerce\Forms\OrderForm;
@@ -720,15 +721,15 @@ class EcommercePayment extends DataObject implements EditableEcommerceObject
      */
     protected function setClientIP()
     {
-        $proxy = null;
-        $ip = null;
-        if (Controller::has_curr()) {
-            $ip = Controller::curr()->getRequest()->getIP();
-        }
+        // the real IP address of the visitor (also behind CloudFlare).
+        $ip = EcommerceCountry::get_ip();
+        $ip = '' !== $ip ? $ip : null;
 
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //swapsies
-            $proxy = $ip;
+        // the server that connected to us, if that is not the visitor (e.g. CloudFlare).
+        $proxy = null;
+        $peer = isset($_SERVER['REMOTE_ADDR']) && is_string($_SERVER['REMOTE_ADDR']) ? trim($_SERVER['REMOTE_ADDR']) : '';
+        if ('' !== $peer && filter_var($peer, FILTER_VALIDATE_IP) && $peer !== $ip) {
+            $proxy = $peer;
         }
 
         // Only set the IP and ProxyIP if none currently set
