@@ -219,6 +219,7 @@ class EcommercePaymentFormSetupAndValidation
                             _t('EcommercePaymentFormSetupAndValidation.INVALID_CVV_NUMBER', 'Invalid security number.'),
                             'bad'
                         );
+                        $errors = true;
                     }
 
                     break;
@@ -248,6 +249,39 @@ class EcommercePaymentFormSetupAndValidation
         $this->paymentObject->write();
 
         return true;
+    }
+
+    /**
+     * Removes the card security number (CVV) and masks the card number (only the last four digits are kept)
+     * of the payment object, once the payment has been processed.
+     * (These fields are only filled in for payment methods that take card details on this website.)
+     */
+    protected function scrubCardData(): void
+    {
+        $payment = $this->paymentObject;
+        if (! $payment || ! $payment->exists()) {
+            return;
+        }
+        $dbFieldMap = Config::inst()->get(EcommercePaymentFormSetupAndValidation::class, 'db_field_map');
+        $map = $dbFieldMap[$payment->ClassName] ?? [];
+        $cvvField = $map['CVVNumber'] ?? 'CVVNumber';
+        $cardNumberField = $map['CardNumber'] ?? 'CardNumber';
+        $changed = false;
+        if ($payment->hasDatabaseField($cvvField) && '' !== (string) $payment->{$cvvField}) {
+            $payment->{$cvvField} = '';
+            $changed = true;
+        }
+        if ($payment->hasDatabaseField($cardNumberField)) {
+            $number = (string) $payment->{$cardNumberField};
+            // only mask if it still looks like a full card number (not already masked)
+            if (preg_match('/^\d{12,19}$/', $number)) {
+                $payment->{$cardNumberField} = str_repeat('*', strlen($number) - 4) . substr($number, -4);
+                $changed = true;
+            }
+        }
+        if ($changed) {
+            $payment->write();
+        }
     }
 
     /**
@@ -313,6 +347,8 @@ class EcommercePaymentFormSetupAndValidation
         $this->paymentObject->write();
         // Process payment, get the result back
         $result = $this->paymentObject->processPayment($data, $form);
+        // the card security number must never be kept and the card number is masked
+        $this->scrubCardData();
 
         if (! is_a($result, EcommerceConfigClassNames::getName(EcommercePaymentResult::class))) {
             $form->getController()->redirectBack();
