@@ -1057,6 +1057,27 @@ class EcommerceRole extends DataExtension implements PermissionProvider, Permiss
 
     /**
      * standard SS method
+     * If the email address of a member changes then the new email address has not been verified
+     * (only the old one was), so it must be verified again with a one-time code
+     * before guest orders with that email address can be linked to the member.
+     */
+    public function onBeforeWrite()
+    {
+        $owner = $this->getOwner();
+        if ($owner->isInDB() && $owner->EmailVerifiedAt) {
+            $changes = $owner->getChangedFields(false, DataObject::CHANGE_VALUE);
+            if (isset($changes['Email'])) {
+                $before = mb_strtolower(trim((string) ($changes['Email']['before'] ?? '')));
+                $after = mb_strtolower(trim((string) ($changes['Email']['after'] ?? '')));
+                if ($before !== $after) {
+                    $owner->EmailVerifiedAt = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * standard SS method
      * Make sure the member is added as a customer.
      */
     public function onAfterWrite()
