@@ -20,6 +20,20 @@ use Sunnysideup\Ecommerce\Pages\OrderConfirmationPage;
 
 class OrderFormFeedback extends Form
 {
+    /**
+     * The maximum number of characters for the note.
+     *
+     * @var int
+     */
+    private static $max_note_length = 2000;
+
+    /**
+     * The maximum number of feedback entries for one order.
+     *
+     * @var int
+     */
+    private static $max_feedback_entries_per_order = 3;
+
     protected $order;
 
     protected $_orderConfirmationPage;
@@ -63,18 +77,39 @@ class OrderFormFeedback extends Form
 
     public function dofeedback(array $data, Form $form, HTTPRequest $request)
     {
-        if ($this->order) {
-            $note = $data['Note'] ?? 'no note';
-            $rating = $data['Rating'] ?? 'Not sure';
-            $object = OrderFeedback::create();
-            $object->Note = $note;
-            $object->Rating = $rating;
-            $object->OrderID = $this->order->ID;
-            $object->write();
-            $form->sessionMessage(
-                $this->getValueFromOrderConfirmationPage('FeedbackFormThankYou'),
-                'good'
-            );
+        $order = $this->order;
+        // feedback can only be left for an order that has been submitted
+        // and only a limited number of times (anyone with the link can use this form).
+        if ($order && $order->exists() && $order->IsSubmitted()) {
+            $rating = $data['Rating'] ?? '';
+            $note = $data['Note'] ?? '';
+            $allowedRatings = [];
+            $ratingField = $this->Fields()->dataFieldByName('Rating');
+            if ($ratingField instanceof OptionsetField) {
+                $allowedRatings = array_map('strval', array_keys($ratingField->getSource()));
+            }
+            $maxPerOrder = (int) Config::inst()->get(self::class, 'max_feedback_entries_per_order');
+            if (! is_string($rating) || ! in_array($rating, $allowedRatings, true) || ! is_string($note)) {
+                $form->sessionMessage(
+                    _t('OrderFormFeedback.INVALID_FEEDBACK', 'Please select one of the options.'),
+                    'bad'
+                );
+            } elseif ($maxPerOrder > 0 && OrderFeedback::get()->filter(['OrderID' => $order->ID])->count() >= $maxPerOrder) {
+                $form->sessionMessage(
+                    _t('OrderFormFeedback.TOO_MUCH_FEEDBACK', 'Thank you, we have already received your feedback for this order.'),
+                    'good'
+                );
+            } else {
+                $object = OrderFeedback::create();
+                $object->Note = mb_substr(trim(strip_tags($note)), 0, (int) Config::inst()->get(self::class, 'max_note_length')) ?: 'no note';
+                $object->Rating = $rating;
+                $object->OrderID = $order->ID;
+                $object->write();
+                $form->sessionMessage(
+                    $this->getValueFromOrderConfirmationPage('FeedbackFormThankYou'),
+                    'good'
+                );
+            }
         } else {
             $form->sessionMessage(
                 _t(
@@ -85,7 +120,11 @@ class OrderFormFeedback extends Form
             );
         }
 
-        return $this->controller->redirect($this->order->FeedbackLink());
+        if ($order) {
+            return $this->controller->redirect($order->FeedbackLink());
+        }
+
+        return $this->controller->redirectBack();
     }
 
     /**
