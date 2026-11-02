@@ -3,10 +3,10 @@
 namespace Sunnysideup\Ecommerce\Model\Address;
 
 use Override;
-use SilverStripe\Forms\CompositeField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HiddenField;
@@ -987,4 +987,11 @@ class OrderAddress extends DataObject implements EditableEcommerceObject
 
         return null;
     }
+
+    public function validateMemberForAutocompletion(Member $member): bool
+    {
+        $loggedInUser = Security::getCurrentUser();
+        return $member && $member->exists() && $loggedInUser && $member->ID === $loggedInUser->ID && ! $member->IsShopAdmin();
+    }
+
 }
